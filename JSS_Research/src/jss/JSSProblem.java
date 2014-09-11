@@ -1,10 +1,12 @@
 package jss;
 
 /**
- * Some default class while I tinker around with ECJ again.
+ * TODO Interface that I don't really know what to do with.
+ *
  * @author parkjohn
  *
  */
-public class JSSProblem {
+public interface JSSProblem {
+
 
 }
