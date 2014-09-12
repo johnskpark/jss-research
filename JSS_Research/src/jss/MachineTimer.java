@@ -16,22 +16,14 @@ public class MachineTimer {
 
 	private List<IMachine> machines = new ArrayList<IMachine>();
 
-	private double currentTime = 0;
+	private double currentTime;
 
 	/**
-	 * FORKEN JAVADOCS RIGHT HERE RIGHT NOW.
+	 * Default initialisation of the machine timer.
 	 * @param machine
 	 */
 	public MachineTimer() {
-
-	}
-
-	/**
-	 * TODO javadoc
-	 * @param startTime
-	 */
-	public MachineTimer(double startTime) {
-		currentTime = startTime;
+		currentTime = 0;
 	}
 
 	/**
