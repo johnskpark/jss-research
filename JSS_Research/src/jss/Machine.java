@@ -4,15 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Represents a machine in a job shop scheduling problem instance.
+ * Represents a basic machine in a job shop scheduling problem instance.
  *
  * @author parkjohn
  *
  */
-public class Machine {
-
-	List<Job> processedJobs = new ArrayList<Job>();
-	Job currentJob = null;
+public class Machine implements IMachine {
+	List<IJob> processedJobs = new ArrayList<IJob>();
+	IJob currentJob = null;
 
 	double timeAvailable = 0;
 	MachineTimer timer = null;
@@ -26,45 +25,46 @@ public class Machine {
 		this.timer.addMachine(this);
 	}
 
-	/**
-	 * Get the current job being processed.
-	 * @return the current job being processed, or null if no jobs are being processed
-	 */
-	Job getCurrentJob() {
+	@Override
+	public IJob getCurrentJob() {
 		return currentJob;
 	}
 
-	/**
-	 * Starts processing the job, as long as the machine does not have a job currently
-	 * being processed on it. Otherwise, the job is immediately rejected and
-	 * a RuntimeException is thrown.
-	 * @param job the job to start processing
-	 * @throws RuntimeException if the machine is currently busy
-	 */
-	void processJob(Job job) throws RuntimeException {
-		// TODO: placeholder
+	@Override
+	public List<IJob> getProcessedJobs() {
+		return processedJobs;
 	}
 
-	/**
-	 * Callback method to be called from the timer to update the current job status.
-	 */
-	void updateStatus() {
-		// TODO: placeholder
+	@Override
+	public void processJob(IJob job) throws RuntimeException {
+		if (currentJob != null) {
+			throw new RuntimeException("Attempted to process a job while the machine was still running");
+		}
+
+		currentJob = job;
+		timeAvailable =
+				Math.max(timer.getCurrentTime(), job.getReleaseTime()) +
+				job.getSetupTime(this) +
+				job.getProcessingTime(this);
 	}
 
-	/**
-	 * Get whether the machine is available to process a job.
-	 * @return true if there is no job being processed, false otherwise
-	 */
-	boolean isAvailable() {
-		return currentJob != null;
+	@Override
+	public void updateStatus() {
+		double currentTime = timer.getCurrentTime();
+
+		if (currentTime >= timeAvailable) {
+			processedJobs.add(currentJob);
+			currentJob = null;
+		}
 	}
 
-	/**
-	 * Return when the machine is next available to process a job.
-	 * @return TODO write some bullshit javadoc here
-	 */
-	double getTimeAvailable() {
+	@Override
+	public boolean isAvailable() {
+		return currentJob == null;
+	}
+
+	@Override
+	public double getTimeAvailable() {
 		return timeAvailable;
 	}
 }

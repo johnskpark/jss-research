@@ -1,5 +1,8 @@
 package jss;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public abstract class ProblemInstance {
 
@@ -19,4 +22,18 @@ public abstract class ProblemInstance {
 	// On the other hand, JSS Problem should know how well each individual did overall.
 
 	// TODO this should be on the outside, not the inside.
+
+	private List<IJob> jobs = new ArrayList<IJob>();
+	private List<IMachine> machines = new ArrayList<IMachine>();
+
+	public ProblemInstance(List<IJob> jobs, List<IMachine> machines) {
+		this.jobs = jobs;
+		this.machines = machines;
+	}
+
+	public abstract List<IJob> getJobs();
+
+	public List<IMachine> getMachines() {
+		return machines;
+	}
 }

@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class MachineTimer {
 
-	private List<Machine> machines = new ArrayList<Machine>();
+	private List<IMachine> machines = new ArrayList<IMachine>();
 
 	private double currentTime = 0;
 
@@ -26,27 +26,49 @@ public class MachineTimer {
 
 	}
 
+	/**
+	 * TODO javadoc
+	 * @param startTime
+	 */
 	public MachineTimer(double startTime) {
 		currentTime = startTime;
 	}
 
-	public void addMachine(Machine machine) {
+	/**
+	 * Add the machine to the machine timer.
+	 * @param machine
+	 */
+	public void addMachine(IMachine machine) {
 		machines.add(machine);
 	}
 
 	/**
-	 * TODO
-	 * @param time
+	 * Shifts time forward by the specified amount, and update the
+	 * statuses of the machines on whether they are processing a job
+	 * or not.
+	 * @param time amount the time is shifted by
 	 */
 	public void shiftTime(double time) {
-		currentTime += time;
+		setCurrentTime(getCurrentTime() + time);
+
+		for (IMachine machine : machines) {
+			machine.updateStatus();
+		}
 	}
 
 	/**
-	 * TODO
+	 * Get the current time.
 	 * @return
 	 */
 	public double getCurrentTime() {
 		return currentTime;
+	}
+
+	/**
+	 * Set the current time.
+	 * @param time
+	 */
+	protected void setCurrentTime(double time) {
+		currentTime = time;
 	}
 }

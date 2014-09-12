@@ -1,14 +1,14 @@
-package jss.problem.dynamic_problem;
+package jss.problem.static_problem;
 
 import java.util.List;
 
 import jss.IJob;
 import jss.ProblemInstance;
 
-public class DynamicProblemInstance extends ProblemInstance {
+public class StaticProblemInstance extends ProblemInstance {
 
-	public DynamicProblemInstance() {
-		super(null, null);
+	public StaticProblemInstance() {
+		super(null, null); // TODO:
 	}
 
 	@Override
