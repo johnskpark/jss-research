@@ -4,18 +4,36 @@ import jss.JSSProblem;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.gp.GPProblem;
+import ec.util.Parameter;
 
 public class EvolutionProblem extends GPProblem implements JSSProblem {
 
-	// This guy's job is to carry jss.Problem, insert the GP solution generator and fitness measures as solvers
-	// to the jss.Problem, and then obtain the output statistics from it as evaluation measure.
 
-	// I will make an interface called ... Problem maybe? I dunno.
+
+
+	@Override
+	public void setup(EvolutionState state, Parameter parameter) {
+		super.setup(state, parameter);
+
+		// TODO Auto-generated method stub.
+
+		loadConfig(parameter);
+	}
 
 	@Override
 	public void evaluate(EvolutionState state, Individual ind,
 			int subpopulation, int threadnum) {
 		// TODO Auto-generated method stub
 
+	}
+
+	private void loadConfig(Parameter parameter) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public Object clone() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

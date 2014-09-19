@@ -3,6 +3,15 @@ package jss;
 /**
  * Generic interface for job definition.
  *
+ * TODO this will need to be changed. At the moment, it doesn't
+ * take into account various scenarios:
+ *
+ * - Job's property changes
+ * - Job needs to be processed on certain order
+ * - Machines may break down, requiring jobs to be rerouted
+ *
+ * Because of this, I might need to rewrite the interface again.
+ *
  * @author parkjohn
  *
  */
