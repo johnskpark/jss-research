@@ -49,12 +49,13 @@ public interface IJob {
 	 * valid for the job to be processed by the machine will be handled
 	 * in the machine logic.
 	 * @param machine the machine to visit
+	 * @throws RuntimeException if the machine is not next in line to be visited
 	 */
-	public void visitMachine(IMachine machine); // TODO: probably come up with a different name later.
+	public void visitMachine(IMachine machine) throws RuntimeException;
 
 	/**
 	 * Get whether the job can be processed on the machine or not.
 	 * @return
 	 */
-	public boolean isProcessable(IMachine machine); // TODO: probably come up with a different name later.
+	public boolean isProcessable(IMachine machine);
 }

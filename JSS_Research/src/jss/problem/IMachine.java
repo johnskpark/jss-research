@@ -17,6 +17,12 @@ public interface IMachine {
 	public IJob getCurrentJob();
 
 	/**
+	 * Whether a job is still being processed on the machine.
+	 * @return true if there is a job being processed, false otherwise.
+	 */
+	public boolean isProcessing();
+
+	/**
 	 * Get the list of all the jobs processed by the machine.
 	 * @return a list of the jobs processed by the machine
 	 */
@@ -34,19 +40,14 @@ public interface IMachine {
 	public void processJob(IJob job) throws RuntimeException;
 
 	/**
-	 * Callback method to be called from the timer to update the current job status.
-	 */
-	public void updateStatus();
-
-	/**
 	 * Get whether the machine is available to process a job.
-	 * @return true if there is no job being processed, false otherwise
+	 * @return if the machine is available, false otherwise.
 	 */
 	public boolean isAvailable();
 
 	/**
 	 * Return when the machine is next available to process a job.
-	 * @return the time when the machine will next be available
+	 * @return the time when the machine will next be available.
 	 */
 	public double getTimeAvailable();
 }
