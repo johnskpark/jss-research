@@ -2,8 +2,8 @@ package jss.problem.dynamic_problem;
 
 import java.util.List;
 
-import jss.IJob;
 import jss.ProblemInstance;
+import jss.problem.IJob;
 
 public class DynamicProblemInstance extends ProblemInstance {
 

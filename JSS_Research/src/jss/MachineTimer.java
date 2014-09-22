@@ -3,6 +3,8 @@ package jss;
 import java.util.ArrayList;
 import java.util.List;
 
+import jss.problem.IMachine;
+
 /**
  * Universal timer used by all of the machines. When solving the problem,
  * this timer will be incremented to simulate the machines processing the

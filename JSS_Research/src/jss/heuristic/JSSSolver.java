@@ -1,6 +1,8 @@
-package jss;
+package jss.heuristic;
 
 import java.util.List;
+
+import jss.ProblemInstance;
 
 /**
  * Generates solution for the particular problem instance it is given using the specified rule.
@@ -10,9 +12,9 @@ import java.util.List;
  * @author parkjohn
  *
  */
-public class ProblemInstanceSolver {
+public class JSSSolver {
 
-	public ProblemInstanceSolver() {
+	public JSSSolver() {
 		// TODO: Write some constructor here.
 	}
 

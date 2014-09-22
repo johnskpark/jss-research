@@ -3,6 +3,9 @@ package jss;
 import java.util.ArrayList;
 import java.util.List;
 
+import jss.problem.IJob;
+import jss.problem.IMachine;
+
 /**
  * Represents a basic machine in a job shop scheduling problem instance.
  *

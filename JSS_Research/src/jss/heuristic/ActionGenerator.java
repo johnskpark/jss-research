@@ -1,4 +1,4 @@
-package jss;
+package jss.heuristic;
 
 /**
  * Generates an action from the input. TODO elaborate.
@@ -7,5 +7,7 @@ package jss;
  *
  */
 public interface ActionGenerator {
+
+
 
 }

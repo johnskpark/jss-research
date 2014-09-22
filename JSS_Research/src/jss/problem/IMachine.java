@@ -1,4 +1,4 @@
-package jss;
+package jss.problem;
 
 import java.util.List;
 

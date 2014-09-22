@@ -4,6 +4,9 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import jss.problem.IJob;
+import jss.problem.IMachine;
+
 /**
  * Represents a basic job in a job shop scheduling problem instance. Has the same
  * processing time, setup time and due date for all machines in the shop, and has

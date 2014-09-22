@@ -2,8 +2,8 @@ package jss.problem.static_problem;
 
 import java.util.List;
 
-import jss.IJob;
 import jss.ProblemInstance;
+import jss.problem.IJob;
 
 public class StaticProblemInstance extends ProblemInstance {
 

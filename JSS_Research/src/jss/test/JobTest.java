@@ -4,8 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import jss.BasicJob;
-import jss.IJob;
-import jss.IMachine;
+import jss.problem.IJob;
+import jss.problem.IMachine;
 
 import org.jmock.auto.Mock;
 import org.jmock.integration.junit4.JUnitRuleMockery;

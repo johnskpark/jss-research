@@ -1,4 +1,4 @@
-package jss;
+package jss.problem;
 
 /**
  * Generic interface for job definition.

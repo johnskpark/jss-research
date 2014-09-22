@@ -1,4 +1,4 @@
-package jss;
+package jss.problem;
 
 /**
  * TODO problem instance that covers the machines and the jobs.

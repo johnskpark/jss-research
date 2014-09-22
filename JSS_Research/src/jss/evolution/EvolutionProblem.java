@@ -1,6 +1,7 @@
 package jss.evolution;
 
 import jss.JSSProblem;
+import jss.heuristic.JSSSolver;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.gp.GPProblem;
@@ -8,16 +9,14 @@ import ec.util.Parameter;
 
 public class EvolutionProblem extends GPProblem implements JSSProblem {
 
-
-
+	// TODO The fitness measure, the rule converter and the problem dataset
+	JSSSolver solver;
 
 	@Override
 	public void setup(EvolutionState state, Parameter parameter) {
 		super.setup(state, parameter);
 
-		// TODO Auto-generated method stub.
-
-		loadConfig(parameter);
+		
 	}
 
 	@Override
@@ -25,10 +24,6 @@ public class EvolutionProblem extends GPProblem implements JSSProblem {
 			int subpopulation, int threadnum) {
 		// TODO Auto-generated method stub
 
-	}
-
-	private void loadConfig(Parameter parameter) {
-		// TODO Auto-generated method stub
 	}
 
 	@Override

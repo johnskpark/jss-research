@@ -1,12 +1,20 @@
 package jss.problem.dynamic_problem;
 
-import jss.ProblemInstance;
-import jss.ProblemInstanceFactory;
+import java.util.Iterator;
 
-public class DynamicProblemInstanceFactory implements ProblemInstanceFactory {
+import jss.problem.IProblemInstance;
+import jss.problem.IProblemFactory;
+
+public class DynamicProblemInstanceFactory implements IProblemFactory {
 
 	@Override
-	public ProblemInstance createNextProblemInstance() {
+	public IProblemInstance createNextProblem() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Iterator<IProblemInstance> iterator() {
 		// TODO Auto-generated method stub
 		return null;
 	}

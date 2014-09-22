@@ -1,8 +1,8 @@
 package jss.test;
 
 import static org.junit.Assert.assertEquals;
-import jss.IMachine;
 import jss.MachineTimer;
+import jss.problem.IMachine;
 
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
