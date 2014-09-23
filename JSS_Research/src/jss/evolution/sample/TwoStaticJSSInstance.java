@@ -4,9 +4,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import jss.problem.IJob;
-import jss.problem.IMachine;
-import jss.problem.IProblemInstance;
+import jss.EventHandler;
+import jss.IJob;
+import jss.IMachine;
+import jss.IProblemInstance;
 
 /**
  * Really, really basic problem instance.
@@ -15,8 +16,8 @@ import jss.problem.IProblemInstance;
  */
 public class TwoStaticJSSInstance implements IProblemInstance {
 
-	private List<IJob> jobs = new ArrayList<IJob>();
-	private List<IMachine> machines = Arrays.asList(new IMachine[]{new BasicMachine(), new BasicMachine()});
+	private List<BasicJob> jobs = new ArrayList<BasicJob>();
+	private List<BasicMachine> machines = Arrays.asList(new BasicMachine[]{new BasicMachine(), new BasicMachine()});
 
 	public TwoStaticJSSInstance() {
 	}
@@ -26,10 +27,31 @@ public class TwoStaticJSSInstance implements IProblemInstance {
 	}
 
 	public List<IJob> getJobs() {
-		return jobs;
+		return new ArrayList<IJob>(jobs);
 	}
 
 	public List<IMachine> getMachines() {
-		return machines;
+		return new ArrayList<IMachine>(machines);
+	}
+
+	@Override
+	public List<EventHandler> getEventHandlers() {
+		List<EventHandler> eventHandlers = new ArrayList<EventHandler>(jobs.size() + machines.size());
+
+		eventHandlers.addAll(jobs);
+		eventHandlers.addAll(machines);
+
+		return eventHandlers;
+	}
+
+	@Override
+	public void reset() {
+		for (BasicJob job : jobs) {
+			job.reset();
+		}
+
+		for (BasicMachine machine : machines) {
+			machine.reset();
+		}
 	}
 }

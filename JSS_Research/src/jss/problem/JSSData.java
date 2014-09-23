@@ -1,10 +1,10 @@
 package jss.problem;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import jss.ProblemInstance;
+import jss.IProblemFactory;
+import jss.IProblemInstance;
 import ec.EvolutionState;
 import ec.gp.GPData;
 import ec.util.Parameter;

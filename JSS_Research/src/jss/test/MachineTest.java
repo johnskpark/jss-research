@@ -1,18 +1,5 @@
 package jss.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import jss.Machine;
-import jss.problem.IJob;
-import jss.problem.IMachine;
-
-import org.jmock.Expectations;
-import org.jmock.auto.Mock;
-import org.jmock.integration.junit4.JUnitRuleMockery;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
 
 /**
  * Tests for the machines.

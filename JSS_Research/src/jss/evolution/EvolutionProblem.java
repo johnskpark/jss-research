@@ -1,13 +1,12 @@
 package jss.evolution;
 
-import jss.JSSProblem;
-import jss.solver.ISolver;
+import jss.ISolver;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.gp.GPProblem;
 import ec.util.Parameter;
 
-public class EvolutionProblem extends GPProblem implements JSSProblem {
+public class EvolutionProblem extends GPProblem {
 
 	// TODO The fitness measure, the rule converter and the problem dataset
 	ISolver solver;
@@ -16,7 +15,7 @@ public class EvolutionProblem extends GPProblem implements JSSProblem {
 	public void setup(EvolutionState state, Parameter parameter) {
 		super.setup(state, parameter);
 
-		
+
 	}
 
 	@Override

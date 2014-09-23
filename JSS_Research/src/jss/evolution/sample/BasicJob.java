@@ -6,10 +6,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
-import jss.problem.IJob;
-import jss.problem.IMachine;
+import jss.Event;
+import jss.EventHandler;
+import jss.IJob;
+import jss.IMachine;
+import jss.Subscriber;
+import jss.SubscriptionHandler;
 
-public class BasicJob implements IJob {
+public class BasicJob implements IJob, EventHandler, SubscriptionHandler {
 
 	// Immutable component
 	private List<IMachine> machineList = new LinkedList<IMachine>();
@@ -72,7 +76,45 @@ public class BasicJob implements IJob {
 	}
 
 	@Override
-	public void clear() {
+	public boolean isCompleted() {
+		return machineQueue.isEmpty();
+	}
+
+	@Override
+	public void reset() {
 		machineQueue = new LinkedList<IMachine>(machineList);
 	}
+
+	// Basic Job has no event triggers.
+
+	@Override
+	public boolean hasEvent() {
+		return false;
+	}
+
+	@Override
+	public Event getNextEvent() {
+		return null;
+	}
+
+	@Override
+	public double getNextEventTime() {
+		return Double.POSITIVE_INFINITY;
+	}
+
+	@Override
+	public void onSubscriptionRequest(Subscriber s) {
+		// Do nothing.
+	}
+
+	@Override
+	public void sendMachineFeed(IMachine machine) {
+		// Do nothing.
+	}
+
+	@Override
+	public void sendJobFeed(IJob job) {
+		// Do nothing.
+	}
+
 }

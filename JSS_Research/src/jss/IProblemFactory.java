@@ -1,4 +1,4 @@
-package jss.problem;
+package jss;
 
 /**
  * Interface for the factories that generate problem instances.

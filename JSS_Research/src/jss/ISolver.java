@@ -1,8 +1,6 @@
-package jss.solver;
+package jss;
 
 import java.util.List;
-
-import jss.problem.IProblemInstance;
 
 /**
  * TODO I have no idea what I'm doing anymore.
@@ -17,5 +15,5 @@ public interface ISolver {
 	 * @return
 	 * @throws RuntimeException
 	 */
-	public List<IAction> getSolution(IProblemInstance problem) throws RuntimeException;
+	public List<Action> getSolution(IProblemInstance problem) throws RuntimeException;
 }

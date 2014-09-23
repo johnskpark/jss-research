@@ -1,26 +1,22 @@
 package jss.evolution.sample;
 
-import jss.problem.IMachine;
-import jss.problem.IProblemInstance;
-import jss.solver.IAction;
-import jss.solver.IRule;
+import jss.Action;
+import jss.ActionHandler;
+import jss.IMachine;
+import jss.IProblemInstance;
 import ec.EvolutionState;
-import ec.Individual;
-import ec.Problem;
-import ec.gp.ADFStack;
-import ec.gp.GPData;
 import ec.gp.GPIndividual;
 
-public class BasicRule implements IRule {
+public class BasicRule implements ActionHandler {
 
 	// TODO Okay, find out what you don't need later down the line, and remove them.
 	private EvolutionState state;
-	private Individual ind;
+	private GPIndividual ind;
 	private int subpopulation;
 	private int threadnum;
 
 	public BasicRule(EvolutionState state,
-			Individual ind,
+			GPIndividual ind,
 			int subpopulation,
 			int threadnum) {
 		this.state = state;
@@ -30,9 +26,7 @@ public class BasicRule implements IRule {
 	}
 
 	@Override
-	public IAction getAction(IMachine machine, IProblemInstance problem) {
-		// TODO
-
+	public Action getAction(IMachine machine, IProblemInstance problem) {
 
 		return null;
 	}

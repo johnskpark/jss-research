@@ -1,4 +1,5 @@
-package jss.problem;
+package jss;
+
 
 /**
  * Generic interface for job definition.
@@ -66,7 +67,13 @@ public interface IJob {
 	public boolean isProcessable(IMachine machine);
 
 	/**
-	 * Clear any processing done for this job.
+	 * TODO javadoc.
+	 * @return
 	 */
-	public void clear();
+	public boolean isCompleted();
+
+	/**
+	 * Reset any processing done for this job.
+	 */
+	public void reset();
 }

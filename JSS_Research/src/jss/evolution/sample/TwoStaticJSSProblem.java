@@ -2,9 +2,10 @@ package jss.evolution.sample;
 
 import java.util.List;
 
-import jss.solver.IAction;
+import jss.Action;
 import ec.EvolutionState;
 import ec.Individual;
+import ec.gp.GPIndividual;
 import ec.gp.GPProblem;
 import ec.util.Parameter;
 
@@ -32,12 +33,16 @@ public class TwoStaticJSSProblem extends GPProblem {
 			final Individual ind,
 			final int subpopulation,
 			final int threadnum) {
+		if (!(ind instanceof GPIndividual)) {
+			// TODO fatal error.
+		}
+
 		BasicStatistics stats = new BasicStatistics();
 
-		solver.setRule(new BasicRule(state, ind, subpopulation, threadnum));
+		solver.setRule(new BasicRule(state, (GPIndividual)ind, subpopulation, threadnum));
 
 		for (TwoStaticJSSInstance problem : dataset.getProblems()) {
-			List<IAction> solutionActions = solver.getSolution(problem);
+			List<Action> solutionActions = solver.getSolution(problem);
 		}
 	}
 

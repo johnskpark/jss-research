@@ -1,7 +1,7 @@
 package jss.test;
 
 import static org.junit.Assert.assertEquals;
-import jss.problem.IMachine;
+import jss.IMachine;
 
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;

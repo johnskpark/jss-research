@@ -2,8 +2,8 @@ package jss.problem.dynamic_problem;
 
 import java.util.Iterator;
 
-import jss.problem.IProblemInstance;
-import jss.problem.IProblemFactory;
+import jss.IProblemFactory;
+import jss.IProblemInstance;
 
 public class DynamicProblemInstanceFactory implements IProblemFactory {
 

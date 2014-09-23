@@ -1,7 +1,5 @@
-package jss.solver;
+package jss;
 
-import jss.problem.IMachine;
-import jss.problem.IProblemInstance;
 
 /**
  * Generates an action from the input. TODO elaborate.
@@ -9,12 +7,12 @@ import jss.problem.IProblemInstance;
  * @author parkjohn
  *
  */
-public interface IRule {
+public interface ActionHandler {
 
 	/**
 	 * Get the action for the particular machine, given a problem instance.
 	 * @return
 	 */
-	public IAction getAction(IMachine machine, IProblemInstance problem);
+	public Action getAction(IMachine machine, IProblemInstance problem);
 
 }

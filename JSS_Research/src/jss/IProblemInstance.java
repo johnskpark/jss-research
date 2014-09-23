@@ -1,4 +1,4 @@
-package jss.problem;
+package jss;
 
 import java.util.List;
 
@@ -26,5 +26,14 @@ public interface IProblemInstance {
 	 */
 	public List<IMachine> getMachines();
 
+	/**
+	 * TODO
+	 * @return
+	 */
+	public List<EventHandler> getEventHandlers();
 
+	/**
+	 * TODO
+	 */
+	public void reset();
 }

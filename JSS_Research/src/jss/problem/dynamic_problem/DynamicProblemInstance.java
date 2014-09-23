@@ -2,13 +2,14 @@ package jss.problem.dynamic_problem;
 
 import java.util.List;
 
-import jss.ProblemInstance;
-import jss.problem.IJob;
+import jss.EventHandler;
+import jss.IJob;
+import jss.IMachine;
+import jss.problem.GenericProblemInstance;
 
-public class DynamicProblemInstance extends ProblemInstance {
+public class DynamicProblemInstance extends GenericProblemInstance {
 
 	public DynamicProblemInstance() {
-		super(null, null);
 	}
 
 	@Override
@@ -16,4 +17,17 @@ public class DynamicProblemInstance extends ProblemInstance {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public List<IMachine> getMachines() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<EventHandler> getEventHandlers() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

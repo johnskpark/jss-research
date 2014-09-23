@@ -1,11 +1,10 @@
-package jss.solver;
+package jss;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.PriorityQueue;
-
-import jss.problem.IMachine;
-import jss.problem.IProblemInstance;
 
 /**
  * TODO javadoc here.
@@ -16,38 +15,64 @@ import jss.problem.IProblemInstance;
 public class EventCore {
 
 	private PriorityQueue<EventGroup> eventQueue = new PriorityQueue<EventGroup>();
+	private Map<Double, EventGroup> eventMap = new HashMap<Double, EventGroup>();
 
 	private double currentTime = 0;
 
 	private IProblemInstance problem;
-	private IRule rule;
 
 	/**
-	 * TODO
+	 * TODO javadoc.
 	 */
-	public EventCore(IProblemInstance problem, IRule rule) {
+	public EventCore(IProblemInstance problem) {
 		this.problem = problem;
-		this.rule = rule;
 
-		for (IMachine machine : problem.getMachines()) {
-
+		for (EventHandler handler : problem.getEventHandlers()) {
+			if (handler.hasEvent()) {
+				addEvent(handler.getNextEvent(), handler.getNextEventTime());
+			}
 		}
 	}
 
+	/**
+	 * TODO javadoc.
+	 * @return
+	 */
 	public boolean hasEvent() {
 		return !eventQueue.isEmpty();
 	}
 
-	public IAction triggerEvent() {
+	/**
+	 * TODO javadoc.
+	 */
+	public void triggerEvent() {
 		EventGroup events = eventQueue.poll();
+		eventMap.remove(events.getTime());
+
+		currentTime = events.getTime();
+
 		events.trigger();
 
-		// TODO
-		return null;
+		for (EventHandler handler : problem.getEventHandlers()) {
+			if (handler.hasEvent()) {
+				addEvent(handler.getNextEvent(), handler.getNextEventTime());
+			}
+		}
 	}
 
-	private void addEvent() {
-		// TODO
+	private void addEvent(Event event, double time) {
+		if (time < currentTime) {
+			throw new RuntimeException("You done goofed from EventCore");
+		}
+
+		if (!eventMap.containsKey(time)) {
+			EventGroup group = new EventGroup(time);
+
+			eventQueue.offer(group);
+			eventMap.put(time, group);
+		}
+
+		eventMap.get(time).addEvent(event);
 	}
 
 	private class EventGroup implements Comparable<EventGroup> {
@@ -55,7 +80,7 @@ public class EventCore {
 
 		private double triggerTime;
 
-		public EventGroup(double triggertime) {
+		public EventGroup(double triggerTime) {
 			this.triggerTime = triggerTime;
 		}
 
@@ -69,7 +94,7 @@ public class EventCore {
 
 		public void trigger() {
 			for (Event event : eventList) {
-
+				event.trigger();
 			}
 		}
 

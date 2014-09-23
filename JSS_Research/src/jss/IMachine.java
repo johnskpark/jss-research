@@ -1,4 +1,4 @@
-package jss.problem;
+package jss;
 
 import java.util.List;
 
@@ -46,7 +46,7 @@ public interface IMachine {
 	public double getTimeAvailable();
 
 	/**
-	 * Clear any processing done on this machine.
+	 * Reset any processing done on this machine.
 	 */
-	public void clear();
+	public void reset();
 }
