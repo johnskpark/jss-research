@@ -1,4 +1,4 @@
-package jss.heuristic;
+package jss.solver;
 
 import jss.problem.IJob;
 import jss.problem.IMachine;
@@ -12,7 +12,7 @@ import jss.problem.IMachine;
  * @author parkjohn
  *
  */
-public interface Action {
+public interface IAction {
 
 	/**
 	 * Assign the job to the machine to be processed.
@@ -21,4 +21,5 @@ public interface Action {
 	 * @param time The earliest time the job is set to be processed.
 	 */
 	public void assign(IJob job, IMachine machine, double time);
+
 }

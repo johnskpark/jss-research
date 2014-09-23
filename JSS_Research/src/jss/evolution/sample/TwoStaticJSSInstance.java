@@ -1,6 +1,7 @@
 package jss.evolution.sample;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import jss.problem.IJob;
@@ -14,27 +15,21 @@ import jss.problem.IProblemInstance;
  */
 public class TwoStaticJSSInstance implements IProblemInstance {
 
-	private BasicMachine machine1;
-	private BasicMachine machine2;
-
-	private List<BasicJob> jobs = new ArrayList<BasicJob>();
+	private List<IJob> jobs = new ArrayList<IJob>();
+	private List<IMachine> machines = Arrays.asList(new IMachine[]{new BasicMachine(), new BasicMachine()});
 
 	public TwoStaticJSSInstance() {
-	}
-
-	public BasicMachine getMachine1() {
-		return machine1;
-	}
-
-	public BasicMachine getMachine2() {
-		return machine2;
 	}
 
 	public void addJob(BasicJob job) {
 		jobs.add(job);
 	}
 
-	public List<BasicJob> getJobs() {
+	public List<IJob> getJobs() {
 		return jobs;
+	}
+
+	public List<IMachine> getMachines() {
+		return machines;
 	}
 }

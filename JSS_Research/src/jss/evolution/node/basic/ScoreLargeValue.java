@@ -10,6 +10,8 @@ import ec.util.Parameter;
 
 public class ScoreLargeValue extends GPNode {
 
+	private static final long serialVersionUID = 13L;
+
 	@Override
 	public String toString() {
 		return "Inf";

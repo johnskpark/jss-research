@@ -17,12 +17,6 @@ public interface IMachine {
 	public IJob getCurrentJob();
 
 	/**
-	 * Whether a job is still being processed on the machine.
-	 * @return true if there is a job being processed, false otherwise.
-	 */
-	public boolean isProcessing();
-
-	/**
 	 * Get the list of all the jobs processed by the machine.
 	 * @return a list of the jobs processed by the machine
 	 */
@@ -50,4 +44,9 @@ public interface IMachine {
 	 * @return the time when the machine will next be available.
 	 */
 	public double getTimeAvailable();
+
+	/**
+	 * Clear any processing done on this machine.
+	 */
+	public void clear();
 }

@@ -1,8 +1,11 @@
-package jss.event;
+package jss.solver;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.PriorityQueue;
+
+import jss.problem.IMachine;
+import jss.problem.IProblemInstance;
 
 /**
  * TODO javadoc here.
@@ -16,23 +19,39 @@ public class EventCore {
 
 	private double currentTime = 0;
 
+	private IProblemInstance problem;
+	private IRule rule;
+
 	/**
 	 * TODO
 	 */
-	public EventCore() {
+	public EventCore(IProblemInstance problem, IRule rule) {
+		this.problem = problem;
+		this.rule = rule;
 
+		for (IMachine machine : problem.getMachines()) {
+
+		}
 	}
 
-	public void addEvent(double triggerTime, TimerEvent event) {
-
+	public boolean hasEvent() {
+		return !eventQueue.isEmpty();
 	}
 
-	public void pollEvent() {
+	public IAction triggerEvent() {
+		EventGroup events = eventQueue.poll();
+		events.trigger();
 
+		// TODO
+		return null;
+	}
+
+	private void addEvent() {
+		// TODO
 	}
 
 	private class EventGroup implements Comparable<EventGroup> {
-		private List<TimerEvent> eventList = new ArrayList<TimerEvent>();
+		private List<Event> eventList = new ArrayList<Event>();
 
 		private double triggerTime;
 
@@ -44,13 +63,13 @@ public class EventCore {
 			return triggerTime;
 		}
 
-		public void addEvent(TimerEvent event) {
+		public void addEvent(Event event) {
 			eventList.add(event);
 		}
 
 		public void trigger() {
-			for (TimerEvent event : eventList) {
-				event.trigger();
+			for (Event event : eventList) {
+
 			}
 		}
 

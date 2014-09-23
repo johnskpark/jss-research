@@ -1,5 +1,7 @@
 package jss.problem;
 
+import java.util.List;
+
 /**
  * TODO problem instance that covers the machines and the jobs.
  *
@@ -8,6 +10,21 @@ package jss.problem;
  */
 public interface IProblemInstance {
 
-	// TODO: so what do I do here again?
+	/**
+	 * Get the list of jobs that are visible in the problem.
+	 *
+	 * TODO elaborate on the visibility.
+	 * @return
+	 */
+	public List<IJob> getJobs();
+
+	/**
+	 * Get the list of machines that are visible in the problem.
+	 *
+	 * TODO elaborate on the visibility.
+	 * @return
+	 */
+	public List<IMachine> getMachines();
+
 
 }

@@ -2,13 +2,18 @@ package jss.evolution.sample;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
-import ec.EvolutionState;
-import ec.gp.GPData;
 import ec.util.MersenneTwisterFast;
-import ec.util.Parameter;
 
-public class TwoStaticJSSData extends GPData {
+/**
+ * I done goofed here. Change this to the proper dataset that's located
+ * in the problem.
+ *
+ * @author parkjohn
+ *
+ */
+public class TwoStaticJSSDataset {
 
 	private static final int NUM_PROBLEMS_PER_CONFIG = 8;
 	private static final int NUM_JOBS_PER_PROBLEM = 10;
@@ -19,9 +24,7 @@ public class TwoStaticJSSData extends GPData {
 	private static final int MACHINE2_RANGE = 20;
 	private static final int MACHINE2_MIN = 200;
 
-	private List<TwoStaticJSSInstance> problems = new ArrayList<TwoStaticJSSInstance>();
-
-	private double[][] ratios = new double[][]{
+	private static final double[][] CATEGORY_RATIOS = new double[][]{
 			{0.40, 0.40, 0.15, 0.05},
 			{0.50, 0.30, 0.10, 0.10},
 			{0.30, 0.50, 0.10, 0.10},
@@ -36,35 +39,29 @@ public class TwoStaticJSSData extends GPData {
 			{0.10, 0.10, 0.45, 0.35}
 	};
 
-	@Override
-	public void copyTo(final GPData gpd) {
-		TwoStaticJSSData data = (TwoStaticJSSData)gpd;
-		data.problems = problems;
-	}
+	private Random rand;
 
-	@Override
-	public void setup(final EvolutionState state, final Parameter base) {
-		super.setup(state, base);
+	private List<TwoStaticJSSInstance> problems = new ArrayList<TwoStaticJSSInstance>();
 
-		for (int i = 0; i < ratios.length; i++) {
+	public TwoStaticJSSDataset(int seed) {
+		rand = new Random(seed);
+
+		for (int i = 0; i < CATEGORY_RATIOS.length; i++) {
 			ProblemFactory factory = new ProblemFactory(
-					ratios[i][0],
-					ratios[i][1],
-					ratios[i][2],
-					ratios[i][3]);
+					CATEGORY_RATIOS[i][0],
+					CATEGORY_RATIOS[i][1],
+					CATEGORY_RATIOS[i][2],
+					CATEGORY_RATIOS[i][3]);
 
 			for (int j = 0; j < NUM_PROBLEMS_PER_CONFIG; j++) {
-				problems.add(factory.createProblem(state.random[0],
+				problems.add(factory.createProblem(rand,
 						NUM_JOBS_PER_PROBLEM));
 			}
 		}
 	}
 
-	@Override
-	public Object clone() {
-		TwoStaticJSSData clone = (TwoStaticJSSData)super.clone();
-		clone.problems = new ArrayList<TwoStaticJSSInstance>(problems);
-		return clone;
+	public List<TwoStaticJSSInstance> getProblems() {
+		return problems;
 	}
 
 	private class ProblemFactory {
@@ -77,7 +74,7 @@ public class TwoStaticJSSData extends GPData {
 			probs[3] = probs[2] + bToA;
 		}
 
-		public TwoStaticJSSInstance createProblem(MersenneTwisterFast rand, int numJobs) {
+		public TwoStaticJSSInstance createProblem(Random rand, int numJobs) {
 			TwoStaticJSSInstance inst = new TwoStaticJSSInstance();
 
 			for (int i = 0; i < numJobs; i++) {
@@ -89,22 +86,22 @@ public class TwoStaticJSSData extends GPData {
 				// TODO this is disgusting, even for a hack.
 				if (machineProb < probs[0]) {
 					processingTime = MACHINE1_RANGE * rand.nextDouble() + MACHINE1_MIN;
-					job.offerMachine(inst.getMachine1(), processingTime);
+					job.offerMachine(inst.getMachines().get(0), processingTime);
 				} else if (machineProb < probs[1]) {
 					processingTime = MACHINE2_RANGE * rand.nextDouble() + MACHINE2_MIN;
-					job.offerMachine(inst.getMachine2(), processingTime);
+					job.offerMachine(inst.getMachines().get(1), processingTime);
 				} else if (machineProb < probs[1]) {
 					processingTime = MACHINE1_RANGE * rand.nextDouble() + MACHINE1_MIN;
-					job.offerMachine(inst.getMachine1(), processingTime);
+					job.offerMachine(inst.getMachines().get(0), processingTime);
 
 					processingTime = MACHINE2_RANGE * rand.nextDouble() + MACHINE2_MIN;
-					job.offerMachine(inst.getMachine2(), processingTime);
+					job.offerMachine(inst.getMachines().get(1), processingTime);
 				} else {
 					processingTime = MACHINE2_RANGE * rand.nextDouble() + MACHINE2_MIN;
-					job.offerMachine(inst.getMachine2(), processingTime);
+					job.offerMachine(inst.getMachines().get(1), processingTime);
 
 					processingTime = MACHINE1_RANGE * rand.nextDouble() + MACHINE1_MIN;
-					job.offerMachine(inst.getMachine1(), processingTime);
+					job.offerMachine(inst.getMachines().get(0), processingTime);
 				}
 
 				inst.addJob(job);

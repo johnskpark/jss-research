@@ -54,8 +54,19 @@ public interface IJob {
 	public void visitMachine(IMachine machine) throws RuntimeException;
 
 	/**
+	 * TODO javadoc.
+	 * @return
+	 */
+	public IMachine getNextMachine();
+
+	/**
 	 * Get whether the job can be processed on the machine or not.
 	 * @return
 	 */
 	public boolean isProcessable(IMachine machine);
+
+	/**
+	 * Clear any processing done for this job.
+	 */
+	public void clear();
 }

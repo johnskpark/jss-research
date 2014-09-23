@@ -10,6 +10,8 @@ import ec.util.Parameter;
 
 public class ScoreReleaseTime extends GPNode {
 
+	private static final long serialVersionUID = 7L;
+
 	@Override
 	public String toString() {
 		return "R";

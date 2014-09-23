@@ -22,11 +22,6 @@ public class BasicMachine implements IMachine {
 	}
 
 	@Override
-	public boolean isProcessing() {
-		return currentJob != null;
-	}
-
-	@Override
 	public List<IJob> getProcessedJobs() {
 		return prevJobs;
 	}
@@ -45,14 +40,20 @@ public class BasicMachine implements IMachine {
 
 	@Override
 	public boolean isAvailable() {
-		// TODO Auto-generated method stub
-		return false;
+		return currentJob == null;
 	}
 
 	@Override
 	public double getTimeAvailable() {
-		// TODO Auto-generated method stub
-		return 0;
+		return availableTime;
+	}
+
+	@Override
+	public void clear() {
+		prevJobs = new ArrayList<IJob>();
+
+		currentJob = null;
+		availableTime = 0;
 	}
 
 }

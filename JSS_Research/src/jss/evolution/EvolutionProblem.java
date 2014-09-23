@@ -1,7 +1,7 @@
 package jss.evolution;
 
 import jss.JSSProblem;
-import jss.heuristic.JSSSolver;
+import jss.solver.ISolver;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.gp.GPProblem;
@@ -10,7 +10,7 @@ import ec.util.Parameter;
 public class EvolutionProblem extends GPProblem implements JSSProblem {
 
 	// TODO The fitness measure, the rule converter and the problem dataset
-	JSSSolver solver;
+	ISolver solver;
 
 	@Override
 	public void setup(EvolutionState state, Parameter parameter) {
