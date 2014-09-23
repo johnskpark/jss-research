@@ -39,10 +39,11 @@ public class TwoStaticJSSProblem extends GPProblem {
 
 		BasicStatistics stats = new BasicStatistics();
 
-		solver.setRule(new BasicRule(state, (GPIndividual)ind, subpopulation, threadnum));
+		solver.setRule(new BasicRule(state, (GPIndividual)ind, subpopulation, threadnum, (BasicData)input));
 
 		for (TwoStaticJSSInstance problem : dataset.getProblems()) {
 			List<Action> solutionActions = solver.getSolution(problem);
+
 		}
 	}
 
