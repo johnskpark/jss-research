@@ -15,5 +15,5 @@ public interface ISolver {
 	 * @return
 	 * @throws RuntimeException
 	 */
-	public List<Action> getSolution(IProblemInstance problem) throws RuntimeException;
+	public IResult getSolution(IProblemInstance problem) throws RuntimeException;
 }

@@ -7,7 +7,7 @@ public interface SubscriptionHandler {
 	 * TODO javadoc.
 	 * @param s
 	 */
-	public void onSubscriptionRequest(Subscriber s);
+	public void onSubscriptionRequest(Subscriber subscriber);
 
 	/**
 	 * TODO javadoc.

@@ -55,6 +55,11 @@ public class BasicJob implements IJob, EventHandler, SubscriptionHandler {
 	}
 
 	@Override
+	public double getPenalty(IMachine machine) {
+		return 1;
+	}
+
+	@Override
 	public void visitMachine(IMachine machine) throws RuntimeException {
 		if (!machineQueue.peek().equals(machine)) {
 			throw new RuntimeException("You done goofed from BasicJob");

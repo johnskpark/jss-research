@@ -18,6 +18,8 @@ public class BasicMachine implements IMachine, EventHandler, SubscriptionHandler
 	private BasicJob currentJob = null;
 	private double availableTime = 0;
 
+	private List<Subscriber> subscribers = new ArrayList<Subscriber>();
+
 	public BasicMachine() {
 	}
 
@@ -79,7 +81,7 @@ public class BasicMachine implements IMachine, EventHandler, SubscriptionHandler
 			};
 		} else {
 			// Finish the job.
-			return new JobProcessedEvent();
+			return new JobProcessedEvent(this);
 		}
 	}
 
@@ -89,29 +91,36 @@ public class BasicMachine implements IMachine, EventHandler, SubscriptionHandler
 	}
 
 	@Override
-	public void onSubscriptionRequest(Subscriber s) {
-		// TODO Auto-generated method stub
-
+	public void onSubscriptionRequest(Subscriber subscriber) {
+		subscribers.add(subscriber);
 	}
 
 	@Override
 	public void sendMachineFeed(IMachine machine) {
-		// TODO Auto-generated method stub
-
+		for (Subscriber subscriber : subscribers) {
+			subscriber.onMachineFeed(machine);
+		}
 	}
 
 	@Override
 	public void sendJobFeed(IJob job) {
-		// TODO Auto-generated method stub
-
+		// Do nothing.
 	}
 
 	// An event class that represents a job completing on the machine.
 	private class JobProcessedEvent implements Event {
+		private BasicMachine machine;
+
+		public JobProcessedEvent(BasicMachine machine) {
+			this.machine = machine;
+		}
+
 		@Override
 		public void trigger() {
-			prevJobs.add(currentJob);
-			currentJob = null;
+			machine.prevJobs.add(currentJob);
+			machine.currentJob = null;
+
+			machine.sendMachineFeed(machine);
 		}
 	}
 }
