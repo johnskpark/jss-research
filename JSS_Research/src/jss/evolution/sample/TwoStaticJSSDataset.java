@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import ec.util.MersenneTwisterFast;
+import jss.IMachine;
 
 /**
  * I done goofed here. Change this to the proper dataset that's located
@@ -41,7 +41,7 @@ public class TwoStaticJSSDataset {
 
 	private Random rand;
 
-	private List<TwoStaticJSSInstance> problems = new ArrayList<TwoStaticJSSInstance>();
+	private List<BasicInstance> problems = new ArrayList<BasicInstance>();
 
 	public TwoStaticJSSDataset(int seed) {
 		rand = new Random(seed);
@@ -60,7 +60,7 @@ public class TwoStaticJSSDataset {
 		}
 	}
 
-	public List<TwoStaticJSSInstance> getProblems() {
+	public List<BasicInstance> getProblems() {
 		return problems;
 	}
 
@@ -74,34 +74,49 @@ public class TwoStaticJSSDataset {
 			probs[3] = probs[2] + bToA;
 		}
 
-		public TwoStaticJSSInstance createProblem(Random rand, int numJobs) {
-			TwoStaticJSSInstance inst = new TwoStaticJSSInstance();
+		public BasicInstance createProblem(Random rand, int numJobs) {
+			BasicInstance inst = new BasicInstance();
 
 			for (int i = 0; i < numJobs; i++) {
 				BasicJob job = new BasicJob();
 
 				double machineProb = rand.nextDouble();
+
+				IMachine machine;
 				double processingTime;
 
-				// TODO this is disgusting, even for a hack.
 				if (machineProb < probs[0]) {
 					processingTime = MACHINE1_RANGE * rand.nextDouble() + MACHINE1_MIN;
-					job.offerMachine(inst.getMachines().get(0), processingTime);
+					machine = inst.getMachines().get(0);
+
+					job.offerMachine(machine);
+					job.setProcessingTime(machine, processingTime);
 				} else if (machineProb < probs[1]) {
 					processingTime = MACHINE2_RANGE * rand.nextDouble() + MACHINE2_MIN;
-					job.offerMachine(inst.getMachines().get(1), processingTime);
+					machine = inst.getMachines().get(1);
+
+					job.offerMachine(machine);
+					job.setProcessingTime(machine, processingTime);
 				} else if (machineProb < probs[1]) {
 					processingTime = MACHINE1_RANGE * rand.nextDouble() + MACHINE1_MIN;
-					job.offerMachine(inst.getMachines().get(0), processingTime);
+					machine = inst.getMachines().get(0);
+					job.offerMachine(machine);
+					job.setProcessingTime(machine, processingTime);
 
 					processingTime = MACHINE2_RANGE * rand.nextDouble() + MACHINE2_MIN;
-					job.offerMachine(inst.getMachines().get(1), processingTime);
+					machine = inst.getMachines().get(1);
+					job.offerMachine(machine);
+					job.setProcessingTime(machine, processingTime);
 				} else {
 					processingTime = MACHINE2_RANGE * rand.nextDouble() + MACHINE2_MIN;
-					job.offerMachine(inst.getMachines().get(1), processingTime);
+					machine = inst.getMachines().get(1);
+					job.offerMachine(machine);
+					job.setProcessingTime(machine, processingTime);
 
 					processingTime = MACHINE1_RANGE * rand.nextDouble() + MACHINE1_MIN;
-					job.offerMachine(inst.getMachines().get(0), processingTime);
+					machine = inst.getMachines().get(0);
+					job.offerMachine(machine);
+					job.setProcessingTime(machine, processingTime);
 				}
 
 				inst.addJob(job);

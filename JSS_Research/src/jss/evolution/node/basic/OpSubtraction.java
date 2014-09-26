@@ -1,5 +1,6 @@
 package jss.evolution.node.basic;
 
+import jss.evolution.sample.BasicData;
 import ec.EvolutionState;
 import ec.Problem;
 import ec.gp.ADFStack;
@@ -10,7 +11,7 @@ import ec.util.Parameter;
 
 public class OpSubtraction extends GPNode {
 
-	private static final long serialVersionUID = 17L;
+	private static final long serialVersionUID = -4259728422320985825L;
 
 	@Override
 	public String toString() {
@@ -35,8 +36,15 @@ public class OpSubtraction extends GPNode {
 			final ADFStack stack,
 			final GPIndividual individual,
 			final Problem problem) {
-		// TODO Auto-generated method stub
+		BasicData data = (BasicData)input;
 
+		children[0].eval(state, thread, input, stack, individual, problem);
+		double priority1 = data.getPriority();
+
+		children[1].eval(state, thread, input, stack, individual, problem);
+		double priority2 = data.getPriority();
+
+		data.setPriority(priority1 - priority2);
 	}
 
 }

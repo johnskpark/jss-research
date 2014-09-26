@@ -1,5 +1,6 @@
 package jss.evolution.node.basic;
 
+import jss.evolution.sample.BasicData;
 import ec.EvolutionState;
 import ec.Problem;
 import ec.gp.ADFStack;
@@ -10,7 +11,7 @@ import ec.util.Parameter;
 
 public class ScoreReleaseTime extends GPNode {
 
-	private static final long serialVersionUID = 7L;
+	private static final long serialVersionUID = -1153623043250724347L;
 
 	@Override
 	public String toString() {
@@ -35,8 +36,8 @@ public class ScoreReleaseTime extends GPNode {
 			final ADFStack stack,
 			final GPIndividual individual,
 			final Problem problem) {
-		// TODO Auto-generated method stub
-
+		BasicData data = (BasicData)input;
+		data.setPriority(data.getReleaseTime());
 	}
 
 }

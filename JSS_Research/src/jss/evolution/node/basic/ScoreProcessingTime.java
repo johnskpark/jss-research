@@ -1,5 +1,6 @@
 package jss.evolution.node.basic;
 
+import jss.evolution.sample.BasicData;
 import ec.EvolutionState;
 import ec.Problem;
 import ec.gp.ADFStack;
@@ -10,7 +11,7 @@ import ec.util.Parameter;
 
 public class ScoreProcessingTime extends GPNode {
 
-	private static final long serialVersionUID = 11L;
+	private static final long serialVersionUID = 4917340755318117709L;
 
 	@Override
 	public String toString() {
@@ -35,7 +36,8 @@ public class ScoreProcessingTime extends GPNode {
 			final ADFStack stack,
 			final GPIndividual individual,
 			final Problem problem) {
-		// TODO
+		BasicData data = (BasicData)input;
+		data.setPriority(data.getProcessingTime());
 	}
 
 }

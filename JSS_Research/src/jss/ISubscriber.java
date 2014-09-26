@@ -6,7 +6,7 @@ package jss;
  * @author parkjohn
  *
  */
-public interface Subscriber {
+public interface ISubscriber {
 
 	/**
 	 * TODO javadoc.

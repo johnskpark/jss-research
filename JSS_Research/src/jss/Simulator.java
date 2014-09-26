@@ -12,7 +12,7 @@ import java.util.PriorityQueue;
  * @author parkjohn
  *
  */
-public class EventCore {
+public class Simulator {
 
 	private PriorityQueue<EventGroup> eventQueue = new PriorityQueue<EventGroup>();
 	private Map<Double, EventGroup> eventMap = new HashMap<Double, EventGroup>();
@@ -24,7 +24,7 @@ public class EventCore {
 	/**
 	 * TODO javadoc.
 	 */
-	public EventCore(IProblemInstance problem) {
+	public Simulator(IProblemInstance problem) {
 		this.problem = problem;
 
 		for (EventHandler handler : problem.getEventHandlers()) {

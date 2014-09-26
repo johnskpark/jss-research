@@ -1,8 +1,8 @@
 package jss.problem;
 
 import jss.ISolver;
-import jss.Subscriber;
+import jss.ISubscriber;
 
-public abstract class GenericSolver implements ISolver, Subscriber {
+public abstract class GenericSolver implements ISolver, ISubscriber {
 
 }

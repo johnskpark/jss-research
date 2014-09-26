@@ -1,13 +1,13 @@
 package jss;
 
 
-public interface SubscriptionHandler {
+public interface ISubscriptionHandler {
 
 	/**
 	 * TODO javadoc.
 	 * @param s
 	 */
-	public void onSubscriptionRequest(Subscriber subscriber);
+	public void onSubscriptionRequest(ISubscriber subscriber);
 
 	/**
 	 * TODO javadoc.

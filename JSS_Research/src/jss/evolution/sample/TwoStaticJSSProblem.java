@@ -10,12 +10,12 @@ import ec.util.Parameter;
 
 public class TwoStaticJSSProblem extends GPProblem {
 
-	private static final long serialVersionUID = 3L;
+	private static final long serialVersionUID = -9179316619823952437L;
 
 	private static final int DATASET_SEED = 15;
 
 	private TwoStaticJSSDataset dataset = new TwoStaticJSSDataset(DATASET_SEED);
-	private TwoStaticJSSSolver solver = new TwoStaticJSSSolver();
+	private BasicSolver solver = new BasicSolver();
 
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
@@ -38,7 +38,7 @@ public class TwoStaticJSSProblem extends GPProblem {
 
 			solver.setRule(new BasicRule(state, (GPIndividual)ind, subpopulation, threadnum, (BasicData)input));
 
-			for (TwoStaticJSSInstance problem : dataset.getProblems()) {
+			for (BasicInstance problem : dataset.getProblems()) {
 				IResult solution = solver.getSolution(problem);
 
 				stats.addSolution(problem, solution);

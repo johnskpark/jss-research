@@ -2,20 +2,20 @@ package jss.evolution.sample;
 
 import jss.Action;
 import jss.ActionHandler;
-import jss.EventCore;
+import jss.Simulator;
 import jss.IJob;
 import jss.IMachine;
 import jss.IProblemInstance;
 import jss.IResult;
 import jss.ISolver;
-import jss.Subscriber;
+import jss.ISubscriber;
 
 /**
  * TODO javadoc.
  * @author parkjohn
  *
  */
-public class TwoStaticJSSSolver implements ISolver, Subscriber {
+public class BasicSolver implements ISolver, ISubscriber {
 
 	private ActionHandler rule;
 
@@ -25,7 +25,7 @@ public class TwoStaticJSSSolver implements ISolver, Subscriber {
 	/**
 	 * TODO Javadoc. I wonder if I even need this component here at all.
 	 */
-	public TwoStaticJSSSolver() {
+	public BasicSolver() {
 	}
 
 	public void setRule(ActionHandler rule) {
@@ -34,7 +34,7 @@ public class TwoStaticJSSSolver implements ISolver, Subscriber {
 
 	@Override
 	public IResult getSolution(IProblemInstance problem) throws RuntimeException {
-		EventCore core = new EventCore(problem);
+		Simulator core = new Simulator(problem);
 		this.problem = problem;
 		this.solution = new BasicResult(problem);
 

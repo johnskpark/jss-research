@@ -6,13 +6,13 @@ import jss.Event;
 import jss.EventHandler;
 import jss.IJob;
 import jss.IMachine;
-import jss.Subscriber;
-import jss.SubscriptionHandler;
+import jss.ISubscriber;
+import jss.ISubscriptionHandler;
 
-public abstract class GenericMachine implements IMachine, EventHandler, SubscriptionHandler {
+public abstract class GenericMachine implements IMachine, EventHandler, ISubscriptionHandler {
 
 	@Override
-	public void onSubscriptionRequest(Subscriber s) {
+	public void onSubscriptionRequest(ISubscriber s) {
 		// TODO Auto-generated method stub
 
 	}

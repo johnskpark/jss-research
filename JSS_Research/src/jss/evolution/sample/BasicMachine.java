@@ -7,18 +7,18 @@ import jss.Event;
 import jss.EventHandler;
 import jss.IJob;
 import jss.IMachine;
-import jss.Subscriber;
-import jss.SubscriptionHandler;
+import jss.ISubscriber;
+import jss.ISubscriptionHandler;
 
-public class BasicMachine implements IMachine, EventHandler, SubscriptionHandler {
+public class BasicMachine implements IMachine, EventHandler, ISubscriptionHandler {
 
 	// Mutable components
 	private List<IJob> prevJobs = new ArrayList<IJob>();
 
-	private BasicJob currentJob = null;
+	private IJob currentJob = null;
 	private double availableTime = 0;
 
-	private List<Subscriber> subscribers = new ArrayList<Subscriber>();
+	private List<ISubscriber> subscribers = new ArrayList<ISubscriber>();
 
 	public BasicMachine() {
 	}
@@ -39,7 +39,7 @@ public class BasicMachine implements IMachine, EventHandler, SubscriptionHandler
 			throw new RuntimeException("You done goofed from BasicMachine");
 		}
 
-		currentJob = (BasicJob)job;
+		currentJob = job;
 		availableTime = Math.max(availableTime, job.getReleaseTime()) +
 				job.getSetupTime(this) +
 				job.getProcessingTime(this);
@@ -53,6 +53,16 @@ public class BasicMachine implements IMachine, EventHandler, SubscriptionHandler
 	@Override
 	public double getTimeAvailable() {
 		return availableTime;
+	}
+
+	@Override
+	public void updateStatus(double time) {
+		if (time >= availableTime) {
+			prevJobs.add(currentJob);
+			currentJob = null;
+
+			sendMachineFeed(this);
+		}
 	}
 
 	@Override
@@ -81,7 +91,7 @@ public class BasicMachine implements IMachine, EventHandler, SubscriptionHandler
 			};
 		} else {
 			// Finish the job.
-			return new JobProcessedEvent(this);
+			return new JobProcessedEvent(this, availableTime);
 		}
 	}
 
@@ -91,13 +101,13 @@ public class BasicMachine implements IMachine, EventHandler, SubscriptionHandler
 	}
 
 	@Override
-	public void onSubscriptionRequest(Subscriber subscriber) {
+	public void onSubscriptionRequest(ISubscriber subscriber) {
 		subscribers.add(subscriber);
 	}
 
 	@Override
 	public void sendMachineFeed(IMachine machine) {
-		for (Subscriber subscriber : subscribers) {
+		for (ISubscriber subscriber : subscribers) {
 			subscriber.onMachineFeed(machine);
 		}
 	}
@@ -110,17 +120,16 @@ public class BasicMachine implements IMachine, EventHandler, SubscriptionHandler
 	// An event class that represents a job completing on the machine.
 	private class JobProcessedEvent implements Event {
 		private BasicMachine machine;
+		private double completionTime;
 
-		public JobProcessedEvent(BasicMachine machine) {
+		public JobProcessedEvent(BasicMachine machine, double time) {
 			this.machine = machine;
+			this.completionTime = time;
 		}
 
 		@Override
 		public void trigger() {
-			machine.prevJobs.add(currentJob);
-			machine.currentJob = null;
-
-			machine.sendMachineFeed(machine);
+			machine.updateStatus(completionTime);
 		}
 	}
 }

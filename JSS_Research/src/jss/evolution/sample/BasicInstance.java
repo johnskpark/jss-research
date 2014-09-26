@@ -14,12 +14,12 @@ import jss.IProblemInstance;
  * @author parkjohn
  *
  */
-public class TwoStaticJSSInstance implements IProblemInstance {
+public class BasicInstance implements IProblemInstance {
 
 	private List<BasicJob> jobs = new ArrayList<BasicJob>();
 	private List<BasicMachine> machines = Arrays.asList(new BasicMachine[]{new BasicMachine(), new BasicMachine()});
 
-	public TwoStaticJSSInstance() {
+	public BasicInstance() {
 	}
 
 	public void addJob(BasicJob job) {

@@ -1,5 +1,6 @@
 package jss.evolution.node.basic;
 
+import jss.evolution.sample.BasicData;
 import ec.EvolutionState;
 import ec.Problem;
 import ec.gp.ADFStack;
@@ -10,7 +11,9 @@ import ec.util.Parameter;
 
 public class ScoreLargeValue extends GPNode {
 
-	private static final long serialVersionUID = 13L;
+	private static final long serialVersionUID = -5825676453528932050L;
+
+	private static final double LARGE_VALUE = 10000.0;
 
 	@Override
 	public String toString() {
@@ -35,8 +38,8 @@ public class ScoreLargeValue extends GPNode {
 			final ADFStack stack,
 			final GPIndividual individual,
 			final Problem problem) {
-		// TODO Auto-generated method stub
-
+		BasicData data = (BasicData)input;
+		data.setPriority(LARGE_VALUE);
 	}
 
 }

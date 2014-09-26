@@ -10,14 +10,19 @@ import jss.Event;
 import jss.EventHandler;
 import jss.IJob;
 import jss.IMachine;
-import jss.Subscriber;
-import jss.SubscriptionHandler;
+import jss.ISubscriber;
+import jss.ISubscriptionHandler;
 
-public class BasicJob implements IJob, EventHandler, SubscriptionHandler {
+public class BasicJob implements IJob, EventHandler, ISubscriptionHandler {
 
 	// Immutable component
 	private List<IMachine> machineList = new LinkedList<IMachine>();
+
 	private Map<IMachine, Double> processingTimes = new HashMap<IMachine, Double>();
+	private Map<IMachine, Double> setupTimes = new HashMap<IMachine, Double>();
+	private Map<IMachine, Double> dueDates = new HashMap<IMachine, Double>();
+	private Map<IMachine, Double> penalties = new HashMap<IMachine, Double>();
+	private double releaseTime = 0;
 
 	// Mutable component
 	private Queue<IMachine> machineQueue = new LinkedList<IMachine>();
@@ -25,15 +30,73 @@ public class BasicJob implements IJob, EventHandler, SubscriptionHandler {
 	public BasicJob() {
 	}
 
-	public void offerMachine(IMachine machine, double processingTime) {
+	/**
+	 * TODO javadoc.
+	 * @param machine
+	 */
+	public void offerMachine(IMachine machine) {
 		machineList.add(machine);
 		machineQueue.offer(machine);
-		processingTimes.put(machine, processingTime);
+	}
+
+	/**
+	 * TODO javadoc.
+	 * @param machine
+	 * @param processing
+	 */
+	public void setProcessingTime(IMachine machine, double processing) {
+		checkMachine(machine);
+		processingTimes.put(machine, processing);
+	}
+
+	/**
+	 * TODO javadoc.
+	 * @param machine
+	 * @param setup
+	 */
+	public void setSetupTime(IMachine machine, double setup) {
+		checkMachine(machine);
+		setupTimes.put(machine, setup);
+	}
+
+	/**
+	 * TODO javadoc.
+	 * @param machine
+	 * @param dueDate
+	 */
+	public void setDueDate(IMachine machine, double dueDate) {
+		checkMachine(machine);
+		dueDates.put(machine, dueDate);
+	}
+
+	/**
+	 * TODO javadoc.
+	 * @param machine
+	 * @param penalty
+	 */
+	public void setPenalty(IMachine machine, double penalty) {
+		checkMachine(machine);
+		penalties.put(machine, penalty);
+	}
+
+	/**
+	 * TODO javadoc.
+	 * @param release
+	 */
+	public void setReleaseTime(double release) {
+		releaseTime = release;
+	}
+
+	// Check invariance.
+	private void checkMachine(IMachine machine) {
+		if (!machineList.contains(machine)) {
+			throw new RuntimeException("Machine has not been offered to the job");
+		}
 	}
 
 	@Override
 	public double getReleaseTime() {
-		return 0;
+		return releaseTime;
 	}
 
 	@Override
@@ -46,16 +109,25 @@ public class BasicJob implements IJob, EventHandler, SubscriptionHandler {
 
 	@Override
 	public double getSetupTime(IMachine machine) {
+		if (setupTimes.containsKey(machine)) {
+			return setupTimes.get(machine);
+		}
 		return 0;
 	}
 
 	@Override
 	public double getDueDate(IMachine machine) {
+		if (dueDates.containsKey(machine)) {
+			return dueDates.get(machine);
+		}
 		return 0;
 	}
 
 	@Override
 	public double getPenalty(IMachine machine) {
+		if (penalties.containsKey(machine)) {
+			return penalties.get(machine);
+		}
 		return 1;
 	}
 
@@ -77,6 +149,9 @@ public class BasicJob implements IJob, EventHandler, SubscriptionHandler {
 
 	@Override
 	public boolean isProcessable(IMachine machine) {
+		if (machineQueue.isEmpty()) {
+			return false;
+		}
 		return machineQueue.peek().equals(machine);
 	}
 
@@ -108,7 +183,7 @@ public class BasicJob implements IJob, EventHandler, SubscriptionHandler {
 	}
 
 	@Override
-	public void onSubscriptionRequest(Subscriber s) {
+	public void onSubscriptionRequest(ISubscriber s) {
 		// Do nothing.
 	}
 

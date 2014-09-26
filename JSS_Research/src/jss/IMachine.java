@@ -46,6 +46,12 @@ public interface IMachine {
 	public double getTimeAvailable();
 
 	/**
+	 * TODO javadoc.
+	 * @param time
+	 */
+	public void updateStatus(double time);
+
+	/**
 	 * Reset any processing done on this machine.
 	 */
 	public void reset();
