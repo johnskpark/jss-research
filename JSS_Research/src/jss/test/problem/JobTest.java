@@ -18,7 +18,7 @@ public class JobTest {
 	private IMachine mockMachine2;
 
 	@Test
-	public void BasicJobTest_GetterSetter() {
+	public void basicJobTest_GetterSetter() {
 		BasicJob job = new BasicJob();
 
 		mockMachine1 = context.mock(IMachine.class, "Machine1");
@@ -63,7 +63,7 @@ public class JobTest {
 	}
 
 	@Test
-	public void BasicJobTest_VisitMachine() {
+	public void basicJobTest_VisitMachine() {
 		BasicJob job = new BasicJob();
 
 		IMachine machine1 = context.mock(IMachine.class, "Machine1");
@@ -99,7 +99,7 @@ public class JobTest {
 	}
 
 	@Test
-	public void BasicJobTest_Reset() {
+	public void basicJobTest_Reset() {
 		BasicJob job = new BasicJob();
 
 		mockMachine1 = context.mock(IMachine.class, "Machine1");
@@ -130,7 +130,7 @@ public class JobTest {
 	}
 
 	@Test
-	public void BasicJobTestFail_SetProcessingTime() {
+	public void basicJobTestFail_SetProcessingTime() {
 		BasicJob job = new BasicJob();
 
 		mockMachine1 = context.mock(IMachine.class);
@@ -145,7 +145,7 @@ public class JobTest {
 	}
 
 	@Test
-	public void BasicJobTestFail_SetSetupTime() {
+	public void basicJobTestFail_SetSetupTime() {
 		BasicJob job = new BasicJob();
 
 		mockMachine1 = context.mock(IMachine.class);
@@ -160,7 +160,7 @@ public class JobTest {
 	}
 
 	@Test
-	public void BasicJobTestFail_SetDueDate() {
+	public void basicJobTestFail_SetDueDate() {
 		BasicJob job = new BasicJob();
 
 		mockMachine1 = context.mock(IMachine.class);
@@ -175,7 +175,7 @@ public class JobTest {
 	}
 
 	@Test
-	public void BasicJobTestFail_SetPenalty() {
+	public void basicJobTestFail_SetPenalty() {
 		BasicJob job = new BasicJob();
 
 		mockMachine1 = context.mock(IMachine.class);
@@ -190,7 +190,7 @@ public class JobTest {
 	}
 
 	@Test
-	public void BasicJobTestFail_VisitMachine() {
+	public void basicJobTestFail_VisitMachine() {
 		BasicJob job = new BasicJob();
 
 		IMachine machine1 = context.mock(IMachine.class, "Machine1");

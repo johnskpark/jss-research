@@ -25,7 +25,7 @@ public class MachineTest {
 	private double setupTime = 0.0;
 
 	@Test
-	public void BasicMachineTest_ProcessJob() {
+	public void basicMachineTest_ProcessJob() {
 		machine = new BasicMachine();
 		mockJob1 = context.mock(IJob.class);
 
@@ -55,7 +55,7 @@ public class MachineTest {
 	}
 
 	@Test
-	public void BasicMachineTest_FinishJob() {
+	public void basicMachineTest_FinishJob() {
 		machine = new BasicMachine();
 		mockJob1 = context.mock(IJob.class);
 
@@ -83,7 +83,7 @@ public class MachineTest {
 	}
 
 	@Test
-	public void BasicMachineTest_Reset() {
+	public void basicMachineTest_Reset() {
 		machine = new BasicMachine();
 		mockJob1 = context.mock(IJob.class);
 
@@ -111,7 +111,7 @@ public class MachineTest {
 	}
 
 	@Test
-	public void BasicMachineTestFail_ProcessJob() {
+	public void basicMachineTestFail_ProcessJob() {
 		machine = new BasicMachine();
 		mockJob1 = context.mock(IJob.class, "Job1");
 		mockJob2 = context.mock(IJob.class, "Job2");

@@ -1,5 +1,7 @@
 package jss;
 
+import java.util.List;
+
 public interface IResult {
 
 	/**
@@ -7,6 +9,12 @@ public interface IResult {
 	 * @param action
 	 */
 	public void addAction(Action action);
+
+	/**
+	 * TODO javadoc.
+	 * @return
+	 */
+	public List<Action> getActions();
 
 	/**
 	 * TODO javadoc.

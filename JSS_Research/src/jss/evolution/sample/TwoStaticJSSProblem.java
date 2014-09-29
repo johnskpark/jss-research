@@ -36,7 +36,7 @@ public class TwoStaticJSSProblem extends GPProblem {
 
 			BasicStatistics stats = new BasicStatistics();
 
-			solver.setRule(new BasicRule(state, (GPIndividual)ind, subpopulation, threadnum, (BasicData)input));
+			solver.setRule(new BasicGPRule(state, (GPIndividual)ind, subpopulation, threadnum, (BasicData)input));
 
 			for (BasicInstance problem : dataset.getProblems()) {
 				IResult solution = solver.getSolution(problem);

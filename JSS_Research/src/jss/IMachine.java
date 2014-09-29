@@ -12,9 +12,15 @@ public interface IMachine {
 
 	/**
 	 * Get the current job being processed.
-	 * @return the current job being processed, or null if no jobs are being processed
+	 * @return the current job being processed, or null if no jobs are being processed.
 	 */
 	public IJob getCurrentJob();
+
+	/**
+	 * Get the last job that was processed.
+	 * @return the last job that was processed, or null if no jobs are being processed.
+	 */
+	public IJob getLastProcessedJob();
 
 	/**
 	 * Get the list of all the jobs processed by the machine.

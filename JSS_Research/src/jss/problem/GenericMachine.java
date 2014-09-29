@@ -2,14 +2,14 @@ package jss.problem;
 
 import java.util.List;
 
-import jss.Event;
-import jss.EventHandler;
+import jss.IEvent;
+import jss.IEventHandler;
 import jss.IJob;
 import jss.IMachine;
 import jss.ISubscriber;
 import jss.ISubscriptionHandler;
 
-public abstract class GenericMachine implements IMachine, EventHandler, ISubscriptionHandler {
+public abstract class GenericMachine implements IMachine, IEventHandler, ISubscriptionHandler {
 
 	@Override
 	public void onSubscriptionRequest(ISubscriber s) {
@@ -36,7 +36,7 @@ public abstract class GenericMachine implements IMachine, EventHandler, ISubscri
 	}
 
 	@Override
-	public Event getNextEvent() {
+	public IEvent getNextEvent() {
 		// TODO Auto-generated method stub
 		return null;
 	}

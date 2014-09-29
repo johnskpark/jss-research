@@ -30,7 +30,7 @@ public interface IProblemInstance {
 	 * TODO
 	 * @return
 	 */
-	public List<EventHandler> getEventHandlers();
+	public List<IEventHandler> getEventHandlers();
 
 	/**
 	 * TODO

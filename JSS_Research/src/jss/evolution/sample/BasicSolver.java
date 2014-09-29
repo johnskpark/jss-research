@@ -50,9 +50,14 @@ public class BasicSolver implements ISolver, ISubscriber {
 	@Override
 	public void onMachineFeed(IMachine machine) {
 		if (machine.isAvailable()) {
-			 // TODO need to set the makespan and total weighted tardiness
+			IJob lastJob = machine.getLastProcessedJob();
+
+			double penalty = lastJob.getPenalty(machine);
+			double tardiness = Math.max(machine.getTimeAvailable() -
+					lastJob.getDueDate(machine), 0);
+
 			solution.setMakespan(machine.getTimeAvailable());
-			solution.setTWT(0); // TODO
+			solution.setTWT(solution.getTWT() + penalty * tardiness);
 
 			Action action = rule.getAction(machine, problem);
 			solution.addAction(action);

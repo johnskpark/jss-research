@@ -2,7 +2,7 @@ package jss.problem.static_problem;
 
 import java.util.List;
 
-import jss.EventHandler;
+import jss.IEventHandler;
 import jss.IJob;
 import jss.IMachine;
 import jss.problem.GenericProblemInstance;
@@ -25,7 +25,7 @@ public class StaticProblemInstance extends GenericProblemInstance {
 	}
 
 	@Override
-	public List<EventHandler> getEventHandlers() {
+	public List<IEventHandler> getEventHandlers() {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -27,11 +27,19 @@ public class Simulator {
 	public Simulator(IProblemInstance problem) {
 		this.problem = problem;
 
-		for (EventHandler handler : problem.getEventHandlers()) {
+		for (IEventHandler handler : problem.getEventHandlers()) {
 			if (handler.hasEvent()) {
 				addEvent(handler.getNextEvent(), handler.getNextEventTime());
 			}
 		}
+	}
+
+	/**
+	 * TODO javadoc.
+	 * @return
+	 */
+	public double getTime() {
+		return currentTime;
 	}
 
 	/**
@@ -53,14 +61,14 @@ public class Simulator {
 
 		events.trigger();
 
-		for (EventHandler handler : problem.getEventHandlers()) {
+		for (IEventHandler handler : problem.getEventHandlers()) {
 			if (handler.hasEvent()) {
 				addEvent(handler.getNextEvent(), handler.getNextEventTime());
 			}
 		}
 	}
 
-	private void addEvent(Event event, double time) {
+	private void addEvent(IEvent event, double time) {
 		if (time < currentTime) {
 			throw new RuntimeException("You done goofed from EventCore");
 		}
@@ -76,7 +84,7 @@ public class Simulator {
 	}
 
 	private class EventGroup implements Comparable<EventGroup> {
-		private List<Event> eventList = new ArrayList<Event>();
+		private List<IEvent> eventList = new ArrayList<IEvent>();
 
 		private double triggerTime;
 
@@ -88,12 +96,12 @@ public class Simulator {
 			return triggerTime;
 		}
 
-		public void addEvent(Event event) {
+		public void addEvent(IEvent event) {
 			eventList.add(event);
 		}
 
 		public void trigger() {
-			for (Event event : eventList) {
+			for (IEvent event : eventList) {
 				event.trigger();
 			}
 		}

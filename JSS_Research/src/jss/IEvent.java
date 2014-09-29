@@ -1,6 +1,6 @@
 package jss;
 
-public interface Event {
+public interface IEvent {
 
 	/**
 	 * TODO javadoc.

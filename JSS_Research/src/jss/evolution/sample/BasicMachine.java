@@ -3,14 +3,14 @@ package jss.evolution.sample;
 import java.util.ArrayList;
 import java.util.List;
 
-import jss.Event;
-import jss.EventHandler;
+import jss.IEvent;
+import jss.IEventHandler;
 import jss.IJob;
 import jss.IMachine;
 import jss.ISubscriber;
 import jss.ISubscriptionHandler;
 
-public class BasicMachine implements IMachine, EventHandler, ISubscriptionHandler {
+public class BasicMachine implements IMachine, IEventHandler, ISubscriptionHandler {
 
 	// Mutable components
 	private List<IJob> prevJobs = new ArrayList<IJob>();
@@ -26,6 +26,14 @@ public class BasicMachine implements IMachine, EventHandler, ISubscriptionHandle
 	@Override
 	public IJob getCurrentJob() {
 		return currentJob;
+	}
+
+	@Override
+	public IJob getLastProcessedJob() {
+		if (prevJobs.isEmpty()) {
+			return null;
+		}
+		return prevJobs.get(prevJobs.size() - 1);
 	}
 
 	@Override
@@ -79,11 +87,11 @@ public class BasicMachine implements IMachine, EventHandler, ISubscriptionHandle
 	}
 
 	@Override
-	public Event getNextEvent() {
+	public IEvent getNextEvent() {
 		if (availableTime == 0) {
 			// At the start, the machine triggers an event for something
 			// to be processed into the machine.
-			return new Event() {
+			return new IEvent() {
 				public void trigger() {
 					// Do nothing. Its just there at the start for the
 					// jobs to start coming in.
@@ -118,7 +126,7 @@ public class BasicMachine implements IMachine, EventHandler, ISubscriptionHandle
 	}
 
 	// An event class that represents a job completing on the machine.
-	private class JobProcessedEvent implements Event {
+	private class JobProcessedEvent implements IEvent {
 		private BasicMachine machine;
 		private double completionTime;
 

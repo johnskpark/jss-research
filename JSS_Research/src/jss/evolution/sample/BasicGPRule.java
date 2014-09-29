@@ -10,7 +10,7 @@ import jss.IProblemInstance;
 import ec.EvolutionState;
 import ec.gp.GPIndividual;
 
-public class BasicRule implements ActionHandler {
+public class BasicGPRule implements ActionHandler {
 
 	private EvolutionState state;
 	private GPIndividual ind;
@@ -19,7 +19,7 @@ public class BasicRule implements ActionHandler {
 
 	private BasicData data;
 
-	public BasicRule(EvolutionState state,
+	public BasicGPRule(EvolutionState state,
 			GPIndividual ind,
 			int subpopulation,
 			int threadnum,

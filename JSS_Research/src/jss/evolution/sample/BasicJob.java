@@ -6,14 +6,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
-import jss.Event;
-import jss.EventHandler;
+import jss.IEvent;
+import jss.IEventHandler;
 import jss.IJob;
 import jss.IMachine;
 import jss.ISubscriber;
 import jss.ISubscriptionHandler;
 
-public class BasicJob implements IJob, EventHandler, ISubscriptionHandler {
+public class BasicJob implements IJob, IEventHandler, ISubscriptionHandler {
 
 	// Immutable component
 	private List<IMachine> machineList = new LinkedList<IMachine>();
@@ -173,7 +173,7 @@ public class BasicJob implements IJob, EventHandler, ISubscriptionHandler {
 	}
 
 	@Override
-	public Event getNextEvent() {
+	public IEvent getNextEvent() {
 		return null;
 	}
 

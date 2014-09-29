@@ -10,7 +10,7 @@ package jss;
  * @author parkjohn
  *
  */
-public interface EventHandler {
+public interface IEventHandler {
 
 	/**
 	 * Returns whether the object has events or not.
@@ -22,7 +22,7 @@ public interface EventHandler {
 	 * Returns the next event to be queued up by the EventCore.
 	 * @return null if no more events are to be triggered by the object.
 	 */
-	public Event getNextEvent();
+	public IEvent getNextEvent();
 
 	/**
 	 * Returns the time when the next event is expected to be triggered
