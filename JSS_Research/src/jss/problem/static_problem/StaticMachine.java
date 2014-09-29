@@ -1,4 +1,4 @@
-package jss.evolution.sample;
+package jss.problem.static_problem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,7 @@ import jss.ISubscriptionHandler;
  * @author parkjohn
  *
  */
-public class BasicMachine implements IMachine, IEventHandler, ISubscriptionHandler {
+public class StaticMachine implements IMachine, IEventHandler, ISubscriptionHandler {
 
 	// Mutable components TODO more doc.
 	private List<IJob> prevJobs = new ArrayList<IJob>();
@@ -31,7 +31,7 @@ public class BasicMachine implements IMachine, IEventHandler, ISubscriptionHandl
 	/**
 	 * TODO javadoc.
 	 */
-	public BasicMachine() {
+	public StaticMachine() {
 		machineEvent = new MachineEvent(this, 0);
 	}
 
@@ -100,7 +100,7 @@ public class BasicMachine implements IMachine, IEventHandler, ISubscriptionHandl
 		currentJob = null;
 		availableTime = 0;
 
-		subscribers = new ArrayList<ISubscriber>(); // TODO let's see if we need this or not.
+		subscribers = new ArrayList<ISubscriber>();
 
 		machineEvent = new MachineEvent(this, 0);
 	}
@@ -139,10 +139,10 @@ public class BasicMachine implements IMachine, IEventHandler, ISubscriptionHandl
 
 	// An event class that represents a job completing on the machine.
 	private class MachineEvent implements IEvent {
-		private BasicMachine machine;
+		private StaticMachine machine;
 		private double completionTime;
 
-		public MachineEvent(BasicMachine machine, double time) {
+		public MachineEvent(StaticMachine machine, double time) {
 			this.machine = machine;
 			this.completionTime = time;
 		}

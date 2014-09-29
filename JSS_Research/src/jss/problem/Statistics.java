@@ -1,4 +1,4 @@
-package jss.evolution.sample;
+package jss.problem;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,7 +12,7 @@ import jss.IResult;
  * @author parkjohn
  *
  */
-public class BasicStatistics {
+public class Statistics {
 
 	private Map<IProblemInstance, IResult> problems = new HashMap<IProblemInstance, IResult>();
 
@@ -24,7 +24,7 @@ public class BasicStatistics {
 	/**
 	 * TODO javadoc.
 	 */
-	public BasicStatistics() {
+	public Statistics() {
 	}
 
 	/**

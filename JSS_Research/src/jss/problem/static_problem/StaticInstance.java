@@ -1,7 +1,6 @@
-package jss.evolution.sample;
+package jss.problem.static_problem;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import jss.IEventHandler;
@@ -10,40 +9,33 @@ import jss.IMachine;
 import jss.IProblemInstance;
 
 /**
- * Really, really basic problem instance.
+ * Really, really basic problem instance. TODO write more.
+ *
  * @author parkjohn
  *
  */
-public class BasicInstance implements IProblemInstance {
+public class StaticInstance implements IProblemInstance {
 
-	private List<BasicJob> jobs = new ArrayList<BasicJob>();
-	private List<BasicMachine> machines = new ArrayList<BasicMachine>();
+	private List<StaticJob> jobs = new ArrayList<StaticJob>();
+	private List<StaticMachine> machines = new ArrayList<StaticMachine>();
 
 	/**
 	 * TODO javadoc.
 	 */
-	public BasicInstance() {
-	}
-
-	/**
-	 * TODO javadoc.
-	 * @param job
-	 */
-	public void addJob(BasicJob job) {
-		jobs.add(job);
-	}
-
-	/**
-	 * TODO javadoc.
-	 * @param machine
-	 */
-	public void addMachine(BasicMachine machine) {
-		machines.add(machine);
+	public StaticInstance() {
 	}
 
 	@Override
 	public List<IJob> getJobs() {
-		return new ArrayList<IJob>(jobs);
+		List<IJob> incompleteJobs = new ArrayList<IJob>();
+
+		for (IJob job : jobs) {
+			if (!job.isCompleted()) {
+				incompleteJobs.add(job);
+			}
+		}
+
+		return incompleteJobs;
 	}
 
 	@Override
@@ -63,11 +55,11 @@ public class BasicInstance implements IProblemInstance {
 
 	@Override
 	public void reset() {
-		for (BasicJob job : jobs) {
+		for (StaticJob job : jobs) {
 			job.reset();
 		}
 
-		for (BasicMachine machine : machines) {
+		for (StaticMachine machine : machines) {
 			machine.reset();
 		}
 	}

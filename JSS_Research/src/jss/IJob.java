@@ -36,9 +36,9 @@ public interface IJob {
 	/**
 	 * Get the due date of the job for the particular machine.
 	 * @param machine The machine that will be processing the job.
-	 * @return The due date of the job on the machine. If the job cannot
-	 *         be processed at the particular machine, then
-	 *         Double.POSITIVE_INFINITY will be returned. TODO
+	 * @return The due date of the job on the machine. If the job cannot be
+	 *         processed at the particular machine, then
+	 *         Double.POSITIVE_INFINITY will be returned.
 	 */
 	public double getDueDate(IMachine machine);
 
@@ -59,13 +59,13 @@ public interface IJob {
 	public void visitMachine(IMachine machine) throws RuntimeException;
 
 	/**
-	 * TODO javadoc.
-	 * @return
+	 * Get the next machine that needs to be visited by the job.
+	 * @return The next machine to visit by the job to process it.
 	 */
 	public IMachine getNextMachine();
 
 	/**
-	 * Get whether the job can be processed on the machine or not.
+	 * Get whether the job can be processed on the machine or not. TODO
 	 * @return
 	 */
 	public boolean isProcessable(IMachine machine);

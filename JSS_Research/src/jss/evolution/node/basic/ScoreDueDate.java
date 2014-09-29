@@ -11,13 +11,11 @@ import ec.gp.GPIndividual;
 import ec.gp.GPNode;
 import ec.util.Parameter;
 
-public class ScoreProcessingTime extends GPNode {
-
-	private static final long serialVersionUID = 4917340755318117709L;
+public class ScoreDueDate extends GPNode {
 
 	@Override
 	public String toString() {
-		return "P";
+		return "D";
 	}
 
 	@Override
@@ -43,7 +41,7 @@ public class ScoreProcessingTime extends GPNode {
 		IMachine machine = data.getMachine();
 		IJob job = data.getJob();
 
-		data.setPriority(job.getProcessingTime(machine));
+		data.setPriority(job.getDueDate(machine));
 	}
 
 }

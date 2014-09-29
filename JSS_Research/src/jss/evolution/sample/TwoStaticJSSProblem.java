@@ -1,6 +1,11 @@
 package jss.evolution.sample;
 
+import jss.IProblemInstance;
 import jss.IResult;
+import jss.evolution.JSSRule;
+import jss.evolution.JSSData;
+import jss.problem.CompletelyReactiveSolver;
+import jss.problem.Statistics;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.gp.GPIndividual;
@@ -15,13 +20,13 @@ public class TwoStaticJSSProblem extends GPProblem {
 	private static final int DATASET_SEED = 15;
 
 	private TwoStaticJSSDataset dataset = new TwoStaticJSSDataset(DATASET_SEED);
-	private BasicSolver solver = new BasicSolver();
+	private CompletelyReactiveSolver solver = new CompletelyReactiveSolver();
 
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
 		super.setup(state, base);
 
-		input = (BasicData)state.parameters.getInstanceForParameterEq(base.push(P_DATA), null, BasicData.class);
+		input = (JSSData)state.parameters.getInstanceForParameterEq(base.push(P_DATA), null, JSSData.class);
 		input.setup(state, base.push(P_DATA));
 	}
 
@@ -34,11 +39,11 @@ public class TwoStaticJSSProblem extends GPProblem {
 			// Check to make sure that the individual is a GPIndividual and uses KozaFitness.
 			checkIndividual(state, ind);
 
-			BasicStatistics stats = new BasicStatistics();
+			Statistics stats = new Statistics();
 
-			solver.setRule(new BasicGPRule(state, (GPIndividual)ind, subpopulation, threadnum, (BasicData)input));
+			solver.setRule(new JSSRule(state, (GPIndividual)ind, threadnum, (JSSData)input));
 
-			for (BasicInstance problem : dataset.getProblems()) {
+			for (IProblemInstance problem : dataset.getProblems()) {
 				IResult solution = solver.getSolution(problem);
 
 				stats.addSolution(problem, solution);
@@ -64,7 +69,7 @@ public class TwoStaticJSSProblem extends GPProblem {
 	public Object clone() {
 		TwoStaticJSSProblem newObject = (TwoStaticJSSProblem)super.clone();
 
-		newObject.input = (BasicData)input.clone();
+		newObject.input = (JSSData)input.clone();
 		newObject.dataset = dataset;
 		newObject.solver = solver;
 

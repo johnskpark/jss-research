@@ -1,4 +1,4 @@
-package jss.evolution.sample;
+package jss.evolution;
 
 import jss.IJob;
 import jss.IMachine;
@@ -11,7 +11,7 @@ import ec.gp.GPData;
  * @author parkjohn
  *
  */
-public class BasicData extends GPData {
+public class JSSData extends GPData {
 
 	private static final long serialVersionUID = 5L;
 

@@ -1,4 +1,4 @@
-package jss.evolution.sample;
+package jss.evolution;
 
 import java.util.List;
 
@@ -10,23 +10,33 @@ import jss.IProblemInstance;
 import ec.EvolutionState;
 import ec.gp.GPIndividual;
 
-public class BasicGPRule implements ActionHandler {
+/**
+ * TODO javadoc.
+ *
+ * @author parkjohn
+ *
+ */
+public class JSSRule implements ActionHandler {
 
 	private EvolutionState state;
 	private GPIndividual ind;
-	private int subpopulation;
 	private int threadnum;
 
-	private BasicData data;
+	private JSSData data;
 
-	public BasicGPRule(EvolutionState state,
+	/**
+	 * TODO javadoc.
+	 * @param state
+	 * @param ind
+	 * @param threadnum
+	 * @param data
+	 */
+	public JSSRule(EvolutionState state,
 			GPIndividual ind,
-			int subpopulation,
 			int threadnum,
-			BasicData data) {
+			JSSData data) {
 		this.state = state;
 		this.ind = ind;
-		this.subpopulation = subpopulation;
 		this.threadnum = threadnum;
 
 		this.data = data;

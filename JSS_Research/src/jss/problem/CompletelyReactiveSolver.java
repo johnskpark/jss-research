@@ -1,4 +1,4 @@
-package jss.evolution.sample;
+package jss.problem;
 
 import jss.Action;
 import jss.ActionHandler;
@@ -9,23 +9,24 @@ import jss.IProblemInstance;
 import jss.IResult;
 import jss.ISolver;
 import jss.ISubscriber;
+import jss.problem.static_problem.StaticMachine;
 
 /**
  * TODO javadoc.
  * @author parkjohn
  *
  */
-public class BasicSolver implements ISolver, ISubscriber {
+public class CompletelyReactiveSolver implements ISolver, ISubscriber {
 
 	private ActionHandler rule;
 
 	private IProblemInstance problem;
-	private BasicResult solution;
+	private Result solution;
 
 	/**
 	 * TODO Javadoc. I wonder if I even need this component here at all.
 	 */
-	public BasicSolver() {
+	public CompletelyReactiveSolver() {
 	}
 
 	/**
@@ -40,11 +41,11 @@ public class BasicSolver implements ISolver, ISubscriber {
 	public IResult getSolution(IProblemInstance problem) throws RuntimeException {
 		Simulator core = new Simulator(problem);
 		this.problem = problem;
-		this.solution = new BasicResult(problem);
+		this.solution = new Result(problem);
 
 		// Subscribe to the machines for updates.
 		for (IMachine machine : problem.getMachines()) {
-			BasicMachine basicMachine = (BasicMachine)machine;
+			StaticMachine basicMachine = (StaticMachine)machine;
 			basicMachine.onSubscriptionRequest(this);
 		}
 
@@ -82,7 +83,8 @@ public class BasicSolver implements ISolver, ISubscriber {
 
 	@Override
 	public void onJobFeed(IJob job) {
-		// Do nothing.
+		// Do nothing. TODO make it do something IF the job is being
+		// released.
 	}
 
 }

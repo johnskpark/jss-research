@@ -1,13 +1,19 @@
 package jss.test;
 
 import jss.IMachine;
-import jss.evolution.sample.BasicJob;
+import jss.problem.static_problem.StaticJob;
 
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;
 import org.junit.Assert;
 import org.junit.Test;
 
+/**
+ * TODO javadoc.
+ *
+ * @author parkjohn
+ *
+ */
 public class JobTest {
 
 	private static final double EPSILON = 0.001;
@@ -19,7 +25,7 @@ public class JobTest {
 
 	@Test
 	public void basicJobTest_GetterSetter() {
-		BasicJob job = new BasicJob();
+		StaticJob job = new StaticJob();
 
 		mockMachine1 = context.mock(IMachine.class, "Machine1");
 		mockMachine2 = context.mock(IMachine.class, "Machine2");
@@ -64,7 +70,7 @@ public class JobTest {
 
 	@Test
 	public void basicJobTest_VisitMachine() {
-		BasicJob job = new BasicJob();
+		StaticJob job = new StaticJob();
 
 		mockMachine1 = context.mock(IMachine.class, "Machine1");
 		mockMachine2 = context.mock(IMachine.class, "Machine2");
@@ -100,7 +106,7 @@ public class JobTest {
 
 	@Test
 	public void basicJobTest_Reset() {
-		BasicJob job = new BasicJob();
+		StaticJob job = new StaticJob();
 
 		mockMachine1 = context.mock(IMachine.class, "Machine1");
 		mockMachine2 = context.mock(IMachine.class, "Machine2");
@@ -131,7 +137,7 @@ public class JobTest {
 
 	@Test
 	public void basicJobTestFail_SetProcessingTime() {
-		BasicJob job = new BasicJob();
+		StaticJob job = new StaticJob();
 
 		mockMachine1 = context.mock(IMachine.class);
 
@@ -146,7 +152,7 @@ public class JobTest {
 
 	@Test
 	public void basicJobTestFail_SetSetupTime() {
-		BasicJob job = new BasicJob();
+		StaticJob job = new StaticJob();
 
 		mockMachine1 = context.mock(IMachine.class);
 
@@ -161,7 +167,7 @@ public class JobTest {
 
 	@Test
 	public void basicJobTestFail_SetDueDate() {
-		BasicJob job = new BasicJob();
+		StaticJob job = new StaticJob();
 
 		mockMachine1 = context.mock(IMachine.class);
 
@@ -176,7 +182,7 @@ public class JobTest {
 
 	@Test
 	public void basicJobTestFail_SetPenalty() {
-		BasicJob job = new BasicJob();
+		StaticJob job = new StaticJob();
 
 		mockMachine1 = context.mock(IMachine.class);
 
@@ -191,7 +197,7 @@ public class JobTest {
 
 	@Test
 	public void basicJobTestFail_VisitMachine() {
-		BasicJob job = new BasicJob();
+		StaticJob job = new StaticJob();
 
 		IMachine machine1 = context.mock(IMachine.class, "Machine1");
 		IMachine machine2 = context.mock(IMachine.class, "Machine2");

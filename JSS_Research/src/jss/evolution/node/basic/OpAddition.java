@@ -1,6 +1,6 @@
 package jss.evolution.node.basic;
 
-import jss.evolution.sample.BasicData;
+import jss.evolution.JSSData;
 import ec.EvolutionState;
 import ec.Problem;
 import ec.gp.ADFStack;
@@ -42,7 +42,7 @@ public class OpAddition extends GPNode {
 			final ADFStack stack,
 			final GPIndividual individual,
 			final Problem problem) {
-		BasicData data = (BasicData)input;
+		JSSData data = (JSSData)input;
 
 		children[0].eval(state, thread, input, stack, individual, problem);
 		double priority1 = data.getPriority();

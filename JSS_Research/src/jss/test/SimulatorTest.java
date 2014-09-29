@@ -15,6 +15,12 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+/**
+ * TODO javadoc.
+ *
+ * @author parkjohn
+ *
+ */
 public class SimulatorTest {
 
 	private static final double EPSILON = 0.001;

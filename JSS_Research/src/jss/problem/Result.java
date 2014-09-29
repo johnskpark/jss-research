@@ -1,4 +1,4 @@
-package jss.evolution.sample;
+package jss.problem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +13,7 @@ import jss.IResult;
  * @author parkjohn
  *
  */
-public class BasicResult implements IResult {
+public class Result implements IResult {
 
 	private List<Action> solutionActions = new ArrayList<Action>();
 
@@ -26,7 +26,7 @@ public class BasicResult implements IResult {
 	 * TODO javadoc.
 	 * @param problem
 	 */
-	public BasicResult(IProblemInstance problem) {
+	public Result(IProblemInstance problem) {
 		this.problem = problem;
 	}
 

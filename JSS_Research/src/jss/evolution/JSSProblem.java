@@ -6,7 +6,7 @@ import ec.Individual;
 import ec.gp.GPProblem;
 import ec.util.Parameter;
 
-public class EvolutionProblem extends GPProblem {
+public class JSSProblem extends GPProblem {
 
 	// TODO The fitness measure, the rule converter and the problem dataset
 	ISolver solver;

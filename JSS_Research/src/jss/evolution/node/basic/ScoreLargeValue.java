@@ -1,6 +1,6 @@
 package jss.evolution.node.basic;
 
-import jss.evolution.sample.BasicData;
+import jss.evolution.JSSData;
 import ec.EvolutionState;
 import ec.Problem;
 import ec.gp.ADFStack;
@@ -38,7 +38,7 @@ public class ScoreLargeValue extends GPNode {
 			final ADFStack stack,
 			final GPIndividual individual,
 			final Problem problem) {
-		BasicData data = (BasicData)input;
+		JSSData data = (JSSData)input;
 		data.setPriority(LARGE_VALUE);
 	}
 

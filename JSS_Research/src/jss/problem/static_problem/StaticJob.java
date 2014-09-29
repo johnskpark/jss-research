@@ -1,4 +1,4 @@
-package jss.evolution.sample;
+package jss.problem.static_problem;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -19,7 +19,7 @@ import jss.ISubscriptionHandler;
  * @author parkjohn
  *
  */
-public class BasicJob implements IJob, IEventHandler, ISubscriptionHandler {
+public class StaticJob implements IJob, IEventHandler, ISubscriptionHandler {
 
 	// Immutable component TODO more doc
 	private List<IMachine> machineList = new LinkedList<IMachine>();
@@ -33,7 +33,7 @@ public class BasicJob implements IJob, IEventHandler, ISubscriptionHandler {
 	// Mutable component TODO more doc
 	private Queue<IMachine> machineQueue = new LinkedList<IMachine>();
 
-	public BasicJob() {
+	public StaticJob() {
 	}
 
 	/**

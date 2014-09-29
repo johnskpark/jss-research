@@ -2,7 +2,7 @@ package jss.test;
 
 import jss.IJob;
 import jss.IMachine;
-import jss.evolution.sample.BasicMachine;
+import jss.problem.static_problem.StaticMachine;
 
 import org.jmock.Expectations;
 import org.jmock.Mockery;
@@ -10,6 +10,12 @@ import org.jmock.integration.junit4.JUnit4Mockery;
 import org.junit.Assert;
 import org.junit.Test;
 
+/**
+ * TODO javadoc.
+ *
+ * @author parkjohn
+ *
+ */
 public class MachineTest {
 
 	private static final double EPSILON = 0.001;
@@ -26,7 +32,7 @@ public class MachineTest {
 
 	@Test
 	public void basicMachineTest_ProcessJob() {
-		machine = new BasicMachine();
+		machine = new StaticMachine();
 		mockJob1 = context.mock(IJob.class);
 
 		releaseTime = 0.0;
@@ -57,7 +63,7 @@ public class MachineTest {
 
 	@Test
 	public void basicMachineTest_FinishJob() {
-		machine = new BasicMachine();
+		machine = new StaticMachine();
 		mockJob1 = context.mock(IJob.class);
 
 		releaseTime = 0.0;
@@ -86,7 +92,7 @@ public class MachineTest {
 
 	@Test
 	public void basicMachineTest_Reset() {
-		machine = new BasicMachine();
+		machine = new StaticMachine();
 		mockJob1 = context.mock(IJob.class);
 
 		releaseTime = 0.0;
@@ -115,7 +121,7 @@ public class MachineTest {
 
 	@Test
 	public void basicMachineTestFail_ProcessJob() {
-		machine = new BasicMachine();
+		machine = new StaticMachine();
 		mockJob1 = context.mock(IJob.class, "Job1");
 		mockJob2 = context.mock(IJob.class, "Job2");
 
