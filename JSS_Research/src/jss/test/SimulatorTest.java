@@ -1,4 +1,4 @@
-package jss.test.solver;
+package jss.test;
 
 import java.util.ArrayList;
 import java.util.Arrays;

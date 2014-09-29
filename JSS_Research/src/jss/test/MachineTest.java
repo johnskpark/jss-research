@@ -1,4 +1,4 @@
-package jss.test.problem;
+package jss.test;
 
 import jss.IJob;
 import jss.IMachine;
@@ -20,9 +20,9 @@ public class MachineTest {
 	private IJob mockJob1;
 	private IJob mockJob2;
 
-	private double releaseTime = 0.0;
-	private double processingTime = 5.0;
-	private double setupTime = 0.0;
+	private double releaseTime;
+	private double processingTime;
+	private double setupTime;
 
 	@Test
 	public void basicMachineTest_ProcessJob() {
@@ -41,6 +41,7 @@ public class MachineTest {
 		Assert.assertEquals(machine.getTimeAvailable(), 0, EPSILON);
 
 		context.checking(new Expectations() {{
+			oneOf(mockJob1).visitMachine(machine);
 			oneOf(mockJob1).getReleaseTime(); will(returnValue(releaseTime));
 			oneOf(mockJob1).getProcessingTime(machine); will(returnValue(processingTime));
 			oneOf(mockJob1).getSetupTime(machine); will(returnValue(setupTime));
@@ -66,6 +67,7 @@ public class MachineTest {
 		double completionTime = releaseTime + setupTime + processingTime;
 
 		context.checking(new Expectations() {{
+			oneOf(mockJob1).visitMachine(machine);
 			oneOf(mockJob1).getReleaseTime(); will(returnValue(releaseTime));
 			oneOf(mockJob1).getProcessingTime(machine); will(returnValue(processingTime));
 			oneOf(mockJob1).getSetupTime(machine); will(returnValue(setupTime));
@@ -94,6 +96,7 @@ public class MachineTest {
 		double completionTime = releaseTime + setupTime + processingTime;
 
 		context.checking(new Expectations() {{
+			oneOf(mockJob1).visitMachine(machine);
 			oneOf(mockJob1).getReleaseTime(); will(returnValue(releaseTime));
 			oneOf(mockJob1).getProcessingTime(machine); will(returnValue(processingTime));
 			oneOf(mockJob1).getSetupTime(machine); will(returnValue(setupTime));
@@ -121,6 +124,7 @@ public class MachineTest {
 		setupTime = 0.0;
 
 		context.checking(new Expectations() {{
+			oneOf(mockJob1).visitMachine(machine);
 			oneOf(mockJob1).getReleaseTime(); will(returnValue(releaseTime));
 			oneOf(mockJob1).getProcessingTime(machine); will(returnValue(processingTime));
 			oneOf(mockJob1).getSetupTime(machine); will(returnValue(setupTime));

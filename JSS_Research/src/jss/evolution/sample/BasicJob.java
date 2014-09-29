@@ -13,9 +13,15 @@ import jss.IMachine;
 import jss.ISubscriber;
 import jss.ISubscriptionHandler;
 
+/**
+ * TODO javadoc.
+ *
+ * @author parkjohn
+ *
+ */
 public class BasicJob implements IJob, IEventHandler, ISubscriptionHandler {
 
-	// Immutable component
+	// Immutable component TODO more doc
 	private List<IMachine> machineList = new LinkedList<IMachine>();
 
 	private Map<IMachine, Double> processingTimes = new HashMap<IMachine, Double>();
@@ -24,7 +30,7 @@ public class BasicJob implements IJob, IEventHandler, ISubscriptionHandler {
 	private Map<IMachine, Double> penalties = new HashMap<IMachine, Double>();
 	private double releaseTime = 0;
 
-	// Mutable component
+	// Mutable component TODO more doc
 	private Queue<IMachine> machineQueue = new LinkedList<IMachine>();
 
 	public BasicJob() {

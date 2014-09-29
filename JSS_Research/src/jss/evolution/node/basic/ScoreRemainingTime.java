@@ -1,5 +1,8 @@
 package jss.evolution.node.basic;
 
+import jss.IJob;
+import jss.IMachine;
+import jss.IProblemInstance;
 import jss.evolution.sample.BasicData;
 import ec.EvolutionState;
 import ec.Problem;
@@ -9,19 +12,13 @@ import ec.gp.GPIndividual;
 import ec.gp.GPNode;
 import ec.util.Parameter;
 
-/**
- * TODO javadoc.
- *
- * @author parkjohn
- *
- */
-public class OpMultiplication extends GPNode {
+public class ScoreRemainingTime extends GPNode {
 
-	private static final long serialVersionUID = 672174749690633859L;
+	private static final long serialVersionUID = 5176332159809663461L;
 
 	@Override
 	public String toString() {
-		return "*";
+		return "TP";
 	}
 
 	@Override
@@ -30,27 +27,27 @@ public class OpMultiplication extends GPNode {
 			final GPIndividual typicalIndividual,
 			final Parameter individualBase) {
 		super.checkConstraints(state, tree, typicalIndividual, individualBase);
-		if (children.length != 2) {
+		if (children.length != 0) {
 			state.output.error("Incorrect number of children for node " + toStringForError() + " at " + individualBase);
 		}
 	}
 
 	@Override
-	public void eval(final EvolutionState state,
-			final int thread,
-			final GPData input,
-			final ADFStack stack,
-			final GPIndividual individual,
-			final Problem problem) {
+	public void eval(EvolutionState state, int thread, GPData input,
+			ADFStack stack, GPIndividual individual, Problem problem) {
 		BasicData data = (BasicData)input;
 
-		children[0].eval(state, thread, input, stack, individual, problem);
-		double priority1 = data.getPriority();
+		IProblemInstance problemInstance = data.getProblem();
+		IJob job = data.getJob();
 
-		children[1].eval(state, thread, input, stack, individual, problem);
-		double priority2 = data.getPriority();
+		double remainingTime = 0;
+		for (IMachine machine : problemInstance.getMachines()) {
+			if (job.isProcessable(machine)) {
+				remainingTime += job.getProcessingTime(machine);
+			}
+		}
 
-		data.setPriority(priority1 * priority2);
+		data.setPriority(remainingTime);
 	}
 
 }

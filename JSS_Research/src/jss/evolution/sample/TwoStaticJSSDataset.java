@@ -76,6 +76,8 @@ public class TwoStaticJSSDataset {
 
 		public BasicInstance createProblem(Random rand, int numJobs) {
 			BasicInstance inst = new BasicInstance();
+			inst.addMachine(new BasicMachine());
+			inst.addMachine(new BasicMachine());
 
 			for (int i = 0; i < numJobs; i++) {
 				BasicJob job = new BasicJob();

@@ -40,10 +40,11 @@ public class BasicGPRule implements ActionHandler {
 		IJob bestJob = null;
 
 		for (IJob job : jobs) {
-			if (!job.isProcessable(machine)) {
+			if (!machine.equals(job.getNextMachine())) {
 				continue;
 			}
 
+			data.setProblem(problem);
 			data.setJob(job);
 			data.setMachine(machine);
 

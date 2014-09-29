@@ -9,6 +9,12 @@ import ec.gp.GPIndividual;
 import ec.gp.GPNode;
 import ec.util.Parameter;
 
+/**
+ * TODO javadoc.
+ *
+ * @author parkjohn
+ *
+ */
 public class OpConditional extends GPNode {
 
 	private static final long serialVersionUID = -8055215086941685756L;

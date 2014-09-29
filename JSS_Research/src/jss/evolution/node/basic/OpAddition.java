@@ -9,6 +9,12 @@ import ec.gp.GPIndividual;
 import ec.gp.GPNode;
 import ec.util.Parameter;
 
+/**
+ * TODO javadoc.
+ *
+ * @author parkjohn
+ *
+ */
 public class OpAddition extends GPNode {
 
 	private static final long serialVersionUID = -4233800502828347443L;

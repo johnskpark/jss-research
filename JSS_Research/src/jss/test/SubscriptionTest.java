@@ -1,4 +1,4 @@
-package jss.test.subscription;
+package jss.test;
 
 public class SubscriptionTest {
 

@@ -13,7 +13,7 @@ public class ScoreLargeValue extends GPNode {
 
 	private static final long serialVersionUID = -5825676453528932050L;
 
-	private static final double LARGE_VALUE = 10000.0;
+	private static final double LARGE_VALUE = 100000000.0;
 
 	@Override
 	public String toString() {

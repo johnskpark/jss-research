@@ -1,4 +1,4 @@
-package jss.test.node;
+package jss.test;
 
 public class LookaheadNodeTest {
 

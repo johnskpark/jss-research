@@ -1,4 +1,4 @@
-package jss.test.solver;
+package jss.test;
 
 import jss.IProblemInstance;
 import jss.evolution.sample.BasicResult;

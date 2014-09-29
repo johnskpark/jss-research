@@ -17,7 +17,7 @@ import jss.IProblemInstance;
 public class BasicInstance implements IProblemInstance {
 
 	private List<BasicJob> jobs = new ArrayList<BasicJob>();
-	private List<BasicMachine> machines = Arrays.asList(new BasicMachine[]{new BasicMachine(), new BasicMachine()});
+	private List<BasicMachine> machines = new ArrayList<BasicMachine>();
 
 	/**
 	 * TODO javadoc.
@@ -31,6 +31,14 @@ public class BasicInstance implements IProblemInstance {
 	 */
 	public void addJob(BasicJob job) {
 		jobs.add(job);
+	}
+
+	/**
+	 * TODO javadoc.
+	 * @param machine
+	 */
+	public void addMachine(BasicMachine machine) {
+		machines.add(machine);
 	}
 
 	@Override

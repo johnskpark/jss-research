@@ -6,6 +6,12 @@ import java.util.Map;
 import jss.IProblemInstance;
 import jss.IResult;
 
+/**
+ * TODO javadoc.
+ *
+ * @author parkjohn
+ *
+ */
 public class BasicStatistics {
 
 	private Map<IProblemInstance, IResult> problems = new HashMap<IProblemInstance, IResult>();
@@ -15,6 +21,17 @@ public class BasicStatistics {
 
 	private int count = 0;
 
+	/**
+	 * TODO javadoc.
+	 */
+	public BasicStatistics() {
+	}
+
+	/**
+	 * TODO javadoc.
+	 * @param problem
+	 * @param solution
+	 */
 	public void addSolution(IProblemInstance problem, IResult solution) {
 		problems.put(problem, solution);
 
@@ -23,10 +40,18 @@ public class BasicStatistics {
 		count++;
 	}
 
+	/**
+	 * TODO javadoc.
+	 * @return
+	 */
 	public double getAverageMakespan() {
 		return totalMakespan / count;
 	}
 
+	/**
+	 * TODO javadoc.
+	 * @return
+	 */
 	public double getAverageTWT() {
 		return totalTWT / count;
 	}

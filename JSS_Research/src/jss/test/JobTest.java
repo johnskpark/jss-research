@@ -1,4 +1,4 @@
-package jss.test.problem;
+package jss.test;
 
 import jss.IMachine;
 import jss.evolution.sample.BasicJob;
@@ -66,35 +66,35 @@ public class JobTest {
 	public void basicJobTest_VisitMachine() {
 		BasicJob job = new BasicJob();
 
-		IMachine machine1 = context.mock(IMachine.class, "Machine1");
-		IMachine machine2 = context.mock(IMachine.class, "Machine2");
+		mockMachine1 = context.mock(IMachine.class, "Machine1");
+		mockMachine2 = context.mock(IMachine.class, "Machine2");
 
-		job.offerMachine(machine1);
-		job.offerMachine(machine2);
+		job.offerMachine(mockMachine1);
+		job.offerMachine(mockMachine2);
 
-		Assert.assertEquals(job.getNextMachine(), machine1);
-		Assert.assertTrue(job.isProcessable(machine1));
-		Assert.assertFalse(job.isProcessable(machine2));
+		Assert.assertEquals(job.getNextMachine(), mockMachine1);
+		Assert.assertTrue(mockMachine1.equals(job.getNextMachine()));
+		Assert.assertFalse(mockMachine2.equals(job.getNextMachine()));
 		Assert.assertFalse(job.isCompleted());
 
-		job.visitMachine(machine1);
+		job.visitMachine(mockMachine1);
 
-		Assert.assertEquals(job.getNextMachine(), machine2);
-		Assert.assertFalse(job.isProcessable(machine1));
-		Assert.assertTrue(job.isProcessable(machine2));
+		Assert.assertEquals(job.getNextMachine(), mockMachine2);
+		Assert.assertFalse(mockMachine1.equals(job.getNextMachine()));
+		Assert.assertTrue(mockMachine2.equals(job.getNextMachine()));
 		Assert.assertFalse(job.isCompleted());
 
-		job.visitMachine(machine2);
+		job.visitMachine(mockMachine2);
 
 		Assert.assertNull(job.getNextMachine());
-		Assert.assertFalse(job.isProcessable(machine1));
-		Assert.assertFalse(job.isProcessable(machine2));
+		Assert.assertFalse(mockMachine1.equals(job.getNextMachine()));
+		Assert.assertFalse(mockMachine2.equals(job.getNextMachine()));
 		Assert.assertTrue(job.isCompleted());
 
 		job.reset();
 
-		Assert.assertTrue(job.isProcessable(machine1));
-		Assert.assertFalse(job.isProcessable(machine2));
+		Assert.assertTrue(mockMachine1.equals(job.getNextMachine()));
+		Assert.assertFalse(mockMachine2.equals(job.getNextMachine()));
 		Assert.assertFalse(job.isCompleted());
 	}
 
@@ -109,23 +109,23 @@ public class JobTest {
 		job.offerMachine(mockMachine2);
 
 		Assert.assertEquals(job.getNextMachine(), mockMachine1);
-		Assert.assertTrue(job.isProcessable(mockMachine1));
-		Assert.assertFalse(job.isProcessable(mockMachine2));
+		Assert.assertTrue(mockMachine1.equals(job.getNextMachine()));
+		Assert.assertFalse(mockMachine2.equals(job.getNextMachine()));
 		Assert.assertFalse(job.isCompleted());
 
 		job.visitMachine(mockMachine1);
 		job.visitMachine(mockMachine2);
 
 		Assert.assertNull(job.getNextMachine());
-		Assert.assertFalse(job.isProcessable(mockMachine1));
-		Assert.assertFalse(job.isProcessable(mockMachine2));
+		Assert.assertFalse(mockMachine1.equals(job.getNextMachine()));
+		Assert.assertFalse(mockMachine2.equals(job.getNextMachine()));
 		Assert.assertTrue(job.isCompleted());
 
 		job.reset();
 
 		Assert.assertEquals(job.getNextMachine(), mockMachine1);
-		Assert.assertTrue(job.isProcessable(mockMachine1));
-		Assert.assertFalse(job.isProcessable(mockMachine2));
+		Assert.assertTrue(mockMachine1.equals(job.getNextMachine()));
+		Assert.assertFalse(mockMachine2.equals(job.getNextMachine()));
 		Assert.assertFalse(job.isCompleted());
 	}
 

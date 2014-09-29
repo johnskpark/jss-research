@@ -9,6 +9,12 @@ import ec.gp.GPIndividual;
 import ec.gp.GPNode;
 import ec.util.Parameter;
 
+/**
+ * TODO javadoc.
+ *
+ * @author parkjohn
+ *
+ */
 public class OpSubtraction extends GPNode {
 
 	private static final long serialVersionUID = -4259728422320985825L;

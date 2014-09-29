@@ -2,6 +2,7 @@ package jss.evolution.sample;
 
 import jss.IJob;
 import jss.IMachine;
+import jss.IProblemInstance;
 import ec.gp.GPData;
 
 /**
@@ -14,10 +15,43 @@ public class BasicData extends GPData {
 
 	private static final long serialVersionUID = 5L;
 
-	private IMachine machine = null;
-	private IJob job = null;
+	private IProblemInstance problem;
+	private IMachine machine;
+	private IJob job;
 
 	private double priority;
+
+	/**
+	 * TODO javadoc.
+	 * @return
+	 */
+	public IProblemInstance getProblem() {
+		return problem;
+	}
+
+	/**
+	 * TODO javadoc.
+	 * @return
+	 */
+	public IMachine getMachine() {
+		return machine;
+	}
+
+	/**
+	 * TODO javadoc.
+	 * @return
+	 */
+	public IJob getJob() {
+		return job;
+	}
+
+	/**
+	 * TODO javadoc.
+	 * @param problem
+	 */
+	public void setProblem(IProblemInstance problem) {
+		this.problem = problem;
+	}
 
 	/**
 	 * TODO javadoc.
@@ -39,38 +73,6 @@ public class BasicData extends GPData {
 	 * TODO javadoc.
 	 * @return
 	 */
-	public double getReleaseTime() {
-		return job.getReleaseTime();
-	}
-
-	/**
-	 * TODO javadoc.
-	 * @return
-	 */
-	public double getProcessingTime() {
-		return job.getProcessingTime(machine);
-	}
-
-	/**
-	 * TODO javadoc.
-	 * @return
-	 */
-	public double getSetupTime() {
-		return job.getSetupTime(machine);
-	}
-
-	/**
-	 * TODO javadoc.
-	 * @return
-	 */
-	public double getDueDate() {
-		return job.getDueDate(machine);
-	}
-
-	/**
-	 * TODO javadoc.
-	 * @return
-	 */
 	public double getPriority() {
 		return priority;
 	}
@@ -83,6 +85,9 @@ public class BasicData extends GPData {
 		this.priority = priority;
 	}
 
+	/**
+	 * TODO javadoc.
+	 */
 	public void clear() {
 		machine = null;
 		job = null;

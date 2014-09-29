@@ -1,12 +1,9 @@
 package jss.evolution.sample;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import jss.Action;
-import jss.IMachine;
 import jss.IProblemInstance;
 import jss.IResult;
 

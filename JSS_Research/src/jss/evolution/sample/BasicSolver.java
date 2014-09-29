@@ -28,6 +28,10 @@ public class BasicSolver implements ISolver, ISubscriber {
 	public BasicSolver() {
 	}
 
+	/**
+	 * TODO javadoc.
+	 * @param rule
+	 */
 	public void setRule(ActionHandler rule) {
 		this.rule = rule;
 	}

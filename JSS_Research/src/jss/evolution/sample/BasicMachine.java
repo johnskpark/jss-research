@@ -10,9 +10,15 @@ import jss.IMachine;
 import jss.ISubscriber;
 import jss.ISubscriptionHandler;
 
+/**
+ * TODO javadoc.
+ *
+ * @author parkjohn
+ *
+ */
 public class BasicMachine implements IMachine, IEventHandler, ISubscriptionHandler {
 
-	// Mutable components
+	// Mutable components TODO more doc.
 	private List<IJob> prevJobs = new ArrayList<IJob>();
 
 	private IJob currentJob = null;
@@ -22,6 +28,9 @@ public class BasicMachine implements IMachine, IEventHandler, ISubscriptionHandl
 
 	private IEvent machineEvent;
 
+	/**
+	 * TODO javadoc.
+	 */
 	public BasicMachine() {
 		machineEvent = new MachineEvent(this, 0);
 	}

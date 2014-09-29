@@ -1,4 +1,4 @@
-package jss.test.solver;
+package jss.test;
 
 public class SolverTest {
 

@@ -9,6 +9,12 @@ import ec.gp.GPIndividual;
 import ec.gp.GPNode;
 import ec.util.Parameter;
 
+/**
+ * TODO javadoc.
+ *
+ * @author parkjohn
+ *
+ */
 public class OpDivision extends GPNode {
 
 	private static final long serialVersionUID = 2589591919537774922L;

@@ -1,5 +1,7 @@
 package jss.evolution.node.basic;
 
+import jss.IJob;
+import jss.IMachine;
 import jss.evolution.sample.BasicData;
 import ec.EvolutionState;
 import ec.Problem;
@@ -37,7 +39,11 @@ public class ScoreProcessingTime extends GPNode {
 			final GPIndividual individual,
 			final Problem problem) {
 		BasicData data = (BasicData)input;
-		data.setPriority(data.getProcessingTime());
+
+		IMachine machine = data.getMachine();
+		IJob job = data.getJob();
+
+		data.setPriority(job.getProcessingTime(machine));
 	}
 
 }

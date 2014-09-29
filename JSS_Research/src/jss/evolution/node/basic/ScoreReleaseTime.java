@@ -1,5 +1,6 @@
 package jss.evolution.node.basic;
 
+import jss.IJob;
 import jss.evolution.sample.BasicData;
 import ec.EvolutionState;
 import ec.Problem;
@@ -27,6 +28,8 @@ public class ScoreReleaseTime extends GPNode {
 		if (children.length != 0) {
 			state.output.error("Incorrect number of children for node " + toStringForError() + " at " + individualBase);
 		}
+
+		// TODO check to make sure that the job is static.
 	}
 
 	@Override
@@ -37,7 +40,10 @@ public class ScoreReleaseTime extends GPNode {
 			final GPIndividual individual,
 			final Problem problem) {
 		BasicData data = (BasicData)input;
-		data.setPriority(data.getReleaseTime());
+
+		IJob job = data.getJob();
+
+		data.setPriority(job.getReleaseTime());
 	}
 
 }

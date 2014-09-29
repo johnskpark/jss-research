@@ -31,7 +31,7 @@ gp.fs.0.func.5 = jss.evolution.node.basic.ScoreLargeValue
 gp.fs.0.func.5.nc = nc0
 gp.fs.0.func.6 = jss.evolution.node.basic.ScoreProcessingTime
 gp.fs.0.func.6.nc = nc0
-gp.fs.0.func.7 = jss.evolution.node.basic.ScoreReleaseTime
+gp.fs.0.func.7 = jss.evolution.node.basic.ScoreRemainingTime
 gp.fs.0.func.7.nc = nc0
 
 eval.problem = jss.evolution.sample.TwoStaticJSSProblem
