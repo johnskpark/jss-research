@@ -15,7 +15,7 @@ public class OpAddition extends GPNode {
 
 	@Override
 	public String toString() {
-		return "Inf";
+		return "+";
 	}
 
 	@Override

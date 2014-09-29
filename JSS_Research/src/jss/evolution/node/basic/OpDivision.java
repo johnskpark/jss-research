@@ -15,7 +15,7 @@ public class OpDivision extends GPNode {
 
 	@Override
 	public String toString() {
-		return "Inf";
+		return "/";
 	}
 
 	@Override

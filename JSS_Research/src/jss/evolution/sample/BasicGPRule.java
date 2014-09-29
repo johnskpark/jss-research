@@ -55,10 +55,13 @@ public class BasicGPRule implements ActionHandler {
 			}
 		}
 
-		// Simply process the job as early as possible.
-		double time = Math.max(machine.getTimeAvailable(), bestJob.getReleaseTime());
-
-		return new Action(machine, bestJob, time);
+		if (bestJob != null) {
+			// Simply process the job as early as possible.
+			double time = Math.max(machine.getTimeAvailable(), bestJob.getReleaseTime());
+			return new Action(machine, bestJob, time);
+		} else {
+			return null;
+		}
 	}
 
 }

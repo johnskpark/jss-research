@@ -2,7 +2,7 @@
 # Licensed under the Academic Free License version 3.0
 # See the file "LICENSE" for more information
 
-parent.0 = ec.gp.koza.koza.params
+parent.0 = ../../../ec/gp/koza/koza.params
 
 # the next four items are already defined in koza.params, but we
 # put them here to be clear.
@@ -34,8 +34,8 @@ gp.fs.0.func.6.nc = nc0
 gp.fs.0.func.7 = jss.evolution.node.basic.ScoreReleaseTime
 gp.fs.0.func.7.nc = nc0
 
-eval.problem = ec.app.oas.dr.TGPOAS
-eval.problem.data = ec.app.oas.OASData
+eval.problem = jss.evolution.sample.TwoStaticJSSProblem
+eval.problem.data = jss.evolution.sample.BasicData
 
 # seed.0=26556
 seed.0=17

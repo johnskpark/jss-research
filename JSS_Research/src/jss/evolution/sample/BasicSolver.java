@@ -38,6 +38,13 @@ public class BasicSolver implements ISolver, ISubscriber {
 		this.problem = problem;
 		this.solution = new BasicResult(problem);
 
+		// Subscribe to the machines for updates.
+		for (IMachine machine : problem.getMachines()) {
+			BasicMachine basicMachine = (BasicMachine)machine;
+			basicMachine.onSubscriptionRequest(this);
+		}
+
+		// Run the simulator.
 		while (core.hasEvent()) {
 			core.triggerEvent();
 		}
@@ -50,18 +57,22 @@ public class BasicSolver implements ISolver, ISubscriber {
 	@Override
 	public void onMachineFeed(IMachine machine) {
 		if (machine.isAvailable()) {
-			IJob lastJob = machine.getLastProcessedJob();
+			IJob lastJob;
+			if ((lastJob = machine.getLastProcessedJob()) != null) {
+				double penalty = lastJob.getPenalty(machine);
+				double tardiness = Math.max(machine.getTimeAvailable() -
+						lastJob.getDueDate(machine), 0);
 
-			double penalty = lastJob.getPenalty(machine);
-			double tardiness = Math.max(machine.getTimeAvailable() -
-					lastJob.getDueDate(machine), 0);
-
-			solution.setMakespan(machine.getTimeAvailable());
-			solution.setTWT(solution.getTWT() + penalty * tardiness);
+				solution.setMakespan(machine.getTimeAvailable());
+				solution.setTWT(solution.getTWT() + penalty * tardiness);
+			}
 
 			Action action = rule.getAction(machine, problem);
-			solution.addAction(action);
-			machine.processJob(action.getJob());
+
+			if (action != null) {
+				solution.addAction(action);
+				machine.processJob(action.getJob());
+			}
 		}
 	}
 

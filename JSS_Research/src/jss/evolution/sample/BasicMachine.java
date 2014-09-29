@@ -20,7 +20,10 @@ public class BasicMachine implements IMachine, IEventHandler, ISubscriptionHandl
 
 	private List<ISubscriber> subscribers = new ArrayList<ISubscriber>();
 
+	private IEvent machineEvent;
+
 	public BasicMachine() {
+		machineEvent = new MachineEvent(this, 0);
 	}
 
 	@Override
@@ -47,10 +50,14 @@ public class BasicMachine implements IMachine, IEventHandler, ISubscriptionHandl
 			throw new RuntimeException("You done goofed from BasicMachine");
 		}
 
+		job.visitMachine(this);
+
 		currentJob = job;
 		availableTime = Math.max(availableTime, job.getReleaseTime()) +
 				job.getSetupTime(this) +
 				job.getProcessingTime(this);
+
+		machineEvent = new MachineEvent(this, availableTime);
 	}
 
 	@Override
@@ -66,8 +73,12 @@ public class BasicMachine implements IMachine, IEventHandler, ISubscriptionHandl
 	@Override
 	public void updateStatus(double time) {
 		if (time >= availableTime) {
-			prevJobs.add(currentJob);
-			currentJob = null;
+			if (availableTime != 0) {
+				prevJobs.add(currentJob);
+				currentJob = null;
+			}
+
+			machineEvent = null;
 
 			sendMachineFeed(this);
 		}
@@ -79,28 +90,20 @@ public class BasicMachine implements IMachine, IEventHandler, ISubscriptionHandl
 
 		currentJob = null;
 		availableTime = 0;
+
+		subscribers = new ArrayList<ISubscriber>(); // TODO let's see if we need this or not.
+
+		machineEvent = new MachineEvent(this, 0);
 	}
 
 	@Override
 	public boolean hasEvent() {
-		return availableTime == 0 || !isAvailable();
+		return machineEvent != null;
 	}
 
 	@Override
 	public IEvent getNextEvent() {
-		if (availableTime == 0) {
-			// At the start, the machine triggers an event for something
-			// to be processed into the machine.
-			return new IEvent() {
-				public void trigger() {
-					// Do nothing. Its just there at the start for the
-					// jobs to start coming in.
-				}
-			};
-		} else {
-			// Finish the job.
-			return new JobProcessedEvent(this, availableTime);
-		}
+		return machineEvent;
 	}
 
 	@Override
@@ -126,11 +129,11 @@ public class BasicMachine implements IMachine, IEventHandler, ISubscriptionHandl
 	}
 
 	// An event class that represents a job completing on the machine.
-	private class JobProcessedEvent implements IEvent {
+	private class MachineEvent implements IEvent {
 		private BasicMachine machine;
 		private double completionTime;
 
-		public JobProcessedEvent(BasicMachine machine, double time) {
+		public MachineEvent(BasicMachine machine, double time) {
 			this.machine = machine;
 			this.completionTime = time;
 		}
@@ -140,4 +143,5 @@ public class BasicMachine implements IMachine, IEventHandler, ISubscriptionHandl
 			machine.updateStatus(completionTime);
 		}
 	}
+
 }

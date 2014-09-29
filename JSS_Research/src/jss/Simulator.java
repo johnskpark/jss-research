@@ -1,10 +1,10 @@
 package jss;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.PriorityQueue;
+import java.util.Set;
 
 /**
  * TODO javadoc here.
@@ -84,7 +84,7 @@ public class Simulator {
 	}
 
 	private class EventGroup implements Comparable<EventGroup> {
-		private List<IEvent> eventList = new ArrayList<IEvent>();
+		private Set<IEvent> eventList = new HashSet<IEvent>();
 
 		private double triggerTime;
 

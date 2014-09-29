@@ -97,7 +97,7 @@ public class TwoStaticJSSDataset {
 
 					job.offerMachine(machine);
 					job.setProcessingTime(machine, processingTime);
-				} else if (machineProb < probs[1]) {
+				} else if (machineProb < probs[2]) {
 					processingTime = MACHINE1_RANGE * rand.nextDouble() + MACHINE1_MIN;
 					machine = inst.getMachines().get(0);
 					job.offerMachine(machine);
