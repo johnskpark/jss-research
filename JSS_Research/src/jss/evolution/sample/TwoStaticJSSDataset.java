@@ -10,8 +10,7 @@ import jss.problem.static_problem.StaticJob;
 import jss.problem.static_problem.StaticMachine;
 
 /**
- * I done goofed here. Change this to the proper dataset that's located
- * in the problem.
+ * TODO javadoc.
  *
  * @author parkjohn
  *
