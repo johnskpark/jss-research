@@ -3,9 +3,6 @@ package jss.problem.static_problem;
 import java.util.ArrayList;
 import java.util.List;
 
-import jss.IEventHandler;
-import jss.IJob;
-import jss.IMachine;
 import jss.IProblemInstance;
 
 /**

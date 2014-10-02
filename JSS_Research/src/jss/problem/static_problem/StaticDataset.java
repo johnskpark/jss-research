@@ -1,5 +1,7 @@
 package jss.problem.static_problem;
 
+import jss.IDataset;
+
 /**
  * TODO need a way to automatically generate the data, and then write it down
  * to a file (and be able to read it again).
@@ -7,30 +9,6 @@ package jss.problem.static_problem;
  * @author parkjohn
  *
  */
-public class StaticDataset {
+public abstract class StaticDataset implements IDataset {
 
-	private int seed;
-
-	/**
-	 * TODO javadoc.
-	 * @param seed
-	 */
-	public StaticDataset(int seed) {
-		this.seed = seed;
-	}
-
-	/**
-	 * TODO javadoc.
-	 * @param numMachine
-	 */
-	public void setNumMachine(int numMachine) {
-		// TODO placeholder
-	}
-
-	/**
-	 * TODO javadoc.
-	 */
-	public void printOutput() {
-		// TODO placeholder
-	}
 }
