@@ -1,4 +1,4 @@
-package jss.problem.static_problem;
+package jss.problem.breakdown_problem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,29 +11,32 @@ import jss.ISubscriber;
 import jss.ISubscriptionHandler;
 
 /**
- * Really, really basic problem instance. TODO write more.
+ * TODO javadoc.
  *
  * @author parkjohn
  *
  */
-public class StaticInstance implements IProblemInstance, ISubscriptionHandler {
+public class BreakdownInstance implements IProblemInstance, ISubscriptionHandler {
 
-	private List<StaticJob> jobs = new ArrayList<StaticJob>();
-	private List<StaticMachine> machines = new ArrayList<StaticMachine>();
+	private List<BreakdownJob> jobs = new ArrayList<BreakdownJob>();
+	private List<BreakdownMachine> machines = new ArrayList<BreakdownMachine>();
+
+	private IEventHandler breakdownHandler;
 
 	private List<ISubscriber> subscribers = new ArrayList<ISubscriber>();
 
 	/**
 	 * TODO javadoc.
 	 */
-	public StaticInstance() {
+	public BreakdownInstance(IEventHandler handler) {
+		breakdownHandler = handler;
 	}
 
-	public void addJob(StaticJob job) {
+	public void addJob(BreakdownJob job) {
 		jobs.add(job);
 	}
 
-	public void addMachine(StaticMachine machine) {
+	public void addMachine(BreakdownMachine machine) {
 		machines.add(machine);
 	}
 
@@ -61,17 +64,18 @@ public class StaticInstance implements IProblemInstance, ISubscriptionHandler {
 
 		eventHandlers.addAll(jobs);
 		eventHandlers.addAll(machines);
+		eventHandlers.add(breakdownHandler);
 
 		return eventHandlers;
 	}
 
 	@Override
 	public void reset() {
-		for (StaticJob job : jobs) {
+		for (BreakdownJob job : jobs) {
 			job.reset();
 		}
 
-		for (StaticMachine machine : machines) {
+		for (BreakdownMachine machine : machines) {
 			machine.reset();
 		}
 

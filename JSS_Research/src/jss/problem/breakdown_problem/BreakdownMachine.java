@@ -1,4 +1,4 @@
-package jss.problem.static_problem;
+package jss.problem.breakdown_problem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,12 +10,13 @@ import jss.IMachine;
 import jss.ISubscriptionHandler;
 
 /**
- * TODO javadoc.
+ * TODO currently just a copy of the static machine. If we don't require
+ * the separation, merge the two into one class.
  *
  * @author parkjohn
  *
  */
-public class StaticMachine implements IMachine, IEventHandler {
+public class BreakdownMachine implements IMachine, IEventHandler {
 
 	// Mutable components TODO more doc.
 	private List<IJob> prevJobs = new ArrayList<IJob>();
@@ -29,7 +30,7 @@ public class StaticMachine implements IMachine, IEventHandler {
 	/**
 	 * TODO javadoc.
 	 */
-	public StaticMachine(ISubscriptionHandler handler) {
+	public BreakdownMachine(ISubscriptionHandler handler) {
 		subscriptionHandler = handler;
 		machineEvent = new MachineEvent(this, 0);
 	}
@@ -91,6 +92,12 @@ public class StaticMachine implements IMachine, IEventHandler {
 		}
 	}
 
+	public void breakdown() {
+		if (currentJob != null) {
+			// TODO do the breakdown.
+		}
+	}
+
 	@Override
 	public void reset() {
 		prevJobs = new ArrayList<IJob>();
@@ -108,20 +115,22 @@ public class StaticMachine implements IMachine, IEventHandler {
 
 	@Override
 	public IEvent getNextEvent() {
+		// TODO need to return both event if they occur at the same time
 		return machineEvent;
 	}
 
 	@Override
 	public double getNextEventTime() {
+		// TODO need to return both event if they occur at the same time
 		return availableTime;
 	}
 
 	// An event class that represents a job completing on the machine.
 	private class MachineEvent implements IEvent {
-		private StaticMachine machine;
+		private BreakdownMachine machine;
 		private double completionTime;
 
-		public MachineEvent(StaticMachine machine, double time) {
+		public MachineEvent(BreakdownMachine machine, double time) {
 			this.machine = machine;
 			this.completionTime = time;
 		}

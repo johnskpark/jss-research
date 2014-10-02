@@ -50,13 +50,12 @@ public interface IJob {
 	public double getPenalty(IMachine machine);
 
 	/**
-	 * Visit the machine to be processed. The logic for whether it is
-	 * valid for the job to be processed by the machine will be handled
-	 * in the machine logic.
-	 * @param machine the machine to visit
+	 * Callback function that declares that the job has been last processed on
+	 * the specified machine.
+	 * @param machine the machine for which the job has been last processed on.
 	 * @throws RuntimeException if the machine is not next in line to be visited
 	 */
-	public void visitMachine(IMachine machine) throws RuntimeException;
+	public void processedOnMachine(IMachine machine) throws RuntimeException;
 
 	/**
 	 * Get the next machine that needs to be visited by the job.

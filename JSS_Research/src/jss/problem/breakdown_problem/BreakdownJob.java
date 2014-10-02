@@ -1,4 +1,4 @@
-package jss.problem.static_problem;
+package jss.problem.breakdown_problem;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -13,17 +13,12 @@ import jss.IMachine;
 import jss.ISubscriber;
 import jss.ISubscriptionHandler;
 
-/**
- * TODO javadoc.
- *
- * @author parkjohn
- *
- */
-public class StaticJob implements IJob, IEventHandler, ISubscriptionHandler {
+public class BreakdownJob implements IJob, IEventHandler, ISubscriptionHandler {
 
 	// Immutable component TODO more doc
 	private List<IMachine> machineList = new LinkedList<IMachine>();
 
+	// TODO these will need to change to some classes later on.
 	private Map<IMachine, Double> processingTimes = new HashMap<IMachine, Double>();
 	private Map<IMachine, Double> setupTimes = new HashMap<IMachine, Double>();
 	private Map<IMachine, Double> dueDates = new HashMap<IMachine, Double>();
@@ -33,7 +28,7 @@ public class StaticJob implements IJob, IEventHandler, ISubscriptionHandler {
 	// Mutable component TODO more doc
 	private Queue<IMachine> machineQueue = new LinkedList<IMachine>();
 
-	public StaticJob() {
+	public BreakdownJob() {
 	}
 
 	/**

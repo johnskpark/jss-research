@@ -17,6 +17,7 @@ public class Result implements IResult {
 
 	private List<Action> solutionActions = new ArrayList<Action>();
 
+	// TODO need more objectives here, such as the disruption and such.
 	private double makespan = 0;
 	private double twt = 0;
 

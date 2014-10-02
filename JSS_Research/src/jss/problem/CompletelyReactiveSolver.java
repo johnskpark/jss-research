@@ -9,6 +9,7 @@ import jss.IProblemInstance;
 import jss.IResult;
 import jss.ISolver;
 import jss.ISubscriber;
+import jss.problem.static_problem.StaticInstance;
 import jss.problem.static_problem.StaticMachine;
 
 /**
@@ -43,11 +44,12 @@ public class CompletelyReactiveSolver implements ISolver, ISubscriber {
 		this.problem = problem;
 		this.solution = new Result(problem);
 
-		// Subscribe to the machines for updates.
-		for (IMachine machine : problem.getMachines()) {
-			StaticMachine basicMachine = (StaticMachine)machine;
-			basicMachine.onSubscriptionRequest(this);
-		}
+		// Subscribe to the problem for updates.
+//		for (IMachine machine : problem.getMachines()) {
+//			StaticMachine basicMachine = (StaticMachine)machine;
+//			basicMachine.onSubscriptionRequest(this);
+//		}
+		// TODO need a better way to approach this.
 
 		// Run the simulator.
 		while (core.hasEvent()) {

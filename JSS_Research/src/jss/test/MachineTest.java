@@ -2,6 +2,7 @@ package jss.test;
 
 import jss.IJob;
 import jss.IMachine;
+import jss.ISubscriptionHandler;
 import jss.problem.static_problem.StaticMachine;
 
 import org.jmock.Expectations;
@@ -22,6 +23,7 @@ public class MachineTest {
 
 	private Mockery context = new JUnit4Mockery();
 
+	private ISubscriptionHandler mockHandler;
 	private IMachine machine;
 	private IJob mockJob1;
 	private IJob mockJob2;
@@ -31,8 +33,9 @@ public class MachineTest {
 	private double setupTime;
 
 	@Test
-	public void basicMachineTest_ProcessJob() {
-		machine = new StaticMachine();
+	public void staticMachineTest_ProcessJob() {
+		mockHandler = context.mock(ISubscriptionHandler.class);
+		machine = new StaticMachine(mockHandler);
 		mockJob1 = context.mock(IJob.class);
 
 		releaseTime = 0.0;
@@ -47,7 +50,7 @@ public class MachineTest {
 		Assert.assertEquals(machine.getTimeAvailable(), 0, EPSILON);
 
 		context.checking(new Expectations() {{
-			oneOf(mockJob1).visitMachine(machine);
+			oneOf(mockJob1).processedOnMachine(machine);
 			oneOf(mockJob1).getReleaseTime(); will(returnValue(releaseTime));
 			oneOf(mockJob1).getProcessingTime(machine); will(returnValue(processingTime));
 			oneOf(mockJob1).getSetupTime(machine); will(returnValue(setupTime));
@@ -62,8 +65,9 @@ public class MachineTest {
 	}
 
 	@Test
-	public void basicMachineTest_FinishJob() {
-		machine = new StaticMachine();
+	public void staticMachineTest_FinishJob() {
+		mockHandler = context.mock(ISubscriptionHandler.class);
+		machine = new StaticMachine(mockHandler);
 		mockJob1 = context.mock(IJob.class);
 
 		releaseTime = 0.0;
@@ -73,13 +77,18 @@ public class MachineTest {
 		double completionTime = releaseTime + setupTime + processingTime;
 
 		context.checking(new Expectations() {{
-			oneOf(mockJob1).visitMachine(machine);
+			oneOf(mockJob1).processedOnMachine(machine);
 			oneOf(mockJob1).getReleaseTime(); will(returnValue(releaseTime));
 			oneOf(mockJob1).getProcessingTime(machine); will(returnValue(processingTime));
 			oneOf(mockJob1).getSetupTime(machine); will(returnValue(setupTime));
 		}});
 
 		machine.processJob(mockJob1);
+
+		context.checking(new Expectations() {{
+			oneOf(mockHandler).sendMachineFeed(machine);
+		}});
+
 		machine.updateStatus(completionTime);
 
 		Assert.assertNull(machine.getCurrentJob());
@@ -91,8 +100,9 @@ public class MachineTest {
 	}
 
 	@Test
-	public void basicMachineTest_Reset() {
-		machine = new StaticMachine();
+	public void staticMachineTest_Reset() {
+		mockHandler = context.mock(ISubscriptionHandler.class);
+		machine = new StaticMachine(mockHandler);
 		mockJob1 = context.mock(IJob.class);
 
 		releaseTime = 0.0;
@@ -102,13 +112,18 @@ public class MachineTest {
 		double completionTime = releaseTime + setupTime + processingTime;
 
 		context.checking(new Expectations() {{
-			oneOf(mockJob1).visitMachine(machine);
+			oneOf(mockJob1).processedOnMachine(machine);
 			oneOf(mockJob1).getReleaseTime(); will(returnValue(releaseTime));
 			oneOf(mockJob1).getProcessingTime(machine); will(returnValue(processingTime));
 			oneOf(mockJob1).getSetupTime(machine); will(returnValue(setupTime));
 		}});
 
 		machine.processJob(mockJob1);
+
+		context.checking(new Expectations() {{
+			oneOf(mockHandler).sendMachineFeed(machine);
+		}});
+
 		machine.updateStatus(completionTime);
 
 		machine.reset();
@@ -120,8 +135,9 @@ public class MachineTest {
 	}
 
 	@Test
-	public void basicMachineTestFail_ProcessJob() {
-		machine = new StaticMachine();
+	public void staticMachineTestFail_ProcessJob() {
+		mockHandler = context.mock(ISubscriptionHandler.class);
+		machine = new StaticMachine(mockHandler);
 		mockJob1 = context.mock(IJob.class, "Job1");
 		mockJob2 = context.mock(IJob.class, "Job2");
 
@@ -130,7 +146,7 @@ public class MachineTest {
 		setupTime = 0.0;
 
 		context.checking(new Expectations() {{
-			oneOf(mockJob1).visitMachine(machine);
+			oneOf(mockJob1).processedOnMachine(machine);
 			oneOf(mockJob1).getReleaseTime(); will(returnValue(releaseTime));
 			oneOf(mockJob1).getProcessingTime(machine); will(returnValue(processingTime));
 			oneOf(mockJob1).getSetupTime(machine); will(returnValue(setupTime));

@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import jss.IProblemInstance;
-import jss.problem.static_problem.StaticInstanceBuilder;
+import jss.problem.static_problem.StaticInstance;
 import jss.problem.static_problem.StaticJob;
 import jss.problem.static_problem.StaticMachine;
 
@@ -77,14 +77,15 @@ public class TwoStaticJSSDataset {
 			probs[3] = probs[2] + bToA;
 		}
 
+		// TODO this will probably need to be fixed up later.
 		public IProblemInstance createProblem(Random rand, int numJobs) {
-			StaticInstanceBuilder builder = new StaticInstanceBuilder();
+			StaticInstance problem = new StaticInstance();
 
-			StaticMachine machine1 = new StaticMachine();
-			StaticMachine machine2 = new StaticMachine();
+			StaticMachine machine1 = new StaticMachine(problem);
+			StaticMachine machine2 = new StaticMachine(problem);
 
-			builder.addMachine(machine1);
-			builder.addMachine(machine2);
+			problem.addMachine(machine1);
+			problem.addMachine(machine2);
 
 			for (int i = 0; i < numJobs; i++) {
 				StaticJob job = new StaticJob();
@@ -118,10 +119,10 @@ public class TwoStaticJSSDataset {
 					job.setProcessingTime(machine1, processingTime);
 				}
 
-				builder.addJob(job);
+				problem.addJob(job);
 			}
 
-			return builder.createNewInstance();
+			return problem;
 		}
 	}
 

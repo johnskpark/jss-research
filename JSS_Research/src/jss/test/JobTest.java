@@ -24,7 +24,7 @@ public class JobTest {
 	private IMachine mockMachine2;
 
 	@Test
-	public void basicJobTest_GetterSetter() {
+	public void staticJobTest_GetterSetter() {
 		StaticJob job = new StaticJob();
 
 		mockMachine1 = context.mock(IMachine.class, "Machine1");
@@ -69,7 +69,7 @@ public class JobTest {
 	}
 
 	@Test
-	public void basicJobTest_VisitMachine() {
+	public void staticJobTest_VisitMachine() {
 		StaticJob job = new StaticJob();
 
 		mockMachine1 = context.mock(IMachine.class, "Machine1");
@@ -83,14 +83,14 @@ public class JobTest {
 		Assert.assertFalse(mockMachine2.equals(job.getNextMachine()));
 		Assert.assertFalse(job.isCompleted());
 
-		job.visitMachine(mockMachine1);
+		job.processedOnMachine(mockMachine1);
 
 		Assert.assertEquals(job.getNextMachine(), mockMachine2);
 		Assert.assertFalse(mockMachine1.equals(job.getNextMachine()));
 		Assert.assertTrue(mockMachine2.equals(job.getNextMachine()));
 		Assert.assertFalse(job.isCompleted());
 
-		job.visitMachine(mockMachine2);
+		job.processedOnMachine(mockMachine2);
 
 		Assert.assertNull(job.getNextMachine());
 		Assert.assertFalse(mockMachine1.equals(job.getNextMachine()));
@@ -105,7 +105,7 @@ public class JobTest {
 	}
 
 	@Test
-	public void basicJobTest_Reset() {
+	public void staticJobTest_Reset() {
 		StaticJob job = new StaticJob();
 
 		mockMachine1 = context.mock(IMachine.class, "Machine1");
@@ -119,8 +119,8 @@ public class JobTest {
 		Assert.assertFalse(mockMachine2.equals(job.getNextMachine()));
 		Assert.assertFalse(job.isCompleted());
 
-		job.visitMachine(mockMachine1);
-		job.visitMachine(mockMachine2);
+		job.processedOnMachine(mockMachine1);
+		job.processedOnMachine(mockMachine2);
 
 		Assert.assertNull(job.getNextMachine());
 		Assert.assertFalse(mockMachine1.equals(job.getNextMachine()));
@@ -136,7 +136,7 @@ public class JobTest {
 	}
 
 	@Test
-	public void basicJobTestFail_SetProcessingTime() {
+	public void staticJobTestFail_SetProcessingTime() {
 		StaticJob job = new StaticJob();
 
 		mockMachine1 = context.mock(IMachine.class);
@@ -151,7 +151,7 @@ public class JobTest {
 	}
 
 	@Test
-	public void basicJobTestFail_SetSetupTime() {
+	public void staticJobTestFail_SetSetupTime() {
 		StaticJob job = new StaticJob();
 
 		mockMachine1 = context.mock(IMachine.class);
@@ -166,7 +166,7 @@ public class JobTest {
 	}
 
 	@Test
-	public void basicJobTestFail_SetDueDate() {
+	public void staticJobTestFail_SetDueDate() {
 		StaticJob job = new StaticJob();
 
 		mockMachine1 = context.mock(IMachine.class);
@@ -181,7 +181,7 @@ public class JobTest {
 	}
 
 	@Test
-	public void basicJobTestFail_SetPenalty() {
+	public void staticJobTestFail_SetPenalty() {
 		StaticJob job = new StaticJob();
 
 		mockMachine1 = context.mock(IMachine.class);
@@ -196,7 +196,7 @@ public class JobTest {
 	}
 
 	@Test
-	public void basicJobTestFail_VisitMachine() {
+	public void staticJobTestFail_VisitMachine() {
 		StaticJob job = new StaticJob();
 
 		IMachine machine1 = context.mock(IMachine.class, "Machine1");
@@ -206,7 +206,7 @@ public class JobTest {
 		job.offerMachine(machine2);
 
 		try {
-			job.visitMachine(machine2);
+			job.processedOnMachine(machine2);
 
 			Assert.fail();
 		} catch (RuntimeException e) {

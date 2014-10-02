@@ -13,6 +13,8 @@ import ec.util.Parameter;
 
 public class ScoreDueDate extends GPNode {
 
+	private static final long serialVersionUID = -4015393052275553333L;
+
 	@Override
 	public String toString() {
 		return "D";
