@@ -15,6 +15,12 @@ import jss.problem.static_problem.StaticJob;
 import jss.problem.static_problem.StaticMachine;
 import jss.util.TalliardRandom;
 
+/**
+ * TODO javadoc.
+ *
+ * @author parkjohn
+ *
+ */
 public class TalliardDataset extends StaticDataset {
 
 	private static final String TALLIARD_DATASET = "jss_talliard.csv";
@@ -25,6 +31,9 @@ public class TalliardDataset extends StaticDataset {
 	private List<RawInstance> rawInstances = new ArrayList<RawInstance>();
 	private List<StaticInstance> problemInstances = new ArrayList<StaticInstance>();
 
+	/**
+	 * TODO javadoc.
+	 */
 	public TalliardDataset() {
 		// Read the .csv file.
 		readFile();
@@ -41,6 +50,10 @@ public class TalliardDataset extends StaticDataset {
 		try {
 			String line = reader.readLine(); // Skip the first line (header).
 			while ((line = reader.readLine()) != null) {
+				if (line.trim().isEmpty()) {
+					continue;
+				}
+				System.out.println(line);
 				rawInstances.add(readLine(line));
 			}
 		} catch (IOException ex) {
@@ -69,6 +82,8 @@ public class TalliardDataset extends StaticDataset {
 		}
 	}
 
+	// Look at the paper "Benchmarks for basic scheduling problems" for
+	// the pseudocode details.
 	private StaticInstance rawToStatic(RawInstance rawInstance) {
 		TalliardRandom timeRand = new TalliardRandom(rawInstance.timeSeed);
 		TalliardRandom machineRand = new TalliardRandom(rawInstance.machineSeed);
@@ -122,8 +137,33 @@ public class TalliardDataset extends StaticDataset {
 		return (int) Math.floor(min + rand.nextDouble() * (max - min + 1));
 	}
 
+	@Override
 	public List<IProblemInstance> getProblems() {
 		return new ArrayList<IProblemInstance>(problemInstances);
+	}
+
+	/**
+	 * TODO javadoc.
+	 * @return
+	 */
+	public List<Double> getUpperBounds() {
+		List<Double> upperBounds = new ArrayList<Double>();
+		for (RawInstance raw : rawInstances) {
+			upperBounds.add(raw.upperBound);
+		}
+		return upperBounds;
+	}
+
+	/**
+	 * TODO javadoc.
+	 * @return
+	 */
+	public List<Double> getLowerBounds() {
+		List<Double> lowerBounds = new ArrayList<Double>();
+		for (RawInstance raw : rawInstances) {
+			lowerBounds.add(raw.lowerBound);
+		}
+		return lowerBounds;
 	}
 
 	private class RawInstance {
