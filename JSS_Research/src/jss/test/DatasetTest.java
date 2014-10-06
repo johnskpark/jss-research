@@ -81,13 +81,10 @@ public class DatasetTest {
 				for (int i = 0; i < orderedMachines.size(); i++) {
 					IMachine machine = orderedMachines.get(i);
 
-					System.out.printf("%d,", machines.indexOf(machine));
-
-//					Assert.assertTrue(machine instanceof StaticMachine);
-//					Assert.assertEquals(job.getProcessingTime(machine), processingTimes[j][i], EPSILON);
-//					Assert.assertEquals(machine, machines.get(processingOrders[j][i]));
+					Assert.assertTrue(machine instanceof StaticMachine);
+					Assert.assertEquals(job.getProcessingTime(machine), processingTimes[j][i], EPSILON);
+					Assert.assertEquals(machine, machines.get(processingOrders[j][i]-1));
 				}
-				System.out.println();
 			}
 
 		} catch (RuntimeException ex) {
@@ -107,15 +104,11 @@ public class DatasetTest {
 			Assert.assertEquals(problems.size(), upperBounds.size());
 			Assert.assertEquals(problems.size(), lowerBounds.size());
 
-			taillardInstanceTest(problems.get(0),
-					upperBounds.get(0),
-					lowerBounds.get(0));
-
-//			for (int i = 0; i < problems.size(); i++) {
-//				talliardInstanceTest(problems.get(i),
-//						upperBounds.get(i),
-//						lowerBounds.get(i));
-//			}
+			for (int i = 0; i < problems.size(); i++) {
+				taillardInstanceTest(problems.get(i),
+						upperBounds.get(i),
+						lowerBounds.get(i));
+			}
 
 		} catch (RuntimeException ex) {
 			Assert.fail();

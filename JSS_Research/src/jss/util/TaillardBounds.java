@@ -22,15 +22,7 @@ public class TaillardBounds {
 	 * @return
 	 */
 	public static double calculateUpperBound(StaticInstance problem) {
-		List<IMachine> machines = problem.getMachines();
-		List<IJob> jobs = problem.getJobs();
-
-		double[] b = getB(problem);
-		double[] a = getA(problem);
-		double[] T = getT(problem);
-
-		// TODO
-		return 0;
+		throw new UnsupportedOperationException("Upper bound calculation on Taillard dataset not specified");
 	}
 
 	/**
@@ -82,15 +74,14 @@ public class TaillardBounds {
 
 				double sum = 0.0;
 				int kPrime = orderedMachines.indexOf(machine);
-				System.out.printf("b: %d,%d,%d\t", i, j, kPrime);
-				for (int k = 0; k < kPrime - 1; k++) {
+
+				for (int k = 0; k < kPrime; k++) {
 					sum += job.getProcessingTime(orderedMachines.get(k));
 				}
 
 				b[i] = Math.min(sum, b[i]);
 			}
 		}
-		System.out.println();
 
 		return b;
 	}
@@ -112,7 +103,7 @@ public class TaillardBounds {
 
 				double sum = 0.0;
 				int kPrime = orderedMachines.indexOf(machine);
-				System.out.printf("a: %d,%d,%d\t", i, j, kPrime);
+
 				for (int k = kPrime + 1; k < machines.size(); k++) {
 					sum += job.getProcessingTime(orderedMachines.get(k));
 				}
@@ -120,7 +111,6 @@ public class TaillardBounds {
 				a[i] = Math.min(sum, a[i]);
 			}
 		}
-		System.out.println();
 
 		return a;
 	}
