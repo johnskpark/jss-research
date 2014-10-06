@@ -1,10 +1,11 @@
-package jss.evolution.sample;
+package jss.problem.static_problem.rachel_dataset;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import jss.IProblemInstance;
+import jss.problem.static_problem.StaticDataset;
 import jss.problem.static_problem.StaticInstance;
 import jss.problem.static_problem.StaticJob;
 import jss.problem.static_problem.StaticMachine;
@@ -15,7 +16,7 @@ import jss.problem.static_problem.StaticMachine;
  * @author parkjohn
  *
  */
-public class TwoStaticJSSDataset {
+public class TwoStaticJSSDataset extends StaticDataset {
 
 	private static final int NUM_PROBLEMS_PER_CONFIG = 8;
 	private static final int NUM_JOBS_PER_PROBLEM = 10;
@@ -62,8 +63,21 @@ public class TwoStaticJSSDataset {
 		}
 	}
 
+	@Override
 	public List<IProblemInstance> getProblems() {
 		return problems;
+	}
+
+	@Override
+	public List<Double> getUpperBounds() {
+		// TODO
+		throw new UnsupportedOperationException("Not yet implemented");
+	}
+
+	@Override
+	public List<Double> getLowerBounds() {
+		// TODO
+		throw new UnsupportedOperationException("Not yet implemented");
 	}
 
 	private class ProblemFactory {

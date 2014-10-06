@@ -15,7 +15,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * TODO integration test.
+ * TODO integration test. Currently tests the Taillard dataset.
  *
  * @author parkjohn
  *

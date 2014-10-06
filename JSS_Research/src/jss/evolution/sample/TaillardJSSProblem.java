@@ -7,7 +7,7 @@ import jss.evolution.JSSData;
 import jss.evolution.JSSRule;
 import jss.problem.CompletelyReactiveSolver;
 import jss.problem.Statistics;
-import jss.problem.static_problem.rachel_dataset.TwoStaticJSSDataset;
+import jss.problem.static_problem.taillard_dataset.TaillardDataset;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.gp.GPIndividual;
@@ -15,13 +15,17 @@ import ec.gp.GPProblem;
 import ec.gp.koza.KozaFitness;
 import ec.util.Parameter;
 
-public class TwoStaticJSSProblem extends GPProblem {
+/**
+ * TODO javadoc. This will probably be merged with the TwoStaticJSSProblem to form a single class later down the line.
+ *
+ * @author parkjohn
+ *
+ */
+public class TaillardJSSProblem extends GPProblem {
 
 	private static final long serialVersionUID = -9179316619823952437L;
 
-	private static final int DATASET_SEED = 15;
-
-	private IDataset dataset = new TwoStaticJSSDataset(DATASET_SEED);
+	private IDataset dataset = new TaillardDataset();
 	private CompletelyReactiveSolver solver = new CompletelyReactiveSolver();
 
 	@Override
@@ -69,7 +73,7 @@ public class TwoStaticJSSProblem extends GPProblem {
 
 	@Override
 	public Object clone() {
-		TwoStaticJSSProblem newObject = (TwoStaticJSSProblem)super.clone();
+		TaillardJSSProblem newObject = (TaillardJSSProblem)super.clone();
 
 		newObject.input = (JSSData)input.clone();
 		newObject.dataset = dataset;

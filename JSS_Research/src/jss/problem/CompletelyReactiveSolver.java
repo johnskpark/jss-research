@@ -2,15 +2,13 @@ package jss.problem;
 
 import jss.Action;
 import jss.ActionHandler;
-import jss.Simulator;
 import jss.IJob;
 import jss.IMachine;
 import jss.IProblemInstance;
 import jss.IResult;
 import jss.ISolver;
 import jss.ISubscriber;
-import jss.problem.static_problem.StaticInstance;
-import jss.problem.static_problem.StaticMachine;
+import jss.Simulator;
 
 /**
  * TODO javadoc.
@@ -43,13 +41,6 @@ public class CompletelyReactiveSolver implements ISolver, ISubscriber {
 		Simulator core = new Simulator(problem);
 		this.problem = problem;
 		this.solution = new Result(problem);
-
-		// Subscribe to the problem for updates.
-//		for (IMachine machine : problem.getMachines()) {
-//			StaticMachine basicMachine = (StaticMachine)machine;
-//			basicMachine.onSubscriptionRequest(this);
-//		}
-		// TODO need a better way to approach this.
 
 		// Run the simulator.
 		while (core.hasEvent()) {
