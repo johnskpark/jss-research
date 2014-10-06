@@ -1,4 +1,4 @@
-package jss.problem.static_problem.talliard_dataset;
+package jss.problem.static_problem.taillard_dataset;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,7 +13,7 @@ import jss.problem.static_problem.StaticDataset;
 import jss.problem.static_problem.StaticInstance;
 import jss.problem.static_problem.StaticJob;
 import jss.problem.static_problem.StaticMachine;
-import jss.util.TalliardRandom;
+import jss.util.TaillardRandom;
 
 /**
  * TODO javadoc.
@@ -21,9 +21,9 @@ import jss.util.TalliardRandom;
  * @author parkjohn
  *
  */
-public class TalliardDataset extends StaticDataset {
+public class TaillardDataset extends StaticDataset {
 
-	private static final String TALLIARD_DATASET = "jss_talliard.csv";
+	private static final String TALLIARD_DATASET = "jss_taillard.csv";
 
 	private static int MIN_PROCESSING_TIME = 1;
 	private static int MAX_PROCESSING_TIME = 99;
@@ -34,7 +34,7 @@ public class TalliardDataset extends StaticDataset {
 	/**
 	 * TODO javadoc.
 	 */
-	public TalliardDataset() {
+	public TaillardDataset() {
 		// Read the .csv file.
 		readFile();
 
@@ -43,7 +43,7 @@ public class TalliardDataset extends StaticDataset {
 	}
 
 	private void readFile() {
-		InputStream inputStream = TalliardDataset.class.getResourceAsStream(TALLIARD_DATASET);
+		InputStream inputStream = TaillardDataset.class.getResourceAsStream(TALLIARD_DATASET);
 		InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
 		BufferedReader reader = new BufferedReader(inputStreamReader);
 
@@ -53,7 +53,6 @@ public class TalliardDataset extends StaticDataset {
 				if (line.trim().isEmpty()) {
 					continue;
 				}
-				System.out.println(line);
 				rawInstances.add(readLine(line));
 			}
 		} catch (IOException ex) {
@@ -85,23 +84,27 @@ public class TalliardDataset extends StaticDataset {
 	// Look at the paper "Benchmarks for basic scheduling problems" for
 	// the pseudocode details.
 	private StaticInstance rawToStatic(RawInstance rawInstance) {
-		TalliardRandom timeRand = new TalliardRandom(rawInstance.timeSeed);
-		TalliardRandom machineRand = new TalliardRandom(rawInstance.machineSeed);
+		TaillardRandom timeRand = new TaillardRandom(rawInstance.timeSeed);
+		TaillardRandom machineRand = new TaillardRandom(rawInstance.machineSeed);
 
 		StaticInstance instance = new StaticInstance();
 
 		StaticMachine[] machines = new StaticMachine[rawInstance.numMachines];
 		for (int i = 0; i < rawInstance.numMachines; i++) {
 			machines[i] = new StaticMachine(instance);
+			instance.addMachine(machines[i]);
 		}
 
 		StaticJob[] jobs = new StaticJob[rawInstance.numJobs];
 		for (int j = 0; j < rawInstance.numJobs; j++) {
 			jobs[j] = new StaticJob();
+			instance.addJob(jobs[j]);
 		}
 
 		// Set the machine processing order of jobs.
+		// TODO the machine ordering is fucked up.
 		for (int j = 0; j < rawInstance.numJobs; j++) {
+
 			// Initialise the initial processing order.
 			int[] processingOrder = new int[rawInstance.numMachines];
 			for (int i = 0; i < rawInstance.numMachines; i++) {
@@ -120,20 +123,18 @@ public class TalliardDataset extends StaticDataset {
 			for (int i = 0; i < rawInstance.numMachines; i++) {
 				jobs[j].offerMachine(machines[processingOrder[i]]);
 			}
-		}
 
-		// Set the processing time of the jobs.
-		for (int j = 0; j < rawInstance.numJobs; j++) {
+			// Set the processing time for each machine on the job.
 			for (int i = 0; i < rawInstance.numMachines; i++) {
 				int processingTime = uniformDistribution(MIN_PROCESSING_TIME, MAX_PROCESSING_TIME, timeRand);
-				jobs[j].setProcessingTime(machines[i], processingTime);
+				jobs[j].setProcessingTime(machines[processingOrder[i]], processingTime);
 			}
 		}
 
 		return instance;
 	}
 
-	private int uniformDistribution(int min, int max, TalliardRandom rand) {
+	private int uniformDistribution(int min, int max, TaillardRandom rand) {
 		return (int) Math.floor(min + rand.nextDouble() * (max - min + 1));
 	}
 

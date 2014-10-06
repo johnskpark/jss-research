@@ -1,5 +1,6 @@
 package jss.problem.static_problem;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -169,6 +170,14 @@ public class StaticJob implements IJob, IEventHandler, ISubscriptionHandler {
 	@Override
 	public void reset() {
 		machineQueue = new LinkedList<IMachine>(machineList);
+	}
+
+	/**
+	 * TODO javadoc.
+	 * @return
+	 */
+	public List<IMachine> getProcessingOrder() {
+		return new ArrayList<IMachine>(machineList);
 	}
 
 	// Basic Job has no event triggers.

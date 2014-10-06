@@ -6,7 +6,7 @@ package jss.util;
  * @author parkjohn
  *
  */
-public class TalliardRandom implements IRandom {
+public class TaillardRandom implements IRandom {
 
 	private static final int A_CONSTANT = 16807;
 	private static final int B_CONSTANT = 127773;
@@ -20,7 +20,7 @@ public class TalliardRandom implements IRandom {
 	 * TODO javadoc.
 	 * @param seed
 	 */
-	public TalliardRandom(long seed) {
+	public TaillardRandom(long seed) {
 		initSeed = seed;
 		currentSeed = seed;
 	}
