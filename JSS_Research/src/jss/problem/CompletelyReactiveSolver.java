@@ -8,6 +8,7 @@ import jss.IProblemInstance;
 import jss.IResult;
 import jss.ISolver;
 import jss.ISubscriber;
+import jss.ISubscriptionHandler;
 import jss.Simulator;
 
 /**
@@ -41,6 +42,9 @@ public class CompletelyReactiveSolver implements ISolver, ISubscriber {
 		Simulator core = new Simulator(problem);
 		this.problem = problem;
 		this.solution = new Result(problem);
+
+		// TODO fix this up sometime later.
+		((ISubscriptionHandler)problem).onSubscriptionRequest(this);;
 
 		// Run the simulator.
 		while (core.hasEvent()) {

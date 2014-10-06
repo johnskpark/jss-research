@@ -18,6 +18,8 @@ import jss.problem.static_problem.StaticMachine;
  */
 public class TwoStaticJSSDataset extends StaticDataset {
 
+	private static final int DATASET_SEED = 15;
+
 	private static final int NUM_PROBLEMS_PER_CONFIG = 8;
 	private static final int NUM_JOBS_PER_PROBLEM = 10;
 
@@ -46,6 +48,30 @@ public class TwoStaticJSSDataset extends StaticDataset {
 
 	private List<IProblemInstance> problems = new ArrayList<IProblemInstance>();
 
+	/**
+	 * TODO javadoc.
+	 */
+	public TwoStaticJSSDataset() {
+		rand = new Random(DATASET_SEED);
+
+		for (int i = 0; i < CATEGORY_RATIOS.length; i++) {
+			ProblemFactory factory = new ProblemFactory(
+					CATEGORY_RATIOS[i][0],
+					CATEGORY_RATIOS[i][1],
+					CATEGORY_RATIOS[i][2],
+					CATEGORY_RATIOS[i][3]);
+
+			for (int j = 0; j < NUM_PROBLEMS_PER_CONFIG; j++) {
+				problems.add(factory.createProblem(rand,
+						NUM_JOBS_PER_PROBLEM));
+			}
+		}
+	}
+
+	/**
+	 * TODO javadoc.
+	 * @param seed
+	 */
 	public TwoStaticJSSDataset(int seed) {
 		rand = new Random(seed);
 

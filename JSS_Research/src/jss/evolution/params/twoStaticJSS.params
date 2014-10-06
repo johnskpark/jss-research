@@ -35,7 +35,7 @@ gp.fs.0.func.7 = jss.evolution.node.basic.ScoreRemainingTime
 gp.fs.0.func.7.nc = nc0
 
 eval.problem = jss.evolution.sample.TwoStaticJSSProblem
-eval.problem.data = jss.evolution.JSSData
+eval.problem.data = jss.evolution.JSSGPData
 
 # seed.0=26556
 seed.0=17

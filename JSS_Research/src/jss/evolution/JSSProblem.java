@@ -26,7 +26,7 @@ public class JSSProblem extends GPProblem {
 		super.setup(state, base);
 
 		// Setup the GPData
-		input = (JSSData) state.parameters.getInstanceForParameterEq(base.push(P_DATA), null, JSSData.class);
+		input = (JSSGPData) state.parameters.getInstanceForParameterEq(base.push(P_DATA), null, JSSGPData.class);
 		input.setup(state, base.push(P_DATA));
 
 		// Setup the dataset and the solver
@@ -50,7 +50,7 @@ public class JSSProblem extends GPProblem {
 			config.setIndividual((GPIndividual)ind);
 			config.setSubpopulation(subpopulation);
 			config.setThreadnum(threadnum);
-			config.setData((JSSData)input);
+			config.setData((JSSGPData)input);
 
 			solver.setGPConfiguration(config);
 
@@ -79,7 +79,7 @@ public class JSSProblem extends GPProblem {
 	public Object clone() {
 		JSSProblem newObject = (JSSProblem)super.clone();
 
-		newObject.input = (JSSData)input.clone();
+		newObject.input = (JSSGPData)input.clone();
 		newObject.dataset = dataset;
 		newObject.solver = solver;
 

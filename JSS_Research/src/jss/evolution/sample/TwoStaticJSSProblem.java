@@ -3,7 +3,7 @@ package jss.evolution.sample;
 import jss.IDataset;
 import jss.IProblemInstance;
 import jss.IResult;
-import jss.evolution.JSSData;
+import jss.evolution.JSSGPData;
 import jss.evolution.JSSGPRule;
 import jss.problem.CompletelyReactiveSolver;
 import jss.problem.Statistics;
@@ -28,7 +28,7 @@ public class TwoStaticJSSProblem extends GPProblem {
 	public void setup(final EvolutionState state, final Parameter base) {
 		super.setup(state, base);
 
-		input = (JSSData)state.parameters.getInstanceForParameterEq(base.push(P_DATA), null, JSSData.class);
+		input = (JSSGPData)state.parameters.getInstanceForParameterEq(base.push(P_DATA), null, JSSGPData.class);
 		input.setup(state, base.push(P_DATA));
 	}
 
@@ -43,7 +43,7 @@ public class TwoStaticJSSProblem extends GPProblem {
 
 			Statistics stats = new Statistics();
 
-			solver.setRule(new JSSGPRule(state, (GPIndividual)ind, threadnum, (JSSData)input));
+			solver.setRule(new JSSGPRule(state, (GPIndividual)ind, threadnum, (JSSGPData)input));
 
 			for (IProblemInstance problem : dataset.getProblems()) {
 				IResult solution = solver.getSolution(problem);
@@ -71,7 +71,7 @@ public class TwoStaticJSSProblem extends GPProblem {
 	public Object clone() {
 		TwoStaticJSSProblem newObject = (TwoStaticJSSProblem)super.clone();
 
-		newObject.input = (JSSData)input.clone();
+		newObject.input = (JSSGPData)input.clone();
 		newObject.dataset = dataset;
 		newObject.solver = solver;
 

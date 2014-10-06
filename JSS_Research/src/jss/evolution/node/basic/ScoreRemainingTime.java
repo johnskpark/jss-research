@@ -3,7 +3,7 @@ package jss.evolution.node.basic;
 import jss.IJob;
 import jss.IMachine;
 import jss.IProblemInstance;
-import jss.evolution.JSSData;
+import jss.evolution.JSSGPData;
 import ec.EvolutionState;
 import ec.Problem;
 import ec.gp.ADFStack;
@@ -35,7 +35,7 @@ public class ScoreRemainingTime extends GPNode {
 	@Override
 	public void eval(EvolutionState state, int thread, GPData input,
 			ADFStack stack, GPIndividual individual, Problem problem) {
-		JSSData data = (JSSData)input;
+		JSSGPData data = (JSSGPData)input;
 
 		IProblemInstance problemInstance = data.getProblem();
 		IJob job = data.getJob();

@@ -2,7 +2,7 @@ package jss.evolution.node.basic;
 
 import jss.IJob;
 import jss.IMachine;
-import jss.evolution.JSSData;
+import jss.evolution.JSSGPData;
 import ec.EvolutionState;
 import ec.Problem;
 import ec.gp.ADFStack;
@@ -38,7 +38,7 @@ public class ScoreDueDate extends GPNode {
 			final ADFStack stack,
 			final GPIndividual individual,
 			final Problem problem) {
-		JSSData data = (JSSData)input;
+		JSSGPData data = (JSSGPData)input;
 
 		IMachine machine = data.getMachine();
 		IJob job = data.getJob();

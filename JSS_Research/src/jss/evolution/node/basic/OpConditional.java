@@ -1,6 +1,6 @@
 package jss.evolution.node.basic;
 
-import jss.evolution.JSSData;
+import jss.evolution.JSSGPData;
 import ec.EvolutionState;
 import ec.Problem;
 import ec.gp.ADFStack;
@@ -38,7 +38,7 @@ public class OpConditional extends GPNode {
 	@Override
 	public void eval(EvolutionState state, int thread, GPData input,
 			ADFStack stack, GPIndividual individual, Problem problem) {
-		JSSData data = (JSSData)input;
+		JSSGPData data = (JSSGPData)input;
 
 		children[0].eval(state, thread, input, stack, individual, problem);
 		double condPriority = data.getPriority();

@@ -22,7 +22,7 @@ public class JSSGPRule implements ActionHandler {
 	private GPIndividual ind;
 	private int threadnum;
 
-	private JSSData data;
+	private JSSGPData data;
 
 	/**
 	 * TODO javadoc.
@@ -34,7 +34,7 @@ public class JSSGPRule implements ActionHandler {
 	public JSSGPRule(EvolutionState state,
 			GPIndividual ind,
 			int threadnum,
-			JSSData data) {
+			JSSGPData data) {
 		this.state = state;
 		this.ind = ind;
 		this.threadnum = threadnum;

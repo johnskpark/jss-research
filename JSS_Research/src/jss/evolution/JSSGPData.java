@@ -11,7 +11,7 @@ import ec.gp.GPData;
  * @author parkjohn
  *
  */
-public class JSSData extends GPData {
+public class JSSGPData extends GPData {
 
 	private static final long serialVersionUID = 5L;
 

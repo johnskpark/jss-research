@@ -16,7 +16,7 @@ public class JSSGPConfiguration {
 	private int subpopulation;
 	private int threadnum;
 
-	private JSSData data;
+	private JSSGPData data;
 
 	/**
 	 * TODO javadoc.
@@ -60,7 +60,7 @@ public class JSSGPConfiguration {
 	 * TODO javadoc.
 	 * @param data
 	 */
-	public void setData(JSSData data) {
+	public void setData(JSSGPData data) {
 		this.data = data;
 	}
 
@@ -100,7 +100,7 @@ public class JSSGPConfiguration {
 	 * TODO javadoc.
 	 * @return
 	 */
-	public JSSData getData() {
+	public JSSGPData getData() {
 		return data;
 	}
 }
