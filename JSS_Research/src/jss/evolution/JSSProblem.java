@@ -1,33 +1,88 @@
 package jss.evolution;
 
-import jss.ISolver;
+import jss.IDataset;
+import jss.IProblemInstance;
+import jss.IResult;
+import jss.problem.Statistics;
 import ec.EvolutionState;
 import ec.Individual;
+import ec.gp.GPIndividual;
 import ec.gp.GPProblem;
+import ec.gp.koza.KozaFitness;
 import ec.util.Parameter;
 
 public class JSSProblem extends GPProblem {
 
-	// TODO The fitness measure, the rule converter and the problem dataset
-	ISolver solver;
+	private final static long serialVersionUID = -3817123526020178300L;
+
+	private final static String P_INSTANCES = "instances";
+	private final static String P_SOLVER = "solver";
+
+	private IDataset dataset;
+	private JSSGPSolver solver;
 
 	@Override
-	public void setup(EvolutionState state, Parameter parameter) {
-		super.setup(state, parameter);
+	public void setup(final EvolutionState state, final Parameter base) {
+		super.setup(state, base);
 
+		// Setup the GPData
+		input = (JSSData) state.parameters.getInstanceForParameterEq(base.push(P_DATA), null, JSSData.class);
+		input.setup(state, base.push(P_DATA));
 
+		// Setup the dataset and the solver
+		dataset = (IDataset) state.parameters.getInstanceForParameterEq(base.push(P_INSTANCES), null, IDataset.class);
+		solver = (JSSGPSolver) state.parameters.getInstanceForParameterEq(base.push(P_SOLVER), null, JSSGPSolver.class);
 	}
 
 	@Override
-	public void evaluate(EvolutionState state, Individual ind,
-			int subpopulation, int threadnum) {
-		// TODO Auto-generated method stub
+	public void evaluate(final EvolutionState state,
+			final Individual ind,
+			final int subpopulation,
+			final int threadnum) {
+		if (!ind.evaluated) {
+			// Check to make sure that the individual is a GPIndividual and uses KozaFitness.
+			checkIndividual(state, ind);
 
+			Statistics stats = new Statistics();
+
+			JSSGPConfiguration config = new JSSGPConfiguration();
+			config.setState(state);
+			config.setIndividual((GPIndividual)ind);
+			config.setSubpopulation(subpopulation);
+			config.setThreadnum(threadnum);
+			config.setData((JSSData)input);
+
+			solver.setGPConfiguration(config);
+
+			for (IProblemInstance problem : dataset.getProblems()) {
+				IResult solution = solver.getSolution(problem);
+
+				stats.addSolution(problem, solution);
+			}
+
+			((KozaFitness)ind.fitness).setStandardizedFitness(state, stats.getAverageMakespan());
+
+			ind.evaluated = true;
+		}
+	}
+
+	private void checkIndividual(final EvolutionState state, final Individual ind) {
+		if (!(ind instanceof GPIndividual)) {
+			state.output.error("The individual must be an instance of GPIndividual");
+		}
+		if (!(ind.fitness instanceof KozaFitness)) {
+			state.output.error("The individual's fitness must be an instance of KozaFitness");
+		}
 	}
 
 	@Override
 	public Object clone() {
-		// TODO Auto-generated method stub
-		return null;
+		JSSProblem newObject = (JSSProblem)super.clone();
+
+		newObject.input = (JSSData)input.clone();
+		newObject.dataset = dataset;
+		newObject.solver = solver;
+
+		return newObject;
 	}
 }

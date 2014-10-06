@@ -16,7 +16,7 @@ import ec.gp.GPIndividual;
  * @author parkjohn
  *
  */
-public class JSSRule implements ActionHandler {
+public class JSSGPRule implements ActionHandler {
 
 	private EvolutionState state;
 	private GPIndividual ind;
@@ -31,7 +31,7 @@ public class JSSRule implements ActionHandler {
 	 * @param threadnum
 	 * @param data
 	 */
-	public JSSRule(EvolutionState state,
+	public JSSGPRule(EvolutionState state,
 			GPIndividual ind,
 			int threadnum,
 			JSSData data) {

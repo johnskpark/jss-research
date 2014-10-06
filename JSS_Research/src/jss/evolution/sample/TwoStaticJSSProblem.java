@@ -4,7 +4,7 @@ import jss.IDataset;
 import jss.IProblemInstance;
 import jss.IResult;
 import jss.evolution.JSSData;
-import jss.evolution.JSSRule;
+import jss.evolution.JSSGPRule;
 import jss.problem.CompletelyReactiveSolver;
 import jss.problem.Statistics;
 import jss.problem.static_problem.rachel_dataset.TwoStaticJSSDataset;
@@ -43,7 +43,7 @@ public class TwoStaticJSSProblem extends GPProblem {
 
 			Statistics stats = new Statistics();
 
-			solver.setRule(new JSSRule(state, (GPIndividual)ind, threadnum, (JSSData)input));
+			solver.setRule(new JSSGPRule(state, (GPIndividual)ind, threadnum, (JSSData)input));
 
 			for (IProblemInstance problem : dataset.getProblems()) {
 				IResult solution = solver.getSolution(problem);
