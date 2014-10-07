@@ -42,7 +42,7 @@ public class MachineTest {
 		processingTime = 5.0;
 		setupTime = 0.0;
 
-		double completionTime = releaseTime + setupTime + processingTime;
+		final double completionTime = releaseTime + setupTime + processingTime;
 
 		Assert.assertNull(machine.getCurrentJob());
 		Assert.assertTrue(machine.getProcessedJobs().isEmpty());
@@ -56,7 +56,7 @@ public class MachineTest {
 			oneOf(mockJob1).getSetupTime(machine); will(returnValue(setupTime));
 		}});
 
-		machine.processJob(mockJob1);
+		machine.processJob(mockJob1, 0);
 
 		Assert.assertEquals(machine.getCurrentJob(), mockJob1);
 		Assert.assertTrue(machine.getProcessedJobs().isEmpty());
@@ -74,7 +74,7 @@ public class MachineTest {
 		processingTime = 5.0;
 		setupTime = 0.0;
 
-		double completionTime = releaseTime + setupTime + processingTime;
+		final double completionTime = releaseTime + setupTime + processingTime;
 
 		context.checking(new Expectations() {{
 			oneOf(mockJob1).processedOnMachine(machine);
@@ -83,10 +83,10 @@ public class MachineTest {
 			oneOf(mockJob1).getSetupTime(machine); will(returnValue(setupTime));
 		}});
 
-		machine.processJob(mockJob1);
+		machine.processJob(mockJob1, 0);
 
 		context.checking(new Expectations() {{
-			oneOf(mockHandler).sendMachineFeed(machine);
+			oneOf(mockHandler).sendMachineFeed(machine, completionTime);
 		}});
 
 		machine.updateStatus(completionTime);
@@ -99,6 +99,8 @@ public class MachineTest {
 		Assert.assertEquals(machine.getProcessedJobs().get(0), mockJob1);
 	}
 
+	// TODO need test for processing two jobs sequentially
+
 	@Test
 	public void staticMachineTest_Reset() {
 		mockHandler = context.mock(ISubscriptionHandler.class);
@@ -109,7 +111,7 @@ public class MachineTest {
 		processingTime = 5.0;
 		setupTime = 0.0;
 
-		double completionTime = releaseTime + setupTime + processingTime;
+		final double completionTime = releaseTime + setupTime + processingTime;
 
 		context.checking(new Expectations() {{
 			oneOf(mockJob1).processedOnMachine(machine);
@@ -118,10 +120,10 @@ public class MachineTest {
 			oneOf(mockJob1).getSetupTime(machine); will(returnValue(setupTime));
 		}});
 
-		machine.processJob(mockJob1);
+		machine.processJob(mockJob1, 0);
 
 		context.checking(new Expectations() {{
-			oneOf(mockHandler).sendMachineFeed(machine);
+			oneOf(mockHandler).sendMachineFeed(machine, completionTime);
 		}});
 
 		machine.updateStatus(completionTime);
@@ -152,10 +154,10 @@ public class MachineTest {
 			oneOf(mockJob1).getSetupTime(machine); will(returnValue(setupTime));
 		}});
 
-		machine.processJob(mockJob1);
+		machine.processJob(mockJob1, 0);
 
 		try {
-			machine.processJob(mockJob2);
+			machine.processJob(mockJob2, 0);
 			Assert.fail();
 		} catch (RuntimeException e) {
 		}

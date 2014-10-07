@@ -70,7 +70,9 @@ public class Simulator {
 
 	private void addEvent(IEvent event, double time) {
 		if (time < currentTime) {
-			throw new RuntimeException("You done goofed from EventCore");
+			throw new RuntimeException(String.format(
+					"Attempted to add event at time %.2f before current time %.2f",
+					time, currentTime));
 		}
 
 		if (!eventMap.containsKey(time)) {

@@ -5,17 +5,21 @@ public interface ISubscriptionHandler {
 
 	/**
 	 * TODO javadoc.
-	 * @param s
+	 * @param subscriber
 	 */
 	public void onSubscriptionRequest(ISubscriber subscriber);
 
 	/**
 	 * TODO javadoc.
+	 * @param machine
+	 * @param time
 	 */
-	public void sendMachineFeed(IMachine machine);
+	public void sendMachineFeed(IMachine machine, double time);
 
 	/**
 	 * TODO javadoc.
+	 * @param machine
+	 * @param time
 	 */
-	public void sendJobFeed(IJob job);
+	public void sendJobFeed(IJob job, double time);
 }

@@ -1,5 +1,11 @@
 package jss;
 
+/**
+ * TODO javadoc.
+ *
+ * @author parkjohn
+ *
+ */
 public interface IEvent {
 
 	/**

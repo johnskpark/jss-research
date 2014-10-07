@@ -57,15 +57,21 @@ public class CompletelyReactiveSolver implements ISolver, ISubscriber {
 	}
 
 	@Override
-	public void onMachineFeed(IMachine machine) {
-		if (machine.isAvailable()) {
+	public void onMachineFeed(IMachine m, double time) {
+		// Cycle through the machines and process jobs on the available machines
+		for (IMachine machine : problem.getMachines()) {
+			if (!machine.isAvailable()) {
+				continue;
+			}
+
 			IJob lastJob;
 			if ((lastJob = machine.getLastProcessedJob()) != null) {
+				double completionTime = machine.getTimeAvailable();
 				double penalty = lastJob.getPenalty(machine);
-				double tardiness = Math.max(machine.getTimeAvailable() -
+				double tardiness = Math.max(completionTime -
 						lastJob.getDueDate(machine), 0);
 
-				solution.setMakespan(machine.getTimeAvailable());
+				solution.setMakespan(completionTime);
 				solution.setTWT(solution.getTWT() + penalty * tardiness);
 			}
 
@@ -73,13 +79,13 @@ public class CompletelyReactiveSolver implements ISolver, ISubscriber {
 
 			if (action != null) {
 				solution.addAction(action);
-				machine.processJob(action.getJob());
+				machine.processJob(action.getJob(), time);
 			}
 		}
 	}
 
 	@Override
-	public void onJobFeed(IJob job) {
+	public void onJobFeed(IJob job, double time) {
 		// Do nothing. TODO make it do something IF the job is being
 		// released.
 	}

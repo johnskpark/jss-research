@@ -12,11 +12,15 @@ public interface ISubscriber {
 	 * TODO javadoc.
 	 *
 	 * Callback.
+	 * @param machine
+	 * @param time
 	 */
-	public void onMachineFeed(IMachine machine);
+	public void onMachineFeed(IMachine machine, double time);
 
 	/**
 	 * TODO javadoc.
+	 * @param job
+	 * @param time
 	 */
-	public void onJobFeed(IJob job);
+	public void onJobFeed(IJob job, double time);
 }

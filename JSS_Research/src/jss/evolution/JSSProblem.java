@@ -66,6 +66,7 @@ public class JSSProblem extends GPProblem {
 		}
 	}
 
+	// TODO doc
 	private void checkIndividual(final EvolutionState state, final Individual ind) {
 		if (!(ind instanceof GPIndividual)) {
 			state.output.error("The individual must be an instance of GPIndividual");

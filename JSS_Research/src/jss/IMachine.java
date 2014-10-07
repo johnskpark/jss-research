@@ -35,9 +35,10 @@ public interface IMachine {
 	 * - The job cannot be processed on the machine.
 	 *  Otherwise, the job is immediately rejected and a RuntimeException is thrown.
 	 * @param job the job to start processing
+	 * @param time TODO javadoc.
 	 * @throws RuntimeException if the job cannot be processed on the machine
 	 */
-	public void processJob(IJob job) throws RuntimeException;
+	public void processJob(IJob job, double time) throws RuntimeException;
 
 	/**
 	 * Get whether the machine is available to process a job.

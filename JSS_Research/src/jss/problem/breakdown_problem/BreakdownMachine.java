@@ -54,13 +54,13 @@ public class BreakdownMachine implements IMachine, IEventHandler {
 	}
 
 	@Override
-	public void processJob(IJob job) throws RuntimeException {
-		if (currentJob != null) {
+	public void processJob(IJob job, double time) throws RuntimeException {
+		if (currentJob != null || time < availableTime) {
 			throw new RuntimeException("You done goofed from BasicMachine");
 		}
 
 		currentJob = job;
-		availableTime = Math.max(availableTime, job.getReleaseTime()) +
+		availableTime = Math.max(time, job.getReleaseTime()) +
 				job.getSetupTime(this) +
 				job.getProcessingTime(this);
 
@@ -88,7 +88,7 @@ public class BreakdownMachine implements IMachine, IEventHandler {
 			}
 
 			machineEvent = null;
-			subscriptionHandler.sendMachineFeed(this);
+			subscriptionHandler.sendMachineFeed(this, time);
 		}
 	}
 

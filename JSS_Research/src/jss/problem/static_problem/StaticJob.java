@@ -20,7 +20,7 @@ import jss.ISubscriptionHandler;
  * @author parkjohn
  *
  */
-public class StaticJob implements IJob, IEventHandler, ISubscriptionHandler {
+public class StaticJob implements IJob, IEventHandler {
 
 	// Immutable component TODO more doc
 	private List<IMachine> machineList = new LinkedList<IMachine>();
@@ -195,21 +195,6 @@ public class StaticJob implements IJob, IEventHandler, ISubscriptionHandler {
 	@Override
 	public double getNextEventTime() {
 		return Double.POSITIVE_INFINITY;
-	}
-
-	@Override
-	public void onSubscriptionRequest(ISubscriber s) {
-		// Do nothing.
-	}
-
-	@Override
-	public void sendMachineFeed(IMachine machine) {
-		// Do nothing.
-	}
-
-	@Override
-	public void sendJobFeed(IJob job) {
-		// Do nothing.
 	}
 
 }

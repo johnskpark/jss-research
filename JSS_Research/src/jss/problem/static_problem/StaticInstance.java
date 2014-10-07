@@ -84,16 +84,16 @@ public class StaticInstance implements IProblemInstance, ISubscriptionHandler {
 	}
 
 	@Override
-	public void sendMachineFeed(IMachine machine) {
+	public void sendMachineFeed(IMachine machine, double time) {
 		for (ISubscriber subscriber : subscribers) {
-			subscriber.onMachineFeed(machine);
+			subscriber.onMachineFeed(machine, time);
 		}
 	}
 
 	@Override
-	public void sendJobFeed(IJob job) {
+	public void sendJobFeed(IJob job, double time) {
 		for (ISubscriber subscriber : subscribers) {
-			subscriber.onJobFeed(job);
+			subscriber.onJobFeed(job, time);
 		}
 	}
 }
