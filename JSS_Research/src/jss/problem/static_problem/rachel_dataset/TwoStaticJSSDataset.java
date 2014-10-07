@@ -95,6 +95,16 @@ public class TwoStaticJSSDataset extends StaticDataset {
 	}
 
 	@Override
+	public List<IProblemInstance> getTraining() {
+		return problems;
+	}
+
+	@Override
+	public List<IProblemInstance> getTest() {
+		return problems;
+	}
+
+	@Override
 	public List<Double> getUpperBounds() {
 		// TODO
 		throw new UnsupportedOperationException("Not yet implemented");

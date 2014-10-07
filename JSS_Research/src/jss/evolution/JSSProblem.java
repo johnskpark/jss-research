@@ -54,7 +54,7 @@ public class JSSProblem extends GPProblem {
 
 			solver.setGPConfiguration(config);
 
-			for (IProblemInstance problem : dataset.getProblems()) {
+			for (IProblemInstance problem : dataset.getTraining()) {
 				IResult solution = solver.getSolution(problem);
 
 				stats.addSolution(problem, solution);
@@ -66,7 +66,8 @@ public class JSSProblem extends GPProblem {
 		}
 	}
 
-	// TODO doc
+	// Check the individual for invariance. Each individual must be a GPIndividual,
+	// and the fitness must be KozaFitness.
 	private void checkIndividual(final EvolutionState state, final Individual ind) {
 		if (!(ind instanceof GPIndividual)) {
 			state.output.error("The individual must be an instance of GPIndividual");

@@ -23,10 +23,13 @@ import jss.util.TaillardRandom;
  */
 public class TaillardDataset extends StaticDataset {
 
-	private static final String TALLIARD_DATASET = "jss_taillard.csv";
+	private final static String TALLIARD_DATASET = "jss_taillard.csv";
 
-	private static int MIN_PROCESSING_TIME = 1;
-	private static int MAX_PROCESSING_TIME = 99;
+	private final static int TRAINING_SMALL_MACHINE_NUM = 15;
+	private final static int TRAINING_SMALL_JOB_NUM = 15;
+
+	private final static int MIN_PROCESSING_TIME = 1;
+	private final static int MAX_PROCESSING_TIME = 99;
 
 	private List<RawInstance> rawInstances = new ArrayList<RawInstance>();
 	private List<StaticInstance> problemInstances = new ArrayList<StaticInstance>();
@@ -102,7 +105,6 @@ public class TaillardDataset extends StaticDataset {
 		}
 
 		// Set the machine processing order of jobs.
-		// TODO the machine ordering is fucked up.
 		for (int j = 0; j < rawInstance.numJobs; j++) {
 
 			// Initialise the initial processing order.
@@ -143,10 +145,33 @@ public class TaillardDataset extends StaticDataset {
 		return new ArrayList<IProblemInstance>(problemInstances);
 	}
 
-	/**
-	 * TODO javadoc.
-	 * @return
-	 */
+	@Override
+	public List<IProblemInstance> getTraining() {
+		List<IProblemInstance> training = new ArrayList<IProblemInstance>();
+		for (IProblemInstance problem : problemInstances) {
+			int machineSize = problem.getMachines().size();
+			int jobSize = problem.getJobs().size();
+
+			// TODO placeholder. Need a way to parameterise this later.
+			if (machineSize == TRAINING_SMALL_MACHINE_NUM && jobSize == TRAINING_SMALL_JOB_NUM) {
+				training.add(problem);
+			}
+		}
+
+		// Remove half of the problem instances
+		for (int i = 0; i < training.size() / 2; i++) {
+			training.remove(training.size() - 1);
+		}
+
+		return training;
+	}
+
+	@Override
+	public List<IProblemInstance> getTest() {
+		return new ArrayList<IProblemInstance>(problemInstances);
+	}
+
+	@Override
 	public List<Double> getUpperBounds() {
 		List<Double> upperBounds = new ArrayList<Double>();
 		for (RawInstance raw : rawInstances) {
@@ -155,10 +180,7 @@ public class TaillardDataset extends StaticDataset {
 		return upperBounds;
 	}
 
-	/**
-	 * TODO javadoc.
-	 * @return
-	 */
+	@Override
 	public List<Double> getLowerBounds() {
 		List<Double> lowerBounds = new ArrayList<Double>();
 		for (RawInstance raw : rawInstances) {
