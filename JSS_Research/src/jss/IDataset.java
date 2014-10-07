@@ -17,9 +17,10 @@ public interface IDataset {
 
 	/**
 	 * TODO javadoc.
+	 * @param problemSize
 	 * @return
 	 */
-	public List<IProblemInstance> getTraining();
+	public List<IProblemInstance> getTraining(ProblemSize problemSize);
 
 	/**
 	 * TODO javadoc.

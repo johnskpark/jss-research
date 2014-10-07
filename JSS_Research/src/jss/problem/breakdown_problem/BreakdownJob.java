@@ -10,8 +10,6 @@ import jss.IEvent;
 import jss.IEventHandler;
 import jss.IJob;
 import jss.IMachine;
-import jss.ISubscriber;
-import jss.ISubscriptionHandler;
 
 public class BreakdownJob implements IJob, IEventHandler {
 

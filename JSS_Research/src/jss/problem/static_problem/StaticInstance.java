@@ -23,6 +23,9 @@ public class StaticInstance implements IProblemInstance, ISubscriptionHandler {
 
 	private List<ISubscriber> subscribers = new ArrayList<ISubscriber>();
 
+	private double upperBound;
+	private double lowerBound;
+
 	/**
 	 * TODO javadoc.
 	 */
@@ -81,6 +84,38 @@ public class StaticInstance implements IProblemInstance, ISubscriptionHandler {
 	@Override
 	public void onSubscriptionRequest(ISubscriber subscriber) {
 		subscribers.add(subscriber);
+	}
+
+	/**
+	 * TODO javadoc.
+	 * @return
+	 */
+	public double getUpperBound() {
+		return upperBound;
+	}
+
+	/**
+	 * TODO javadoc.
+	 * @param upperBound
+	 */
+	public void setUpperBound(double upperBound) {
+		this.upperBound = upperBound;
+	}
+
+	/**
+	 * TODO javadoc.
+	 * @return
+	 */
+	public double getLowerBound() {
+		return lowerBound;
+	}
+
+	/**
+	 * TODO javadoc.
+	 * @param lowerBound
+	 */
+	public void setLowerBound(double lowerBound) {
+		this.lowerBound = lowerBound;
 	}
 
 	@Override

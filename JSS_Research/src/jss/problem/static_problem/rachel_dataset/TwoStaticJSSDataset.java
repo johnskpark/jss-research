@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import jss.IProblemInstance;
+import jss.ProblemSize;
 import jss.problem.static_problem.StaticDataset;
 import jss.problem.static_problem.StaticInstance;
 import jss.problem.static_problem.StaticJob;
@@ -95,7 +96,7 @@ public class TwoStaticJSSDataset extends StaticDataset {
 	}
 
 	@Override
-	public List<IProblemInstance> getTraining() {
+	public List<IProblemInstance> getTraining(ProblemSize problemSize) {
 		return problems;
 	}
 

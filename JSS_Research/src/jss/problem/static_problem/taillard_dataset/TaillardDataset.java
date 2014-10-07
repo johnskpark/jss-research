@@ -5,10 +5,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 import jss.IProblemInstance;
+import jss.ProblemSize;
 import jss.problem.static_problem.StaticDataset;
 import jss.problem.static_problem.StaticInstance;
 import jss.problem.static_problem.StaticJob;
@@ -27,6 +30,12 @@ public class TaillardDataset extends StaticDataset {
 
 	private final static int TRAINING_SMALL_MACHINE_NUM = 15;
 	private final static int TRAINING_SMALL_JOB_NUM = 15;
+	private final static int TRAINING_MEDIUM_MACHINE_NUM = 30;
+	private final static int TRAINING_MEDIUM_JOB_NUM = 20;
+	private final static int TRAINING_LARGE_MACHINE_NUM = 100;
+	private final static int TRAINING_LARGE_JOB_NUM = 20;
+
+	private final static Map<ProblemSize, MachineJobPair> PROBLEM_SIZE_MAP = new HashMap<ProblemSize, MachineJobPair>();
 
 	private final static int MIN_PROCESSING_TIME = 1;
 	private final static int MAX_PROCESSING_TIME = 99;
@@ -43,6 +52,9 @@ public class TaillardDataset extends StaticDataset {
 
 		// Convert from raw .csv file.
 		generateDataset();
+
+		// TODO docs.
+		todoNameHere();
 	}
 
 	private void readFile() {
@@ -133,7 +145,27 @@ public class TaillardDataset extends StaticDataset {
 			}
 		}
 
+		instance.setUpperBound(rawInstance.upperBound);
+		instance.setLowerBound(rawInstance.lowerBound);
+
 		return instance;
+	}
+
+	private void todoNameHere() {
+		MachineJobPair smallPair = new MachineJobPair();
+		smallPair.numMachines = TRAINING_SMALL_MACHINE_NUM;
+		smallPair.numJobs = TRAINING_SMALL_JOB_NUM;
+		PROBLEM_SIZE_MAP.put(ProblemSize.SMALL_PROBLEM_SIZE, smallPair);
+
+		MachineJobPair mediumPair = new MachineJobPair();
+		smallPair.numMachines = TRAINING_MEDIUM_MACHINE_NUM;
+		smallPair.numJobs = TRAINING_MEDIUM_JOB_NUM;
+		PROBLEM_SIZE_MAP.put(ProblemSize.MEDIUM_PROBLEM_SIZE, mediumPair);
+
+		MachineJobPair largePair = new MachineJobPair();
+		smallPair.numMachines = TRAINING_LARGE_MACHINE_NUM;
+		smallPair.numJobs = TRAINING_LARGE_JOB_NUM;
+		PROBLEM_SIZE_MAP.put(ProblemSize.LARGE_PROBLEM_SIZE, largePair);
 	}
 
 	private int uniformDistribution(int min, int max, TaillardRandom rand) {
@@ -146,14 +178,15 @@ public class TaillardDataset extends StaticDataset {
 	}
 
 	@Override
-	public List<IProblemInstance> getTraining() {
+	public List<IProblemInstance> getTraining(ProblemSize problemSize) {
 		List<IProblemInstance> training = new ArrayList<IProblemInstance>();
 		for (IProblemInstance problem : problemInstances) {
 			int machineSize = problem.getMachines().size();
 			int jobSize = problem.getJobs().size();
 
 			// TODO placeholder. Need a way to parameterise this later.
-			if (machineSize == TRAINING_SMALL_MACHINE_NUM && jobSize == TRAINING_SMALL_JOB_NUM) {
+			MachineJobPair pair = PROBLEM_SIZE_MAP.get(problemSize);
+			if (machineSize == pair.numMachines && jobSize == pair.numJobs) {
 				training.add(problem);
 			}
 		}
@@ -196,5 +229,10 @@ public class TaillardDataset extends StaticDataset {
 		long machineSeed;
 		double upperBound;
 		double lowerBound;
+	}
+
+	private class MachineJobPair {
+		int numMachines;
+		int numJobs;
 	}
 }

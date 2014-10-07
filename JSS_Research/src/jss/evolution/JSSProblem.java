@@ -1,8 +1,11 @@
 package jss.evolution;
 
+import java.util.List;
+
 import jss.IDataset;
 import jss.IProblemInstance;
 import jss.IResult;
+import jss.ProblemSize;
 import jss.problem.Statistics;
 import ec.EvolutionState;
 import ec.Individual;
@@ -21,6 +24,9 @@ public class JSSProblem extends GPProblem {
 	private IDataset dataset;
 	private JSSGPSolver solver;
 
+	private ProblemSize problemSize;
+	private boolean problemSizeSet = false;
+
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
 		super.setup(state, base);
@@ -32,6 +38,13 @@ public class JSSProblem extends GPProblem {
 		// Setup the dataset and the solver
 		dataset = (IDataset) state.parameters.getInstanceForParameterEq(base.push(P_INSTANCES), null, IDataset.class);
 		solver = (JSSGPSolver) state.parameters.getInstanceForParameterEq(base.push(P_SOLVER), null, JSSGPSolver.class);
+
+		// Set the problem size used for the training set.
+		String problemSizeStr = state.parameters.getString(base.push("TODO"), null);
+		if (problemSizeStr != null) {
+			problemSize = ProblemSize.strToProblemSize(problemSizeStr);
+			problemSizeSet = true;
+		}
 	}
 
 	@Override
@@ -54,7 +67,9 @@ public class JSSProblem extends GPProblem {
 
 			solver.setGPConfiguration(config);
 
-			for (IProblemInstance problem : dataset.getTraining()) {
+			List<IProblemInstance> trainingSet = (problemSizeSet) ?
+					dataset.getTraining(problemSize) : dataset.getProblems();
+			for (IProblemInstance problem : trainingSet) {
 				IResult solution = solver.getSolution(problem);
 
 				stats.addSolution(problem, solution);

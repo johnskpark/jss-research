@@ -6,7 +6,7 @@ import java.util.List;
 import jss.IProblemInstance;
 
 /**
- * TODO javadoc.
+ * TODO This needs some work, but I'll carry it out sometime later.
  *
  * @author parkjohn
  *
