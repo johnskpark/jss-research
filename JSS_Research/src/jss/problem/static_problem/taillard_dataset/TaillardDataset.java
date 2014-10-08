@@ -26,19 +26,19 @@ import jss.util.TaillardRandom;
  */
 public class TaillardDataset extends StaticDataset {
 
-	private final static String TALLIARD_DATASET = "jss_taillard.csv";
+	private static final String TALLIARD_DATASET = "jss_taillard.csv";
 
-	private final static int TRAINING_SMALL_MACHINE_NUM = 15;
-	private final static int TRAINING_SMALL_JOB_NUM = 15;
-	private final static int TRAINING_MEDIUM_MACHINE_NUM = 30;
-	private final static int TRAINING_MEDIUM_JOB_NUM = 20;
-	private final static int TRAINING_LARGE_MACHINE_NUM = 100;
-	private final static int TRAINING_LARGE_JOB_NUM = 20;
+	private static final int TRAINING_SMALL_MACHINE_NUM = 15;
+	private static final int TRAINING_SMALL_JOB_NUM = 15;
+	private static final int TRAINING_MEDIUM_MACHINE_NUM = 30;
+	private static final int TRAINING_MEDIUM_JOB_NUM = 20;
+	private static final int TRAINING_LARGE_MACHINE_NUM = 100;
+	private static final int TRAINING_LARGE_JOB_NUM = 20;
 
-	private final static Map<ProblemSize, MachineJobPair> PROBLEM_SIZE_MAP = new HashMap<ProblemSize, MachineJobPair>();
+	private static final Map<ProblemSize, MachineJobPair> PROBLEM_SIZE_MAP = new HashMap<ProblemSize, MachineJobPair>();
 
-	private final static int MIN_PROCESSING_TIME = 1;
-	private final static int MAX_PROCESSING_TIME = 99;
+	private static final int MIN_PROCESSING_TIME = 1;
+	private static final int MAX_PROCESSING_TIME = 99;
 
 	private List<RawInstance> rawInstances = new ArrayList<RawInstance>();
 	private List<StaticInstance> problemInstances = new ArrayList<StaticInstance>();
@@ -87,6 +87,7 @@ public class TaillardDataset extends StaticDataset {
 		rawData.upperBound = sc.nextDouble();
 		rawData.lowerBound = sc.nextDouble();
 
+		sc.close();
 		return rawData;
 	}
 

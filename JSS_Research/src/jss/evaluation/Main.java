@@ -7,4 +7,7 @@ package jss.evaluation;
  */
 public class Main {
 
+	public static void main(String[] args) {
+		RuleParser parser = new RuleParser();
+	}
 }

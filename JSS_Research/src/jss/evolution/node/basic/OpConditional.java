@@ -1,6 +1,7 @@
 package jss.evolution.node.basic;
 
 import jss.evolution.JSSGPData;
+import jss.evolution.node.INode;
 import ec.EvolutionState;
 import ec.Problem;
 import ec.gp.ADFStack;
@@ -15,13 +16,20 @@ import ec.util.Parameter;
  * @author parkjohn
  *
  */
-public class OpConditional extends GPNode {
+public class OpConditional extends GPNode implements INode {
 
 	private static final long serialVersionUID = -8055215086941685756L;
 
+	private static final int NUM_CHILDREN = 3;
+	
 	@Override
 	public String toString() {
 		return "If";
+	}
+	
+	@Override
+	public int getChildrenNum() {
+		return NUM_CHILDREN;
 	}
 
 	@Override
@@ -30,7 +38,7 @@ public class OpConditional extends GPNode {
 			final GPIndividual typicalIndividual,
 			final Parameter individualBase) {
 		super.checkConstraints(state, tree, typicalIndividual, individualBase);
-		if (children.length != 3) {
+		if (children.length != NUM_CHILDREN) {
 			state.output.error("Incorrect number of children for node " + toStringForError() + " at " + individualBase);
 		}
 	}

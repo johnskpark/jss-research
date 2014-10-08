@@ -7,5 +7,9 @@
 	<classpathentry kind="lib" path="test_jars/hamcrest-library-1.3.jar"/>
 	<classpathentry kind="lib" path="test_jars/jmock-junit4-2.6.0.jar"/>
 	<classpathentry kind="lib" path="test_jars/jmock-2.6.0.jar"/>
+	<classpathentry kind="lib" path="reflections/guava-18.0.jar"/>
+	<classpathentry kind="lib" path="reflections/reflections-0.9.9-RC1-uberjar.jar"/>
+	<classpathentry kind="lib" path="reflections/slf4j-api-1.7.7.jar"/>
+	<classpathentry kind="lib" path="reflections/javassist.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

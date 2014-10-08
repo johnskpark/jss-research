@@ -4,6 +4,7 @@ import jss.IJob;
 import jss.IMachine;
 import jss.IProblemInstance;
 import jss.evolution.JSSGPData;
+import jss.evolution.node.INode;
 import ec.EvolutionState;
 import ec.Problem;
 import ec.gp.ADFStack;
@@ -12,13 +13,20 @@ import ec.gp.GPIndividual;
 import ec.gp.GPNode;
 import ec.util.Parameter;
 
-public class ScoreRemainingTime extends GPNode {
+public class ScoreRemainingTime extends GPNode implements INode {
 
 	private static final long serialVersionUID = 5176332159809663461L;
 
+	private static final int CHILDREN_NUM = 0;
+	
 	@Override
 	public String toString() {
 		return "TP";
+	}
+	
+	@Override
+	public int getChildrenNum() {
+		return CHILDREN_NUM;
 	}
 
 	@Override
@@ -27,7 +35,7 @@ public class ScoreRemainingTime extends GPNode {
 			final GPIndividual typicalIndividual,
 			final Parameter individualBase) {
 		super.checkConstraints(state, tree, typicalIndividual, individualBase);
-		if (children.length != 0) {
+		if (children.length != CHILDREN_NUM) {
 			state.output.error("Incorrect number of children for node " + toStringForError() + " at " + individualBase);
 		}
 	}

@@ -16,10 +16,10 @@ import ec.util.Parameter;
 
 public class JSSProblem extends GPProblem {
 
-	private final static long serialVersionUID = -3817123526020178300L;
+	private static final long serialVersionUID = -3817123526020178300L;
 
-	private final static String P_INSTANCES = "instances";
-	private final static String P_SOLVER = "solver";
+	private static final String P_INSTANCES = "instances";
+	private static final String P_SOLVER = "solver";
 
 	private IDataset dataset;
 	private JSSGPSolver solver;
