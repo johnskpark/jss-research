@@ -10,6 +10,6 @@
 	<classpathentry kind="lib" path="reflections/guava-18.0.jar"/>
 	<classpathentry kind="lib" path="reflections/reflections-0.9.9-RC1-uberjar.jar"/>
 	<classpathentry kind="lib" path="reflections/slf4j-api-1.7.7.jar"/>
-	<classpathentry kind="lib" path="reflections/javassist.jar"/>
+	<classpathentry kind="lib" path="reflections/javassist-3.18.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
