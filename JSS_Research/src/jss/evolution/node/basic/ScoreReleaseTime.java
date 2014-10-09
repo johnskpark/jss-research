@@ -2,7 +2,6 @@ package jss.evolution.node.basic;
 
 import jss.IJob;
 import jss.evolution.JSSGPData;
-import jss.evolution.node.INode;
 import ec.EvolutionState;
 import ec.Problem;
 import ec.gp.ADFStack;
@@ -11,20 +10,15 @@ import ec.gp.GPIndividual;
 import ec.gp.GPNode;
 import ec.util.Parameter;
 
-public class ScoreReleaseTime extends GPNode implements INode {
+public class ScoreReleaseTime extends GPNode {
 
 	private static final long serialVersionUID = -1153623043250724347L;
 
 	private static final int CHILDREN_NUM = 0;
-	
+
 	@Override
 	public String toString() {
 		return "R";
-	}
-	
-	@Override
-	public int getChildrenNum() {
-		return CHILDREN_NUM;
 	}
 
 	@Override

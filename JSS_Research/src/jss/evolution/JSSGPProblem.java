@@ -14,7 +14,7 @@ import ec.gp.GPProblem;
 import ec.gp.koza.KozaFitness;
 import ec.util.Parameter;
 
-public class JSSProblem extends GPProblem {
+public class JSSGPProblem extends GPProblem {
 
 	private static final long serialVersionUID = -3817123526020178300L;
 
@@ -94,7 +94,7 @@ public class JSSProblem extends GPProblem {
 
 	@Override
 	public Object clone() {
-		JSSProblem newObject = (JSSProblem)super.clone();
+		JSSGPProblem newObject = (JSSGPProblem)super.clone();
 
 		newObject.input = (JSSGPData)input.clone();
 		newObject.dataset = dataset;

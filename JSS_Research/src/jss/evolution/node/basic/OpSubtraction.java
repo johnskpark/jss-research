@@ -1,7 +1,6 @@
 package jss.evolution.node.basic;
 
 import jss.evolution.JSSGPData;
-import jss.evolution.node.INode;
 import ec.EvolutionState;
 import ec.Problem;
 import ec.gp.ADFStack;
@@ -16,20 +15,15 @@ import ec.util.Parameter;
  * @author parkjohn
  *
  */
-public class OpSubtraction extends GPNode implements INode {
+public class OpSubtraction extends GPNode {
 
 	private static final long serialVersionUID = -4259728422320985825L;
 
 	private static final int CHILDREN_NUM = 2;
-	
+
 	@Override
 	public String toString() {
 		return "-";
-	}
-	
-	@Override
-	public int getChildrenNum() {
-		return CHILDREN_NUM;
 	}
 
 	@Override

@@ -1,7 +1,6 @@
 package jss.evolution.node.basic;
 
 import jss.evolution.JSSGPData;
-import jss.evolution.node.INode;
 import ec.EvolutionState;
 import ec.Problem;
 import ec.gp.ADFStack;
@@ -16,20 +15,15 @@ import ec.util.Parameter;
  * @author parkjohn
  *
  */
-public class OpConditional extends GPNode implements INode {
+public class OpConditional extends GPNode {
 
 	private static final long serialVersionUID = -8055215086941685756L;
 
 	private static final int NUM_CHILDREN = 3;
-	
+
 	@Override
 	public String toString() {
 		return "If";
-	}
-	
-	@Override
-	public int getChildrenNum() {
-		return NUM_CHILDREN;
 	}
 
 	@Override
