@@ -1,6 +1,7 @@
 package jss.evolution.node.basic;
 
 import jss.evolution.JSSGPData;
+import jss.node.NodeDefinition;
 import ec.EvolutionState;
 import ec.Problem;
 import ec.gp.ADFStack;
@@ -19,11 +20,9 @@ public class OpSubtraction extends GPNode {
 
 	private static final long serialVersionUID = -4259728422320985825L;
 
-	private static final int CHILDREN_NUM = 2;
-
 	@Override
 	public String toString() {
-		return "-";
+		return NodeDefinition.OP_SUBTRACTION.toString();
 	}
 
 	@Override
@@ -32,7 +31,7 @@ public class OpSubtraction extends GPNode {
 			final GPIndividual typicalIndividual,
 			final Parameter individualBase) {
 		super.checkConstraints(state, tree, typicalIndividual, individualBase);
-		if (children.length != CHILDREN_NUM) {
+		if (children.length != NodeDefinition.OP_SUBTRACTION.numChildren()) {
 			state.output.error("Incorrect number of children for node " + toStringForError() + " at " + individualBase);
 		}
 	}

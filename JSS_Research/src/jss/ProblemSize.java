@@ -1,9 +1,7 @@
 package jss;
 
 /**
- * TODO javadoc. Remove this sometime later down the line.
- * Probably make it its own class eh.
- *
+ * Helper enum that is used by the implemented dataset... TODO javadoc.
  * @author parkjohn
  *
  */
@@ -25,10 +23,8 @@ public enum ProblemSize {
 		} else if (problemSize == "large") {
 			return ProblemSize.LARGE_PROBLEM_SIZE;
 		} else {
-			throw new RuntimeException("You done goofed");
+			throw new RuntimeException("You done goofed"); // TODO
 		}
 	}
-
-	// TODO more shit here.
 
 }

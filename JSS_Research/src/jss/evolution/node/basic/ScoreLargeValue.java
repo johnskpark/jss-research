@@ -1,6 +1,7 @@
 package jss.evolution.node.basic;
 
 import jss.evolution.JSSGPData;
+import jss.node.NodeDefinition;
 import ec.EvolutionState;
 import ec.Problem;
 import ec.gp.ADFStack;
@@ -14,11 +15,10 @@ public class ScoreLargeValue extends GPNode {
 	private static final long serialVersionUID = -5825676453528932050L;
 
 	private static final double LARGE_VALUE = 100000000.0;
-	private static final int CHILDREN_NUM = 0;
 
 	@Override
 	public String toString() {
-		return "Inf";
+		return NodeDefinition.SCORE_LARGE_VALUE.toString();
 	}
 
 	@Override
@@ -27,7 +27,7 @@ public class ScoreLargeValue extends GPNode {
 			final GPIndividual typicalIndividual,
 			final Parameter individualBase) {
 		super.checkConstraints(state, tree, typicalIndividual, individualBase);
-		if (children.length != CHILDREN_NUM) {
+		if (children.length != NodeDefinition.SCORE_LARGE_VALUE.numChildren()) {
 			state.output.error("Incorrect number of children for node " + toStringForError() + " at " + individualBase);
 		}
 	}

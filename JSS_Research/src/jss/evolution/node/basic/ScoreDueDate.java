@@ -3,6 +3,7 @@ package jss.evolution.node.basic;
 import jss.IJob;
 import jss.IMachine;
 import jss.evolution.JSSGPData;
+import jss.node.NodeDefinition;
 import ec.EvolutionState;
 import ec.Problem;
 import ec.gp.ADFStack;
@@ -15,11 +16,9 @@ public class ScoreDueDate extends GPNode {
 
 	private static final long serialVersionUID = -4015393052275553333L;
 
-	private static final int CHILDREN_NUM = 0;
-
 	@Override
 	public String toString() {
-		return "D";
+		return NodeDefinition.SCORE_DUE_DATE.toString();
 	}
 
 	@Override
@@ -28,7 +27,7 @@ public class ScoreDueDate extends GPNode {
 			final GPIndividual typicalIndividual,
 			final Parameter individualBase) {
 		super.checkConstraints(state, tree, typicalIndividual, individualBase);
-		if (children.length != CHILDREN_NUM) {
+		if (children.length != NodeDefinition.SCORE_DUE_DATE.numChildren()) {
 			state.output.error("Incorrect number of children for node " + toStringForError() + " at " + individualBase);
 		}
 	}

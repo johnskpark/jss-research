@@ -7,7 +7,25 @@ import java.util.PriorityQueue;
 import java.util.Set;
 
 /**
- * TODO javadoc here.
+ * Simulates the Job Shop Scheduling environment. The simulator wraps around a
+ * particular problem instance, and handles the process of triggering events
+ * that occur in the environment, and keeping track of when these events
+ * occurred. Refer to @see IEvent for the definitions of events.
+ *
+ * The Simulator can be considered as an iterator over the list of events that
+ * occur over the time it takes to "solve" a Job Shop Scheduling problem
+ * instance.
+ *
+ * To use the Simulator, simply instantiate a new instance of the Simulator,
+ * wrapping the problem instance within it. The Simulator will queue the
+ * preliminary events that are expected to occur as the simulation starts.
+ * Afterwards, loop over the events that occur by first checking whether the
+ * Simulator has any events left @see hasEvent, and triggering them if it
+ * does (@see triggerEvent).
+ *
+ * Although the Simulator does not directly link to the
+ * @see ISubscriptionHandler, it relies on it to broadcast that an event
+ * occurred to all the related parties, such as the @see ISolver.
  *
  * @author parkjohn
  *
@@ -22,7 +40,8 @@ public class Simulator {
 	private IProblemInstance problem;
 
 	/**
-	 * TODO javadoc.
+	 * Create a new instance of the simulator.
+	 * @param problem The problem instance to simulate.
 	 */
 	public Simulator(IProblemInstance problem) {
 		this.problem = problem;
@@ -35,7 +54,8 @@ public class Simulator {
 	}
 
 	/**
-	 * TODO javadoc.
+	 * Get the current time of the simulator, which is the time when the last
+	 * event was triggered.
 	 * @return
 	 */
 	public double getTime() {
@@ -43,7 +63,9 @@ public class Simulator {
 	}
 
 	/**
-	 * TODO javadoc.
+	 * Get whether the simulator has any events left. If the simulator does
+	 * not have any more events, the simulation of the Job Shop Scheduling
+	 * environment is completed.
 	 * @return
 	 */
 	public boolean hasEvent() {
@@ -51,9 +73,17 @@ public class Simulator {
 	}
 
 	/**
-	 * TODO javadoc.
+	 * Trigger the next event in the queue.
+	 * @throws RuntimeException If no more events are queued up in the
+	 *                          Simulator, and if the problem instance
+	 *                          generates any events that occur before the
+	 *                          last triggered event.
 	 */
-	public void triggerEvent() {
+	public void triggerEvent() throws RuntimeException {
+		if (eventQueue.isEmpty()) {
+			throw new RuntimeException("Simulator has no more events to trigger"); // TODO change this from runtime exception
+		}
+
 		EventGroup events = eventQueue.poll();
 		eventMap.remove(events.getTime());
 
@@ -68,6 +98,7 @@ public class Simulator {
 		}
 	}
 
+	// Add the next sets of events onto the Simulator queue.
 	private void addEvent(IEvent event, double time) {
 		if (time < currentTime) {
 			throw new RuntimeException(String.format(
@@ -85,6 +116,7 @@ public class Simulator {
 		eventMap.get(time).addEvent(event);
 	}
 
+	// A group of events that occur at a single point in time.
 	private class EventGroup implements Comparable<EventGroup> {
 		private Set<IEvent> eventList = new HashSet<IEvent>();
 

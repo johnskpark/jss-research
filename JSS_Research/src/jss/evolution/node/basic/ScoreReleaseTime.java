@@ -2,6 +2,7 @@ package jss.evolution.node.basic;
 
 import jss.IJob;
 import jss.evolution.JSSGPData;
+import jss.node.NodeDefinition;
 import ec.EvolutionState;
 import ec.Problem;
 import ec.gp.ADFStack;
@@ -14,11 +15,9 @@ public class ScoreReleaseTime extends GPNode {
 
 	private static final long serialVersionUID = -1153623043250724347L;
 
-	private static final int CHILDREN_NUM = 0;
-
 	@Override
 	public String toString() {
-		return "R";
+		return NodeDefinition.SCORE_RELEASE_TIME.toString();
 	}
 
 	@Override
@@ -27,7 +26,7 @@ public class ScoreReleaseTime extends GPNode {
 			final GPIndividual typicalIndividual,
 			final Parameter individualBase) {
 		super.checkConstraints(state, tree, typicalIndividual, individualBase);
-		if (children.length != CHILDREN_NUM) {
+		if (children.length != NodeDefinition.SCORE_RELEASE_TIME.numChildren()) {
 			state.output.error("Incorrect number of children for node " + toStringForError() + " at " + individualBase);
 		}
 

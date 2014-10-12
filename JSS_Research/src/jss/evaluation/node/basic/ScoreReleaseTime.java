@@ -2,13 +2,23 @@ package jss.evaluation.node.basic;
 
 import jss.evaluation.JSSEvalData;
 import jss.evaluation.node.INode;
+import jss.evaluation.node.NodeAnnotation;
+import jss.node.NodeDefinition;
 
+@NodeAnnotation(node=NodeDefinition.SCORE_RELEASE_TIME)
 public class ScoreReleaseTime implements INode {
+
+	private static final NodeDefinition NODE_DEFINITION = NodeDefinition.SCORE_RELEASE_TIME;
+
+	/**
+	 * TODO javadoc.
+	 */
+	public ScoreReleaseTime() {
+	}
 
 	@Override
 	public int getChildrenNum() {
-		// TODO Auto-generated method stub
-		return 0;
+		return NODE_DEFINITION.numChildren();
 	}
 
 	@Override

@@ -1,10 +1,14 @@
 package jss.evaluation;
 
+import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 import jss.evaluation.node.INode;
+import jss.evaluation.node.NodeAnnotation;
+import jss.evaluation.node.NodeUtil;
+import jss.node.NodeDefinition;
 
 import org.reflections.Reflections;
 
@@ -16,7 +20,7 @@ import org.reflections.Reflections;
  */
 public class RuleParser {
 
-	private static final String BASE_NODE_DIR = "jss.evolution";
+	private static final String BASE_NODE_DIR = "jss.evaluation.node";
 
 	private Map<String, NodeChildrenNumPair> nodeMap = new HashMap<String, NodeChildrenNumPair>();
 
@@ -33,13 +37,14 @@ public class RuleParser {
 			Set<Class<? extends INode>> subTypes = reflections.getSubTypesOf(INode.class);
 
 			for (Class<? extends INode> subType : subTypes) {
-				INode obj = subType.newInstance();
+				if (!subType.isAnnotationPresent(NodeAnnotation.class)) {
+					NodeDefinition nodeDefinition = NodeUtil.getNodeDefinition(subType);
+					NodeChildrenNumPair pair = new NodeChildrenNumPair();
+					pair.nodeClass = subType;
+					pair.childrenNum = nodeDefinition.numChildren();
 
-				NodeChildrenNumPair pair = new NodeChildrenNumPair();
-				pair.nodeClass = subType;
-				pair.childrenNum = obj.getChildrenNum();
-
-				nodeMap.put(obj.toString(), pair);
+					nodeMap.put(nodeDefinition.toString(), pair);
+				}
 			}
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
@@ -72,18 +77,16 @@ public class RuleParser {
 				}
 
 				NodeChildrenNumPair pair = nodeMap.get(token);
-				INode node = generateNewNode(pair);
 
 				// Parse the child nodes.
-				INode[] children = new INode[pair.childrenNum];
+				Object[] children = new INode[pair.childrenNum];
 				for (int i = 0; i < pair.childrenNum; i++) {
 					children[i] = parse();
 				}
 
-
 				match(")");
 
-				return node;
+				return generateNewNode(pair, children);
 			} else {
 				// Parse the terminal node.
 				String token = readToken();
@@ -92,14 +95,22 @@ public class RuleParser {
 				}
 
 				NodeChildrenNumPair pair = nodeMap.get(token);
+
 				return generateNewNode(pair);
 			}
 
 		}
 
-		private INode generateNewNode(NodeChildrenNumPair pair) {
+		private INode generateNewNode(NodeChildrenNumPair pair, Object... children) {
 			try {
-				return pair.nodeClass.newInstance();
+				Class<?>[] parameterTypes = new Class<?>[pair.childrenNum];
+				for (int i = 0; i < pair.childrenNum; i++) {
+					parameterTypes[i] = INode.class;
+				}
+
+				Constructor<? extends INode> constructor = pair.nodeClass.getConstructor(parameterTypes);
+
+				return constructor.newInstance(children);
 			} catch (Exception ex) {
 				throw new RuntimeException(ex);
 			}
