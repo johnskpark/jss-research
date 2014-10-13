@@ -1,22 +1,16 @@
 package jss.evolution;
 
-import java.util.List;
-
-import jss.Action;
 import jss.ActionHandler;
-import jss.IJob;
-import jss.IMachine;
-import jss.IProblemInstance;
 import ec.EvolutionState;
 import ec.gp.GPIndividual;
 
 /**
- * TODO javadoc.
+ * TODO javadoc. Also, this should go in sample.
  *
  * @author parkjohn
  *
  */
-public class JSSGPRule implements ActionHandler {
+public abstract class JSSGPRule implements ActionHandler {
 
 	private EvolutionState state;
 	private GPIndividual ind;
@@ -42,37 +36,36 @@ public class JSSGPRule implements ActionHandler {
 		this.data = data;
 	}
 
-	@Override
-	public Action getAction(IMachine machine, IProblemInstance problem) {
-		List<IJob> jobs = problem.getJobs();
+	/**
+	 * TODO javadoc.
+	 * @return
+	 */
+	protected EvolutionState getState() {
+		return state;
+	}
 
-		double bestPriority = Double.NEGATIVE_INFINITY;
-		IJob bestJob = null;
+	/**
+	 * TODO javadoc.
+	 * @return
+	 */
+	protected GPIndividual getIndividual() {
+		return ind;
+	}
 
-		for (IJob job : jobs) {
-			if (!machine.equals(job.getNextMachine())) {
-				continue;
-			}
+	/**
+	 * TODO javadoc.
+	 * @return
+	 */
+	protected int getThreadnum() {
+		return threadnum;
+	}
 
-			data.setProblem(problem);
-			data.setJob(job);
-			data.setMachine(machine);
-
-			ind.trees[0].child.eval(state, threadnum, data, null, ind, null);
-
-			if (data.getPriority() > bestPriority) {
-				bestPriority = data.getPriority();
-				bestJob = job;
-			}
-		}
-
-		if (bestJob != null) {
-			// Simply process the job as early as possible.
-			double time = Math.max(machine.getTimeAvailable(), bestJob.getReleaseTime());
-			return new Action(machine, bestJob, time);
-		} else {
-			return null;
-		}
+	/**
+	 * TODO javadoc.
+	 * @return
+	 */
+	protected JSSGPData getData() {
+		return data;
 	}
 
 }

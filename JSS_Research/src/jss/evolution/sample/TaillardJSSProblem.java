@@ -47,7 +47,7 @@ public class TaillardJSSProblem extends GPProblem {
 
 			Statistics stats = new Statistics();
 
-			solver.setRule(new JSSGPRule(state, (GPIndividual)ind, threadnum, (JSSGPData)input));
+			solver.setRule(new PriorityBasedDR(state, (GPIndividual)ind, threadnum, (JSSGPData)input));
 
 			for (IProblemInstance problem : dataset.getProblems()) {
 				IResult solution = solver.getSolution(problem);
