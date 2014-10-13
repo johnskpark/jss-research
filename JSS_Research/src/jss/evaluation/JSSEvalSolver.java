@@ -1,4 +1,4 @@
-package jss.evolution;
+package jss.evaluation;
 
 import jss.IProblemInstance;
 import jss.IResult;
@@ -6,25 +6,37 @@ import jss.ISolver;
 
 /**
  * TODO javadoc.
- *
  * @author parkjohn
  *
  */
-public abstract class JSSGPSolver implements ISolver {
+public abstract class JSSEvalSolver implements ISolver {
 
 	private ISolver solver;
+
+	private int seed;
+
+	private JSSEvalData data;
 
 	/**
 	 * TODO javadoc.
 	 */
-	public JSSGPSolver() {
+	public JSSEvalSolver() {
 	}
 
 	/**
 	 * TODO javadoc.
 	 * @param config
 	 */
-	public abstract void setGPConfiguration(JSSGPConfiguration config);
+	public void setConfiguration(JSSEvalConfiguration config) {
+		seed = config.getSeed();
+		setChildConfiguration(config);
+	}
+
+	/**
+	 * TODO javadoc.
+	 * @param config
+	 */
+	protected abstract void setChildConfiguration(JSSEvalConfiguration config);
 
 	/**
 	 * TODO javadoc.

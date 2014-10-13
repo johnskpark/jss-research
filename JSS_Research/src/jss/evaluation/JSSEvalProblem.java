@@ -22,6 +22,8 @@ import javax.xml.validation.Validator;
 
 import jss.IDataset;
 import jss.IProblemInstance;
+import jss.IResult;
+import jss.ISolver;
 import jss.evaluation.node.INode;
 
 import org.w3c.dom.Document;
@@ -41,7 +43,7 @@ public class JSSEvalProblem {
 	public static final String EVALUATION_XSD = "jss_evaluation.xsd";
 
 	public static final String XML_RULE_BASE = "ruleConfig";
-	public static final String XML_RULE_TYPE = "ruleType";
+	public static final String XML_RULE_TYPE = "ruleClass";
 	public static final String XML_RULE_NUM = "ruleNum";
 	public static final String XML_RULE_FILE = "ruleFile";
 
@@ -49,12 +51,17 @@ public class JSSEvalProblem {
 	public static final String XML_DATASET_CLASS = "datasetClass";
 	public static final String XML_DATASET_FILE = "datasetFile";
 
-	private Map<String, List<LoadedRule>> rulesMap = new HashMap<String, List<LoadedRule>>();
+	private Map<String, List<JSSEvalSolver>> solversMap = new HashMap<String, List<JSSEvalSolver>>();
 	private IDataset dataset;
 
 	// Will work similar to the EvolutionProblem. Insert rules and fitness,
 	// and then get the output.
 
+	/**
+	 * TODO javadoc.
+	 * @param xmlFilename
+	 * @throws Exception
+	 */
 	public JSSEvalProblem(String xmlFilename) throws Exception {
 		validateXml(xmlFilename);
 		loadConfiguration(xmlFilename);
@@ -100,35 +107,41 @@ public class JSSEvalProblem {
 
 			RuleParser parser = new RuleParser();
 
-			loadRuleFile(parser, 1, ""); // TODO
+			loadRuleFile(parser, null, 1, ""); // TODO
 		}
 
 	}
 
 	private void loadRuleFile(RuleParser parser,
+			Class<? extends JSSEvalSolver> solverClass,
 			int numRules,
 			String ruleFilename) throws Exception {
 		InputStream fileStream = new FileInputStream(new File(ruleFilename));
 		InputStreamReader fileReader = new InputStreamReader(fileStream);
 		BufferedReader reader = new BufferedReader(fileReader);
 
-		List<LoadedRule> rules = new ArrayList<LoadedRule>();
+		List<JSSEvalSolver> solvers = new ArrayList<JSSEvalSolver>();
 
 		String ruleString;
 		while ((ruleString = reader.readLine()) != null) {
 			String[] split = ruleString.split(",");
 
-			LoadedRule rule = new LoadedRule();
-			rule.seed = Integer.parseInt(split[0]);
-			rule.roots = new INode[numRules];
-			for (int i = 0; i < numRules; i++) {
-				rule.roots[i] = parser.getRuleFromString(split[i+1]);
-			}
+			JSSEvalConfiguration config = new JSSEvalConfiguration();
+			config.setSeed(Integer.parseInt(split[0]));
 
-			rules.add(rule);
+			List<INode> roots = new ArrayList<INode>();
+			for (int i = 0; i < numRules; i++) {
+				roots.add(parser.getRuleFromString(split[i+1]));
+			}
+			config.setRules(roots);
+
+			JSSEvalSolver solver = solverClass.newInstance();
+			solver.setConfiguration(config);
+
+			solvers.add(solver);
 		}
 
-		rulesMap.put(ruleFilename, rules);
+		solversMap.put(ruleFilename, solvers);
 
 		reader.close();
 	}
@@ -154,22 +167,21 @@ public class JSSEvalProblem {
 		}
 	}
 
+	/**
+	 * TODO javadoc.
+	 * @param outputCsv
+	 */
 	public void evaluate(String outputCsv) {
-		// TODO
+		for (String ruleFilename : solversMap.keySet()) {
+			List<JSSEvalSolver> solvers = solversMap.get(ruleFilename);
 
-		for (String ruleFilename : rulesMap.keySet()) {
-			List<LoadedRule> rule = rulesMap.get(ruleFilename);
-
-			for (IProblemInstance problem : dataset.getProblems()) {
-
+			for (JSSEvalSolver solver : solvers) {
+				for (IProblemInstance problem : dataset.getProblems()) {
+					IResult result = solver.getSolution(problem);
+					// TODO
+				}
 			}
-
 		}
-	}
-
-	private class LoadedRule {
-		int seed;
-		INode[] roots;
 	}
 
 }

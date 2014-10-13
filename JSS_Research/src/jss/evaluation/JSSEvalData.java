@@ -16,7 +16,13 @@ public class JSSEvalData {
 	private IMachine machine;
 	private IJob job;
 
-	private double priority;
+	public JSSEvalData(IProblemInstance problem,
+			IMachine machine,
+			IJob job) {
+		this.problem = problem;
+		this.machine = machine;
+		this.job = job;
+	}
 
 	/**
 	 * TODO javadoc.
@@ -42,51 +48,4 @@ public class JSSEvalData {
 		return job;
 	}
 
-	/**
-	 * TODO javadoc.
-	 * @param problem
-	 */
-	public void setProblem(IProblemInstance problem) {
-		this.problem = problem;
-	}
-
-	/**
-	 * TODO javadoc.
-	 * @param machine
-	 */
-	public void setMachine(IMachine machine) {
-		this.machine = machine;
-	}
-
-	/**
-	 * TODO javadoc.
-	 * @param job
-	 */
-	public void setJob(IJob job) {
-		this.job = job;
-	}
-
-	/**
-	 * TODO javadoc.
-	 * @return
-	 */
-	public double getPriority() {
-		return priority;
-	}
-
-	/**
-	 * TODO javadoc.
-	 * @param priority
-	 */
-	public void setPriority(double priority) {
-		this.priority = priority;
-	}
-
-	/**
-	 * TODO javadoc.
-	 */
-	public void clear() {
-		machine = null;
-		job = null;
-	}
 }

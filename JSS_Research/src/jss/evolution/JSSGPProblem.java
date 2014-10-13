@@ -14,6 +14,11 @@ import ec.gp.GPProblem;
 import ec.gp.koza.KozaFitness;
 import ec.util.Parameter;
 
+/**
+ * TODO javadoc.
+ * @author parkjohn
+ *
+ */
 public class JSSGPProblem extends GPProblem {
 
 	private static final long serialVersionUID = -3817123526020178300L;

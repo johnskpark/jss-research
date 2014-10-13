@@ -3,7 +3,7 @@
 <xs:element name="ruleConfig">
 	<xs:complexType>
 		<xs:sequence>
-			<xs:element name="ruleType" type="xs:string" maxOccurs="1" minOccurs="1"/>
+			<xs:element name="ruleClass" type="xs:string" maxOccurs="1" minOccurs="1"/>
 			<xs:element name="ruleNum" type="xs:integer" maxOccurs="1" minOccurs="1"/>
 			<xs:element name="ruleFile" type="xs:string" maxOccurs="1" minOccurs="1"/>
 		</xs:sequence>
