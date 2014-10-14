@@ -7,6 +7,9 @@ package jss;
  * instances themselves as they undergo a state change, such as jobs finishing
  * on machines.
  *
+ * ISubscriptionHandler is used in conjunction with @see IProblemInstance to
+ * represent the job shop scheduling problem instance.
+ *
  * @author parkjohn
  *
  */

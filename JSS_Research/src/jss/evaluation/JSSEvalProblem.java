@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,7 +24,6 @@ import javax.xml.validation.Validator;
 import jss.IDataset;
 import jss.IProblemInstance;
 import jss.IResult;
-import jss.ISolver;
 import jss.evaluation.node.INode;
 
 import org.w3c.dom.Document;
@@ -43,7 +43,7 @@ public class JSSEvalProblem {
 	public static final String EVALUATION_XSD = "jss_evaluation.xsd";
 
 	public static final String XML_RULE_BASE = "ruleConfig";
-	public static final String XML_RULE_TYPE = "ruleClass";
+	public static final String XML_RULE_CLASS = "ruleClass";
 	public static final String XML_RULE_NUM = "ruleNum";
 	public static final String XML_RULE_FILE = "ruleFile";
 
@@ -53,9 +53,6 @@ public class JSSEvalProblem {
 
 	private Map<String, List<JSSEvalSolver>> solversMap = new HashMap<String, List<JSSEvalSolver>>();
 	private IDataset dataset;
-
-	// Will work similar to the EvolutionProblem. Insert rules and fitness,
-	// and then get the output.
 
 	/**
 	 * TODO javadoc.
@@ -83,6 +80,7 @@ public class JSSEvalProblem {
 		}
 	}
 
+	// TODO docs.
 	private void loadConfiguration(String xmlFilename) throws Exception {
 		File xmlFile = new File(xmlFilename);
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -95,6 +93,7 @@ public class JSSEvalProblem {
 		loadDataset(doc);
 	}
 
+	// TODO docs.
 	private void loadRules(Document doc) throws Exception {
 		NodeList nList = doc.getElementsByTagName(XML_RULE_BASE);
 
@@ -103,15 +102,28 @@ public class JSSEvalProblem {
 			Element ruleBase = (Element) ruleNode;
 
 			// Parse the node list
-			// TODO fuck, I have no idea what to do here.
+			String solverClassStr = ruleBase.getElementsByTagName(XML_RULE_CLASS).item(0).getTextContent();
+			String ruleNumStr = ruleBase.getElementsByTagName(XML_RULE_NUM).item(0).getTextContent();
+			String ruleFilename = ruleBase.getElementsByTagName(XML_RULE_FILE).item(0).getTextContent();
+
+			Class<?> retrievedClass = Class.forName(solverClassStr);
+			if (retrievedClass.isAssignableFrom(JSSEvalSolver.class)) {
+				throw new RuntimeException("You done goofed"); // TODO
+			}
+
+			@SuppressWarnings("unchecked")  // The checks right above.
+			Class<? extends JSSEvalSolver> solverClass =
+					(Class<? extends JSSEvalSolver>) retrievedClass;
+
+			int ruleNum = Integer.parseInt(ruleNumStr);
 
 			RuleParser parser = new RuleParser();
-
-			loadRuleFile(parser, null, 1, ""); // TODO
+			loadRuleFile(parser, solverClass, ruleNum, ruleFilename);
 		}
 
 	}
 
+	// TODO docs.
 	private void loadRuleFile(RuleParser parser,
 			Class<? extends JSSEvalSolver> solverClass,
 			int numRules,
@@ -146,6 +158,7 @@ public class JSSEvalProblem {
 		reader.close();
 	}
 
+	// TODO docs.
 	private void loadDataset(Document doc) throws Exception {
 		NodeList nList = doc.getElementsByTagName(XML_DATASET_BASE);
 
@@ -171,17 +184,26 @@ public class JSSEvalProblem {
 	 * TODO javadoc.
 	 * @param outputCsv
 	 */
-	public void evaluate(String outputCsv) {
+	public void evaluate(String outputCsv) throws Exception {
+		PrintStream output = new PrintStream(new File(outputCsv));
+
 		for (String ruleFilename : solversMap.keySet()) {
 			List<JSSEvalSolver> solvers = solversMap.get(ruleFilename);
 
 			for (JSSEvalSolver solver : solvers) {
+				output.printf("%s,%d", ruleFilename, solver.getSeed());
+
 				for (IProblemInstance problem : dataset.getProblems()) {
-					IResult result = solver.getSolution(problem);
-					// TODO
+					IResult solution = solver.getSolution(problem);
+
+					output.printf(",%f", solution.getMakespan());
 				}
+
+				output.println();
 			}
 		}
+
+		output.close();
 	}
 
 }

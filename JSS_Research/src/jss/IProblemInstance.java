@@ -3,9 +3,23 @@ package jss;
 import java.util.List;
 
 /**
- * TODO problem instance that covers the machines and the jobs. elaborate
+ * Representation of a job shop scheduling problem instance. IProblemInstance
+ * stores all of the data that makes up a job shop scheduling problem
+ * instance. In the most basic situation, this consists of the list of jobs,
+ * machines and operations that need to be carried out on the machines. In
+ * more complex situations, it includes future breakdowns, changes in job and
+ * machine properties, etc.
  *
- * Modified by getting the jobs and machines and directly modifying them.
+ * In addition to storing the properties of the problem instance,
+ * IProblemInstance also stores the current state of the simulation as the
+ * jobs are processed by the machines. The solver directly modifies this state
+ * as it solves the problem. If the solver carries out an invalid action, an
+ * Exception will be thrown by relevant component (either the machine or the
+ * job). TODO elaborate on the Exception that is thrown.
+ *
+ * IProblemInstance should be used in conjunction with
+ * @see ISubscriptionHandler to notify the @see ISolver as updates occur
+ * during the simulation.
  *
  * @author parkjohn
  *

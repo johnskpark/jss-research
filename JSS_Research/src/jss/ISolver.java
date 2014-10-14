@@ -7,7 +7,8 @@ package jss;
  * A solution in this case is defined as a list of @see Action that can be
  * applied sequentially to the problem instance.
  *
- * TODO more documentation.
+ * ISolver should be used in conjunction with @see ISubscriber to solve the
+ * job shop scheduling problem instances.
  *
  * @author parkjohn
  *
@@ -15,10 +16,11 @@ package jss;
 public interface ISolver {
 
 	/**
-	 * TODO javadoc.
-	 * @param problem
-	 * @return
-	 * @throws RuntimeException
+	 * Use the solver to generate a solution for the particular job shop
+	 * scheduling problem instance.
+	 * @param problem The job shop scheduling problem instance to solve.
+	 * @return The solution for the problem instance as an instance of IResult.
+	 * @throws RuntimeException TODO this will probably be modified later down the line.
 	 */
 	public IResult getSolution(IProblemInstance problem) throws RuntimeException;
 }

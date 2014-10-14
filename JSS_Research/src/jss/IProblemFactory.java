@@ -2,6 +2,7 @@ package jss;
 
 /**
  * Interface for the factories that generate problem instances.
+ * TODO currently not used anywhere at the moment.
  *
  * @author parkjohn
  *

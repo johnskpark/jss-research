@@ -54,6 +54,14 @@ public abstract class JSSEvalSolver implements ISolver {
 		return solver;
 	}
 
+	/**
+	 * TODO javadoc.
+	 * @return
+	 */
+	public int getSeed() {
+		return seed;
+	}
+
 	@Override
 	public IResult getSolution(IProblemInstance problem)
 			throws RuntimeException {

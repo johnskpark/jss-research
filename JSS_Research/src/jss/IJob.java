@@ -64,14 +64,18 @@ public interface IJob {
 	public IMachine getNextMachine();
 
 	/**
-	 * Get whether the job can be processed on the machine or not. TODO
-	 * @return
+	 * Get whether the job has an operation on the particular machine or not.
+	 * Jobs should not be processed on machines that it does not have an
+	 * operation on.
+	 * @return True if the job has an operation on the specified machine,
+	 *         false otherwise.
 	 */
 	public boolean isProcessable(IMachine machine);
 
 	/**
-	 * TODO javadoc.
-	 * @return
+	 * Get whether all operations have been completed for the job.
+	 * @return True if the job does not need to be processed any further,
+	 *         false otherwise.
 	 */
 	public boolean isCompleted();
 
