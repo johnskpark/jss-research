@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<evaluationConfig>
+	<ruleConfig>
+		<ruleClass>jss.evaluation.sample.PriorityBasedSolver</ruleClass>
+		<ruleNum>1</ruleNum>
+		<ruleFile>all_rules_small.txt</ruleFile>
+	</ruleConfig>
+
+	<ruleConfig>
+		<ruleClass>jss.evaluation.sample.PriorityBasedSolver</ruleClass>
+		<ruleNum>1</ruleNum>
+		<ruleFile>all_rules_medium.txt</ruleFile>
+	</ruleConfig>
+
+	<ruleConfig>
+		<ruleClass>jss.evaluation.sample.PriorityBasedSolver</ruleClass>
+		<ruleNum>1</ruleNum>
+		<ruleFile>all_rules_large.txt</ruleFile>
+	</ruleConfig>
+
+	<datasetConfig>
+		<datasetClass>jss.problem.static_problem.taillard_dataset.TaillardDataset</datasetClass>
+	</datasetConfig>
+</evaluationConfig>

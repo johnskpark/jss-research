@@ -37,8 +37,9 @@ public class RuleParser {
 			Set<Class<? extends INode>> subTypes = reflections.getSubTypesOf(INode.class);
 
 			for (Class<? extends INode> subType : subTypes) {
-				if (!subType.isAnnotationPresent(NodeAnnotation.class)) {
+				if (subType.isAnnotationPresent(NodeAnnotation.class)) {
 					NodeDefinition nodeDefinition = NodeUtil.getNodeDefinition(subType);
+
 					NodeChildrenNumPair pair = new NodeChildrenNumPair();
 					pair.nodeClass = subType;
 					pair.childrenNum = nodeDefinition.numChildren();
@@ -73,7 +74,7 @@ public class RuleParser {
 
 				String token = readToken();
 				if (!nodeMap.containsKey(token)) {
-					throw new RuntimeException("You done goofed again from RuleParser");
+					throw new RuntimeException("Unrecognised token " + token); // TODO
 				}
 
 				NodeChildrenNumPair pair = nodeMap.get(token);
@@ -91,7 +92,7 @@ public class RuleParser {
 				// Parse the terminal node.
 				String token = readToken();
 				if (!nodeMap.containsKey(token)) {
-					throw new RuntimeException("You done goofed again from RuleParser");
+					throw new RuntimeException("Unrecognised token " + token); // TODO
 				}
 
 				NodeChildrenNumPair pair = nodeMap.get(token);
@@ -117,14 +118,17 @@ public class RuleParser {
 		}
 
 		private void ignoreWhitespace() {
-			while (index < input.length() && Character.isWhitespace(input.charAt(index))) {
+			while (index < input.length() &&
+					Character.isWhitespace(input.charAt(index))) {
 				index++;
 			}
 		}
 
 		private String readToken() {
 			int startIndex = index;
-			while (index < input.length() && !Character.isWhitespace(input.charAt(index))) {
+			while (index < input.length() &&
+					!Character.isWhitespace(input.charAt(index)) &&
+					input.charAt(index) != ')') {
 				index++;
 			}
 			return input.substring(startIndex, index);

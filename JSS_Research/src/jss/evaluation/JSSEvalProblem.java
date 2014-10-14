@@ -54,6 +54,8 @@ public class JSSEvalProblem {
 	private Map<String, List<JSSEvalSolver>> solversMap = new HashMap<String, List<JSSEvalSolver>>();
 	private IDataset dataset;
 
+	private RuleParser parser = new RuleParser();
+
 	/**
 	 * TODO javadoc.
 	 * @param xmlFilename
@@ -117,15 +119,13 @@ public class JSSEvalProblem {
 
 			int ruleNum = Integer.parseInt(ruleNumStr);
 
-			RuleParser parser = new RuleParser();
-			loadRuleFile(parser, solverClass, ruleNum, ruleFilename);
+			loadRuleFile(solverClass, ruleNum, ruleFilename);
 		}
 
 	}
 
 	// TODO docs.
-	private void loadRuleFile(RuleParser parser,
-			Class<? extends JSSEvalSolver> solverClass,
+	private void loadRuleFile(Class<? extends JSSEvalSolver> solverClass,
 			int numRules,
 			String ruleFilename) throws Exception {
 		InputStream fileStream = new FileInputStream(new File(ruleFilename));

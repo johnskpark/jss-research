@@ -8,7 +8,7 @@ public class NodeUtil {
 	}
 
 	public static NodeDefinition getNodeDefinition(Class<? extends INode> nodeClass) {
-		if (nodeClass.isAnnotationPresent(NodeAnnotation.class)) {
+		if (!nodeClass.isAnnotationPresent(NodeAnnotation.class)) {
 			throw new RuntimeException("You done goofed"); // TODO
 		}
 
