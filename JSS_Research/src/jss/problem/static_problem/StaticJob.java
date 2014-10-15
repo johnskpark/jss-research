@@ -176,10 +176,7 @@ public class StaticJob implements IJob, IEventHandler {
 
 	@Override
 	public boolean isProcessable(IMachine machine) {
-		if (machineQueue.isEmpty()) {
-			return false;
-		}
-		return machineQueue.peek().equals(machine);
+		return machineQueue.contains(machine);
 	}
 
 	@Override
