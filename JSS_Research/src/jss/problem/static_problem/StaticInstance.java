@@ -11,7 +11,7 @@ import jss.ISubscriber;
 import jss.ISubscriptionHandler;
 
 /**
- * Really, really basic problem instance. TODO write more.
+ * Really, really basic problem instance. TODO write more, especially what static means.
  *
  * @author parkjohn
  *

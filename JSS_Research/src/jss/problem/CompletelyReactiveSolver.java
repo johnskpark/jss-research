@@ -12,7 +12,22 @@ import jss.ISubscriptionHandler;
 import jss.Simulator;
 
 /**
- * TODO javadoc.
+ * Represents a completely reactive solver that generates solutions for Job
+ * Shop Scheduling problem instances.
+ *
+ * A completely reactive solver is a solver that assigns an @see Action for a
+ * particular machine as soon as the machine finishes processing a job.
+ * Because of this, dispatching rules are considered as being completely
+ * reactive solver. This differs from predictive reactive solvers, where the
+ * schedule predefined before the simulation starts, and modified as
+ * stochastic processes occur during the simulation (e.g. machines breaking
+ * down).
+ *
+ * Completely reactive solvers are considered as being able to handle
+ * dynamic/stochastic Job Shop Scheduling problems better due to its
+ * on-the-spot decision making procedure. However, it is also far more myopic
+ * than predictive reactive solvers.
+ *
  * @author parkjohn
  *
  */
@@ -24,13 +39,13 @@ public class CompletelyReactiveSolver implements ISolver, ISubscriber {
 	private Result solution;
 
 	/**
-	 * TODO Javadoc. I wonder if I even need this component here at all.
+	 * Generate a new instance of a completely reactive solver.
 	 */
 	public CompletelyReactiveSolver() {
 	}
 
 	/**
-	 * TODO javadoc.
+	 * Set the rule that will be used for the 'on-the-spot' decision making.
 	 * @param rule
 	 */
 	public void setRule(IActionHandler rule) {
@@ -43,7 +58,6 @@ public class CompletelyReactiveSolver implements ISolver, ISubscriber {
 		this.problem = problem;
 		this.solution = new Result(problem);
 
-		// TODO fix this up sometime later.
 		((ISubscriptionHandler)problem).onSubscriptionRequest(this);;
 
 		// Run the simulator.

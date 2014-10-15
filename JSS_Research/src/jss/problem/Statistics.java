@@ -7,7 +7,7 @@ import jss.IProblemInstance;
 import jss.IResult;
 
 /**
- * TODO javadoc.
+ * Helper class that deals with generating statistics for solutions.
  *
  * @author parkjohn
  *
@@ -22,15 +22,16 @@ public class Statistics {
 	private int count = 0;
 
 	/**
-	 * TODO javadoc.
+	 * Generate a new instance of Statistics object.
 	 */
 	public Statistics() {
 	}
 
 	/**
-	 * TODO javadoc.
-	 * @param problem
-	 * @param solution
+	 * Add a solution for a Job Shop Scheduling problem instance into the
+	 * solution repository.
+	 * @param problem The solved problem instance.
+	 * @param solution The solution for the solved problem instance.
 	 */
 	public void addSolution(IProblemInstance problem, IResult solution) {
 		problems.put(problem, solution);
@@ -41,7 +42,7 @@ public class Statistics {
 	}
 
 	/**
-	 * TODO javadoc.
+	 * Get the average makespan of the solutions.
 	 * @return
 	 */
 	public double getAverageMakespan() {
@@ -49,7 +50,7 @@ public class Statistics {
 	}
 
 	/**
-	 * TODO javadoc.
+	 * Get the average total weighted tardiness.
 	 * @return
 	 */
 	public double getAverageTWT() {

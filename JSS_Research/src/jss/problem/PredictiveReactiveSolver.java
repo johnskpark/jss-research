@@ -4,6 +4,11 @@ import jss.IProblemInstance;
 import jss.IResult;
 import jss.ISolver;
 
+/**
+ * TODO javadoc. Not used yet, so won't doc yet.
+ * @author parkjohn
+ *
+ */
 public class PredictiveReactiveSolver implements ISolver {
 
 	@Override

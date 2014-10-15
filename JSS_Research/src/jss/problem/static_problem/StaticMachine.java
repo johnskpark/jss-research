@@ -10,7 +10,10 @@ import jss.IMachine;
 import jss.ISubscriptionHandler;
 
 /**
- * TODO javadoc.
+ * A concrete representation of a machine in a static Job Shop Scheduling
+ * problem instances.
+ *
+ * @see StaticInstance for definition of static Job Shop Scheduling problems.
  *
  * @author parkjohn
  *
@@ -27,7 +30,9 @@ public class StaticMachine implements IMachine, IEventHandler {
 	private ISubscriptionHandler subscriptionHandler;
 
 	/**
-	 * TODO javadoc.
+	 * Generate a new instance of a static machine for the static Job Shop
+	 * Scheduling problem instance.
+	 * @param handler The subscription handler for callback methods.
 	 */
 	public StaticMachine(ISubscriptionHandler handler) {
 		subscriptionHandler = handler;

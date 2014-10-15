@@ -13,7 +13,10 @@ import jss.IJob;
 import jss.IMachine;
 
 /**
- * TODO javadoc.
+ * A concrete representation of a job in a static Job Shop Scheduling problem
+ * instances.
+ *
+ * @see StaticInstance for definition of static Job Shop Scheduling problems.
  *
  * @author parkjohn
  *
@@ -34,11 +37,16 @@ public class StaticJob implements IJob, IEventHandler {
 
 	private IMachine machine;
 
+	/**
+	 * Generate a new instance of a static job for the static Job Shop
+	 * Scheduling problem instance.
+	 */
 	public StaticJob() {
 	}
 
 	/**
-	 * TODO javadoc.
+	 * Offer the machine as the latest operations that needs to be carried out
+	 * for the job to be completed.
 	 * @param machine
 	 */
 	public void offerMachine(IMachine machine) {
@@ -47,7 +55,7 @@ public class StaticJob implements IJob, IEventHandler {
 	}
 
 	/**
-	 * TODO javadoc.
+	 * Set the processing time for the specified machine.
 	 * @param machine
 	 * @param processing
 	 */
@@ -57,7 +65,7 @@ public class StaticJob implements IJob, IEventHandler {
 	}
 
 	/**
-	 * TODO javadoc.
+	 * Set the setup time for the specified machine.
 	 * @param machine
 	 * @param setup
 	 */
@@ -67,7 +75,7 @@ public class StaticJob implements IJob, IEventHandler {
 	}
 
 	/**
-	 * TODO javadoc.
+	 * Set the due date for the specified machine.
 	 * @param machine
 	 * @param dueDate
 	 */
@@ -77,7 +85,7 @@ public class StaticJob implements IJob, IEventHandler {
 	}
 
 	/**
-	 * TODO javadoc.
+	 * Set the weight/penalty for the specified machine.
 	 * @param machine
 	 * @param penalty
 	 */
@@ -87,7 +95,7 @@ public class StaticJob implements IJob, IEventHandler {
 	}
 
 	/**
-	 * TODO javadoc.
+	 * Set the release time of the job.
 	 * @param release
 	 */
 	public void setReleaseTime(double release) {
@@ -190,7 +198,9 @@ public class StaticJob implements IJob, IEventHandler {
 	}
 
 	/**
-	 * TODO javadoc.
+	 * Get the processing order for the job.
+	 * TODO this will need to be removed at some point, it's pretty much a
+	 * hack.
 	 * @return
 	 */
 	public List<IMachine> getProcessingOrder() {
