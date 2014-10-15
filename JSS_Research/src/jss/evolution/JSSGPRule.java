@@ -1,6 +1,6 @@
 package jss.evolution;
 
-import jss.ActionHandler;
+import jss.IActionHandler;
 import ec.EvolutionState;
 import ec.gp.GPIndividual;
 
@@ -10,7 +10,7 @@ import ec.gp.GPIndividual;
  * @author parkjohn
  *
  */
-public abstract class JSSGPRule implements ActionHandler {
+public abstract class JSSGPRule implements IActionHandler {
 
 	private EvolutionState state;
 	private GPIndividual ind;

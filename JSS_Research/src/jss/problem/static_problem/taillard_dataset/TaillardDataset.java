@@ -16,7 +16,6 @@ import jss.problem.static_problem.StaticDataset;
 import jss.problem.static_problem.StaticInstance;
 import jss.problem.static_problem.StaticJob;
 import jss.problem.static_problem.StaticMachine;
-import jss.util.TaillardRandom;
 
 /**
  * TODO javadoc.

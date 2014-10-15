@@ -3,7 +3,7 @@ package jss.evaluation.sample;
 import java.util.List;
 
 import jss.Action;
-import jss.ActionHandler;
+import jss.IActionHandler;
 import jss.IJob;
 import jss.IMachine;
 import jss.IProblemInstance;
@@ -34,7 +34,7 @@ public class FIFOSolver extends JSSEvalSolver {
 	}
 
 	// TODO docs.
-	private class FIFODR implements ActionHandler {
+	private class FIFODR implements IActionHandler {
 
 		@Override
 		public Action getAction(IMachine machine, IProblemInstance problem) {

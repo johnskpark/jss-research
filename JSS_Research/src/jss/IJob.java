@@ -4,6 +4,14 @@ package jss;
 /**
  * Generic interface for job definition in a Job Shop Scheduling problem.
  *
+ * In Job Shop Scheduling, jobs are abstractions of tasks and processes that
+ * need to be processed on particular machine(s) in specific orders of
+ * operations. A problem instance is only considered to have been 'solved'
+ * if it has processed all of the operations for the incoming jobs.
+ *
+ * @see IMachine for the interface definition of Machines in Job Shop
+ * Scheduling.
+ *
  * @author parkjohn
  *
  */

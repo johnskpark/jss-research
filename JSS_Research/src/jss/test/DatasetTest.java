@@ -8,8 +8,8 @@ import jss.IProblemInstance;
 import jss.problem.static_problem.StaticInstance;
 import jss.problem.static_problem.StaticJob;
 import jss.problem.static_problem.StaticMachine;
+import jss.problem.static_problem.taillard_dataset.TaillardBounds;
 import jss.problem.static_problem.taillard_dataset.TaillardDataset;
-import jss.util.TaillardBounds;
 
 import org.junit.Assert;
 import org.junit.Test;

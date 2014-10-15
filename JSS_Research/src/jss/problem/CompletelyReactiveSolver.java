@@ -1,7 +1,7 @@
 package jss.problem;
 
 import jss.Action;
-import jss.ActionHandler;
+import jss.IActionHandler;
 import jss.IJob;
 import jss.IMachine;
 import jss.IProblemInstance;
@@ -18,7 +18,7 @@ import jss.Simulator;
  */
 public class CompletelyReactiveSolver implements ISolver, ISubscriber {
 
-	private ActionHandler rule;
+	private IActionHandler rule;
 
 	private IProblemInstance problem;
 	private Result solution;
@@ -33,7 +33,7 @@ public class CompletelyReactiveSolver implements ISolver, ISubscriber {
 	 * TODO javadoc.
 	 * @param rule
 	 */
-	public void setRule(ActionHandler rule) {
+	public void setRule(IActionHandler rule) {
 		this.rule = rule;
 	}
 

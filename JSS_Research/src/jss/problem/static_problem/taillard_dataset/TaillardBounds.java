@@ -1,4 +1,4 @@
-package jss.util;
+package jss.problem.static_problem.taillard_dataset;
 
 import java.util.List;
 

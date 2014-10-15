@@ -5,6 +5,12 @@ import java.util.List;
 /**
  * Generic interface for machine definition.
  *
+ * In Job Shop Scheduling, machines are abstractions of production lines.
+ * Various jobs will need to be processed on particular machine(s), and it is
+ * up to the scheduler to determine which job the machine will process.
+ *
+ * @see IJob for the interface definition of Jobs in Job Shop Scheduling.
+ *
  * @author parkjohn
  *
  */

@@ -3,7 +3,7 @@ package jss.evaluation.sample;
 import java.util.List;
 
 import jss.Action;
-import jss.ActionHandler;
+import jss.IActionHandler;
 import jss.IJob;
 import jss.IMachine;
 import jss.IProblemInstance;
@@ -15,7 +15,7 @@ import jss.evaluation.node.INode;
  * @author parkjohn
  *
  */
-public class PriorityBasedDR implements ActionHandler {
+public class PriorityBasedDR implements IActionHandler {
 
 	private INode node;
 
