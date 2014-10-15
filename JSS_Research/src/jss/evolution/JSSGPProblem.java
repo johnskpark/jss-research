@@ -23,8 +23,8 @@ public class JSSGPProblem extends GPProblem {
 
 	private static final long serialVersionUID = -3817123526020178300L;
 
-	private static final String P_INSTANCES = "instances";
-	private static final String P_SOLVER = "solver";
+	public static final String P_INSTANCES = "instances";
+	public static final String P_SOLVER = "solver";
 
 	private IDataset dataset;
 	private JSSGPSolver solver;
