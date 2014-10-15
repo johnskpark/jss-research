@@ -42,8 +42,10 @@ public class JSSEvalProblem {
 
 	public static final String EVALUATION_XSD = "jss_evaluation.xsd";
 
-	public static final String XML_RULE_BASE = "ruleConfig";
-	public static final String XML_RULE_CLASS = "ruleClass";
+	public static final String XML_SOLVER_BASE = "solverConfig";
+	public static final String XML_SOLVER_CLASS = "solverClass";
+	public static final String XML_SOLVER_FILE = "solverFile";
+
 	public static final String XML_RULE_NUM = "ruleNum";
 	public static final String XML_RULE_FILE = "ruleFile";
 
@@ -91,22 +93,19 @@ public class JSSEvalProblem {
 
 		doc.getDocumentElement().normalize();
 
-		loadRules(doc);
+		loadSolvers(doc);
 		loadDataset(doc);
 	}
 
 	// TODO docs.
-	private void loadRules(Document doc) throws Exception {
-		NodeList nList = doc.getElementsByTagName(XML_RULE_BASE);
+	private void loadSolvers(Document doc) throws Exception {
+		NodeList nList = doc.getElementsByTagName(XML_SOLVER_BASE);
 
 		for (int i = 0; i < nList.getLength(); i++) {
-			Node ruleNode = nList.item(i);
-			Element ruleBase = (Element) ruleNode;
+			Element solverBase = (Element) nList.item(i);
 
-			// Parse the node list
-			String solverClassStr = ruleBase.getElementsByTagName(XML_RULE_CLASS).item(0).getTextContent();
-			String ruleNumStr = ruleBase.getElementsByTagName(XML_RULE_NUM).item(0).getTextContent();
-			String ruleFilename = ruleBase.getElementsByTagName(XML_RULE_FILE).item(0).getTextContent();
+			// Get the solver definition.
+			String solverClassStr = solverBase.getElementsByTagName(XML_SOLVER_CLASS).item(0).getTextContent();
 
 			Class<?> retrievedClass = Class.forName(solverClassStr);
 			if (retrievedClass.isAssignableFrom(JSSEvalSolver.class)) {
@@ -117,15 +116,30 @@ public class JSSEvalProblem {
 			Class<? extends JSSEvalSolver> solverClass =
 					(Class<? extends JSSEvalSolver>) retrievedClass;
 
-			int ruleNum = Integer.parseInt(ruleNumStr);
+			// Load any additional files.
+			NodeList ruleFileNodeList = solverBase.getElementsByTagName(XML_SOLVER_FILE);
 
-			loadRuleFile(solverClass, ruleNum, ruleFilename);
+			if (ruleFileNodeList.getLength() != 0) {
+				Element ruleBase = (Element) ruleFileNodeList.item(0);
+
+				String ruleNumStr = ruleBase.getElementsByTagName(XML_RULE_NUM).item(0).getTextContent();
+				String ruleFilename = ruleBase.getElementsByTagName(XML_RULE_FILE).item(0).getTextContent();
+
+				int ruleNum = Integer.parseInt(ruleNumStr);
+
+				List<JSSEvalSolver> solvers = loadRuleFile(solverClass, ruleNum, ruleFilename);
+				solversMap.put(ruleFilename, solvers);
+			} else {
+				List<JSSEvalSolver> solvers = loadStaticSolvers(solverClass);
+
+				solversMap.put(solverClassStr, solvers);
+			}
 		}
 
 	}
 
 	// TODO docs.
-	private void loadRuleFile(Class<? extends JSSEvalSolver> solverClass,
+	private List<JSSEvalSolver> loadRuleFile(Class<? extends JSSEvalSolver> solverClass,
 			int numRules,
 			String ruleFilename) throws Exception {
 		InputStream fileStream = new FileInputStream(new File(ruleFilename));
@@ -153,9 +167,21 @@ public class JSSEvalProblem {
 			solvers.add(solver);
 		}
 
-		solversMap.put(ruleFilename, solvers);
-
 		reader.close();
+
+		return solvers;
+	}
+
+	private List<JSSEvalSolver> loadStaticSolvers(Class<? extends JSSEvalSolver> solverClass)
+			throws Exception {
+		List<JSSEvalSolver> solvers = new ArrayList<JSSEvalSolver>();
+
+		JSSEvalSolver solver = solverClass.newInstance();
+		solver.setConfiguration(new JSSEvalConfiguration());
+
+		solvers.add(solver);
+
+		return solvers;
 	}
 
 	// TODO docs.
@@ -196,6 +222,7 @@ public class JSSEvalProblem {
 				for (IProblemInstance problem : dataset.getProblems()) {
 					IResult solution = solver.getSolution(problem);
 
+					// TODO make this generic.
 					output.printf(",%f", solution.getMakespan());
 				}
 

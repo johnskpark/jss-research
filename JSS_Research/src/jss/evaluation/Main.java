@@ -16,7 +16,7 @@ public class Main {
 			JSSEvalProblem evalProblem;
 
 			evalProblem = new JSSEvalProblem(xmlFilename);
-			//evalProblem.evaluate(outputCsv);
+			evalProblem.evaluate(outputCsv);
 		} catch (Exception ex) {
 			System.err.println(ex.getMessage());
 			ex.printStackTrace();

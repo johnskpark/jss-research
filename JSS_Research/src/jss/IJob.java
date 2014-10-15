@@ -64,6 +64,12 @@ public interface IJob {
 	public IMachine getNextMachine();
 
 	/**
+	 * Get the last machine that the job was processed on.
+	 * @return The last machine that was visited by the job.
+	 */
+	public IMachine getLastMachine();
+
+	/**
 	 * Get whether the job has an operation on the particular machine or not.
 	 * Jobs should not be processed on machines that it does not have an
 	 * operation on.

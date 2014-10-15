@@ -1,22 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <evaluationConfig>
-	<ruleConfig>
-		<ruleClass>jss.evaluation.sample.PriorityBasedSolver</ruleClass>
-		<ruleNum>1</ruleNum>
-		<ruleFile>all_rules_small.txt</ruleFile>
-	</ruleConfig>
+	<solverConfig>
+		<solverClass>jss.evaluation.sample.PriorityBasedSolver</solverClass>
+		<solverFile>
+			<ruleNum>1</ruleNum>
+			<ruleFile>all_rules_small.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
 
-	<ruleConfig>
-		<ruleClass>jss.evaluation.sample.PriorityBasedSolver</ruleClass>
-		<ruleNum>1</ruleNum>
-		<ruleFile>all_rules_medium.txt</ruleFile>
-	</ruleConfig>
+	<solverConfig>
+		<solverClass>jss.evaluation.sample.PriorityBasedSolver</solverClass>
+		<solverFile>
+			<ruleNum>1</ruleNum>
+			<ruleFile>all_rules_medium.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
 
-	<ruleConfig>
-		<ruleClass>jss.evaluation.sample.PriorityBasedSolver</ruleClass>
-		<ruleNum>1</ruleNum>
-		<ruleFile>all_rules_large.txt</ruleFile>
-	</ruleConfig>
+	<solverConfig>
+		<solverClass>jss.evaluation.sample.PriorityBasedSolver</solverClass>
+		<solverFile>
+			<ruleNum>1</ruleNum>
+			<ruleFile>all_rules_large.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
 
 	<datasetConfig>
 		<datasetClass>jss.problem.static_problem.taillard_dataset.TaillardDataset</datasetClass>

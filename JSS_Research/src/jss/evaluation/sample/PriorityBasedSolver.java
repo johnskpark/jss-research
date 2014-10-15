@@ -5,8 +5,16 @@ import jss.evaluation.JSSEvalSolver;
 import jss.evaluation.sample.PriorityBasedDR;
 import jss.problem.CompletelyReactiveSolver;
 
+/**
+ * TODO javadoc.
+ * @author parkjohn
+ *
+ */
 public class PriorityBasedSolver extends JSSEvalSolver {
 
+	/**
+	 * TODO javadoc.
+	 */
 	public PriorityBasedSolver() {
 		super();
 	}

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<evaluationConfig>
+	<solverConfig>
+		<solverClass>jss.evaluation.sample.SPTSolver</solverClass>
+	</solverConfig>
+
+	<datasetConfig>
+		<datasetClass>jss.problem.static_problem.taillard_dataset.TaillardDataset</datasetClass>
+	</datasetConfig>
+</evaluationConfig>

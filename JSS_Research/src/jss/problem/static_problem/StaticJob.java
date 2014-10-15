@@ -153,6 +153,15 @@ public class StaticJob implements IJob, IEventHandler {
 	}
 
 	@Override
+	public IMachine getLastMachine() {
+		int diff = machineList.size() - machineQueue.size();
+		if (diff != 0) {
+			return machineList.get(diff-1);
+		}
+		return null;
+	}
+
+	@Override
 	public boolean isProcessable(IMachine machine) {
 		if (machineQueue.isEmpty()) {
 			return false;
