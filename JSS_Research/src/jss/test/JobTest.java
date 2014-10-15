@@ -41,7 +41,7 @@ public class JobTest {
 
 		job.setReleaseTime(releaseTime);
 
-		Assert.assertEquals(job.getReleaseTime(), releaseTime, EPSILON);
+		Assert.assertEquals(job.getReadyTime(mockMachine1), releaseTime, EPSILON);
 
 		job.setProcessingTime(mockMachine1, processingTimes[0]);
 		job.setProcessingTime(mockMachine2, processingTimes[1]);
@@ -83,14 +83,16 @@ public class JobTest {
 		Assert.assertFalse(mockMachine2.equals(job.getNextMachine()));
 		Assert.assertFalse(job.isCompleted());
 
-		job.processedOnMachine(mockMachine1);
+		job.startedProcessingOnMachine(mockMachine1);
+		job.finishProcessingOnMachine();
 
 		Assert.assertEquals(job.getNextMachine(), mockMachine2);
 		Assert.assertFalse(mockMachine1.equals(job.getNextMachine()));
 		Assert.assertTrue(mockMachine2.equals(job.getNextMachine()));
 		Assert.assertFalse(job.isCompleted());
 
-		job.processedOnMachine(mockMachine2);
+		job.startedProcessingOnMachine(mockMachine2);
+		job.finishProcessingOnMachine();
 
 		Assert.assertNull(job.getNextMachine());
 		Assert.assertFalse(mockMachine1.equals(job.getNextMachine()));
@@ -119,8 +121,10 @@ public class JobTest {
 		Assert.assertFalse(mockMachine2.equals(job.getNextMachine()));
 		Assert.assertFalse(job.isCompleted());
 
-		job.processedOnMachine(mockMachine1);
-		job.processedOnMachine(mockMachine2);
+		job.startedProcessingOnMachine(mockMachine1);
+		job.finishProcessingOnMachine();
+		job.startedProcessingOnMachine(mockMachine2);
+		job.finishProcessingOnMachine();
 
 		Assert.assertNull(job.getNextMachine());
 		Assert.assertFalse(mockMachine1.equals(job.getNextMachine()));
@@ -206,7 +210,7 @@ public class JobTest {
 		job.offerMachine(machine2);
 
 		try {
-			job.processedOnMachine(machine2);
+			job.startedProcessingOnMachine(machine2);
 
 			Assert.fail();
 		} catch (RuntimeException e) {

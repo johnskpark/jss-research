@@ -5,10 +5,17 @@ import jss.evaluation.node.INode;
 import jss.evaluation.node.NodeAnnotation;
 import jss.node.NodeDefinition;
 
+/**
+ * TODO javadoc.
+ * @author parkjohn
+ *
+ */
 @NodeAnnotation(node=NodeDefinition.SCORE_LARGE_VALUE)
 public class ScoreLargeValue implements INode {
 
 	private static final NodeDefinition NODE_DEFINITION = NodeDefinition.SCORE_LARGE_VALUE;
+
+	private static final double LARGE_VALUE = 100000000.0;
 
 	/**
 	 * TODO javadoc.
@@ -23,8 +30,7 @@ public class ScoreLargeValue implements INode {
 
 	@Override
 	public double evaluate(JSSEvalData data) {
-		// TODO Auto-generated method stub
-		return 0;
+		return LARGE_VALUE;
 	}
 
 }

@@ -1,6 +1,6 @@
 package jss.evolution.node.basic;
 
-import jss.IJob;
+import jss.IMachine;
 import jss.evolution.JSSGPData;
 import jss.node.NodeDefinition;
 import ec.EvolutionState;
@@ -11,13 +11,13 @@ import ec.gp.GPIndividual;
 import ec.gp.GPNode;
 import ec.util.Parameter;
 
-public class ScoreReleaseTime extends GPNode {
+public class ScoreMachineReadyTime extends GPNode {
 
-	private static final long serialVersionUID = -1153623043250724347L;
+	private static final long serialVersionUID = -3673528161888028806L;
 
 	@Override
 	public String toString() {
-		return NodeDefinition.SCORE_RELEASE_TIME.toString();
+		return NodeDefinition.SCORE_MACHINE_READY_TIME.toString();
 	}
 
 	@Override
@@ -26,7 +26,7 @@ public class ScoreReleaseTime extends GPNode {
 			final GPIndividual typicalIndividual,
 			final Parameter individualBase) {
 		super.checkConstraints(state, tree, typicalIndividual, individualBase);
-		if (children.length != NodeDefinition.SCORE_RELEASE_TIME.numChildren()) {
+		if (children.length != NodeDefinition.SCORE_MACHINE_READY_TIME.numChildren()) {
 			state.output.error("Incorrect number of children for node " + toStringForError() + " at " + individualBase);
 		}
 
@@ -42,9 +42,9 @@ public class ScoreReleaseTime extends GPNode {
 			final Problem problem) {
 		JSSGPData data = (JSSGPData)input;
 
-		IJob job = data.getJob();
+		IMachine machine = data.getMachine();
 
-		data.setPriority(job.getReleaseTime());
+		data.setPriority(machine.getTimeAvailable());
 	}
 
 }

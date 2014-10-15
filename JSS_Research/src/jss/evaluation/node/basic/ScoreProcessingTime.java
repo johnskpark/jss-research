@@ -1,10 +1,17 @@
 package jss.evaluation.node.basic;
 
+import jss.IJob;
+import jss.IMachine;
 import jss.evaluation.JSSEvalData;
 import jss.evaluation.node.INode;
 import jss.evaluation.node.NodeAnnotation;
 import jss.node.NodeDefinition;
 
+/**
+ * TODO javadoc.
+ * @author parkjohn
+ *
+ */
 @NodeAnnotation(node=NodeDefinition.SCORE_PROCESSING_TIME)
 public class ScoreProcessingTime implements INode {
 
@@ -23,8 +30,9 @@ public class ScoreProcessingTime implements INode {
 
 	@Override
 	public double evaluate(JSSEvalData data) {
-		// TODO Auto-generated method stub
-		return 0;
+		IMachine machine = data.getMachine();
+		IJob job = data.getJob();
+		return job.getProcessingTime(machine);
 	}
 
 }

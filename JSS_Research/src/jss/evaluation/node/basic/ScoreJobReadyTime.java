@@ -12,15 +12,15 @@ import jss.node.NodeDefinition;
  * @author parkjohn
  *
  */
-@NodeAnnotation(node=NodeDefinition.SCORE_DUE_DATE)
-public class ScoreDueDate implements INode {
+@NodeAnnotation(node=NodeDefinition.SCORE_JOB_READY_TIME)
+public class ScoreJobReadyTime implements INode {
 
-	private static final NodeDefinition NODE_DEFINITION = NodeDefinition.SCORE_DUE_DATE;
+	private static final NodeDefinition NODE_DEFINITION = NodeDefinition.SCORE_JOB_READY_TIME;
 
 	/**
 	 * TODO javadoc.
 	 */
-	public ScoreDueDate() {
+	public ScoreJobReadyTime() {
 	}
 
 	@Override
@@ -32,7 +32,7 @@ public class ScoreDueDate implements INode {
 	public double evaluate(JSSEvalData data) {
 		IMachine machine = data.getMachine();
 		IJob job = data.getJob();
-		return job.getDueDate(machine);
+		return job.getReadyTime(machine);
 	}
 
 }

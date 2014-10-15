@@ -59,8 +59,10 @@ public class BreakdownMachine implements IMachine, IEventHandler {
 			throw new RuntimeException("You done goofed from BasicMachine");
 		}
 
+		job.startedProcessingOnMachine(this);
+
 		currentJob = job;
-		availableTime = Math.max(time, job.getReleaseTime()) +
+		availableTime = Math.max(time, job.getReadyTime(this)) +
 				job.getSetupTime(this) +
 				job.getProcessingTime(this);
 
@@ -81,7 +83,7 @@ public class BreakdownMachine implements IMachine, IEventHandler {
 	public void updateStatus(double time) {
 		if (time >= availableTime) {
 			if (availableTime != 0) {
-				currentJob.processedOnMachine(this);
+				currentJob.finishProcessingOnMachine();
 
 				prevJobs.add(currentJob);
 				currentJob = null;

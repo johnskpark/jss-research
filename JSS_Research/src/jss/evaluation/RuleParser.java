@@ -8,6 +8,7 @@ import java.util.Set;
 import jss.evaluation.node.INode;
 import jss.evaluation.node.NodeAnnotation;
 import jss.evaluation.node.NodeUtil;
+import jss.evaluation.node.basic.ERCRandom;
 import jss.node.NodeDefinition;
 
 import org.reflections.Reflections;
@@ -91,13 +92,15 @@ public class RuleParser {
 			} else {
 				// Parse the terminal node.
 				String token = readToken();
-				if (!nodeMap.containsKey(token)) {
+				if (nodeMap.containsKey(token)) {
+					NodeChildrenNumPair pair = nodeMap.get(token);
+
+					return generateNewNode(pair);
+				} else if (token.matches("[\\d]+(\\.[\\d]+)?")) {
+					return new ERCRandom(Double.parseDouble(token));
+				} else {
 					throw new RuntimeException("Unrecognised token " + token); // TODO
 				}
-
-				NodeChildrenNumPair pair = nodeMap.get(token);
-
-				return generateNewNode(pair);
 			}
 
 		}

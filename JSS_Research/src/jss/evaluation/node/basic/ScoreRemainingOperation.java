@@ -13,15 +13,15 @@ import jss.node.NodeDefinition;
  * @author parkjohn
  *
  */
-@NodeAnnotation(node=NodeDefinition.SCORE_REMAINING_TIME)
-public class ScoreRemainingTime implements INode {
+@NodeAnnotation(node=NodeDefinition.SCORE_REMAINING_OPERATION)
+public class ScoreRemainingOperation implements INode {
 
 	private static final NodeDefinition NODE_DEFINITION = NodeDefinition.SCORE_REMAINING_TIME;
 
 	/**
 	 * TODO javadoc.
 	 */
-	public ScoreRemainingTime() {
+	public ScoreRemainingOperation() {
 	}
 
 	@Override
@@ -34,14 +34,14 @@ public class ScoreRemainingTime implements INode {
 		IProblemInstance problem = data.getProblem();
 		IJob job = data.getJob();
 
-		double remainingTime = 0;
+		int remainingOperation = 0;
 		for (IMachine machine : problem.getMachines()) {
 			if (job.isProcessable(machine)) {
-				remainingTime += job.getProcessingTime(machine);
+				remainingOperation++;
 			}
 		}
 
-		return remainingTime;
+		return remainingOperation;
 	}
 
 }

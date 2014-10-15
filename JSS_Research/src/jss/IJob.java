@@ -13,7 +13,7 @@ public interface IJob {
 	 * Get the release time of the job.
 	 * @return The time that the job is first released into the problem.
 	 */
-	public double getReleaseTime();
+	public double getReadyTime(IMachine machine);
 
 	/**
 	 * Get the processing time of the job for the particular machine.
@@ -50,12 +50,28 @@ public interface IJob {
 	public double getPenalty(IMachine machine);
 
 	/**
+	 * Callback function that declares that the job has started being
+	 * processed on the specified machine.
+	 * @param machine The machine for which the job has been started on.
+	 * @throws RuntimeException If the machine is not next in line to be
+	 *                          visited.
+	 */
+	public void startedProcessingOnMachine(IMachine machine) throws RuntimeException;
+
+	/**
 	 * Callback function that declares that the job has been last processed on
 	 * the specified machine.
-	 * @param machine the machine for which the job has been last processed on.
-	 * @throws RuntimeException if the machine is not next in line to be visited
+	 * @param machine The machine for which the job has been last processed on.
 	 */
-	public void processedOnMachine(IMachine machine) throws RuntimeException;
+	public void finishProcessingOnMachine();
+
+	/**
+	 * Get the current machine that is processing the job, or null if no
+	 * machine is processing a job.
+	 * @return The current machine processing the job, null if no machine is
+	 *         processing a job.
+	 */
+	public IMachine getCurrentMachine();
 
 	/**
 	 * Get the next machine that needs to be visited by the job.

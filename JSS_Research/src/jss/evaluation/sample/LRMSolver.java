@@ -58,7 +58,7 @@ public class LRMSolver extends JSSEvalSolver {
 
 			if (bestJob != null) {
 				// Simply process the job as early as possible.
-				double time = Math.max(machine.getTimeAvailable(), bestJob.getReleaseTime());
+				double time = Math.max(machine.getTimeAvailable(), bestJob.getReadyTime(machine));
 				return new Action(machine, bestJob, time);
 			} else {
 				return null;

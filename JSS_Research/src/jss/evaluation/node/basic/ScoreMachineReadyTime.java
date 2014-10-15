@@ -1,6 +1,5 @@
 package jss.evaluation.node.basic;
 
-import jss.IJob;
 import jss.IMachine;
 import jss.evaluation.JSSEvalData;
 import jss.evaluation.node.INode;
@@ -12,15 +11,15 @@ import jss.node.NodeDefinition;
  * @author parkjohn
  *
  */
-@NodeAnnotation(node=NodeDefinition.SCORE_DUE_DATE)
-public class ScoreDueDate implements INode {
+@NodeAnnotation(node=NodeDefinition.SCORE_JOB_READY_TIME)
+public class ScoreMachineReadyTime implements INode {
 
-	private static final NodeDefinition NODE_DEFINITION = NodeDefinition.SCORE_DUE_DATE;
+	private static final NodeDefinition NODE_DEFINITION = NodeDefinition.SCORE_MACHINE_READY_TIME;
 
 	/**
 	 * TODO javadoc.
 	 */
-	public ScoreDueDate() {
+	public ScoreMachineReadyTime() {
 	}
 
 	@Override
@@ -31,8 +30,7 @@ public class ScoreDueDate implements INode {
 	@Override
 	public double evaluate(JSSEvalData data) {
 		IMachine machine = data.getMachine();
-		IJob job = data.getJob();
-		return job.getDueDate(machine);
+		return machine.getTimeAvailable();
 	}
 
 }

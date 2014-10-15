@@ -50,10 +50,11 @@ public class MachineTest {
 		Assert.assertEquals(machine.getTimeAvailable(), 0, EPSILON);
 
 		context.checking(new Expectations() {{
-			oneOf(mockJob1).processedOnMachine(machine);
-			oneOf(mockJob1).getReleaseTime(); will(returnValue(releaseTime));
+			oneOf(mockJob1).startedProcessingOnMachine(machine);
+			oneOf(mockJob1).getReadyTime(machine); will(returnValue(releaseTime));
 			oneOf(mockJob1).getProcessingTime(machine); will(returnValue(processingTime));
 			oneOf(mockJob1).getSetupTime(machine); will(returnValue(setupTime));
+			oneOf(mockJob1).finishProcessingOnMachine();
 		}});
 
 		machine.processJob(mockJob1, 0);
@@ -77,10 +78,11 @@ public class MachineTest {
 		final double completionTime = releaseTime + setupTime + processingTime;
 
 		context.checking(new Expectations() {{
-			oneOf(mockJob1).processedOnMachine(machine);
-			oneOf(mockJob1).getReleaseTime(); will(returnValue(releaseTime));
+			oneOf(mockJob1).startedProcessingOnMachine(machine);
+			oneOf(mockJob1).getReadyTime(machine); will(returnValue(releaseTime));
 			oneOf(mockJob1).getProcessingTime(machine); will(returnValue(processingTime));
 			oneOf(mockJob1).getSetupTime(machine); will(returnValue(setupTime));
+			oneOf(mockJob1).finishProcessingOnMachine();
 		}});
 
 		machine.processJob(mockJob1, 0);
@@ -114,10 +116,11 @@ public class MachineTest {
 		final double completionTime = releaseTime + setupTime + processingTime;
 
 		context.checking(new Expectations() {{
-			oneOf(mockJob1).processedOnMachine(machine);
-			oneOf(mockJob1).getReleaseTime(); will(returnValue(releaseTime));
+			oneOf(mockJob1).startedProcessingOnMachine(machine);
+			oneOf(mockJob1).getReadyTime(machine); will(returnValue(releaseTime));
 			oneOf(mockJob1).getProcessingTime(machine); will(returnValue(processingTime));
 			oneOf(mockJob1).getSetupTime(machine); will(returnValue(setupTime));
+			oneOf(mockJob1).finishProcessingOnMachine();
 		}});
 
 		machine.processJob(mockJob1, 0);
@@ -148,10 +151,11 @@ public class MachineTest {
 		setupTime = 0.0;
 
 		context.checking(new Expectations() {{
-			oneOf(mockJob1).processedOnMachine(machine);
-			oneOf(mockJob1).getReleaseTime(); will(returnValue(releaseTime));
+			oneOf(mockJob1).startedProcessingOnMachine(machine);
+			oneOf(mockJob1).getReadyTime(machine); will(returnValue(releaseTime));
 			oneOf(mockJob1).getProcessingTime(machine); will(returnValue(processingTime));
 			oneOf(mockJob1).getSetupTime(machine); will(returnValue(setupTime));
+			oneOf(mockJob1).finishProcessingOnMachine();
 		}});
 
 		machine.processJob(mockJob1, 0);

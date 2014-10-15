@@ -26,6 +26,8 @@ public class BreakdownJob implements IJob, IEventHandler {
 	// Mutable component TODO more doc
 	private Queue<IMachine> machineQueue = new LinkedList<IMachine>();
 
+	private IMachine machine;
+
 	public BreakdownJob() {
 	}
 
@@ -94,7 +96,7 @@ public class BreakdownJob implements IJob, IEventHandler {
 	}
 
 	@Override
-	public double getReleaseTime() {
+	public double getReadyTime(IMachine machine) {
 		return releaseTime;
 	}
 
@@ -131,11 +133,22 @@ public class BreakdownJob implements IJob, IEventHandler {
 	}
 
 	@Override
-	public void processedOnMachine(IMachine machine) throws RuntimeException {
+	public void startedProcessingOnMachine(IMachine machine) throws RuntimeException {
 		if (!machineQueue.peek().equals(machine)) {
 			throw new RuntimeException("You done goofed from BasicJob");
 		}
+		this.machine = machine;
+	}
+
+	@Override
+	public void finishProcessingOnMachine() {
+		machine = null;
 		machineQueue.poll();
+	}
+
+	@Override
+	public IMachine getCurrentMachine() {
+		return machine;
 	}
 
 	@Override
