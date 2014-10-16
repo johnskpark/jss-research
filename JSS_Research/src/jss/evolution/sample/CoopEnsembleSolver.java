@@ -9,12 +9,12 @@ import jss.problem.CompletelyReactiveSolver;
  * @author parkjohn
  *
  */
-public class PriorityBasedSolver extends JSSGPSolver {
+public class CoopEnsembleSolver extends JSSGPSolver {
 
 	/**
 	 * TODO javadoc.
 	 */
-	public PriorityBasedSolver() {
+	public CoopEnsembleSolver() {
 		super();
 	}
 

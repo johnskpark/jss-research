@@ -16,7 +16,7 @@ import jss.evolution.JSSGPRule;
  * @author parkjohn
  *
  */
-public class PriorityBasedDR extends JSSGPRule {
+public class CoopEnsembleDR extends JSSGPRule {
 
 	/**
 	 * TODO javadoc.
@@ -25,7 +25,7 @@ public class PriorityBasedDR extends JSSGPRule {
 	 * @param threadnum
 	 * @param data
 	 */
-	public PriorityBasedDR(EvolutionState state,
+	public CoopEnsembleDR(EvolutionState state,
 			GPIndividual ind,
 			int threadnum,
 			JSSGPData data) {
