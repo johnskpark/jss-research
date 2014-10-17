@@ -19,7 +19,7 @@ import ec.util.Parameter;
  * @author parkjohn
  *
  */
-public class JSSGPProblem extends GPProblem {
+public class JSSGPSimpleProblem extends GPProblem {
 
 	private static final long serialVersionUID = -3817123526020178300L;
 
@@ -59,14 +59,14 @@ public class JSSGPProblem extends GPProblem {
 			final int threadnum) {
 		if (!ind.evaluated) {
 			// Check to make sure that the individual is a GPIndividual and uses KozaFitness.
-			checkIndividual(state, ind);
+			checkInvariance(state, ind);
 
 			Statistics stats = new Statistics();
 
 			JSSGPConfiguration config = new JSSGPConfiguration();
 			config.setState(state);
-			config.setIndividual((GPIndividual)ind);
-			config.setSubpopulation(subpopulation);
+			config.setIndividuals(new GPIndividual[]{(GPIndividual)ind});
+			config.setSubpopulations(new int[]{subpopulation});
 			config.setThreadnum(threadnum);
 			config.setData((JSSGPData)input);
 
@@ -88,7 +88,7 @@ public class JSSGPProblem extends GPProblem {
 
 	// Check the individual for invariance. Each individual must be a GPIndividual,
 	// and the fitness must be KozaFitness.
-	private void checkIndividual(final EvolutionState state, final Individual ind) {
+	private void checkInvariance(final EvolutionState state, final Individual ind) {
 		if (!(ind instanceof GPIndividual)) {
 			state.output.error("The individual must be an instance of GPIndividual");
 		}
@@ -99,7 +99,7 @@ public class JSSGPProblem extends GPProblem {
 
 	@Override
 	public Object clone() {
-		JSSGPProblem newObject = (JSSGPProblem)super.clone();
+		JSSGPSimpleProblem newObject = (JSSGPSimpleProblem)super.clone();
 
 		newObject.input = (JSSGPData)input.clone();
 		newObject.dataset = dataset;
@@ -107,4 +107,5 @@ public class JSSGPProblem extends GPProblem {
 
 		return newObject;
 	}
+
 }

@@ -42,7 +42,7 @@ gp.fs.0.func.9.nc = nc0
 gp.fs.0.func.10 = jss.evolution.node.basic.ScoreRemainingTime
 gp.fs.0.func.10.nc = nc0
 
-eval.problem = jss.evolution.JSSGPProblem
+eval.problem = jss.evolution.JSSGPSimpleProblem
 eval.problem.data = jss.evolution.JSSGPData
 eval.problem.solver = jss.evolution.sample.PriorityBasedSolver
 

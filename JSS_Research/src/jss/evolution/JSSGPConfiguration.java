@@ -12,8 +12,8 @@ import ec.gp.GPIndividual;
 public class JSSGPConfiguration {
 
 	private EvolutionState state;
-	private GPIndividual ind;
-	private int subpopulation;
+	private GPIndividual[] ind;
+	private int[] subpopulations;
 	private int threadnum;
 
 	private JSSGPData data;
@@ -36,7 +36,7 @@ public class JSSGPConfiguration {
 	 * TODO javadoc.
 	 * @param ind
 	 */
-	public void setIndividual(GPIndividual ind) {
+	public void setIndividuals(GPIndividual[] ind) {
 		this.ind = ind;
 	}
 
@@ -44,8 +44,8 @@ public class JSSGPConfiguration {
 	 * TODO javadoc.
 	 * @param subpopulation
 	 */
-	public void setSubpopulation(int subpopulation) {
-		this.subpopulation = subpopulation;
+	public void setSubpopulations(int[] subpopulations) {
+		this.subpopulations = subpopulations;
 	}
 
 	/**
@@ -76,7 +76,7 @@ public class JSSGPConfiguration {
 	 * TODO javadoc.
 	 * @return
 	 */
-	public GPIndividual getIndividual() {
+	public GPIndividual[] getIndividuals() {
 		return ind;
 	}
 
@@ -84,8 +84,8 @@ public class JSSGPConfiguration {
 	 * TODO javadoc.
 	 * @return
 	 */
-	public int getSubpopulation() {
-		return subpopulation;
+	public int[] getSubpopulations() {
+		return subpopulations;
 	}
 
 	/**
