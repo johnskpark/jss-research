@@ -1,8 +1,6 @@
 package jss.evolution.node.basic;
 
 import jss.IJob;
-import jss.IMachine;
-import jss.IProblemInstance;
 import jss.evolution.JSSGPData;
 import jss.node.NodeDefinition;
 import ec.EvolutionState;
@@ -38,17 +36,9 @@ public class ScoreRemainingTime extends GPNode {
 			ADFStack stack, GPIndividual individual, Problem problem) {
 		JSSGPData data = (JSSGPData)input;
 
-		IProblemInstance problemInstance = data.getProblem();
 		IJob job = data.getJob();
 
-		double remainingTime = 0;
-		for (IMachine machine : problemInstance.getMachines()) {
-			if (job.isProcessable(machine)) {
-				remainingTime += job.getProcessingTime(machine);
-			}
-		}
-
-		data.setPriority(remainingTime);
+		data.setPriority(job.getRemainingTime());
 	}
 
 }

@@ -56,7 +56,7 @@ public interface IMachine {
 	 * Return when the machine is next available to process a job.
 	 * @return The time when the machine will next be available.
 	 */
-	public double getTimeAvailable();
+	public double getReadyTime();
 
 	/**
 	 * Update the status of the machine for the specified time. This includes

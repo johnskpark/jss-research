@@ -11,5 +11,8 @@
 	<classpathentry kind="lib" path="reflections/reflections-0.9.9-RC1-uberjar.jar"/>
 	<classpathentry kind="lib" path="reflections/slf4j-api-1.7.7.jar"/>
 	<classpathentry kind="lib" path="reflections/javassist-3.18.jar"/>
+	<classpathentry kind="lib" path="test_jars/cglib-nodep-3.1.jar"/>
+	<classpathentry kind="lib" path="test_jars/objenesis-2.1.jar"/>
+	<classpathentry kind="lib" path="test_jars/jmock-legacy-2.5.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

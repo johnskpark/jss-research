@@ -63,7 +63,7 @@ public class CoopEnsembleDR extends JSSGPRule {
 
 		if (bestJob != null) {
 			// Simply process the job as early as possible.
-			double time = Math.max(machine.getTimeAvailable(), bestJob.getReadyTime(machine));
+			double time = Math.max(machine.getReadyTime(), bestJob.getReadyTime(machine));
 			return new Action(machine, bestJob, time);
 		} else {
 			return null;

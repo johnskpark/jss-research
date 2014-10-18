@@ -145,6 +145,20 @@ public class StaticJob implements IJob, IEventHandler {
 		}
 		return 1;
 	}
+	
+	@Override
+	public double getRemainingTime() {
+		double remainingTime = 0.0;
+		for (IMachine machine : machineQueue) {
+			remainingTime += getProcessingTime(machine);
+		}
+		return remainingTime;
+	}
+	
+	@Override
+	public int getRemainingOperation() {
+		return machineQueue.size();
+	}
 
 	@Override
 	public void startedProcessingOnMachine(IMachine machine) throws RuntimeException {

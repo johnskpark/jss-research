@@ -29,8 +29,6 @@ public class ScoreMachineReadyTime extends GPNode {
 		if (children.length != NodeDefinition.SCORE_MACHINE_READY_TIME.numChildren()) {
 			state.output.error("Incorrect number of children for node " + toStringForError() + " at " + individualBase);
 		}
-
-		// TODO check to make sure that the job is static.
 	}
 
 	@Override
@@ -44,7 +42,7 @@ public class ScoreMachineReadyTime extends GPNode {
 
 		IMachine machine = data.getMachine();
 
-		data.setPriority(machine.getTimeAvailable());
+		data.setPriority(machine.getReadyTime());
 	}
 
 }

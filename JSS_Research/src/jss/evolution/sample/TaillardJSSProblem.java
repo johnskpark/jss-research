@@ -4,7 +4,6 @@ import jss.IDataset;
 import jss.IProblemInstance;
 import jss.IResult;
 import jss.evolution.JSSGPData;
-import jss.evolution.JSSGPRule;
 import jss.problem.CompletelyReactiveSolver;
 import jss.problem.Statistics;
 import jss.problem.static_problem.taillard_dataset.TaillardDataset;

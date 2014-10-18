@@ -79,7 +79,7 @@ public class StaticMachine implements IMachine, IEventHandler {
 	}
 
 	@Override
-	public double getTimeAvailable() {
+	public double getReadyTime() {
 		return availableTime;
 	}
 

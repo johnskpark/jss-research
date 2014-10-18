@@ -47,7 +47,7 @@ public class MachineTest {
 		Assert.assertNull(machine.getCurrentJob());
 		Assert.assertTrue(machine.getProcessedJobs().isEmpty());
 		Assert.assertTrue(machine.isAvailable());
-		Assert.assertEquals(machine.getTimeAvailable(), 0, EPSILON);
+		Assert.assertEquals(machine.getReadyTime(), 0, EPSILON);
 
 		context.checking(new Expectations() {{
 			oneOf(mockJob1).startedProcessingOnMachine(machine);
@@ -62,7 +62,7 @@ public class MachineTest {
 		Assert.assertEquals(machine.getCurrentJob(), mockJob1);
 		Assert.assertTrue(machine.getProcessedJobs().isEmpty());
 		Assert.assertFalse(machine.isAvailable());
-		Assert.assertEquals(machine.getTimeAvailable(), completionTime, EPSILON);
+		Assert.assertEquals(machine.getReadyTime(), completionTime, EPSILON);
 	}
 
 	@Test
@@ -96,7 +96,7 @@ public class MachineTest {
 		Assert.assertNull(machine.getCurrentJob());
 		Assert.assertTrue(machine.getProcessedJobs().size() == 1);
 		Assert.assertTrue(machine.isAvailable());
-		Assert.assertEquals(machine.getTimeAvailable(), completionTime, EPSILON);
+		Assert.assertEquals(machine.getReadyTime(), completionTime, EPSILON);
 
 		Assert.assertEquals(machine.getProcessedJobs().get(0), mockJob1);
 	}
@@ -136,7 +136,7 @@ public class MachineTest {
 		Assert.assertNull(machine.getCurrentJob());
 		Assert.assertTrue(machine.getProcessedJobs().isEmpty());
 		Assert.assertTrue(machine.isAvailable());
-		Assert.assertEquals(machine.getTimeAvailable(), 0, EPSILON);
+		Assert.assertEquals(machine.getReadyTime(), 0, EPSILON);
 	}
 
 	@Test

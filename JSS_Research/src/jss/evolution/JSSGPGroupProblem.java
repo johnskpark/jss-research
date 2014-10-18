@@ -1,9 +1,11 @@
 package jss.evolution;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 
 import jss.IDataset;
+import jss.IProblemInstance;
+import jss.IResult;
 import jss.ProblemSize;
 import jss.problem.Statistics;
 import ec.EvolutionState;
@@ -105,6 +107,22 @@ public class JSSGPGroupProblem extends Problem implements GroupedProblemForm {
 		config.setIndividuals((GPIndividual[])ind);
 		config.setSubpopulations(subpops);
 		config.setThreadnum(threadnum);
+		
+		solver.setGPConfiguration(config);
+
+		List<IProblemInstance> trainingSet = (problemSizeSet) ?
+				dataset.getTraining(problemSize) : dataset.getProblems();
+		for (IProblemInstance problem : trainingSet) {
+			IResult solution = solver.getSolution(problem);
+
+			stats.addSolution(problem, solution);
+		}
+
+		for (int i = 0; i < ind.length; i++) {
+			if (updateFitness[i]) {
+				// TODO 
+			}
+		}
 	}
 
 	// Check the individual for invariance. Each individual must be a GPIndividual,

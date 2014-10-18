@@ -47,7 +47,7 @@ public class FIFOSolver extends JSSEvalSolver {
 					continue;
 				}
 
-				double completion = Math.max(machine.getTimeAvailable(),
+				double completion = Math.max(machine.getReadyTime(),
 						job.getReadyTime(machine)) +
 						job.getSetupTime(machine) +
 						job.getProcessingTime(machine);
@@ -66,7 +66,7 @@ public class FIFOSolver extends JSSEvalSolver {
 
 				IMachine lastMachine = job.getLastMachine();
 				double priority = (lastMachine != null) ?
-						lastMachine.getTimeAvailable() : job.getReadyTime(machine);
+						lastMachine.getReadyTime() : job.getReadyTime(machine);
 
 				if (priority < bestPriority) {
 					bestPriority = priority;
@@ -76,7 +76,7 @@ public class FIFOSolver extends JSSEvalSolver {
 
 			if (bestJob != null) {
 				// Simply process the job as early as possible.
-				double time = Math.max(machine.getTimeAvailable(), bestJob.getReadyTime(machine));
+				double time = Math.max(machine.getReadyTime(), bestJob.getReadyTime(machine));
 				return new Action(machine, bestJob, time);
 			} else {
 				return null;

@@ -1,8 +1,6 @@
 package jss.evaluation.node.basic;
 
 import jss.IJob;
-import jss.IMachine;
-import jss.IProblemInstance;
 import jss.evaluation.JSSEvalData;
 import jss.evaluation.node.INode;
 import jss.evaluation.node.NodeAnnotation;
@@ -31,17 +29,9 @@ public class ScoreRemainingOperation implements INode {
 
 	@Override
 	public double evaluate(JSSEvalData data) {
-		IProblemInstance problem = data.getProblem();
 		IJob job = data.getJob();
 
-		int remainingOperation = 0;
-		for (IMachine machine : problem.getMachines()) {
-			if (job.isProcessable(machine)) {
-				remainingOperation++;
-			}
-		}
-
-		return remainingOperation;
+		return job.getRemainingOperation();
 	}
 
 }
