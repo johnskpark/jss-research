@@ -145,7 +145,7 @@ public class JSSGPGroupedProblem extends GPProblem implements GroupedProblemForm
 		checkInvariance(state, ind);
 
 		Statistics stats = new Statistics();
-		double penalty = 0.0;
+		double[] penalties = new double[ind.length];
 
 		GPIndividual[] gpInds = new GPIndividual[ind.length];
 		for (int i = 0; i < ind.length; i++) {
@@ -175,14 +175,23 @@ public class JSSGPGroupedProblem extends GPProblem implements GroupedProblemForm
 
 			stats.addSolution(problem, solution);
 
-			// TODO add penalty factor.
+			// TODO temporary code.
+			double[] p = calculatePenalties(trackers);
+			for (int i = 0; i < ind.length; i++) {
+				penalties[i] += p[i] / trainingSet.size();
+				trackers[i].clear();
+			}
 		}
 
 		// TODO make this generic.
-		double kozaFitness = stats.getAverageMakespan();
-		double trial = -kozaFitness;
+		double makespan = stats.getAverageMakespan();
 
 		for (int i = 0; i < ind.length; i++) {
+			//System.out.printf("%f\t", penalties[i]);
+
+			double kozaFitness = makespan * (1 + penalties[i]);
+			double trial = -kozaFitness;
+
 			if (updateFitness[i]) {
 				GPIndividual gpInd = gpInds[i];
 
@@ -207,6 +216,8 @@ public class JSSGPGroupedProblem extends GPProblem implements GroupedProblemForm
 				((KozaFitness)gpInd.fitness).setStandardizedFitness(state, kozaFitness);
 			}
 		}
+
+		//System.out.println();
 	}
 
 	// Check the individual for invariance. Each individual must be a GPIndividual,
@@ -254,10 +265,38 @@ public class JSSGPGroupedProblem extends GPProblem implements GroupedProblemForm
 	}
 
 	// TODO temp code.
-	private double[] calculatePenalty(PriorityTracker[] trackers) {
-		// TODO
+	private double[] calculatePenalties(PriorityTracker[] trackers) {
+		double[] penalties = new double[trackers.length];
 
-		return null;
+		for (int i = 0; i < penalties.length; i++) {
+			List<Double> thisPriorities = trackers[i].getPriorities();
+
+			double[] thisSigmoids = new double[thisPriorities.size()];
+			for (int j = 0; j < thisPriorities.size(); j++) {
+				thisSigmoids[j] = 1.0 / (1.0 + Math.exp(-thisPriorities.get(j)));
+			}
+
+			for (int j = 0; j < penalties.length; j++) {
+				if (i == j) {
+					continue;
+				}
+
+				List<Double> otherPriorities = trackers[j].getPriorities();
+
+				double[] otherSigmoids = new double[otherPriorities.size()];
+				for (int k = 0; k < otherPriorities.size(); k++) {
+					otherSigmoids[k] = 1.0 / (1.0 + Math.exp(-otherPriorities.get(k)));
+
+					penalties[i] += (thisSigmoids[k] - otherSigmoids[k]) *
+							(thisSigmoids[k] - otherSigmoids[k]);
+				}
+			}
+
+			penalties[i] = 1 - penalties[i] / (thisPriorities.size() *
+					(penalties.length - 1));
+		}
+
+		return penalties;
 	}
 
 }
