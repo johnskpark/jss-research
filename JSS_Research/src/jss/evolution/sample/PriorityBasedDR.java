@@ -21,15 +21,15 @@ public class PriorityBasedDR extends JSSGPRule {
 	/**
 	 * TODO javadoc.
 	 * @param state
-	 * @param ind
+	 * @param inds
 	 * @param threadnum
 	 * @param data
 	 */
 	public PriorityBasedDR(EvolutionState state,
-			GPIndividual ind,
+			GPIndividual[] inds,
 			int threadnum,
 			JSSGPData data) {
-		super(state, ind, threadnum, data);
+		super(state, inds, threadnum, data);
 	}
 
 	@Override
@@ -48,11 +48,11 @@ public class PriorityBasedDR extends JSSGPRule {
 			getData().setJob(job);
 			getData().setMachine(machine);
 
-			getIndividual().trees[0].child.eval(getState(),
+			getIndividuals()[0].trees[0].child.eval(getState(),
 					getThreadnum(),
 					getData(),
 					null,
-					getIndividual(),
+					getIndividuals()[0],
 					null);
 
 			if (getData().getPriority() > bestPriority) {

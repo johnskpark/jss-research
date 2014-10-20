@@ -17,6 +17,12 @@ import ec.gp.GPProblem;
 import ec.gp.koza.KozaFitness;
 import ec.util.Parameter;
 
+/**
+ * TODO in the future, try and see if I can group this along with the
+ * simple problem form and make a standardised problem form.
+ * @author parkjohn
+ *
+ */
 public class JSSGPGroupedProblem extends GPProblem implements GroupedProblemForm {
 
 	private static final long serialVersionUID = 7483010104507824649L;

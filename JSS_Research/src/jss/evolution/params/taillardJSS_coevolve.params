@@ -12,6 +12,8 @@ parent.0 = ../../../ec/gp/koza/koza.params
 pop.subpops = 10
 pop.default-subpop = 0
 
+pop.subpop.0.size = 500
+
 eval = ec.coevolve.MultiPopCoevolutionaryEvaluator
 
 eval.num-shuffled =	1

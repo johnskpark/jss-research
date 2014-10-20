@@ -13,7 +13,7 @@ import ec.gp.GPIndividual;
 public abstract class JSSGPRule implements IActionHandler {
 
 	private EvolutionState state;
-	private GPIndividual ind;
+	private GPIndividual[] inds;
 	private int threadnum;
 
 	private JSSGPData data;
@@ -26,11 +26,11 @@ public abstract class JSSGPRule implements IActionHandler {
 	 * @param data
 	 */
 	public JSSGPRule(EvolutionState state,
-			GPIndividual ind,
+			GPIndividual[] inds,
 			int threadnum,
 			JSSGPData data) {
 		this.state = state;
-		this.ind = ind;
+		this.inds = inds;
 		this.threadnum = threadnum;
 
 		this.data = data;
@@ -48,8 +48,8 @@ public abstract class JSSGPRule implements IActionHandler {
 	 * TODO javadoc.
 	 * @return
 	 */
-	protected GPIndividual getIndividual() {
-		return ind;
+	protected GPIndividual[] getIndividuals() {
+		return inds;
 	}
 
 	/**

@@ -23,7 +23,7 @@ public class PriorityBasedSolver extends JSSGPSolver {
 		CompletelyReactiveSolver solver = new CompletelyReactiveSolver();
 
 		solver.setRule(new PriorityBasedDR(config.getState(),
-				config.getIndividuals()[0],
+				config.getIndividuals(),
 				config.getThreadnum(),
 				config.getData()));
 

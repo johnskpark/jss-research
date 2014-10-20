@@ -42,7 +42,7 @@ public class TwoStaticJSSProblem extends GPProblem {
 
 			Statistics stats = new Statistics();
 
-			solver.setRule(new PriorityBasedDR(state, (GPIndividual)ind, threadnum, (JSSGPData)input));
+			solver.setRule(new PriorityBasedDR(state, new GPIndividual[]{(GPIndividual)ind}, threadnum, (JSSGPData)input));
 
 			for (IProblemInstance problem : dataset.getProblems()) {
 				IResult solution = solver.getSolution(problem);
