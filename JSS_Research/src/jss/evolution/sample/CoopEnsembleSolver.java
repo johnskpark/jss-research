@@ -25,7 +25,8 @@ public class CoopEnsembleSolver extends JSSGPSolver {
 		solver.setRule(new CoopEnsembleDR(config.getState(),
 				config.getIndividuals(),
 				config.getThreadnum(),
-				config.getData()));
+				config.getData(),
+				config.getTrackers()));
 
 		setSolver(solver);
 	}

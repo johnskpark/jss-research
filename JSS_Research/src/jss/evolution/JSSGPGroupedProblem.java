@@ -7,6 +7,7 @@ import jss.IDataset;
 import jss.IProblemInstance;
 import jss.IResult;
 import jss.ProblemSize;
+import jss.evolution.sample.PriorityTracker;
 import jss.problem.Statistics;
 import ec.EvolutionState;
 import ec.Individual;
@@ -144,6 +145,7 @@ public class JSSGPGroupedProblem extends GPProblem implements GroupedProblemForm
 		checkInvariance(state, ind);
 
 		Statistics stats = new Statistics();
+		double penalty = 0.0;
 
 		GPIndividual[] gpInds = new GPIndividual[ind.length];
 		for (int i = 0; i < ind.length; i++) {
@@ -157,6 +159,13 @@ public class JSSGPGroupedProblem extends GPProblem implements GroupedProblemForm
 		config.setThreadnum(threadnum);
 		config.setData((JSSGPData)input);
 
+		// TODO hack code. Fix later.
+		PriorityTracker[] trackers = new PriorityTracker[gpInds.length];
+		for (int i = 0; i < ind.length; i++) {
+			trackers[i] = new PriorityTracker();
+		}
+		config.setTrackers(trackers);
+
 		solver.setGPConfiguration(config);
 
 		List<IProblemInstance> trainingSet = (problemSizeSet) ?
@@ -165,8 +174,11 @@ public class JSSGPGroupedProblem extends GPProblem implements GroupedProblemForm
 			IResult solution = solver.getSolution(problem);
 
 			stats.addSolution(problem, solution);
+
+			// TODO add penalty factor.
 		}
 
+		// TODO make this generic.
 		double kozaFitness = stats.getAverageMakespan();
 		double trial = -kozaFitness;
 
@@ -239,6 +251,13 @@ public class JSSGPGroupedProblem extends GPProblem implements GroupedProblemForm
 		newObject.solver = solver;
 
 		return newObject;
+	}
+
+	// TODO temp code.
+	private double[] calculatePenalty(PriorityTracker[] trackers) {
+		// TODO
+
+		return null;
 	}
 
 }

@@ -80,6 +80,7 @@ public class JSSGPSimpleProblem extends GPProblem {
 				stats.addSolution(problem, solution);
 			}
 
+			// TODO make this generic.
 			((KozaFitness)ind.fitness).setStandardizedFitness(state, stats.getAverageMakespan());
 
 			ind.evaluated = true;

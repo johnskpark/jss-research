@@ -18,6 +18,8 @@ public class JSSGPConfiguration {
 
 	private JSSGPData data;
 
+	private ITracker[] trackers;
+
 	/**
 	 * TODO javadoc.
 	 */
@@ -54,6 +56,14 @@ public class JSSGPConfiguration {
 	 */
 	public void setThreadnum(int threadnum) {
 		this.threadnum = threadnum;
+	}
+
+	/**
+	 * TODO javadoc.
+	 * @param tracker
+	 */
+	public void setTrackers(ITracker[] trackers) {
+		this.trackers = trackers;
 	}
 
 	/**
@@ -102,5 +112,13 @@ public class JSSGPConfiguration {
 	 */
 	public JSSGPData getData() {
 		return data;
+	}
+
+	/**
+	 * TODO javadoc.
+	 * @return
+	 */
+	public ITracker[] getTrackers() {
+		return trackers;
 	}
 }
