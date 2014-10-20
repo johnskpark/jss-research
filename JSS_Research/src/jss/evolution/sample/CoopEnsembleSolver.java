@@ -22,7 +22,7 @@ public class CoopEnsembleSolver extends JSSGPSolver {
 	public void setGPConfiguration(JSSGPConfiguration config) {
 		CompletelyReactiveSolver solver = new CompletelyReactiveSolver();
 
-		solver.setRule(new PriorityBasedDR(config.getState(),
+		solver.setRule(new CoopEnsembleDR(config.getState(),
 				config.getIndividuals()[0],
 				config.getThreadnum(),
 				config.getData()));

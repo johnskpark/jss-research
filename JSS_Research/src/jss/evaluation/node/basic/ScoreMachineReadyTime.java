@@ -30,6 +30,7 @@ public class ScoreMachineReadyTime implements INode {
 	@Override
 	public double evaluate(JSSEvalData data) {
 		IMachine machine = data.getMachine();
+
 		return machine.getReadyTime();
 	}
 

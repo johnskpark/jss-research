@@ -14,6 +14,7 @@ import ec.gp.GPIndividual;
 import ec.gp.GPNode;
 import ec.util.Code;
 import ec.util.DecodeReturn;
+import ec.util.Parameter;
 
 /**
  * TODO javadoc.
@@ -27,6 +28,9 @@ public class ERCRandomUniform extends ERC {
 	public static final String P_MIN = "min";
 	public static final String P_MAX = "max";
 
+	private double minVal = Double.NaN;
+	private double maxVal = Double.NaN;
+
 	private double value;
 
 	@Override
@@ -35,15 +39,28 @@ public class ERCRandomUniform extends ERC {
 	}
 
 	@Override
+	public void setup(final EvolutionState state, final Parameter base) {
+		super.setup(state, base);
+
+		try {
+			minVal = state.parameters.getDouble(base.push(P_MIN), null);
+			maxVal = state.parameters.getDouble(base.push(P_MAX), null);
+		} catch (NumberFormatException ex) {
+			state.output.fatal(ex.getMessage());
+		}
+	}
+
+	@Override
 	public void resetNode(final EvolutionState state, int thread) {
 		try {
-			double minVal = state.parameters.getDouble(defaultBase().push(P_MIN), null);
-			double maxVal = state.parameters.getDouble(defaultBase().push(P_MAX), null); // TODO
+			if (Double.isNaN(minVal) || Double.isNaN(maxVal)) {
+				throw new NumberFormatException();
+			}
 
 			value = state.random[thread].nextDouble() *
 					(maxVal - minVal) + minVal;
 		} catch (NumberFormatException ex) {
-			state.output.fatal("Insufficient parameters for ERCRandomUniform, must define the interval");
+			state.output.fatal("Insufficient parameters for ERCRandomUniform, must define the interval.");
 		}
 	}
 
