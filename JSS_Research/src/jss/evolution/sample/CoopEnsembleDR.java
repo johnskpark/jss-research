@@ -50,24 +50,30 @@ public class CoopEnsembleDR extends JSSGPRule {
 		}
 
 		int[] voteCounts = new int[processableJobs.size()];
+		double[] prioritySums = new double[processableJobs.size()];
 
 		int mostVotes = 0;
-		IJob mostVotedJob = null;
+		int mostVotedIndex = -1;
 
 		for (int i = 0; i < getIndividuals().length; i++) {
 			GPIndividual gpInd = getIndividuals()[i];
 
-			int bestIndex = getBestIndex(gpInd, processableJobs, machine, problem, trackers[i]);
-			if (bestIndex == -1) {
+			PriorityIndexPair bestPair = getBestIndex(gpInd, processableJobs, machine, problem, trackers[i]);
+			if (bestPair.index == -1) {
 				return null;
 			}
 
-			voteCounts[bestIndex]++;
-			if (voteCounts[bestIndex] > mostVotes) {
-				mostVotes = voteCounts[bestIndex];
-				mostVotedJob = processableJobs.get(bestIndex);
+			voteCounts[bestPair.index]++;
+			prioritySums[bestPair.index] += bestPair.priority;
+
+			if (voteCounts[bestPair.index] > mostVotes || (voteCounts[bestPair.index] == mostVotes ||
+					prioritySums[bestPair.index] > prioritySums[mostVotedIndex])) {
+				mostVotes = voteCounts[bestPair.index];
+				mostVotedIndex = bestPair.index;
 			}
 		}
+
+		IJob mostVotedJob = processableJobs.get(mostVotedIndex);
 
 		// Simply process the job as early as possible.
 		double time = Math.max(machine.getReadyTime(), mostVotedJob.getReadyTime(machine));
@@ -86,7 +92,7 @@ public class CoopEnsembleDR extends JSSGPRule {
 	}
 
 	// Get the index of the job with the highest priority.
-	private int getBestIndex(GPIndividual gpInd,
+	private PriorityIndexPair getBestIndex(GPIndividual gpInd,
 			List<IJob> processableJobs,
 			IMachine machine,
 			IProblemInstance problem,
@@ -118,7 +124,15 @@ public class CoopEnsembleDR extends JSSGPRule {
 			}
 		}
 
-		return bestIndex;
+		PriorityIndexPair pair = new PriorityIndexPair();
+		pair.priority = Double.POSITIVE_INFINITY;
+		pair.index = bestIndex;
+		return pair;
+	}
+
+	private class PriorityIndexPair {
+		double priority;
+		int index;
 	}
 
 }

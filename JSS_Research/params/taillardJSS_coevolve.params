@@ -1,0 +1,70 @@
+# Copyright 2006 by Sean Luke and George Mason University
+# Licensed under the Academic Free License version 3.0
+# See the file "LICENSE" for more information
+
+parent.0 = koza.params
+
+# the next four items are already defined in koza.params, but we
+# put them here to be clear.
+
+# For the cooperative coevolutionary component.
+
+pop.subpops = 10
+pop.default-subpop = 0
+
+pop.subpop.0.size = 500
+
+eval = ec.coevolve.MultiPopCoevolutionaryEvaluator
+
+eval.num-shuffled =	1
+eval.num-current = 0
+eval.num-elites = 0
+eval.num-prev = 0
+eval.select-current = ec.select.RandomSelection
+eval.select-prev = ec.select.RandomSelection
+
+# For this MO problem, we most likely need two function sets to deal with
+# the two objective functions
+gp.fs.size = 1
+gp.fs.0 = ec.gp.GPFunctionSet
+# We'll call the function set "f0".
+gp.fs.0.name = f0
+
+# We have five functions in the function set.  They are:
+
+gp.fs.0.size = 11
+gp.fs.0.func.0 = jss.evolution.node.basic.ERCRandomUniform
+gp.fs.0.func.0.nc = nc0
+gp.fs.0.func.0.min = 0
+gp.fs.0.func.0.max = 1
+gp.fs.0.func.1 = jss.evolution.node.basic.OpAddition
+gp.fs.0.func.1.nc = nc2
+gp.fs.0.func.2 = jss.evolution.node.basic.OpConditional
+gp.fs.0.func.2.nc = nc3
+gp.fs.0.func.3 = jss.evolution.node.basic.OpDivision
+gp.fs.0.func.3.nc = nc2
+gp.fs.0.func.4 = jss.evolution.node.basic.OpMultiplication
+gp.fs.0.func.4.nc = nc2
+gp.fs.0.func.5 = jss.evolution.node.basic.OpSubtraction
+gp.fs.0.func.5.nc = nc2
+gp.fs.0.func.6 = jss.evolution.node.basic.ScoreLargeValue
+gp.fs.0.func.6.nc = nc0
+gp.fs.0.func.7 = jss.evolution.node.basic.ScoreMachineReadyTime
+gp.fs.0.func.7.nc = nc0
+gp.fs.0.func.8 = jss.evolution.node.basic.ScoreProcessingTime
+gp.fs.0.func.8.nc = nc0
+gp.fs.0.func.9 = jss.evolution.node.basic.ScoreRemainingOperation
+gp.fs.0.func.9.nc = nc0
+gp.fs.0.func.10 = jss.evolution.node.basic.ScoreRemainingTime
+gp.fs.0.func.10.nc = nc0
+
+eval.problem = jss.evolution.JSSGPGroupedProblem
+eval.problem.data = jss.evolution.JSSGPData
+eval.problem.solver = jss.evolution.sample.CoopEnsembleSolver
+
+eval.problem.instances = jss.problem.static_problem.taillard_dataset.TaillardDataset
+eval.problem.size = small
+#eval.problem.instances = jss.problem.static_problem.rachel_dataset.TwoStaticJSSDataset
+
+# seed.0=26556
+seed.0=17

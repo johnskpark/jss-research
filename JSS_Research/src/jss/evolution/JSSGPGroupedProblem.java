@@ -187,8 +187,6 @@ public class JSSGPGroupedProblem extends GPProblem implements GroupedProblemForm
 		double makespan = stats.getAverageMakespan();
 
 		for (int i = 0; i < ind.length; i++) {
-			//System.out.printf("%f\t", penalties[i]);
-
 			double kozaFitness = makespan * (1 + penalties[i]);
 			double trial = -kozaFitness;
 
@@ -216,8 +214,6 @@ public class JSSGPGroupedProblem extends GPProblem implements GroupedProblemForm
 				((KozaFitness)gpInd.fitness).setStandardizedFitness(state, kozaFitness);
 			}
 		}
-
-		//System.out.println();
 	}
 
 	// Check the individual for invariance. Each individual must be a GPIndividual,
