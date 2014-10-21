@@ -318,6 +318,22 @@ public class BasicNodeTest {
 	}
 
 	@Test
+	public void divisionTest_ProtectedDiv() {
+		fakeGPNode1 = new FakeGPNode(5.0);
+		fakeGPNode2 = new FakeGPNode(0.0);
+
+		data = new JSSGPData();
+
+		OpDivision node = new OpDivision();
+		node.children = new GPNode[2];
+		node.children[0] = fakeGPNode1;
+		node.children[1] = fakeGPNode2;
+		node.eval(null, 0, data, null, null, null);
+
+		Assert.assertEquals(1.0, data.getPriority(), EPSILON);
+	}
+
+	@Test
 	public void multiplicationTest() {
 		fakeGPNode1 = new FakeGPNode(5.0);
 		fakeGPNode2 = new FakeGPNode(3.0);

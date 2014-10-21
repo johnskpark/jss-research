@@ -52,7 +52,7 @@ public class OpDivision extends GPNode {
 		double priority2 = data.getPriority();
 
 		if (priority2 == 0) {
-			data.setPriority(priority1);
+			data.setPriority(1.0);
 		} else {
 			data.setPriority(priority1 / priority2);
 		}
