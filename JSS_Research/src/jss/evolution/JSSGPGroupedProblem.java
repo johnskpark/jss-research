@@ -188,7 +188,7 @@ public class JSSGPGroupedProblem extends GPProblem implements GroupedProblemForm
 
 		for (int i = 0; i < ind.length; i++) {
 			double kozaFitness = makespan * (1 + penalties[i]);
-			double trial = -kozaFitness;
+			double trial = kozaFitness;
 
 			if (updateFitness[i]) {
 				GPIndividual gpInd = gpInds[i];
