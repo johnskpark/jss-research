@@ -100,6 +100,8 @@ public class CoopEnsembleDR extends JSSGPRule {
 		double bestPriority = Double.NEGATIVE_INFINITY;
 		int bestIndex = -1;
 
+		double[] normalisedPriorities = new double[processableJobs.size()];
+
 		for (int j = 0; j < processableJobs.size(); j++) {
 			IJob job = processableJobs.get(j);
 
@@ -114,6 +116,9 @@ public class CoopEnsembleDR extends JSSGPRule {
 					gpInd,
 					null);
 
+			// Normalise the priority between interval [0,1]
+			normalisedPriorities[j] = 1.0 / (1.0 + Math.exp(-getData().getPriority()));
+
 			// Add the priority to the trackers
 			tracker.getPriorities().add(getData().getPriority());
 
@@ -124,8 +129,13 @@ public class CoopEnsembleDR extends JSSGPRule {
 			}
 		}
 
+		double sumNormalisedPriorities = 0.0;
+		for (int j = 0; j < processableJobs.size(); j++) {
+			sumNormalisedPriorities += normalisedPriorities[j];
+		}
+
 		PriorityIndexPair pair = new PriorityIndexPair();
-		pair.priority = Double.POSITIVE_INFINITY;
+		pair.priority = normalisedPriorities[bestIndex] / sumNormalisedPriorities;
 		pair.index = bestIndex;
 		return pair;
 	}
