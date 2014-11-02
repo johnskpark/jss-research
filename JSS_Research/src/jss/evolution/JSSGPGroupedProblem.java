@@ -170,6 +170,7 @@ public class JSSGPGroupedProblem extends GPProblem implements GroupedProblemForm
 
 		List<IProblemInstance> trainingSet = (problemSizeSet) ?
 				dataset.getTraining(problemSize) : dataset.getProblems();
+
 		for (IProblemInstance problem : trainingSet) {
 			IResult solution = solver.getSolution(problem);
 
