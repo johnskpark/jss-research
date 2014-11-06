@@ -33,7 +33,7 @@ public class PriorityBasedDR extends JSSGPRule {
 	}
 
 	@Override
-	public Action getAction(IMachine machine, IProblemInstance problem) {
+	public Action getAction(IMachine machine, IProblemInstance problem, double time) {
 		List<IJob> jobs = problem.getJobs();
 
 		double bestPriority = Double.NEGATIVE_INFINITY;
@@ -63,8 +63,8 @@ public class PriorityBasedDR extends JSSGPRule {
 
 		if (bestJob != null) {
 			// Simply process the job as early as possible.
-			double time = Math.max(machine.getReadyTime(), bestJob.getReadyTime(machine));
-			return new Action(machine, bestJob, time);
+			double t = Math.max(machine.getReadyTime(), bestJob.getReadyTime(machine));
+			return new Action(machine, bestJob, t);
 		} else {
 			return null;
 		}

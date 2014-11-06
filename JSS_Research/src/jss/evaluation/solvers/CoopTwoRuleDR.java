@@ -30,8 +30,8 @@ public class CoopTwoRuleDR implements IActionHandler {
 	}
 
 	@Override
-	public Action getAction(IMachine machine, IProblemInstance problem) {
-		if (selectFirstRule(machine, problem)) {
+	public Action getAction(IMachine machine, IProblemInstance problem, double time) {
+		if (selectFirstRule(machine, problem, time)) {
 			return getAction(rule1, machine, problem);
 		} else {
 			return getAction(rule2, machine, problem);
@@ -39,9 +39,8 @@ public class CoopTwoRuleDR implements IActionHandler {
 	}
 
 	// Determine whether to use the first rule out of the two rules.
-	private boolean selectFirstRule(IMachine machine, IProblemInstance problem) {
-		// TODO
-		return true;
+	private boolean selectFirstRule(IMachine machine, IProblemInstance problem, double time) {
+		return time == 0;
 	}
 
 	// Get the action using the specified rule

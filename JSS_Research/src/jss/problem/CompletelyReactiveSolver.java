@@ -89,7 +89,7 @@ public class CompletelyReactiveSolver implements ISolver, ISubscriber {
 				solution.setTWT(solution.getTWT() + penalty * tardiness);
 			}
 
-			Action action = rule.getAction(machine, problem);
+			Action action = rule.getAction(machine, problem, time);
 
 			if (action != null) {
 				solution.addAction(action);

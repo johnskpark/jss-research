@@ -43,7 +43,7 @@ public class CoopEnsembleDR extends JSSGPRule {
 	}
 
 	@Override
-	public Action getAction(IMachine machine, IProblemInstance problem) {
+	public Action getAction(IMachine machine, IProblemInstance problem, double time) {
 		List<IJob> processableJobs = getProcessableJobs(machine, problem.getJobs());
 		if (processableJobs.isEmpty()) {
 			return null;
@@ -76,8 +76,8 @@ public class CoopEnsembleDR extends JSSGPRule {
 		IJob mostVotedJob = processableJobs.get(mostVotedIndex);
 
 		// Simply process the job as early as possible.
-		double time = Math.max(machine.getReadyTime(), mostVotedJob.getReadyTime(machine));
-		return new Action(machine, mostVotedJob, time);
+		double t = Math.max(machine.getReadyTime(), mostVotedJob.getReadyTime(machine));
+		return new Action(machine, mostVotedJob, t);
 	}
 
 	// Get the list of jobs that are waiting to be processed on the input machine.

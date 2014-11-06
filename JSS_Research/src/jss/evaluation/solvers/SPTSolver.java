@@ -37,7 +37,7 @@ public class SPTSolver extends JSSEvalSolver {
 	private class SPTDR implements IActionHandler {
 
 		@Override
-		public Action getAction(IMachine machine, IProblemInstance problem) {
+		public Action getAction(IMachine machine, IProblemInstance problem, double time) {
 			List<IJob> jobs = problem.getJobs();
 
 			double earliestCompletion = Double.POSITIVE_INFINITY;
@@ -73,8 +73,8 @@ public class SPTSolver extends JSSEvalSolver {
 
 			if (bestJob != null) {
 				// Simply process the job as early as possible.
-				double time = Math.max(machine.getReadyTime(), bestJob.getReadyTime(machine));
-				return new Action(machine, bestJob, time);
+				double t = Math.max(machine.getReadyTime(), bestJob.getReadyTime(machine));
+				return new Action(machine, bestJob, t);
 			} else {
 				return null;
 			}

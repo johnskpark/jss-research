@@ -13,9 +13,9 @@ package jss;
 public interface IActionHandler {
 
 	/**
-	 * Get the action for the particular machine, given a problem instance.
-	 * @return
+	 * Get the action for the particular machine, given a problem instance and
+	 * the current time.
 	 */
-	public Action getAction(IMachine machine, IProblemInstance problem);
+	public Action getAction(IMachine machine, IProblemInstance problem, double time);
 
 }
