@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <evaluationConfig>
 	<solverConfig>
-		<solverClass>jss.evaluation.sample.CoopEnsembleSolver</solverClass>
+		<solverClass>jss.evaluation.solvers.CoopEnsembleSolver</solverClass>
 		<solverFile>
 			<ruleNum>10</ruleNum>
 			<ruleFile>coop_rules_small.txt</ruleFile>
@@ -9,7 +9,7 @@
 	</solverConfig>
 
 	<solverConfig>
-		<solverClass>jss.evaluation.sample.CoopEnsembleSolver</solverClass>
+		<solverClass>jss.evaluation.solvers.CoopEnsembleSolver</solverClass>
 		<solverFile>
 			<ruleNum>10</ruleNum>
 			<ruleFile>coop_rules_medium.txt</ruleFile>
@@ -17,7 +17,7 @@
 	</solverConfig>
 
 	<solverConfig>
-		<solverClass>jss.evaluation.sample.CoopEnsembleSolver</solverClass>
+		<solverClass>jss.evaluation.solvers.CoopEnsembleSolver</solverClass>
 		<solverFile>
 			<ruleNum>10</ruleNum>
 			<ruleFile>coop_rules_large.txt</ruleFile>
