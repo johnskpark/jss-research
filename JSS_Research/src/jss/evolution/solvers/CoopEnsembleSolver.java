@@ -1,4 +1,4 @@
-package jss.evolution.sample;
+package jss.evolution.solvers;
 
 import jss.evolution.JSSGPConfiguration;
 import jss.evolution.JSSGPSolver;

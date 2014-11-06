@@ -1,35 +1,30 @@
-package jss.evolution.sample;
+package jss.evaluation.solvers;
 
 import java.util.List;
 
-import ec.EvolutionState;
-import ec.gp.GPIndividual;
 import jss.Action;
+import jss.IActionHandler;
 import jss.IJob;
 import jss.IMachine;
 import jss.IProblemInstance;
-import jss.evolution.JSSGPData;
-import jss.evolution.JSSGPRule;
+import jss.evaluation.JSSEvalData;
+import jss.evaluation.node.INode;
 
 /**
  * TODO javadoc.
  * @author parkjohn
  *
  */
-public class PriorityBasedDR extends JSSGPRule {
+public class PriorityBasedDR implements IActionHandler {
+
+	private INode node;
 
 	/**
 	 * TODO javadoc.
-	 * @param state
-	 * @param inds
-	 * @param threadnum
-	 * @param data
+	 * @param node
 	 */
-	public PriorityBasedDR(EvolutionState state,
-			GPIndividual[] inds,
-			int threadnum,
-			JSSGPData data) {
-		super(state, inds, threadnum, data);
+	public PriorityBasedDR(INode node) {
+		this.node = node;
 	}
 
 	@Override
@@ -44,19 +39,11 @@ public class PriorityBasedDR extends JSSGPRule {
 				continue;
 			}
 
-			getData().setProblem(problem);
-			getData().setJob(job);
-			getData().setMachine(machine);
+			JSSEvalData data = new JSSEvalData(problem, machine, job);
+			double priority = node.evaluate(data);
 
-			getIndividuals()[0].trees[0].child.eval(getState(),
-					getThreadnum(),
-					getData(),
-					null,
-					getIndividuals()[0],
-					null);
-
-			if (getData().getPriority() > bestPriority) {
-				bestPriority = getData().getPriority();
+			if (priority > bestPriority) {
+				bestPriority = priority;
 				bestJob = job;
 			}
 		}
@@ -69,5 +56,4 @@ public class PriorityBasedDR extends JSSGPRule {
 			return null;
 		}
 	}
-
 }

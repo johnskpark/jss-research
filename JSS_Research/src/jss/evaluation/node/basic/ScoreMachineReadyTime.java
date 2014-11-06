@@ -11,7 +11,7 @@ import jss.node.NodeDefinition;
  * @author parkjohn
  *
  */
-@NodeAnnotation(node=NodeDefinition.SCORE_JOB_READY_TIME)
+@NodeAnnotation(node=NodeDefinition.SCORE_MACHINE_READY_TIME)
 public class ScoreMachineReadyTime implements INode {
 
 	private static final NodeDefinition NODE_DEFINITION = NodeDefinition.SCORE_MACHINE_READY_TIME;

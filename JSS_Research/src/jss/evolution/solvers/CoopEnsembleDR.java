@@ -1,34 +1,45 @@
-package jss.evaluation.sample;
+package jss.evolution.solvers;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import jss.Action;
-import jss.IActionHandler;
 import jss.IJob;
 import jss.IMachine;
 import jss.IProblemInstance;
-import jss.evaluation.JSSEvalData;
-import jss.evaluation.node.INode;
+import jss.evolution.ITracker;
+import jss.evolution.JSSGPData;
+import jss.evolution.JSSGPRule;
+import ec.EvolutionState;
+import ec.gp.GPIndividual;
 
 /**
  * TODO javadoc.
  * @author parkjohn
  *
  */
-public class CoopEnsembleDR implements IActionHandler {
+public class CoopEnsembleDR extends JSSGPRule {
 
-	private List<INode> rules;
-	private int ruleNum;
+	private PriorityTracker[] trackers;
 
 	/**
 	 * TODO javadoc.
-	 * @param rules
-	 * @param ruleNum
+	 * @param state
+	 * @param inds
+	 * @param threadnum
+	 * @param data
 	 */
-	public CoopEnsembleDR(List<INode> rules, int ruleNum) {
-		this.rules = rules;
-		this.ruleNum = ruleNum;
+	public CoopEnsembleDR(EvolutionState state,
+			GPIndividual[] inds,
+			int threadnum,
+			JSSGPData data,
+			ITracker[] trackers) {
+		super(state, inds, threadnum, data);
+
+		this.trackers = new PriorityTracker[trackers.length];
+		for (int i = 0; i < trackers.length; i++) {
+			this.trackers[i] = (PriorityTracker)trackers[i];
+		}
 	}
 
 	@Override
@@ -44,10 +55,10 @@ public class CoopEnsembleDR implements IActionHandler {
 		int mostVotes = 0;
 		int mostVotedIndex = -1;
 
-		for (int i = 0; i < ruleNum; i++) {
-			INode rule = rules.get(i);
+		for (int i = 0; i < getIndividuals().length; i++) {
+			GPIndividual gpInd = getIndividuals()[i];
 
-			PriorityIndexPair bestPair = getBestIndex(rule, processableJobs, machine, problem);
+			PriorityIndexPair bestPair = getBestIndex(gpInd, processableJobs, machine, problem, trackers[i]);
 			if (bestPair.index == -1) {
 				return null;
 			}
@@ -81,10 +92,11 @@ public class CoopEnsembleDR implements IActionHandler {
 	}
 
 	// Get the index of the job with the highest priority.
-	private PriorityIndexPair getBestIndex(INode rule,
+	private PriorityIndexPair getBestIndex(GPIndividual gpInd,
 			List<IJob> processableJobs,
 			IMachine machine,
-			IProblemInstance problem) {
+			IProblemInstance problem,
+			PriorityTracker tracker) {
 		double bestPriority = Double.NEGATIVE_INFINITY;
 		int bestIndex = -1;
 
@@ -93,15 +105,26 @@ public class CoopEnsembleDR implements IActionHandler {
 		for (int j = 0; j < processableJobs.size(); j++) {
 			IJob job = processableJobs.get(j);
 
-			JSSEvalData data = new JSSEvalData(problem, machine, job);
-			double priority = rule.evaluate(data);
+			getData().setProblem(problem);
+			getData().setJob(job);
+			getData().setMachine(machine);
+
+			gpInd.trees[0].child.eval(getState(),
+					getThreadnum(),
+					getData(),
+					null,
+					gpInd,
+					null);
 
 			// Normalise the priority between interval [0,1]
-			normalisedPriorities[j] = 1.0 / (1.0 + Math.exp(-priority));
+			normalisedPriorities[j] = 1.0 / (1.0 + Math.exp(-getData().getPriority()));
+
+			// Add the priority to the trackers
+			tracker.getPriorities().add(getData().getPriority());
 
 			// Update the best priority.
-			if (priority > bestPriority) {
-				bestPriority = priority;
+			if (getData().getPriority() > bestPriority) {
+				bestPriority = getData().getPriority();
 				bestIndex = j;
 			}
 		}

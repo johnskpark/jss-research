@@ -1,4 +1,4 @@
-package jss.evaluation.sample;
+package jss.evaluation.solvers;
 
 import java.util.List;
 
@@ -16,25 +16,25 @@ import jss.problem.CompletelyReactiveSolver;
  * @author parkjohn
  *
  */
-public class FIFOSolver extends JSSEvalSolver {
+public class SPTSolver extends JSSEvalSolver {
 
 	/**
 	 * TODO javadoc.
 	 */
-	public FIFOSolver() {
+	public SPTSolver() {
 		super();
 	}
 
 	@Override
 	protected void setChildConfiguration(JSSEvalConfiguration config) {
 		CompletelyReactiveSolver solver = new CompletelyReactiveSolver();
-		solver.setRule(new FIFODR());
+		solver.setRule(new SPTDR());
 
 		setSolver(solver);
 	}
 
 	// TODO docs.
-	private class FIFODR implements IActionHandler {
+	private class SPTDR implements IActionHandler {
 
 		@Override
 		public Action getAction(IMachine machine, IProblemInstance problem) {
@@ -59,14 +59,11 @@ public class FIFOSolver extends JSSEvalSolver {
 			IJob bestJob = null;
 
 			for (IJob job : jobs) {
-				if (!machine.equals(job.getNextMachine()) ||
-						job.getReadyTime(machine) >= earliestCompletion) {
+				if (!machine.equals(job.getNextMachine())) {
 					continue;
 				}
 
-				IMachine lastMachine = job.getLastMachine();
-				double priority = (lastMachine != null) ?
-						lastMachine.getReadyTime() : job.getReadyTime(machine);
+				double priority = job.getProcessingTime(machine);
 
 				if (priority < bestPriority) {
 					bestPriority = priority;

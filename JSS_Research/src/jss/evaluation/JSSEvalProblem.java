@@ -24,6 +24,7 @@ import javax.xml.validation.Validator;
 import jss.IDataset;
 import jss.IProblemInstance;
 import jss.IResult;
+import jss.ProblemSize;
 import jss.evaluation.node.INode;
 
 import org.w3c.dom.Document;
@@ -160,6 +161,7 @@ public class JSSEvalProblem {
 				roots.add(parser.getRuleFromString(split[i+1]));
 			}
 			config.setRules(roots);
+			config.setRuleNum(numRules);
 
 			JSSEvalSolver solver = solverClass.newInstance();
 			solver.setConfiguration(config);
@@ -219,7 +221,7 @@ public class JSSEvalProblem {
 			for (JSSEvalSolver solver : solvers) {
 				output.printf("%s,%d", ruleFilename, solver.getSeed());
 
-				for (IProblemInstance problem : dataset.getProblems()) {
+				for (IProblemInstance problem : dataset.getTraining(ProblemSize.SMALL_PROBLEM_SIZE)) {
 					IResult solution = solver.getSolution(problem);
 
 					// TODO make this generic.

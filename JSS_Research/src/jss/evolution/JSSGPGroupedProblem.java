@@ -7,7 +7,7 @@ import jss.IDataset;
 import jss.IProblemInstance;
 import jss.IResult;
 import jss.ProblemSize;
-import jss.evolution.sample.PriorityTracker;
+import jss.evolution.solvers.PriorityTracker;
 import jss.problem.Statistics;
 import ec.EvolutionState;
 import ec.Individual;

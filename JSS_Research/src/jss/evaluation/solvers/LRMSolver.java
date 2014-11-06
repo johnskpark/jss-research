@@ -1,4 +1,4 @@
-package jss.evaluation.sample;
+package jss.evaluation.solvers;
 
 import java.util.List;
 

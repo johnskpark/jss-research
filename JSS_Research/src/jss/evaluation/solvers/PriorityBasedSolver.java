@@ -1,8 +1,8 @@
-package jss.evaluation.sample;
+package jss.evaluation.solvers;
 
 import jss.evaluation.JSSEvalConfiguration;
 import jss.evaluation.JSSEvalSolver;
-import jss.evaluation.sample.PriorityBasedDR;
+import jss.evaluation.solvers.PriorityBasedDR;
 import jss.problem.CompletelyReactiveSolver;
 
 /**

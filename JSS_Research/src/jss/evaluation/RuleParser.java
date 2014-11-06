@@ -96,10 +96,12 @@ public class RuleParser {
 					NodeChildrenNumPair pair = nodeMap.get(token);
 
 					return generateNewNode(pair);
-				} else if (token.matches("[\\d]+(\\.[\\d]+)?")) {
-					return new ERCRandom(Double.parseDouble(token));
 				} else {
-					throw new RuntimeException("Unrecognised token " + token); // TODO
+					try {
+						return new ERCRandom(Double.parseDouble(token));
+					} catch (NumberFormatException ex) {
+						throw new RuntimeException("Unrecognised token " + token); // TODO
+					}
 				}
 			}
 

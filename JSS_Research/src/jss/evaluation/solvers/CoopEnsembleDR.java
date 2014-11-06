@@ -1,45 +1,34 @@
-package jss.evolution.sample;
+package jss.evaluation.solvers;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import jss.Action;
+import jss.IActionHandler;
 import jss.IJob;
 import jss.IMachine;
 import jss.IProblemInstance;
-import jss.evolution.ITracker;
-import jss.evolution.JSSGPData;
-import jss.evolution.JSSGPRule;
-import ec.EvolutionState;
-import ec.gp.GPIndividual;
+import jss.evaluation.JSSEvalData;
+import jss.evaluation.node.INode;
 
 /**
  * TODO javadoc.
  * @author parkjohn
  *
  */
-public class CoopEnsembleDR extends JSSGPRule {
+public class CoopEnsembleDR implements IActionHandler {
 
-	private PriorityTracker[] trackers;
+	private List<INode> rules;
+	private int ruleNum;
 
 	/**
 	 * TODO javadoc.
-	 * @param state
-	 * @param inds
-	 * @param threadnum
-	 * @param data
+	 * @param rules
+	 * @param ruleNum
 	 */
-	public CoopEnsembleDR(EvolutionState state,
-			GPIndividual[] inds,
-			int threadnum,
-			JSSGPData data,
-			ITracker[] trackers) {
-		super(state, inds, threadnum, data);
-
-		this.trackers = new PriorityTracker[trackers.length];
-		for (int i = 0; i < trackers.length; i++) {
-			this.trackers[i] = (PriorityTracker)trackers[i];
-		}
+	public CoopEnsembleDR(List<INode> rules, int ruleNum) {
+		this.rules = rules;
+		this.ruleNum = ruleNum;
 	}
 
 	@Override
@@ -55,10 +44,10 @@ public class CoopEnsembleDR extends JSSGPRule {
 		int mostVotes = 0;
 		int mostVotedIndex = -1;
 
-		for (int i = 0; i < getIndividuals().length; i++) {
-			GPIndividual gpInd = getIndividuals()[i];
+		for (int i = 0; i < ruleNum; i++) {
+			INode rule = rules.get(i);
 
-			PriorityIndexPair bestPair = getBestIndex(gpInd, processableJobs, machine, problem, trackers[i]);
+			PriorityIndexPair bestPair = getBestIndex(rule, processableJobs, machine, problem);
 			if (bestPair.index == -1) {
 				return null;
 			}
@@ -92,11 +81,10 @@ public class CoopEnsembleDR extends JSSGPRule {
 	}
 
 	// Get the index of the job with the highest priority.
-	private PriorityIndexPair getBestIndex(GPIndividual gpInd,
+	private PriorityIndexPair getBestIndex(INode rule,
 			List<IJob> processableJobs,
 			IMachine machine,
-			IProblemInstance problem,
-			PriorityTracker tracker) {
+			IProblemInstance problem) {
 		double bestPriority = Double.NEGATIVE_INFINITY;
 		int bestIndex = -1;
 
@@ -105,26 +93,15 @@ public class CoopEnsembleDR extends JSSGPRule {
 		for (int j = 0; j < processableJobs.size(); j++) {
 			IJob job = processableJobs.get(j);
 
-			getData().setProblem(problem);
-			getData().setJob(job);
-			getData().setMachine(machine);
-
-			gpInd.trees[0].child.eval(getState(),
-					getThreadnum(),
-					getData(),
-					null,
-					gpInd,
-					null);
+			JSSEvalData data = new JSSEvalData(problem, machine, job);
+			double priority = rule.evaluate(data);
 
 			// Normalise the priority between interval [0,1]
-			normalisedPriorities[j] = 1.0 / (1.0 + Math.exp(-getData().getPriority()));
-
-			// Add the priority to the trackers
-			tracker.getPriorities().add(getData().getPriority());
+			normalisedPriorities[j] = 1.0 / (1.0 + Math.exp(-priority));
 
 			// Update the best priority.
-			if (getData().getPriority() > bestPriority) {
-				bestPriority = getData().getPriority();
+			if (priority > bestPriority) {
+				bestPriority = priority;
 				bestIndex = j;
 			}
 		}

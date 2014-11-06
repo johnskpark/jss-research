@@ -1,4 +1,4 @@
-package jss.evolution.sample;
+package jss.evolution.solvers;
 
 import jss.IDataset;
 import jss.IProblemInstance;
@@ -6,7 +6,7 @@ import jss.IResult;
 import jss.evolution.JSSGPData;
 import jss.problem.CompletelyReactiveSolver;
 import jss.problem.Statistics;
-import jss.problem.static_problem.taillard_dataset.TaillardDataset;
+import jss.problem.static_problem.rachel_dataset.TwoStaticJSSDataset;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.gp.GPIndividual;
@@ -14,17 +14,13 @@ import ec.gp.GPProblem;
 import ec.gp.koza.KozaFitness;
 import ec.util.Parameter;
 
-/**
- * TODO javadoc. This will probably be merged with the TwoStaticJSSProblem to form a single class later down the line.
- *
- * @author parkjohn
- *
- */
-public class TaillardJSSProblem extends GPProblem {
+public class TwoStaticJSSProblem extends GPProblem {
 
 	private static final long serialVersionUID = -9179316619823952437L;
 
-	private IDataset dataset = new TaillardDataset();
+	private static final int DATASET_SEED = 15;
+
+	private IDataset dataset = new TwoStaticJSSDataset(DATASET_SEED);
 	private CompletelyReactiveSolver solver = new CompletelyReactiveSolver();
 
 	@Override
@@ -72,7 +68,7 @@ public class TaillardJSSProblem extends GPProblem {
 
 	@Override
 	public Object clone() {
-		TaillardJSSProblem newObject = (TaillardJSSProblem)super.clone();
+		TwoStaticJSSProblem newObject = (TwoStaticJSSProblem)super.clone();
 
 		newObject.input = (JSSGPData)input.clone();
 		newObject.dataset = dataset;

@@ -27,10 +27,10 @@ public class TaillardDataset extends StaticDataset {
 
 	private static final int TRAINING_SMALL_MACHINE_NUM = 15;
 	private static final int TRAINING_SMALL_JOB_NUM = 15;
-	private static final int TRAINING_MEDIUM_MACHINE_NUM = 30;
-	private static final int TRAINING_MEDIUM_JOB_NUM = 20;
-	private static final int TRAINING_LARGE_MACHINE_NUM = 100;
-	private static final int TRAINING_LARGE_JOB_NUM = 20;
+	private static final int TRAINING_MEDIUM_MACHINE_NUM = 20;
+	private static final int TRAINING_MEDIUM_JOB_NUM = 30;
+	private static final int TRAINING_LARGE_MACHINE_NUM = 20;
+	private static final int TRAINING_LARGE_JOB_NUM = 100;
 
 	private static final int MIN_PROCESSING_TIME = 1;
 	private static final int MAX_PROCESSING_TIME = 99;
@@ -165,15 +165,18 @@ public class TaillardDataset extends StaticDataset {
 			}
 		}
 
-		for (int i = 0; i < smallInstances.size() / 2; i++) {
+		int smallSize = smallInstances.size() / 2;
+		for (int i = 0; i < smallSize; i++) {
 			smallInstances.remove(smallInstances.size() - 1);
 		}
 
-		for (int i = 0; i < mediumInstances.size() / 2; i++) {
+		int mediumSize = mediumInstances.size() / 2;
+		for (int i = 0; i < mediumSize; i++) {
 			mediumInstances.remove(mediumInstances.size() - 1);
 		}
 
-		for (int i = 0; i < largeInstances.size() / 2; i++) {
+		int largeSize = largeInstances.size() / 2;
+		for (int i = 0; i < largeSize; i++) {
 			largeInstances.remove(largeInstances.size() - 1);
 		}
 	}

@@ -1,4 +1,4 @@
-package jss.evolution.sample;
+package jss.evolution.solvers;
 
 import java.util.ArrayList;
 import java.util.List;
