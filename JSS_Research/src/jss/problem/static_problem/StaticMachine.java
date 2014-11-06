@@ -20,7 +20,8 @@ import jss.ISubscriptionHandler;
  */
 public class StaticMachine implements IMachine, IEventHandler {
 
-	// Mutable components TODO more doc.
+	// Mutable components to the static machines that is actively modified
+	// during the simulation.
 	private List<IJob> prevJobs = new ArrayList<IJob>();
 
 	private IJob currentJob = null;

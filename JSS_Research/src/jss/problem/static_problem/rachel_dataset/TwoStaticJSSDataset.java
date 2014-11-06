@@ -12,7 +12,12 @@ import jss.problem.static_problem.StaticJob;
 import jss.problem.static_problem.StaticMachine;
 
 /**
- * TODO javadoc.
+ * Static dataset that is used for Hunt's paper on evolving optimal
+ * dispatching rules for 2 machine JSS problem instances.
+ *
+ * The full details of the implementation are covered in the paper
+ * "Evolving Machine Specific Dispatching Rules for a Two-Machine Job Shop
+ * using Genetic Programming" by Hunt et al.
  *
  * @author parkjohn
  *

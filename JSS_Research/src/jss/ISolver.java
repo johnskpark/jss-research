@@ -20,7 +20,8 @@ public interface ISolver {
 	 * scheduling problem instance.
 	 * @param problem The job shop scheduling problem instance to solve.
 	 * @return The solution for the problem instance as an instance of IResult.
-	 * @throws RuntimeException TODO this will probably be modified later down the line.
+	 * @throws IllegalActionException if the solver applies an illegal action
+	 *                                during the simulation.
 	 */
 	public IResult getSolution(IProblemInstance problem) throws RuntimeException;
 }

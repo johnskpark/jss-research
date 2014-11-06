@@ -1,7 +1,9 @@
 package jss.node;
 
 /**
- * TODO javadoc.
+ * Enum definitions for the terminals and non-terminals that are used by
+ * GP individuals for JSS.
+ *
  * @author parkjohn
  *
  */
@@ -25,6 +27,7 @@ public enum NodeDefinition {
 	private String nodeSymbol;
 	private int numChildren;
 
+	// Private constructor to ensure that no other classes can access it.
 	private NodeDefinition(String nodeSymbol, int numChildren) {
 		this.nodeSymbol = nodeSymbol;
 		this.numChildren = numChildren;

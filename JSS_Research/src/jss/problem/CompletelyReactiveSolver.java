@@ -100,8 +100,7 @@ public class CompletelyReactiveSolver implements ISolver, ISubscriber {
 
 	@Override
 	public void onJobFeed(IJob job, double time) {
-		// Do nothing. TODO make it do something IF the job is being
-		// released.
+		// Do nothing for now.
 	}
 
 }

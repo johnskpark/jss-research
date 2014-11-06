@@ -9,7 +9,7 @@ import jss.problem.static_problem.StaticInstance;
 import jss.problem.static_problem.StaticJob;
 
 /**
- * TODO javadoc.
+ * Helper class that for calculating the lower bound for the Taillard's dataset.
  *
  * @author parkjohn
  *
@@ -17,18 +17,14 @@ import jss.problem.static_problem.StaticJob;
 public class TaillardBounds {
 
 	/**
-	 * Calculate the upper bound of the JSS problem instance.
-	 * @param problem TODO
-	 * @return
+	 * Calculate the upper bound for the specified JSS problem instance.
 	 */
 	public static double calculateUpperBound(StaticInstance problem) {
 		throw new UnsupportedOperationException("Upper bound calculation on Taillard dataset not specified");
 	}
 
 	/**
-	 * Calculate the lower bound of the JSS problem instance.
-	 * @param problem TODO
-	 * @return
+	 * Calculate the lower bound for the specified JSS problem instance.
 	 */
 	public static double calculateLowerBound(StaticInstance problem) {
 		List<IMachine> machines = problem.getMachines();

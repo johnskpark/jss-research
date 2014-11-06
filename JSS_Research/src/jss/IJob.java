@@ -53,33 +53,33 @@ public interface IJob {
 	/**
 	 * Get the penalty factor for tardy jobs.
 	 * @param machine The machine that will be processing the job.
-	 * @return The penalty of the job on the machine. If the job cannot be 
+	 * @return The penalty of the job on the machine. If the job cannot be
 	 *         processed at the particular machine, then 0 will be returned.
 	 */
 	public double getPenalty(IMachine machine);
 
 	/**
 	 * Get the total processing time of the remaining operations for the job.
-	 * @return The total processing time of the remaining operations that are 
+	 * @return The total processing time of the remaining operations that are
 	 *         left on the job, 0 if the job is completed.
 	 */
 	public double getRemainingTime();
-	
+
 	/**
 	 * Get the total number of remaining operations for the job.
 	 * @return The total number of remaining operations that are left on the
 	 *         job, 0 if the job is completed.
 	 */
 	public int getRemainingOperation();
-	
+
 	/**
 	 * Callback function that declares that the job has started being
 	 * processed on the specified machine.
 	 * @param machine The machine for which the job has been started on.
-	 * @throws RuntimeException If the machine is not next in line to be
+	 * @throws IllegalActionException If the machine is not next in line to be
 	 *                          visited.
 	 */
-	public void startedProcessingOnMachine(IMachine machine) throws RuntimeException;
+	public void startedProcessingOnMachine(IMachine machine) throws IllegalActionException;
 
 	/**
 	 * Callback function that declares that the job has been last processed on

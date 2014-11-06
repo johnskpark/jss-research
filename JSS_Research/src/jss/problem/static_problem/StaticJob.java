@@ -23,7 +23,7 @@ import jss.IMachine;
  */
 public class StaticJob implements IJob, IEventHandler {
 
-	// Immutable component TODO more doc
+	// Immutable component that stays constant during the simulation.
 	private List<IMachine> machineList = new LinkedList<IMachine>();
 
 	private Map<IMachine, Double> processingTimes = new HashMap<IMachine, Double>();
@@ -32,7 +32,7 @@ public class StaticJob implements IJob, IEventHandler {
 	private Map<IMachine, Double> penalties = new HashMap<IMachine, Double>();
 	private double releaseTime = 0;
 
-	// Mutable component TODO more doc
+	// Mutable component that is actively modified during the simulation.
 	private Queue<IMachine> machineQueue = new LinkedList<IMachine>();
 
 	private IMachine machine;
@@ -145,7 +145,7 @@ public class StaticJob implements IJob, IEventHandler {
 		}
 		return 1;
 	}
-	
+
 	@Override
 	public double getRemainingTime() {
 		double remainingTime = 0.0;
@@ -154,7 +154,7 @@ public class StaticJob implements IJob, IEventHandler {
 		}
 		return remainingTime;
 	}
-	
+
 	@Override
 	public int getRemainingOperation() {
 		return machineQueue.size();

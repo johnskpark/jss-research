@@ -16,7 +16,10 @@ import jss.problem.static_problem.StaticJob;
 import jss.problem.static_problem.StaticMachine;
 
 /**
- * TODO javadoc.
+ * Represents the Taillard's dataset that is present in the JSS literature.
+ *
+ * The full details of the implementation are covered in the paper
+ * "Benchmarks for basic scheduling problems" by Taillard, E.
  *
  * @author parkjohn
  *
@@ -43,7 +46,7 @@ public class TaillardDataset extends StaticDataset {
 	private List<IProblemInstance> largeInstances = new ArrayList<IProblemInstance>();
 
 	/**
-	 * TODO javadoc.
+	 * Construct a new instance of the Taillard's dataset.
 	 */
 	public TaillardDataset() {
 		// Read the .csv file.

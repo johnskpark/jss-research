@@ -42,9 +42,9 @@ public interface IMachine {
 	 *  Otherwise, the job is immediately rejected and a RuntimeException is thrown.
 	 * @param job The job to start processing.
 	 * @param time The time to start processing the job.
-	 * @throws RuntimeException If the job cannot be processed on the machine
+	 * @throws IllegalActionException If the job cannot be processed on the machine
 	 */
-	public void processJob(IJob job, double time) throws RuntimeException;
+	public void processJob(IJob job, double time) throws IllegalActionException;
 
 	/**
 	 * Get whether the machine is available to process a job.

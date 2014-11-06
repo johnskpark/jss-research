@@ -1,7 +1,7 @@
 package jss;
 
 /**
- * Helper enum that is used by the implemented dataset... TODO javadoc.
+ * Helper enum that is used by the datasets for the defining the training sets.
  * @author parkjohn
  *
  */
@@ -11,9 +11,9 @@ public enum ProblemSize {
 	LARGE_PROBLEM_SIZE;
 
 	/**
-	 * TODO javadoc.
-	 * @param problemSize
-	 * @return
+	 * Convert the specified string to the specified problem size enum.
+	 * @throws IllegalArgumentException of the string does not match any of
+	 *                                  the problem size enums.
 	 */
 	public static ProblemSize strToProblemSize(String problemSize) {
 		if (problemSize == "small") {
@@ -23,7 +23,7 @@ public enum ProblemSize {
 		} else if (problemSize == "large") {
 			return ProblemSize.LARGE_PROBLEM_SIZE;
 		} else {
-			throw new RuntimeException("You done goofed"); // TODO
+			throw new IllegalArgumentException("Invalid problem size. Must be \"small\", \"medium\" or \"large\". Got " + problemSize);
 		}
 	}
 

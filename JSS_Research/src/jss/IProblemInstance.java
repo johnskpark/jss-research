@@ -14,8 +14,8 @@ import java.util.List;
  * IProblemInstance also stores the current state of the simulation as the
  * jobs are processed by the machines. The solver directly modifies this state
  * as it solves the problem. If the solver carries out an invalid action, an
- * Exception will be thrown by relevant component (either the machine or the
- * job). TODO elaborate on the Exception that is thrown.
+ * @see IllegalActionException will be thrown by relevant component (either
+ * the machine or the job).
  *
  * IProblemInstance should be used in conjunction with
  * @see ISubscriptionHandler to notify the @see ISolver as updates occur

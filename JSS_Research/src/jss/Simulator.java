@@ -3,6 +3,7 @@ package jss;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.PriorityQueue;
 import java.util.Set;
 
@@ -56,7 +57,6 @@ public class Simulator {
 	/**
 	 * Get the current time of the simulator, which is the time when the last
 	 * event was triggered.
-	 * @return
 	 */
 	public double getTime() {
 		return currentTime;
@@ -66,7 +66,6 @@ public class Simulator {
 	 * Get whether the simulator has any events left. If the simulator does
 	 * not have any more events, the simulation of the Job Shop Scheduling
 	 * environment is completed.
-	 * @return
 	 */
 	public boolean hasEvent() {
 		return !eventQueue.isEmpty();
@@ -74,14 +73,14 @@ public class Simulator {
 
 	/**
 	 * Trigger the next event in the queue.
-	 * @throws RuntimeException If no more events are queued up in the
-	 *                          Simulator, and if the problem instance
-	 *                          generates any events that occur before the
-	 *                          last triggered event.
+	 * @throws NoSuchElementException If no more events are queued up in the
+	 *                                Simulator, and if the problem instance
+	 *                                generates any events that occur before
+	 *                                the last triggered event.
 	 */
-	public void triggerEvent() throws RuntimeException {
+	public void triggerEvent() throws NoSuchElementException {
 		if (eventQueue.isEmpty()) {
-			throw new RuntimeException("Simulator has no more events to trigger"); // TODO change this from runtime exception
+			throw new NoSuchElementException("Simulator has no more events to trigger");
 		}
 
 		EventGroup events = eventQueue.poll();
