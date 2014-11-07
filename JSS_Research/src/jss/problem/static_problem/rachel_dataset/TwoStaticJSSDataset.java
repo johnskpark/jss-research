@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import jss.IDataset;
 import jss.IProblemInstance;
 import jss.ProblemSize;
-import jss.problem.static_problem.StaticDataset;
 import jss.problem.static_problem.StaticInstance;
 import jss.problem.static_problem.StaticJob;
 import jss.problem.static_problem.StaticMachine;
@@ -22,7 +22,7 @@ import jss.problem.static_problem.StaticMachine;
  * @author parkjohn
  *
  */
-public class TwoStaticJSSDataset extends StaticDataset {
+public class TwoStaticJSSDataset implements IDataset {
 
 	private static final int DATASET_SEED = 15;
 
@@ -108,18 +108,6 @@ public class TwoStaticJSSDataset extends StaticDataset {
 	@Override
 	public List<IProblemInstance> getTest() {
 		return problems;
-	}
-
-	@Override
-	public List<Double> getUpperBounds() {
-		// TODO
-		throw new UnsupportedOperationException("Not yet implemented");
-	}
-
-	@Override
-	public List<Double> getLowerBounds() {
-		// TODO
-		throw new UnsupportedOperationException("Not yet implemented");
 	}
 
 	private class ProblemFactory {

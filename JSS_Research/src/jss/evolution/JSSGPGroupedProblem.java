@@ -145,7 +145,6 @@ public class JSSGPGroupedProblem extends GPProblem implements GroupedProblemForm
 		checkInvariance(state, ind);
 
 		Statistics stats = new Statistics();
-		double[] penalties = new double[ind.length];
 
 		GPIndividual[] gpInds = new GPIndividual[ind.length];
 		for (int i = 0; i < ind.length; i++) {
@@ -160,11 +159,11 @@ public class JSSGPGroupedProblem extends GPProblem implements GroupedProblemForm
 		config.setData((JSSGPData)input);
 
 		// TODO hack code. Fix later.
-		PriorityTracker[] trackers = new PriorityTracker[gpInds.length];
-		for (int i = 0; i < ind.length; i++) {
-			trackers[i] = new PriorityTracker();
-		}
-		config.setTrackers(trackers);
+//		PriorityTracker[] trackers = new PriorityTracker[gpInds.length];
+//		for (int i = 0; i < ind.length; i++) {
+//			trackers[i] = new PriorityTracker();
+//		}
+//		config.setTrackers(trackers);
 
 		solver.setGPConfiguration(config);
 
@@ -177,19 +176,17 @@ public class JSSGPGroupedProblem extends GPProblem implements GroupedProblemForm
 			stats.addSolution(problem, solution);
 
 			// TODO temporary code.
-			double[] p = calculatePenalties(trackers);
-			for (int i = 0; i < ind.length; i++) {
-				penalties[i] += p[i] / trainingSet.size();
-				trackers[i].clear();
-			}
+//			double[] p = calculatePenalties(trackers);
+//			for (int i = 0; i < ind.length; i++) {
+//				penalties[i] += p[i] / trainingSet.size();
+//				trackers[i].clear();
+//			}
 		}
 
 		// TODO make this generic.
-		double makespan = stats.getAverageMakespan();
 
 		for (int i = 0; i < ind.length; i++) {
-			double kozaFitness = makespan * (1 + penalties[i]);
-			double trial = kozaFitness;
+			double fitness = stats.getAverageMakespan();
 
 			if (updateFitness[i]) {
 				GPIndividual gpInd = gpInds[i];
@@ -201,18 +198,18 @@ public class JSSGPGroupedProblem extends GPProblem implements GroupedProblemForm
 						gpInd.fitness.setContext(ind, i);
 					}
 
-					gpInd.fitness.trials.add(new Double(trial));
-				} else if ((Double)gpInd.fitness.trials.get(0) < trial) {
+					gpInd.fitness.trials.add(new Double(fitness));
+				} else if ((Double)gpInd.fitness.trials.get(0) < fitness) {
 					if (shouldSetContext) {
 						gpInd.fitness.setContext(ind, i);
 					}
 
 					Object t = gpInd.fitness.trials.get(0);
-					gpInd.fitness.trials.set(0, trial);
+					gpInd.fitness.trials.set(0, fitness);
 					gpInd.fitness.trials.add(t);
 				}
 
-				((KozaFitness)gpInd.fitness).setStandardizedFitness(state, kozaFitness);
+				((KozaFitness)gpInd.fitness).setStandardizedFitness(state, fitness);
 			}
 		}
 	}

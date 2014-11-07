@@ -98,16 +98,9 @@ public class DatasetTest {
 			TaillardDataset dataset = new TaillardDataset();
 
 			List<IProblemInstance> problems = dataset.getProblems();
-			List<Double> upperBounds = dataset.getUpperBounds();
-			List<Double> lowerBounds = dataset.getLowerBounds();
-
-			Assert.assertEquals(problems.size(), upperBounds.size());
-			Assert.assertEquals(problems.size(), lowerBounds.size());
 
 			for (int i = 0; i < problems.size(); i++) {
-				taillardInstanceTest(problems.get(i),
-						upperBounds.get(i),
-						lowerBounds.get(i));
+				taillardInstanceTest(problems.get(i));
 			}
 
 		} catch (RuntimeException ex) {
@@ -117,14 +110,14 @@ public class DatasetTest {
 
 	// Test each problem instance whether their upper and lower bounds
 	// meet the one expected by the benchmark.
-	private void taillardInstanceTest(IProblemInstance problem,
-			double expectedUB,
-			double expectedLB) {
-		//double actualUB = TalliardBounds.calculateUpperBound((StaticInstance) problem);
-		double actualLB = TaillardBounds.calculateLowerBound((StaticInstance) problem);
+	private void taillardInstanceTest(IProblemInstance problem) {
+		StaticInstance staticProblem = (StaticInstance) problem;
 
-		// Assert.assertEquals(expectedUB, actualUB, EPSILON);
-		Assert.assertEquals(expectedLB, actualLB, EPSILON);
+		//double actualUB = TalliardBounds.calculateUpperBound(staticProblem);
+		double actualLB = TaillardBounds.calculateLowerBound(staticProblem);
+
+		// Assert.assertEquals(staticProblem.getUpperBound(), actualUB, EPSILON);
+		Assert.assertEquals(staticProblem.getLowerBound(), actualLB, EPSILON);
 	}
 
 }

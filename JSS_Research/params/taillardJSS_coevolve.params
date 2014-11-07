@@ -9,10 +9,10 @@ parent.0 = koza.params
 
 # For the cooperative coevolutionary component.
 
-pop.subpops = 10
+pop.subpops = 2
 pop.default-subpop = 0
 
-pop.subpop.0.size = 500
+pop.subpop.0.size = 512
 
 eval = ec.coevolve.MultiPopCoevolutionaryEvaluator
 
@@ -60,7 +60,7 @@ gp.fs.0.func.10.nc = nc0
 
 eval.problem = jss.evolution.JSSGPGroupedProblem
 eval.problem.data = jss.evolution.JSSGPData
-eval.problem.solver = jss.evolution.solvers.CoopEnsembleSolver
+eval.problem.solver = jss.evolution.solvers.CoopTwoRuleSolver
 
 eval.problem.instances = jss.problem.static_problem.taillard_dataset.TaillardDataset
 eval.problem.size = small

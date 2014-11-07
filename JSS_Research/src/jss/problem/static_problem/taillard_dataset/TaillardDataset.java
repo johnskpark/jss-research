@@ -8,9 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import jss.IDataset;
 import jss.IProblemInstance;
 import jss.ProblemSize;
-import jss.problem.static_problem.StaticDataset;
 import jss.problem.static_problem.StaticInstance;
 import jss.problem.static_problem.StaticJob;
 import jss.problem.static_problem.StaticMachine;
@@ -24,7 +24,7 @@ import jss.problem.static_problem.StaticMachine;
  * @author parkjohn
  *
  */
-public class TaillardDataset extends StaticDataset {
+public class TaillardDataset implements IDataset {
 
 	private static final String TALLIARD_DATASET = "jss_taillard.csv";
 
@@ -206,24 +206,6 @@ public class TaillardDataset extends StaticDataset {
 	@Override
 	public List<IProblemInstance> getTest() {
 		return new ArrayList<IProblemInstance>(problemInstances);
-	}
-
-	@Override
-	public List<Double> getUpperBounds() {
-		List<Double> upperBounds = new ArrayList<Double>();
-		for (RawInstance raw : rawInstances) {
-			upperBounds.add(raw.upperBound);
-		}
-		return upperBounds;
-	}
-
-	@Override
-	public List<Double> getLowerBounds() {
-		List<Double> lowerBounds = new ArrayList<Double>();
-		for (RawInstance raw : rawInstances) {
-			lowerBounds.add(raw.lowerBound);
-		}
-		return lowerBounds;
 	}
 
 	private class RawInstance {
