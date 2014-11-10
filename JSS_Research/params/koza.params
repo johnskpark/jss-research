@@ -35,7 +35,7 @@ init = ec.gp.GPInitializer
 # using GPIndividuals as the prototypical individual class.
 
 pop.subpop.0.species = ec.gp.GPSpecies
-pop.subpop.0.species.ind = ec.gp.GPIndividual
+pop.subpop.0.species.ind = jss.evolution.JSSGPIndividual
 
 # We retry 100 times for duplicates (this is the lil-gp default)
 # in our subpopulation 0

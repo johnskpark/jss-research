@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<evaluationConfig>
+	<solverConfig>
+		<solverClass>jss.evaluation.solvers.CoopTwoRuleSolver</solverClass>
+		<solverFile>
+			<ruleNum>2</ruleNum>
+			<ruleFile>two_rules_small.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>jss.evaluation.solvers.CoopTwoRuleSolver</solverClass>
+		<solverFile>
+			<ruleNum>2</ruleNum>
+			<ruleFile>two_rules_medium.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>jss.evaluation.solvers.CoopTwoRuleSolver</solverClass>
+		<solverFile>
+			<ruleNum>2</ruleNum>
+			<ruleFile>two_rules_large.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<datasetConfig>
+		<datasetClass>jss.problem.static_problem.taillard_dataset.TaillardDataset</datasetClass>
+	</datasetConfig>
+</evaluationConfig>

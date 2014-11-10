@@ -221,7 +221,7 @@ public class JSSEvalProblem {
 			for (JSSEvalSolver solver : solvers) {
 				output.printf("%s,%d", ruleFilename, solver.getSeed());
 
-				for (IProblemInstance problem : dataset.getTraining(ProblemSize.SMALL_PROBLEM_SIZE)) {
+				for (IProblemInstance problem : dataset.getProblems()) {
 					IResult solution = solver.getSolution(problem);
 
 					// TODO make this generic.
