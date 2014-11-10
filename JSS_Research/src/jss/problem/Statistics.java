@@ -5,6 +5,7 @@ import java.util.Map;
 
 import jss.IProblemInstance;
 import jss.IResult;
+import jss.problem.static_problem.StaticInstance;
 
 /**
  * Helper class that deals with generating statistics for solutions.
@@ -18,6 +19,8 @@ public class Statistics {
 
 	private double totalMakespan = 0;
 	private double totalTWT = 0;
+
+	private double totalDeviation = 0;
 
 	private int count = 0;
 
@@ -39,11 +42,16 @@ public class Statistics {
 		totalMakespan += solution.getMakespan();
 		totalTWT += solution.getTWT();
 		count++;
+
+		if (problem instanceof StaticInstance) {
+			StaticInstance staticProblem = (StaticInstance) problem;
+			totalDeviation += (solution.getMakespan() - staticProblem.getLowerBound()) /
+					staticProblem.getLowerBound();
+		}
 	}
 
 	/**
 	 * Get the average makespan of the solutions.
-	 * @return
 	 */
 	public double getAverageMakespan() {
 		return totalMakespan / count;
@@ -51,10 +59,16 @@ public class Statistics {
 
 	/**
 	 * Get the average total weighted tardiness.
-	 * @return
 	 */
 	public double getAverageTWT() {
 		return totalTWT / count;
+	}
+
+	/**
+	 * Get the average deviation of the makespan of the solutions.
+	 */
+	public double getAverageDeviation() {
+		return totalDeviation / count;
 	}
 
 }

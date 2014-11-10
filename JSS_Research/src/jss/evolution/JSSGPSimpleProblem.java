@@ -81,7 +81,7 @@ public class JSSGPSimpleProblem extends GPProblem {
 			}
 
 			// TODO make this generic.
-			((KozaFitness)ind.fitness).setStandardizedFitness(state, stats.getAverageMakespan());
+			((KozaFitness)ind.fitness).setStandardizedFitness(state, stats.getAverageDeviation());
 
 			ind.evaluated = true;
 		}
