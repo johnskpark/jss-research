@@ -1,7 +1,5 @@
 package jss.evaluation.solvers;
 
-import java.util.List;
-
 import jss.Action;
 import jss.IActionHandler;
 import jss.IJob;

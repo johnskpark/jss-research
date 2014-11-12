@@ -24,7 +24,6 @@ import javax.xml.validation.Validator;
 import jss.IDataset;
 import jss.IProblemInstance;
 import jss.IResult;
-import jss.ProblemSize;
 import jss.evaluation.node.INode;
 
 import org.w3c.dom.Document;
@@ -139,7 +138,7 @@ public class JSSEvalProblem {
 
 	}
 
-	// TODO docs.
+	// Load in the rule file from the specified file.
 	private List<JSSEvalSolver> loadRuleFile(Class<? extends JSSEvalSolver> solverClass,
 			int numRules,
 			String ruleFilename) throws Exception {

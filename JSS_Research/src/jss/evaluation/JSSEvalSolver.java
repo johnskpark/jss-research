@@ -15,8 +15,6 @@ public abstract class JSSEvalSolver implements ISolver {
 
 	private int seed;
 
-	private JSSEvalData data;
-
 	/**
 	 * TODO javadoc.
 	 */

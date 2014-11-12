@@ -1,7 +1,5 @@
 package jss.evolution.solvers;
 
-import java.util.List;
-
 import jss.Action;
 import jss.IJob;
 import jss.IMachine;
