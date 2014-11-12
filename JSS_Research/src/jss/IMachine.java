@@ -69,4 +69,6 @@ public interface IMachine {
 	 * Reset any processing done on this machine.
 	 */
 	public void reset();
+
+	// TODO need to add in the ability to access the jobs waiting at a machine.
 }

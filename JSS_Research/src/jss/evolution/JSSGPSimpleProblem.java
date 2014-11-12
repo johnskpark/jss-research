@@ -25,9 +25,12 @@ public class JSSGPSimpleProblem extends GPProblem {
 
 	public static final String P_INSTANCES = "instances";
 	public static final String P_SOLVER = "solver";
+	public static final String P_FITNESS = "fitness";
+	public static final String P_SIZE = "size";
 
-	private IDataset dataset;
 	private JSSGPSolver solver;
+	private IDataset dataset;
+	private IFitness fitness;
 
 	private ProblemSize problemSize;
 	private boolean problemSizeSet = false;
@@ -41,11 +44,12 @@ public class JSSGPSimpleProblem extends GPProblem {
 		input.setup(state, base.push(P_DATA));
 
 		// Setup the dataset and the solver
-		dataset = (IDataset) state.parameters.getInstanceForParameterEq(base.push(P_INSTANCES), null, IDataset.class);
 		solver = (JSSGPSolver) state.parameters.getInstanceForParameterEq(base.push(P_SOLVER), null, JSSGPSolver.class);
+		dataset = (IDataset) state.parameters.getInstanceForParameterEq(base.push(P_INSTANCES), null, IDataset.class);
+		fitness = (IFitness) state.parameters.getInstanceForParameterEq(base.push(P_FITNESS), null, IFitness.class);
 
 		// Set the problem size used for the training set.
-		String problemSizeStr = state.parameters.getString(base.push("TODO"), null);
+		String problemSizeStr = state.parameters.getString(base.push(P_SIZE), null);
 		if (problemSizeStr != null) {
 			problemSize = ProblemSize.strToProblemSize(problemSizeStr);
 			problemSizeSet = true;
@@ -80,8 +84,7 @@ public class JSSGPSimpleProblem extends GPProblem {
 				stats.addSolution(problem, solution);
 			}
 
-			// TODO make this generic.
-			((KozaFitness)ind.fitness).setStandardizedFitness(state, stats.getAverageDeviation());
+			((KozaFitness)ind.fitness).setStandardizedFitness(state, fitness.getFitness(stats));
 
 			ind.evaluated = true;
 		}

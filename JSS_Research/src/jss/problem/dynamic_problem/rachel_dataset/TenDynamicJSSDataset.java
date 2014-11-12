@@ -15,7 +15,7 @@ import jss.ProblemSize;
  */
 public class TenDynamicJSSDataset implements IDataset {
 
-	private long seed; // Need a way to set the seed.
+	private long seed;
 	private Random rand;
 
 	/**

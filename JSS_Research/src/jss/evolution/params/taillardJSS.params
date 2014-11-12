@@ -46,9 +46,11 @@ gp.fs.0.func.11.nc = nc0
 
 eval.problem = jss.evolution.JSSGPSimpleProblem
 eval.problem.data = jss.evolution.JSSGPData
-eval.problem.solver = jss.evolution.solvers.PriorityBasedSolver
 
 eval.problem.instances = jss.problem.static_problem.taillard_dataset.TaillardDataset
+eval.problem.solver = jss.evolution.solvers.PriorityBasedSolver
+eval.problem.fitness = jss.evolution.fitness.MakespanDeviationFitness
+
 eval.problem.size = small
 #eval.problem.instances = jss.problem.static_problem.rachel_dataset.TwoStaticJSSDataset
 

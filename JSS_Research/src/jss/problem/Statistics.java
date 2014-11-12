@@ -67,7 +67,7 @@ public class Statistics {
 	/**
 	 * Get the average deviation of the makespan of the solutions.
 	 */
-	public double getAverageDeviation() {
+	public double getAverageMakespanDeviation() {
 		return totalDeviation / count;
 	}
 

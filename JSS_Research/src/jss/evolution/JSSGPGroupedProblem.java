@@ -33,6 +33,7 @@ public class JSSGPGroupedProblem extends GPProblem implements GroupedProblemForm
 
 	public static final String P_INSTANCES = "instances";
 	public static final String P_SOLVER = "solver";
+	public static final String P_SIZE = "size";
 
 	private IDataset dataset;
 	private JSSGPSolver solver;
@@ -56,7 +57,7 @@ public class JSSGPGroupedProblem extends GPProblem implements GroupedProblemForm
 		solver = (JSSGPSolver) state.parameters.getInstanceForParameterEq(base.push(P_SOLVER), null, JSSGPSolver.class);
 
 		// Set the problem size used for the training set.
-		String problemSizeStr = state.parameters.getString(base.push("TODO"), null);
+		String problemSizeStr = state.parameters.getString(base.push(P_SIZE), null);
 		if (problemSizeStr != null) {
 			problemSize = ProblemSize.strToProblemSize(problemSizeStr);
 			problemSizeSet = true;
