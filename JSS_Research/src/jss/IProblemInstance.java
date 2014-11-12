@@ -66,4 +66,9 @@ public interface IProblemInstance {
 	 * instance.
 	 */
 	public void reset();
+
+	/**
+	 * TODO javadoc.
+	 */
+	public void initialise();
 }

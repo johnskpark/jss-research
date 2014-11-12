@@ -47,6 +47,8 @@ public class Simulator {
 	public Simulator(IProblemInstance problem) {
 		this.problem = problem;
 
+		problem.initialise();
+
 		for (IEventHandler handler : problem.getEventHandlers()) {
 			if (handler.hasEvent()) {
 				addEvent(handler.getNextEvent(), handler.getNextEventTime());

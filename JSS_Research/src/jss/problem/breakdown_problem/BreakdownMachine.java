@@ -2,6 +2,7 @@ package jss.problem.breakdown_problem;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import jss.IEvent;
 import jss.IEventHandler;
@@ -108,6 +109,16 @@ public class BreakdownMachine implements IMachine, IEventHandler {
 		availableTime = 0;
 
 		machineEvent = new MachineEvent(this, 0);
+	}
+
+	@Override
+	public Set<IJob> getWaitingJobs() {
+		throw new UnsupportedOperationException("Not yet implemented");
+	}
+
+	@Override
+	public void addWaitingJob(IJob job) {
+		throw new UnsupportedOperationException("Not yet implemented");
 	}
 
 	@Override

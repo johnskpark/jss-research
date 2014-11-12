@@ -29,12 +29,10 @@ public class PriorityBasedDR implements IActionHandler {
 
 	@Override
 	public Action getAction(IMachine machine, IProblemInstance problem, double time) {
-		List<IJob> jobs = problem.getJobs();
-
 		double bestPriority = Double.NEGATIVE_INFINITY;
 		IJob bestJob = null;
 
-		for (IJob job : jobs) {
+		for (IJob job : machine.getWaitingJobs()) {
 			if (!machine.equals(job.getNextMachine())) {
 				continue;
 			}

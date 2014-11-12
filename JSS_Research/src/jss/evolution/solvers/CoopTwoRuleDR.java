@@ -48,12 +48,10 @@ public class CoopTwoRuleDR extends JSSGPRule {
 
 	// Get the action using the specified rule
 	private Action getAction(GPIndividual gpInd, IMachine machine, IProblemInstance problem) {
-		List<IJob> jobs = problem.getJobs();
-
 		double bestPriority = Double.NEGATIVE_INFINITY;
 		IJob bestJob = null;
 
-		for (IJob job : jobs) {
+		for (IJob job : machine.getWaitingJobs()) {
 			if (!machine.equals(job.getNextMachine())) {
 				continue;
 			}

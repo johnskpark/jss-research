@@ -82,6 +82,13 @@ public class StaticInstance implements IProblemInstance, ISubscriptionHandler {
 	}
 
 	@Override
+	public void initialise() {
+		for (StaticJob job : jobs) {
+			job.getNextMachine().addWaitingJob(job);
+		}
+	}
+
+	@Override
 	public void onSubscriptionRequest(ISubscriber subscriber) {
 		subscribers.add(subscriber);
 	}

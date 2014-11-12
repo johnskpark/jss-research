@@ -53,6 +53,7 @@ public class SimulatorTest {
 	@Before
 	public void setup() {
 		initExpectations = new Expectations() {{
+			oneOf(mockProblem).initialise();
 			oneOf(mockProblem).getEventHandlers();
 			will(returnValue(Arrays.asList(new IEventHandler[]{
 					fakeHandler1,

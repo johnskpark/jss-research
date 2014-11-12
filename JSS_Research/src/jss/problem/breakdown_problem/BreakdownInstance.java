@@ -83,6 +83,11 @@ public class BreakdownInstance implements IProblemInstance, ISubscriptionHandler
 	}
 
 	@Override
+	public void initialise() {
+		throw new UnsupportedOperationException("Not yet implemented");
+	}
+
+	@Override
 	public void onSubscriptionRequest(ISubscriber subscriber) {
 		subscribers.add(subscriber);
 	}

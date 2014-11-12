@@ -45,7 +45,7 @@ public class CoopEnsembleDR extends JSSGPRule {
 	@Override
 	public Action getAction(IMachine machine, IProblemInstance problem, double time) {
 		List<IJob> processableJobs = getProcessableJobs(machine, problem.getJobs());
-		if (processableJobs.isEmpty()) {
+		if (machine.getWaitingJobs().isEmpty()) {
 			return null;
 		}
 

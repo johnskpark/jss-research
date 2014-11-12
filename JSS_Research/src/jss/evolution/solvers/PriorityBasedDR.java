@@ -1,15 +1,13 @@
 package jss.evolution.solvers;
 
-import java.util.List;
-
-import ec.EvolutionState;
-import ec.gp.GPIndividual;
 import jss.Action;
 import jss.IJob;
 import jss.IMachine;
 import jss.IProblemInstance;
 import jss.evolution.JSSGPData;
 import jss.evolution.JSSGPRule;
+import ec.EvolutionState;
+import ec.gp.GPIndividual;
 
 /**
  * TODO javadoc.
@@ -34,12 +32,10 @@ public class PriorityBasedDR extends JSSGPRule {
 
 	@Override
 	public Action getAction(IMachine machine, IProblemInstance problem, double time) {
-		List<IJob> jobs = problem.getJobs();
-
 		double bestPriority = Double.NEGATIVE_INFINITY;
 		IJob bestJob = null;
 
-		for (IJob job : jobs) {
+		for (IJob job : machine.getWaitingJobs()) {
 			if (!machine.equals(job.getNextMachine())) {
 				continue;
 			}

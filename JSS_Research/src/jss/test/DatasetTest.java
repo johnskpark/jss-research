@@ -5,6 +5,7 @@ import java.util.List;
 import jss.IJob;
 import jss.IMachine;
 import jss.IProblemInstance;
+import jss.ProblemSize;
 import jss.problem.static_problem.StaticInstance;
 import jss.problem.static_problem.StaticJob;
 import jss.problem.static_problem.StaticMachine;
@@ -118,6 +119,21 @@ public class DatasetTest {
 
 		// Assert.assertEquals(staticProblem.getUpperBound(), actualUB, EPSILON);
 		Assert.assertEquals(staticProblem.getLowerBound(), actualLB, EPSILON);
+	}
+
+	@Test
+	public void problemSizeTest_StringToEnum() {
+		String smallSizeStr = "small";
+		ProblemSize smallSizeEnum = ProblemSize.strToProblemSize(smallSizeStr);
+		Assert.assertEquals(ProblemSize.SMALL_PROBLEM_SIZE, smallSizeEnum);
+
+		String mediumSizeStr = "medium";
+		ProblemSize mediumSizeEnum = ProblemSize.strToProblemSize(mediumSizeStr);
+		Assert.assertEquals(ProblemSize.MEDIUM_PROBLEM_SIZE, mediumSizeEnum);
+
+		String largeSizeStr = "large";
+		ProblemSize largeSizeEnum = ProblemSize.strToProblemSize(largeSizeStr);
+		Assert.assertEquals(ProblemSize.LARGE_PROBLEM_SIZE, largeSizeEnum);
 	}
 
 }

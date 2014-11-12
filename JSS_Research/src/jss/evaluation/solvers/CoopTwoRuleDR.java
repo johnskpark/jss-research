@@ -45,12 +45,10 @@ public class CoopTwoRuleDR implements IActionHandler {
 
 	// Get the action using the specified rule
 	private Action getAction(INode rule, IMachine machine, IProblemInstance problem) {
-		List<IJob> jobs = problem.getJobs();
-
 		double bestPriority = Double.NEGATIVE_INFINITY;
 		IJob bestJob = null;
 
-		for (IJob job : jobs) {
+		for (IJob job : machine.getWaitingJobs()) {
 			if (!machine.equals(job.getNextMachine())) {
 				continue;
 			}
