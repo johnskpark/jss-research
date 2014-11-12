@@ -1,9 +1,7 @@
 package jss.problem.static_problem;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import jss.IEvent;
 import jss.IEventHandler;
@@ -25,7 +23,7 @@ public class StaticMachine implements IMachine, IEventHandler {
 	// Mutable components to the static machines that is actively modified
 	// during the simulation.
 	private List<IJob> prevJobs = new ArrayList<IJob>();
-	private Set<IJob> waitingJobs = new HashSet<IJob>();
+	private List<IJob> waitingJobs = new ArrayList<IJob>();
 
 	private IJob currentJob = null;
 	private double availableTime = 0;
@@ -111,7 +109,7 @@ public class StaticMachine implements IMachine, IEventHandler {
 	@Override
 	public void reset() {
 		prevJobs = new ArrayList<IJob>();
-		waitingJobs = new HashSet<IJob>();
+		waitingJobs = new ArrayList<IJob>();
 
 		currentJob = null;
 		availableTime = 0;
@@ -120,13 +118,15 @@ public class StaticMachine implements IMachine, IEventHandler {
 	}
 
 	@Override
-	public Set<IJob> getWaitingJobs() {
+	public List<IJob> getWaitingJobs() {
 		return waitingJobs;
 	}
 
 	@Override
 	public void addWaitingJob(IJob job) {
-		waitingJobs.add(job);
+		if (!waitingJobs.contains(job)) {
+			waitingJobs.add(job);
+		}
 	}
 
 	@Override

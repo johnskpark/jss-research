@@ -119,6 +119,7 @@ public class Simulator {
 
 	// A group of events that occur at a single point in time.
 	private class EventGroup implements Comparable<EventGroup> {
+		// TODO can't have this, needs to be deterministic.
 		private Set<IEvent> eventList = new HashSet<IEvent>();
 
 		private double triggerTime;

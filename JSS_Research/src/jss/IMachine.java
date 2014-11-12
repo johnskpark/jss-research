@@ -1,7 +1,6 @@
 package jss;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * Generic interface for machine definition.
@@ -74,7 +73,7 @@ public interface IMachine {
 	/**
 	 * Get the set of jobs waiting at the machine.
 	 */
-	public Set<IJob> getWaitingJobs();
+	public List<IJob> getWaitingJobs();
 
 	/**
 	 * Add the job to the list of jobs waiting at the machine.
