@@ -1,11 +1,11 @@
 package jss;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.PriorityQueue;
-import java.util.Set;
 
 /**
  * Simulates the Job Shop Scheduling environment. The simulator wraps around a
@@ -119,8 +119,7 @@ public class Simulator {
 
 	// A group of events that occur at a single point in time.
 	private class EventGroup implements Comparable<EventGroup> {
-		// TODO can't have this, needs to be deterministic.
-		private Set<IEvent> eventList = new HashSet<IEvent>();
+		private List<IEvent> eventList = new ArrayList<IEvent>();
 
 		private double triggerTime;
 
@@ -133,7 +132,9 @@ public class Simulator {
 		}
 
 		public void addEvent(IEvent event) {
-			eventList.add(event);
+			if (!eventList.contains(event)) {
+				eventList.add(event);
+			}
 		}
 
 		public void trigger() {

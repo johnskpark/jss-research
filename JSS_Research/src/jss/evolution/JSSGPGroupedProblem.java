@@ -31,12 +31,16 @@ public class JSSGPGroupedProblem extends GPProblem implements GroupedProblemForm
 	public static final String P_SHOULD_SET_CONTEXT = "set-context";
 	private boolean shouldSetContext;
 
-	public static final String P_INSTANCES = "instances";
 	public static final String P_SOLVER = "solver";
+	public static final String P_INSTANCES = "instances";
+	public static final String P_FITNESS = "fitness";
 	public static final String P_SIZE = "size";
 
-	private IDataset dataset;
+	public static final String TRACKER_DATA = "tracker";
+
 	private JSSGPSolver solver;
+	private IDataset dataset;
+	private IFitness fitness;
 
 	private ProblemSize problemSize;
 	private boolean problemSizeSet = false;
@@ -53,8 +57,9 @@ public class JSSGPGroupedProblem extends GPProblem implements GroupedProblemForm
 		input.setup(state, base.push(P_DATA));
 
 		// Setup the dataset and the solver.
-		dataset = (IDataset) state.parameters.getInstanceForParameterEq(base.push(P_INSTANCES), null, IDataset.class);
 		solver = (JSSGPSolver) state.parameters.getInstanceForParameterEq(base.push(P_SOLVER), null, JSSGPSolver.class);
+		dataset = (IDataset) state.parameters.getInstanceForParameterEq(base.push(P_INSTANCES), null, IDataset.class);
+		fitness = (IFitness) state.parameters.getInstanceForParameter(base.push(P_FITNESS), null, IFitness.class);
 
 		// Set the problem size used for the training set.
 		String problemSizeStr = state.parameters.getString(base.push(P_SIZE), null);
@@ -129,7 +134,7 @@ public class JSSGPGroupedProblem extends GPProblem implements GroupedProblemForm
 				stats.addSolution(problem, solution);
 			}
 
-			((KozaFitness)ind.fitness).setStandardizedFitness(state, stats.getAverageMakespan());
+			((KozaFitness)ind.fitness).setStandardizedFitness(state, fitness.getFitness(stats));
 
 			ind.evaluated = true;
 		}
@@ -146,11 +151,15 @@ public class JSSGPGroupedProblem extends GPProblem implements GroupedProblemForm
 		checkInvariance(state, ind);
 
 		Statistics stats = new Statistics();
+		stats.addData(TRACKER_DATA, null); // TODO
 
 		GPIndividual[] gpInds = new GPIndividual[ind.length];
 		for (int i = 0; i < ind.length; i++) {
 			gpInds[i] = (GPIndividual)ind[i];
 		}
+
+		PriorityTracker tracker = new PriorityTracker();
+		tracker.loadIndividuals(ind);
 
 		JSSGPConfiguration config = new JSSGPConfiguration();
 		config.setState(state);
@@ -158,13 +167,7 @@ public class JSSGPGroupedProblem extends GPProblem implements GroupedProblemForm
 		config.setSubpopulations(subpops);
 		config.setThreadnum(threadnum);
 		config.setData((JSSGPData)input);
-
-		// TODO hack code. Fix later.
-//		PriorityTracker[] trackers = new PriorityTracker[gpInds.length];
-//		for (int i = 0; i < ind.length; i++) {
-//			trackers[i] = new PriorityTracker();
-//		}
-//		config.setTrackers(trackers);
+		config.setTracker(tracker);
 
 		solver.setGPConfiguration(config);
 
@@ -175,19 +178,13 @@ public class JSSGPGroupedProblem extends GPProblem implements GroupedProblemForm
 			IResult solution = solver.getSolution(problem);
 
 			stats.addSolution(problem, solution);
+			//(stats.getData(TRACKER_DATA)). TODO
 
-			// TODO temporary code.
-//			double[] p = calculatePenalties(trackers);
-//			for (int i = 0; i < ind.length; i++) {
-//				penalties[i] += p[i] / trainingSet.size();
-//				trackers[i].clear();
-//			}
+			tracker.clear();
 		}
 
-		// TODO make this generic.
-
 		for (int i = 0; i < ind.length; i++) {
-			double fitness = stats.getAverageMakespan();
+			double trial = fitness.getFitness(stats);
 
 			if (updateFitness[i]) {
 				GPIndividual gpInd = gpInds[i];
@@ -199,8 +196,8 @@ public class JSSGPGroupedProblem extends GPProblem implements GroupedProblemForm
 						gpInd.fitness.setContext(ind, i);
 					}
 
-					gpInd.fitness.trials.add(new Double(fitness));
-				} else if ((Double)gpInd.fitness.trials.get(0) < fitness) {
+					gpInd.fitness.trials.add(new Double(trial));
+				} else if ((Double)gpInd.fitness.trials.get(0) < trial) {
 					if (shouldSetContext) {
 						gpInd.fitness.setContext(ind, i);
 					}
@@ -210,7 +207,7 @@ public class JSSGPGroupedProblem extends GPProblem implements GroupedProblemForm
 					gpInd.fitness.trials.add(t);
 				}
 
-				((KozaFitness)gpInd.fitness).setStandardizedFitness(state, fitness);
+				((KozaFitness)gpInd.fitness).setStandardizedFitness(state, trial);
 			}
 		}
 	}
@@ -260,38 +257,38 @@ public class JSSGPGroupedProblem extends GPProblem implements GroupedProblemForm
 	}
 
 	// TODO temp code.
-	private double[] calculatePenalties(PriorityTracker[] trackers) {
-		double[] penalties = new double[trackers.length];
-
-		for (int i = 0; i < penalties.length; i++) {
-			List<Double> thisPriorities = trackers[i].getPriorities();
-
-			double[] thisSigmoids = new double[thisPriorities.size()];
-			for (int j = 0; j < thisPriorities.size(); j++) {
-				thisSigmoids[j] = 1.0 / (1.0 + Math.exp(-thisPriorities.get(j)));
-			}
-
-			for (int j = 0; j < penalties.length; j++) {
-				if (i == j) {
-					continue;
-				}
-
-				List<Double> otherPriorities = trackers[j].getPriorities();
-
-				double[] otherSigmoids = new double[otherPriorities.size()];
-				for (int k = 0; k < otherPriorities.size(); k++) {
-					otherSigmoids[k] = 1.0 / (1.0 + Math.exp(-otherPriorities.get(k)));
-
-					penalties[i] += (thisSigmoids[k] - otherSigmoids[k]) *
-							(thisSigmoids[k] - otherSigmoids[k]);
-				}
-			}
-
-			penalties[i] = 1 - penalties[i] / (thisPriorities.size() *
-					(penalties.length - 1));
-		}
-
-		return penalties;
-	}
+//	private double[] calculatePenalties(PriorityTracker[] trackers) {
+//		double[] penalties = new double[trackers.length];
+//
+//		for (int i = 0; i < penalties.length; i++) {
+//			List<Double> thisPriorities = trackers[i].getPriorities();
+//
+//			double[] thisSigmoids = new double[thisPriorities.size()];
+//			for (int j = 0; j < thisPriorities.size(); j++) {
+//				thisSigmoids[j] = 1.0 / (1.0 + Math.exp(-thisPriorities.get(j)));
+//			}
+//
+//			for (int j = 0; j < penalties.length; j++) {
+//				if (i == j) {
+//					continue;
+//				}
+//
+//				List<Double> otherPriorities = trackers[j].getPriorities();
+//
+//				double[] otherSigmoids = new double[otherPriorities.size()];
+//				for (int k = 0; k < otherPriorities.size(); k++) {
+//					otherSigmoids[k] = 1.0 / (1.0 + Math.exp(-otherPriorities.get(k)));
+//
+//					penalties[i] += (thisSigmoids[k] - otherSigmoids[k]) *
+//							(thisSigmoids[k] - otherSigmoids[k]);
+//				}
+//			}
+//
+//			penalties[i] = 1 - penalties[i] / (thisPriorities.size() *
+//					(penalties.length - 1));
+//		}
+//
+//		return penalties;
+//	}
 
 }

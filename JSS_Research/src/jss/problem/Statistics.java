@@ -17,6 +17,8 @@ public class Statistics {
 
 	private Map<IProblemInstance, IResult> problems = new HashMap<IProblemInstance, IResult>();
 
+	private Map<String, Object> additionalData = new HashMap<String, Object>();
+
 	private double totalMakespan = 0;
 	private double totalTWT = 0;
 
@@ -48,6 +50,21 @@ public class Statistics {
 			totalDeviation += (solution.getMakespan() - staticProblem.getLowerBound()) /
 					staticProblem.getLowerBound();
 		}
+	}
+
+	/**
+	 * TODO javadoc.
+	 * @param key
+	 * @param data
+	 */
+	public void addData(String key, Object data) {
+		// TODO this needs to be modified
+		additionalData.put(key, data);
+	}
+
+	public Object getData(String key) {
+		// TODO this needs to be modified
+		return additionalData.get(key);
 	}
 
 	/**

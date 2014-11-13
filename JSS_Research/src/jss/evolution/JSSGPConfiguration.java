@@ -18,7 +18,7 @@ public class JSSGPConfiguration {
 
 	private JSSGPData data;
 
-	private ITracker[] trackers;
+	private ITracker tracker;
 
 	/**
 	 * TODO javadoc.
@@ -62,8 +62,8 @@ public class JSSGPConfiguration {
 	 * TODO javadoc.
 	 * @param tracker
 	 */
-	public void setTrackers(ITracker[] trackers) {
-		this.trackers = trackers;
+	public void setTracker(ITracker tracker) {
+		this.tracker = tracker;
 	}
 
 	/**
@@ -118,7 +118,7 @@ public class JSSGPConfiguration {
 	 * TODO javadoc.
 	 * @return
 	 */
-	public ITracker[] getTrackers() {
-		return trackers;
+	public ITracker getTracker() {
+		return tracker;
 	}
 }

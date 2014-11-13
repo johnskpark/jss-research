@@ -1,6 +1,5 @@
 package jss.evolution.solvers;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import jss.Action;
@@ -20,7 +19,7 @@ import ec.gp.GPIndividual;
  */
 public class CoopEnsembleDR extends JSSGPRule {
 
-	private PriorityTracker[] trackers;
+	private PriorityTracker tracker;
 
 	/**
 	 * TODO javadoc.
@@ -33,21 +32,19 @@ public class CoopEnsembleDR extends JSSGPRule {
 			GPIndividual[] inds,
 			int threadnum,
 			JSSGPData data,
-			ITracker[] trackers) {
+			ITracker tracker) {
 		super(state, inds, threadnum, data);
 
-		this.trackers = new PriorityTracker[trackers.length];
-		for (int i = 0; i < trackers.length; i++) {
-			this.trackers[i] = (PriorityTracker)trackers[i];
-		}
+		this.tracker = (PriorityTracker)tracker;
 	}
 
 	@Override
 	public Action getAction(IMachine machine, IProblemInstance problem, double time) {
-		List<IJob> processableJobs = getProcessableJobs(machine, problem.getJobs());
 		if (machine.getWaitingJobs().isEmpty()) {
 			return null;
 		}
+
+		List<IJob> processableJobs = machine.getWaitingJobs();
 
 		int[] voteCounts = new int[processableJobs.size()];
 		double[] prioritySums = new double[processableJobs.size()];
@@ -58,7 +55,7 @@ public class CoopEnsembleDR extends JSSGPRule {
 		for (int i = 0; i < getIndividuals().length; i++) {
 			GPIndividual gpInd = getIndividuals()[i];
 
-			PriorityIndexPair bestPair = getBestIndex(gpInd, processableJobs, machine, problem, trackers[i]);
+			PriorityIndexPair bestPair = getBestIndex(gpInd, processableJobs, machine, problem, tracker);
 			if (bestPair.index == -1) {
 				return null;
 			}
@@ -78,17 +75,6 @@ public class CoopEnsembleDR extends JSSGPRule {
 		// Simply process the job as early as possible.
 		double t = Math.max(machine.getReadyTime(), mostVotedJob.getReadyTime(machine));
 		return new Action(machine, mostVotedJob, t);
-	}
-
-	// Get the list of jobs that are waiting to be processed on the input machine.
-	private List<IJob> getProcessableJobs(IMachine machine, List<IJob> jobs) {
-		List<IJob> processableJobs = new ArrayList<IJob>();
-		for (IJob job : jobs) {
-			if (machine.equals(job.getNextMachine())) {
-				processableJobs.add(job);
-			}
-		}
-		return processableJobs;
 	}
 
 	// Get the index of the job with the highest priority.
@@ -120,7 +106,7 @@ public class CoopEnsembleDR extends JSSGPRule {
 			normalisedPriorities[j] = 1.0 / (1.0 + Math.exp(-getData().getPriority()));
 
 			// Add the priority to the trackers
-			tracker.getPriorities().add(getData().getPriority());
+			tracker.addPriority(gpInd, getData().getPriority());
 
 			// Update the best priority.
 			if (getData().getPriority() > bestPriority) {
