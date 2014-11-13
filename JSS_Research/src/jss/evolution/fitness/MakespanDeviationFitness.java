@@ -2,6 +2,7 @@ package jss.evolution.fitness;
 
 import jss.evolution.IFitness;
 import jss.problem.Statistics;
+import ec.Individual;
 
 /**
  * TODO javadoc.
@@ -17,7 +18,7 @@ public class MakespanDeviationFitness implements IFitness {
 	}
 
 	@Override
-	public double getFitness(Statistics stats) {
+	public double getFitness(Statistics stats, Individual ind) {
 		return stats.getAverageMakespanDeviation();
 	}
 }

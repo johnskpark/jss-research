@@ -84,7 +84,7 @@ public class JSSGPSimpleProblem extends GPProblem {
 				stats.addSolution(problem, solution);
 			}
 
-			((KozaFitness)ind.fitness).setStandardizedFitness(state, fitness.getFitness(stats));
+			((KozaFitness)ind.fitness).setStandardizedFitness(state, fitness.getFitness(stats, ind));
 
 			ind.evaluated = true;
 		}

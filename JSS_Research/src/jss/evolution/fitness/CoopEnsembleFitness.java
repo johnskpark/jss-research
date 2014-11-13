@@ -2,8 +2,9 @@ package jss.evolution.fitness;
 
 import jss.evolution.IFitness;
 import jss.evolution.JSSGPGroupedProblem;
-import jss.evolution.solvers.PriorityTracker;
+import jss.evolution.statistic_data.PenaltyData;
 import jss.problem.Statistics;
+import ec.Individual;
 
 /**
  * TODO javadoc.
@@ -19,11 +20,10 @@ public class CoopEnsembleFitness implements IFitness {
 	}
 
 	@Override
-	public double getFitness(Statistics stats) {
-		PriorityTracker tracker = (PriorityTracker) stats.getData(JSSGPGroupedProblem.TRACKER_DATA);
+	public double getFitness(Statistics stats, Individual ind) {
+		PenaltyData penaltyData = (PenaltyData) stats.getData(JSSGPGroupedProblem.TRACKER_DATA);
 
-
-		return stats.getAverageMakespanDeviation();
+		return stats.getAverageMakespanDeviation() * penaltyData.getAveragePenalty(ind);
 	}
 
 }

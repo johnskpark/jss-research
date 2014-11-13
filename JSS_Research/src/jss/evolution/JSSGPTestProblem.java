@@ -130,7 +130,7 @@ public class JSSGPTestProblem extends GPProblem {
 			}
 
 			for (Individual groupedInd : indGroup) {
-				((KozaFitness)groupedInd.fitness).setStandardizedFitness(state, fitness.getFitness(stats));
+				((KozaFitness)groupedInd.fitness).setStandardizedFitness(state, fitness.getFitness(stats, ind));
 				groupedInd.evaluated = true;
 			}
 		}

@@ -15,7 +15,8 @@ import ec.Individual;
  */
 public class PriorityTracker implements ITracker {
 
-	private Map<Individual, List<Double>> indMap = new HashMap<Individual, List<Double>>();
+	private Map<Individual, Integer> indIndexMap = new HashMap<Individual, Integer>();
+	private List<IndividualPrioritiesPair> indList = new ArrayList<IndividualPrioritiesPair>();
 
 	/**
 	 * TODO javadoc.
@@ -27,9 +28,14 @@ public class PriorityTracker implements ITracker {
 	 * TODO javadoc.
 	 * @param inds
 	 */
-	public void loadIndividuals(Individual[] inds) {
-		for (Individual ind : inds) {
-			indMap.put(ind, new ArrayList<Double>());
+	public void loadIndividuals(final Individual[] inds) {
+		for (int i = 0; i < inds.length; i++) {
+			indIndexMap.put(inds[i], i);
+
+			IndividualPrioritiesPair pair = new IndividualPrioritiesPair();
+			pair.ind = inds[i];
+			pair.priorities = new ArrayList<Double>();
+			indList.add(i, pair);
 		}
 	}
 
@@ -37,7 +43,7 @@ public class PriorityTracker implements ITracker {
 	 * TODO javadoc.
 	 */
 	public void addPriority(Individual ind, double priority) {
-		indMap.get(ind).add(priority);
+		indList.get(indIndexMap.get(ind)).priorities.add(priority);
 	}
 
 	/**
@@ -45,17 +51,63 @@ public class PriorityTracker implements ITracker {
 	 * @return
 	 */
 	public Map<Individual, Double> getPenalties() {
-		// TODO
-		return null;
+		Map<Individual, Double> penalties = new HashMap<Individual, Double>();
+
+		double[][] normalisedPriorities = normalisePriorities();
+
+		for (int i = 0; i < indList.size(); i++) {
+			penalties.put(indList.get(i).ind, calculatePenalty(normalisedPriorities, i));
+		}
+
+		return penalties;
+	}
+
+	// Normalise the priorities.
+	private double[][] normalisePriorities() {
+		double[][] normalisedPriorities = new double[indList.size()][];
+
+		for (int i = 0; i < indList.size(); i++) {
+			List<Double> priorities = indList.get(i).priorities;
+
+			normalisedPriorities[i] = new double[priorities.size()];
+			for (int j = 0; j < priorities.size(); j++) {
+				normalisedPriorities[i][j] = 1.0 / (1.0 + Math.exp(-priorities.get(j)));
+			}
+		}
+
+		return normalisedPriorities;
+	}
+
+	// Calculate the penalty for the particular index.
+	private double calculatePenalty(double[][] priorities, int index) {
+		double penalty = 0.0;
+
+		for (int i = 0; i < indList.size(); i++) {
+			if (index == i) {
+				continue;
+			}
+
+			for (int j = 0; j < priorities[index].length; j++) {
+				penalty += (priorities[index][j] - priorities[i][j]) *
+						(priorities[index][j] - priorities[i][j]);
+			}
+		}
+
+		return (1 - penalty) / (priorities[index].length * (indList.size() - 1));
 	}
 
 	/**
 	 * TODO javadoc.
 	 */
 	public void clear() {
-		for (Individual ind : indMap.keySet()) {
-			indMap.get(ind).clear();
+		for (IndividualPrioritiesPair pair : indList) {
+			pair.priorities.clear();
 		}
+	}
+
+	private class IndividualPrioritiesPair {
+		Individual ind;
+		List<Double> priorities;
 	}
 
 }

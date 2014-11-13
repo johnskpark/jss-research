@@ -8,6 +8,7 @@ import jss.IProblemInstance;
 import jss.IResult;
 import jss.ProblemSize;
 import jss.evolution.solvers.PriorityTracker;
+import jss.evolution.statistic_data.PenaltyData;
 import jss.problem.Statistics;
 import ec.EvolutionState;
 import ec.Individual;
@@ -134,7 +135,7 @@ public class JSSGPGroupedProblem extends GPProblem implements GroupedProblemForm
 				stats.addSolution(problem, solution);
 			}
 
-			((KozaFitness)ind.fitness).setStandardizedFitness(state, fitness.getFitness(stats));
+			((KozaFitness)ind.fitness).setStandardizedFitness(state, fitness.getFitness(stats, ind));
 
 			ind.evaluated = true;
 		}
@@ -151,7 +152,7 @@ public class JSSGPGroupedProblem extends GPProblem implements GroupedProblemForm
 		checkInvariance(state, ind);
 
 		Statistics stats = new Statistics();
-		stats.addData(TRACKER_DATA, null); // TODO
+		stats.addData(TRACKER_DATA, new PenaltyData());
 
 		GPIndividual[] gpInds = new GPIndividual[ind.length];
 		for (int i = 0; i < ind.length; i++) {
@@ -178,13 +179,13 @@ public class JSSGPGroupedProblem extends GPProblem implements GroupedProblemForm
 			IResult solution = solver.getSolution(problem);
 
 			stats.addSolution(problem, solution);
-			//(stats.getData(TRACKER_DATA)). TODO
+			((PenaltyData) stats.getData(TRACKER_DATA)).addPenalties(tracker.getPenalties());
 
 			tracker.clear();
 		}
 
 		for (int i = 0; i < ind.length; i++) {
-			double trial = fitness.getFitness(stats);
+			double trial = fitness.getFitness(stats, gpInds[i]);
 
 			if (updateFitness[i]) {
 				GPIndividual gpInd = gpInds[i];
