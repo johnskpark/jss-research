@@ -23,7 +23,7 @@ public class CoopEnsembleFitness implements IFitness {
 	public double getFitness(Statistics stats, Individual ind) {
 		PenaltyData penaltyData = (PenaltyData) stats.getData(JSSGPGroupedProblem.TRACKER_DATA);
 
-		return stats.getAverageMakespanDeviation() * penaltyData.getAveragePenalty(ind);
+		return stats.getAverageMakespanDeviation() * (1 + penaltyData.getAveragePenalty(ind));
 	}
 
 }

@@ -35,7 +35,7 @@ public class CoopEnsembleDR extends JSSGPRule {
 			ITracker tracker) {
 		super(state, inds, threadnum, data);
 
-		this.tracker = (PriorityTracker)tracker;
+		this.tracker = (PriorityTracker) tracker;
 	}
 
 	@Override
@@ -53,9 +53,7 @@ public class CoopEnsembleDR extends JSSGPRule {
 		int mostVotedIndex = -1;
 
 		for (int i = 0; i < getIndividuals().length; i++) {
-			GPIndividual gpInd = getIndividuals()[i];
-
-			PriorityIndexPair bestPair = getBestIndex(gpInd, processableJobs, machine, problem, tracker);
+			PriorityIndexPair bestPair = getBestIndex(i, processableJobs, machine, problem, tracker);
 			if (bestPair.index == -1) {
 				return null;
 			}
@@ -78,11 +76,13 @@ public class CoopEnsembleDR extends JSSGPRule {
 	}
 
 	// Get the index of the job with the highest priority.
-	private PriorityIndexPair getBestIndex(GPIndividual gpInd,
+	private PriorityIndexPair getBestIndex(int index,
 			List<IJob> processableJobs,
 			IMachine machine,
 			IProblemInstance problem,
 			PriorityTracker tracker) {
+		GPIndividual gpInd = getIndividuals()[index];
+
 		double bestPriority = Double.NEGATIVE_INFINITY;
 		int bestIndex = -1;
 
@@ -106,7 +106,7 @@ public class CoopEnsembleDR extends JSSGPRule {
 			normalisedPriorities[j] = 1.0 / (1.0 + Math.exp(-getData().getPriority()));
 
 			// Add the priority to the trackers
-			tracker.addPriority(gpInd, getData().getPriority());
+			tracker.addPriority(index, getData().getPriority());
 
 			// Update the best priority.
 			if (getData().getPriority() > bestPriority) {

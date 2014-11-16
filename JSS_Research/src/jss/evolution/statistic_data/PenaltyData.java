@@ -40,7 +40,8 @@ public class PenaltyData {
 			indPenalties.add(kvp.getValue());
 
 			// Increment the total penalty at the front of the list.
-			indPenalties.set(0, indPenalties.get(0) + kvp.getValue());
+			double sumPenalties = indPenalties.get(0) + kvp.getValue();
+			indPenalties.set(0, sumPenalties);
 		}
 	}
 
@@ -51,7 +52,7 @@ public class PenaltyData {
 	 */
 	public double getAveragePenalty(Individual ind) {
 		List<Double> indPenalties = accumulatedPenalties.get(ind);
-		return indPenalties.get(0) / indPenalties.size() - 1;
+		return indPenalties.get(0) / (indPenalties.size() - 1);
 	}
 
 }

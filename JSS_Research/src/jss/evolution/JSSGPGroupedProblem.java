@@ -110,8 +110,10 @@ public class JSSGPGroupedProblem extends GPProblem implements GroupedProblemForm
 	}
 
 	@Override
-	public void evaluate(EvolutionState state, Individual ind,
-			int subpopulation, int threadnum) {
+	public void evaluate(final EvolutionState state,
+			final Individual ind,
+			final int subpopulation,
+			final int threadnum) {
 		if (!ind.evaluated) {
 			// Check to make sure that the individual is a GPIndividual and uses KozaFitness.
 			checkInvariance(state, ind);
@@ -144,30 +146,30 @@ public class JSSGPGroupedProblem extends GPProblem implements GroupedProblemForm
 	@SuppressWarnings("unchecked")
 	@Override
 	public void evaluate(final EvolutionState state,
-			final Individual[] ind,
+			final Individual[] inds,
 			final boolean[] updateFitness,
 			final boolean countVictoriesOnly,
 			final int[] subpops,
 			final int threadnum) {
-		checkInvariance(state, ind);
+		checkInvariance(state, inds);
 
 		Statistics stats = new Statistics();
 		stats.addData(TRACKER_DATA, new PenaltyData());
 
-		GPIndividual[] gpInds = new GPIndividual[ind.length];
-		for (int i = 0; i < ind.length; i++) {
-			gpInds[i] = (GPIndividual)ind[i];
+		GPIndividual[] gpInds = new GPIndividual[inds.length];
+		for (int i = 0; i < inds.length; i++) {
+			gpInds[i] = (GPIndividual) inds[i];
 		}
 
 		PriorityTracker tracker = new PriorityTracker();
-		tracker.loadIndividuals(ind);
+		tracker.loadIndividuals(inds);
 
 		JSSGPConfiguration config = new JSSGPConfiguration();
 		config.setState(state);
 		config.setIndividuals(gpInds);
 		config.setSubpopulations(subpops);
 		config.setThreadnum(threadnum);
-		config.setData((JSSGPData)input);
+		config.setData((JSSGPData) input);
 		config.setTracker(tracker);
 
 		solver.setGPConfiguration(config);
@@ -184,7 +186,7 @@ public class JSSGPGroupedProblem extends GPProblem implements GroupedProblemForm
 			tracker.clear();
 		}
 
-		for (int i = 0; i < ind.length; i++) {
+		for (int i = 0; i < inds.length; i++) {
 			double trial = fitness.getFitness(stats, gpInds[i]);
 
 			if (updateFitness[i]) {
@@ -194,13 +196,13 @@ public class JSSGPGroupedProblem extends GPProblem implements GroupedProblemForm
 
 				if (len == 0) {
 					if (shouldSetContext) {
-						gpInd.fitness.setContext(ind, i);
+						gpInd.fitness.setContext(inds, i);
 					}
 
 					gpInd.fitness.trials.add(new Double(trial));
-				} else if ((Double)gpInd.fitness.trials.get(0) < trial) {
+				} else if ((Double) gpInd.fitness.trials.get(0) < trial) {
 					if (shouldSetContext) {
-						gpInd.fitness.setContext(ind, i);
+						gpInd.fitness.setContext(inds, i);
 					}
 
 					Object t = gpInd.fitness.trials.get(0);
@@ -250,7 +252,7 @@ public class JSSGPGroupedProblem extends GPProblem implements GroupedProblemForm
 	public Object clone() {
 		JSSGPGroupedProblem newObject = (JSSGPGroupedProblem)super.clone();
 
-		newObject.input = (JSSGPData)input.clone();
+		newObject.input = (JSSGPData) input.clone();
 		newObject.dataset = dataset;
 		newObject.solver = solver;
 

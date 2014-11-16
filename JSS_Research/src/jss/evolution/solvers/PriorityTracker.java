@@ -15,7 +15,6 @@ import ec.Individual;
  */
 public class PriorityTracker implements ITracker {
 
-	private Map<Individual, Integer> indIndexMap = new HashMap<Individual, Integer>();
 	private List<IndividualPrioritiesPair> indList = new ArrayList<IndividualPrioritiesPair>();
 
 	/**
@@ -28,10 +27,8 @@ public class PriorityTracker implements ITracker {
 	 * TODO javadoc.
 	 * @param inds
 	 */
-	public void loadIndividuals(final Individual[] inds) {
+	public void loadIndividuals(Individual[] inds) {
 		for (int i = 0; i < inds.length; i++) {
-			indIndexMap.put(inds[i], i);
-
 			IndividualPrioritiesPair pair = new IndividualPrioritiesPair();
 			pair.ind = inds[i];
 			pair.priorities = new ArrayList<Double>();
@@ -42,8 +39,8 @@ public class PriorityTracker implements ITracker {
 	/**
 	 * TODO javadoc.
 	 */
-	public void addPriority(Individual ind, double priority) {
-		indList.get(indIndexMap.get(ind)).priorities.add(priority);
+	public void addPriority(int index, double priority) {
+		indList.get(index).priorities.add(priority);
 	}
 
 	/**
@@ -93,7 +90,8 @@ public class PriorityTracker implements ITracker {
 			}
 		}
 
-		return (1 - penalty) / (priorities[index].length * (indList.size() - 1));
+		penalty = 1 - penalty / (priorities[index].length * (indList.size() - 1));
+		return penalty;
 	}
 
 	/**
