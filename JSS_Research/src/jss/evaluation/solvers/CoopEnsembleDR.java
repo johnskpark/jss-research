@@ -1,6 +1,5 @@
 package jss.evaluation.solvers;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import jss.Action;
@@ -33,10 +32,11 @@ public class CoopEnsembleDR implements IActionHandler {
 
 	@Override
 	public Action getAction(IMachine machine, IProblemInstance problem, double time) {
-		List<IJob> processableJobs = getProcessableJobs(machine, problem.getJobs());
 		if (machine.getWaitingJobs().isEmpty()) {
 			return null;
 		}
+
+		List<IJob> processableJobs = machine.getWaitingJobs();
 
 		int[] voteCounts = new int[processableJobs.size()];
 		double[] prioritySums = new double[processableJobs.size()];
@@ -67,17 +67,6 @@ public class CoopEnsembleDR implements IActionHandler {
 		// Simply process the job as early as possible.
 		double t = Math.max(machine.getReadyTime(), mostVotedJob.getReadyTime(machine));
 		return new Action(machine, mostVotedJob, t);
-	}
-
-	// Get the list of jobs that are waiting to be processed on the input machine.
-	private List<IJob> getProcessableJobs(IMachine machine, List<IJob> jobs) {
-		List<IJob> processableJobs = new ArrayList<IJob>();
-		for (IJob job : jobs) {
-			if (machine.equals(job.getNextMachine())) {
-				processableJobs.add(job);
-			}
-		}
-		return processableJobs;
 	}
 
 	// Get the index of the job with the highest priority.

@@ -4,7 +4,7 @@
 		<solverClass>jss.evaluation.solvers.PriorityBasedSolver</solverClass>
 		<solverFile>
 			<ruleNum>1</ruleNum>
-			<ruleFile>all_rules_small.txt</ruleFile>
+			<ruleFile>su_rules_small.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
@@ -12,7 +12,7 @@
 		<solverClass>jss.evaluation.solvers.PriorityBasedSolver</solverClass>
 		<solverFile>
 			<ruleNum>1</ruleNum>
-			<ruleFile>all_rules_medium.txt</ruleFile>
+			<ruleFile>su_rules_medium.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
@@ -20,7 +20,7 @@
 		<solverClass>jss.evaluation.solvers.PriorityBasedSolver</solverClass>
 		<solverFile>
 			<ruleNum>1</ruleNum>
-			<ruleFile>all_rules_large.txt</ruleFile>
+			<ruleFile>su_rules_large.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
