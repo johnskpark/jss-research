@@ -21,7 +21,7 @@ public interface IJob {
 	 * Get the release time of the job.
 	 * @return The time that the job is first released into the problem.
 	 */
-	public double getReadyTime(IMachine machine);
+	public double getReadyTime();
 
 	/**
 	 * Get the processing time of the job for the particular machine.
@@ -42,21 +42,16 @@ public interface IJob {
 	public double getSetupTime(IMachine machine);
 
 	/**
-	 * Get the due date of the job for the particular machine.
-	 * @param machine The machine that will be processing the job.
-	 * @return The due date of the job on the machine. If the job cannot be
-	 *         processed at the particular machine, then
-	 *         Double.POSITIVE_INFINITY will be returned.
+	 * Get the due date of the job.
+	 * @return The due date of the job.
 	 */
-	public double getDueDate(IMachine machine);
+	public double getDueDate();
 
 	/**
 	 * Get the penalty factor for tardy jobs.
-	 * @param machine The machine that will be processing the job.
-	 * @return The penalty of the job on the machine. If the job cannot be
-	 *         processed at the particular machine, then 0 will be returned.
+	 * @return The penalty of the job.
 	 */
-	public double getPenalty(IMachine machine);
+	public double getPenalty();
 
 	/**
 	 * Get the total processing time of the remaining operations for the job.

@@ -41,10 +41,9 @@ public class ScoreDueDate extends GPNode {
 			final Problem problem) {
 		JSSGPData data = (JSSGPData)input;
 
-		IMachine machine = data.getMachine();
 		IJob job = data.getJob();
 
-		data.setPriority(job.getDueDate(machine));
+		data.setPriority(job.getDueDate());
 	}
 
 }

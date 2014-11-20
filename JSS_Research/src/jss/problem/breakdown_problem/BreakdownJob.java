@@ -96,7 +96,7 @@ public class BreakdownJob implements IJob, IEventHandler {
 	}
 
 	@Override
-	public double getReadyTime(IMachine machine) {
+	public double getReadyTime() {
 		return releaseTime;
 	}
 
@@ -117,21 +117,17 @@ public class BreakdownJob implements IJob, IEventHandler {
 	}
 
 	@Override
-	public double getDueDate(IMachine machine) {
-		if (dueDates.containsKey(machine)) {
-			return dueDates.get(machine);
-		}
+	public double getDueDate() {
+		// TODO
 		return 0;
 	}
 
 	@Override
-	public double getPenalty(IMachine machine) {
-		if (penalties.containsKey(machine)) {
-			return penalties.get(machine);
-		}
+	public double getPenalty() {
+		// TODO
 		return 1;
 	}
-	
+
 	@Override
 	public double getRemainingTime() {
 		double remainingTime = 0.0;
@@ -140,7 +136,7 @@ public class BreakdownJob implements IJob, IEventHandler {
 		}
 		return remainingTime;
 	}
-	
+
 	@Override
 	public int getRemainingOperation() {
 		return machineQueue.size();

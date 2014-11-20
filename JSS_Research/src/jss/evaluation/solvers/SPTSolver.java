@@ -48,7 +48,7 @@ public class SPTSolver extends JSSEvalSolver {
 				}
 
 				double completion = Math.max(machine.getReadyTime(),
-						job.getReadyTime(machine)) +
+						job.getReadyTime()) +
 						job.getSetupTime(machine) +
 						job.getProcessingTime(machine);
 
@@ -73,7 +73,7 @@ public class SPTSolver extends JSSEvalSolver {
 
 			if (bestJob != null) {
 				// Simply process the job as early as possible.
-				double t = Math.max(machine.getReadyTime(), bestJob.getReadyTime(machine));
+				double t = Math.max(machine.getReadyTime(), bestJob.getReadyTime());
 				return new Action(machine, bestJob, t);
 			} else {
 				return null;

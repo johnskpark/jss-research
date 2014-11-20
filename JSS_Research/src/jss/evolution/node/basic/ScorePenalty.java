@@ -41,10 +41,9 @@ public class ScorePenalty extends GPNode {
 			final Problem problem) {
 		JSSGPData data = (JSSGPData)input;
 
-		IMachine machine = data.getMachine();
 		IJob job = data.getJob();
 
-		data.setPriority(job.getPenalty(machine));
+		data.setPriority(job.getPenalty());
 	}
 
 }

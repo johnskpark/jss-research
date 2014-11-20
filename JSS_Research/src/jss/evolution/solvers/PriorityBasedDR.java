@@ -59,7 +59,7 @@ public class PriorityBasedDR extends JSSGPRule {
 
 		if (bestJob != null) {
 			// Simply process the job as early as possible.
-			double t = Math.max(machine.getReadyTime(), bestJob.getReadyTime(machine));
+			double t = Math.max(machine.getReadyTime(), bestJob.getReadyTime());
 			return new Action(machine, bestJob, t);
 		} else {
 			return null;

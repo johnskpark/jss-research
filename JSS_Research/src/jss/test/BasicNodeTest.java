@@ -132,7 +132,7 @@ public class BasicNodeTest {
 		data.setMachine(mockMachine);
 
 		context.checking(new Expectations() {{
-			oneOf(mockJob).getDueDate(mockMachine); will(returnValue(5.0));
+			oneOf(mockJob).getDueDate(); will(returnValue(5.0));
 		}});
 
 		ScoreDueDate node = new ScoreDueDate();
@@ -151,7 +151,7 @@ public class BasicNodeTest {
 		data.setMachine(mockMachine);
 
 		context.checking(new Expectations() {{
-			oneOf(mockJob).getReadyTime(mockMachine); will(returnValue(5.0));
+			oneOf(mockJob).getReadyTime(); will(returnValue(5.0));
 		}});
 
 		ScoreJobReadyTime node = new ScoreJobReadyTime();
@@ -189,7 +189,7 @@ public class BasicNodeTest {
 		data.setMachine(mockMachine);
 
 		context.checking(new Expectations() {{
-			oneOf(mockJob).getPenalty(mockMachine); will(returnValue(5.0));
+			oneOf(mockJob).getPenalty(); will(returnValue(5.0));
 		}});
 
 		ScorePenalty node = new ScorePenalty();

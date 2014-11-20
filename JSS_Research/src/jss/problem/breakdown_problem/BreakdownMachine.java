@@ -62,7 +62,7 @@ public class BreakdownMachine implements IMachine, IEventHandler {
 		job.startedProcessingOnMachine(this);
 
 		currentJob = job;
-		availableTime = Math.max(time, job.getReadyTime(this)) +
+		availableTime = Math.max(time, job.getReadyTime()) +
 				job.getSetupTime(this) +
 				job.getProcessingTime(this);
 

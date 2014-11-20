@@ -65,7 +65,7 @@ public class CoopEnsembleDR implements IActionHandler {
 		IJob mostVotedJob = processableJobs.get(mostVotedIndex);
 
 		// Simply process the job as early as possible.
-		double t = Math.max(machine.getReadyTime(), mostVotedJob.getReadyTime(machine));
+		double t = Math.max(machine.getReadyTime(), mostVotedJob.getReadyTime());
 		return new Action(machine, mostVotedJob, t);
 	}
 

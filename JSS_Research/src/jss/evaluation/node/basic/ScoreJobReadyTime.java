@@ -1,7 +1,6 @@
 package jss.evaluation.node.basic;
 
 import jss.IJob;
-import jss.IMachine;
 import jss.evaluation.JSSEvalData;
 import jss.evaluation.node.INode;
 import jss.evaluation.node.NodeAnnotation;
@@ -30,9 +29,8 @@ public class ScoreJobReadyTime implements INode {
 
 	@Override
 	public double evaluate(JSSEvalData data) {
-		IMachine machine = data.getMachine();
 		IJob job = data.getJob();
-		return job.getReadyTime(machine);
+		return job.getReadyTime();
 	}
 
 }

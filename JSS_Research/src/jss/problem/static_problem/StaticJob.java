@@ -28,8 +28,9 @@ public class StaticJob implements IJob, IEventHandler {
 
 	private Map<IMachine, Double> processingTimes = new HashMap<IMachine, Double>();
 	private Map<IMachine, Double> setupTimes = new HashMap<IMachine, Double>();
-	private Map<IMachine, Double> dueDates = new HashMap<IMachine, Double>();
-	private Map<IMachine, Double> penalties = new HashMap<IMachine, Double>();
+
+	private double dueDates = 0;
+	private double penalties = 0;
 	private double releaseTime = 0;
 
 	// Mutable component that is actively modified during the simulation.
@@ -76,22 +77,18 @@ public class StaticJob implements IJob, IEventHandler {
 
 	/**
 	 * Set the due date for the specified machine.
-	 * @param machine
 	 * @param dueDate
 	 */
-	public void setDueDate(IMachine machine, double dueDate) {
-		checkMachine(machine);
-		dueDates.put(machine, dueDate);
+	public void setDueDate(double dueDate) {
+		dueDates = dueDate;
 	}
 
 	/**
 	 * Set the weight/penalty for the specified machine.
-	 * @param machine
 	 * @param penalty
 	 */
-	public void setPenalty(IMachine machine, double penalty) {
-		checkMachine(machine);
-		penalties.put(machine, penalty);
+	public void setPenalty(double penalty) {
+		penalties = penalty;
 	}
 
 	/**
@@ -110,7 +107,7 @@ public class StaticJob implements IJob, IEventHandler {
 	}
 
 	@Override
-	public double getReadyTime(IMachine machine) {
+	public double getReadyTime() {
 		return releaseTime;
 	}
 
@@ -131,19 +128,13 @@ public class StaticJob implements IJob, IEventHandler {
 	}
 
 	@Override
-	public double getDueDate(IMachine machine) {
-		if (dueDates.containsKey(machine)) {
-			return dueDates.get(machine);
-		}
-		return 0;
+	public double getDueDate() {
+		return dueDates;
 	}
 
 	@Override
-	public double getPenalty(IMachine machine) {
-		if (penalties.containsKey(machine)) {
-			return penalties.get(machine);
-		}
-		return 1;
+	public double getPenalty() {
+		return penalties;
 	}
 
 	@Override

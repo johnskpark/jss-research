@@ -4,8 +4,10 @@ import java.util.List;
 import java.util.Random;
 
 import jss.IDataset;
+import jss.IJob;
 import jss.IProblemInstance;
 import jss.ProblemSize;
+import jss.problem.dynamic_problem.IDoubleValueGenerator;
 
 /**
  * TODO javadoc.
@@ -17,6 +19,11 @@ public class TenDynamicJSSDataset implements IDataset {
 
 	private long seed;
 	private Random rand;
+
+	private double[] meanProcessingTime = new double[]{25, 25, 25, 50, 25, 50};
+	private double[] utilisation = new double[]{0.85, 0.95, 0.90, 0.90, 0.97, 0.97};
+	private double[][] dueDateTightness = new double[][]{{3, 5, 7}, {3, 5, 7}, {2, 4, 6},
+			{2, 4, 6}, {2, 4, 6}, {2, 4, 6}};
 
 	/**
 	 * TODO javadoc.

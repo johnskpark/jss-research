@@ -69,7 +69,7 @@ public class StaticMachine implements IMachine, IEventHandler {
 		waitingJobs.remove(job);
 
 		currentJob = job;
-		availableTime = Math.max(time, job.getReadyTime(this)) +
+		availableTime = Math.max(time, job.getReadyTime()) +
 				job.getSetupTime(this) +
 				job.getProcessingTime(this);
 

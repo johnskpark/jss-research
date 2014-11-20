@@ -81,9 +81,9 @@ public class CompletelyReactiveSolver implements ISolver, ISubscriber {
 			IJob lastJob;
 			if ((lastJob = machine.getLastProcessedJob()) != null) {
 				double completionTime = machine.getReadyTime();
-				double penalty = lastJob.getPenalty(machine);
+				double penalty = lastJob.getPenalty();
 				double tardiness = Math.max(completionTime -
-						lastJob.getDueDate(machine), 0);
+						lastJob.getDueDate(), 0);
 
 				solution.setMakespan(completionTime);
 				solution.setTWT(solution.getTWT() + penalty * tardiness);

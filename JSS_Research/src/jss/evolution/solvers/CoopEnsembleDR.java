@@ -71,7 +71,7 @@ public class CoopEnsembleDR extends JSSGPRule {
 		IJob mostVotedJob = processableJobs.get(mostVotedIndex);
 
 		// Simply process the job as early as possible.
-		double t = Math.max(machine.getReadyTime(), mostVotedJob.getReadyTime(machine));
+		double t = Math.max(machine.getReadyTime(), mostVotedJob.getReadyTime());
 		return new Action(machine, mostVotedJob, t);
 	}
 

@@ -51,7 +51,7 @@ public class MachineTest {
 
 		context.checking(new Expectations() {{
 			oneOf(mockJob1).startedProcessingOnMachine(machine);
-			oneOf(mockJob1).getReadyTime(machine); will(returnValue(releaseTime));
+			oneOf(mockJob1).getReadyTime(); will(returnValue(releaseTime));
 			oneOf(mockJob1).getProcessingTime(machine); will(returnValue(processingTime));
 			oneOf(mockJob1).getSetupTime(machine); will(returnValue(setupTime));
 			oneOf(mockJob1).finishProcessingOnMachine();
@@ -80,7 +80,7 @@ public class MachineTest {
 		context.checking(new Expectations() {{
 			oneOf(mockJob1).startedProcessingOnMachine(machine);
 			oneOf(mockJob1).getNextMachine(); will(returnValue(null));
-			oneOf(mockJob1).getReadyTime(machine); will(returnValue(releaseTime));
+			oneOf(mockJob1).getReadyTime(); will(returnValue(releaseTime));
 			oneOf(mockJob1).getProcessingTime(machine); will(returnValue(processingTime));
 			oneOf(mockJob1).getSetupTime(machine); will(returnValue(setupTime));
 			oneOf(mockJob1).finishProcessingOnMachine();
@@ -119,7 +119,7 @@ public class MachineTest {
 		context.checking(new Expectations() {{
 			oneOf(mockJob1).startedProcessingOnMachine(machine);
 			oneOf(mockJob1).getNextMachine(); will(returnValue(null));
-			oneOf(mockJob1).getReadyTime(machine); will(returnValue(releaseTime));
+			oneOf(mockJob1).getReadyTime(); will(returnValue(releaseTime));
 			oneOf(mockJob1).getProcessingTime(machine); will(returnValue(processingTime));
 			oneOf(mockJob1).getSetupTime(machine); will(returnValue(setupTime));
 			oneOf(mockJob1).finishProcessingOnMachine();
@@ -155,7 +155,7 @@ public class MachineTest {
 		context.checking(new Expectations() {{
 			oneOf(mockJob1).startedProcessingOnMachine(machine);
 			oneOf(mockJob1).getNextMachine(); will(returnValue(null));
-			oneOf(mockJob1).getReadyTime(machine); will(returnValue(releaseTime));
+			oneOf(mockJob1).getReadyTime(); will(returnValue(releaseTime));
 			oneOf(mockJob1).getProcessingTime(machine); will(returnValue(processingTime));
 			oneOf(mockJob1).getSetupTime(machine); will(returnValue(setupTime));
 			oneOf(mockJob1).finishProcessingOnMachine();

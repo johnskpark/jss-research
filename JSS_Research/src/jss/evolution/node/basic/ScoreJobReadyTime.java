@@ -1,7 +1,6 @@
 package jss.evolution.node.basic;
 
 import jss.IJob;
-import jss.IMachine;
 import jss.evolution.JSSGPData;
 import jss.node.NodeDefinition;
 import ec.EvolutionState;
@@ -43,10 +42,9 @@ public class ScoreJobReadyTime extends GPNode {
 			final Problem problem) {
 		JSSGPData data = (JSSGPData)input;
 
-		IMachine machine = data.getMachine();
 		IJob job = data.getJob();
 
-		data.setPriority(job.getReadyTime(machine));
+		data.setPriority(job.getReadyTime());
 	}
 
 }

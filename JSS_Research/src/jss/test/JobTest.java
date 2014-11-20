@@ -33,15 +33,15 @@ public class JobTest {
 		double releaseTime = 2;
 		double[] processingTimes = new double[]{5, 2};
 		double[] setupTimes = new double[]{3, 4};
-		double[] dueDates = new double[]{7, 8};
-		double[] penalties = new double[]{1.1, 1.0};
+		double dueDates = 7;
+		double penalties = 1.1;
 
 		job.offerMachine(mockMachine1);
 		job.offerMachine(mockMachine2);
 
 		job.setReleaseTime(releaseTime);
 
-		Assert.assertEquals(job.getReadyTime(mockMachine1), releaseTime, EPSILON);
+		Assert.assertEquals(job.getReadyTime(), releaseTime, EPSILON);
 
 		job.setProcessingTime(mockMachine1, processingTimes[0]);
 		job.setProcessingTime(mockMachine2, processingTimes[1]);
@@ -55,17 +55,13 @@ public class JobTest {
 		Assert.assertEquals(job.getSetupTime(mockMachine1), setupTimes[0], EPSILON);
 		Assert.assertEquals(job.getSetupTime(mockMachine2), setupTimes[1], EPSILON);
 
-		job.setDueDate(mockMachine1, dueDates[0]);
-		job.setDueDate(mockMachine2, dueDates[1]);
+		job.setDueDate(dueDates);
 
-		Assert.assertEquals(job.getDueDate(mockMachine1), dueDates[0], EPSILON);
-		Assert.assertEquals(job.getDueDate(mockMachine2), dueDates[1], EPSILON);
+		Assert.assertEquals(job.getDueDate(), dueDates, EPSILON);
 
-		job.setPenalty(mockMachine1, penalties[0]);
-		job.setPenalty(mockMachine2, penalties[1]);
+		job.setPenalty(penalties);
 
-		Assert.assertEquals(job.getPenalty(mockMachine1), penalties[0], EPSILON);
-		Assert.assertEquals(job.getPenalty(mockMachine2), penalties[1], EPSILON);
+		Assert.assertEquals(job.getPenalty(), penalties, EPSILON);
 	}
 
 	@Test
@@ -164,36 +160,6 @@ public class JobTest {
 
 		try {
 			job.setSetupTime(mockMachine1, setupTime);
-			Assert.fail();
-		} catch (RuntimeException e) {
-		}
-	}
-
-	@Test
-	public void staticJobTestFail_SetDueDate() {
-		StaticJob job = new StaticJob();
-
-		mockMachine1 = context.mock(IMachine.class);
-
-		double dueDate = 7;
-
-		try {
-			job.setDueDate(mockMachine1, dueDate);
-			Assert.fail();
-		} catch (RuntimeException e) {
-		}
-	}
-
-	@Test
-	public void staticJobTestFail_SetPenalty() {
-		StaticJob job = new StaticJob();
-
-		mockMachine1 = context.mock(IMachine.class);
-
-		double penalty = 1.1;
-
-		try {
-			job.setDueDate(mockMachine1, penalty);
 			Assert.fail();
 		} catch (RuntimeException e) {
 		}
