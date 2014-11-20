@@ -18,6 +18,7 @@ import jss.ISubscriptionHandler;
  */
 public class StaticInstance implements IProblemInstance, ISubscriptionHandler {
 
+	// TODO I could probably make this faster by having a list of incomplete jobs.
 	private List<StaticJob> jobs = new ArrayList<StaticJob>();
 	private List<StaticMachine> machines = new ArrayList<StaticMachine>();
 

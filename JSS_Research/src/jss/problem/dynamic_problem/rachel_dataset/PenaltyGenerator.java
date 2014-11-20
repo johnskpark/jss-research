@@ -10,39 +10,34 @@ import jss.problem.dynamic_problem.IDoubleValueGenerator;
  * @author parkjohn
  *
  */
-public class JobReadyTimeGenerator implements IDoubleValueGenerator {
+public class PenaltyGenerator implements IDoubleValueGenerator {
 
-	private double poissonMean;
+	private double[] penalties = new double[]{1, 2, 4};
+	private double[] probs = new double[]{0.2, 0.8, 1.0};
 
 	private long seed;
 	private Random rand;
 
 	/**
 	 * TODO javadoc.
-	 * @param mean
 	 * @param s
 	 */
-	public JobReadyTimeGenerator(double mean, long s) {
-		poissonMean = mean;
-
+	public PenaltyGenerator(long s) {
 		seed = s;
 		rand = new Random(seed);
 	}
 
 	@Override
 	public double getDoubleValue(IJob job) {
-		double value = 0.0;
-		double p = Math.exp(-poissonMean);
-		double s = p;
-		double u = rand.nextDouble();
+		double prob = rand.nextDouble();
 
-		do {
-			value++;
-			p *= poissonMean / value;
-			s += p;
-		} while (u > s);
+		for (int i = 0; i < probs.length; i++) {
+			if (prob < probs[i]) {
+				return penalties[i];
+			}
+		}
 
-		return value;
+		return 1;
 	}
 
 	@Override

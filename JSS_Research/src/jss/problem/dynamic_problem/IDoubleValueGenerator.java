@@ -15,4 +15,8 @@ public interface IDoubleValueGenerator {
 	 */
 	public double getDoubleValue(IJob job);
 
+	/**
+	 * TODO javadoc.
+	 */
+	public void reset();
 }

@@ -1,13 +1,13 @@
 package jss.problem.dynamic_problem.rachel_dataset;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import jss.IDataset;
-import jss.IJob;
 import jss.IProblemInstance;
 import jss.ProblemSize;
-import jss.problem.dynamic_problem.IDoubleValueGenerator;
+import jss.problem.dynamic_problem.DynamicInstance;
 
 /**
  * TODO javadoc.
@@ -25,21 +25,27 @@ public class TenDynamicJSSDataset implements IDataset {
 	private double[][] dueDateTightness = new double[][]{{3, 5, 7}, {3, 5, 7}, {2, 4, 6},
 			{2, 4, 6}, {2, 4, 6}, {2, 4, 6}};
 
+	private List<DynamicInstance> problemInstances = new ArrayList<DynamicInstance>();
+
 	/**
 	 * TODO javadoc.
 	 */
 	public TenDynamicJSSDataset() {
 		this.seed = System.currentTimeMillis();
-		this.rand = new Random();
+		this.rand = new Random(seed);
 	}
 
 	/**
 	 * TODO javadoc.
 	 * @param seed
 	 */
-	public TenDynamicJSSDataset(long seed) {
-		this.seed = seed;
+	public TenDynamicJSSDataset(long s) {
+		this.seed = s;
 		this.rand = new Random(seed);
+	}
+
+	private void generateDataset() {
+		// TODO placeholder.
 	}
 
 	@Override
