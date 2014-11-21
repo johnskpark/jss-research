@@ -17,10 +17,13 @@ import jss.ISubscriptionHandler;
  */
 public class DynamicInstance implements IProblemInstance, ISubscriptionHandler {
 
+	private IProcessingOrderGenerator processingOrderGenerator;
+
 	private IDoubleValueGenerator processingTimeGenerator;
 	private IDoubleValueGenerator jobReadyTimeGenerator;
 	private IDoubleValueGenerator dueDateGenerator;
 	private IDoubleValueGenerator penaltyGenerator;
+	private IDoubleValueGenerator setupTimeGenerator;
 
 	private List<DynamicJob> jobs = new ArrayList<DynamicJob>();
 	private List<IJob> incompleteJobs = new ArrayList<IJob>();
@@ -37,6 +40,14 @@ public class DynamicInstance implements IProblemInstance, ISubscriptionHandler {
 
 	public void addMachine(DynamicMachine machine) {
 		machines.add(machine);
+	}
+
+	/**
+	 * TODO javadoc.
+	 * @param pog
+	 */
+	public void setProcessingOrderGenerator(IProcessingOrderGenerator pog) {
+		processingOrderGenerator = pog;
 	}
 
 	/**
@@ -71,6 +82,14 @@ public class DynamicInstance implements IProblemInstance, ISubscriptionHandler {
 		penaltyGenerator = pg;
 	}
 
+	/**
+	 * TODO javadoc.
+	 * @param stg
+	 */
+	public void setSetupTimeGenerator(IDoubleValueGenerator stg) {
+		setupTimeGenerator = stg;
+	}
+
 	@Override
 	public List<IJob> getJobs() {
 		return incompleteJobs;
@@ -100,10 +119,13 @@ public class DynamicInstance implements IProblemInstance, ISubscriptionHandler {
 			machine.reset();
 		}
 
+		processingOrderGenerator.reset();
+
 		processingTimeGenerator.reset();
 		jobReadyTimeGenerator.reset();
 		dueDateGenerator.reset();
 		penaltyGenerator.reset();
+		setupTimeGenerator.reset();
 
 		subscribers = new ArrayList<ISubscriber>();
 	}
@@ -117,10 +139,51 @@ public class DynamicInstance implements IProblemInstance, ISubscriptionHandler {
 		}
 	}
 
+	// Generate a new job using the generators.
 	private void generateJob() {
-		// TODO hefty component where the job's properties are set.
+		DynamicJob job = new DynamicJob();
+
+		// Get the list of machines that the job needs to be processed on into.
+		List<DynamicMachine> machineOrder = processingOrderGenerator.getProcessingOrder(machines);
+
+		for (DynamicMachine machine : machineOrder) {
+			job.offerMachine(machine);
+			job.setProcessingTime(machine, generateProcessingTime(job));
+			job.setSetupTime(machine, generateSetupTime(job));
+		}
+
+		job.setReadyTime(generateJobReadyTime(job));
+		job.setDueDate(generateDueDate(job));
+		job.setPenalty(generatePenalty(job));
+
+		jobs.add(job);
+		// TODO need to add to the current time.
 	}
 
+	// Generate processing time for the job.
+	private double generateProcessingTime(DynamicJob job) {
+		return (processingTimeGenerator != null) ? processingTimeGenerator.getDoubleValue(job) : 0;
+	}
+
+	// Generate setup time for the job.
+	private double generateSetupTime(DynamicJob job) {
+		return (setupTimeGenerator != null) ? setupTimeGenerator.getDoubleValue(job) : 0;
+	}
+
+	// Generate job ready time for the job.
+	private double generateJobReadyTime(DynamicJob job) {
+		return (jobReadyTimeGenerator != null) ? jobReadyTimeGenerator.getDoubleValue(job) : 0;
+	}
+
+	// Generate due date time for the job.
+	private double generateDueDate(DynamicJob job) {
+		return (dueDateGenerator != null) ? dueDateGenerator.getDoubleValue(job) : 0;
+	}
+
+	// Generate penalty for tardy job.
+	private double generatePenalty(DynamicJob job) {
+		return (penaltyGenerator != null) ? penaltyGenerator.getDoubleValue(job) : 0;
+	}
 
 	@Override
 	public void onSubscriptionRequest(ISubscriber subscriber) {

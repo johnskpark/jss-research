@@ -29,9 +29,9 @@ public class StaticJob implements IJob, IEventHandler {
 	private Map<IMachine, Double> processingTimes = new HashMap<IMachine, Double>();
 	private Map<IMachine, Double> setupTimes = new HashMap<IMachine, Double>();
 
-	private double dueDates = 0;
-	private double penalties = 0;
-	private double releaseTime = 0;
+	private double dueDate = 0;
+	private double penalty = 0;
+	private double readyTime = 0;
 
 	// Mutable component that is actively modified during the simulation.
 	private Queue<IMachine> machineQueue = new LinkedList<IMachine>();
@@ -80,7 +80,7 @@ public class StaticJob implements IJob, IEventHandler {
 	 * @param dueDate
 	 */
 	public void setDueDate(double dueDate) {
-		dueDates = dueDate;
+		this.dueDate = dueDate;
 	}
 
 	/**
@@ -88,15 +88,15 @@ public class StaticJob implements IJob, IEventHandler {
 	 * @param penalty
 	 */
 	public void setPenalty(double penalty) {
-		penalties = penalty;
+		this.penalty = penalty;
 	}
 
 	/**
 	 * Set the release time of the job.
 	 * @param release
 	 */
-	public void setReleaseTime(double release) {
-		releaseTime = release;
+	public void setReadyTime(double release) {
+		this.readyTime = release;
 	}
 
 	// Check invariance.
@@ -108,7 +108,7 @@ public class StaticJob implements IJob, IEventHandler {
 
 	@Override
 	public double getReadyTime() {
-		return releaseTime;
+		return readyTime;
 	}
 
 	@Override
@@ -129,12 +129,12 @@ public class StaticJob implements IJob, IEventHandler {
 
 	@Override
 	public double getDueDate() {
-		return dueDates;
+		return dueDate;
 	}
 
 	@Override
 	public double getPenalty() {
-		return penalties;
+		return penalty;
 	}
 
 	@Override

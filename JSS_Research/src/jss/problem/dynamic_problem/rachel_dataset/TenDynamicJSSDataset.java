@@ -8,6 +8,7 @@ import jss.IDataset;
 import jss.IProblemInstance;
 import jss.ProblemSize;
 import jss.problem.dynamic_problem.DynamicInstance;
+import jss.problem.dynamic_problem.IProcessingOrderGenerator;
 
 /**
  * TODO javadoc.
@@ -20,12 +21,31 @@ public class TenDynamicJSSDataset implements IDataset {
 	private long seed;
 	private Random rand;
 
-	private double[] meanProcessingTime = new double[]{25, 25, 25, 50, 25, 50};
-	private double[] utilisation = new double[]{0.85, 0.95, 0.90, 0.90, 0.97, 0.97};
-	private double[][] dueDateTightness = new double[][]{{3, 5, 7}, {3, 5, 7}, {2, 4, 6},
-			{2, 4, 6}, {2, 4, 6}, {2, 4, 6}};
+	private double[][] meanProcessingTimes = new double[][]{{25, 25}, {25, 50, 25, 50}};
+	private double[][] utilisationRates = new double[][]{{0.85, 0.95}, {0.90, 0.90, 0.97, 0.97}};
+	private double[][][] dueDateTightness = new double[][][]{
+			{{3, 5, 7}, {3, 5, 7}},
+			{{2, 4, 6}, {2, 4, 6}, {2, 4, 6}, {2, 4, 6}}
+	};
+
+	private IProcessingOrderGenerator[][] processingOrderGenerators = new IProcessingOrderGenerator[][]{
+		{
+			new FixedOperationNumberPOG(4),
+			new FixedOperationNumberPOG(8)
+		},
+		{
+			new FixedOperationNumberPOG(4),
+			new FixedOperationNumberPOG(6),
+			new FixedOperationNumberPOG(8),
+			new FixedOperationNumberPOG(10),
+			new VariableOperationNumberPOG(2, 10)
+		}
+	};
 
 	private List<DynamicInstance> problemInstances = new ArrayList<DynamicInstance>();
+
+	private List<IProblemInstance> trainingSet = new ArrayList<IProblemInstance>();
+	private List<IProblemInstance> testSet = new ArrayList<IProblemInstance>();
 
 	/**
 	 * TODO javadoc.
@@ -33,6 +53,8 @@ public class TenDynamicJSSDataset implements IDataset {
 	public TenDynamicJSSDataset() {
 		this.seed = System.currentTimeMillis();
 		this.rand = new Random(seed);
+
+		generateDataset();
 	}
 
 	/**
@@ -42,6 +64,8 @@ public class TenDynamicJSSDataset implements IDataset {
 	public TenDynamicJSSDataset(long s) {
 		this.seed = s;
 		this.rand = new Random(seed);
+
+		generateDataset();
 	}
 
 	private void generateDataset() {
@@ -50,20 +74,17 @@ public class TenDynamicJSSDataset implements IDataset {
 
 	@Override
 	public List<IProblemInstance> getProblems() {
-		// TODO Auto-generated method stub
-		return null;
+		return new ArrayList<IProblemInstance>(problemInstances);
 	}
 
 	@Override
 	public List<IProblemInstance> getTraining(ProblemSize problemSize) {
-		// TODO Auto-generated method stub
-		return null;
+		return trainingSet;
 	}
 
 	@Override
 	public List<IProblemInstance> getTest() {
-		// TODO Auto-generated method stub
-		return null;
+		return testSet;
 	}
 
 }

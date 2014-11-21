@@ -39,7 +39,7 @@ public class JobTest {
 		job.offerMachine(mockMachine1);
 		job.offerMachine(mockMachine2);
 
-		job.setReleaseTime(releaseTime);
+		job.setReadyTime(releaseTime);
 
 		Assert.assertEquals(job.getReadyTime(), releaseTime, EPSILON);
 

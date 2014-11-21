@@ -1,120 +1,228 @@
 package jss.problem.dynamic_problem;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Queue;
+
 import jss.IEvent;
 import jss.IEventHandler;
 import jss.IJob;
 import jss.IMachine;
-import jss.IllegalActionException;
 
+/**
+ * TODO javadoc.
+ * @author parkjohn
+ *
+ */
 public class DynamicJob implements IJob, IEventHandler {
+
+	// Immutable component that stays constant during the simulation.
+	private List<IMachine> machineList = new LinkedList<IMachine>();
+
+	private Map<IMachine, Double> processingTimes = new HashMap<IMachine, Double>();
+	private Map<IMachine, Double> setupTimes = new HashMap<IMachine, Double>();
+
+	private double dueDate = 0;
+	private double penalty = 0;
+	private double readyTime = 0;
+
+	// Mutable component that is actively modified during the simulation.
+	private Queue<IMachine> machineQueue = new LinkedList<IMachine>();
+
+	private IMachine machine;
+
+	/**
+	 * Generate a new instance of a static job for the static Job Shop
+	 * Scheduling problem instance.
+	 */
+	public DynamicJob() {
+	}
+
+	/**
+	 * Offer the machine as the latest operations that needs to be carried out
+	 * for the job to be completed.
+	 * @param machine
+	 */
+	public void offerMachine(IMachine machine) {
+		machineList.add(machine);
+		machineQueue.offer(machine);
+	}
+
+	/**
+	 * Set the processing time for the specified machine.
+	 * @param machine
+	 * @param processing
+	 */
+	public void setProcessingTime(IMachine machine, double processing) {
+		checkMachine(machine);
+		processingTimes.put(machine, processing);
+	}
+
+	/**
+	 * Set the setup time for the specified machine.
+	 * @param machine
+	 * @param setup
+	 */
+	public void setSetupTime(IMachine machine, double setup) {
+		checkMachine(machine);
+		setupTimes.put(machine, setup);
+	}
+
+	/**
+	 * Set the due date for the specified machine.
+	 * @param dueDate
+	 */
+	public void setDueDate(double dueDate) {
+		this.dueDate = dueDate;
+	}
+
+	/**
+	 * Set the weight/penalty for the specified machine.
+	 * @param penalty
+	 */
+	public void setPenalty(double penalty) {
+		this.penalty = penalty;
+	}
+
+	/**
+	 * Set the release time of the job.
+	 * @param release
+	 */
+	public void setReadyTime(double release) {
+		this.readyTime = release;
+	}
+
+	// Check invariance.
+	private void checkMachine(IMachine machine) {
+		if (!machineList.contains(machine)) {
+			throw new RuntimeException("Machine has not been offered to the job");
+		}
+	}
 
 	@Override
 	public double getReadyTime() {
-		// TODO Auto-generated method stub
-		return 0;
+		return readyTime;
 	}
 
 	@Override
 	public double getProcessingTime(IMachine machine) {
-		// TODO Auto-generated method stub
+		if (processingTimes.containsKey(machine)) {
+			return processingTimes.get(machine);
+		}
 		return 0;
 	}
 
 	@Override
 	public double getSetupTime(IMachine machine) {
-		// TODO Auto-generated method stub
+		if (setupTimes.containsKey(machine)) {
+			return setupTimes.get(machine);
+		}
 		return 0;
 	}
 
 	@Override
 	public double getDueDate() {
-		// TODO Auto-generated method stub
-		return 0;
+		return dueDate;
 	}
 
 	@Override
 	public double getPenalty() {
-		// TODO Auto-generated method stub
-		return 0;
+		return penalty;
 	}
 
 	@Override
 	public double getRemainingTime() {
-		// TODO Auto-generated method stub
-		return 0;
+		double remainingTime = 0.0;
+		for (IMachine machine : machineQueue) {
+			remainingTime += getProcessingTime(machine);
+		}
+		return remainingTime;
 	}
 
 	@Override
 	public int getRemainingOperation() {
-		// TODO Auto-generated method stub
-		return 0;
+		return machineQueue.size();
 	}
 
 	@Override
-	public void startedProcessingOnMachine(IMachine machine)
-			throws IllegalActionException {
-		// TODO Auto-generated method stub
-
+	public void startedProcessingOnMachine(IMachine machine) throws RuntimeException {
+		if (!machineQueue.peek().equals(machine)) {
+			throw new RuntimeException("You done goofed from BasicJob");
+		}
+		this.machine = machine;
 	}
 
 	@Override
 	public void finishProcessingOnMachine() {
-		// TODO Auto-generated method stub
-
+		machine = null;
+		machineQueue.poll();
 	}
 
 	@Override
 	public IMachine getCurrentMachine() {
-		// TODO Auto-generated method stub
-		return null;
+		return machine;
 	}
 
 	@Override
 	public IMachine getNextMachine() {
-		// TODO Auto-generated method stub
+		if (!machineQueue.isEmpty()) {
+			return machineQueue.peek();
+		}
 		return null;
 	}
 
 	@Override
 	public IMachine getLastMachine() {
-		// TODO Auto-generated method stub
+		int diff = machineList.size() - machineQueue.size();
+		if (diff != 0) {
+			return machineList.get(diff-1);
+		}
 		return null;
 	}
 
 	@Override
 	public boolean isProcessable(IMachine machine) {
-		// TODO Auto-generated method stub
-		return false;
+		return machineQueue.contains(machine);
 	}
 
 	@Override
 	public boolean isCompleted() {
-		// TODO Auto-generated method stub
-		return false;
+		return machineQueue.isEmpty();
 	}
 
 	@Override
 	public void reset() {
-		// TODO Auto-generated method stub
-
+		machineQueue = new LinkedList<IMachine>(machineList);
 	}
+
+	/**
+	 * Get the processing order for the job.
+	 * TODO this will need to be removed at some point, it's pretty much a
+	 * hack.
+	 * @return
+	 */
+	public List<IMachine> getProcessingOrder() {
+		return new ArrayList<IMachine>(machineList);
+	}
+
+	// Basic Job has no event triggers.
 
 	@Override
 	public boolean hasEvent() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public IEvent getNextEvent() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public double getNextEventTime() {
-		// TODO Auto-generated method stub
-		return 0;
+		return Double.POSITIVE_INFINITY;
 	}
 
 }
