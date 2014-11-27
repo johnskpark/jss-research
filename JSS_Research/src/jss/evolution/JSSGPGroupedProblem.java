@@ -7,8 +7,8 @@ import jss.IDataset;
 import jss.IProblemInstance;
 import jss.IResult;
 import jss.ProblemSize;
-import jss.evolution.solvers.PriorityTracker;
 import jss.evolution.statistic_data.PenaltyData;
+import jss.evolution.tracker.PriorityTracker;
 import jss.problem.Statistics;
 import ec.EvolutionState;
 import ec.Individual;
@@ -41,7 +41,7 @@ public class JSSGPGroupedProblem extends GPProblem implements GroupedProblemForm
 
 	private JSSGPSolver solver;
 	private IDataset dataset;
-	private IFitness fitness;
+	private IGroupedFitness fitness;
 
 	private ProblemSize problemSize;
 	private boolean problemSizeSet = false;
@@ -60,7 +60,7 @@ public class JSSGPGroupedProblem extends GPProblem implements GroupedProblemForm
 		// Setup the dataset and the solver.
 		solver = (JSSGPSolver) state.parameters.getInstanceForParameterEq(base.push(P_SOLVER), null, JSSGPSolver.class);
 		dataset = (IDataset) state.parameters.getInstanceForParameterEq(base.push(P_INSTANCES), null, IDataset.class);
-		fitness = (IFitness) state.parameters.getInstanceForParameter(base.push(P_FITNESS), null, IFitness.class);
+		fitness = (IGroupedFitness) state.parameters.getInstanceForParameter(base.push(P_FITNESS), null, IGroupedFitness.class);
 
 		// Set the problem size used for the training set.
 		String problemSizeStr = state.parameters.getString(base.push(P_SIZE), null);
@@ -114,33 +114,7 @@ public class JSSGPGroupedProblem extends GPProblem implements GroupedProblemForm
 			final Individual ind,
 			final int subpopulation,
 			final int threadnum) {
-		if (!ind.evaluated) {
-			// Check to make sure that the individual is a GPIndividual and uses KozaFitness.
-			checkInvariance(state, ind);
-
-			Statistics stats = new Statistics();
-
-			JSSGPConfiguration config = new JSSGPConfiguration();
-			config.setState(state);
-			config.setIndividuals(new GPIndividual[]{(GPIndividual)ind});
-			config.setSubpopulations(new int[]{subpopulation});
-			config.setThreadnum(threadnum);
-			config.setData((JSSGPData)input);
-
-			solver.setGPConfiguration(config);
-
-			List<IProblemInstance> trainingSet = (problemSizeSet) ?
-					dataset.getTraining(problemSize) : dataset.getProblems();
-			for (IProblemInstance problem : trainingSet) {
-				IResult solution = solver.getSolution(problem);
-
-				stats.addSolution(problem, solution);
-			}
-
-			((KozaFitness)ind.fitness).setStandardizedFitness(state, fitness.getFitness(stats, ind));
-
-			ind.evaluated = true;
-		}
+		state.output.fatal("JSSGPGroupedProblem must be used in a grouped problem form");
 	}
 
 	@SuppressWarnings("unchecked")
@@ -187,7 +161,7 @@ public class JSSGPGroupedProblem extends GPProblem implements GroupedProblemForm
 		}
 
 		for (int i = 0; i < inds.length; i++) {
-			double trial = fitness.getFitness(stats, gpInds[i]);
+			double trial = fitness.getFitness(stats, i);
 
 			if (updateFitness[i]) {
 				GPIndividual gpInd = gpInds[i];
@@ -212,17 +186,6 @@ public class JSSGPGroupedProblem extends GPProblem implements GroupedProblemForm
 
 				((KozaFitness)gpInd.fitness).setStandardizedFitness(state, trial);
 			}
-		}
-	}
-
-	// Check the individual for invariance. Each individual must be a GPIndividual,
-	// and the fitness must be KozaFitness.
-	private void checkInvariance(final EvolutionState state, final Individual ind) {
-		if (!(ind instanceof GPIndividual)) {
-			state.output.error("The individual must be an instance of GPIndividual");
-		}
-		if (!(ind.fitness instanceof KozaFitness)) {
-			state.output.error("The individual's fitness must be an instance of KozaFitness");
 		}
 	}
 

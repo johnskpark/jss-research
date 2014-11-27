@@ -48,7 +48,7 @@ eval.problem = jss.evolution.JSSGPSimpleProblem
 eval.problem.data = jss.evolution.JSSGPData
 
 eval.problem.instances = jss.problem.static_problem.taillard_dataset.TaillardDataset
-eval.problem.solver = jss.evolution.solvers.PriorityBasedSolver
+eval.problem.solver = jss.evolution.solver.PriorityBasedSolver
 eval.problem.fitness = jss.evolution.fitness.MakespanDeviationFitness
 
 eval.problem.size = small

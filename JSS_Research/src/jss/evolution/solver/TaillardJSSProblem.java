@@ -1,4 +1,4 @@
-package jss.evolution.solvers;
+package jss.evolution.solver;
 
 import jss.IDataset;
 import jss.IProblemInstance;

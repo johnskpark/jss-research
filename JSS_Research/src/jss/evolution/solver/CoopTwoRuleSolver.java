@@ -1,4 +1,4 @@
-package jss.evolution.solvers;
+package jss.evolution.solver;
 
 import jss.evolution.JSSGPConfiguration;
 import jss.evolution.JSSGPSolver;
@@ -9,12 +9,12 @@ import jss.problem.CompletelyReactiveSolver;
  * @author parkjohn
  *
  */
-public class CoopEnsembleSolver extends JSSGPSolver {
+public class CoopTwoRuleSolver extends JSSGPSolver {
 
 	/**
 	 * TODO javadoc.
 	 */
-	public CoopEnsembleSolver() {
+	public CoopTwoRuleSolver() {
 		super();
 	}
 
@@ -22,12 +22,12 @@ public class CoopEnsembleSolver extends JSSGPSolver {
 	public void setGPConfiguration(JSSGPConfiguration config) {
 		CompletelyReactiveSolver solver = new CompletelyReactiveSolver();
 
-		solver.setRule(new CoopEnsembleDR(config.getState(),
+		solver.setRule(new CoopTwoRuleDR(config.getState(),
 				config.getIndividuals(),
 				config.getThreadnum(),
-				config.getData(),
-				config.getTracker()));
+				config.getData()));
 
 		setSolver(solver);
 	}
+
 }

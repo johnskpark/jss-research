@@ -1,11 +1,7 @@
 package jss.evolution.statistic_data;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import ec.Individual;
 
 /**
  * TODO javadoc.
@@ -14,7 +10,7 @@ import ec.Individual;
  */
 public class PenaltyData {
 
-	private Map<Individual, List<Double>> accumulatedPenalties = new HashMap<Individual, List<Double>>();
+	private List<List<Double>> accumulatedPenalties = new ArrayList<List<Double>>();
 
 	/**
 	 * TODO javadoc.
@@ -26,21 +22,22 @@ public class PenaltyData {
 	 * TODO javadoc.
 	 * @param penalties
 	 */
-	public void addPenalties(Map<Individual, Double> penalties) {
-		for (Map.Entry<Individual, Double> kvp : penalties.entrySet()) {
-			// Add in the list if it does not exist yet.
-			if (!accumulatedPenalties.containsKey(kvp.getKey())) {
-				accumulatedPenalties.put(kvp.getKey(), new ArrayList<Double>());
-				accumulatedPenalties.get(kvp.getKey()).add(0.0);
+	public void addPenalties(List<Double> penalties) {
+		if (accumulatedPenalties.isEmpty()) {
+			for (int i = 0; i < penalties.size(); i++) {
+				accumulatedPenalties.add(i, new ArrayList<Double>());
+				accumulatedPenalties.get(i).add(0.0);
 			}
+		}
 
-			List<Double> indPenalties = accumulatedPenalties.get(kvp.getKey());
+		for (int i = 0; i < penalties.size(); i++) {
+			List<Double> indPenalties = accumulatedPenalties.get(i);
 
 			// Add in the value.
-			indPenalties.add(kvp.getValue());
+			indPenalties.add(penalties.get(i));
 
 			// Increment the total penalty at the front of the list.
-			double sumPenalties = indPenalties.get(0) + kvp.getValue();
+			double sumPenalties = indPenalties.get(0) + penalties.get(i);
 			indPenalties.set(0, sumPenalties);
 		}
 	}
@@ -50,8 +47,8 @@ public class PenaltyData {
 	 * @param ind
 	 * @return
 	 */
-	public double getAveragePenalty(Individual ind) {
-		List<Double> indPenalties = accumulatedPenalties.get(ind);
+	public double getAveragePenalty(int index) {
+		List<Double> indPenalties = accumulatedPenalties.get(index);
 		return indPenalties.get(0) / (indPenalties.size() - 1);
 	}
 

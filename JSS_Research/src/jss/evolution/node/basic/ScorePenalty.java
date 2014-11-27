@@ -1,7 +1,6 @@
 package jss.evolution.node.basic;
 
 import jss.IJob;
-import jss.IMachine;
 import jss.evolution.JSSGPData;
 import jss.node.NodeDefinition;
 import ec.EvolutionState;

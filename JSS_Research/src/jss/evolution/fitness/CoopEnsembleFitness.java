@@ -1,17 +1,16 @@
 package jss.evolution.fitness;
 
-import jss.evolution.IFitness;
+import jss.evolution.IGroupedFitness;
 import jss.evolution.JSSGPGroupedProblem;
 import jss.evolution.statistic_data.PenaltyData;
 import jss.problem.Statistics;
-import ec.Individual;
 
 /**
  * TODO javadoc.
  * @author parkjohn
  *
  */
-public class CoopEnsembleFitness implements IFitness {
+public class CoopEnsembleFitness implements IGroupedFitness {
 
 	/**
 	 * TODO javadoc.
@@ -20,10 +19,10 @@ public class CoopEnsembleFitness implements IFitness {
 	}
 
 	@Override
-	public double getFitness(Statistics stats, Individual ind) {
+	public double getFitness(Statistics stats, int index) {
 		PenaltyData penaltyData = (PenaltyData) stats.getData(JSSGPGroupedProblem.TRACKER_DATA);
 
-		return stats.getAverageMakespanDeviation() * (1 + penaltyData.getAveragePenalty(ind));
+		return stats.getAverageMakespanDeviation() * (1 + penaltyData.getAveragePenalty(index));
 	}
 
 }

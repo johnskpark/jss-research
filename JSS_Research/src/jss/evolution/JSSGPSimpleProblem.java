@@ -30,7 +30,7 @@ public class JSSGPSimpleProblem extends GPProblem {
 
 	private JSSGPSolver solver;
 	private IDataset dataset;
-	private IFitness fitness;
+	private ISimpleFitness fitness;
 
 	private ProblemSize problemSize;
 	private boolean problemSizeSet = false;
@@ -46,7 +46,7 @@ public class JSSGPSimpleProblem extends GPProblem {
 		// Setup the dataset and the solver
 		solver = (JSSGPSolver) state.parameters.getInstanceForParameterEq(base.push(P_SOLVER), null, JSSGPSolver.class);
 		dataset = (IDataset) state.parameters.getInstanceForParameterEq(base.push(P_INSTANCES), null, IDataset.class);
-		fitness = (IFitness) state.parameters.getInstanceForParameterEq(base.push(P_FITNESS), null, IFitness.class);
+		fitness = (ISimpleFitness) state.parameters.getInstanceForParameterEq(base.push(P_FITNESS), null, ISimpleFitness.class);
 
 		// Set the problem size used for the training set.
 		String problemSizeStr = state.parameters.getString(base.push(P_SIZE), null);
@@ -84,7 +84,7 @@ public class JSSGPSimpleProblem extends GPProblem {
 				stats.addSolution(problem, solution);
 			}
 
-			((KozaFitness)ind.fitness).setStandardizedFitness(state, fitness.getFitness(stats, ind));
+			((KozaFitness)ind.fitness).setStandardizedFitness(state, fitness.getFitness(stats));
 
 			ind.evaluated = true;
 		}

@@ -1,4 +1,4 @@
-package jss.evolution.solvers;
+package jss.evolution.solver;
 
 import java.util.List;
 
@@ -9,6 +9,7 @@ import jss.IProblemInstance;
 import jss.evolution.ITracker;
 import jss.evolution.JSSGPData;
 import jss.evolution.JSSGPRule;
+import jss.evolution.tracker.PriorityTracker;
 import ec.EvolutionState;
 import ec.gp.GPIndividual;
 
