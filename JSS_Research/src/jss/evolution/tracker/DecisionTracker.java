@@ -3,7 +3,7 @@ package jss.evolution.tracker;
 import jss.evolution.ITracker;
 
 /**
- * Tracker
+ * Tracker for developing the surrogate model.
  * @author parkjohn
  *
  */
