@@ -259,39 +259,4 @@ public class JSSGPGroupedProblem extends GPProblem implements GroupedProblemForm
 		return newObject;
 	}
 
-	// TODO temp code.
-//	private double[] calculatePenalties(PriorityTracker[] trackers) {
-//		double[] penalties = new double[trackers.length];
-//
-//		for (int i = 0; i < penalties.length; i++) {
-//			List<Double> thisPriorities = trackers[i].getPriorities();
-//
-//			double[] thisSigmoids = new double[thisPriorities.size()];
-//			for (int j = 0; j < thisPriorities.size(); j++) {
-//				thisSigmoids[j] = 1.0 / (1.0 + Math.exp(-thisPriorities.get(j)));
-//			}
-//
-//			for (int j = 0; j < penalties.length; j++) {
-//				if (i == j) {
-//					continue;
-//				}
-//
-//				List<Double> otherPriorities = trackers[j].getPriorities();
-//
-//				double[] otherSigmoids = new double[otherPriorities.size()];
-//				for (int k = 0; k < otherPriorities.size(); k++) {
-//					otherSigmoids[k] = 1.0 / (1.0 + Math.exp(-otherPriorities.get(k)));
-//
-//					penalties[i] += (thisSigmoids[k] - otherSigmoids[k]) *
-//							(thisSigmoids[k] - otherSigmoids[k]);
-//				}
-//			}
-//
-//			penalties[i] = 1 - penalties[i] / (thisPriorities.size() *
-//					(penalties.length - 1));
-//		}
-//
-//		return penalties;
-//	}
-
 }

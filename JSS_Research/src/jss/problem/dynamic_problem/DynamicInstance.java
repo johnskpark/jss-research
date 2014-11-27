@@ -157,7 +157,7 @@ public class DynamicInstance implements IProblemInstance, ISubscriptionHandler {
 		job.setPenalty(generatePenalty(job));
 
 		jobs.add(job);
-		// TODO need to add to the current time.
+		// TODO need to add to the current time. I also need a stopping criterion.
 	}
 
 	// Generate processing time for the job.

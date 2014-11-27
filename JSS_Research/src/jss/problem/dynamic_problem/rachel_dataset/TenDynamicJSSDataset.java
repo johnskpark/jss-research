@@ -8,7 +8,7 @@ import jss.IDataset;
 import jss.IProblemInstance;
 import jss.ProblemSize;
 import jss.problem.dynamic_problem.DynamicInstance;
-import jss.problem.dynamic_problem.IProcessingOrderGenerator;
+import jss.problem.dynamic_problem.IDoubleValueGenerator;
 
 /**
  * TODO javadoc.
@@ -17,6 +17,9 @@ import jss.problem.dynamic_problem.IProcessingOrderGenerator;
  *
  */
 public class TenDynamicJSSDataset implements IDataset {
+
+	private static final int FIXED_OPERATION_NUMBER = 0;
+	private static final int VARIABLE_OPERATION_NUMBER = 1;
 
 	private long seed;
 	private Random rand;
@@ -27,19 +30,21 @@ public class TenDynamicJSSDataset implements IDataset {
 			{{3, 5, 7}, {3, 5, 7}},
 			{{2, 4, 6}, {2, 4, 6}, {2, 4, 6}, {2, 4, 6}}
 	};
+	private int trainSize = 2;
+	private int testSize = 4;
 
-	private IProcessingOrderGenerator[][] processingOrderGenerators = new IProcessingOrderGenerator[][]{
-		{
-			new FixedOperationNumberPOG(4),
-			new FixedOperationNumberPOG(8)
-		},
-		{
-			new FixedOperationNumberPOG(4),
-			new FixedOperationNumberPOG(6),
-			new FixedOperationNumberPOG(8),
-			new FixedOperationNumberPOG(10),
-			new VariableOperationNumberPOG(2, 10)
-		}
+	private int[][][] processingOrderGenerators = new int[][][]{
+			{
+				{FIXED_OPERATION_NUMBER, 4},
+				{FIXED_OPERATION_NUMBER, 8}
+			},
+			{
+				{FIXED_OPERATION_NUMBER, 4},
+				{FIXED_OPERATION_NUMBER, 6},
+				{FIXED_OPERATION_NUMBER, 8},
+				{FIXED_OPERATION_NUMBER, 10},
+				{VARIABLE_OPERATION_NUMBER, 2, 10}
+			}
 	};
 
 	private List<DynamicInstance> problemInstances = new ArrayList<DynamicInstance>();
@@ -69,7 +74,23 @@ public class TenDynamicJSSDataset implements IDataset {
 	}
 
 	private void generateDataset() {
-		// TODO placeholder.
+		for (int i = 0; i < trainSize; i++) {
+			for (int j = 0; j < processingOrderGenerators[0].length; j++) {
+				DynamicInstance problemInstance = new DynamicInstance();
+
+				problemInstance.setProcessingOrderGenerator(null); // TODO
+
+				problemInstance.setProcessingTimeGenerator(new ProcessingTimeGenerator(meanProcessingTimes[0][i], rand.nextLong()));
+
+				problemInstance.setJobReadyTimeGenerator(null); // TODO
+				problemInstance.setDueDateGenerator(null); // TODO
+				problemInstance.setPenaltyGenerator(null); // TODO
+			}
+		}
+	}
+	
+	private void generateProblemInstance() {
+		
 	}
 
 	@Override
