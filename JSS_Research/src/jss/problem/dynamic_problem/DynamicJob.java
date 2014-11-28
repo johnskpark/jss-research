@@ -1,6 +1,5 @@
 package jss.problem.dynamic_problem;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -11,6 +10,7 @@ import jss.IEvent;
 import jss.IEventHandler;
 import jss.IJob;
 import jss.IMachine;
+import jss.ISubscriptionHandler;
 
 /**
  * TODO javadoc.
@@ -34,11 +34,16 @@ public class DynamicJob implements IJob, IEventHandler {
 
 	private IMachine machine;
 
+	private IEvent jobReadyEvent;
+	private ISubscriptionHandler subscriptionHandler;
+
 	/**
 	 * Generate a new instance of a static job for the static Job Shop
 	 * Scheduling problem instance.
 	 */
-	public DynamicJob() {
+	public DynamicJob(ISubscriptionHandler handler) {
+		subscriptionHandler = handler;
+		jobReadyEvent = new JobReadyEvent(this);
 	}
 
 	/**
@@ -198,31 +203,45 @@ public class DynamicJob implements IJob, IEventHandler {
 		machineQueue = new LinkedList<IMachine>(machineList);
 	}
 
+
 	/**
-	 * Get the processing order for the job.
-	 * TODO this will need to be removed at some point, it's pretty much a
-	 * hack.
-	 * @return
+	 * Update the status of the dynamic job.
 	 */
-	public List<IMachine> getProcessingOrder() {
-		return new ArrayList<IMachine>(machineList);
+	public void updateStatus() {
+		jobReadyEvent = null;
+		subscriptionHandler.sendJobFeed(this, readyTime);
 	}
 
-	// Basic Job has no event triggers.
+	// Dynamic job has event trigger for when the job is released into the market.
 
 	@Override
 	public boolean hasEvent() {
-		return false;
+		return jobReadyEvent != null;
 	}
 
 	@Override
 	public IEvent getNextEvent() {
-		return null;
+		return jobReadyEvent;
 	}
 
 	@Override
 	public double getNextEventTime() {
-		return Double.POSITIVE_INFINITY;
+		return readyTime;
+	}
+
+	// An event class that represents a job being released into the market.
+	private class JobReadyEvent implements IEvent {
+		private DynamicJob job;
+
+		public JobReadyEvent(DynamicJob job) {
+			this.job = job;
+		}
+
+		@Override
+		public void trigger() {
+			job.updateStatus();
+		}
+
 	}
 
 }

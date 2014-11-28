@@ -10,31 +10,32 @@ import jss.ProblemSize;
 import jss.problem.dynamic_problem.DynamicInstance;
 
 /**
- * TODO javadoc.
+ * Ten machine dynamic JSS problem that is used by Rachel for her evaluation
+ * of the 'less-myopic' dispatching rule evolved using GP.
  *
  * @author parkjohn
  *
  */
 public class TenDynamicJSSDataset implements IDataset {
 
-	private int trainingIndex = 0;
-	private int testingIndex = 1;
+	private static final int trainingIndex = 0;
+	private static final int testingIndex = 1;
 
-	private double[][] meanProcessingTimes = new double[][]{{25, 25}, {25, 50, 25, 50}};
-	private double[][] utilisationRates = new double[][]{{0.85, 0.95}, {0.90, 0.90, 0.97, 0.97}};
-	private double[][][] dueDateTightness = new double[][][]{
+	private static final double[][] meanProcessingTimes = new double[][]{{25, 25}, {25, 50, 25, 50}};
+	private static final double[][] utilisationRates = new double[][]{{0.85, 0.95}, {0.90, 0.90, 0.97, 0.97}};
+	private static final double[][][] dueDateTightness = new double[][][]{
 			{{3, 5, 7}, {3, 5, 7}},
 			{{2, 4, 6}, {2, 4, 6}, {2, 4, 6}, {2, 4, 6}}
 	};
-	private int trainSize = 2;
-	private int testSize = 4;
+	private static final int trainSize = 2;
+	private static final int testSize = 4;
 
-	private int[][][] processingOrderGenerators = new int[][][]{
+	private static final int[][][] processingOrderGenerators = new int[][][]{
 			{{4, 4}, {8, 8}},
 			{{4, 4}, {6, 6}, {8, 8}, {10, 10}, {2, 10}}
 	};
-	private int trainOperationOrdersSize = 2;
-	private int testOperationOrdersSize = 5;
+	private static final int trainOperationOrdersSize = 2;
+	private static final int testOperationOrdersSize = 5;
 
 	private long seed;
 	private Random rand;
@@ -132,6 +133,8 @@ public class TenDynamicJSSDataset implements IDataset {
 		problemInstance.setJobReadyTimeGenerator(new JobReadyTimeGenerator(poissonMean, rand.nextLong()));
 		problemInstance.setDueDateGenerator(new DueDateGenerator(tightness, rand.nextLong()));
 		problemInstance.setPenaltyGenerator(new PenaltyGenerator(rand.nextLong()));
+
+		problemInstance.setTerminationCriterion(new TerminationCriterion(problemInstance));
 
 		return problemInstance;
 	}

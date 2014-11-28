@@ -25,7 +25,10 @@ public class DynamicInstance implements IProblemInstance, ISubscriptionHandler {
 	private IDoubleValueGenerator penaltyGenerator;
 	private IDoubleValueGenerator setupTimeGenerator;
 
+	private ITerminationCriterion terminationCriterion;
+
 	private List<DynamicJob> jobs = new ArrayList<DynamicJob>();
+	private List<IJob> unreleasedJobs = new ArrayList<IJob>();
 	private List<IJob> incompleteJobs = new ArrayList<IJob>();
 
 	private List<DynamicMachine> machines = new ArrayList<DynamicMachine>();
@@ -43,51 +46,66 @@ public class DynamicInstance implements IProblemInstance, ISubscriptionHandler {
 	}
 
 	/**
-	 * TODO javadoc.
-	 * @param pog
+	 * Setter method for the generator that generate a list of machines to be
+	 * processed on for the order of operations for a job.
 	 */
 	public void setProcessingOrderGenerator(IProcessingOrderGenerator pog) {
 		processingOrderGenerator = pog;
 	}
 
 	/**
-	 * TODO javadoc.
-	 * @param ptg
+	 * Setter method for the generator that generate double values for the
+	 * processing time of a job on machines.
 	 */
 	public void setProcessingTimeGenerator(IDoubleValueGenerator ptg) {
 		processingTimeGenerator = ptg;
 	}
 
 	/**
-	 * TODO javadoc.
-	 * @param jrtg
+	 * Setter method for the generator that generate double values for the
+	 * job ready time of a job on machines.
 	 */
 	public void setJobReadyTimeGenerator(IDoubleValueGenerator jrtg) {
 		jobReadyTimeGenerator = jrtg;
 	}
 
 	/**
-	 * TODO javadoc.
-	 * @param ddg
+	 * Setter method for the generator that generate double values for the
+	 * due date time of a job.
 	 */
 	public void setDueDateGenerator(IDoubleValueGenerator ddg) {
 		dueDateGenerator = ddg;
 	}
 
 	/**
-	 * TODO javadoc.
-	 * @param pg
+	 * Setter method for the generator that generate double values for the
+	 * penalty factor for a tardy job.
 	 */
 	public void setPenaltyGenerator(IDoubleValueGenerator pg) {
 		penaltyGenerator = pg;
 	}
 
 	/**
-	 * TODO javadoc.
-	 * @param stg
+	 * Setter method for the generator that generate double values for the
+	 * setup time of a job on machines.
 	 */
 	public void setSetupTimeGenerator(IDoubleValueGenerator stg) {
 		setupTimeGenerator = stg;
+	}
+
+	/**
+	 * TODO javadoc.
+	 * @param tc
+	 */
+	public void setTerminationCriterion(ITerminationCriterion tc) {
+		terminationCriterion = tc;
+	}
+
+	/**
+	 * Returns the number of jobs completed in the simulation.
+	 */
+	public int getNumJobsCompleted() {
+		return jobs.size() - incompleteJobs.size();
 	}
 
 	@Override
@@ -113,6 +131,8 @@ public class DynamicInstance implements IProblemInstance, ISubscriptionHandler {
 	@Override
 	public void reset() {
 		jobs = new ArrayList<DynamicJob>();
+
+		unreleasedJobs = new ArrayList<IJob>();
 		incompleteJobs = new ArrayList<IJob>();
 
 		for (DynamicMachine machine : machines) {
@@ -141,7 +161,7 @@ public class DynamicInstance implements IProblemInstance, ISubscriptionHandler {
 
 	// Generate a new job using the generators.
 	private void generateJob() {
-		DynamicJob job = new DynamicJob();
+		DynamicJob job = new DynamicJob(this);
 
 		// Get the list of machines that the job needs to be processed on into.
 		List<DynamicMachine> machineOrder = processingOrderGenerator.getProcessingOrder(machines);
@@ -156,8 +176,8 @@ public class DynamicInstance implements IProblemInstance, ISubscriptionHandler {
 		job.setDueDate(generateDueDate(job));
 		job.setPenalty(generatePenalty(job));
 
+		unreleasedJobs.add(job);
 		jobs.add(job);
-		// TODO need to add to the current time. I also need a stopping criterion.
 	}
 
 	// Generate processing time for the job.
@@ -192,6 +212,12 @@ public class DynamicInstance implements IProblemInstance, ISubscriptionHandler {
 
 	@Override
 	public void sendMachineFeed(IMachine machine, double time) {
+		// Remove the job from the list of incomplete jobs.
+		IJob job = machine.getLastProcessedJob();
+		if (job != null) {
+			incompleteJobs.remove(job);
+		}
+
 		for (ISubscriber subscriber : subscribers) {
 			subscriber.onMachineFeed(machine, time);
 		}
@@ -199,6 +225,17 @@ public class DynamicInstance implements IProblemInstance, ISubscriptionHandler {
 
 	@Override
 	public void sendJobFeed(IJob job, double time) {
+		// Reveal the job to the market if the current time is past its ready time.
+		if (time >= job.getReadyTime()) {
+			incompleteJobs.add(job);
+			unreleasedJobs.remove(job);
+		}
+
+		// Generate new jobs if the termination criterion has not yet been reached.
+		if (!terminationCriterion.criterionMet()) {
+			generateJob();
+		}
+
 		for (ISubscriber subscriber : subscribers) {
 			subscriber.onJobFeed(job, time);
 		}
