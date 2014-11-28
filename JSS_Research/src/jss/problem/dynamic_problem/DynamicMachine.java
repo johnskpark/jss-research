@@ -1,91 +1,163 @@
 package jss.problem.dynamic_problem;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jss.IEvent;
 import jss.IEventHandler;
 import jss.IJob;
 import jss.IMachine;
-import jss.IllegalActionException;
+import jss.ISubscriptionHandler;
 
+/**
+ * A concrete representation of a machine in a dynamic Job Shop Scheduling
+ * problem instances.
+ *
+ * @see DynamicInstance for definition of dynamic Job Shop Scheduling problems.
+ *
+ * @author parkjohn
+ *
+ */
 public class DynamicMachine implements IMachine, IEventHandler {
+
+	// Mutable components to the static machines that is actively modified
+	// during the simulation.
+	private List<IJob> prevJobs = new ArrayList<IJob>();
+	private List<IJob> waitingJobs = new ArrayList<IJob>();
+
+	private IJob currentJob = null;
+	private double availableTime = 0;
+
+	private IEvent machineEvent;
+	private ISubscriptionHandler subscriptionHandler;
+
+	/**
+	 * Generate a new instance of a static machine for the static Job Shop
+	 * Scheduling problem instance.
+	 * @param handler The subscription handler for callback methods.
+	 */
+	public DynamicMachine(ISubscriptionHandler handler) {
+		subscriptionHandler = handler;
+		machineEvent = new MachineEvent(this, 0);
+	}
 
 	@Override
 	public IJob getCurrentJob() {
-		// TODO Auto-generated method stub
-		return null;
+		return currentJob;
 	}
 
 	@Override
 	public IJob getLastProcessedJob() {
-		// TODO Auto-generated method stub
-		return null;
+		if (prevJobs.isEmpty()) {
+			return null;
+		}
+		return prevJobs.get(prevJobs.size() - 1);
 	}
 
 	@Override
 	public List<IJob> getProcessedJobs() {
-		// TODO Auto-generated method stub
-		return null;
+		return prevJobs;
 	}
 
 	@Override
-	public void processJob(IJob job, double time) throws IllegalActionException {
-		// TODO Auto-generated method stub
+	public void processJob(IJob job, double time) throws RuntimeException {
+		if (currentJob != null || time < availableTime) {
+			throw new RuntimeException("You done goofed from BasicMachine");
+		}
 
+		job.startedProcessingOnMachine(this);
+		waitingJobs.remove(job);
+
+		currentJob = job;
+		availableTime = Math.max(time, job.getReadyTime()) +
+				job.getSetupTime(this) +
+				job.getProcessingTime(this);
+
+		machineEvent = new MachineEvent(this, availableTime);
 	}
 
 	@Override
 	public boolean isAvailable() {
-		// TODO Auto-generated method stub
-		return false;
+		return currentJob == null;
 	}
 
 	@Override
 	public double getReadyTime() {
-		// TODO Auto-generated method stub
-		return 0;
+		return availableTime;
 	}
 
 	@Override
 	public void updateStatus(double time) {
-		// TODO Auto-generated method stub
+		if (time >= availableTime) {
+			if (availableTime != 0) {
+				currentJob.finishProcessingOnMachine();
 
+				IMachine nextMachine = currentJob.getNextMachine();
+				if (nextMachine != null) {
+					nextMachine.addWaitingJob(currentJob);
+				}
+
+				prevJobs.add(currentJob);
+				currentJob = null;
+			}
+
+			machineEvent = null;
+			subscriptionHandler.sendMachineFeed(this, time);
+		}
 	}
 
 	@Override
 	public void reset() {
-		// TODO Auto-generated method stub
+		prevJobs = new ArrayList<IJob>();
+		waitingJobs = new ArrayList<IJob>();
 
+		currentJob = null;
+		availableTime = 0;
+
+		machineEvent = new MachineEvent(this, 0);
 	}
 
 	@Override
 	public List<IJob> getWaitingJobs() {
-		// TODO Auto-generated method stub
-		return null;
+		return waitingJobs;
 	}
 
 	@Override
 	public void addWaitingJob(IJob job) {
-		// TODO Auto-generated method stub
-
+		if (!waitingJobs.contains(job)) {
+			waitingJobs.add(job);
+		}
 	}
 
 	@Override
 	public boolean hasEvent() {
-		// TODO Auto-generated method stub
-		return false;
+		return machineEvent != null;
 	}
 
 	@Override
 	public IEvent getNextEvent() {
-		// TODO Auto-generated method stub
-		return null;
+		return machineEvent;
 	}
 
 	@Override
 	public double getNextEventTime() {
-		// TODO Auto-generated method stub
-		return 0;
+		return availableTime;
+	}
+
+	// An event class that represents a job completing on the machine.
+	private class MachineEvent implements IEvent {
+		private DynamicMachine machine;
+		private double completionTime;
+
+		public MachineEvent(DynamicMachine machine, double time) {
+			this.machine = machine;
+			this.completionTime = time;
+		}
+
+		@Override
+		public void trigger() {
+			machine.updateStatus(completionTime);
+		}
 	}
 
 }
