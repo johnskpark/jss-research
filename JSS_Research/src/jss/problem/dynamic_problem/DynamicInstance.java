@@ -36,7 +36,7 @@ public class DynamicInstance implements IProblemInstance, ISubscriptionHandler {
 	private List<ISubscriber> subscribers = new ArrayList<ISubscriber>();
 
 	/**
-	 * TODO javadoc.
+	 * Generate a new dynamic job shop scheduling problem instance.
 	 */
 	public DynamicInstance() {
 	}
@@ -94,8 +94,8 @@ public class DynamicInstance implements IProblemInstance, ISubscriptionHandler {
 	}
 
 	/**
-	 * TODO javadoc.
-	 * @param tc
+	 * Setter method for the termination criterion that stop job generation
+	 * when a termination criterion is reached.
 	 */
 	public void setTerminationCriterion(ITerminationCriterion tc) {
 		terminationCriterion = tc;
@@ -141,26 +141,22 @@ public class DynamicInstance implements IProblemInstance, ISubscriptionHandler {
 
 		processingOrderGenerator.reset();
 
-		processingTimeGenerator.reset();
-		jobReadyTimeGenerator.reset();
-		dueDateGenerator.reset();
-		penaltyGenerator.reset();
-		setupTimeGenerator.reset();
+		resetProcessingTimeGenerator();
+		resetJobReadyTimeGenerator();
+		resetDueDateGenerator();
+		resetPenaltyGenerator();
+		resetSetupTimeGenerator();
 
 		subscribers = new ArrayList<ISubscriber>();
 	}
 
 	@Override
 	public void initialise() {
-		generateJob();
-
-		for (DynamicJob job : jobs) {
-			job.getNextMachine().addWaitingJob(job);
-		}
+		generateJob(0.0);
 	}
 
 	// Generate a new job using the generators.
-	private void generateJob() {
+	private void generateJob(double currentTime) {
 		DynamicJob job = new DynamicJob(this);
 
 		// Get the list of machines that the job needs to be processed on into.
@@ -172,7 +168,7 @@ public class DynamicInstance implements IProblemInstance, ISubscriptionHandler {
 			job.setSetupTime(machine, generateSetupTime(job));
 		}
 
-		job.setReadyTime(generateJobReadyTime(job));
+		job.setReadyTime(currentTime + generateJobReadyTime(job));
 		job.setDueDate(generateDueDate(job));
 		job.setPenalty(generatePenalty(job));
 
@@ -180,29 +176,48 @@ public class DynamicInstance implements IProblemInstance, ISubscriptionHandler {
 		jobs.add(job);
 	}
 
-	// Generate processing time for the job.
+	// Generate values for the job.
+
 	private double generateProcessingTime(DynamicJob job) {
 		return (processingTimeGenerator != null) ? processingTimeGenerator.getDoubleValue(job) : 0;
 	}
 
-	// Generate setup time for the job.
 	private double generateSetupTime(DynamicJob job) {
 		return (setupTimeGenerator != null) ? setupTimeGenerator.getDoubleValue(job) : 0;
 	}
 
-	// Generate job ready time for the job.
 	private double generateJobReadyTime(DynamicJob job) {
 		return (jobReadyTimeGenerator != null) ? jobReadyTimeGenerator.getDoubleValue(job) : 0;
 	}
 
-	// Generate due date time for the job.
 	private double generateDueDate(DynamicJob job) {
 		return (dueDateGenerator != null) ? dueDateGenerator.getDoubleValue(job) : 0;
 	}
 
-	// Generate penalty for tardy job.
 	private double generatePenalty(DynamicJob job) {
 		return (penaltyGenerator != null) ? penaltyGenerator.getDoubleValue(job) : 0;
+	}
+
+	// Reset the generators.
+
+	private void resetProcessingTimeGenerator() {
+		if (processingTimeGenerator != null) { processingTimeGenerator.reset(); }
+	}
+
+	private void resetSetupTimeGenerator() {
+		if (setupTimeGenerator != null) { setupTimeGenerator.reset(); }
+	}
+
+	private void resetJobReadyTimeGenerator() {
+		if (jobReadyTimeGenerator != null) { jobReadyTimeGenerator.reset(); }
+	}
+
+	private void resetDueDateGenerator() {
+		if (dueDateGenerator != null) { dueDateGenerator.reset(); }
+	}
+
+	private void resetPenaltyGenerator() {
+		if (penaltyGenerator != null) { penaltyGenerator.reset(); }
 	}
 
 	@Override
@@ -229,11 +244,13 @@ public class DynamicInstance implements IProblemInstance, ISubscriptionHandler {
 		if (time >= job.getReadyTime()) {
 			incompleteJobs.add(job);
 			unreleasedJobs.remove(job);
+
+			job.getNextMachine().addWaitingJob(job);
 		}
 
 		// Generate new jobs if the termination criterion has not yet been reached.
 		if (!terminationCriterion.criterionMet()) {
-			generateJob();
+			generateJob(time);
 		}
 
 		for (ISubscriber subscriber : subscribers) {

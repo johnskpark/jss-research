@@ -72,7 +72,7 @@ public class CompletelyReactiveSolver implements ISolver, ISubscriber {
 
 	@Override
 	public void onMachineFeed(IMachine m, double time) {
-		// Cycle through the machines and process jobs on the available machines
+		// Cycle through the machines and process jobs on the available machines.
 		for (IMachine machine : problem.getMachines()) {
 			if (!machine.isAvailable()) {
 				continue;
@@ -100,7 +100,16 @@ public class CompletelyReactiveSolver implements ISolver, ISubscriber {
 
 	@Override
 	public void onJobFeed(IJob job, double time) {
-		// Do nothing for now.
+		// Find the machine that the job was released for.
+		IMachine machine = job.getNextMachine();
+
+		// Process the job if the machine is available.
+		if (machine.isAvailable()) {
+			Action action = rule.getAction(machine, problem, job.getReadyTime());
+
+			solution.addAction(action);
+			machine.processJob(action.getJob(), job.getReadyTime());
+		}
 	}
 
 }

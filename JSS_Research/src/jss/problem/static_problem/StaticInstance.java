@@ -28,7 +28,7 @@ public class StaticInstance implements IProblemInstance, ISubscriptionHandler {
 	private double lowerBound;
 
 	/**
-	 * TODO javadoc.
+	 * Generate a new static job shop scheduling problem instance.
 	 */
 	public StaticInstance() {
 	}

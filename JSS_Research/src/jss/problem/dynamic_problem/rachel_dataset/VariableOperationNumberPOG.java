@@ -28,7 +28,7 @@ public class VariableOperationNumberPOG implements IProcessingOrderGenerator {
 		List<DynamicMachine> selectableMachines = new ArrayList<DynamicMachine>(machines);
 		List<DynamicMachine> operationOrder = new ArrayList<DynamicMachine>();
 
-		int numOperations = rand.nextInt(maxOperations - minOperations) + minOperations;
+		int numOperations = ((maxOperations != minOperations) ? rand.nextInt(maxOperations - minOperations) : 0) + minOperations;
 
 		int operation = 0;
 		while (operation < numOperations && !selectableMachines.isEmpty()) {

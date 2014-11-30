@@ -8,6 +8,7 @@ import jss.IDataset;
 import jss.IProblemInstance;
 import jss.ProblemSize;
 import jss.problem.dynamic_problem.DynamicInstance;
+import jss.problem.dynamic_problem.DynamicMachine;
 
 /**
  * Ten machine dynamic JSS problem that is used by Rachel for her evaluation
@@ -18,24 +19,29 @@ import jss.problem.dynamic_problem.DynamicInstance;
  */
 public class TenDynamicJSSDataset implements IDataset {
 
-	private static final int trainingIndex = 0;
-	private static final int testingIndex = 1;
+	// TODO temporary variable
+	private static final int defaultSeed = 15;
 
-	private static final double[][] meanProcessingTimes = new double[][]{{25, 25}, {25, 50, 25, 50}};
-	private static final double[][] utilisationRates = new double[][]{{0.85, 0.95}, {0.90, 0.90, 0.97, 0.97}};
-	private static final double[][][] dueDateTightness = new double[][][]{
+	private static final int TRAINING_INDEX = 0;
+	private static final int TESTING_INDEX = 1;
+
+	private static final double[][] MEAN_PROCESSING_TIMES = new double[][]{{25, 25}, {25, 50, 25, 50}};
+	private static final double[][] UTILISATION_RATES = new double[][]{{0.85, 0.95}, {0.90, 0.90, 0.97, 0.97}};
+	private static final double[][][] DUE_DATE_TIGHTNESS = new double[][][]{
 			{{3, 5, 7}, {3, 5, 7}},
 			{{2, 4, 6}, {2, 4, 6}, {2, 4, 6}, {2, 4, 6}}
 	};
-	private static final int trainSize = 2;
-	private static final int testSize = 4;
+	private static final int TRAINING_SIZE = 2;
+	private static final int TESTING_SIZE = 4;
 
-	private static final int[][][] processingOrderGenerators = new int[][][]{
+	private static final int[][][] PROCESSING_ORDER_GENERATORS = new int[][][]{
 			{{4, 4}, {8, 8}},
 			{{4, 4}, {6, 6}, {8, 8}, {10, 10}, {2, 10}}
 	};
-	private static final int trainOperationOrdersSize = 2;
-	private static final int testOperationOrdersSize = 5;
+	private static final int TRAINING_OPERATION_ORDER_SIZE = 2;
+	private static final int TESTING_OPERATION_ORDER_SIZE = 5;
+
+	private static final int NUM_MACHINES = 10;
 
 	private long seed;
 	private Random rand;
@@ -49,7 +55,8 @@ public class TenDynamicJSSDataset implements IDataset {
 	 * TODO javadoc.
 	 */
 	public TenDynamicJSSDataset() {
-		this.seed = System.currentTimeMillis();
+		//this.seed = System.currentTimeMillis();
+		this.seed = defaultSeed;
 		this.rand = new Random(seed);
 
 		generateDataset();
@@ -72,17 +79,17 @@ public class TenDynamicJSSDataset implements IDataset {
 	}
 
 	private void generateTrainingSet() {
-		for (int i = 0; i < trainSize; i++) {
-			for (int j = 0; j < trainOperationOrdersSize; j++) {
-				int minOperations = processingOrderGenerators[trainingIndex][i][0];
-				int maxOperations = processingOrderGenerators[trainingIndex][i][1];
+		for (int i = 0; i < TRAINING_SIZE; i++) {
+			for (int j = 0; j < TRAINING_OPERATION_ORDER_SIZE; j++) {
+				int minOperations = PROCESSING_ORDER_GENERATORS[TRAINING_INDEX][i][0];
+				int maxOperations = PROCESSING_ORDER_GENERATORS[TRAINING_INDEX][i][1];
 
-				double uniformMean = meanProcessingTimes[trainingIndex][i];
-				double poissonMean = utilisationRates[trainingIndex][i] *
-						meanProcessingTimes[trainingIndex][i] *
+				double uniformMean = MEAN_PROCESSING_TIMES[TRAINING_INDEX][i];
+				double poissonMean = UTILISATION_RATES[TRAINING_INDEX][i] *
+						MEAN_PROCESSING_TIMES[TRAINING_INDEX][i] *
 						(minOperations + maxOperations) / 2.0;
 
-				double[] tightness = dueDateTightness[trainingIndex][i];
+				double[] tightness = DUE_DATE_TIGHTNESS[TRAINING_INDEX][i];
 
 				DynamicInstance problemInstance = generateProblemInstance(minOperations,
 						maxOperations,
@@ -97,17 +104,17 @@ public class TenDynamicJSSDataset implements IDataset {
 	}
 
 	private void generateTestingSet() {
-		for (int i = 0; i < testSize; i++) {
-			for (int j = 0; j < testOperationOrdersSize; j++) {
-				int minOperations = processingOrderGenerators[testingIndex][i][0];
-				int maxOperations = processingOrderGenerators[testingIndex][i][1];
+		for (int i = 0; i < TESTING_SIZE; i++) {
+			for (int j = 0; j < TESTING_OPERATION_ORDER_SIZE; j++) {
+				int minOperations = PROCESSING_ORDER_GENERATORS[TESTING_INDEX][i][0];
+				int maxOperations = PROCESSING_ORDER_GENERATORS[TESTING_INDEX][i][1];
 
-				double uniformMean = meanProcessingTimes[testingIndex][i];
-				double poissonMean = utilisationRates[testingIndex][i] *
-						meanProcessingTimes[testingIndex][i] *
+				double uniformMean = MEAN_PROCESSING_TIMES[TESTING_INDEX][i];
+				double poissonMean = UTILISATION_RATES[TESTING_INDEX][i] *
+						MEAN_PROCESSING_TIMES[TESTING_INDEX][i] *
 						(minOperations + maxOperations) / 2.0;
 
-				double[] tightness = dueDateTightness[testingIndex][i];
+				double[] tightness = DUE_DATE_TIGHTNESS[TESTING_INDEX][i];
 
 				DynamicInstance problemInstance = generateProblemInstance(minOperations,
 						maxOperations,
@@ -126,17 +133,51 @@ public class TenDynamicJSSDataset implements IDataset {
 			double uniformMean,
 			double poissonMean,
 			double[] tightness) {
-		DynamicInstance problemInstance = new DynamicInstance();
+		DynamicInstance problem = new DynamicInstance();
 
-		problemInstance.setProcessingOrderGenerator(new VariableOperationNumberPOG(minOperations, maxOperations, rand.nextLong()));
-		problemInstance.setProcessingTimeGenerator(new ProcessingTimeGenerator(uniformMean, rand.nextLong()));
-		problemInstance.setJobReadyTimeGenerator(new JobReadyTimeGenerator(poissonMean, rand.nextLong()));
-		problemInstance.setDueDateGenerator(new DueDateGenerator(tightness, rand.nextLong()));
+		addMachines(problem);
+		addProcessingOrderGenerator(problem, minOperations, maxOperations);
+		addProcessingTimeGenerator(problem, uniformMean);
+		addJobReadyTimeGenerator(problem, poissonMean);
+		addDueDateGenerator(problem, tightness);
+		addPenaltyGenerator(problem);
+		addTerminationCriterion(problem);
+
+		return problem;
+	}
+
+	private void addMachines(DynamicInstance problemInstance) {
+		for (int i = 0; i < NUM_MACHINES; i++) {
+			problemInstance.addMachine(new DynamicMachine(problemInstance));
+		}
+	}
+
+	private void addProcessingOrderGenerator(DynamicInstance problemInstance, int minOperations, int maxOperations) {
+		problemInstance.setProcessingOrderGenerator(new
+				VariableOperationNumberPOG(minOperations, maxOperations, rand.nextLong()));
+	}
+
+	private void addProcessingTimeGenerator(DynamicInstance problemInstance, double uniformMean) {
+		problemInstance.setProcessingTimeGenerator(new
+				ProcessingTimeGenerator(uniformMean, rand.nextLong()));
+	}
+
+	private void addJobReadyTimeGenerator(DynamicInstance problemInstance, double poissonMean) {
+		problemInstance.setJobReadyTimeGenerator(new
+				JobReadyTimeGenerator(poissonMean, rand.nextLong()));
+	}
+
+	private void addDueDateGenerator(DynamicInstance problemInstance, double[] tightness) {
+		problemInstance.setDueDateGenerator(new
+				DueDateGenerator(tightness, rand.nextLong()));
+	}
+
+	private void addPenaltyGenerator(DynamicInstance problemInstance) {
 		problemInstance.setPenaltyGenerator(new PenaltyGenerator(rand.nextLong()));
+	}
 
+	private void addTerminationCriterion(DynamicInstance problemInstance) {
 		problemInstance.setTerminationCriterion(new TerminationCriterion(problemInstance));
-
-		return problemInstance;
 	}
 
 	@Override
