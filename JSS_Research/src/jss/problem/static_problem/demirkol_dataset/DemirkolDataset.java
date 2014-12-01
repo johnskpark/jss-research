@@ -1,7 +1,6 @@
 package jss.problem.static_problem.demirkol_dataset;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -53,9 +52,9 @@ public class DemirkolDataset implements IDataset {
 
 	private void readFile() {
 		if (isRunningFromJar()) {
-			getStreamsFromJar();
+			readFromJar();
 		} else {
-			getStreamsFromDir();
+			readFromFile();
 		}
 	}
 
@@ -65,29 +64,22 @@ public class DemirkolDataset implements IDataset {
 		return datasetURL.toString().startsWith("jar:");
 	}
 
-	private List<InputStream> getStreamsFromDir() {
-		try {
-			List<InputStream> inputStreams = new ArrayList<InputStream>();
+	private List<InputStream> readFromFile() {
+		List<InputStream> inputStreams = new ArrayList<InputStream>();
 
-			File dir = new File(DemirkolDataset.class.getResource(DEMIRKOL_DATASET).getPath());
+		File dir = new File(DemirkolDataset.class.getResource(DEMIRKOL_DATASET).getPath());
 
-			for (File file : dir.listFiles()) {
-				System.out.println("\"" + file + "\"");
+		for (File file : dir.listFiles()) {
+			if (file.getName().endsWith(DEMIRKOL_FILE_SUFFIX)) {
 
-				if (file.getName().endsWith(DEMIRKOL_FILE_SUFFIX)) {
-					System.out.println(file.getName());
-					inputStreams.add(new FileInputStream(file));
-				}
 			}
-			
-			return inputStreams;
-		} catch (IOException ex) {
-			throw new RuntimeException(ex);
 		}
+
+		return inputStreams;
 	}
 
 	// The fark is this on about?
-	private List<InputStream> getStreamsFromJar() {
+	private void readFromJar() {
 		JarFile jarFile = null;
 		try {
 			String path = new File(DemirkolDataset.class.getResource(DEMIRKOL_DATASET).getPath()).getParent().replaceAll("(!|file:\\\\)", "");
@@ -110,8 +102,6 @@ public class DemirkolDataset implements IDataset {
 			} catch (Exception e) {
 			}
 		}
-		
-		return null;
 	}
 
 	private void generateTrainingSets() {
