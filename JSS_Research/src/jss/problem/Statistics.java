@@ -53,18 +53,21 @@ public class Statistics {
 	}
 
 	/**
-	 * TODO javadoc.
-	 * @param key
-	 * @param data
+	 * Add in the additional data into the statistics measure.
+	 * @param key The key to extract the data with.
+	 * @param data The object representing the data.
 	 */
-	public void addData(String key, Object data) {
-		// TODO this needs to be modified
+	public <T> void addData(String key, T data) {
 		additionalData.put(key, data);
 	}
 
-	public Object getData(String key) {
-		// TODO this needs to be modified
-		return additionalData.get(key);
+	/**
+	 * Retrieve the additional data from the statistics measure.
+	 * @param key The key to extract the data with.
+	 */
+	@SuppressWarnings("unchecked")
+	public <T> T getData(String key) {
+		return (T)additionalData.get(key);
 	}
 
 	/**

@@ -146,6 +146,8 @@ public class TenDynamicJSSDataset implements IDataset {
 		return problem;
 	}
 
+	// Add in the different components of a problem instance.
+
 	private void addMachines(DynamicInstance problemInstance) {
 		for (int i = 0; i < NUM_MACHINES; i++) {
 			problemInstance.addMachine(new DynamicMachine(problemInstance));
