@@ -1,8 +1,10 @@
 package jss.problem.static_problem.demirkol_dataset;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -51,11 +53,9 @@ public class DemirkolDataset implements IDataset {
 	}
 
 	private void readFile() {
-		if (isRunningFromJar()) {
-			readFromJar();
-		} else {
-			readFromFile();
-		}
+		List<InputStream> inputStreams = (isRunningFromJar()) ? getStreamsFromJar() : getStreamsFromDir();
+		
+		readProblemInstances(inputStreams);
 	}
 
 	private boolean isRunningFromJar() {
@@ -64,22 +64,31 @@ public class DemirkolDataset implements IDataset {
 		return datasetURL.toString().startsWith("jar:");
 	}
 
-	private List<InputStream> readFromFile() {
-		List<InputStream> inputStreams = new ArrayList<InputStream>();
-
-		File dir = new File(DemirkolDataset.class.getResource(DEMIRKOL_DATASET).getPath());
-
-		for (File file : dir.listFiles()) {
-			if (file.getName().endsWith(DEMIRKOL_FILE_SUFFIX)) {
-
+	// TODO fix up the exception handling sometime later.
+	private List<InputStream> getStreamsFromDir() {
+		try {
+			List<InputStream> inputStreams = new ArrayList<InputStream>();
+	
+			File dir = new File(DemirkolDataset.class.getResource(DEMIRKOL_DATASET).toURI());
+			for (File file : dir.listFiles()) {
+				if (file.getName().endsWith(DEMIRKOL_FILE_SUFFIX)) {
+					inputStreams.add(new FileInputStream(file));
+				}
 			}
+			
+			return inputStreams;
+		} catch (URISyntaxException ex) {
+			throw new RuntimeException(ex);
+		} catch (IOException ex) {
+			throw new RuntimeException(ex);
 		}
-
-		return inputStreams;
 	}
 
-	// The fark is this on about?
-	private void readFromJar() {
+	// The fark is this on about? Have a run of this at the university tomorrow to see what 
+	// the heck a jar entry does.
+	private List<InputStream> getStreamsFromJar() {
+		// TODO
+		
 		JarFile jarFile = null;
 		try {
 			String path = new File(DemirkolDataset.class.getResource(DEMIRKOL_DATASET).getPath()).getParent().replaceAll("(!|file:\\\\)", "");
@@ -102,6 +111,13 @@ public class DemirkolDataset implements IDataset {
 			} catch (Exception e) {
 			}
 		}
+		
+		return null;
+	}
+	
+	private void readProblemInstances(List<InputStream> inputStreams) {
+		// I don't like this idea of having multiple file streams open. Maybe try to find another 
+		// way somehow.
 	}
 
 	private void generateTrainingSets() {
