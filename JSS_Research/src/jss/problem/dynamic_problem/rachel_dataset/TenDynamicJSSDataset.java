@@ -19,9 +19,6 @@ import jss.problem.dynamic_problem.DynamicMachine;
  */
 public class TenDynamicJSSDataset implements IDataset {
 
-	// TODO temporary variable
-	private static final int defaultSeed = 15;
-
 	private static final int TRAINING_INDEX = 0;
 	private static final int TESTING_INDEX = 1;
 
@@ -55,8 +52,7 @@ public class TenDynamicJSSDataset implements IDataset {
 	 * TODO javadoc.
 	 */
 	public TenDynamicJSSDataset() {
-		//this.seed = System.currentTimeMillis();
-		this.seed = defaultSeed;
+		this.seed = System.currentTimeMillis();
 		this.rand = new Random(seed);
 
 		generateDataset();
