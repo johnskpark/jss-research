@@ -1,7 +1,6 @@
 package jss.evolution;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +17,7 @@ import ec.Individual;
 import ec.gp.GPIndividual;
 import ec.gp.GPProblem;
 import ec.gp.koza.KozaFitness;
+import ec.simple.SimpleStatistics;
 import ec.util.Parameter;
 
 /**
@@ -52,6 +52,11 @@ public class JSSGPTestProblem extends GPProblem {
 	private int numIterations = 3;
 
 	private Map<GPIndividual, List<GPIndividual[]>> evalGroups = new HashMap<GPIndividual, List<GPIndividual[]>>();
+	private GPIndividual[] bestGroup = null;
+	private KozaFitness bestGroupFitness = new KozaFitness();
+
+	private GPIndividual[] bestGroupOfGeneration = null;
+	private KozaFitness bestGroupOfGenerationFitness = new KozaFitness();
 
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
@@ -84,6 +89,9 @@ public class JSSGPTestProblem extends GPProblem {
 		if (numIterStr != null) {
 			numIterations = 3;
 		}
+
+		bestGroupFitness.setStandardizedFitness(state, Double.MAX_VALUE);
+		bestGroupOfGenerationFitness.setStandardizedFitness(state, Double.MAX_VALUE);
 	}
 
 	@Override
@@ -92,7 +100,10 @@ public class JSSGPTestProblem extends GPProblem {
 		for (int i = 0; i < inds.length; i++) {
 			evalGroups.put((GPIndividual) inds[i], new ArrayList<GPIndividual[]>());
 
-			List<Individual> remainingInds = Arrays.asList(inds);
+			List<GPIndividual> remainingInds = new ArrayList<GPIndividual>();
+			for (int j = 0; j < inds.length; j++) {
+				remainingInds.add((GPIndividual) inds[j]);
+			}
 
 			int iteration = 0;
 			while (iteration < numIterations && !remainingInds.isEmpty()) {
@@ -102,7 +113,7 @@ public class JSSGPTestProblem extends GPProblem {
 				int count = 1;
 				while (count < groupSize && !remainingInds.isEmpty()) {
 					int index = state.random[threadnum].nextInt(remainingInds.size());
-					indGroup[count] = (GPIndividual) remainingInds.remove(index);
+					indGroup[count] = remainingInds.remove(index);
 
 					count++;
 				}
@@ -115,7 +126,23 @@ public class JSSGPTestProblem extends GPProblem {
 
 	@Override
 	public void finishEvaluating(final EvolutionState state, final int threadnum) {
+		// Print out the best ensemble group of generation that was evaluated.
+		state.output.message("Best ensemble fitness of generation " + bestGroupOfGenerationFitness.fitnessToStringForHumans());
+
+		// Update the bestGroup overall.
+		if (bestGroupOfGenerationFitness.betterThan(bestGroupFitness)) {
+			bestGroup = bestGroupOfGeneration;
+			bestGroupFitness.setStandardizedFitness(state, bestGroupOfGenerationFitness.standardizedFitness());
+		}
+
+		// Print out the best ensemble over all generation that was evaluated.
+		SimpleStatistics stats = (SimpleStatistics) state.statistics;
+		state.output.println("Ensemble: TODO", stats.statisticslog);
+
+		// Clear out the grouping.
 		evalGroups.clear();
+		bestGroupOfGeneration = null;
+		bestGroupOfGenerationFitness.setStandardizedFitness(state, Double.MAX_VALUE);
 	}
 
 	@Override
@@ -128,6 +155,7 @@ public class JSSGPTestProblem extends GPProblem {
 			checkInvariance(state, ind);
 
 			Statistics stats = new Statistics();
+			stats.addData(TRACKER_DATA, new PenaltyData());
 
 			List<GPIndividual[]> indGroups = evalGroups.get(ind);
 			for (GPIndividual[] indGroup : indGroups) {
@@ -154,6 +182,12 @@ public class JSSGPTestProblem extends GPProblem {
 					((PenaltyData) stats.getData(TRACKER_DATA)).addPenalties(tracker.getPenalties());
 
 					tracker.clear();
+				}
+
+				double groupFitness = fitness.getFitness(stats);
+				if (bestGroupOfGenerationFitness.standardizedFitness() > groupFitness) {
+					bestGroupOfGeneration = indGroup;
+					bestGroupOfGenerationFitness.setStandardizedFitness(state, groupFitness);
 				}
 			}
 
