@@ -94,6 +94,22 @@ public class JSSGPTestProblem extends GPProblem {
 		bestGroupOfGenerationFitness.setStandardizedFitness(state, Double.MAX_VALUE);
 	}
 
+	/**
+	 * TODO dirty dirty hack.
+	 * @return
+	 */
+	public GPIndividual[] getBestGroupOfGeneration() {
+		return bestGroupOfGeneration;
+	}
+
+	/**
+	 * TODO dirty dirty hack.
+	 * @return
+	 */
+	public GPIndividual[] getBestGroup() {
+		return bestGroup;
+	}
+
 	@Override
 	public void prepareToEvaluate(final EvolutionState state, final int threadnum) {
 		Individual[] inds = state.population.subpops[0].individuals;

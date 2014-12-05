@@ -271,7 +271,7 @@ public class ECSuite extends Problem implements SimpleProblemForm
             "  " + V_LENNARDJONES + "\n" +
             "  " + V_LUNACEK + "\n",
             base.push( P_WHICH_PROBLEM ) );
-        
+
         seed = state.parameters.getLongWithDefault( base.push( P_SEED ), null, ROTATION_SEED );
         if (seed <= 0)
             state.output.fatal("If a rotation seed is provided, it must be > 0", base.push( P_SEED ), null);
@@ -289,7 +289,7 @@ public class ECSuite extends Problem implements SimpleProblemForm
             state.output.fatal( "The individuals for this problem should be DoubleVectorIndividuals." );
 
         DoubleVectorIndividual temp = (DoubleVectorIndividual)ind;
-        double[] genome = temp.genome;
+        //double[] genome = temp.genome;
         //int len = genome.length;
 
         // this curious break-out makes it easy to use the isOptimal() and function() methods
@@ -363,7 +363,7 @@ public class ECSuite extends Problem implements SimpleProblemForm
                     {
                     double gj = genome[i-1] ;
                     double gi = genome[i] ;
-                    value += 100 * (gj*gj - gj) * (gj*gj - gj) +  (1-gj) * (1-gj);
+                    value += 100 * (gj*gj - gi) * (gj*gj - gi) +  (1-gj) * (1-gj);
                     }
                 return -value;
 
@@ -548,7 +548,7 @@ public class ECSuite extends Problem implements SimpleProblemForm
             // http://arxiv.org/pdf/1207.4318.pdf
             // http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.154.1657
             // // // //
-            double s = 0.7 ; // The shape of the boundary of the double sphere, 
+            double s = 0.7 ; // The shape of the boundary of the double sphere,
             // could be like [0.2 - 1.4] but not 0.0.
             // > 1.0 or < 1.0 means a parabolic shape, 1.0 means a linear boundary.
             double d = 1.0 ; // depth of the sphere, could be 1, 2, 3, or 4. 1 is deeper than 4
@@ -561,8 +561,8 @@ public class ECSuite extends Problem implements SimpleProblemForm
             double sigma2 = 0.0 ;
             for(int i = 0 ; i < genome.length ; i++)
                 {
-                sigma1 = (genome[i] - mu1) * (genome[i] - mu1); 
-                sigma2 = (genome[i] - mu2) * (genome[i] - mu2); 
+                sigma1 = (genome[i] - mu1) * (genome[i] - mu1);
+                sigma2 = (genome[i] - mu2) * (genome[i] - mu2);
                 }
             sigma2 = d * genome.length + s * sigma1 ;
             double sphere = Math.min(sigma1, sigma2);
@@ -570,9 +570,9 @@ public class ECSuite extends Problem implements SimpleProblemForm
             // + or - ? not sure, I always get confused.
             // Lunacek function is a combination of Rastrigin and a Double Sphere.
             // As the Rastrigin is -, so this function should be.
-            return -1.0 * (sphere + rastrigin) ; 
+            return -1.0 * (sphere + rastrigin) ;
             }
-                        
+
             default:
                 state.output.fatal( "ec.app.ecsuite.ECSuite has an invalid problem -- how on earth did that happen?" );
                 return 0;  // never happens
@@ -733,11 +733,11 @@ public class ECSuite extends Problem implements SimpleProblemForm
         {
         if (rotationSeed == ROTATION_SEED)
             state.output.warnOnce("Default rotation seed being used (" + rotationSeed + ")");
-                
+
         MersenneTwisterFast rand = new MersenneTwisterFast(rotationSeed);  // it's rare to need to do this, but we need to guarantee the same rotation space
         for(int i = 0; i < 624 * 4; i++) // prime the MT for 4 full sample iterations to get it warmed up
             rand.nextInt();
-        
+
         double o[ /* row */ ][ /* column */ ] = new double[N][N];
 
         // make random values
