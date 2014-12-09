@@ -151,10 +151,6 @@ public class JSSGPTestProblem extends GPProblem {
 			bestGroupFitness.setStandardizedFitness(state, bestGroupOfGenerationFitness.standardizedFitness());
 		}
 
-		// Print out the best ensemble over all generation that was evaluated.
-		SimpleStatistics stats = (SimpleStatistics) state.statistics;
-		state.output.println("Ensemble: TODO", stats.statisticslog);
-
 		// Clear out the grouping.
 		evalGroups.clear();
 		bestGroupOfGeneration = null;

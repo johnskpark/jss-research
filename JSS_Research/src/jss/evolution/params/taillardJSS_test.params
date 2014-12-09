@@ -4,6 +4,8 @@
 
 parent.0 = ../../../ec/gp/koza/koza.params
 
+stat = jss.evolution.JSSGPTestStatistics
+
 # the next four items are already defined in koza.params, but we
 # put them here to be clear.
 
