@@ -112,6 +112,11 @@ public class JSSGPTestProblem extends GPProblem {
 
 	@Override
 	public void prepareToEvaluate(final EvolutionState state, final int threadnum) {
+		// Clear out the grouping.
+		evalGroups.clear();
+		bestGroupOfGeneration = null;
+		bestGroupOfGenerationFitness.setStandardizedFitness(state, Double.MAX_VALUE);
+		
 		Individual[] inds = state.population.subpops[0].individuals;
 		for (int i = 0; i < inds.length; i++) {
 			evalGroups.put((GPIndividual) inds[i], new ArrayList<GPIndividual[]>());
@@ -150,11 +155,6 @@ public class JSSGPTestProblem extends GPProblem {
 			bestGroup = bestGroupOfGeneration;
 			bestGroupFitness.setStandardizedFitness(state, bestGroupOfGenerationFitness.standardizedFitness());
 		}
-
-		// Clear out the grouping.
-		evalGroups.clear();
-		bestGroupOfGeneration = null;
-		bestGroupOfGenerationFitness.setStandardizedFitness(state, Double.MAX_VALUE);
 	}
 
 	@Override
