@@ -3,7 +3,7 @@ package jss.evolution;
 import ec.EvolutionState;
 import ec.simple.SimpleStatistics;
 
-// Add the stupid shit in here.
+// Add the stupid shit in here... Actually, you know what? Ignore this.
 public class JSSGPTestStatistics extends SimpleStatistics {
 
 	@Override
