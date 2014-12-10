@@ -17,7 +17,6 @@ import ec.Individual;
 import ec.gp.GPIndividual;
 import ec.gp.GPProblem;
 import ec.gp.koza.KozaFitness;
-import ec.simple.SimpleStatistics;
 import ec.util.Parameter;
 
 /**
@@ -116,7 +115,7 @@ public class JSSGPTestProblem extends GPProblem {
 		evalGroups.clear();
 		bestGroupOfGeneration = null;
 		bestGroupOfGenerationFitness.setStandardizedFitness(state, Double.MAX_VALUE);
-		
+
 		Individual[] inds = state.population.subpops[0].individuals;
 		for (int i = 0; i < inds.length; i++) {
 			evalGroups.put((GPIndividual) inds[i], new ArrayList<GPIndividual[]>());
