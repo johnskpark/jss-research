@@ -22,6 +22,7 @@ import ec.util.Parameter;
 /**
  * TODO javadoc.
  * TODO try to incorporate this into the standardised format.
+ * I will try to get the grouping into this further.
  *
  * @author parkjohn
  *
@@ -91,6 +92,7 @@ public class JSSGPTestProblem extends GPProblem {
 
 		bestGroupFitness.setStandardizedFitness(state, Double.MAX_VALUE);
 		bestGroupOfGenerationFitness.setStandardizedFitness(state, Double.MAX_VALUE);
+
 	}
 
 	/**
