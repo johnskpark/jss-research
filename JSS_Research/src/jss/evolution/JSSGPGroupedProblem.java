@@ -1,6 +1,5 @@
 package jss.evolution;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import jss.IDataset;
@@ -12,55 +11,63 @@ import jss.evolution.tracker.PriorityTracker;
 import jss.problem.Statistics;
 import ec.EvolutionState;
 import ec.Individual;
-import ec.Population;
-import ec.coevolve.GroupedProblemForm;
 import ec.gp.GPIndividual;
 import ec.gp.GPProblem;
 import ec.gp.koza.KozaFitness;
 import ec.util.Parameter;
 
 /**
- * TODO in the future, try and see if I can group this along with the
- * simple problem form and make a standardised problem form.
+ * TODO javadoc.
+ * TODO try to incorporate this into the standardised format.
+ * I will try to get the grouping into this further.
+ *
  * @author parkjohn
  *
  */
-public class JSSGPGroupedProblem extends GPProblem implements GroupedProblemForm {
+public class JSSGPGroupedProblem extends GPProblem {
 
-	private static final long serialVersionUID = 7483010104507824649L;
-
-	public static final String P_SHOULD_SET_CONTEXT = "set-context";
-	private boolean shouldSetContext;
+	private static final long serialVersionUID = -3817123526020178300L;
 
 	public static final String P_SOLVER = "solver";
 	public static final String P_INSTANCES = "instances";
 	public static final String P_FITNESS = "fitness";
 	public static final String P_SIZE = "size";
 
+	public static final String P_GROUP = "group";
+
 	public static final String TRACKER_DATA = "tracker";
 
 	private JSSGPSolver solver;
 	private IDataset dataset;
-	private IGroupedFitness fitness;
+	private ISimpleFitness fitness;
 
 	private ProblemSize problemSize;
 	private boolean problemSizeSet = false;
+
+//	private int groupSize = 3;
+//	private int numIterations = 3;
+//
+//	private Map<GPIndividual, List<GPIndividual[]>> evalGroups = new HashMap<GPIndividual, List<GPIndividual[]>>();
+//	private GPIndividual[] bestGroup = null;
+//	private KozaFitness bestGroupFitness = new KozaFitness();
+//
+//	private GPIndividual[] bestGroupOfGeneration = null;
+//	private KozaFitness bestGroupOfGenerationFitness = new KozaFitness();
+	
+	private IGroupedIndividual individualGrouping = null;
 
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
 		super.setup(state, base);
 
-		// Load whether we should set context or not.
-		shouldSetContext = state.parameters.getBoolean(base.push(P_SHOULD_SET_CONTEXT), null, true);
-
-		// Setup the GPData.
+		// Setup the GPData
 		input = (JSSGPData) state.parameters.getInstanceForParameterEq(base.push(P_DATA), null, JSSGPData.class);
 		input.setup(state, base.push(P_DATA));
 
-		// Setup the dataset and the solver.
+		// Setup the dataset and the solver
 		solver = (JSSGPSolver) state.parameters.getInstanceForParameterEq(base.push(P_SOLVER), null, JSSGPSolver.class);
 		dataset = (IDataset) state.parameters.getInstanceForParameterEq(base.push(P_INSTANCES), null, IDataset.class);
-		fitness = (IGroupedFitness) state.parameters.getInstanceForParameter(base.push(P_FITNESS), null, IGroupedFitness.class);
+		fitness = (ISimpleFitness) state.parameters.getInstanceForParameterEq(base.push(P_FITNESS), null, ISimpleFitness.class);
 
 		// Set the problem size used for the training set.
 		String problemSizeStr = state.parameters.getString(base.push(P_SIZE), null);
@@ -68,45 +75,45 @@ public class JSSGPGroupedProblem extends GPProblem implements GroupedProblemForm
 			problemSize = ProblemSize.strToProblemSize(problemSizeStr);
 			problemSizeSet = true;
 		}
+		
+		// Set the grouping used to group the individuals together
+		individualGrouping = (IGroupedIndividual) state.parameters.getInstanceForParameterEq(base.push(P_GROUP), null, IGroupedIndividual.class);
+		individualGrouping.setup(state, base);
+
+		// Set the group size used for the individuals.
+//		String groupSizeStr = state.parameters.getString(base.push(P_GROUP), null);
+//		if (groupSizeStr != null) {
+//			groupSize = Integer.parseInt(groupSizeStr);
+//		}
+
+		// Set the number of iterations used for the individuals.
+//		String numIterStr = state.parameters.getString(base.push(P_ITER), null);
+//		if (numIterStr != null) {
+//			numIterations = 3;
+//		}
+
+//		bestGroupFitness.setStandardizedFitness(state, Double.MAX_VALUE);
+//		bestGroupOfGenerationFitness.setStandardizedFitness(state, Double.MAX_VALUE);
+
+	}
+	
+	public IGroupedIndividual getIndividualGrouping() {
+		return individualGrouping;
 	}
 
-	@SuppressWarnings("rawtypes")
 	@Override
-	public void preprocessPopulation(final EvolutionState state,
-			final Population pop,
-			final boolean[] prepareForFitnessAssessment,
-			final boolean countVictoriesOnly) {
-		for (int i = 0; i < pop.subpops.length; i++) {
-			if (prepareForFitnessAssessment[i]) {
-				for (int j = 0; j < pop.subpops[i].individuals.length; j++) {
-					KozaFitness fitness = (KozaFitness)pop.subpops[i].individuals[j].fitness;
-					fitness.trials = new ArrayList();
-				}
-			}
-		}
+	public void prepareToEvaluate(final EvolutionState state, final int threadnum) {
+		individualGrouping.groupIndividuals(state, threadnum);
 	}
 
 	@Override
-	public void postprocessPopulation(final EvolutionState state,
-			final Population pop,
-			final boolean[] assessFitness,
-			final boolean countVictoriesOnly) {
-		for (int i = 0; i < pop.subpops.length; i++ ) {
-			if (assessFitness[i]) {
-				for (int j = 0; j < pop.subpops[i].individuals.length; j++) {
-					KozaFitness fitness = ((KozaFitness)(pop.subpops[i].individuals[j].fitness));
+	public void finishEvaluating(final EvolutionState state, final int threadnum) {
+		KozaFitness groupFitness = individualGrouping.getBestGroupForGenerationFitness();
+		
+		// Print out the best ensemble group of generation that was evaluated.
+		state.output.message("Best ensemble fitness of generation " + groupFitness.fitnessToStringForHumans());
 
-					// we take the minimum over the trials
-					double min = Double.POSITIVE_INFINITY;
-					for (int l = 0; l < fitness.trials.size(); l++) {
-						min = Math.min(((Double)(fitness.trials.get(l))).doubleValue(), min);  // it'll be the first one, but whatever
-					}
-
-					fitness.setStandardizedFitness(state, min);
-					pop.subpops[i].individuals[j].evaluated = true;
-				}
-			}
-		}
+		individualGrouping.clearForGeneration(state);
 	}
 
 	@Override
@@ -114,108 +121,64 @@ public class JSSGPGroupedProblem extends GPProblem implements GroupedProblemForm
 			final Individual ind,
 			final int subpopulation,
 			final int threadnum) {
-		state.output.fatal("JSSGPGroupedProblem must be used in a grouped problem form");
-	}
+		if (!ind.evaluated) {
+			Statistics stats = new Statistics();
+			stats.addData(TRACKER_DATA, new PenaltyData());
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public void evaluate(final EvolutionState state,
-			final Individual[] inds,
-			final boolean[] updateFitness,
-			final boolean countVictoriesOnly,
-			final int[] subpops,
-			final int threadnum) {
-		checkInvariance(state, inds);
+			List<GPIndividual[]> indGroups = individualGrouping.getGroups(ind);
+			for (GPIndividual[] indGroup : indGroups) {
+				PriorityTracker tracker = new PriorityTracker();
+				tracker.loadIndividuals(indGroup);
 
-		Statistics stats = new Statistics();
-		stats.addData(TRACKER_DATA, new PenaltyData());
+				JSSGPConfiguration config = new JSSGPConfiguration();
+				config.setState(state);
+				config.setIndividuals(indGroup);
+				config.setSubpopulations(new int[]{subpopulation});
+				config.setThreadnum(threadnum);
+				config.setData((JSSGPData)input);
+				config.setTracker(tracker);
 
-		GPIndividual[] gpInds = new GPIndividual[inds.length];
-		for (int i = 0; i < inds.length; i++) {
-			gpInds[i] = (GPIndividual) inds[i];
-		}
+				solver.setGPConfiguration(config);
 
-		PriorityTracker tracker = new PriorityTracker();
-		tracker.loadIndividuals(inds);
+				List<IProblemInstance> trainingSet = (problemSizeSet) ?
+						dataset.getTraining(problemSize) : dataset.getProblems();
 
-		JSSGPConfiguration config = new JSSGPConfiguration();
-		config.setState(state);
-		config.setIndividuals(gpInds);
-		config.setSubpopulations(subpops);
-		config.setThreadnum(threadnum);
-		config.setData((JSSGPData) input);
-		config.setTracker(tracker);
+				for (IProblemInstance problem : trainingSet) {
+					IResult solution = solver.getSolution(problem);
 
-		solver.setGPConfiguration(config);
+					stats.addSolution(problem, solution);
+					((PenaltyData) stats.getData(TRACKER_DATA)).addPenalties(tracker.getPenalties());
 
-		List<IProblemInstance> trainingSet = (problemSizeSet) ?
-				dataset.getTraining(problemSize) : dataset.getProblems();
-
-		for (IProblemInstance problem : trainingSet) {
-			IResult solution = solver.getSolution(problem);
-
-			stats.addSolution(problem, solution);
-			((PenaltyData) stats.getData(TRACKER_DATA)).addPenalties(tracker.getPenalties());
-
-			tracker.clear();
-		}
-
-		for (int i = 0; i < inds.length; i++) {
-			double trial = fitness.getFitness(stats, i);
-
-			if (updateFitness[i]) {
-				GPIndividual gpInd = gpInds[i];
-
-				int len = gpInd.fitness.trials.size();
-
-				if (len == 0) {
-					if (shouldSetContext) {
-						gpInd.fitness.setContext(inds, i);
-					}
-
-					gpInd.fitness.trials.add(new Double(trial));
-				} else if ((Double) gpInd.fitness.trials.get(0) < trial) {
-					if (shouldSetContext) {
-						gpInd.fitness.setContext(inds, i);
-					}
-
-					Object t = gpInd.fitness.trials.get(0);
-					gpInd.fitness.trials.set(0, fitness);
-					gpInd.fitness.trials.add(t);
+					tracker.clear();
 				}
 
-				((KozaFitness)gpInd.fitness).setStandardizedFitness(state, trial);
+				double groupFitness = fitness.getFitness(stats);
+				
+				individualGrouping.updateFitness(state, indGroup, groupFitness);
 			}
+
+			((KozaFitness)ind.fitness).setStandardizedFitness(state, fitness.getFitness(stats));
+
+			ind.evaluated = true;
 		}
 	}
 
 	// Check the individual for invariance. Each individual must be a GPIndividual,
 	// and the fitness must be KozaFitness.
-	private void checkInvariance(final EvolutionState state, final Individual[] ind) {
-        if (ind.length == 0) {
-            state.output.fatal("Number of individuals provided to CoevolutionaryECSuite is 0!");
-        }
-        if (ind.length == 1) {
-            state.output.warnOnce("Coevolution used, but number of individuals provided to CoevolutionaryECSuite is 1.");
-        }
-
-        for (int i = 0; i < ind.length; i++) {
-			if (!(ind[i] instanceof GPIndividual)) {
-				state.output.error("The individual must be an instance of GPIndividual");
-			}
-			if (!(ind[i].fitness instanceof KozaFitness)) {
-				state.output.error("The individual's fitness must be an instance of KozaFitness");
-			}
-        }
-
-        state.output.exitIfErrors();
-	}
+//	private void checkInvariance(final EvolutionState state, final Individual ind) {
+//		if (!(ind instanceof GPIndividual)) {
+//			state.output.error("The individual must be an instance of GPIndividual");
+//		}
+//		if (!(ind.fitness instanceof KozaFitness)) {
+//			state.output.error("The individual's fitness must be an instance of KozaFitness");
+//		}
+//	}
 
 	@Override
 	public Object clone() {
 		JSSGPGroupedProblem newObject = (JSSGPGroupedProblem)super.clone();
 
-		newObject.input = (JSSGPData) input.clone();
+		newObject.input = (JSSGPData)input.clone();
 		newObject.dataset = dataset;
 		newObject.solver = solver;
 

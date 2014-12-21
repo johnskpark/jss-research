@@ -58,7 +58,7 @@ gp.fs.0.func.9.nc = nc0
 gp.fs.0.func.10 = jss.evolution.node.basic.ScoreRemainingTime
 gp.fs.0.func.10.nc = nc0
 
-eval.problem = jss.evolution.JSSGPGroupedProblem
+eval.problem = jss.evolution.JSSGPCoopProblem
 eval.problem.data = jss.evolution.JSSGPData
 
 eval.problem.instances = jss.problem.static_problem.taillard_dataset.TaillardDataset
