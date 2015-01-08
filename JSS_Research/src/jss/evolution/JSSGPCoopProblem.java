@@ -8,6 +8,7 @@ import jss.IProblemInstance;
 import jss.IResult;
 import jss.ProblemSize;
 import jss.evolution.statistic_data.PenaltyData;
+import jss.evolution.tracker.MSDPriorityTracker;
 import jss.evolution.tracker.PriorityTracker;
 import jss.problem.Statistics;
 import ec.EvolutionState;
@@ -135,7 +136,7 @@ public class JSSGPCoopProblem extends GPProblem implements GroupedProblemForm {
 			gpInds[i] = (GPIndividual) inds[i];
 		}
 
-		PriorityTracker tracker = new PriorityTracker();
+		PriorityTracker tracker = new MSDPriorityTracker();
 		tracker.loadIndividuals(inds);
 
 		JSSGPConfiguration config = new JSSGPConfiguration();

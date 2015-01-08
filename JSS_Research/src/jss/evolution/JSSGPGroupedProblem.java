@@ -7,6 +7,7 @@ import jss.IProblemInstance;
 import jss.IResult;
 import jss.ProblemSize;
 import jss.evolution.statistic_data.PenaltyData;
+import jss.evolution.tracker.MSDPriorityTracker;
 import jss.evolution.tracker.PriorityTracker;
 import jss.problem.Statistics;
 import ec.EvolutionState;
@@ -53,7 +54,7 @@ public class JSSGPGroupedProblem extends GPProblem {
 //
 //	private GPIndividual[] bestGroupOfGeneration = null;
 //	private KozaFitness bestGroupOfGenerationFitness = new KozaFitness();
-	
+
 	private IGroupedIndividual individualGrouping = null;
 
 	@Override
@@ -75,28 +76,13 @@ public class JSSGPGroupedProblem extends GPProblem {
 			problemSize = ProblemSize.strToProblemSize(problemSizeStr);
 			problemSizeSet = true;
 		}
-		
+
 		// Set the grouping used to group the individuals together
 		individualGrouping = (IGroupedIndividual) state.parameters.getInstanceForParameterEq(base.push(P_GROUP), null, IGroupedIndividual.class);
 		individualGrouping.setup(state, base);
 
-		// Set the group size used for the individuals.
-//		String groupSizeStr = state.parameters.getString(base.push(P_GROUP), null);
-//		if (groupSizeStr != null) {
-//			groupSize = Integer.parseInt(groupSizeStr);
-//		}
-
-		// Set the number of iterations used for the individuals.
-//		String numIterStr = state.parameters.getString(base.push(P_ITER), null);
-//		if (numIterStr != null) {
-//			numIterations = 3;
-//		}
-
-//		bestGroupFitness.setStandardizedFitness(state, Double.MAX_VALUE);
-//		bestGroupOfGenerationFitness.setStandardizedFitness(state, Double.MAX_VALUE);
-
 	}
-	
+
 	public IGroupedIndividual getIndividualGrouping() {
 		return individualGrouping;
 	}
@@ -109,7 +95,7 @@ public class JSSGPGroupedProblem extends GPProblem {
 	@Override
 	public void finishEvaluating(final EvolutionState state, final int threadnum) {
 		KozaFitness groupFitness = individualGrouping.getBestGroupForGenerationFitness();
-		
+
 		// Print out the best ensemble group of generation that was evaluated.
 		state.output.message("Best ensemble fitness of generation " + groupFitness.fitnessToStringForHumans());
 
@@ -127,7 +113,7 @@ public class JSSGPGroupedProblem extends GPProblem {
 
 			List<GPIndividual[]> indGroups = individualGrouping.getGroups(ind);
 			for (GPIndividual[] indGroup : indGroups) {
-				PriorityTracker tracker = new PriorityTracker();
+				PriorityTracker tracker = new MSDPriorityTracker();
 				tracker.loadIndividuals(indGroup);
 
 				JSSGPConfiguration config = new JSSGPConfiguration();
@@ -153,7 +139,7 @@ public class JSSGPGroupedProblem extends GPProblem {
 				}
 
 				double groupFitness = fitness.getFitness(stats);
-				
+
 				individualGrouping.updateFitness(state, indGroup, groupFitness);
 			}
 

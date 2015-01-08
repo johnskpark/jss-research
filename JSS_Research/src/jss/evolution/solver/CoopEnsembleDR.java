@@ -9,6 +9,7 @@ import jss.IProblemInstance;
 import jss.evolution.ITracker;
 import jss.evolution.JSSGPData;
 import jss.evolution.JSSGPRule;
+import jss.evolution.tracker.MSDPriorityTracker;
 import jss.evolution.tracker.PriorityTracker;
 import ec.EvolutionState;
 import ec.gp.GPIndividual;
@@ -36,7 +37,7 @@ public class CoopEnsembleDR extends JSSGPRule {
 			ITracker tracker) {
 		super(state, inds, threadnum, data);
 
-		this.tracker = (PriorityTracker) tracker;
+		this.tracker = (MSDPriorityTracker) tracker;
 	}
 
 	@Override

@@ -10,4 +10,5 @@ package jss.evolution;
  */
 public interface ITracker {
 
+	public void clear();
 }

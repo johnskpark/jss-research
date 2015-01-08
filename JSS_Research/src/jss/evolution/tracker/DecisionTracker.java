@@ -9,5 +9,7 @@ import jss.evolution.ITracker;
  */
 public class DecisionTracker implements ITracker {
 
+	public void clear() {
+	}
 
 }

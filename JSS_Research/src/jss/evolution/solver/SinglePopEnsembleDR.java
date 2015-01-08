@@ -11,11 +11,11 @@ import jss.IProblemInstance;
 import jss.evolution.ITracker;
 import jss.evolution.JSSGPData;
 import jss.evolution.JSSGPRule;
-import jss.evolution.tracker.PriorityTracker;
+import jss.evolution.tracker.MSDPriorityTracker;
 
 public class SinglePopEnsembleDR extends JSSGPRule {
 
-	private PriorityTracker tracker;
+	private MSDPriorityTracker tracker;
 
 	public SinglePopEnsembleDR(EvolutionState state,
 			GPIndividual[] inds,
@@ -24,7 +24,7 @@ public class SinglePopEnsembleDR extends JSSGPRule {
 			ITracker tracker) {
 		super(state, inds, threadnum, data);
 
-		this.tracker = (PriorityTracker) tracker;
+		this.tracker = (MSDPriorityTracker) tracker;
 	}
 
 	@Override
@@ -70,7 +70,7 @@ public class SinglePopEnsembleDR extends JSSGPRule {
 			List<IJob> processableJobs,
 			IMachine machine,
 			IProblemInstance problem,
-			PriorityTracker tracker) {
+			MSDPriorityTracker tracker) {
 
 		double[] normalisedPriorities = getNormalisedPriorities(getIndividuals()[index],
 				processableJobs,
