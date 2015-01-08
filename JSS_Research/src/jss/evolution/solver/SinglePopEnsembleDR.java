@@ -2,6 +2,8 @@ package jss.evolution.solver;
 
 import java.util.List;
 
+import ec.EvolutionState;
+import ec.gp.GPIndividual;
 import jss.Action;
 import jss.IJob;
 import jss.IMachine;
@@ -10,26 +12,12 @@ import jss.evolution.ITracker;
 import jss.evolution.JSSGPData;
 import jss.evolution.JSSGPRule;
 import jss.evolution.tracker.PriorityTracker;
-import ec.EvolutionState;
-import ec.gp.GPIndividual;
 
-/**
- * TODO javadoc.
- * @author parkjohn
- *
- */
-public class CoopEnsembleDR extends JSSGPRule {
+public class SinglePopEnsembleDR extends JSSGPRule {
 
 	private PriorityTracker tracker;
 
-	/**
-	 * TODO javadoc.
-	 * @param state
-	 * @param inds
-	 * @param threadnum
-	 * @param data
-	 */
-	public CoopEnsembleDR(EvolutionState state,
+	public SinglePopEnsembleDR(EvolutionState state,
 			GPIndividual[] inds,
 			int threadnum,
 			JSSGPData data,
@@ -41,6 +29,7 @@ public class CoopEnsembleDR extends JSSGPRule {
 
 	@Override
 	public Action getAction(IMachine machine, IProblemInstance problem, double time) {
+		// TODO modify this to fit the implementation details that are in the paper. This includes the tracker and the weighted sum majority voting
 		if (machine.getWaitingJobs().isEmpty()) {
 			return null;
 		}
@@ -92,8 +81,6 @@ public class CoopEnsembleDR extends JSSGPRule {
 		int bestIndex = -1;
 
 		for (int j = 0; j < normalisedPriorities.length; j++) {
-			tracker.addPriority(index, normalisedPriorities[j]);
-
 			if (normalisedPriorities[j] > bestPriority) {
 				bestPriority = normalisedPriorities[j];
 				bestIndex = j;
@@ -121,7 +108,7 @@ public class CoopEnsembleDR extends JSSGPRule {
 
 			gpInd.trees[0].child.eval(getState(), getThreadnum(), getData(), null, gpInd, null);
 
-			double sigmoidPriority = 1.0 / (1.0 + Math.exp(-getData().getPriority()));
+			double sigmoidPriority = Math.exp(-getData().getPriority());
 
 			normalisedPriorities[j] = sigmoidPriority;
 			sumPriorities += sigmoidPriority;

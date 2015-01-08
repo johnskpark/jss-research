@@ -43,6 +43,13 @@ public class PriorityTracker implements ITracker {
 	}
 
 	/**
+	 * Returns the list of all priorities accumulated.
+	 */
+	protected List<List<Double>> getAllPriorities() {
+		return allPriorities;
+	}
+
+	/**
 	 * Get the list of penalties incurred by the individuals from the
 	 * priorities.
 	 */
