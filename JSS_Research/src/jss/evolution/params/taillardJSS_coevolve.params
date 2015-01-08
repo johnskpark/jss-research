@@ -64,6 +64,7 @@ eval.problem.data = jss.evolution.JSSGPData
 eval.problem.instances = jss.problem.static_problem.taillard_dataset.TaillardDataset
 eval.problem.solver = jss.evolution.solver.CoopEnsembleSolver
 eval.problem.fitness = jss.evolution.fitness.CoopEnsembleFitness
+eval.problem.tracker = jss.evolution.tracker.MSDPriorityTracker
 
 eval.problem.size = small
 #eval.problem.instances = jss.problem.static_problem.rachel_dataset.TwoStaticJSSDataset

@@ -35,6 +35,7 @@ public class JSSGPGroupedProblem extends GPProblem {
 	public static final String P_SIZE = "size";
 
 	public static final String P_GROUP = "group";
+	public static final String P_TRACKER = "tracker";
 
 	public static final String TRACKER_DATA = "tracker";
 
@@ -45,17 +46,8 @@ public class JSSGPGroupedProblem extends GPProblem {
 	private ProblemSize problemSize;
 	private boolean problemSizeSet = false;
 
-//	private int groupSize = 3;
-//	private int numIterations = 3;
-//
-//	private Map<GPIndividual, List<GPIndividual[]>> evalGroups = new HashMap<GPIndividual, List<GPIndividual[]>>();
-//	private GPIndividual[] bestGroup = null;
-//	private KozaFitness bestGroupFitness = new KozaFitness();
-//
-//	private GPIndividual[] bestGroupOfGeneration = null;
-//	private KozaFitness bestGroupOfGenerationFitness = new KozaFitness();
-
 	private IGroupedIndividual individualGrouping = null;
+	private PriorityTracker tracker = null;
 
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
@@ -81,6 +73,8 @@ public class JSSGPGroupedProblem extends GPProblem {
 		individualGrouping = (IGroupedIndividual) state.parameters.getInstanceForParameterEq(base.push(P_GROUP), null, IGroupedIndividual.class);
 		individualGrouping.setup(state, base);
 
+		// Set the tracker that is used to calculate the penalties for the individuals
+		tracker = (PriorityTracker) state.parameters.getInstanceForParameterEq(base.push(P_TRACKER), null, PriorityTracker.class);
 	}
 
 	public IGroupedIndividual getIndividualGrouping() {
@@ -113,7 +107,6 @@ public class JSSGPGroupedProblem extends GPProblem {
 
 			List<GPIndividual[]> indGroups = individualGrouping.getGroups(ind);
 			for (GPIndividual[] indGroup : indGroups) {
-				PriorityTracker tracker = new MSDPriorityTracker();
 				tracker.loadIndividuals(indGroup);
 
 				JSSGPConfiguration config = new JSSGPConfiguration();
