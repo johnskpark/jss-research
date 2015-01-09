@@ -21,6 +21,8 @@ public abstract class PriorityTracker implements ITracker {
 	 * @param inds
 	 */
 	public void loadIndividuals(Individual[] inds) {
+		allPriorities.clear();
+
 		for (int i = 0; i < inds.length; i++) {
 			allPriorities.add(i, new ArrayList<Double>());
 		}

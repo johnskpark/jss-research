@@ -115,8 +115,6 @@ public class SinglePopEnsembleDR extends JSSGPRule {
 		for (int j = 0; j < processableJobs.size(); j++) {
 			double normalisedPriority = Math.exp(priorities[j] - bestPriority - Math.log(sum));
 
-			System.out.printf("size: %d %f\n", processableJobs.size(), normalisedPriority);
-
 			normalisedPriorities.add(j, normalisedPriority);
 		}
 
