@@ -51,94 +51,94 @@ public class DemirkolDataset implements IDataset {
 
 		// Generate the lists of the training sets.
 		generateTrainingSets();
-		
+
 		// Read in the upper and lower bounds.
 		readBounds();
 	}
 
 	private void readDirectory() {
 		File datasetDir = new File(DEMIRKOL_DATASET);
-		
+
 		if (!datasetDir.exists() || !datasetDir.isDirectory()) {
 			throw new RuntimeException("Demirkol dataset does not exist at directory \'dataset/DemirkolBenchmarksJobShop\'");
 		}
-		
+
 		for (File dataFile : datasetDir.listFiles()) {
 			if (!dataFile.getName().endsWith(DEMIRKOL_FILE_SUFFIX)) {
 				continue;
 			}
-			
+
 			try {
 				FileReader fileReader = new FileReader(dataFile);
 				BufferedReader reader = new BufferedReader(fileReader);
-				
+
 				String line = reader.readLine();
 				int numJobs = Integer.parseInt(line.split("\\s+")[0]);
 				int numMachines = Integer.parseInt(line.split("\\s+")[1]);
-				
+
 				StaticInstance problemInstance = new StaticInstance();
-				
+
 				List<StaticMachine> machines = new ArrayList<StaticMachine>();
-				
+
 				for (int machine = 0; machine < numMachines; machine++) {
 					machines.add(new StaticMachine(problemInstance));
 				}
-				
+
 				for (int j = 0; j < numJobs; j++) {
 					line = reader.readLine();
-					
+
 					String[] split = line.trim().split("\\s+");
-					
+
 					StaticJob job = new StaticJob();
-					
+
 					for (int i = 0; i < numMachines; i++) {
 						int machine = Integer.parseInt(split[2 * i]);
 						double processingTime = Double.parseDouble(split[2 * i + 1]);
-						
+
 						job.offerMachine(machines.get(machine));
 						job.setProcessingTime(machines.get(machine), processingTime);
 					}
-					
+
 					problemInstance.addJob(job);
 				}
-				
+
 				problemInstances.add(problemInstance);
-				
+
 				String problemInstanceName = dataFile.getName().replace(DEMIRKOL_FILE_SUFFIX, "");
 				problemNameMap.put(problemInstanceName, problemInstance);
-				
+
 				reader.close();
 			} catch (IOException ex) {
 				throw new RuntimeException(ex);
 			}
 		}
 	}
-	
+
 	private void readBounds() {
 		try {
 			File boundsFile = new File(DEMIRKOL_DATASET + DEMIRKOL_BOUNDS_FILE);
 			FileReader fileReader = new FileReader(boundsFile);
 			BufferedReader reader = new BufferedReader(fileReader);
-			
+
 			String line = reader.readLine(); // Skip the first line (header).
 			while ((line = reader.readLine()) != null) {
 				String[] split = line.split(",");
-				
+
 				String problemInstanceName = split[0];
 				double lowerBound = Double.parseDouble(split[3]);
 				double upperBound = Double.parseDouble(split[4]);
-				
+
 				StaticInstance problemInstance = problemNameMap.get(problemInstanceName);
 				problemInstance.setLowerBound(lowerBound);
 				problemInstance.setUpperBound(upperBound);
 			}
-			
+
 			reader.close();
 		} catch (IOException ex) {
 			throw new RuntimeException(ex);
 		}
 	}
-	
+
 	private void generateTrainingSets() {
 		for (IProblemInstance problem : problemInstances) {
 			int machineSize = problem.getMachines().size();
@@ -187,6 +187,11 @@ public class DemirkolDataset implements IDataset {
 	@Override
 	public List<IProblemInstance> getTest() {
 		return new ArrayList<IProblemInstance>(problemInstances);
+	}
+
+	@Override
+	public int getWarmUp() {
+		return 0;
 	}
 
 }

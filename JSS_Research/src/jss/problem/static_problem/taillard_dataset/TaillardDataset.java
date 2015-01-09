@@ -217,4 +217,9 @@ public class TaillardDataset implements IDataset {
 		double lowerBound;
 	}
 
+	@Override
+	public int getWarmUp() {
+		return 0;
+	}
+
 }

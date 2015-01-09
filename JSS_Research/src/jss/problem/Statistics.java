@@ -25,11 +25,20 @@ public class Statistics {
 	private double totalDeviation = 0;
 
 	private int count = 0;
+	private int warmUp = 0;
 
 	/**
 	 * Generate a new instance of Statistics object.
 	 */
 	public Statistics() {
+	}
+
+	/**
+	 * TODO javadoc.
+	 * @param warmUpPeriod
+	 */
+	public void setWarmUp(int warmUpPeriod) {
+		warmUp = warmUpPeriod;
 	}
 
 	/**
@@ -39,11 +48,15 @@ public class Statistics {
 	 * @param solution The solution for the solved problem instance.
 	 */
 	public void addSolution(IProblemInstance problem, IResult solution) {
+		count++;
+		if (count <= warmUp) {
+			return;
+		}
+
 		problems.put(problem, solution);
 
 		totalMakespan += solution.getMakespan();
 		totalTWT += solution.getTWT();
-		count++;
 
 		if (problem instanceof StaticInstance) {
 			StaticInstance staticProblem = (StaticInstance) problem;

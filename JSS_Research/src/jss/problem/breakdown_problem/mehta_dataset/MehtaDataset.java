@@ -10,8 +10,8 @@ import jss.ProblemSize;
 import jss.problem.static_problem.StaticInstance;
 
 /**
- * TODO javadoc. I want this to either be dynamic or static. 
- * 
+ * TODO javadoc. I want this to either be dynamic or static.
+ *
  * @author John Park
  *
  */
@@ -19,7 +19,7 @@ public class MehtaDataset implements IDataset {
 
 	private static final int[] NUM_JOBS = new int[]{10, 20, 30};
 	private static final int[] NUM_MACHINES = new int[]{6, 10};
-	
+
 	private static final double[] TARDINESS = new double[]{0.3, 0.6};
 	private static final double[] DUE_DATE = new double[]{0.5, 2.5};
 
@@ -36,7 +36,7 @@ public class MehtaDataset implements IDataset {
 
 	private long seed;
 	private Random rand;
-	
+
 	private List<StaticInstance> problemInstances = new ArrayList<StaticInstance>();
 
 	private List<IProblemInstance> smallInstances = new ArrayList<IProblemInstance>();
@@ -56,7 +56,7 @@ public class MehtaDataset implements IDataset {
 		// Generate the lists of the training sets.
 		generateTrainingSets();
 	}
-	
+
 	/**
 	 * TODO javadoc.
 	 * @param s
@@ -71,7 +71,7 @@ public class MehtaDataset implements IDataset {
 		// Generate the lists of the training sets.
 		generateTrainingSets();
 	}
-	
+
 	private void generateDataset() {
 		// TODO
 	}
@@ -124,6 +124,11 @@ public class MehtaDataset implements IDataset {
 	@Override
 	public List<IProblemInstance> getTest() {
 		return new ArrayList<IProblemInstance>(problemInstances);
+	}
+
+	@Override
+	public int getWarmUp() {
+		return 0; // TODO
 	}
 
 }

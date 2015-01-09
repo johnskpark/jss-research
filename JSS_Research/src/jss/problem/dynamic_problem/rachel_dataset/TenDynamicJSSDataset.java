@@ -193,4 +193,9 @@ public class TenDynamicJSSDataset implements IDataset {
 		return testingSet;
 	}
 
+	@Override
+	public int getWarmUp() {
+		return 500; // TODO magic number
+	}
+
 }

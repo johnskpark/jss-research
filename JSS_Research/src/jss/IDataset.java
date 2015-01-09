@@ -33,4 +33,11 @@ public interface IDataset {
 	 * @return
 	 */
 	public List<IProblemInstance> getTest();
+
+	/**
+	 * TODO javadoc.
+	 * @return
+	 */
+	public int getWarmUp();
+
 }
