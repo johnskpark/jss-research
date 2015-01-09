@@ -24,8 +24,8 @@ public class EnsembleGroupedIndividual implements IGroupedIndividual {
 	public static final String P_GROUP_SIZE = "group_size";
 	public static final String P_ITER = "iteration";
 
-	private int groupSize = 3;
-	private int numIterations = 3;
+	private int groupSize = 1;
+	private int numIterations = 1;
 
 	private Map<GPIndividual, List<GPIndividual[]>> evalGroups = new HashMap<GPIndividual, List<GPIndividual[]>>();
 	private GPIndividual[] bestGroup = null;
@@ -36,26 +36,21 @@ public class EnsembleGroupedIndividual implements IGroupedIndividual {
 
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
-		// Set the group size used for the individuals.
-		String groupSizeStr = state.parameters.getString(base.push(P_GROUP_SIZE), null);
-		if (groupSizeStr != null) {
-			groupSize = Integer.parseInt(groupSizeStr);
-		}
+		try {
+			groupSize = state.parameters.getInt(base.push(P_GROUP_SIZE), null);
+			numIterations = state.parameters.getInt(base.push(P_ITER), null);
 
-		// Set the number of iterations used for the individuals.
-		String numIterStr = state.parameters.getString(base.push(P_ITER), null);
-		if (numIterStr != null) {
-			numIterations = 3;
+			bestGroupFitness.setStandardizedFitness(state, Double.MAX_VALUE);
+			bestGroupOfGenerationFitness.setStandardizedFitness(state, Double.MAX_VALUE);
+		} catch (NumberFormatException ex) {
+			state.output.fatal(ex.getMessage());
 		}
-
-		bestGroupFitness.setStandardizedFitness(state, Double.MAX_VALUE);
-		bestGroupOfGenerationFitness.setStandardizedFitness(state, Double.MAX_VALUE);
 	}
 
 	@Override
 	public void groupIndividuals(final EvolutionState state, final int threadnum) {
 		Individual[] inds = state.population.subpops[0].individuals;
-		
+
 		for (int i = 0; i < inds.length; i++) {
 			evalGroups.put((GPIndividual) inds[i], new ArrayList<GPIndividual[]>());
 
@@ -92,7 +87,7 @@ public class EnsembleGroupedIndividual implements IGroupedIndividual {
 	public GPIndividual[] getBestGroup() {
 		return bestGroup;
 	}
-	
+
 	@Override
 	public KozaFitness getBestGroupFitness() {
 		return bestGroupFitness;
@@ -102,15 +97,15 @@ public class EnsembleGroupedIndividual implements IGroupedIndividual {
 	public GPIndividual[] getBestGroupForGeneration() {
 		return bestGroupOfGeneration;
 	}
-	
+
 	@Override
 	public KozaFitness getBestGroupForGenerationFitness() {
 		return bestGroupOfGenerationFitness;
 	}
 
 	@Override
-	public void updateFitness(final EvolutionState state, 
-			final GPIndividual[] indGroup, 
+	public void updateFitness(final EvolutionState state,
+			final GPIndividual[] indGroup,
 			final double fitness) {
 		// Update the best group of generation.
 		if (bestGroupOfGenerationFitness.standardizedFitness() > fitness) {

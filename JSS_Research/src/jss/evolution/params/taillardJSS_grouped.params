@@ -56,6 +56,9 @@ eval.problem.solver = jss.evolution.solver.SinglePopEnsembleSolver
 eval.problem.fitness = jss.evolution.fitness.TWTFitness
 
 eval.problem.group = jss.evolution.grouping.EnsembleGroupedIndividual
+eval.problem.group_size = 3
+eval.problem.iteration = 3
+
 eval.problem.tracker = jss.evolution.tracker.NCLPriorityTracker
 
 eval.problem.size = small

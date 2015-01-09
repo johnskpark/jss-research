@@ -7,7 +7,6 @@ import jss.IProblemInstance;
 import jss.IResult;
 import jss.ProblemSize;
 import jss.evolution.statistic_data.PenaltyData;
-import jss.evolution.tracker.MSDPriorityTracker;
 import jss.evolution.tracker.PriorityTracker;
 import jss.problem.Statistics;
 import ec.EvolutionState;
@@ -83,6 +82,8 @@ public class JSSGPGroupedProblem extends GPProblem {
 
 	@Override
 	public void prepareToEvaluate(final EvolutionState state, final int threadnum) {
+		individualGrouping.clearForGeneration(state);
+
 		individualGrouping.groupIndividuals(state, threadnum);
 	}
 
@@ -92,8 +93,6 @@ public class JSSGPGroupedProblem extends GPProblem {
 
 		// Print out the best ensemble group of generation that was evaluated.
 		state.output.message("Best ensemble fitness of generation " + groupFitness.fitnessToStringForHumans());
-
-		individualGrouping.clearForGeneration(state);
 	}
 
 	@Override
