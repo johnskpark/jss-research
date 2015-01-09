@@ -13,6 +13,8 @@ public enum NodeDefinition {
 	OP_DIVISION("/", 2),
 	OP_MULTIPLICATION("*", 2),
 	OP_SUBTRACTION("-", 2),
+	OP_MAXIMUM("Max", 2),
+	OP_MINIMUM("Min", 2),
 	SCORE_LARGE_VALUE("Inf", 0),
 	SCORE_DUE_DATE("DD", 0),
 	SCORE_PROCESSING_TIME("PR", 0),

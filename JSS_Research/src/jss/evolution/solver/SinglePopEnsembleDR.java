@@ -10,13 +10,13 @@ import jss.IProblemInstance;
 import jss.evolution.ITracker;
 import jss.evolution.JSSGPData;
 import jss.evolution.JSSGPRule;
-import jss.evolution.tracker.MSDPriorityTracker;
+import jss.evolution.tracker.PriorityTracker;
 import ec.EvolutionState;
 import ec.gp.GPIndividual;
 
 public class SinglePopEnsembleDR extends JSSGPRule {
 
-	private MSDPriorityTracker tracker;
+	private PriorityTracker tracker;
 
 	public SinglePopEnsembleDR(EvolutionState state,
 			GPIndividual[] inds,
@@ -25,7 +25,7 @@ public class SinglePopEnsembleDR extends JSSGPRule {
 			ITracker tracker) {
 		super(state, inds, threadnum, data);
 
-		this.tracker = (MSDPriorityTracker) tracker;
+		this.tracker = (PriorityTracker) tracker;
 	}
 
 	@Override
@@ -90,23 +90,34 @@ public class SinglePopEnsembleDR extends JSSGPRule {
 			IProblemInstance problem,
 			IMachine machine) {
 		List<Double> normalisedPriorities = new ArrayList<Double>(processableJobs.size());
-		double sumPriorities = 0.0;
 
-		for (int j = 0; j < processableJobs.size(); j++) {
+		double[] priorities = new double[processableJobs.size()];
+		double bestPriority = Double.NEGATIVE_INFINITY;
+		double sum = 0.0;
+
+		for (int i = 0; i < processableJobs.size(); i++) {
 			getData().setProblem(problem);
-			getData().setJob(processableJobs.get(j));
+			getData().setJob(processableJobs.get(i));
 			getData().setMachine(machine);
 
 			gpInd.trees[0].child.eval(getState(), getThreadnum(), getData(), null, gpInd, null);
 
-			double sigmoidPriority = Math.exp(-getData().getPriority());
-
-			normalisedPriorities.add(j, sigmoidPriority);
-			sumPriorities += sigmoidPriority;
+			priorities[i] = getData().getPriority();
+			if (priorities[i] > bestPriority) {
+				bestPriority = priorities[i];
+			}
 		}
 
-		for (int j = 0; j < normalisedPriorities.size(); j++) {
-			normalisedPriorities.set(j, normalisedPriorities.get(j) / sumPriorities);
+		for (int j = 0; j < processableJobs.size(); j++) {
+			sum += Math.exp(priorities[j] - bestPriority);
+		}
+
+		for (int j = 0; j < processableJobs.size(); j++) {
+			double normalisedPriority = Math.exp(priorities[j] - bestPriority - Math.log(sum));
+
+			System.out.printf("size: %d %f\n", processableJobs.size(), normalisedPriority);
+
+			normalisedPriorities.add(j, normalisedPriority);
 		}
 
 		return normalisedPriorities;
