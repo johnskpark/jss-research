@@ -35,6 +35,8 @@ public class DynamicInstance implements IProblemInstance, ISubscriptionHandler {
 
 	private List<ISubscriber> subscribers = new ArrayList<ISubscriber>();
 
+	private int warmUp = 0;
+
 	/**
 	 * Generate a new dynamic job shop scheduling problem instance.
 	 */
@@ -102,6 +104,14 @@ public class DynamicInstance implements IProblemInstance, ISubscriptionHandler {
 	}
 
 	/**
+	 * TODO javadoc.
+	 * @param warmUp
+	 */
+	public void setWarmUp(int warmUp) {
+		this.warmUp = warmUp;
+	}
+
+	/**
 	 * Returns the number of jobs completed in the simulation.
 	 */
 	public int getNumJobsCompleted() {
@@ -116,6 +126,16 @@ public class DynamicInstance implements IProblemInstance, ISubscriptionHandler {
 	@Override
 	public List<IMachine> getMachines() {
 		return new ArrayList<IMachine>(machines);
+	}
+
+	@Override
+	public int getWarmUp() {
+		return warmUp;
+	}
+
+	@Override
+	public boolean isWarmUpComplete() {
+		return getNumJobsCompleted() >= warmUp;
 	}
 
 	@Override

@@ -74,7 +74,6 @@ public class JSSGPSimpleProblem extends GPProblem {
 			checkInvariance(state, ind);
 
 			Statistics stats = new Statistics();
-			stats.setWarmUp(dataset.getWarmUp());
 
 			JSSGPConfiguration config = new JSSGPConfiguration();
 			config.setState(state);

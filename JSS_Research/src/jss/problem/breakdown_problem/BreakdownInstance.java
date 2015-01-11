@@ -59,6 +59,16 @@ public class BreakdownInstance implements IProblemInstance, ISubscriptionHandler
 	}
 
 	@Override
+	public int getWarmUp() {
+		return 0;
+	}
+
+	@Override
+	public boolean isWarmUpComplete() {
+		return true;
+	}
+
+	@Override
 	public List<IEventHandler> getEventHandlers() {
 		List<IEventHandler> eventHandlers = new ArrayList<IEventHandler>(jobs.size() + machines.size());
 

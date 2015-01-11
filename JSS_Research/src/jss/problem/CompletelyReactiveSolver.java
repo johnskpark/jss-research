@@ -57,6 +57,7 @@ public class CompletelyReactiveSolver implements ISolver, ISubscriber {
 		Simulator core = new Simulator(problem);
 		this.problem = problem;
 		this.solution = new Result(problem);
+		this.solution.setWarmUp(problem.getWarmUp());
 
 		((ISubscriptionHandler)problem).onSubscriptionRequest(this);;
 
@@ -78,15 +79,18 @@ public class CompletelyReactiveSolver implements ISolver, ISubscriber {
 				continue;
 			}
 
+			// TODO this part is a little borked. Try and fix this up later, but I'll have to do with a
+			// hack for now. Actually, I might have to fix it now.
+
 			IJob lastJob;
-			if ((lastJob = machine.getLastProcessedJob()) != null) {
+			if ((lastJob = machine.getLastProcessedJob()) != null && problem.isWarmUpComplete()) {
 				double completionTime = machine.getReadyTime();
 				double penalty = lastJob.getPenalty();
 				double tardiness = Math.max(completionTime -
 						lastJob.getDueDate(), 0);
 
 				solution.setMakespan(completionTime);
-				solution.setTWT(solution.getTWT() + penalty * tardiness);
+				solution.addTWT(penalty * tardiness);
 			}
 
 			Action action = rule.getAction(machine, problem, time);

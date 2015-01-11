@@ -41,10 +41,4 @@ public interface IDataset {
 	 */
 	public List<IProblemInstance> getTest();
 
-	/**
-	 * TODO javadoc.
-	 * @return
-	 */
-	public int getWarmUp();
-
 }

@@ -195,9 +195,4 @@ public class DemirkolDataset implements IDataset {
 		return new ArrayList<IProblemInstance>(problemInstances);
 	}
 
-	@Override
-	public int getWarmUp() {
-		return 0;
-	}
-
 }

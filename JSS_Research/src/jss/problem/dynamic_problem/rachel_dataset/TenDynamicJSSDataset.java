@@ -141,6 +141,7 @@ public class TenDynamicJSSDataset implements IDataset {
 		addDueDateGenerator(problem, tightness);
 		addPenaltyGenerator(problem);
 		addTerminationCriterion(problem);
+		setWarmUp(problem);
 
 		return problem;
 	}
@@ -181,6 +182,10 @@ public class TenDynamicJSSDataset implements IDataset {
 		problemInstance.setTerminationCriterion(new TerminationCriterion(problemInstance));
 	}
 
+	private void setWarmUp(DynamicInstance problemInstance) {
+		problemInstance.setWarmUp(WARM_UP_PERIOD);
+	}
+
 	@Override
 	public List<IProblemInstance> getProblems() {
 		return new ArrayList<IProblemInstance>(problemInstances);
@@ -194,11 +199,6 @@ public class TenDynamicJSSDataset implements IDataset {
 	@Override
 	public List<IProblemInstance> getTest() {
 		return testingSet;
-	}
-
-	@Override
-	public int getWarmUp() {
-		return WARM_UP_PERIOD;
 	}
 
 }

@@ -54,6 +54,18 @@ public interface IProblemInstance {
 	public List<IMachine> getMachines();
 
 	/**
+	 * TODO javadoc.
+	 * @return
+	 */
+	public int getWarmUp();
+
+	/**
+	 * TODO javadoc.
+	 * @return
+	 */
+	public boolean isWarmUpComplete();
+
+	/**
 	 * Get the list of event handlers that store events to be used by the
 	 * Simulator visible at the current state of the problem.
 	 * @return Get a fresh list of references to event handlers that are

@@ -111,7 +111,6 @@ public class JSSGPGroupedProblem extends GPProblem {
 		if (!ind.evaluated) {
 			Statistics stats = new Statistics();
 			stats.addData(TRACKER_DATA, new PenaltyData());
-			stats.setWarmUp(dataset.getWarmUp());
 
 			List<GPIndividual[]> indGroups = individualGrouping.getGroups(ind);
 			for (GPIndividual[] indGroup : indGroups) {

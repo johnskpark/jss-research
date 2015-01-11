@@ -23,6 +23,9 @@ public class Result implements IResult {
 	private double makespan = 0;
 	private double twt = 0;
 
+	private int count = 0;
+	private int warmUp = 0;
+
 	private IProblemInstance problem;
 
 	/**
@@ -68,8 +71,27 @@ public class Result implements IResult {
 	 * Update the current total weighted tardiness for the partial solution.
 	 * @param twt The total weighted tardiness to update to.
 	 */
-	public void setTWT(double twt) {
-		this.twt = twt;
+	public void addTWT(double twt) {
+		if (count < warmUp) {
+			return;
+		}
+
+		this.twt += twt;
+	}
+
+	/**
+	 * TODO javadoc.
+	 */
+	public void increment() {
+		count++;
+	}
+
+	/**
+	 * TODO javadoc.
+	 * @param warmUp
+	 */
+	public void setWarmUp(int warmUp) {
+		this.warmUp = warmUp;
 	}
 
 	public IProblemInstance getProblem() {

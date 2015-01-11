@@ -88,7 +88,6 @@ public class TaillardDataset implements IDataset {
 	}
 
 	public void setSeed(long s) {
-		throw new UnsupportedOperationException(); // TODO javadoc.
 	}
 
 	public void generateDataset() {
@@ -216,11 +215,6 @@ public class TaillardDataset implements IDataset {
 		long machineSeed;
 		double upperBound;
 		double lowerBound;
-	}
-
-	@Override
-	public int getWarmUp() {
-		return 0;
 	}
 
 }

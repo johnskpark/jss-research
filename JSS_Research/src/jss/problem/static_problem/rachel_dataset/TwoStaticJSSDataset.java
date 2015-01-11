@@ -164,9 +164,4 @@ public class TwoStaticJSSDataset implements IDataset {
 		}
 	}
 
-	@Override
-	public int getWarmUp() {
-		return 0;
-	}
-
 }

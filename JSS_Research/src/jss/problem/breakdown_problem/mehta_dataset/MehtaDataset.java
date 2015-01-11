@@ -123,9 +123,4 @@ public class MehtaDataset implements IDataset {
 		return new ArrayList<IProblemInstance>(problemInstances);
 	}
 
-	@Override
-	public int getWarmUp() {
-		return 0; // TODO
-	}
-
 }
