@@ -51,12 +51,6 @@ public class TaillardDataset implements IDataset {
 	public TaillardDataset() {
 		// Read the .csv file.
 		readFile();
-
-		// Convert from raw .csv file.
-		generateDataset();
-
-		// Generate the lists of the training sets.
-		generateTrainingSets();
 	}
 
 	private void readFile() {
@@ -93,10 +87,17 @@ public class TaillardDataset implements IDataset {
 		return rawData;
 	}
 
-	private void generateDataset() {
+	public void setSeed(long s) {
+		throw new UnsupportedOperationException(); // TODO javadoc.
+	}
+
+	public void generateDataset() {
 		for (RawInstance rawInstance : rawInstances) {
 			problemInstances.add(rawToStatic(rawInstance));
 		}
+
+		// Generate the lists of the training sets.
+		generateTrainingSets();
 	}
 
 	// Look at the paper "Benchmarks for basic scheduling problems" for

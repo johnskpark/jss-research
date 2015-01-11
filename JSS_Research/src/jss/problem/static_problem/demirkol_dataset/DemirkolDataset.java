@@ -56,6 +56,12 @@ public class DemirkolDataset implements IDataset {
 		readBounds();
 	}
 
+	public void setSeed(long s) {
+	}
+
+	public void generateDataset() {
+	}
+
 	private void readDirectory() {
 		File datasetDir = new File(DEMIRKOL_DATASET);
 

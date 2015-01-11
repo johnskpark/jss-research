@@ -24,9 +24,11 @@ public class JSSGPSimpleProblem extends GPProblem {
 	private static final long serialVersionUID = -3817123526020178300L;
 
 	public static final String P_SOLVER = "solver";
-	public static final String P_INSTANCES = "instances";
 	public static final String P_FITNESS = "fitness";
 	public static final String P_SIZE = "size";
+
+	public static final String P_INSTANCES = "instances";
+	public static final String P_INSTANCES_SEED = "instances_seed";
 
 	private JSSGPSolver solver;
 	private IDataset dataset;
@@ -47,6 +49,12 @@ public class JSSGPSimpleProblem extends GPProblem {
 		solver = (JSSGPSolver) state.parameters.getInstanceForParameterEq(base.push(P_SOLVER), null, JSSGPSolver.class);
 		dataset = (IDataset) state.parameters.getInstanceForParameterEq(base.push(P_INSTANCES), null, IDataset.class);
 		fitness = (ISimpleFitness) state.parameters.getInstanceForParameterEq(base.push(P_FITNESS), null, ISimpleFitness.class);
+
+		String datasetSeedStr = state.parameters.getString(base.push(P_INSTANCES_SEED), null);
+		if (datasetSeedStr != null) {
+			dataset.setSeed(Long.parseLong(datasetSeedStr));
+			dataset.generateDataset();
+		}
 
 		// Set the problem size used for the training set.
 		String problemSizeStr = state.parameters.getString(base.push(P_SIZE), null);

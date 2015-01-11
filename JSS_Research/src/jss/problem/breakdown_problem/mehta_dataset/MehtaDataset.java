@@ -49,12 +49,6 @@ public class MehtaDataset implements IDataset {
 	public MehtaDataset() {
 		seed = System.currentTimeMillis();
 		rand = new Random(seed);
-
-		// Convert from raw .csv file.
-		generateDataset();
-
-		// Generate the lists of the training sets.
-		generateTrainingSets();
 	}
 
 	/**
@@ -64,16 +58,19 @@ public class MehtaDataset implements IDataset {
 	public MehtaDataset(long s) {
 		seed = s;
 		rand = new Random(seed);
+	}
 
+	public void setSeed(long s) {
+		seed = s;
+		rand = new Random(seed);
+	}
+
+	public void generateDataset() {
 		// Convert from raw .csv file.
 		generateDataset();
 
 		// Generate the lists of the training sets.
 		generateTrainingSets();
-	}
-
-	private void generateDataset() {
-		// TODO
 	}
 
 	private void generateTrainingSets() {

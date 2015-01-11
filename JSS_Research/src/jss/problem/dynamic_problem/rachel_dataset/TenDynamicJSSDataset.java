@@ -40,6 +40,8 @@ public class TenDynamicJSSDataset implements IDataset {
 
 	private static final int NUM_MACHINES = 10;
 
+	private static final int WARM_UP_PERIOD = 500;
+
 	private long seed;
 	private Random rand;
 
@@ -54,8 +56,6 @@ public class TenDynamicJSSDataset implements IDataset {
 	public TenDynamicJSSDataset() {
 		this.seed = System.currentTimeMillis();
 		this.rand = new Random(seed);
-
-		generateDataset();
 	}
 
 	/**
@@ -65,11 +65,14 @@ public class TenDynamicJSSDataset implements IDataset {
 	public TenDynamicJSSDataset(long s) {
 		this.seed = s;
 		this.rand = new Random(seed);
-
-		generateDataset();
 	}
 
-	private void generateDataset() {
+	public void setSeed(long s) {
+		this.seed = s;
+		this.rand = new Random(seed);
+	}
+
+	public void generateDataset() {
 		generateTrainingSet();
 		generateTestingSet();
 	}
@@ -195,7 +198,7 @@ public class TenDynamicJSSDataset implements IDataset {
 
 	@Override
 	public int getWarmUp() {
-		return 500; // TODO magic number
+		return WARM_UP_PERIOD;
 	}
 
 }

@@ -24,8 +24,6 @@ import jss.problem.static_problem.StaticMachine;
  */
 public class TwoStaticJSSDataset implements IDataset {
 
-	private static final int DATASET_SEED = 15;
-
 	private static final int NUM_PROBLEMS_PER_CONFIG = 8;
 	private static final int NUM_JOBS_PER_PROBLEM = 10;
 
@@ -50,6 +48,7 @@ public class TwoStaticJSSDataset implements IDataset {
 			{0.10, 0.10, 0.45, 0.35}
 	};
 
+	private long seed;
 	private Random rand;
 
 	private List<IProblemInstance> problems = new ArrayList<IProblemInstance>();
@@ -58,29 +57,25 @@ public class TwoStaticJSSDataset implements IDataset {
 	 * TODO javadoc.
 	 */
 	public TwoStaticJSSDataset() {
-		rand = new Random(DATASET_SEED);
-
-		for (int i = 0; i < CATEGORY_RATIOS.length; i++) {
-			ProblemFactory factory = new ProblemFactory(
-					CATEGORY_RATIOS[i][0],
-					CATEGORY_RATIOS[i][1],
-					CATEGORY_RATIOS[i][2],
-					CATEGORY_RATIOS[i][3]);
-
-			for (int j = 0; j < NUM_PROBLEMS_PER_CONFIG; j++) {
-				problems.add(factory.createProblem(rand,
-						NUM_JOBS_PER_PROBLEM));
-			}
-		}
+		seed = System.currentTimeMillis();
+		rand = new Random(seed);
 	}
 
 	/**
 	 * TODO javadoc.
 	 * @param seed
 	 */
-	public TwoStaticJSSDataset(int seed) {
+	public TwoStaticJSSDataset(int s) {
+		seed = s;
 		rand = new Random(seed);
+	}
 
+	public void setSeed(long s) {
+		seed = s;
+		rand = new Random(seed);
+	}
+
+	public void generateDataset() {
 		for (int i = 0; i < CATEGORY_RATIOS.length; i++) {
 			ProblemFactory factory = new ProblemFactory(
 					CATEGORY_RATIOS[i][0],

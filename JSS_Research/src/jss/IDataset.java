@@ -10,6 +10,13 @@ import java.util.List;
  */
 public interface IDataset {
 
+	public void setSeed(long s);
+
+	/**
+	 * TODO javadoc.
+	 */
+	public void generateDataset();
+
 	/**
 	 * Get the list of Job Shop Scheduling problem instances stored in the
 	 * dataset.
