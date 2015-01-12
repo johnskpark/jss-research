@@ -86,7 +86,7 @@ public class TenDynamicJSSDataset implements IDataset {
 				double uniformMean = MEAN_PROCESSING_TIMES[TRAINING_INDEX][i];
 				double poissonMean = UTILISATION_RATES[TRAINING_INDEX][i] *
 						MEAN_PROCESSING_TIMES[TRAINING_INDEX][i] *
-						(minOperations + maxOperations) / 2.0;
+						(minOperations + maxOperations) / (2.0 * NUM_MACHINES);
 
 				double[] tightness = DUE_DATE_TIGHTNESS[TRAINING_INDEX][i];
 
