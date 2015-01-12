@@ -73,32 +73,43 @@ public class CompletelyReactiveSolver implements ISolver, ISubscriber {
 
 	@Override
 	public void onMachineFeed(IMachine m, double time) {
+		processOperation(m);
+
 		// Cycle through the machines and process jobs on the available machines.
 		for (IMachine machine : problem.getMachines()) {
 			if (!machine.isAvailable()) {
 				continue;
 			}
 
-			// TODO this part is a little borked. Try and fix this up later, but I'll have to do with a
-			// hack for now. Actually, I might have to fix it now.
+			assignAction(machine, time);
+		}
+	}
 
-			IJob lastJob;
-			if ((lastJob = machine.getLastProcessedJob()) != null && problem.isWarmUpComplete()) {
-				double completionTime = machine.getReadyTime();
+	private void processOperation(IMachine machine) {
+		IJob lastJob = machine.getLastProcessedJob();
+
+		if ((lastJob = machine.getLastProcessedJob()) != null) {
+			double completionTime = machine.getReadyTime();
+
+			solution.setMakespan(completionTime);
+
+			if (lastJob.isCompleted()) {
 				double penalty = lastJob.getPenalty();
-				double tardiness = Math.max(completionTime -
-						lastJob.getDueDate(), 0);
+				double tardiness = Math.max(completionTime - lastJob.getDueDate(), 0);
 
-				solution.setMakespan(completionTime);
-				solution.addTWT(penalty * tardiness);
+				if (problem.isWarmUpComplete()) {
+					solution.addTWT(penalty * tardiness);
+				}
 			}
+		}
+	}
 
-			Action action = rule.getAction(machine, problem, time);
+	private void assignAction(IMachine machine, double time) {
+		Action action = rule.getAction(machine, problem, time);
 
-			if (action != null) {
-				solution.addAction(action);
-				machine.processJob(action.getJob(), time);
-			}
+		if (action != null) {
+			solution.addAction(action);
+			machine.processJob(action.getJob(), time);
 		}
 	}
 

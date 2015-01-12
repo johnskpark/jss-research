@@ -41,7 +41,7 @@ public class DueDateGenerator implements IDoubleValueGenerator {
 	@Override
 	public double getDoubleValue(IJob job) {
 		int index = rand.nextInt(length);
-		return job.getReadyTime() + dueDateTightness[index] + job.getRemainingTime();
+		return job.getReadyTime() + dueDateTightness[index] * job.getRemainingTime();
 	}
 
 	@Override

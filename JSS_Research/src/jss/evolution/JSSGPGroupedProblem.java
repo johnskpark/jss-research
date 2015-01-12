@@ -149,17 +149,6 @@ public class JSSGPGroupedProblem extends GPProblem {
 		}
 	}
 
-	// Check the individual for invariance. Each individual must be a GPIndividual,
-	// and the fitness must be KozaFitness.
-//	private void checkInvariance(final EvolutionState state, final Individual ind) {
-//		if (!(ind instanceof GPIndividual)) {
-//			state.output.error("The individual must be an instance of GPIndividual");
-//		}
-//		if (!(ind.fitness instanceof KozaFitness)) {
-//			state.output.error("The individual's fitness must be an instance of KozaFitness");
-//		}
-//	}
-
 	@Override
 	public Object clone() {
 		JSSGPGroupedProblem newObject = (JSSGPGroupedProblem)super.clone();

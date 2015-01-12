@@ -63,6 +63,7 @@ public class DatasetTest {
 
 		try {
 			TaillardDataset dataset = new TaillardDataset();
+			dataset.generateDataset();
 
 			List<IProblemInstance> problems = dataset.getProblems();
 
