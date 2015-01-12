@@ -39,7 +39,9 @@ public class ScoreCurrentTime extends GPNode {
 			final Problem problem) {
 		JSSGPData data = (JSSGPData)input;
 
-		data.setPriority(data.getCurrentTime());
+		double time = data.getCurrentTime();
+
+		data.setPriority(time);
 	}
 
 }

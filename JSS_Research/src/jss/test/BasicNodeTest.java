@@ -223,7 +223,7 @@ public class BasicNodeTest {
 		data.setJob(mockJob);
 
 		context.checking(new Expectations() {{
-			oneOf(mockJob).getRemainingOperation(); will(returnValue(2));
+			oneOf(mockJob).getRemainingOperations(); will(returnValue(2));
 		}});
 
 		ScoreRemainingOperation node = new ScoreRemainingOperation();

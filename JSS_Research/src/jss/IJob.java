@@ -33,6 +33,13 @@ public interface IJob {
 	public double getProcessingTime(IMachine machine);
 
 	/**
+	 * TODO javadoc.
+	 * @param index
+	 * @return
+	 */
+	public double getProcessingTime(int index);
+
+	/**
 	 * Get the setup time of the job for the particular machine.
 	 * @param machine The machine that will be processing the job.
 	 * @return The time it takes to setup the job on the machine. If the job
@@ -40,6 +47,13 @@ public interface IJob {
 	 *         Double.POSITIVE_INFINITY will be returned.
 	 */
 	public double getSetupTime(IMachine machine);
+
+	/**
+	 * TODO javadoc.
+	 * @param index
+	 * @return
+	 */
+	public double getSetupTime(int index);
 
 	/**
 	 * Get the due date of the job.
@@ -65,7 +79,13 @@ public interface IJob {
 	 * @return The total number of remaining operations that are left on the
 	 *         job, 0 if the job is completed.
 	 */
-	public int getRemainingOperation();
+	public int getRemainingOperations();
+
+	/**
+	 * TODO javadoc.
+	 * @return
+	 */
+	public int getNumOperations();
 
 	/**
 	 * Callback function that declares that the job has started being

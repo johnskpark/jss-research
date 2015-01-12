@@ -26,6 +26,7 @@ public class DynamicJob implements IJob, IEventHandler {
 	private Map<IMachine, Double> setupTimes = new HashMap<IMachine, Double>();
 
 	private double dueDate = 0;
+	private double flowFactor = 0;
 	private double penalty = 0;
 	private double readyTime = 0;
 
@@ -121,9 +122,25 @@ public class DynamicJob implements IJob, IEventHandler {
 	}
 
 	@Override
+	public double getProcessingTime(int index) {
+		if (index >= 0 && index < processingTimes.size()) {
+			return processingTimes.get(machineList.get(index));
+		}
+		return 0;
+	}
+
+	@Override
 	public double getSetupTime(IMachine machine) {
 		if (setupTimes.containsKey(machine)) {
 			return setupTimes.get(machine);
+		}
+		return 0;
+	}
+
+	@Override
+	public double getSetupTime(int index) {
+		if (index >= 0 && index < setupTimes.size()) {
+			return setupTimes.get(machineList.get(index));
 		}
 		return 0;
 	}
@@ -148,8 +165,13 @@ public class DynamicJob implements IJob, IEventHandler {
 	}
 
 	@Override
-	public int getRemainingOperation() {
+	public int getRemainingOperations() {
 		return machineQueue.size();
+	}
+
+	@Override
+	public int getNumOperations() {
+		return machineList.size();
 	}
 
 	@Override
@@ -203,6 +225,21 @@ public class DynamicJob implements IJob, IEventHandler {
 		machineQueue = new LinkedList<IMachine>(machineList);
 	}
 
+	/**
+	 * TODO javadoc.
+	 * @param flowFactor
+	 */
+	public void setFlowFactor(double flowFactor) {
+		this.flowFactor = flowFactor;
+	}
+
+	/**
+	 * TODO javadoc.
+	 * @return
+	 */
+	public double getFlowFactor() {
+		return flowFactor;
+	}
 
 	/**
 	 * Update the status of the dynamic job.

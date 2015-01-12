@@ -31,7 +31,7 @@ public class ScoreRemainingOperation implements INode {
 	public double evaluate(JSSEvalData data) {
 		IJob job = data.getJob();
 
-		return job.getRemainingOperation();
+		return job.getRemainingOperations();
 	}
 
 }

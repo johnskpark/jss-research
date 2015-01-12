@@ -1,4 +1,4 @@
-package jss.evolution.node.basic;
+package jss.evolution.node.hildebrandt;
 
 import jss.IJob;
 import jss.evolution.JSSGPData;
@@ -11,13 +11,13 @@ import ec.gp.GPIndividual;
 import ec.gp.GPNode;
 import ec.util.Parameter;
 
-public class ScoreRemainingOperation extends GPNode {
+public class ScoreTimeInSystem extends GPNode {
 
-	private static final long serialVersionUID = -1499669041135595578L;
+	private static final long serialVersionUID = 1361037684605951058L;
 
 	@Override
 	public String toString() {
-		return NodeDefinition.SCORE_REMAINING_TIME.toString();
+		return NodeDefinition.SCORE_TIME_IN_SYSTEM.toString();
 	}
 
 	@Override
@@ -26,7 +26,7 @@ public class ScoreRemainingOperation extends GPNode {
 			final GPIndividual typicalIndividual,
 			final Parameter individualBase) {
 		super.checkConstraints(state, tree, typicalIndividual, individualBase);
-		if (children.length != NodeDefinition.SCORE_REMAINING_TIME.numChildren()) {
+		if (children.length != NodeDefinition.SCORE_TIME_IN_SYSTEM.numChildren()) {
 			state.output.error("Incorrect number of children for node " + toStringForError() + " at " + individualBase);
 		}
 	}
@@ -37,8 +37,9 @@ public class ScoreRemainingOperation extends GPNode {
 		JSSGPData data = (JSSGPData)input;
 
 		IJob job = data.getJob();
+		double time = data.getCurrentTime();
 
-		data.setPriority(job.getRemainingOperations());
+		data.setPriority(time - job.getReadyTime());
 	}
 
 }
