@@ -43,6 +43,7 @@ public class PriorityBasedDR extends JSSGPRule {
 			getData().setProblem(problem);
 			getData().setJob(job);
 			getData().setMachine(machine);
+			getData().setCurrentTime(time);
 
 			getIndividuals()[0].trees[0].child.eval(getState(),
 					getThreadnum(),

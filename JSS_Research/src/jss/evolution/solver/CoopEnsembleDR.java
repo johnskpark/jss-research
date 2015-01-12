@@ -55,7 +55,7 @@ public class CoopEnsembleDR extends JSSGPRule {
 		int mostVotedIndex = -1;
 
 		for (int i = 0; i < getIndividuals().length; i++) {
-			PriorityIndexPair bestPair = getBestIndex(i, processableJobs, machine, problem, tracker);
+			PriorityIndexPair bestPair = getBestIndex(i, processableJobs, machine, problem, time, tracker);
 			if (bestPair.index == -1) {
 				return null;
 			}
@@ -82,11 +82,13 @@ public class CoopEnsembleDR extends JSSGPRule {
 			List<IJob> processableJobs,
 			IMachine machine,
 			IProblemInstance problem,
+			double time,
 			PriorityTracker tracker) {
 
 		double[] normalisedPriorities = getNormalisedPriorities(getIndividuals()[index],
 				processableJobs,
 				problem,
+				time,
 				machine);
 
 		double bestPriority = Double.NEGATIVE_INFINITY;
@@ -111,6 +113,7 @@ public class CoopEnsembleDR extends JSSGPRule {
 	private double[] getNormalisedPriorities(GPIndividual gpInd,
 			List<IJob> processableJobs,
 			IProblemInstance problem,
+			double time,
 			IMachine machine) {
 		double[] normalisedPriorities = new double[processableJobs.size()];
 		double sumPriorities = 0.0;
@@ -119,6 +122,7 @@ public class CoopEnsembleDR extends JSSGPRule {
 			getData().setProblem(problem);
 			getData().setJob(processableJobs.get(j));
 			getData().setMachine(machine);
+			getData().setCurrentTime(time);
 
 			gpInd.trees[0].child.eval(getState(), getThreadnum(), getData(), null, gpInd, null);
 

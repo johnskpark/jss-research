@@ -33,9 +33,9 @@ public class CoopTwoRuleDR extends JSSGPRule {
 	@Override
 	public Action getAction(IMachine machine, IProblemInstance problem, double time) {
 		if (selectFirstRule(machine, problem, time)) {
-			return getAction(getIndividuals()[0], machine, problem);
+			return getAction(getIndividuals()[0], machine, problem, time);
 		} else {
-			return getAction(getIndividuals()[1], machine, problem);
+			return getAction(getIndividuals()[1], machine, problem, time);
 		}
 	}
 
@@ -45,7 +45,7 @@ public class CoopTwoRuleDR extends JSSGPRule {
 	}
 
 	// Get the action using the specified rule
-	private Action getAction(GPIndividual gpInd, IMachine machine, IProblemInstance problem) {
+	private Action getAction(GPIndividual gpInd, IMachine machine, IProblemInstance problem, double time) {
 		double bestPriority = Double.NEGATIVE_INFINITY;
 		IJob bestJob = null;
 
@@ -57,6 +57,7 @@ public class CoopTwoRuleDR extends JSSGPRule {
 			getData().setProblem(problem);
 			getData().setJob(job);
 			getData().setMachine(machine);
+			getData().setCurrentTime(time);
 
 			getIndividuals()[0].trees[0].child.eval(getState(),
 					getThreadnum(),
@@ -73,8 +74,8 @@ public class CoopTwoRuleDR extends JSSGPRule {
 
 		if (bestJob != null) {
 			// Simply process the job as early as possible.
-			double time = Math.max(machine.getReadyTime(), bestJob.getReadyTime());
-			return new Action(machine, bestJob, time);
+			double t = Math.max(machine.getReadyTime(), bestJob.getReadyTime());
+			return new Action(machine, bestJob, t);
 		} else {
 			return null;
 		}

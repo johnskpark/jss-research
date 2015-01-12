@@ -46,7 +46,8 @@ public class SinglePopEnsembleDR extends JSSGPRule {
 			List<Double> normalisedPriorities = getNormalisedPriorities(getIndividuals()[i],
 					processableJobs,
 					problem,
-					machine);
+					machine,
+					time);
 
 			priorities.add(normalisedPriorities);
 
@@ -88,7 +89,8 @@ public class SinglePopEnsembleDR extends JSSGPRule {
 	private List<Double> getNormalisedPriorities(GPIndividual gpInd,
 			List<IJob> processableJobs,
 			IProblemInstance problem,
-			IMachine machine) {
+			IMachine machine,
+			double time) {
 		List<Double> normalisedPriorities = new ArrayList<Double>(processableJobs.size());
 
 		double[] priorities = new double[processableJobs.size()];
@@ -99,6 +101,7 @@ public class SinglePopEnsembleDR extends JSSGPRule {
 			getData().setProblem(problem);
 			getData().setJob(processableJobs.get(i));
 			getData().setMachine(machine);
+			getData().setCurrentTime(time);
 
 			gpInd.trees[0].child.eval(getState(), getThreadnum(), getData(), null, gpInd, null);
 

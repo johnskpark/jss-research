@@ -18,6 +18,7 @@ public class JSSGPData extends GPData {
 	private IProblemInstance problem;
 	private IMachine machine;
 	private IJob job;
+	private double time;
 
 	private double priority;
 
@@ -47,6 +48,14 @@ public class JSSGPData extends GPData {
 
 	/**
 	 * TODO javadoc.
+	 * @return
+	 */
+	public double getCurrentTime() {
+		return time;
+	}
+
+	/**
+	 * TODO javadoc.
 	 * @param problem
 	 */
 	public void setProblem(IProblemInstance problem) {
@@ -67,6 +76,14 @@ public class JSSGPData extends GPData {
 	 */
 	public void setJob(IJob job) {
 		this.job = job;
+	}
+
+	/**
+	 * TODO javadoc.
+	 * @param time
+	 */
+	public void setCurrentTime(double time) {
+		this.time = time;
 	}
 
 	/**

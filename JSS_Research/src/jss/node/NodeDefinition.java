@@ -25,6 +25,7 @@ public enum NodeDefinition {
 	SCORE_MACHINE_READY_TIME("RM", 0),
 	SCORE_NUM_JOBS_WAITING("NJ", 0),
 	SCORE_PENALTY("W", 0),
+	SCORE_CURRENT_TIME("CT", 0),
 	ERC_RANDOM("", 0);
 
 	private String nodeSymbol;

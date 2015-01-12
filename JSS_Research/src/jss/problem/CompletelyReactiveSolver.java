@@ -97,9 +97,8 @@ public class CompletelyReactiveSolver implements ISolver, ISubscriber {
 				double penalty = lastJob.getPenalty();
 				double tardiness = Math.max(completionTime - lastJob.getDueDate(), 0);
 
-				if (problem.isWarmUpComplete()) {
-					solution.addTWT(penalty * tardiness);
-				}
+				solution.addTWT(penalty * tardiness);
+				solution.increment();
 			}
 		}
 	}
