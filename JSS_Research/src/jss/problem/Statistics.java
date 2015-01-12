@@ -1,6 +1,8 @@
 package jss.problem;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import jss.IProblemInstance;
@@ -15,7 +17,8 @@ import jss.problem.static_problem.StaticInstance;
  */
 public class Statistics {
 
-	private Map<IProblemInstance, IResult> problems = new HashMap<IProblemInstance, IResult>();
+	private List<IProblemInstance> problemsList = new ArrayList<IProblemInstance>();
+	private Map<IProblemInstance, IResult> problemsMap = new HashMap<IProblemInstance, IResult>();
 
 	private Map<String, Object> additionalData = new HashMap<String, Object>();
 
@@ -39,7 +42,8 @@ public class Statistics {
 	 * @param solution The solution for the solved problem instance.
 	 */
 	public void addSolution(IProblemInstance problem, IResult solution) {
-		problems.put(problem, solution);
+		problemsList.add(problem);
+		problemsMap.put(problem, solution);
 
 		totalMakespan += solution.getMakespan();
 		totalTWT += solution.getTWT();
@@ -50,6 +54,23 @@ public class Statistics {
 			totalDeviation += (solution.getMakespan() - staticProblem.getLowerBound()) /
 					staticProblem.getLowerBound();
 		}
+	}
+
+	/**
+	 * TODO javadoc.
+	 * @param problem
+	 * @return
+	 */
+	public IResult getSolution(IProblemInstance problem) {
+		return problemsMap.get(problem);
+	}
+
+	/**
+	 * TODO javadoc.
+	 * @return
+	 */
+	public List<IProblemInstance> getProblems() {
+		return problemsList;
 	}
 
 	/**
