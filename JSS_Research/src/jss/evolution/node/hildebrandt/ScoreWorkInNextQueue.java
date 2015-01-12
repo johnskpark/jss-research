@@ -1,5 +1,7 @@
 package jss.evolution.node.hildebrandt;
 
+import jss.IJob;
+import jss.IMachine;
 import jss.evolution.JSSGPData;
 import jss.node.NodeDefinition;
 import ec.EvolutionState;
@@ -35,7 +37,22 @@ public class ScoreWorkInNextQueue extends GPNode {
 			ADFStack stack, GPIndividual individual, Problem problem) {
 		JSSGPData data = (JSSGPData)input;
 
-		data.setPriority(0); // TODO
+		IJob job = data.getJob();
+		IMachine machine = job.getNextMachine();
+
+		double priority = 0;
+		if (machine != null) {
+			for (IJob waitingJob : machine.getWaitingJobs()) {
+				priority += waitingJob.getProcessingTime(machine);
+			}
+
+			IJob currentJob;
+			if ((currentJob = machine.getCurrentJob()) != null) {
+				priority += currentJob.getProcessingTime(machine);
+			}
+		}
+
+		data.setPriority(priority);
 	}
 
 }

@@ -265,7 +265,7 @@ public class DynamicInstance implements IProblemInstance, ISubscriptionHandler {
 			incompleteJobs.add(job);
 			unreleasedJobs.remove(job);
 
-			job.getNextMachine().addWaitingJob(job);
+			job.getCurrentMachine().addWaitingJob(job);
 		}
 
 		// Generate new jobs if the termination criterion has not yet been reached.

@@ -74,31 +74,31 @@ public class JobTest {
 		job.offerMachine(mockMachine1);
 		job.offerMachine(mockMachine2);
 
-		Assert.assertEquals(job.getNextMachine(), mockMachine1);
-		Assert.assertTrue(mockMachine1.equals(job.getNextMachine()));
-		Assert.assertFalse(mockMachine2.equals(job.getNextMachine()));
+		Assert.assertEquals(job.getCurrentMachine(), mockMachine1);
+		Assert.assertTrue(mockMachine1.equals(job.getCurrentMachine()));
+		Assert.assertFalse(mockMachine2.equals(job.getCurrentMachine()));
 		Assert.assertFalse(job.isCompleted());
 
 		job.startedProcessingOnMachine(mockMachine1);
 		job.finishProcessingOnMachine();
 
-		Assert.assertEquals(job.getNextMachine(), mockMachine2);
-		Assert.assertFalse(mockMachine1.equals(job.getNextMachine()));
-		Assert.assertTrue(mockMachine2.equals(job.getNextMachine()));
+		Assert.assertEquals(job.getCurrentMachine(), mockMachine2);
+		Assert.assertFalse(mockMachine1.equals(job.getCurrentMachine()));
+		Assert.assertTrue(mockMachine2.equals(job.getCurrentMachine()));
 		Assert.assertFalse(job.isCompleted());
 
 		job.startedProcessingOnMachine(mockMachine2);
 		job.finishProcessingOnMachine();
 
-		Assert.assertNull(job.getNextMachine());
-		Assert.assertFalse(mockMachine1.equals(job.getNextMachine()));
-		Assert.assertFalse(mockMachine2.equals(job.getNextMachine()));
+		Assert.assertNull(job.getCurrentMachine());
+		Assert.assertFalse(mockMachine1.equals(job.getCurrentMachine()));
+		Assert.assertFalse(mockMachine2.equals(job.getCurrentMachine()));
 		Assert.assertTrue(job.isCompleted());
 
 		job.reset();
 
-		Assert.assertTrue(mockMachine1.equals(job.getNextMachine()));
-		Assert.assertFalse(mockMachine2.equals(job.getNextMachine()));
+		Assert.assertTrue(mockMachine1.equals(job.getCurrentMachine()));
+		Assert.assertFalse(mockMachine2.equals(job.getCurrentMachine()));
 		Assert.assertFalse(job.isCompleted());
 	}
 
@@ -112,9 +112,9 @@ public class JobTest {
 		job.offerMachine(mockMachine1);
 		job.offerMachine(mockMachine2);
 
-		Assert.assertEquals(job.getNextMachine(), mockMachine1);
-		Assert.assertTrue(mockMachine1.equals(job.getNextMachine()));
-		Assert.assertFalse(mockMachine2.equals(job.getNextMachine()));
+		Assert.assertEquals(job.getCurrentMachine(), mockMachine1);
+		Assert.assertTrue(mockMachine1.equals(job.getCurrentMachine()));
+		Assert.assertFalse(mockMachine2.equals(job.getCurrentMachine()));
 		Assert.assertFalse(job.isCompleted());
 
 		job.startedProcessingOnMachine(mockMachine1);
@@ -122,16 +122,16 @@ public class JobTest {
 		job.startedProcessingOnMachine(mockMachine2);
 		job.finishProcessingOnMachine();
 
-		Assert.assertNull(job.getNextMachine());
-		Assert.assertFalse(mockMachine1.equals(job.getNextMachine()));
-		Assert.assertFalse(mockMachine2.equals(job.getNextMachine()));
+		Assert.assertNull(job.getCurrentMachine());
+		Assert.assertFalse(mockMachine1.equals(job.getCurrentMachine()));
+		Assert.assertFalse(mockMachine2.equals(job.getCurrentMachine()));
 		Assert.assertTrue(job.isCompleted());
 
 		job.reset();
 
-		Assert.assertEquals(job.getNextMachine(), mockMachine1);
-		Assert.assertTrue(mockMachine1.equals(job.getNextMachine()));
-		Assert.assertFalse(mockMachine2.equals(job.getNextMachine()));
+		Assert.assertEquals(job.getCurrentMachine(), mockMachine1);
+		Assert.assertTrue(mockMachine1.equals(job.getCurrentMachine()));
+		Assert.assertFalse(mockMachine2.equals(job.getCurrentMachine()));
 		Assert.assertFalse(job.isCompleted());
 	}
 

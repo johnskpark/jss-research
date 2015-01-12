@@ -56,6 +56,12 @@ public interface IJob {
 	public double getSetupTime(int index);
 
 	/**
+	 * TODO javadoc.
+	 * @return
+	 */
+	public double getQueueEntryTime();
+
+	/**
 	 * Get the due date of the job.
 	 * @return The due date of the job.
 	 */
@@ -109,19 +115,43 @@ public interface IJob {
 	 * @return The current machine processing the job, null if no machine is
 	 *         processing a job.
 	 */
-	public IMachine getCurrentMachine();
+	public IMachine getProcessingMachine();
 
 	/**
 	 * Get the next machine that needs to be visited by the job.
 	 * @return The next machine to visit by the job to process it.
 	 */
-	public IMachine getNextMachine();
+	public IMachine getCurrentMachine();
 
 	/**
 	 * Get the last machine that the job was processed on.
 	 * @return The last machine that was visited by the job.
 	 */
 	public IMachine getLastMachine();
+
+	/**
+	 * TODO javadoc.
+	 * @return
+	 */
+	public IMachine getNextMachine();
+
+	/**
+	 * TODO javadoc.
+	 * @return
+	 */
+	public int getCurrentOperationIndex();
+
+	/**
+	 * TODO javadoc.
+	 * @return
+	 */
+	public int getLastOperationIndex();
+
+	/**
+	 * TODO javadoc.
+	 * @return
+	 */
+	public int getNextOperationIndex();
 
 	/**
 	 * Get whether the job has an operation on the particular machine or not.

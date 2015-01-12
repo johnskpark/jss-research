@@ -43,7 +43,7 @@ public class FIFOSolver extends JSSEvalSolver {
 			double earliestCompletion = Double.POSITIVE_INFINITY;
 
 			for (IJob job : jobs) {
-				if (!machine.equals(job.getNextMachine())) {
+				if (!machine.equals(job.getCurrentMachine())) {
 					continue;
 				}
 
@@ -59,7 +59,7 @@ public class FIFOSolver extends JSSEvalSolver {
 			IJob bestJob = null;
 
 			for (IJob job : jobs) {
-				if (!machine.equals(job.getNextMachine()) ||
+				if (!machine.equals(job.getCurrentMachine()) ||
 						job.getReadyTime() >= earliestCompletion) {
 					continue;
 				}

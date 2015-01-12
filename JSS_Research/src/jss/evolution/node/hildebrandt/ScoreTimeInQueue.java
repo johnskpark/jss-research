@@ -1,5 +1,6 @@
 package jss.evolution.node.hildebrandt;
 
+import jss.IJob;
 import jss.evolution.JSSGPData;
 import jss.node.NodeDefinition;
 import ec.EvolutionState;
@@ -35,7 +36,9 @@ public class ScoreTimeInQueue extends GPNode {
 			ADFStack stack, GPIndividual individual, Problem problem) {
 		JSSGPData data = (JSSGPData)input;
 
-		data.setPriority(0); // TODO
+		IJob job = data.getJob();
+
+		data.setPriority(data.getCurrentTime() - job.getQueueEntryTime());
 	}
 
 }

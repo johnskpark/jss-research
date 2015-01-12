@@ -1,6 +1,7 @@
 package jss.evolution.node.hildebrandt;
 
 import jss.IJob;
+import jss.IMachine;
 import jss.evolution.JSSGPData;
 import jss.node.NodeDefinition;
 import ec.EvolutionState;
@@ -37,8 +38,9 @@ public class ScoreNextProcessingTime extends GPNode {
 		JSSGPData data = (JSSGPData)input;
 
 		IJob job = data.getJob();
+		IMachine machine = job.getNextMachine();
 
-		data.setPriority(0); // TODO
+		data.setPriority(job.getProcessingTime(machine));
 	}
 
 }

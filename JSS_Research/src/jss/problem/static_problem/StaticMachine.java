@@ -92,7 +92,7 @@ public class StaticMachine implements IMachine, IEventHandler {
 			if (availableTime != 0) {
 				currentJob.finishProcessingOnMachine();
 
-				IMachine nextMachine = currentJob.getNextMachine();
+				IMachine nextMachine = currentJob.getCurrentMachine();
 				if (nextMachine != null) {
 					nextMachine.addWaitingJob(currentJob);
 				}

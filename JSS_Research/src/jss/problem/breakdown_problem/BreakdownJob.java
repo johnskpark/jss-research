@@ -15,6 +15,7 @@ public class BreakdownJob implements IJob, IEventHandler {
 
 	// Immutable component TODO more doc
 	private List<IMachine> machineList = new LinkedList<IMachine>();
+	private double queueEntryTime = 0;
 
 	// TODO these will need to change to some classes later on.
 	private Map<IMachine, Double> processingTimes = new HashMap<IMachine, Double>();
@@ -86,6 +87,7 @@ public class BreakdownJob implements IJob, IEventHandler {
 	 */
 	public void setReleaseTime(double release) {
 		releaseTime = release;
+		queueEntryTime = releaseTime;
 	}
 
 	// Check invariance.
@@ -133,6 +135,11 @@ public class BreakdownJob implements IJob, IEventHandler {
 	}
 
 	@Override
+	public double getQueueEntryTime() {
+		return queueEntryTime;
+	}
+
+	@Override
 	public double getDueDate() {
 		// TODO
 		return 0;
@@ -173,17 +180,21 @@ public class BreakdownJob implements IJob, IEventHandler {
 
 	@Override
 	public void finishProcessingOnMachine() {
-		machine = null;
 		machineQueue.poll();
+		if (!machineQueue.isEmpty()) {
+			queueEntryTime = machine.getReadyTime();
+		}
+
+		machine = null;
 	}
 
 	@Override
-	public IMachine getCurrentMachine() {
+	public IMachine getProcessingMachine() {
 		return machine;
 	}
 
 	@Override
-	public IMachine getNextMachine() {
+	public IMachine getCurrentMachine() {
 		if (!machineQueue.isEmpty()) {
 			return machineQueue.peek();
 		}
@@ -192,11 +203,35 @@ public class BreakdownJob implements IJob, IEventHandler {
 
 	@Override
 	public IMachine getLastMachine() {
-		int diff = machineList.size() - machineQueue.size();
-		if (diff != 0) {
-			return machineList.get(diff-1);
+		int index = getLastOperationIndex();
+		if (index >= 0) {
+			return machineList.get(index);
 		}
 		return null;
+	}
+
+	@Override
+	public IMachine getNextMachine() {
+		int index = getNextOperationIndex();
+		if (index < machineList.size()) {
+			return machineList.get(index);
+		}
+		return null;
+	}
+
+	@Override
+	public int getCurrentOperationIndex() {
+		return machineList.size() - machineQueue.size();
+	}
+
+	@Override
+	public int getLastOperationIndex() {
+		return machineList.size() - machineQueue.size() - 1;
+	}
+
+	@Override
+	public int getNextOperationIndex() {
+		return machineList.size() - machineQueue.size() + 1;
 	}
 
 	@Override
@@ -212,6 +247,7 @@ public class BreakdownJob implements IJob, IEventHandler {
 	@Override
 	public void reset() {
 		machineQueue = new LinkedList<IMachine>(machineList);
+		queueEntryTime = releaseTime;
 	}
 
 	// Basic Job has no event triggers.

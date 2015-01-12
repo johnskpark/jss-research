@@ -115,7 +115,7 @@ public class CompletelyReactiveSolver implements ISolver, ISubscriber {
 	@Override
 	public void onJobFeed(IJob job, double time) {
 		// Find the machine that the job was released for.
-		IMachine machine = job.getNextMachine();
+		IMachine machine = job.getCurrentMachine();
 
 		// Process the job if the machine is available.
 		if (machine.isAvailable()) {

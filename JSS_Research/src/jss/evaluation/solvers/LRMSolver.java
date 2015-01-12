@@ -44,7 +44,7 @@ public class LRMSolver extends JSSEvalSolver {
 			IJob bestJob = null;
 
 			for (IJob job : jobs) {
-				if (!machine.equals(job.getNextMachine())) {
+				if (!machine.equals(job.getCurrentMachine())) {
 					continue;
 				}
 

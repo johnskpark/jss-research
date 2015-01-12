@@ -1,7 +1,5 @@
 package jss.evolution.node.hildebrandt;
 
-import jss.IJob;
-import jss.IMachine;
 import jss.evolution.JSSGPData;
 import jss.node.NodeDefinition;
 import jss.problem.dynamic_problem.DynamicJob;
@@ -38,21 +36,14 @@ public class ScoreOperationalDueDate extends GPNode {
 			ADFStack stack, GPIndividual individual, Problem problem) {
 		JSSGPData data = (JSSGPData)input;
 
-		IMachine machine = data.getMachine();
-		IJob job = data.getJob();
+		DynamicJob job = (DynamicJob) data.getJob(); // Need the flow factor.
 
-		double priority = getOperationalDueDate(machine, (DynamicJob)job);
-
-		data.setPriority(priority);
-	}
-
-	private double getOperationalDueDate(IMachine machine, DynamicJob job) {
-		if (job.getLastMachine() == null) {
-			return job.getReadyTime() + job.getFlowFactor() * job.getProcessingTime(machine);
+		double priority = job.getReadyTime() + job.getFlowFactor() * job.getProcessingTime(0);
+		for (int i = 1; i < job.getNumOperations(); i++) {
+			priority += job.getFlowFactor() * job.getProcessingTime(i);
 		}
 
-		double previousODD = getOperationalDueDate(machine, job); // TODO
-		return previousODD + job.getFlowFactor() * job.getProcessingTime(machine);
+		data.setPriority(priority);
 	}
 
 }

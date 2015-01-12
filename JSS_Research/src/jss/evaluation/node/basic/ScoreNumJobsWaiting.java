@@ -34,7 +34,7 @@ public class ScoreNumJobsWaiting implements INode {
 
 		int numJobs = 0;
 		for (IJob job : data.getProblem().getJobs()) {
-			if (machine.equals(job.getNextMachine())) {
+			if (machine.equals(job.getCurrentMachine())) {
 				numJobs++;
 			}
 		}

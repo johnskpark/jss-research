@@ -35,6 +35,8 @@ public class DynamicJob implements IJob, IEventHandler {
 
 	private IMachine machine;
 
+	private double queueEntryTime = 0;
+
 	private IEvent jobReadyEvent;
 	private ISubscriptionHandler subscriptionHandler;
 
@@ -99,6 +101,7 @@ public class DynamicJob implements IJob, IEventHandler {
 	 */
 	public void setReadyTime(double release) {
 		this.readyTime = release;
+		this.queueEntryTime = this.readyTime;
 	}
 
 	// Check invariance.
@@ -146,6 +149,11 @@ public class DynamicJob implements IJob, IEventHandler {
 	}
 
 	@Override
+	public double getQueueEntryTime() {
+		return queueEntryTime;
+	}
+
+	@Override
 	public double getDueDate() {
 		return dueDate;
 	}
@@ -177,24 +185,28 @@ public class DynamicJob implements IJob, IEventHandler {
 	@Override
 	public void startedProcessingOnMachine(IMachine machine) throws RuntimeException {
 		if (!machineQueue.peek().equals(machine)) {
-			throw new RuntimeException("You done goofed from BasicJob");
+			throw new RuntimeException("You done goofed from BasicJob"); // TODO
 		}
 		this.machine = machine;
 	}
 
 	@Override
 	public void finishProcessingOnMachine() {
-		machine = null;
 		machineQueue.poll();
+		if (!machineQueue.isEmpty()) {
+			queueEntryTime = machine.getReadyTime();
+		}
+
+		machine = null;
 	}
 
 	@Override
-	public IMachine getCurrentMachine() {
+	public IMachine getProcessingMachine() {
 		return machine;
 	}
 
 	@Override
-	public IMachine getNextMachine() {
+	public IMachine getCurrentMachine() {
 		if (!machineQueue.isEmpty()) {
 			return machineQueue.peek();
 		}
@@ -203,11 +215,35 @@ public class DynamicJob implements IJob, IEventHandler {
 
 	@Override
 	public IMachine getLastMachine() {
-		int diff = machineList.size() - machineQueue.size();
-		if (diff != 0) {
-			return machineList.get(diff-1);
+		int index = getLastOperationIndex();
+		if (index >= 0) {
+			return machineList.get(index);
 		}
 		return null;
+	}
+
+	@Override
+	public IMachine getNextMachine() {
+		int index = getNextOperationIndex();
+		if (index < machineList.size()) {
+			return machineList.get(index);
+		}
+		return null;
+	}
+
+	@Override
+	public int getCurrentOperationIndex() {
+		return machineList.size() - machineQueue.size();
+	}
+
+	@Override
+	public int getLastOperationIndex() {
+		return machineList.size() - machineQueue.size() - 1;
+	}
+
+	@Override
+	public int getNextOperationIndex() {
+		return machineList.size() - machineQueue.size() + 1;
 	}
 
 	@Override
@@ -223,6 +259,7 @@ public class DynamicJob implements IJob, IEventHandler {
 	@Override
 	public void reset() {
 		machineQueue = new LinkedList<IMachine>(machineList);
+		queueEntryTime = readyTime;
 	}
 
 	/**

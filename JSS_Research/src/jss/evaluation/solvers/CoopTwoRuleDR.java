@@ -49,7 +49,7 @@ public class CoopTwoRuleDR implements IActionHandler {
 		IJob bestJob = null;
 
 		for (IJob job : machine.getWaitingJobs()) {
-			if (!machine.equals(job.getNextMachine())) {
+			if (!machine.equals(job.getCurrentMachine())) {
 				continue;
 			}
 
