@@ -16,7 +16,7 @@ public interface IProcessingOrderGenerator {
 	 * TODO javadoc.
 	 * @return
 	 */
-	public List<IMachine> getProcessingOrder(Set<IMachine> machine);
+	public List<IMachine> getProcessingOrder(Set<? extends IMachine> machine);
 
 	/**
 	 * TODO javadoc.

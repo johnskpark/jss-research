@@ -28,8 +28,8 @@ public class TaillardBounds {
 	 * Calculate the lower bound for the specified JSS problem instance.
 	 */
 	public static double calculateLowerBound(StaticInstance problem) {
-		Set<IMachine> machines = problem.getMachines();
-		List<IJob> jobs = problem.getJobs();
+		Set<? extends IMachine> machines = problem.getMachines();
+		List<? extends IJob> jobs = problem.getJobs();
 
 		double[] b = getB(problem);
 		double[] a = getA(problem);
@@ -56,8 +56,8 @@ public class TaillardBounds {
 
 	// Calculation for the b_i values for Talliard's bound calculation.
 	private static double[] getB(IProblemInstance problem) {
-		Set<IMachine> machines = problem.getMachines();
-		List<IJob> jobs = problem.getJobs();
+		Set<? extends IMachine> machines = problem.getMachines();
+		List<? extends IJob> jobs = problem.getJobs();
 
 		double[] b = new double[machines.size()];
 		int i = 0;
@@ -90,8 +90,8 @@ public class TaillardBounds {
 
 	// Calculation for the a_i values for Talliard's bound calculation.
 	private static double[] getA(IProblemInstance problem) {
-		Set<IMachine> machines = problem.getMachines();
-		List<IJob> jobs = problem.getJobs();
+		Set<? extends IMachine> machines = problem.getMachines();
+		List<? extends IJob> jobs = problem.getJobs();
 
 		double[] a = new double[machines.size()];
 		int i = 0;
@@ -124,8 +124,8 @@ public class TaillardBounds {
 
 	// Calculation for the T_i values for Talliard's bound calculation.
 	private static double[] getT(IProblemInstance problem) {
-		Set<IMachine> machines = problem.getMachines();
-		List<IJob> jobs = problem.getJobs();
+		Set<? extends IMachine> machines = problem.getMachines();
+		List<? extends IJob> jobs = problem.getJobs();
 
 		double[] T = new double[machines.size()];
 		int i = 0;

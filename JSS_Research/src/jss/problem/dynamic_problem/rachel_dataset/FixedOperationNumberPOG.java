@@ -34,7 +34,8 @@ public class FixedOperationNumberPOG implements IProcessingOrderGenerator {
 	}
 
 	@Override
-	public List<IMachine> getProcessingOrder(Set<IMachine> machines) {
+	public List<IMachine> getProcessingOrder(Set<? extends IMachine> machines) {
+		// TODO this is going to be slow.
 		List<IMachine> selectableMachines = new ArrayList<IMachine>(machines);
 		List<IMachine> operationOrder = new ArrayList<IMachine>();
 

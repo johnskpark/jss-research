@@ -19,6 +19,8 @@ public class DynamicJob extends BaseJob {
 	 * Scheduling problem instance.
 	 */
 	public DynamicJob(ISubscriptionHandler handler) {
+		super();
+		
 		subscriptionHandler = handler;
 		jobReadyEvent = new JobReadyEvent(this);
 	}

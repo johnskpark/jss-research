@@ -73,8 +73,8 @@ public class DatasetTest {
 
 			StaticInstance problem = (StaticInstance) problems.get(0);
 
-			Set<IMachine> machines = problem.getMachines();
-			List<IJob> jobs = problem.getJobs();
+			Set<? extends IMachine> machines = problem.getMachines();
+			List<? extends IJob> jobs = problem.getJobs();
 
 			for (int j = 0; j < jobs.size(); j++) {
 				Assert.assertTrue(jobs.get(j) instanceof StaticJob);

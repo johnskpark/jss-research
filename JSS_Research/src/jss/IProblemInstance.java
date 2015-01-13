@@ -39,7 +39,7 @@ public interface IProblemInstance {
 	 * @return Get a fresh list of references to jobs that are visible in the
 	 *         problem instance at the current state, and are incomplete.
 	 */
-	public List<IJob> getJobs();
+	public List<? extends IJob> getJobs();
 
 	/**
 	 * Get the list of machines that are visible in the problem.
@@ -52,7 +52,7 @@ public interface IProblemInstance {
 	 * @return Get a fresh list of references to machines that are visible in
 	 *         the problem instance at the current state.
 	 */
-	public Set<IMachine> getMachines();
+	public Set<? extends IMachine> getMachines();
 
 	/**
 	 * TODO javadoc.
@@ -70,7 +70,7 @@ public interface IProblemInstance {
 	 * TODO javadoc.
 	 * @return
 	 */
-	public Set<IMachine> getAvailableMachines();
+	public Set<? extends IMachine> getAvailableMachines();
 
 	/**
 	 * TODO javadoc.
@@ -90,7 +90,7 @@ public interface IProblemInstance {
 	 * @return Get a fresh list of references to event handlers that are
 	 *         visible in the problem instance at the current state.
 	 */
-	public List<IEventHandler> getEventHandlers();
+	public List<? extends IEventHandler> getEventHandlers();
 
 	/**
 	 * Reset any modifications made to the internal state of the problem

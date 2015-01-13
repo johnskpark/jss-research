@@ -21,7 +21,7 @@ public abstract class BaseInstance implements IProblemInstance, ISubscriptionHan
 
 	private List<BaseJob> jobs = new ArrayList<BaseJob>();
 
-	private Set<IMachine> machines = new TreeSet<IMachine>();
+	private Set<BaseMachine> machines = new TreeSet<BaseMachine>();
 	private Set<IMachine> availableMachines = new TreeSet<IMachine>();
 
 	private List<IEventHandler> eventHandlers = new ArrayList<IEventHandler>();
@@ -60,12 +60,12 @@ public abstract class BaseInstance implements IProblemInstance, ISubscriptionHan
 	/// IProblemInstance
 
 	@Override
-	public List<IJob> getJobs()	{
-		return new ArrayList<IJob>(jobs);
+	public List<? extends IJob> getJobs()	{
+		return jobs;
 	}
 
 	@Override
-	public Set<IMachine> getMachines() {
+	public Set<? extends IMachine> getMachines() {
 		return machines;
 	}
 
@@ -80,18 +80,23 @@ public abstract class BaseInstance implements IProblemInstance, ISubscriptionHan
 	}
 
 	@Override
-	public Set<IMachine> getAvailableMachines() {
+	public Set<? extends IMachine> getAvailableMachines() {
 		return availableMachines;
 	}
 
 	@Override
-	public List<IEventHandler> getEventHandlers() {
+	public List<? extends IEventHandler> getEventHandlers() {
 		return eventHandlers;
 	}
 
 	@Override
 	public void reset() {
-		subscribers = new ArrayList<ISubscriber>();
+		eventHandlers.clear();
+		
+		eventHandlers.addAll(jobs);
+		eventHandlers.addAll(machines);
+		
+		subscribers.clear();
 	}
 	
 	@Override
