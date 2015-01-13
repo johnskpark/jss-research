@@ -1,6 +1,5 @@
 package jss.problem.dynamic_problem;
 
-import jss.ISubscriptionHandler;
 import jss.problem.BaseMachine;
 
 /**
@@ -17,10 +16,10 @@ public class DynamicMachine extends BaseMachine {
 	/**
 	 * TODO javadoc.
 	 * @param id
-	 * @param handler
+	 * @param problem
 	 */
-	public DynamicMachine(int id, ISubscriptionHandler handler) {
-		super(id, handler);
+	public DynamicMachine(int id, DynamicInstance problem) {
+		super(id, problem);
 	}
 
 }

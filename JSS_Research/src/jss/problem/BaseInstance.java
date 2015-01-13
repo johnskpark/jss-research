@@ -111,12 +111,16 @@ public abstract class BaseInstance implements IProblemInstance, ISubscriptionHan
 		subscribers.add(subscriber);
 	}
 
+	// TODO fuck, God I'm so goddamn fried in the head.
+	public List<IMachine> unavailableMachines = new ArrayList<IMachine>();
+
 	@Override
 	public void sendMachineFeed(IMachine machine, double time) {
 		for (ISubscriber subscriber : subscribers) {
 			subscriber.onMachineFeed(machine, time);
 		}
 
+		// TODO this doesn't work.
 		if (machine.isAvailable()) {
 			availableMachines.add(machine);
 		} else {

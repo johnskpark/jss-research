@@ -2,7 +2,7 @@ package jss.test;
 
 import jss.IJob;
 import jss.IMachine;
-import jss.ISubscriptionHandler;
+import jss.problem.static_problem.StaticInstance;
 import jss.problem.static_problem.StaticMachine;
 
 import org.jmock.Expectations;
@@ -23,7 +23,6 @@ public class MachineTest {
 
 	private Mockery context = new JUnit4Mockery();
 
-	private ISubscriptionHandler mockHandler;
 	private IMachine machine;
 	private IJob mockJob1;
 	private IJob mockJob2;
@@ -34,8 +33,8 @@ public class MachineTest {
 
 	@Test
 	public void staticMachineTest_ProcessJob() {
-		mockHandler = context.mock(ISubscriptionHandler.class);
-		machine = new StaticMachine(0, mockHandler);
+		StaticInstance mockProblem = new StaticInstance();
+		machine = new StaticMachine(0, mockProblem);
 		mockJob1 = context.mock(IJob.class);
 
 		releaseTime = 0.0;
@@ -67,8 +66,8 @@ public class MachineTest {
 
 	@Test
 	public void staticMachineTest_FinishJob() {
-		mockHandler = context.mock(ISubscriptionHandler.class);
-		machine = new StaticMachine(0, mockHandler);
+		StaticInstance mockProblem = new StaticInstance();
+		machine = new StaticMachine(0, mockProblem);
 		mockJob1 = context.mock(IJob.class);
 
 		releaseTime = 0.0;
@@ -87,11 +86,6 @@ public class MachineTest {
 		}});
 
 		machine.processJob(mockJob1, 0);
-
-		context.checking(new Expectations() {{
-			oneOf(mockHandler).sendMachineFeed(machine, completionTime);
-		}});
-
 		machine.updateStatus(completionTime);
 
 		Assert.assertNull(machine.getCurrentJob());
@@ -106,8 +100,8 @@ public class MachineTest {
 
 	@Test
 	public void staticMachineTest_Reset() {
-		mockHandler = context.mock(ISubscriptionHandler.class);
-		machine = new StaticMachine(0, mockHandler);
+		StaticInstance mockProblem = new StaticInstance();
+		machine = new StaticMachine(0, mockProblem);
 		mockJob1 = context.mock(IJob.class);
 
 		releaseTime = 0.0;
@@ -126,11 +120,6 @@ public class MachineTest {
 		}});
 
 		machine.processJob(mockJob1, 0);
-
-		context.checking(new Expectations() {{
-			oneOf(mockHandler).sendMachineFeed(machine, completionTime);
-		}});
-
 		machine.updateStatus(completionTime);
 
 		machine.reset();
@@ -143,8 +132,8 @@ public class MachineTest {
 
 	@Test
 	public void staticMachineTestFail_ProcessJob() {
-		mockHandler = context.mock(ISubscriptionHandler.class);
-		machine = new StaticMachine(0, mockHandler);
+		StaticInstance mockProblem = new StaticInstance();
+		machine = new StaticMachine(0, mockProblem);
 		mockJob1 = context.mock(IJob.class, "Job1");
 		mockJob2 = context.mock(IJob.class, "Job2");
 

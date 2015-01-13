@@ -102,4 +102,5 @@ public interface IProblemInstance {
 	 * TODO javadoc.
 	 */
 	public void initialise();
+
 }

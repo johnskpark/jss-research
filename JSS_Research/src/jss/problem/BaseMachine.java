@@ -7,7 +7,6 @@ import jss.IEvent;
 import jss.IEventHandler;
 import jss.IJob;
 import jss.IMachine;
-import jss.ISubscriptionHandler;
 
 /**
  * TODO javadoc.
@@ -28,17 +27,18 @@ public abstract class BaseMachine implements IMachine, IEventHandler, Comparable
 	private double availableTime = 0;
 
 	private IEvent machineEvent;
-	private ISubscriptionHandler subscriptionHandler;
+
+	private BaseInstance problem;
 
 	/**
 	 * TODO javadoc.
 	 * @param id
-	 * @param handler
+	 * @param problem
 	 */
-	public BaseMachine(int id, ISubscriptionHandler handler) {
+	public BaseMachine(int id, BaseInstance problem) {
 		this.id = id;
 
-		this.subscriptionHandler = handler;
+		this.problem = problem;
 		this.machineEvent = new MachineEvent(this, 0);
 	}
 
@@ -110,7 +110,8 @@ public abstract class BaseMachine implements IMachine, IEventHandler, Comparable
 			}
 
 			machineEvent = null;
-			subscriptionHandler.sendMachineFeed(this, time);
+
+			problem.sendMachineFeed(this, time);
 		}
 	}
 

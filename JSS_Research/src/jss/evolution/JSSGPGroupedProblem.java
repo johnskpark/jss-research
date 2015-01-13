@@ -66,8 +66,8 @@ public class JSSGPGroupedProblem extends GPProblem {
 		String datasetSeedStr = state.parameters.getString(base.push(P_INSTANCES_SEED), null);
 		if (datasetSeedStr != null) {
 			dataset.setSeed(Long.parseLong(datasetSeedStr));
-			dataset.generateDataset();
 		}
+		dataset.generateDataset();
 
 		// Set the problem size used for the training set.
 		String problemSizeStr = state.parameters.getString(base.push(P_SIZE), null);

@@ -1,6 +1,5 @@
 package jss.problem.static_problem;
 
-import jss.ISubscriptionHandler;
 import jss.problem.BaseMachine;
 
 /**
@@ -17,10 +16,10 @@ public class StaticMachine extends BaseMachine {
 	/**
 	 * TODO javadoc.
 	 * @param id
-	 * @param handler
+	 * @param problem
 	 */
-	public StaticMachine(int id, ISubscriptionHandler handler) {
-		super(id, handler);
+	public StaticMachine(int id, StaticInstance problem) {
+		super(id, problem);
 	}
 
 }

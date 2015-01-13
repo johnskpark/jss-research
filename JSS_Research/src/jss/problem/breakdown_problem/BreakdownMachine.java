@@ -15,10 +15,10 @@ public class BreakdownMachine extends BaseMachine {
 	/**
 	 * TODO javadoc.
 	 * @param id
-	 * @param handler
+	 * @param problem
 	 */
-	public BreakdownMachine(int id, ISubscriptionHandler handler) {
-		super(id, handler);
+	public BreakdownMachine(int id, BreakdownInstance problem) {
+		super(id, problem);
 	}
 
 }
