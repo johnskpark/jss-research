@@ -26,7 +26,8 @@ public class VariableOperationNumberPOG implements IProcessingOrderGenerator {
 
 	@Override
 	public List<IMachine> getProcessingOrder(Set<? extends IMachine> machines) {
-		// TODO this is going to be slow.
+		// TODO this is going to be slow. Also, I need to modify the event handlers to remove
+		// jobs which have had events completed for them.
 		List<IMachine> selectableMachines = new ArrayList<IMachine>(machines);
 		List<IMachine> operationOrder = new ArrayList<IMachine>();
 
