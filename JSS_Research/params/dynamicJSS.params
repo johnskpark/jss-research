@@ -61,7 +61,7 @@ eval.problem.instances_seed = 15
 eval.problem.solver = jss.evolution.solver.PriorityBasedSolver
 eval.problem.fitness = jss.evolution.fitness.TWTFitness
 
-#eval.problem.size = small
+eval.problem.size = small
 #eval.problem.instances = jss.problem.static_problem.rachel_dataset.TwoStaticJSSDataset
 
 # seed.0=26556

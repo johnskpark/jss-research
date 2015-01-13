@@ -1,6 +1,7 @@
 package jss.problem.static_problem;
 
 import jss.IJob;
+import jss.IMachine;
 import jss.problem.BaseInstance;
 
 /**
@@ -35,6 +36,19 @@ public class StaticInstance extends BaseInstance {
 		return true;
 	}
 
+	@Override
+	public void reset() {
+		for (IJob job : getJobs()) {
+			job.reset();
+		}
+		
+		for (IMachine machine : getMachines()) {
+			machine.reset();
+		}
+		
+		super.reset();
+	}
+	
 	@Override
 	public void initialise() {
 		for (IJob job : getJobs()) {

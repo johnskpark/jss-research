@@ -91,15 +91,9 @@ public abstract class BaseInstance implements IProblemInstance, ISubscriptionHan
 
 	@Override
 	public void reset() {
-		jobs = new ArrayList<BaseJob>();
-
-		for (IMachine machine : machines) {
-			machine.reset();
-		}
-
 		subscribers = new ArrayList<ISubscriber>();
 	}
-
+	
 	@Override
 	public void initialise() {
 	}
@@ -111,21 +105,21 @@ public abstract class BaseInstance implements IProblemInstance, ISubscriptionHan
 		subscribers.add(subscriber);
 	}
 
-	// TODO fuck, God I'm so goddamn fried in the head.
-	public List<IMachine> unavailableMachines = new ArrayList<IMachine>();
+	private List<IMachine> unavailableMachines = new ArrayList<IMachine>();
+	
+	public List<IMachine> getUnavailableMachines() {
+		return unavailableMachines;
+	}
 
 	@Override
 	public void sendMachineFeed(IMachine machine, double time) {
+		availableMachines.add(machine);
+		
 		for (ISubscriber subscriber : subscribers) {
 			subscriber.onMachineFeed(machine, time);
 		}
 
-		// TODO this doesn't work.
-		if (machine.isAvailable()) {
-			availableMachines.add(machine);
-		} else {
-			availableMachines.remove(machine);
-		}
+		updateBusyMachines();
 	}
 
 	@Override
@@ -133,6 +127,14 @@ public abstract class BaseInstance implements IProblemInstance, ISubscriptionHan
 		for (ISubscriber subscriber : subscribers) {
 			subscriber.onJobFeed(job, time);
 		}
+		
+		updateBusyMachines();
+	}
+	
+	private void updateBusyMachines() {
+		availableMachines.removeAll(unavailableMachines);
+		
+		unavailableMachines.clear();
 	}
 
 }

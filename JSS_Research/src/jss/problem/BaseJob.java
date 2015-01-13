@@ -269,7 +269,9 @@ public abstract class BaseJob implements IJob, IEventHandler {
 
 	@Override
 	public void reset() {
-		machineQueue = new LinkedList<IMachine>(machineList);
+		machineQueue.clear();
+		machineQueue.addAll(machineList);
+		
 		queueEntryTime = readyTime;
 	}
 

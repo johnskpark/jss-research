@@ -119,10 +119,9 @@ public class DynamicInstance extends BaseInstance {
 
 	@Override
 	public void reset() {
-		super.reset();
-
-		unreleasedJobs = new HashSet<IJob>();
-		incompleteJobs = new HashSet<IJob>();
+		getJobs().clear();
+		unreleasedJobs.clear();
+		incompleteJobs.clear();
 
 		processingOrderGenerator.reset();
 
@@ -131,8 +130,14 @@ public class DynamicInstance extends BaseInstance {
 		resetDueDateGenerator();
 		resetPenaltyGenerator();
 		resetSetupTimeGenerator();
-	}
 
+		for (IMachine machine : getMachines()) {
+			machine.reset();
+		}
+		
+		super.reset();
+	}
+	
 	@Override
 	public void initialise() {
 		generateJob(0.0);

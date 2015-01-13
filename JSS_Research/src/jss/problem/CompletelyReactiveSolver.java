@@ -115,10 +115,7 @@ public class CompletelyReactiveSolver implements ISolver, ISubscriber {
 
 		// Process the job if the machine is available.
 		if (machine.isAvailable()) {
-			Action action = rule.getAction(machine, problem, job.getReadyTime());
-
-			solution.addAction(action);
-			machine.processJob(action.getJob(), job.getReadyTime());
+			assignAction(machine, time);
 		}
 	}
 

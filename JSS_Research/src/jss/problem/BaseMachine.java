@@ -82,6 +82,8 @@ public abstract class BaseMachine implements IMachine, IEventHandler, Comparable
 				job.getProcessingTime(this);
 
 		machineEvent = new MachineEvent(this, availableTime);
+		
+		problem.getUnavailableMachines().add(this);
 	}
 
 	@Override
@@ -117,8 +119,8 @@ public abstract class BaseMachine implements IMachine, IEventHandler, Comparable
 
 	@Override
 	public void reset() {
-		prevJobs = new ArrayList<IJob>();
-		waitingJobs = new ArrayList<IJob>();
+		prevJobs.clear();
+		waitingJobs.clear();
 
 		currentJob = null;
 		availableTime = 0;
