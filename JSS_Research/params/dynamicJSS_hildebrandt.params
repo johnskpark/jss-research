@@ -16,8 +16,8 @@ gp.fs.0.name = f0
 
 # We have five functions in the function set.  They are:
 
-gp.fs.0.size = 16
-gp.fs.0.func.0 = jss.evolution.node.basic.ERCRandomUniform
+gp.fs.0.size = 18
+gp.fs.0.func.0 = jss.evolution.node.hildebrandt.ERCDiscreteUniform
 gp.fs.0.func.0.nc = nc0
 gp.fs.0.func.0.min = 0
 gp.fs.0.func.0.max = 2
@@ -51,7 +51,10 @@ gp.fs.0.func.14 = jss.evolution.node.hildebrandt.ScoreSlack
 gp.fs.0.func.14.nc = nc0
 gp.fs.0.func.15 = jss.evolution.node.hildebrandt.ScoreTimeTillDue
 gp.fs.0.func.15.nc = nc0
-gp.fs.0.func.16 = jss.evolution.node.hildebrandt.Score.OperationalDueDate
+gp.fs.0.func.16 = jss.evolution.node.hildebrandt.ScoreOperationalDueDate
+gp.fs.0.func.16.nc = nc0
+gp.fs.0.func.17 = jss.evolution.node.basic.ScorePenalty
+gp.fs.0.func.17.nc = nc0
 
 eval.problem = jss.evolution.JSSGPSimpleProblem
 eval.problem.data = jss.evolution.JSSGPData
