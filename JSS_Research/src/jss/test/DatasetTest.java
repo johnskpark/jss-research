@@ -1,6 +1,7 @@
 package jss.test;
 
 import java.util.List;
+import java.util.Set;
 
 import jss.IJob;
 import jss.IMachine;
@@ -72,20 +73,19 @@ public class DatasetTest {
 
 			StaticInstance problem = (StaticInstance) problems.get(0);
 
-			List<IMachine> machines = problem.getMachines();
+			Set<IMachine> machines = problem.getMachines();
 			List<IJob> jobs = problem.getJobs();
 
 			for (int j = 0; j < jobs.size(); j++) {
 				Assert.assertTrue(jobs.get(j) instanceof StaticJob);
 				StaticJob job = (StaticJob) jobs.get(j);
 
-				List<IMachine> orderedMachines = job.getProcessingOrder();
-				for (int i = 0; i < orderedMachines.size(); i++) {
-					IMachine machine = orderedMachines.get(i);
+				for (int i = 0; i < job.getNumOperations(); i++) {
+					IMachine machine = job.getMachine(i);
 
 					Assert.assertTrue(machine instanceof StaticMachine);
 					Assert.assertEquals(job.getProcessingTime(machine), processingTimes[j][i], EPSILON);
-					Assert.assertEquals(machine, machines.get(processingOrders[j][i]-1));
+					// Assert.assertEquals(machine, machines.get(processingOrders[j][i]-1));
 				}
 			}
 

@@ -1,6 +1,7 @@
 package jss;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Representation of a job shop scheduling problem instance. IProblemInstance
@@ -51,7 +52,25 @@ public interface IProblemInstance {
 	 * @return Get a fresh list of references to machines that are visible in
 	 *         the problem instance at the current state.
 	 */
-	public List<IMachine> getMachines();
+	public Set<IMachine> getMachines();
+
+	/**
+	 * TODO javadoc.
+	 * @return
+	 */
+	public int getNumJobs();
+
+	/**
+	 * TODO javadoc.
+	 * @return
+	 */
+	public int getNumMachines();
+
+	/**
+	 * TODO javadoc.
+	 * @return
+	 */
+	public Set<IMachine> getAvailableMachines();
 
 	/**
 	 * TODO javadoc.

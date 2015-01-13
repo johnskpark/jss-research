@@ -1,7 +1,5 @@
 package jss.evaluation.solvers;
 
-import java.util.List;
-
 import jss.Action;
 import jss.IActionHandler;
 import jss.IJob;
@@ -38,12 +36,10 @@ public class LRMSolver extends JSSEvalSolver {
 
 		@Override
 		public Action getAction(IMachine machine, IProblemInstance problem, double time) {
-			List<IJob> jobs = problem.getJobs();
-
 			double bestPriority = Double.NEGATIVE_INFINITY;
 			IJob bestJob = null;
 
-			for (IJob job : jobs) {
+			for (IJob job : machine.getWaitingJobs()) {
 				if (!machine.equals(job.getCurrentMachine())) {
 					continue;
 				}

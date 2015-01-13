@@ -1,7 +1,5 @@
 package jss.evaluation.solvers;
 
-import java.util.List;
-
 import jss.Action;
 import jss.IActionHandler;
 import jss.IJob;
@@ -38,14 +36,9 @@ public class FIFOSolver extends JSSEvalSolver {
 
 		@Override
 		public Action getAction(IMachine machine, IProblemInstance problem, double time) {
-			List<IJob> jobs = problem.getJobs();
-
 			double earliestCompletion = Double.POSITIVE_INFINITY;
 
-			for (IJob job : jobs) {
-				if (!machine.equals(job.getCurrentMachine())) {
-					continue;
-				}
+			for (IJob job : machine.getWaitingJobs()) {
 
 				double completion = Math.max(machine.getReadyTime(),
 						job.getReadyTime()) +
@@ -58,7 +51,7 @@ public class FIFOSolver extends JSSEvalSolver {
 			double bestPriority = Double.POSITIVE_INFINITY;
 			IJob bestJob = null;
 
-			for (IJob job : jobs) {
+			for (IJob job : machine.getWaitingJobs()) {
 				if (!machine.equals(job.getCurrentMachine()) ||
 						job.getReadyTime() >= earliestCompletion) {
 					continue;

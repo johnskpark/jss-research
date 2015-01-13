@@ -1,5 +1,6 @@
 package jss.test;
 
+import jss.IMachine;
 import jss.problem.static_problem.StaticInstance;
 import jss.problem.static_problem.StaticJob;
 import jss.problem.static_problem.StaticMachine;
@@ -32,8 +33,8 @@ public class ProblemInstanceTest {
 	public void staticInstanceTest_AddMachines() {
 		problem = new StaticInstance();
 
-		machines = new StaticMachine[]{new StaticMachine(null),
-				new StaticMachine(null)};
+		machines = new StaticMachine[]{new StaticMachine(0, null),
+				new StaticMachine(1, null)};
 
 		for (StaticMachine machine : machines) {
 			problem.addMachine(machine);
@@ -43,8 +44,8 @@ public class ProblemInstanceTest {
 		Assert.assertEquals(2, problem.getMachines().size());
 		Assert.assertEquals(2, problem.getEventHandlers().size());
 
-		for (int i = 0; i < problem.getMachines().size(); i++) {
-			Assert.assertEquals(machines[i], problem.getMachines().get(i));
+		for (IMachine machine : problem.getMachines()) {
+			Assert.assertEquals(machines[machine.getId()], machine);
 		}
 	}
 
@@ -56,7 +57,7 @@ public class ProblemInstanceTest {
 				new StaticJob()};
 
 		for (StaticJob job : jobs) {
-			job.offerMachine(new StaticMachine(null));
+			job.offerMachine(new StaticMachine(0, null));
 			problem.addJob(job);
 		}
 

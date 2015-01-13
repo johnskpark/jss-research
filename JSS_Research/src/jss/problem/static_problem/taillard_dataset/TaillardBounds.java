@@ -1,6 +1,7 @@
 package jss.problem.static_problem.taillard_dataset;
 
 import java.util.List;
+import java.util.Set;
 
 import jss.IJob;
 import jss.IMachine;
@@ -27,7 +28,7 @@ public class TaillardBounds {
 	 * Calculate the lower bound for the specified JSS problem instance.
 	 */
 	public static double calculateLowerBound(StaticInstance problem) {
-		List<IMachine> machines = problem.getMachines();
+		Set<IMachine> machines = problem.getMachines();
 		List<IJob> jobs = problem.getJobs();
 
 		double[] b = getB(problem);
@@ -55,28 +56,33 @@ public class TaillardBounds {
 
 	// Calculation for the b_i values for Talliard's bound calculation.
 	private static double[] getB(IProblemInstance problem) {
-		List<IMachine> machines = problem.getMachines();
+		Set<IMachine> machines = problem.getMachines();
 		List<IJob> jobs = problem.getJobs();
 
 		double[] b = new double[machines.size()];
-		for (int i = 0; i < machines.size(); i++) {
-			IMachine machine = machines.get(i);
-
+		int i = 0;
+		for (IMachine machine : machines) {
 			b[i] = Double.POSITIVE_INFINITY;
 
 			for (int j = 0; j < jobs.size(); j++) {
 				StaticJob job = (StaticJob) jobs.get(j);
-				List<IMachine> orderedMachines = job.getProcessingOrder();
+
+				int kPrime = -1;
+				for (int k = 0; k < job.getNumOperations() && kPrime != -1; k++) {
+					if (job.getMachine(k).equals(machine)) {
+						kPrime = k;
+					}
+				}
 
 				double sum = 0.0;
-				int kPrime = orderedMachines.indexOf(machine);
 
-				for (int k = 0; k < kPrime; k++) {
-					sum += job.getProcessingTime(orderedMachines.get(k));
+				for (int k = kPrime + 1; k < job.getNumOperations(); k++) {
+					sum += job.getProcessingTime(k);
 				}
 
 				b[i] = Math.min(sum, b[i]);
 			}
+			i++;
 		}
 
 		return b;
@@ -84,28 +90,33 @@ public class TaillardBounds {
 
 	// Calculation for the a_i values for Talliard's bound calculation.
 	private static double[] getA(IProblemInstance problem) {
-		List<IMachine> machines = problem.getMachines();
+		Set<IMachine> machines = problem.getMachines();
 		List<IJob> jobs = problem.getJobs();
 
 		double[] a = new double[machines.size()];
-		for (int i = 0; i < machines.size(); i++) {
-			IMachine machine = machines.get(i);
-
+		int i = 0;
+		for (IMachine machine : machines) {
 			a[i] = Double.POSITIVE_INFINITY;
 
 			for (int j = 0; j < jobs.size(); j++) {
 				StaticJob job = (StaticJob) jobs.get(j);
-				List<IMachine> orderedMachines = job.getProcessingOrder();
+
+				int kPrime = -1;
+				for (int k = 0; k < job.getNumOperations() && kPrime != -1; k++) {
+					if (job.getMachine(k).equals(machine)) {
+						kPrime = k;
+					}
+				}
 
 				double sum = 0.0;
-				int kPrime = orderedMachines.indexOf(machine);
 
-				for (int k = kPrime + 1; k < machines.size(); k++) {
-					sum += job.getProcessingTime(orderedMachines.get(k));
+				for (int k = kPrime + 1; k < job.getNumOperations(); k++) {
+					sum += job.getProcessingTime(k);
 				}
 
 				a[i] = Math.min(sum, a[i]);
 			}
+			i++;
 		}
 
 		return a;
@@ -113,16 +124,18 @@ public class TaillardBounds {
 
 	// Calculation for the T_i values for Talliard's bound calculation.
 	private static double[] getT(IProblemInstance problem) {
-		List<IMachine> machines = problem.getMachines();
+		Set<IMachine> machines = problem.getMachines();
 		List<IJob> jobs = problem.getJobs();
 
 		double[] T = new double[machines.size()];
-		for (int i = 0; i < machines.size(); i++) {
+		int i = 0;
+		for (IMachine machine : machines) {
 			T[i] = 0.0;
 
 			for (IJob job : jobs) {
-				T[i] += job.getProcessingTime(machines.get(i));
+				T[i] += job.getProcessingTime(machine);
 			}
+			i++;
 		}
 
 		return T;

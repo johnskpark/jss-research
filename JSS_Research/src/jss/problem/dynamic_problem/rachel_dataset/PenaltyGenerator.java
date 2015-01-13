@@ -13,7 +13,7 @@ import jss.problem.dynamic_problem.IDoubleValueGenerator;
 public class PenaltyGenerator implements IDoubleValueGenerator {
 
 	private static final double[] penalties = new double[]{1, 2, 4};
-	private static final double[] probs = new double[]{0.2, 0.8, 1.0};
+	private static final double[] probs = new double[]{0.2, 0.6, 2.0};
 
 	private long seed;
 	private Random rand;

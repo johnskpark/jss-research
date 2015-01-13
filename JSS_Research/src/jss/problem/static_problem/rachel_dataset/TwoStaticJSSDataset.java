@@ -119,8 +119,8 @@ public class TwoStaticJSSDataset implements IDataset {
 		public IProblemInstance createProblem(Random rand, int numJobs) {
 			StaticInstance problem = new StaticInstance();
 
-			StaticMachine machine1 = new StaticMachine(problem);
-			StaticMachine machine2 = new StaticMachine(problem);
+			StaticMachine machine1 = new StaticMachine(0, problem);
+			StaticMachine machine2 = new StaticMachine(1, problem);
 
 			problem.addMachine(machine1);
 			problem.addMachine(machine2);

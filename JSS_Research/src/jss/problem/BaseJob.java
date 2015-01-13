@@ -1,4 +1,4 @@
-package jss.problem.breakdown_problem;
+package jss.problem;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -6,33 +6,40 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
-import jss.IEvent;
+import jss.IEventHandler;
+import jss.IJob;
 import jss.IMachine;
-import jss.problem.BaseJob;
 
-public class BreakdownJob extends BaseJob {
+public abstract class BaseJob implements IJob, IEventHandler {
 
-	// Immutable component TODO more doc
+	// Immutable component that stays constant during the simulation.
 	private List<IMachine> machineList = new LinkedList<IMachine>();
-	private double queueEntryTime = 0;
 
-	// TODO these will need to change to some classes later on.
 	private Map<IMachine, Double> processingTimes = new HashMap<IMachine, Double>();
 	private Map<IMachine, Double> setupTimes = new HashMap<IMachine, Double>();
-	private Map<IMachine, Double> dueDates = new HashMap<IMachine, Double>();
-	private Map<IMachine, Double> penalties = new HashMap<IMachine, Double>();
-	private double releaseTime = 0;
 
-	// Mutable component TODO more doc
+	private double dueDate = 0;
+	private double flowFactor = 0;
+	private double penalty = 0;
+	private double readyTime = 0;
+
+	// Mutable component that is actively modified during the simulation.
 	private Queue<IMachine> machineQueue = new LinkedList<IMachine>();
 
 	private IMachine machine;
 
-	public BreakdownJob() {
+	private double queueEntryTime = 0;
+
+	/**
+	 * Generate a new instance of a static job for the static Job Shop
+	 * Scheduling problem instance.
+	 */
+	public BaseJob() {
 	}
 
 	/**
-	 * TODO javadoc.
+	 * Offer the machine as the latest operations that needs to be carried out
+	 * for the job to be completed.
 	 * @param machine
 	 */
 	public void offerMachine(IMachine machine) {
@@ -41,7 +48,7 @@ public class BreakdownJob extends BaseJob {
 	}
 
 	/**
-	 * TODO javadoc.
+	 * Set the processing time for the specified machine.
 	 * @param machine
 	 * @param processing
 	 */
@@ -51,7 +58,7 @@ public class BreakdownJob extends BaseJob {
 	}
 
 	/**
-	 * TODO javadoc.
+	 * Set the setup time for the specified machine.
 	 * @param machine
 	 * @param setup
 	 */
@@ -61,32 +68,36 @@ public class BreakdownJob extends BaseJob {
 	}
 
 	/**
-	 * TODO javadoc.
-	 * @param machine
+	 * Set the due date for the specified machine.
 	 * @param dueDate
 	 */
-	public void setDueDate(IMachine machine, double dueDate) {
-		checkMachine(machine);
-		dueDates.put(machine, dueDate);
+	public void setDueDate(double dueDate) {
+		this.dueDate = dueDate;
 	}
 
 	/**
-	 * TODO javadoc.
-	 * @param machine
+	 * Set the weight/penalty for the specified machine.
 	 * @param penalty
 	 */
-	public void setPenalty(IMachine machine, double penalty) {
-		checkMachine(machine);
-		penalties.put(machine, penalty);
+	public void setPenalty(double penalty) {
+		this.penalty = penalty;
 	}
 
 	/**
 	 * TODO javadoc.
+	 * @param flowFactor
+	 */
+	public void setFlowFactor(double flowFactor) {
+		this.flowFactor = flowFactor;
+	}
+
+	/**
+	 * Set the release time of the job.
 	 * @param release
 	 */
-	public void setReleaseTime(double release) {
-		releaseTime = release;
-		queueEntryTime = releaseTime;
+	public void setReadyTime(double release) {
+		this.readyTime = release;
+		this.queueEntryTime = this.readyTime;
 	}
 
 	// Check invariance.
@@ -96,9 +107,11 @@ public class BreakdownJob extends BaseJob {
 		}
 	}
 
+	/// IJob
+
 	@Override
 	public double getReadyTime() {
-		return releaseTime;
+		return readyTime;
 	}
 
 	@Override
@@ -140,14 +153,17 @@ public class BreakdownJob extends BaseJob {
 
 	@Override
 	public double getDueDate() {
-		// TODO
-		return 0;
+		return dueDate;
 	}
 
 	@Override
 	public double getPenalty() {
-		// TODO
-		return 1;
+		return penalty;
+	}
+
+	@Override
+	public double getFlowFactor() {
+		return flowFactor;
 	}
 
 	@Override
@@ -172,7 +188,7 @@ public class BreakdownJob extends BaseJob {
 	@Override
 	public void startedProcessingOnMachine(IMachine machine) throws RuntimeException {
 		if (!machineQueue.peek().equals(machine)) {
-			throw new RuntimeException("You done goofed from BasicJob");
+			throw new RuntimeException("You done goofed from BasicJob"); // TODO
 		}
 		this.machine = machine;
 	}
@@ -219,6 +235,14 @@ public class BreakdownJob extends BaseJob {
 	}
 
 	@Override
+	public IMachine getMachine(int index) {
+		if (index >= 0 && index < machineList.size()) {
+			return machineList.get(index);
+		}
+		return null;
+	}
+
+	@Override
 	public int getCurrentOperationIndex() {
 		return machineList.size() - machineQueue.size();
 	}
@@ -246,24 +270,7 @@ public class BreakdownJob extends BaseJob {
 	@Override
 	public void reset() {
 		machineQueue = new LinkedList<IMachine>(machineList);
-		queueEntryTime = releaseTime;
-	}
-
-	// Basic Job has no event triggers.
-
-	@Override
-	public boolean hasEvent() {
-		return false;
-	}
-
-	@Override
-	public IEvent getNextEvent() {
-		return null;
-	}
-
-	@Override
-	public double getNextEventTime() {
-		return Double.POSITIVE_INFINITY;
+		queueEntryTime = readyTime;
 	}
 
 }

@@ -1,6 +1,5 @@
 package jss.evaluation.node.basic;
 
-import jss.IJob;
 import jss.IMachine;
 import jss.evaluation.JSSEvalData;
 import jss.evaluation.node.INode;
@@ -32,13 +31,6 @@ public class ScoreNumJobsWaiting implements INode {
 	public double evaluate(JSSEvalData data) {
 		IMachine machine = data.getMachine();
 
-		int numJobs = 0;
-		for (IJob job : data.getProblem().getJobs()) {
-			if (machine.equals(job.getCurrentMachine())) {
-				numJobs++;
-			}
-		}
-
-		return numJobs;
+		return machine.getWaitingJobs().size();
 	}
 }

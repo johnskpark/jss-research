@@ -74,6 +74,12 @@ public interface IJob {
 	public double getPenalty();
 
 	/**
+	 * TODO javadoc.
+	 * @return
+	 */
+	public double getFlowFactor();
+
+	/**
 	 * Get the total processing time of the remaining operations for the job.
 	 * @return The total processing time of the remaining operations that are
 	 *         left on the job, 0 if the job is completed.
@@ -134,6 +140,13 @@ public interface IJob {
 	 * @return
 	 */
 	public IMachine getNextMachine();
+
+	/**
+	 * TODO javadoc.
+	 * @param index
+	 * @return
+	 */
+	public IMachine getMachine(int index);
 
 	/**
 	 * TODO javadoc.

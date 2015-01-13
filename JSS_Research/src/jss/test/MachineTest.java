@@ -35,7 +35,7 @@ public class MachineTest {
 	@Test
 	public void staticMachineTest_ProcessJob() {
 		mockHandler = context.mock(ISubscriptionHandler.class);
-		machine = new StaticMachine(mockHandler);
+		machine = new StaticMachine(0, mockHandler);
 		mockJob1 = context.mock(IJob.class);
 
 		releaseTime = 0.0;
@@ -68,7 +68,7 @@ public class MachineTest {
 	@Test
 	public void staticMachineTest_FinishJob() {
 		mockHandler = context.mock(ISubscriptionHandler.class);
-		machine = new StaticMachine(mockHandler);
+		machine = new StaticMachine(0, mockHandler);
 		mockJob1 = context.mock(IJob.class);
 
 		releaseTime = 0.0;
@@ -107,7 +107,7 @@ public class MachineTest {
 	@Test
 	public void staticMachineTest_Reset() {
 		mockHandler = context.mock(ISubscriptionHandler.class);
-		machine = new StaticMachine(mockHandler);
+		machine = new StaticMachine(0, mockHandler);
 		mockJob1 = context.mock(IJob.class);
 
 		releaseTime = 0.0;
@@ -144,7 +144,7 @@ public class MachineTest {
 	@Test
 	public void staticMachineTestFail_ProcessJob() {
 		mockHandler = context.mock(ISubscriptionHandler.class);
-		machine = new StaticMachine(mockHandler);
+		machine = new StaticMachine(0, mockHandler);
 		mockJob1 = context.mock(IJob.class, "Job1");
 		mockJob2 = context.mock(IJob.class, "Job2");
 

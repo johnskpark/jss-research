@@ -3,8 +3,9 @@ package jss.problem.dynamic_problem.rachel_dataset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
-import jss.problem.dynamic_problem.DynamicMachine;
+import jss.IMachine;
 import jss.problem.dynamic_problem.IProcessingOrderGenerator;
 
 /**
@@ -33,9 +34,9 @@ public class FixedOperationNumberPOG implements IProcessingOrderGenerator {
 	}
 
 	@Override
-	public List<DynamicMachine> getProcessingOrder(List<DynamicMachine> machines) {
-		List<DynamicMachine> selectableMachines = new ArrayList<DynamicMachine>(machines);
-		List<DynamicMachine> operationOrder = new ArrayList<DynamicMachine>();
+	public List<IMachine> getProcessingOrder(Set<IMachine> machines) {
+		List<IMachine> selectableMachines = new ArrayList<IMachine>(machines);
+		List<IMachine> operationOrder = new ArrayList<IMachine>();
 
 		int operation = 0;
 		while (operation < numOperations && !selectableMachines.isEmpty()) {

@@ -1,14 +1,7 @@
 package jss.problem.static_problem;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import jss.IEventHandler;
 import jss.IJob;
-import jss.IMachine;
-import jss.IProblemInstance;
-import jss.ISubscriber;
-import jss.ISubscriptionHandler;
+import jss.problem.BaseInstance;
 
 /**
  * Really, really basic problem instance. TODO write more, especially what static means.
@@ -16,13 +9,7 @@ import jss.ISubscriptionHandler;
  * @author parkjohn
  *
  */
-public class StaticInstance implements IProblemInstance, ISubscriptionHandler {
-
-	// TODO I could probably make this faster by having a list of incomplete jobs.
-	private List<StaticJob> jobs = new ArrayList<StaticJob>();
-	private List<StaticMachine> machines = new ArrayList<StaticMachine>();
-
-	private List<ISubscriber> subscribers = new ArrayList<ISubscriber>();
+public class StaticInstance extends BaseInstance {
 
 	private double upperBound;
 	private double lowerBound;
@@ -33,31 +20,10 @@ public class StaticInstance implements IProblemInstance, ISubscriptionHandler {
 	public StaticInstance() {
 	}
 
-	public void addJob(StaticJob job) {
-		jobs.add(job);
-	}
-
-	public void addMachine(StaticMachine machine) {
-		machines.add(machine);
-	}
-
-	@Override
-	public List<IJob> getJobs() {
-		List<IJob> incompleteJobs = new ArrayList<IJob>();
-
-		for (IJob job : jobs) {
-			if (!job.isCompleted()) {
-				incompleteJobs.add(job);
-			}
-		}
-
-		return incompleteJobs;
-	}
-
-	@Override
-	public List<IMachine> getMachines() {
-		return new ArrayList<IMachine>(machines);
-	}
+//	public void addJob(StaticJob job) {
+//		getJobs().add(job);
+//		getIncompleteJobs().add(job);
+//	}
 
 	@Override
 	public int getWarmUp() {
@@ -70,38 +36,10 @@ public class StaticInstance implements IProblemInstance, ISubscriptionHandler {
 	}
 
 	@Override
-	public List<IEventHandler> getEventHandlers() {
-		List<IEventHandler> eventHandlers = new ArrayList<IEventHandler>(jobs.size() + machines.size());
-
-		eventHandlers.addAll(jobs);
-		eventHandlers.addAll(machines);
-
-		return eventHandlers;
-	}
-
-	@Override
-	public void reset() {
-		for (StaticJob job : jobs) {
-			job.reset();
-		}
-
-		for (StaticMachine machine : machines) {
-			machine.reset();
-		}
-
-		subscribers = new ArrayList<ISubscriber>();
-	}
-
-	@Override
 	public void initialise() {
-		for (StaticJob job : jobs) {
+		for (IJob job : getJobs()) {
 			job.getCurrentMachine().addWaitingJob(job);
 		}
-	}
-
-	@Override
-	public void onSubscriptionRequest(ISubscriber subscriber) {
-		subscribers.add(subscriber);
 	}
 
 	/**
@@ -136,17 +74,4 @@ public class StaticInstance implements IProblemInstance, ISubscriptionHandler {
 		this.lowerBound = lowerBound;
 	}
 
-	@Override
-	public void sendMachineFeed(IMachine machine, double time) {
-		for (ISubscriber subscriber : subscribers) {
-			subscriber.onMachineFeed(machine, time);
-		}
-	}
-
-	@Override
-	public void sendJobFeed(IJob job, double time) {
-		for (ISubscriber subscriber : subscribers) {
-			subscriber.onJobFeed(job, time);
-		}
-	}
 }

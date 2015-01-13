@@ -109,7 +109,7 @@ public class TaillardDataset implements IDataset {
 
 		StaticMachine[] machines = new StaticMachine[rawInstance.numMachines];
 		for (int i = 0; i < rawInstance.numMachines; i++) {
-			machines[i] = new StaticMachine(instance);
+			machines[i] = new StaticMachine(i, instance);
 			instance.addMachine(machines[i]);
 		}
 

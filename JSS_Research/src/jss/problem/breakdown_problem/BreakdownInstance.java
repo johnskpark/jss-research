@@ -6,9 +6,8 @@ import java.util.List;
 import jss.IEventHandler;
 import jss.IJob;
 import jss.IMachine;
-import jss.IProblemInstance;
 import jss.ISubscriber;
-import jss.ISubscriptionHandler;
+import jss.problem.BaseInstance;
 
 /**
  * TODO javadoc.
@@ -16,7 +15,7 @@ import jss.ISubscriptionHandler;
  * @author parkjohn
  *
  */
-public class BreakdownInstance implements IProblemInstance, ISubscriptionHandler {
+public class BreakdownInstance extends BaseInstance {
 
 	private List<BreakdownJob> jobs = new ArrayList<BreakdownJob>();
 	private List<BreakdownMachine> machines = new ArrayList<BreakdownMachine>();
@@ -38,24 +37,6 @@ public class BreakdownInstance implements IProblemInstance, ISubscriptionHandler
 
 	public void addMachine(BreakdownMachine machine) {
 		machines.add(machine);
-	}
-
-	@Override
-	public List<IJob> getJobs() {
-		List<IJob> incompleteJobs = new ArrayList<IJob>();
-
-		for (IJob job : jobs) {
-			if (!job.isCompleted()) {
-				incompleteJobs.add(job);
-			}
-		}
-
-		return incompleteJobs;
-	}
-
-	@Override
-	public List<IMachine> getMachines() {
-		return new ArrayList<IMachine>(machines);
 	}
 
 	@Override

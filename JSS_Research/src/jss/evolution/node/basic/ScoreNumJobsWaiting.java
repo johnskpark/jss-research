@@ -1,6 +1,5 @@
 package jss.evolution.node.basic;
 
-import jss.IJob;
 import jss.IMachine;
 import jss.evolution.JSSGPData;
 import jss.node.NodeDefinition;
@@ -43,14 +42,7 @@ public class ScoreNumJobsWaiting extends GPNode {
 
 		IMachine machine = data.getMachine();
 
-		int numJobs = 0;
-		for (IJob job : data.getProblem().getJobs()) {
-			if (machine.equals(job.getCurrentMachine())) {
-				numJobs++;
-			}
-		}
-
-		data.setPriority(numJobs);
+		data.setPriority(machine.getWaitingJobs().size());
 	}
 
 }

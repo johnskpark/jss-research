@@ -87,7 +87,7 @@ public class DemirkolDataset implements IDataset {
 				List<StaticMachine> machines = new ArrayList<StaticMachine>();
 
 				for (int machine = 0; machine < numMachines; machine++) {
-					machines.add(new StaticMachine(problemInstance));
+					machines.add(new StaticMachine(machine, problemInstance));
 				}
 
 				for (int j = 0; j < numJobs; j++) {

@@ -139,7 +139,17 @@ public class Simulator {
 
 		public void trigger() {
 			for (IEvent event : eventList) {
+				// TODO
+				long startTime = System.nanoTime();
+
 				event.trigger();
+
+				long endTime = System.nanoTime();
+				long timeDiff = endTime - startTime;
+
+				if (timeDiff > 500000) {
+					System.out.printf("Time: %dns\n", timeDiff);
+				}
 			}
 		}
 

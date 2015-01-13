@@ -17,6 +17,12 @@ import java.util.List;
 public interface IMachine {
 
 	/**
+	 * TODO javadoc.
+	 * @return
+	 */
+	public int getId();
+
+	/**
 	 * Get the current job being processed.
 	 * @return The current job being processed, or null if no jobs are being processed.
 	 */

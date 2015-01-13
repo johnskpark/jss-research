@@ -76,11 +76,7 @@ public class CompletelyReactiveSolver implements ISolver, ISubscriber {
 		processOperation(m);
 
 		// Cycle through the machines and process jobs on the available machines.
-		for (IMachine machine : problem.getMachines()) {
-			if (!machine.isAvailable()) {
-				continue;
-			}
-
+		for (IMachine machine : problem.getAvailableMachines()) {
 			assignAction(machine, time);
 		}
 	}
