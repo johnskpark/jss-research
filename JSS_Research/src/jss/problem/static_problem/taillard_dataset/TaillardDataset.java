@@ -45,6 +45,8 @@ public class TaillardDataset implements IDataset {
 	private List<IProblemInstance> mediumInstances = new ArrayList<IProblemInstance>();
 	private List<IProblemInstance> largeInstances = new ArrayList<IProblemInstance>();
 
+	private List<IProblemInstance> testInstances = new ArrayList<IProblemInstance>();
+
 	/**
 	 * Construct a new instance of the Taillard's dataset.
 	 */
@@ -96,7 +98,7 @@ public class TaillardDataset implements IDataset {
 		}
 
 		// Generate the lists of the training sets.
-		generateTrainingSets();
+		generateTrainingAndTestingSets();
 	}
 
 	// Look at the paper "Benchmarks for basic scheduling problems" for
@@ -154,7 +156,7 @@ public class TaillardDataset implements IDataset {
 		return instance;
 	}
 
-	private void generateTrainingSets() {
+	private void generateTrainingAndTestingSets() {
 		for (IProblemInstance problem : problemInstances) {
 			int machineSize = problem.getMachines().size();
 			int jobSize = problem.getJobs().size();
@@ -182,6 +184,11 @@ public class TaillardDataset implements IDataset {
 		for (int i = 0; i < largeSize; i++) {
 			largeInstances.remove(largeInstances.size() - 1);
 		}
+
+		testInstances.addAll(problemInstances);
+		testInstances.removeAll(smallInstances);
+		testInstances.removeAll(mediumInstances);
+		testInstances.removeAll(largeInstances);
 	}
 
 	private int uniformDistribution(int min, int max, TaillardRandom rand) {
@@ -205,7 +212,7 @@ public class TaillardDataset implements IDataset {
 
 	@Override
 	public List<IProblemInstance> getTest() {
-		return new ArrayList<IProblemInstance>(problemInstances);
+		return testInstances;
 	}
 
 	private class RawInstance {

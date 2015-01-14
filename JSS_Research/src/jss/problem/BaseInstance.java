@@ -1,9 +1,9 @@
 package jss.problem;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 
 import jss.IEventHandler;
 import jss.IJob;
@@ -21,8 +21,8 @@ public abstract class BaseInstance implements IProblemInstance, ISubscriptionHan
 
 	private List<BaseJob> jobs = new ArrayList<BaseJob>();
 
-	private Set<BaseMachine> machines = new TreeSet<BaseMachine>();
-	private Set<IMachine> availableMachines = new TreeSet<IMachine>();
+	private Set<BaseMachine> machines = new HashSet<BaseMachine>();
+	private Set<IMachine> availableMachines = new HashSet<IMachine>();
 
 	private List<IEventHandler> eventHandlers = new ArrayList<IEventHandler>();
 
@@ -92,13 +92,13 @@ public abstract class BaseInstance implements IProblemInstance, ISubscriptionHan
 	@Override
 	public void reset() {
 		eventHandlers.clear();
-		
+
 		eventHandlers.addAll(jobs);
 		eventHandlers.addAll(machines);
-		
+
 		subscribers.clear();
 	}
-	
+
 	@Override
 	public void initialise() {
 	}
@@ -110,8 +110,10 @@ public abstract class BaseInstance implements IProblemInstance, ISubscriptionHan
 		subscribers.add(subscriber);
 	}
 
+	// TODO make this more standardised.
+
 	private List<IMachine> unavailableMachines = new ArrayList<IMachine>();
-	
+
 	public List<IMachine> getUnavailableMachines() {
 		return unavailableMachines;
 	}
@@ -119,7 +121,7 @@ public abstract class BaseInstance implements IProblemInstance, ISubscriptionHan
 	@Override
 	public void sendMachineFeed(IMachine machine, double time) {
 		availableMachines.add(machine);
-		
+
 		for (ISubscriber subscriber : subscribers) {
 			subscriber.onMachineFeed(machine, time);
 		}
@@ -129,16 +131,36 @@ public abstract class BaseInstance implements IProblemInstance, ISubscriptionHan
 
 	@Override
 	public void sendJobFeed(IJob job, double time) {
+		long startTime1 = System.nanoTime();
+
 		for (ISubscriber subscriber : subscribers) {
 			subscriber.onJobFeed(job, time);
 		}
-		
-		updateBusyMachines();
+
+		long endTime1 = System.nanoTime();
+		long startTime2 = System.nanoTime();
+
+		availableMachines.removeAll(unavailableMachines);
+
+		long endTime2 = System.nanoTime();
+		long startTime3 = System.nanoTime();
+
+		unavailableMachines.clear();
+
+		long endTime3 = System.nanoTime();
+
+		long timeDiff1 = endTime1 - startTime1;
+		long timeDiff2 = endTime2 - startTime2;
+		long timeDiff3 = endTime3 - startTime3;
+
+		// System.out.printf("%d %d %d\n", timeDiff1, timeDiff2, timeDiff3);
+
+		// updateBusyMachines();
 	}
-	
+
 	private void updateBusyMachines() {
 		availableMachines.removeAll(unavailableMachines);
-		
+
 		unavailableMachines.clear();
 	}
 

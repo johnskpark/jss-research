@@ -1,6 +1,5 @@
 package jss.evolution.node.basic;
 
-import jss.IJob;
 import jss.evolution.JSSGPData;
 import jss.node.NodeDefinition;
 import ec.EvolutionState;
@@ -11,13 +10,18 @@ import ec.gp.GPIndividual;
 import ec.gp.GPNode;
 import ec.util.Parameter;
 
+/**
+ * TODO javadoc.
+ * @author parkjohn
+ *
+ */
 public class ScorePenalty extends GPNode {
 
 	private static final long serialVersionUID = -8218368156208837126L;
 
 	@Override
 	public String toString() {
-		return NodeDefinition.SCORE_PROCESSING_TIME.toString();
+		return NodeDefinition.SCORE_PENALTY.toString();
 	}
 
 	@Override
@@ -26,7 +30,7 @@ public class ScorePenalty extends GPNode {
 			final GPIndividual typicalIndividual,
 			final Parameter individualBase) {
 		super.checkConstraints(state, tree, typicalIndividual, individualBase);
-		if (children.length != NodeDefinition.SCORE_PROCESSING_TIME.numChildren()) {
+		if (children.length != NodeDefinition.SCORE_PENALTY.numChildren()) {
 			state.output.error("Incorrect number of children for node " + toStringForError() + " at " + individualBase);
 		}
 	}
@@ -40,9 +44,7 @@ public class ScorePenalty extends GPNode {
 			final Problem problem) {
 		JSSGPData data = (JSSGPData)input;
 
-		IJob job = data.getJob();
-
-		data.setPriority(job.getPenalty());
+		data.setPriority(data.getJob().getPenalty());
 	}
 
 }

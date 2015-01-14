@@ -10,6 +10,11 @@ import ec.gp.GPIndividual;
 import ec.gp.GPNode;
 import ec.util.Parameter;
 
+/**
+ * TODO javadoc.
+ * @author parkjohn
+ *
+ */
 public class ScoreLargeValue extends GPNode {
 
 	private static final long serialVersionUID = -5825676453528932050L;
@@ -40,6 +45,7 @@ public class ScoreLargeValue extends GPNode {
 			final GPIndividual individual,
 			final Problem problem) {
 		JSSGPData data = (JSSGPData)input;
+
 		data.setPriority(LARGE_VALUE);
 	}
 

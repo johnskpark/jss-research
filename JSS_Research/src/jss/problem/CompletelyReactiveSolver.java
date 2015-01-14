@@ -117,6 +117,7 @@ public class CompletelyReactiveSolver implements ISolver, ISubscriber {
 		if (machine.isAvailable()) {
 			assignAction(machine, time);
 		}
+
 	}
 
 }

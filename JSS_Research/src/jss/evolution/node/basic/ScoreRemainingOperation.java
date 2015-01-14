@@ -1,6 +1,5 @@
 package jss.evolution.node.basic;
 
-import jss.IJob;
 import jss.evolution.JSSGPData;
 import jss.node.NodeDefinition;
 import ec.EvolutionState;
@@ -11,13 +10,18 @@ import ec.gp.GPIndividual;
 import ec.gp.GPNode;
 import ec.util.Parameter;
 
+/**
+ * TODO javadoc.
+ * @author parkjohn
+ *
+ */
 public class ScoreRemainingOperation extends GPNode {
 
 	private static final long serialVersionUID = -1499669041135595578L;
 
 	@Override
 	public String toString() {
-		return NodeDefinition.SCORE_REMAINING_TIME.toString();
+		return NodeDefinition.SCORE_REMAINING_OPERATION.toString();
 	}
 
 	@Override
@@ -26,7 +30,7 @@ public class ScoreRemainingOperation extends GPNode {
 			final GPIndividual typicalIndividual,
 			final Parameter individualBase) {
 		super.checkConstraints(state, tree, typicalIndividual, individualBase);
-		if (children.length != NodeDefinition.SCORE_REMAINING_TIME.numChildren()) {
+		if (children.length != NodeDefinition.SCORE_REMAINING_OPERATION.numChildren()) {
 			state.output.error("Incorrect number of children for node " + toStringForError() + " at " + individualBase);
 		}
 	}
@@ -36,9 +40,7 @@ public class ScoreRemainingOperation extends GPNode {
 			ADFStack stack, GPIndividual individual, Problem problem) {
 		JSSGPData data = (JSSGPData)input;
 
-		IJob job = data.getJob();
-
-		data.setPriority(job.getRemainingOperations());
+		data.setPriority(data.getJob().getRemainingOperations());
 	}
 
 }

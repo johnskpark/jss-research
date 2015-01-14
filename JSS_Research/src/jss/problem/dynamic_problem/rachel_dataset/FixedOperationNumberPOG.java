@@ -1,6 +1,7 @@
 package jss.problem.dynamic_problem.rachel_dataset;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -16,6 +17,7 @@ import jss.problem.dynamic_problem.IProcessingOrderGenerator;
  */
 public class FixedOperationNumberPOG implements IProcessingOrderGenerator {
 
+	private List<? extends IMachine> machines;
 	private int numOperations;
 
 	private long seed;
@@ -26,24 +28,22 @@ public class FixedOperationNumberPOG implements IProcessingOrderGenerator {
 	 * @param num
 	 * @param s
 	 */
-	public FixedOperationNumberPOG(int num, long s) {
-		numOperations = num;
+	public FixedOperationNumberPOG(Set<? extends IMachine> machines, int num, long s) {
+		this.machines = new ArrayList<IMachine>(machines);
+		this.numOperations = num;
 
 		seed = s;
 		rand = new Random(seed);
 	}
 
 	@Override
-	public List<IMachine> getProcessingOrder(Set<? extends IMachine> machines) {
-		// TODO this is going to be slow.
-		List<IMachine> selectableMachines = new ArrayList<IMachine>(machines);
+	public List<IMachine> getProcessingOrder() {
 		List<IMachine> operationOrder = new ArrayList<IMachine>();
 
-		int operation = 0;
-		while (operation < numOperations && !selectableMachines.isEmpty()) {
-			int index = rand.nextInt(selectableMachines.size());
-			operationOrder.add(selectableMachines.remove(index));
-			operation++;
+		Collections.shuffle(machines, rand);
+
+		for (int i = 0; i < numOperations; i++) {
+			operationOrder.add(machines.get(i));
 		}
 
 		return operationOrder;

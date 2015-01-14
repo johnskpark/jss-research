@@ -70,9 +70,6 @@ public class JSSGPSimpleProblem extends GPProblem {
 			final int subpopulation,
 			final int threadnum) {
 		if (!ind.evaluated) {
-			// Check to make sure that the individual is a GPIndividual and uses KozaFitness.
-			checkInvariance(state, ind);
-
 			Statistics stats = new Statistics();
 
 			JSSGPConfiguration config = new JSSGPConfiguration();
@@ -91,23 +88,12 @@ public class JSSGPSimpleProblem extends GPProblem {
 
 				stats.addSolution(problem, solution);
 			}
-			
+
 			double f = fitness.getFitness(stats);
 
 			((KozaFitness)ind.fitness).setStandardizedFitness(state, f);
 
 			ind.evaluated = true;
-		}
-	}
-
-	// Check the individual for invariance. Each individual must be a GPIndividual,
-	// and the fitness must be KozaFitness.
-	private void checkInvariance(final EvolutionState state, final Individual ind) {
-		if (!(ind instanceof GPIndividual)) {
-			state.output.error("The individual must be an instance of GPIndividual");
-		}
-		if (!(ind.fitness instanceof KozaFitness)) {
-			state.output.error("The individual's fitness must be an instance of KozaFitness");
 		}
 	}
 

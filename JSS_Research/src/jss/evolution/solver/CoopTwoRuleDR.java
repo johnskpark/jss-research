@@ -50,10 +50,6 @@ public class CoopTwoRuleDR extends JSSGPRule {
 		IJob bestJob = null;
 
 		for (IJob job : machine.getWaitingJobs()) {
-			if (!machine.equals(job.getCurrentMachine())) {
-				continue;
-			}
-
 			getData().setProblem(problem);
 			getData().setJob(job);
 			getData().setMachine(machine);

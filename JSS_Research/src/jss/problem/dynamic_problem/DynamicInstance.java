@@ -104,7 +104,7 @@ public class DynamicInstance extends BaseInstance {
 	 * Returns the number of jobs completed in the simulation.
 	 */
 	public int getNumJobsCompleted() {
-		return getJobs().size() - (incompleteJobs.size() + unreleasedJobs.size());
+		return getNumJobs() - (incompleteJobs.size() + unreleasedJobs.size());
 	}
 
 	@Override
@@ -134,10 +134,10 @@ public class DynamicInstance extends BaseInstance {
 		for (IMachine machine : getMachines()) {
 			machine.reset();
 		}
-		
+
 		super.reset();
 	}
-	
+
 	@Override
 	public void initialise() {
 		generateJob(0.0);
@@ -148,7 +148,7 @@ public class DynamicInstance extends BaseInstance {
 		DynamicJob job = new DynamicJob(this);
 
 		// Get the list of machines that the job needs to be processed on into.
-		List<IMachine> machineOrder = processingOrderGenerator.getProcessingOrder(getMachines());
+		List<IMachine> machineOrder = processingOrderGenerator.getProcessingOrder();
 
 		for (IMachine machine : machineOrder) {
 			job.offerMachine(machine);

@@ -1,7 +1,6 @@
 package jss.problem.dynamic_problem;
 
 import java.util.List;
-import java.util.Set;
 
 import jss.IMachine;
 
@@ -16,7 +15,7 @@ public interface IProcessingOrderGenerator {
 	 * TODO javadoc.
 	 * @return
 	 */
-	public List<IMachine> getProcessingOrder(Set<? extends IMachine> machine);
+	public List<IMachine> getProcessingOrder();
 
 	/**
 	 * TODO javadoc.

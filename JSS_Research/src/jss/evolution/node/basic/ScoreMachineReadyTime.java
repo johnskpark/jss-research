@@ -1,6 +1,5 @@
 package jss.evolution.node.basic;
 
-import jss.IMachine;
 import jss.evolution.JSSGPData;
 import jss.node.NodeDefinition;
 import ec.EvolutionState;
@@ -11,6 +10,11 @@ import ec.gp.GPIndividual;
 import ec.gp.GPNode;
 import ec.util.Parameter;
 
+/**
+ * TODO javadoc.
+ * @author parkjohn
+ *
+ */
 public class ScoreMachineReadyTime extends GPNode {
 
 	private static final long serialVersionUID = -3673528161888028806L;
@@ -40,9 +44,7 @@ public class ScoreMachineReadyTime extends GPNode {
 			final Problem problem) {
 		JSSGPData data = (JSSGPData)input;
 
-		IMachine machine = data.getMachine();
-
-		data.setPriority(machine.getReadyTime());
+		data.setPriority(data.getMachine().getReadyTime());
 	}
 
 }

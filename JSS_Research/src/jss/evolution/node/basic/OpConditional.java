@@ -37,8 +37,12 @@ public class OpConditional extends GPNode {
 	}
 
 	@Override
-	public void eval(EvolutionState state, int thread, GPData input,
-			ADFStack stack, GPIndividual individual, Problem problem) {
+	public void eval(final EvolutionState state,
+			final int thread,
+			final GPData input,
+			final ADFStack stack,
+			final GPIndividual individual,
+			final Problem problem) {
 		JSSGPData data = (JSSGPData)input;
 
 		children[0].eval(state, thread, input, stack, individual, problem);

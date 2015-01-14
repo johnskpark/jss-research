@@ -10,6 +10,11 @@ import ec.gp.GPIndividual;
 import ec.gp.GPNode;
 import ec.util.Parameter;
 
+/**
+ * TODO javadoc.
+ * @author parkjohn
+ *
+ */
 public class ScoreCurrentTime extends GPNode {
 
 	private static final long serialVersionUID = -2010293931102223453L;
@@ -39,9 +44,7 @@ public class ScoreCurrentTime extends GPNode {
 			final Problem problem) {
 		JSSGPData data = (JSSGPData)input;
 
-		double time = data.getCurrentTime();
-
-		data.setPriority(time);
+		data.setPriority(data.getCurrentTime());
 	}
 
 }

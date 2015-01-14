@@ -156,7 +156,7 @@ public class TenDynamicJSSDataset implements IDataset {
 
 	private void addProcessingOrderGenerator(DynamicInstance problemInstance, int minOperations, int maxOperations) {
 		problemInstance.setProcessingOrderGenerator(new
-				VariableOperationNumberPOG(minOperations, maxOperations, rand.nextLong()));
+				VariableOperationNumberPOG(problemInstance.getMachines(), minOperations, maxOperations, rand.nextLong()));
 	}
 
 	private void addProcessingTimeGenerator(DynamicInstance problemInstance, double uniformMean) {

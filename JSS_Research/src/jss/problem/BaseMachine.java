@@ -74,7 +74,7 @@ public abstract class BaseMachine implements IMachine, IEventHandler, Comparable
 		}
 
 		job.startedProcessingOnMachine(this);
-		waitingJobs.remove(job);
+		waitingJobs.remove(job); // TODO this might take a while.
 
 		currentJob = job;
 		availableTime = Math.max(time, job.getReadyTime()) +
@@ -82,7 +82,7 @@ public abstract class BaseMachine implements IMachine, IEventHandler, Comparable
 				job.getProcessingTime(this);
 
 		machineEvent = new MachineEvent(this, availableTime);
-		
+
 		problem.getUnavailableMachines().add(this);
 	}
 
@@ -163,6 +163,14 @@ public abstract class BaseMachine implements IMachine, IEventHandler, Comparable
 	public int compareTo(BaseMachine other) {
 		return this.id - other.id;
 	}
+
+	/// Object
+
+	@Override
+	public int hashCode() {
+		return id; // TODO very basic one for now, I'll use a more complicated one in the future.
+	}
+
 
 	// An event class that represents a job completing on the machine.
 	private class MachineEvent implements IEvent {

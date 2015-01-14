@@ -1,6 +1,7 @@
 package jss.problem.dynamic_problem.rachel_dataset;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -10,34 +11,32 @@ import jss.problem.dynamic_problem.IProcessingOrderGenerator;
 
 public class VariableOperationNumberPOG implements IProcessingOrderGenerator {
 
+	private List<? extends IMachine> machines;
 	private int minOperations;
 	private int maxOperations;
 
 	private long seed;
 	private Random rand;
 
-	public VariableOperationNumberPOG(int min, int max, long s) {
-		minOperations = min;
-		maxOperations = max;
+	public VariableOperationNumberPOG(Set<? extends IMachine> machines, int min, int max, long s) {
+		this.machines = new ArrayList<IMachine>(machines);
+		this.minOperations = min;
+		this.maxOperations = max;
 
 		seed = s;
 		rand = new Random(seed);
 	}
 
 	@Override
-	public List<IMachine> getProcessingOrder(Set<? extends IMachine> machines) {
-		// TODO this is going to be slow. Also, I need to modify the event handlers to remove
-		// jobs which have had events completed for them.
-		List<IMachine> selectableMachines = new ArrayList<IMachine>(machines);
+	public List<IMachine> getProcessingOrder() {
 		List<IMachine> operationOrder = new ArrayList<IMachine>();
+
+		Collections.shuffle(machines, rand);
 
 		int numOperations = ((maxOperations != minOperations) ? rand.nextInt(maxOperations - minOperations) : 0) + minOperations;
 
-		int operation = 0;
-		while (operation < numOperations && !selectableMachines.isEmpty()) {
-			int index = rand.nextInt(selectableMachines.size());
-			operationOrder.add(selectableMachines.remove(index));
-			operation++;
+		for (int i = 0; i < numOperations; i++) {
+			operationOrder.add(machines.get(i));
 		}
 
 		return operationOrder;

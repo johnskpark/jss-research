@@ -1,6 +1,5 @@
 package jss.evolution.solver;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import jss.Action;
@@ -30,30 +29,41 @@ public class SinglePopEnsembleDR extends JSSGPRule {
 
 	@Override
 	public Action getAction(IMachine machine, IProblemInstance problem, double time) {
+		IJob job;
 		if (machine.getWaitingJobs().isEmpty()) {
 			return null;
+		} else if (machine.getWaitingJobs().size() == 1) {
+			job = machine.getWaitingJobs().get(0);
+		} else {
+			job = getJobFromPriorities(machine, problem, time);
 		}
 
-		List<IJob> processableJobs = machine.getWaitingJobs();
-		List<List<Double>> priorities = new ArrayList<List<Double>>();
+		// Simply process the job as early as possible.
+		double t = Math.max(machine.getReadyTime(), job.getReadyTime());
+		return new Action(machine, job, t);
+	}
 
+	private IJob getJobFromPriorities(IMachine machine, IProblemInstance problem, double time) {
+		List<IJob> processableJobs = machine.getWaitingJobs();
+
+		double[][] priorities = new double[getIndividuals().length][];
 		double[] prioritySums = new double[processableJobs.size()];
 
 		double bestPrioritySums = 0.0;
 		int bestPrioritySumsIndex = -1;
 
 		for (int i = 0; i < getIndividuals().length; i++) {
-			List<Double> normalisedPriorities = getNormalisedPriorities(getIndividuals()[i],
+			double[] normalisedPriorities = getNormalisedPriorities(getIndividuals()[i],
 					processableJobs,
 					problem,
 					machine,
 					time);
 
-			priorities.add(normalisedPriorities);
+			priorities[i] = normalisedPriorities;
 
 			int bestIndex = getBestPriorityIndex(normalisedPriorities);
 
-			prioritySums[bestIndex] += normalisedPriorities.get(bestIndex);
+			prioritySums[bestIndex] += normalisedPriorities[bestIndex];
 
 			if (prioritySums[bestIndex] > bestPrioritySums) {
 				bestPrioritySums = prioritySums[bestIndex];
@@ -64,21 +74,19 @@ public class SinglePopEnsembleDR extends JSSGPRule {
 		IJob mostVotedJob = processableJobs.get(bestPrioritySumsIndex);
 
 		for (int i = 0; i < getIndividuals().length; i++) {
-			tracker.addPriority(i, priorities.get(i).get(bestPrioritySumsIndex));
+			tracker.addPriority(i, priorities[i][bestPrioritySumsIndex]);
 		}
 
-		// Simply process the job as early as possible.
-		double t = Math.max(machine.getReadyTime(), mostVotedJob.getReadyTime());
-		return new Action(machine, mostVotedJob, t);
+		return mostVotedJob;
 	}
 
-	private int getBestPriorityIndex(List<Double> priorities) {
+	private int getBestPriorityIndex(double[] priorities) {
 		double bestPriority = Double.NEGATIVE_INFINITY;
 		int bestIndex = -1;
 
-		for (int i = 0; i < priorities.size(); i++) {
-			if (priorities.get(i) > bestPriority) {
-				bestPriority = priorities.get(i);
+		for (int i = 0; i < priorities.length; i++) {
+			if (priorities[i] > bestPriority) {
+				bestPriority = priorities[i];
 				bestIndex = i;
 			}
 		}
@@ -86,12 +94,12 @@ public class SinglePopEnsembleDR extends JSSGPRule {
 		return bestIndex;
 	}
 
-	private List<Double> getNormalisedPriorities(GPIndividual gpInd,
+	private double[] getNormalisedPriorities(GPIndividual gpInd,
 			List<IJob> processableJobs,
 			IProblemInstance problem,
 			IMachine machine,
 			double time) {
-		List<Double> normalisedPriorities = new ArrayList<Double>(processableJobs.size());
+		double[] normalisedPriorities = new double[processableJobs.size()];
 
 		double[] priorities = new double[processableJobs.size()];
 		double bestPriority = Double.NEGATIVE_INFINITY;
@@ -118,7 +126,7 @@ public class SinglePopEnsembleDR extends JSSGPRule {
 		for (int j = 0; j < processableJobs.size(); j++) {
 			double normalisedPriority = Math.exp(priorities[j] - bestPriority - Math.log(sum));
 
-			normalisedPriorities.add(j, normalisedPriority);
+			normalisedPriorities[j] = normalisedPriority;
 		}
 
 		return normalisedPriorities;

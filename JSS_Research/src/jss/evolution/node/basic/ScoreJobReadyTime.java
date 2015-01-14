@@ -1,6 +1,5 @@
 package jss.evolution.node.basic;
 
-import jss.IJob;
 import jss.evolution.JSSGPData;
 import jss.node.NodeDefinition;
 import ec.EvolutionState;
@@ -29,8 +28,6 @@ public class ScoreJobReadyTime extends GPNode {
 		if (children.length != NodeDefinition.SCORE_JOB_READY_TIME.numChildren()) {
 			state.output.error("Incorrect number of children for node " + toStringForError() + " at " + individualBase);
 		}
-
-		// TODO check to make sure that the job is static.
 	}
 
 	@Override
@@ -42,9 +39,7 @@ public class ScoreJobReadyTime extends GPNode {
 			final Problem problem) {
 		JSSGPData data = (JSSGPData)input;
 
-		IJob job = data.getJob();
-
-		data.setPriority(job.getReadyTime());
+		data.setPriority(data.getJob().getReadyTime());
 	}
 
 }
