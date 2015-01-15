@@ -131,31 +131,11 @@ public abstract class BaseInstance implements IProblemInstance, ISubscriptionHan
 
 	@Override
 	public void sendJobFeed(IJob job, double time) {
-		long startTime1 = System.nanoTime();
-
 		for (ISubscriber subscriber : subscribers) {
 			subscriber.onJobFeed(job, time);
 		}
 
-		long endTime1 = System.nanoTime();
-		long startTime2 = System.nanoTime();
-
-		availableMachines.removeAll(unavailableMachines);
-
-		long endTime2 = System.nanoTime();
-		long startTime3 = System.nanoTime();
-
-		unavailableMachines.clear();
-
-		long endTime3 = System.nanoTime();
-
-		long timeDiff1 = endTime1 - startTime1;
-		long timeDiff2 = endTime2 - startTime2;
-		long timeDiff3 = endTime3 - startTime3;
-
-		// System.out.printf("%d %d %d\n", timeDiff1, timeDiff2, timeDiff3);
-
-		// updateBusyMachines();
+		updateBusyMachines();
 	}
 
 	private void updateBusyMachines() {

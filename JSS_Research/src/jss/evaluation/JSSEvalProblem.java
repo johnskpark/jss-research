@@ -205,6 +205,8 @@ public class JSSEvalProblem {
 
 			// TODO load the file into the dataset.
 		}
+
+		dataset.generateDataset();
 	}
 
 	/**

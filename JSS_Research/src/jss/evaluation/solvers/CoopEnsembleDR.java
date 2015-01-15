@@ -32,10 +32,21 @@ public class CoopEnsembleDR implements IActionHandler {
 
 	@Override
 	public Action getAction(IMachine machine, IProblemInstance problem, double time) {
+		IJob job;
 		if (machine.getWaitingJobs().isEmpty()) {
 			return null;
+		} else if (machine.getWaitingJobs().size() == 1) {
+			job = machine.getWaitingJobs().get(0);
+		} else {
+			job = getJobFromPriorities(machine, problem, time);
 		}
 
+		// Simply process the job as early as possible.
+		double t = Math.max(machine.getReadyTime(), job.getReadyTime());
+		return new Action(machine, job, t);
+	}
+
+	private IJob getJobFromPriorities(IMachine machine, IProblemInstance problem, double time) {
 		List<IJob> processableJobs = machine.getWaitingJobs();
 
 		int[] voteCounts = new int[processableJobs.size()];
@@ -63,10 +74,7 @@ public class CoopEnsembleDR implements IActionHandler {
 		}
 
 		IJob mostVotedJob = processableJobs.get(mostVotedIndex);
-
-		// Simply process the job as early as possible.
-		double t = Math.max(machine.getReadyTime(), mostVotedJob.getReadyTime());
-		return new Action(machine, mostVotedJob, t);
+		return mostVotedJob;
 	}
 
 	// Get the index of the job with the highest priority.

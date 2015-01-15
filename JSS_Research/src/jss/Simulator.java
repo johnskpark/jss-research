@@ -143,9 +143,6 @@ public class Simulator {
 			}
 		}
 
-		private void doNothing() {
-		}
-
 		@Override
 		public int compareTo(EventGroup o) {
 			if (this.triggerTime < o.triggerTime) {

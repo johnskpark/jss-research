@@ -271,7 +271,7 @@ public abstract class BaseJob implements IJob, IEventHandler {
 	public void reset() {
 		machineQueue.clear();
 		machineQueue.addAll(machineList);
-		
+
 		queueEntryTime = readyTime;
 	}
 

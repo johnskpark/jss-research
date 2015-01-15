@@ -27,6 +27,21 @@ public class PriorityBasedDR implements IActionHandler {
 
 	@Override
 	public Action getAction(IMachine machine, IProblemInstance problem, double time) {
+		IJob job;
+		if (machine.getWaitingJobs().isEmpty()) {
+			return null;
+		} else if (machine.getWaitingJobs().size() == 1) {
+			job = machine.getWaitingJobs().get(0);
+		} else {
+			job = getJobFromPriorities(machine, problem, time);
+		}
+
+		// Simply process the job as early as possible.
+		double t = Math.max(machine.getReadyTime(), job.getReadyTime());
+		return new Action(machine, job, t);
+	}
+
+	private IJob getJobFromPriorities(IMachine machine, IProblemInstance problem, double time) {
 		double bestPriority = Double.NEGATIVE_INFINITY;
 		IJob bestJob = null;
 
@@ -44,12 +59,6 @@ public class PriorityBasedDR implements IActionHandler {
 			}
 		}
 
-		if (bestJob != null) {
-			// Simply process the job as early as possible.
-			double t = Math.max(machine.getReadyTime(), bestJob.getReadyTime());
-			return new Action(machine, bestJob, t);
-		} else {
-			return null;
-		}
+		return bestJob;
 	}
 }

@@ -191,7 +191,7 @@ public class DemirkolDataset implements IDataset {
 	}
 
 	@Override
-	public List<IProblemInstance> getTest() {
+	public List<IProblemInstance> getTesting() {
 		return new ArrayList<IProblemInstance>(problemInstances);
 	}
 

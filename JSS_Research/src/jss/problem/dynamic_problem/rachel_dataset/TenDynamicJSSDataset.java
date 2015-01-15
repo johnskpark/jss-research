@@ -197,7 +197,7 @@ public class TenDynamicJSSDataset implements IDataset {
 	}
 
 	@Override
-	public List<IProblemInstance> getTest() {
+	public List<IProblemInstance> getTesting() {
 		return testingSet;
 	}
 

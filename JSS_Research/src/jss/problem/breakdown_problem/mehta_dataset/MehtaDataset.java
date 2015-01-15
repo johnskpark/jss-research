@@ -119,7 +119,7 @@ public class MehtaDataset implements IDataset {
 	}
 
 	@Override
-	public List<IProblemInstance> getTest() {
+	public List<IProblemInstance> getTesting() {
 		return new ArrayList<IProblemInstance>(problemInstances);
 	}
 

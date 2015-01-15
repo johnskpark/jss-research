@@ -211,7 +211,7 @@ public class TaillardDataset implements IDataset {
 	}
 
 	@Override
-	public List<IProblemInstance> getTest() {
+	public List<IProblemInstance> getTesting() {
 		return testInstances;
 	}
 

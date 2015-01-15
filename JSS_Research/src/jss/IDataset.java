@@ -39,6 +39,6 @@ public interface IDataset {
 	 * used for testing the trained model.
 	 * @return
 	 */
-	public List<IProblemInstance> getTest();
+	public List<IProblemInstance> getTesting();
 
 }

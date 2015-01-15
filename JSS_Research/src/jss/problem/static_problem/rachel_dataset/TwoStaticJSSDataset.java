@@ -101,7 +101,7 @@ public class TwoStaticJSSDataset implements IDataset {
 	}
 
 	@Override
-	public List<IProblemInstance> getTest() {
+	public List<IProblemInstance> getTesting() {
 		return problems;
 	}
 
