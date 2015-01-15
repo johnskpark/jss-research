@@ -32,9 +32,9 @@ public class CoopTwoRuleDR implements IActionHandler {
 	@Override
 	public Action getAction(IMachine machine, IProblemInstance problem, double time) {
 		if (selectFirstRule(machine, problem, time)) {
-			return getAction(rule1, machine, problem);
+			return getAction(rule1, machine, problem, time);
 		} else {
-			return getAction(rule2, machine, problem);
+			return getAction(rule2, machine, problem, time);
 		}
 	}
 
@@ -44,7 +44,7 @@ public class CoopTwoRuleDR implements IActionHandler {
 	}
 
 	// Get the action using the specified rule
-	private Action getAction(INode rule, IMachine machine, IProblemInstance problem) {
+	private Action getAction(INode rule, IMachine machine, IProblemInstance problem, double time) {
 		double bestPriority = Double.NEGATIVE_INFINITY;
 		IJob bestJob = null;
 
@@ -53,7 +53,7 @@ public class CoopTwoRuleDR implements IActionHandler {
 				continue;
 			}
 
-			JSSEvalData data = new JSSEvalData(problem, machine, job);
+			JSSEvalData data = new JSSEvalData(problem, machine, job, time);
 			double priority = rule.evaluate(data);
 
 			if (priority > bestPriority) {
@@ -64,8 +64,8 @@ public class CoopTwoRuleDR implements IActionHandler {
 
 		if (bestJob != null) {
 			// Simply process the job as early as possible.
-			double time = Math.max(machine.getReadyTime(), bestJob.getReadyTime());
-			return new Action(machine, bestJob, time);
+			double t = Math.max(machine.getReadyTime(), bestJob.getReadyTime());
+			return new Action(machine, bestJob, t);
 		} else {
 			return null;
 		}

@@ -50,7 +50,7 @@ public class PriorityBasedDR implements IActionHandler {
 				continue;
 			}
 
-			JSSEvalData data = new JSSEvalData(problem, machine, job);
+			JSSEvalData data = new JSSEvalData(problem, machine, job, time);
 			double priority = node.evaluate(data);
 
 			if (priority > bestPriority) {

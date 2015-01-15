@@ -58,7 +58,7 @@ public class CoopEnsembleDR implements IActionHandler {
 		for (int i = 0; i < ruleNum; i++) {
 			INode rule = rules.get(i);
 
-			PriorityIndexPair bestPair = getBestIndex(rule, processableJobs, machine, problem);
+			PriorityIndexPair bestPair = getBestIndex(rule, processableJobs, machine, problem, time);
 			if (bestPair.index == -1) {
 				return null;
 			}
@@ -81,7 +81,8 @@ public class CoopEnsembleDR implements IActionHandler {
 	private PriorityIndexPair getBestIndex(INode rule,
 			List<IJob> processableJobs,
 			IMachine machine,
-			IProblemInstance problem) {
+			IProblemInstance problem,
+			double time) {
 		double bestPriority = Double.NEGATIVE_INFINITY;
 		int bestIndex = -1;
 
@@ -90,7 +91,7 @@ public class CoopEnsembleDR implements IActionHandler {
 		for (int j = 0; j < processableJobs.size(); j++) {
 			IJob job = processableJobs.get(j);
 
-			JSSEvalData data = new JSSEvalData(problem, machine, job);
+			JSSEvalData data = new JSSEvalData(problem, machine, job, time);
 			double priority = rule.evaluate(data);
 
 			// Normalise the priority between interval [0,1]

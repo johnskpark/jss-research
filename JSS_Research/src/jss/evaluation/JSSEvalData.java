@@ -15,13 +15,16 @@ public class JSSEvalData {
 	private IProblemInstance problem;
 	private IMachine machine;
 	private IJob job;
+	private double time;
 
 	public JSSEvalData(IProblemInstance problem,
 			IMachine machine,
-			IJob job) {
+			IJob job,
+			double time) {
 		this.problem = problem;
 		this.machine = machine;
 		this.job = job;
+		this.time = time;
 	}
 
 	/**
@@ -46,6 +49,14 @@ public class JSSEvalData {
 	 */
 	public IJob getJob() {
 		return job;
+	}
+
+	/**
+	 * TODO javadoc.
+	 * @return
+	 */
+	public double getTime() {
+		return time;
 	}
 
 }

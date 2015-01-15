@@ -104,7 +104,7 @@ public class SuR1Solver extends JSSEvalSolver {
 				double readyTime = job.getCurrentMachine().getReadyTime();
 
 				if (readyTime <= earliestReadyTime + rule.getAlpha() * (earliestCompletionTime - earliestReadyTime)) {
-					JSSEvalData data = new JSSEvalData(problem, machine, job);
+					JSSEvalData data = new JSSEvalData(problem, machine, job, time);
 
 					double priority = rule.getNode().evaluate(data);
 					if (priority > bestPriority) {
