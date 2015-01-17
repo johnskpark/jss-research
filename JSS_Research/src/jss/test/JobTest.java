@@ -79,7 +79,7 @@ public class JobTest {
 		Assert.assertFalse(mockMachine2.equals(job.getCurrentMachine()));
 		Assert.assertFalse(job.isCompleted());
 
-		job.startedProcessingOnMachine(mockMachine1);
+		job.startedProcessingOnMachine(mockMachine1, 0);
 		job.finishProcessingOnMachine();
 
 		Assert.assertEquals(job.getCurrentMachine(), mockMachine2);
@@ -87,7 +87,7 @@ public class JobTest {
 		Assert.assertTrue(mockMachine2.equals(job.getCurrentMachine()));
 		Assert.assertFalse(job.isCompleted());
 
-		job.startedProcessingOnMachine(mockMachine2);
+		job.startedProcessingOnMachine(mockMachine2, 0);
 		job.finishProcessingOnMachine();
 
 		Assert.assertNull(job.getCurrentMachine());
@@ -117,9 +117,9 @@ public class JobTest {
 		Assert.assertFalse(mockMachine2.equals(job.getCurrentMachine()));
 		Assert.assertFalse(job.isCompleted());
 
-		job.startedProcessingOnMachine(mockMachine1);
+		job.startedProcessingOnMachine(mockMachine1, 0);
 		job.finishProcessingOnMachine();
-		job.startedProcessingOnMachine(mockMachine2);
+		job.startedProcessingOnMachine(mockMachine2, 0);
 		job.finishProcessingOnMachine();
 
 		Assert.assertNull(job.getCurrentMachine());
@@ -176,7 +176,7 @@ public class JobTest {
 		job.offerMachine(machine2);
 
 		try {
-			job.startedProcessingOnMachine(machine2);
+			job.startedProcessingOnMachine(machine2, 0);
 
 			Assert.fail();
 		} catch (RuntimeException e) {

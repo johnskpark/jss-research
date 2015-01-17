@@ -170,7 +170,7 @@ public class BreakdownJob extends BaseJob {
 	}
 
 	@Override
-	public void startedProcessingOnMachine(IMachine machine) throws RuntimeException {
+	public void startedProcessingOnMachine(IMachine machine, double time) throws RuntimeException {
 		if (!machineQueue.peek().equals(machine)) {
 			throw new RuntimeException("You done goofed from BasicJob");
 		}

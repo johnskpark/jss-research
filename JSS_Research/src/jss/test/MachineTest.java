@@ -49,7 +49,7 @@ public class MachineTest {
 		Assert.assertEquals(machine.getReadyTime(), 0, EPSILON);
 
 		context.checking(new Expectations() {{
-			oneOf(mockJob1).startedProcessingOnMachine(machine);
+			oneOf(mockJob1).startedProcessingOnMachine(machine, 0);
 			oneOf(mockJob1).getReadyTime(); will(returnValue(releaseTime));
 			oneOf(mockJob1).getProcessingTime(machine); will(returnValue(processingTime));
 			oneOf(mockJob1).getSetupTime(machine); will(returnValue(setupTime));
@@ -77,7 +77,7 @@ public class MachineTest {
 		final double completionTime = releaseTime + setupTime + processingTime;
 
 		context.checking(new Expectations() {{
-			oneOf(mockJob1).startedProcessingOnMachine(machine);
+			oneOf(mockJob1).startedProcessingOnMachine(machine, 0);
 			oneOf(mockJob1).getCurrentMachine(); will(returnValue(null));
 			oneOf(mockJob1).getReadyTime(); will(returnValue(releaseTime));
 			oneOf(mockJob1).getProcessingTime(machine); will(returnValue(processingTime));
@@ -111,7 +111,7 @@ public class MachineTest {
 		final double completionTime = releaseTime + setupTime + processingTime;
 
 		context.checking(new Expectations() {{
-			oneOf(mockJob1).startedProcessingOnMachine(machine);
+			oneOf(mockJob1).startedProcessingOnMachine(machine, 0);
 			oneOf(mockJob1).getCurrentMachine(); will(returnValue(null));
 			oneOf(mockJob1).getReadyTime(); will(returnValue(releaseTime));
 			oneOf(mockJob1).getProcessingTime(machine); will(returnValue(processingTime));
@@ -142,7 +142,7 @@ public class MachineTest {
 		setupTime = 0.0;
 
 		context.checking(new Expectations() {{
-			oneOf(mockJob1).startedProcessingOnMachine(machine);
+			oneOf(mockJob1).startedProcessingOnMachine(machine, 0);
 			oneOf(mockJob1).getCurrentMachine(); will(returnValue(null));
 			oneOf(mockJob1).getReadyTime(); will(returnValue(releaseTime));
 			oneOf(mockJob1).getProcessingTime(machine); will(returnValue(processingTime));

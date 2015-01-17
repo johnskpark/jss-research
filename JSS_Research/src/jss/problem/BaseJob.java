@@ -186,9 +186,9 @@ public abstract class BaseJob implements IJob, IEventHandler {
 	}
 
 	@Override
-	public void startedProcessingOnMachine(IMachine machine) throws RuntimeException {
+	public void startedProcessingOnMachine(IMachine machine, double time) throws RuntimeException {
 		if (!machineQueue.peek().equals(machine)) {
-			throw new RuntimeException("You done goofed from BasicJob"); // TODO
+			throw new RuntimeException("Attempted to process job at incorrect machine");
 		}
 		this.machine = machine;
 	}

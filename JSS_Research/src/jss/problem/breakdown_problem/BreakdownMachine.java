@@ -1,6 +1,5 @@
 package jss.problem.breakdown_problem;
 
-import jss.ISubscriptionHandler;
 import jss.problem.BaseMachine;
 
 /**

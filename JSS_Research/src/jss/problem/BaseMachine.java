@@ -73,7 +73,7 @@ public abstract class BaseMachine implements IMachine, IEventHandler, Comparable
 			throw new RuntimeException("You done goofed from BasicMachine");
 		}
 
-		job.startedProcessingOnMachine(this);
+		job.startedProcessingOnMachine(this, time);
 		waitingJobs.remove(job); // TODO this might take a while.
 
 		currentJob = job;

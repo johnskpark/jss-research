@@ -66,7 +66,7 @@ public class SuR1Solver extends JSSEvalSolver {
 			double cwr = getCwr(machine, critMachine, bottleMachine, problem);
 			double dj = getDj(bottleMachine, problem);
 
-			double bestPriority = Double.POSITIVE_INFINITY;
+			double bestPriority = Double.NEGATIVE_INFINITY;
 			IJob bestJob = null;
 
 			double earliestCompletionTime = Double.POSITIVE_INFINITY;
@@ -95,13 +95,14 @@ public class SuR1Solver extends JSSEvalSolver {
 			DTDispatchingRule rule = getDispatchingRule(cmi, cwr, dj);
 
 			for (IJob job : problem.getJobs()) {
-				if (!job.isProcessable(machine) ||
-						!(job.getProcessingMachine() != null && machine.equals(job.getCurrentMachine()) ||
-						job.getProcessingMachine() != null && machine.equals(job.getNextMachine()))) {
+				double readyTime;
+				if (job.getProcessingMachine() == null && machine.equals(job.getCurrentMachine())) {
+					readyTime = machine.getReadyTime();
+				} else if (job.getProcessingMachine() != null && machine.equals(job.getNextMachine())) {
+					readyTime = job.getProcessingMachine().getReadyTime();
+				} else {
 					continue;
 				}
-
-				double readyTime = job.getCurrentMachine().getReadyTime();
 
 				if (readyTime <= earliestReadyTime + rule.getAlpha() * (earliestCompletionTime - earliestReadyTime)) {
 					JSSEvalData data = new JSSEvalData(problem, machine, job, time);
@@ -179,7 +180,6 @@ public class SuR1Solver extends JSSEvalSolver {
 			}
 
 			return critWorkload / totalWorkload;
-
 		}
 
 		private double getDj(IMachine bottleMachine, IProblemInstance problem) {

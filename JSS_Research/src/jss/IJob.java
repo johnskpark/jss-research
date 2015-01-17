@@ -103,10 +103,11 @@ public interface IJob {
 	 * Callback function that declares that the job has started being
 	 * processed on the specified machine.
 	 * @param machine The machine for which the job has been started on.
+	 * @param time TODO javadoc.
 	 * @throws IllegalActionException If the machine is not next in line to be
 	 *                          visited.
 	 */
-	public void startedProcessingOnMachine(IMachine machine) throws IllegalActionException;
+	public void startedProcessingOnMachine(IMachine machine, double time) throws IllegalActionException;
 
 	/**
 	 * Callback function that declares that the job has been last processed on
