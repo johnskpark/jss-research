@@ -5,6 +5,10 @@
 	</solverConfig>
 
 	<solverConfig>
+		<solverClass>jss.evaluation.solvers.SuR2Solver</solverClass>
+	</solverConfig>
+	
+	<solverConfig>
 		<solverClass>jss.evaluation.solvers.SuR3Solver</solverClass>
 	</solverConfig>
 
