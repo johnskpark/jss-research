@@ -42,9 +42,16 @@ public class ScoreMachineReadyTime extends GPNode {
 			final ADFStack stack,
 			final GPIndividual individual,
 			final Problem problem) {
+		long startTime = System.nanoTime();
+
 		JSSGPData data = (JSSGPData)input;
 
 		data.setPriority(data.getMachine().getReadyTime());
+
+		long endTime = System.nanoTime();
+		long timeDiff = endTime - startTime;
+
+		System.out.printf("Machine ready: %d\n", timeDiff);
 	}
 
 }

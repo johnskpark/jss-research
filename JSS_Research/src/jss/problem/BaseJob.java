@@ -199,7 +199,6 @@ public abstract class BaseJob implements IJob, IEventHandler {
 		if (!machineQueue.isEmpty()) {
 			queueEntryTime = machine.getReadyTime();
 		}
-
 		machine = null;
 	}
 

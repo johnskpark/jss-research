@@ -42,9 +42,16 @@ public class ScoreProcessingTime extends GPNode {
 			final ADFStack stack,
 			final GPIndividual individual,
 			final Problem problem) {
+		long startTime = System.nanoTime();
+
 		JSSGPData data = (JSSGPData)input;
 
 		data.setPriority(data.getJob().getProcessingTime(data.getMachine()));
+
+		long endTime = System.nanoTime();
+		long timeDiff = endTime - startTime;
+
+		System.out.printf("Processing time: %d\n", timeDiff);
 	}
 
 }

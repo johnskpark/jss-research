@@ -42,9 +42,16 @@ public class ScoreCurrentTime extends GPNode {
 			final ADFStack stack,
 			final GPIndividual individual,
 			final Problem problem) {
+		long startTime = System.nanoTime();
+
 		JSSGPData data = (JSSGPData)input;
 
 		data.setPriority(data.getCurrentTime());
+
+		long endTime = System.nanoTime();
+		long timeDiff = endTime - startTime;
+
+		System.out.printf("Current time: %d\n", timeDiff);
 	}
 
 }

@@ -114,9 +114,16 @@ public class ERCRandomUniform extends ERC {
 			final ADFStack stack,
 			final GPIndividual individual,
 			final Problem problem) {
+		long startTime = System.nanoTime();
+
 		JSSGPData data = (JSSGPData)input;
 
 		data.setPriority(value);
+
+		long endTime = System.nanoTime();
+		long timeDiff = endTime - startTime;
+
+		System.out.printf("ERCRandomUniform: %d\n", timeDiff);
 	}
 
 

@@ -99,15 +99,6 @@ public class CompletelyReactiveSolver implements ISolver, ISubscriber {
 		}
 	}
 
-	private void assignAction(IMachine machine, double time) {
-		Action action = rule.getAction(machine, problem, time);
-
-		if (action != null) {
-			solution.addAction(action);
-			machine.processJob(action.getJob(), time);
-		}
-	}
-
 	@Override
 	public void onJobFeed(IJob job, double time) {
 		// Find the machine that the job was released for.
@@ -118,6 +109,15 @@ public class CompletelyReactiveSolver implements ISolver, ISubscriber {
 			assignAction(machine, time);
 		}
 
+	}
+
+	private void assignAction(IMachine machine, double time) {
+		Action action = rule.getAction(machine, problem, time);
+
+		if (action != null) {
+			solution.addAction(action);
+			machine.processJob(action.getJob(), time);
+		}
 	}
 
 }

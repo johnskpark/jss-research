@@ -112,7 +112,7 @@ public abstract class BaseInstance implements IProblemInstance, ISubscriptionHan
 
 	// TODO make this more standardised.
 
-	private List<IMachine> unavailableMachines = new ArrayList<IMachine>();
+	private List<IMachine> unavailableMachines = new ArrayList<IMachine>(machines.size());
 
 	public List<IMachine> getUnavailableMachines() {
 		return unavailableMachines;

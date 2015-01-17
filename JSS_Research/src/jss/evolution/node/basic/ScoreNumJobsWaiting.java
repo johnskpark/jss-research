@@ -42,9 +42,16 @@ public class ScoreNumJobsWaiting extends GPNode {
 			final ADFStack stack,
 			final GPIndividual individual,
 			final Problem problem) {
+		long startTime = System.nanoTime();
+
 		JSSGPData data = (JSSGPData)input;
 
 		data.setPriority(data.getMachine().getWaitingJobs().size());
+
+		long endTime = System.nanoTime();
+		long timeDiff = endTime - startTime;
+
+		System.out.printf("Num jobs waiting: %d\n", timeDiff);
 	}
 
 }

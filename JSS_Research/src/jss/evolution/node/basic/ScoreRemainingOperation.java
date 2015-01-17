@@ -38,9 +38,16 @@ public class ScoreRemainingOperation extends GPNode {
 	@Override
 	public void eval(EvolutionState state, int thread, GPData input,
 			ADFStack stack, GPIndividual individual, Problem problem) {
+		long startTime = System.nanoTime();
+
 		JSSGPData data = (JSSGPData)input;
 
 		data.setPriority(data.getJob().getRemainingOperations());
+
+		long endTime = System.nanoTime();
+		long timeDiff = endTime - startTime;
+
+		System.out.printf("Remaining operation: %d\n", timeDiff);
 	}
 
 }
