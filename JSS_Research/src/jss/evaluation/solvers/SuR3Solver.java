@@ -80,18 +80,56 @@ public class SuR3Solver extends JSSEvalSolver {
 			double bestPriority = Double.NEGATIVE_INFINITY;
 			IJob bestJob = null;
 
+			double earliestCompletionTime = Double.POSITIVE_INFINITY;
+			double earliestReadyTime = Double.POSITIVE_INFINITY;
+
+			for (IJob job : problem.getJobs()) {
+				if (!job.isProcessable(machine)) {
+					continue;
+				}
+
+				double readyTime;
+				if (job.getProcessingMachine() == null && machine.equals(job.getCurrentMachine())) {
+					readyTime = machine.getReadyTime();
+				} else if (job.getProcessingMachine() != null && machine.equals(job.getNextMachine())) {
+					readyTime = job.getProcessingMachine().getReadyTime();
+				} else {
+					continue;
+				}
+
+				double completionTime = readyTime + job.getProcessingTime(machine);
+
+				earliestReadyTime = Math.min(earliestReadyTime, readyTime);
+				earliestCompletionTime = Math.min(earliestCompletionTime, completionTime);
+			}
+
 			DTDispatchingRule rule = getDispatchingRule(cwr);
-			
-			for (IJob job : machine.getWaitingJobs()) {
-				JSSEvalData data = new JSSEvalData(problem, machine, job, time);
-				
-				double priority = rule.getNode().evaluate(data);
-				if (priority > bestPriority) {
-					bestPriority = priority;
-					bestJob = job;
+
+			for (IJob job : problem.getJobs()) {
+				if (!job.isProcessable(machine)) {
+					continue;
+				}
+
+				double readyTime;
+				if (job.getProcessingMachine() == null && machine.equals(job.getCurrentMachine())) {
+					readyTime = machine.getReadyTime();
+				} else if (job.getProcessingMachine() != null && machine.equals(job.getNextMachine())) {
+					readyTime = job.getProcessingMachine().getReadyTime();
+				} else {
+					continue;
+				}
+
+				if (readyTime <= earliestReadyTime + rule.getAlpha() * (earliestCompletionTime - earliestReadyTime)) {
+					JSSEvalData data = new JSSEvalData(problem, machine, job, time);
+
+					double priority = rule.getNode().evaluate(data);
+					if (priority > bestPriority) {
+						bestPriority = priority;
+						bestJob = job;
+					}
 				}
 			}
-			
+
 			return bestJob;
 		}
 
@@ -173,55 +211,5 @@ public class SuR3Solver extends JSSEvalSolver {
 			}
 		}
 	}
-
-//	double earliestCompletionTime = Double.POSITIVE_INFINITY;
-//	double earliestReadyTime = Double.POSITIVE_INFINITY;
-//
-//	for (IJob job : problem.getJobs()) {
-//		if (!job.isProcessable(machine)) {
-//			continue;
-//		}
-//
-//		double readyTime;
-//		if (job.getProcessingMachine() == null && machine.equals(job.getCurrentMachine())) {
-//			readyTime = machine.getReadyTime();
-//		} else if (job.getProcessingMachine() != null && machine.equals(job.getNextMachine())) {
-//			readyTime = job.getProcessingMachine().getReadyTime();
-//		} else {
-//			continue;
-//		}
-//
-//		double completionTime = readyTime + job.getProcessingTime(machine);
-//
-//		earliestReadyTime = Math.min(earliestReadyTime, readyTime);
-//		earliestCompletionTime = Math.min(earliestCompletionTime, completionTime);
-//	}
-//
-//	DTDispatchingRule rule = getDispatchingRule(cwr);
-//
-//	for (IJob job : problem.getJobs()) {
-//		if (!job.isProcessable(machine)) {
-//			continue;
-//		}
-//
-//		double readyTime;
-//		if (job.getProcessingMachine() == null && machine.equals(job.getCurrentMachine())) {
-//			readyTime = machine.getReadyTime();
-//		} else if (job.getProcessingMachine() != null && machine.equals(job.getNextMachine())) {
-//			readyTime = job.getProcessingMachine().getReadyTime();
-//		} else {
-//			continue;
-//		}
-//
-//		if (readyTime <= earliestReadyTime + rule.getAlpha() * (earliestCompletionTime - earliestReadyTime)) {
-//			JSSEvalData data = new JSSEvalData(problem, machine, job, time);
-//
-//			double priority = rule.getNode().evaluate(data);
-//			if (priority > bestPriority) {
-//				bestPriority = priority;
-//				bestJob = job;
-//			}
-//		}
-//	}
 
 }

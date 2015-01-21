@@ -11,9 +11,9 @@ import ec.*;
 import ec.util.*;
 import java.io.*;
 
-/* 
+/*
  * GPTree.java
- * 
+ *
  * Created: Fri Aug 27 17:14:02 1999
  * By: Sean Luke
  */
@@ -52,14 +52,14 @@ import java.io.*;
 
 
  * <p>GPTrees can print themselves for humans in one of <b>four</b> styles:
- * <ol><li>A GPTree can print the tree as a Koza-style Lisp s-expression, which is the default.  
+ * <ol><li>A GPTree can print the tree as a Koza-style Lisp s-expression, which is the default.
  * <li> A GPTree can print itself in pseudo-C format:
  *     <ol><li>Terminals can be printed either as variables "a" or as zero-argument functions "a()"
  *     <li>One-argument nonterminals are printed as functions "a(b)"
  *     <li>Two-argument nonterminals can be printed either as operators "b a c" or as functions "a(b, c)"
  *     <li>Nonterminals with more arguments are printed as functions "a(b, c, d, ...)"
  * </ol>
- * <li>A GPTree can print the tree AT&amp;T's Graphviz format.  You can snip the code out and save 
+ * <li>A GPTree can print the tree AT&amp;T's Graphviz format.  You can snip the code out and save
  * it as a ".dot" file to render in any Graphviz renderer (for example, use <a href="http://www.pixelglow.com/graphviz/">
  * this MacOS X front end to the renderer</a>).
  * <li>A GPTree can print the tree as a LaTeX2e code snippet, which can be inserted
@@ -75,14 +75,14 @@ import java.io.*;
  * <tt>epic</tt>,<tt>ecltree</tt>, and probably the <tt>fancybox</tt> packages,
  * in that order.  You'll also need to define the command <tt>\gpbox</tt>, which
  * takes one argument (the string name for the GPNode) and draws a box with that
- * node.  Lastly, you might want to set a few parameters dealing with the 
+ * node.  Lastly, you might want to set a few parameters dealing with the
  * <tt>ecltree</tt> package.
  *
  * <p>Here's an example which looks quite good (pardon the double-backslashes
  * in front of the usepackage statements -- javadoc is freaking out if I put
  * a single backslash.  So you'll need to remove the extra backslash in order
  * to try out this example):
- 
+
  <p><table width=100% border=0 cellpadding=0 cellspacing=0>
  <tr><td bgcolor="#DDDDDD"><font size=-1><tt>
  <pre>
@@ -95,17 +95,17 @@ import java.io.*;
  \begin{document}
 
  <b>% minimum distance between nodes on the same line</b>
- \setlength{\GapWidth}{1em}    
+ \setlength{\GapWidth}{1em}
 
  <b>% draw with a thick dashed line, very nice looking</b>
- \thicklines \drawwith{\dottedline{2}}   
+ \thicklines \drawwith{\dottedline{2}}
 
  <b>% draw an oval and center it with the rule.  You may want to fool with the
  % rule values, though these seem to work quite well for me.  If you make the
  % rule smaller than the text height, then the GP nodes may not line up with
  % each other horizontally quite right, so watch out.</b>
  \newcommand{\gpbox}[1]{\Ovalbox{#1\rule[-.7ex]{0ex}{2.7ex}}}
-                
+
  <b>% Here's the tree which the GP system spat out</b>
  \begin{bundle}{\gpbox{progn3}}\chunk{\begin{bundle}{\gpbox{if-food-ahead}}
  \chunk{\begin{bundle}{\gpbox{progn3}}\chunk{\gpbox{right}}
@@ -143,7 +143,7 @@ import java.io.*;
  gp.tree
 
  * @author Sean Luke
- * @version 1.0 
+ * @version 1.0
  */
 
 public class GPTree implements GPNodeParent, Prototype
@@ -182,15 +182,15 @@ public class GPTree implements GPNodeParent, Prototype
     /** The print style of the GPTree. */
     public int printStyle;
 
-    /** When using c to print for humans, do we print terminals as variables? 
+    /** When using c to print for humans, do we print terminals as variables?
         (as opposed to zero-argument functions)? */
     public boolean printTerminalsAsVariablesInC;
 
-    /** When using c to print for humans, do we print two-argument nonterminals in operator form "a op b"? 
+    /** When using c to print for humans, do we print two-argument nonterminals in operator form "a op b"?
         (as opposed to functions "op(a, b)")? */
     public boolean printTwoArgumentNonterminalsAsOperatorsInC;
 
-    public final GPTreeConstraints constraints( final GPInitializer initializer ) 
+    public final GPTreeConstraints constraints( final GPInitializer initializer )
         { return initializer.treeConstraints[constraints]; }
 
     public Parameter defaultBase()
@@ -216,8 +216,8 @@ public class GPTree implements GPNodeParent, Prototype
     /** Like clone() but doesn't copy the tree. */
     public GPTree lightClone()
         {
-        try 
-            { 
+        try
+            {
             return (GPTree)(super.clone());  // note that the root child reference is copied, not cloned
             }
         catch (CloneNotSupportedException e) { throw new InternalError(); } // never happens
@@ -234,9 +234,9 @@ public class GPTree implements GPNodeParent, Prototype
         newtree.child.argposition = 0;
         return newtree;
         }
-    
+
     /** An expensive function which determines my tree number -- only
-        use for errors, etc. Returns ec.gp.GPTree.NO_TREENUM if the 
+        use for errors, etc. Returns ec.gp.GPTree.NO_TREENUM if the
         tree number could not be
         determined (might happen if it's not been assigned yet). */
     public int treeNumber()
@@ -251,7 +251,7 @@ public class GPTree implements GPNodeParent, Prototype
     /** Sets up a prototypical GPTree with those features it shares with
         other GPTrees in its position in its GPIndividual, and nothhing more.
 
-        This must be called <i>after</i> the GPTypes and GPNodeConstraints 
+        This must be called <i>after</i> the GPTypes and GPNodeConstraints
         have been set up.  Presently they're set up in GPInitializer,
         which gets called before this does, so we're safe. */
     public void setup(final EvolutionState state, final Parameter base)
@@ -288,9 +288,9 @@ public class GPTree implements GPNodeParent, Prototype
             def.push(P_TREECONSTRAINTS));
         if (s==null)
             state.output.fatal("No tree constraints are defined for the GPTree " + base + ".");
-        else 
+        else
             constraints = GPTreeConstraints.constraintsFor(s,state).constraintNumber;
-        
+
         state.output.exitIfErrors();  // because I promised
         // we're not loading the nodes at this point
         }
@@ -301,7 +301,7 @@ public class GPTree implements GPNodeParent, Prototype
         {
         if (!(state.initializer instanceof GPInitializer))
             { state.output.error("Initializer is not a GPInitializer"); return; }
-            
+
         GPInitializer initializer = (GPInitializer)(state.initializer);
 
         if (child == null)
@@ -310,7 +310,7 @@ public class GPTree implements GPNodeParent, Prototype
             { state.output.error("Null owner of GPTree."); return; }
         if (owner.trees == null)
             { state.output.error("Owner has null trees."); return; }
-        if (treeNumber() == NO_TREENUM) 
+        if (treeNumber() == NO_TREENUM)
             { state.output.error("No Tree Number! I appear to be an orphan GPTree."); return; }
         if (constraints < 0 || constraints >= initializer.numTreeConstraints)
             { state.output.error("Preposterous tree constraints (" + constraints + ")"); return; }
@@ -320,9 +320,9 @@ public class GPTree implements GPNodeParent, Prototype
         }
 
     /** Prints out the tree in single-line fashion suitable for reading
-        in later by computer. O(n). 
-        The default version of this method simply calls child's 
-        printRootedTree(...) method. 
+        in later by computer. O(n).
+        The default version of this method simply calls child's
+        printRootedTree(...) method.
     */
 
     public void printTree(final EvolutionState state, final int log)
@@ -331,9 +331,9 @@ public class GPTree implements GPNodeParent, Prototype
         }
 
     /** Prints out the tree in single-line fashion suitable for reading
-        in later by computer. O(n). 
-        The default version of this method simply calls child's 
-        printRootedTree(...) method. 
+        in later by computer. O(n).
+        The default version of this method simply calls child's
+        printRootedTree(...) method.
         @deprecated Verbosity no longer has an effect
     */
 
@@ -346,8 +346,8 @@ public class GPTree implements GPNodeParent, Prototype
         }
 
     /** Prints out the tree in single-line fashion suitable for reading
-        in later by computer. O(n). 
-        The default version of this method simply calls child's 
+        in later by computer. O(n).
+        The default version of this method simply calls child's
         printRootedTree(...) method. */
 
     public void printTree(final EvolutionState state,
@@ -393,26 +393,26 @@ public class GPTree implements GPNodeParent, Prototype
         }
 
 
-    /** Prints out the tree in a readable Lisp-like fashion. O(n). 
-        The default version of this method simply calls child's 
+    /** Prints out the tree in a readable Lisp-like fashion. O(n).
+        The default version of this method simply calls child's
         printRootedTreeForHumans(...) method. */
-    
+
     public void printTreeForHumans(final EvolutionState state, final int log)
-        {               
+        {
         printTreeForHumans(state, log, Output.V_VERBOSE);
         }
 
 
-    /** Prints out the tree in a readable Lisp-like fashion. O(n). 
-        The default version of this method simply calls child's 
-        printRootedTreeForHumans(...) method. 
+    /** Prints out the tree in a readable Lisp-like fashion. O(n).
+        The default version of this method simply calls child's
+        printRootedTreeForHumans(...) method.
         @deprecated Verbosity no longer has an effect.
     */
-    
+
     public void printTreeForHumans(final EvolutionState state, final int log,
         final int verbosity)
-        {               
-        if (printStyle==PRINT_STYLE_C) state.output.print(child.makeCTree(true, 
+        {
+        if (printStyle==PRINT_STYLE_C) state.output.print(child.makeCTree(true,
                 printTerminalsAsVariablesInC, printTwoArgumentNonterminalsAsOperatorsInC),log);
         else if (printStyle==PRINT_STYLE_LATEX) state.output.print(child.makeLatexTree(),log);
         else if (printStyle==PRINT_STYLE_DOT) state.output.print(child.makeGraphvizTree(), log);
@@ -421,9 +421,20 @@ public class GPTree implements GPNodeParent, Prototype
         state.output.println("",log);
         }
 
+    public void printTreeForHumans(final PrintStream ps, final int log)
+    	{
+        if (printStyle==PRINT_STYLE_C) ps.print(child.makeCTree(true,
+                printTerminalsAsVariablesInC, printTwoArgumentNonterminalsAsOperatorsInC));
+        else if (printStyle==PRINT_STYLE_LATEX) ps.print(child.makeLatexTree());
+        else if (printStyle==PRINT_STYLE_DOT) ps.print(child.makeGraphvizTree());
+        else child.printRootedTreeForHumans(ps,0,0);
+        // printRootedTreeForHumans doesn't print a '\n', so I need to do so here
+        ps.println("");
+    	}
+
     /** Builds a new randomly-generated rooted tree and attaches it to the GPTree. */
 
-    public void buildTree(final EvolutionState state, final int thread) 
+    public void buildTree(final EvolutionState state, final int thread)
         {
         GPInitializer initializer = ((GPInitializer)state.initializer);
         child = constraints(initializer).init.newRootedTree(state,

@@ -41,18 +41,6 @@ public class SuR1Solver extends JSSEvalSolver {
 
 	private class SuR1DR implements IActionHandler {
 
-		private INode rule1;
-		private INode rule2;
-		private INode rule3;
-		private INode rule4;
-		
-		public SuR1DR() {
-			rule1 = new ScoreRemainingTime();
-			rule2 = new OpSubtraction(new ERCRandom(0), new OpDivision(new ScorePenalty(), new ScoreProcessingTime()));
-			rule3 = new OpSubtraction(new ERCRandom(0), new ScoreProcessingTime());
-			rule4 = new ScoreProcessingTime();
-		}
-		
 		@Override
 		public Action getAction(IMachine machine, IProblemInstance problem, double time) {
 			IJob job;
@@ -81,15 +69,49 @@ public class SuR1Solver extends JSSEvalSolver {
 			double bestPriority = Double.NEGATIVE_INFINITY;
 			IJob bestJob = null;
 
+			double earliestCompletionTime = Double.POSITIVE_INFINITY;
+			double earliestReadyTime = Double.POSITIVE_INFINITY;
+
+			for (IJob job : problem.getJobs()) {
+				if (!job.isProcessable(machine)) {
+					continue;
+				}
+
+				double readyTime;
+				if (job.getProcessingMachine() == null && machine.equals(job.getCurrentMachine())) {
+					readyTime = machine.getReadyTime();
+				} else if (job.getProcessingMachine() != null && machine.equals(job.getNextMachine())) {
+					readyTime = job.getProcessingMachine().getReadyTime();
+				} else {
+					continue;
+				}
+
+				double completionTime = readyTime + job.getProcessingTime(machine);
+
+				earliestReadyTime = Math.min(earliestReadyTime, readyTime);
+				earliestCompletionTime = Math.min(earliestCompletionTime, completionTime);
+			}
+
 			DTDispatchingRule rule = getDispatchingRule(cmi, cwr, dj);
-			
-			for (IJob job : machine.getWaitingJobs()) {
-				JSSEvalData data = new JSSEvalData(problem, machine, job, time);
-				
-				double priority = rule.getNode().evaluate(data);
-				if (priority > bestPriority) {
-					bestPriority = priority;
-					bestJob = job;
+
+			for (IJob job : problem.getJobs()) {
+				double readyTime;
+				if (job.getProcessingMachine() == null && machine.equals(job.getCurrentMachine())) {
+					readyTime = machine.getReadyTime();
+				} else if (job.getProcessingMachine() != null && machine.equals(job.getNextMachine())) {
+					readyTime = job.getProcessingMachine().getReadyTime();
+				} else {
+					continue;
+				}
+
+				if (readyTime <= earliestReadyTime + rule.getAlpha() * (earliestCompletionTime - earliestReadyTime)) {
+					JSSEvalData data = new JSSEvalData(problem, machine, job, time);
+
+					double priority = rule.getNode().evaluate(data);
+					if (priority > bestPriority) {
+						bestPriority = priority;
+						bestJob = job;
+					}
 				}
 			}
 
@@ -178,31 +200,31 @@ public class SuR1Solver extends JSSEvalSolver {
 			if (cmi > 0.1) {
 				if (cwr > 0.2) {
 					if (cwr > 0.8) {
-						rule = new DTDispatchingRule(0.131, rule1);
+						rule = new DTDispatchingRule(0.131, new ScoreRemainingTime());
 					} else if (dj <= 0.3) {
-						rule = new DTDispatchingRule(0.198, rule1);
+						rule = new DTDispatchingRule(0.198, new ScoreRemainingTime());
 					} else {
-						rule = new DTDispatchingRule(0.102, rule1);
+						rule = new DTDispatchingRule(0.102, new ScoreRemainingTime());
 					}
 				} else if (cwr > 10) {
-					rule = new DTDispatchingRule(0.102, rule1);
+					rule = new DTDispatchingRule(0.102, new ScoreRemainingTime());
 				} else {
-					rule = new DTDispatchingRule(0.131, rule1);
+					rule = new DTDispatchingRule(0.131, new ScoreRemainingTime());
 				}
 			} else if (cwr > 0.1) {
 				if (cwr > 0.8) {
-					rule = new DTDispatchingRule(0.014, rule2);
+					rule = new DTDispatchingRule(0.014, new OpSubtraction(new ERCRandom(0), new OpDivision(new ScorePenalty(), new ScoreProcessingTime())));
 				} else if (dj <= 0.3) {
-					rule = new DTDispatchingRule(0.198, rule3);
+					rule = new DTDispatchingRule(0.198, new OpSubtraction(new ERCRandom(0), new ScoreProcessingTime()));
 				} else {
-					rule = new DTDispatchingRule(0.131, rule1);
+					rule = new DTDispatchingRule(0.131, new ScoreRemainingTime());
 				}
 			} else if (cwr > 0.8) {
-				rule = new DTDispatchingRule(0.830, rule4);
+				rule = new DTDispatchingRule(0.830, new ScoreProcessingTime());
 			} else if (dj <= 0.2) {
-				rule = new DTDispatchingRule(0.198, rule3);
+				rule = new DTDispatchingRule(0.198, new OpSubtraction(new ERCRandom(0), new ScoreProcessingTime()));
 			} else {
-				rule = new DTDispatchingRule(0.102, rule1);
+				rule = new DTDispatchingRule(0.102, new ScoreRemainingTime());
 			}
 
 			return rule;
@@ -226,53 +248,5 @@ public class SuR1Solver extends JSSEvalSolver {
 			return node;
 		}
 	}
-	
-	// Old code that is used for active schedule inclusion.
-
-//	double earliestCompletionTime = Double.POSITIVE_INFINITY;
-//	double earliestReadyTime = Double.POSITIVE_INFINITY;
-//
-//	for (IJob job : problem.getJobs()) {
-//		if (!job.isProcessable(machine)) {
-//			continue;
-//		}
-//
-//		double readyTime;
-//		if (job.getProcessingMachine() == null && machine.equals(job.getCurrentMachine())) {
-//			readyTime = machine.getReadyTime();
-//		} else if (job.getProcessingMachine() != null && machine.equals(job.getNextMachine())) {
-//			readyTime = job.getProcessingMachine().getReadyTime();
-//		} else {
-//			continue;
-//		}
-//
-//		double completionTime = readyTime + job.getProcessingTime(machine);
-//
-//		earliestReadyTime = Math.min(earliestReadyTime, readyTime);
-//		earliestCompletionTime = Math.min(earliestCompletionTime, completionTime);
-//	}
-//
-//	DTDispatchingRule rule = getDispatchingRule(cmi, cwr, dj);
-//
-//	for (IJob job : problem.getJobs()) {
-//		double readyTime;
-//		if (job.getProcessingMachine() == null && machine.equals(job.getCurrentMachine())) {
-//			readyTime = machine.getReadyTime();
-//		} else if (job.getProcessingMachine() != null && machine.equals(job.getNextMachine())) {
-//			readyTime = job.getProcessingMachine().getReadyTime();
-//		} else {
-//			continue;
-//		}
-//
-//		if (readyTime <= earliestReadyTime + rule.getAlpha() * (earliestCompletionTime - earliestReadyTime)) {
-//			JSSEvalData data = new JSSEvalData(problem, machine, job, time);
-//
-//			double priority = rule.getNode().evaluate(data);
-//			if (priority > bestPriority) {
-//				bestPriority = priority;
-//				bestJob = job;
-//			}
-//		}
-//	}
 
 }

@@ -42,16 +42,9 @@ public class ScorePenalty extends GPNode {
 			final ADFStack stack,
 			final GPIndividual individual,
 			final Problem problem) {
-		long startTime = System.nanoTime();
-
 		JSSGPData data = (JSSGPData)input;
 
 		data.setPriority(data.getJob().getPenalty());
-
-		long endTime = System.nanoTime();
-		long timeDiff = endTime - startTime;
-
-		System.out.printf("Penalty: %d\n", timeDiff);
 	}
 
 }

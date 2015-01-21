@@ -42,16 +42,9 @@ public class ScoreDueDate extends GPNode {
 			final ADFStack stack,
 			final GPIndividual individual,
 			final Problem problem) {
-		long startTime = System.nanoTime();
-
 		JSSGPData data = (JSSGPData)input;
 
 		data.setPriority(data.getJob().getDueDate());
-
-		long endTime = System.nanoTime();
-		long timeDiff = endTime - startTime;
-
-		System.out.printf("Due date: %d\n", timeDiff);
 	}
 
 }
