@@ -15,6 +15,8 @@ import jss.problem.Statistics;
  */
 public class CoopTWTFitness implements ISimpleFitness {
 
+	public static final double LEARNING_RATIO = 0.5;
+
 	@Override
 	public void loadDataset(List<IProblemInstance> problems) {
 	}
@@ -24,9 +26,7 @@ public class CoopTWTFitness implements ISimpleFitness {
 		double twt = stats.getAverageTWT();
 		double penalty = ((PenaltyData) stats.getData(JSSGPGroupedProblem.TRACKER_DATA)).getAveragePenalty(0);
 
-		System.out.printf("%f %f\n", twt, penalty);
-
-		return twt + 0.5 * penalty; // TODO magic number.
+		return twt + LEARNING_RATIO * penalty;
 	}
 
 }

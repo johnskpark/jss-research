@@ -354,6 +354,7 @@ public class MultiMachineDJSEnsemble extends MultiMachineDJS
 
 		// Static Job Shop Objective : minimize total weighted tardiness
 		double totalWeightTard = 0.0;
+		double penalty = 0.0;
 		numProcessed = 0;
 
 		currentJob = jobs[0];
@@ -431,6 +432,7 @@ public class MultiMachineDJSEnsemble extends MultiMachineDJS
 						//state.output.systemMessage("		ID:"+currentJob.getArrID());
 						if(currentJob.getArrID()>=warmup && currentJob.getArrID()<(warmup+nmeas)){
 							totalWeightTard += currentJob.getWeight()*Math.max(0.0, currentTime - currentJob.getDuedate());
+							penalty += 0.0; // TODO add the penalty factor.
 							collected++;
 							//state.output.systemMessage("		ID:"+currentJob.getArrID()+"  in range collected:"+collected);
 						}
@@ -480,8 +482,7 @@ public class MultiMachineDJSEnsemble extends MultiMachineDJS
 		//state.output.systemMessage("Total Weighted Tardiness: "+totalWeightTard);
 		if(VERB==1)  state.output.systemMessage("");
 		if(test>0) state.output.systemMessage("Final Clock: "+currentTime);
-		// TODO need to add in the penalty factor.
-		return new double[]{totalWeightTard, 0};
+		return new double[]{totalWeightTard, penalty};
 	}
 
 
