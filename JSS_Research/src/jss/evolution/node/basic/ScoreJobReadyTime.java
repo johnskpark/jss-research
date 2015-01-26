@@ -39,7 +39,7 @@ public class ScoreJobReadyTime extends GPNode {
 			final Problem problem) {
 		JSSGPData data = (JSSGPData)input;
 
-		data.setPriority(data.getJob().getReadyTime());
+		data.setPriority(data.getJob().getQueueEntryTime());
 	}
 
 }
