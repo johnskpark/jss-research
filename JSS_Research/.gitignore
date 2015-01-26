@@ -77,3 +77,7 @@
 /su_rules_medium.txt
 /su_rules_small.txt
 /temp_output.csv
+/coop_10rules_nf_large.txt
+/coop_10rules_nf_medium.txt
+/coop_10rules_nf_small.txt
+/suDR_output.csv
