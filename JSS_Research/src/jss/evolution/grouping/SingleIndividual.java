@@ -1,13 +1,11 @@
 package jss.evolution.grouping;
 
-import java.util.List;
-
+import jss.evolution.IGroupedIndividual;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.gp.GPIndividual;
 import ec.gp.koza.KozaFitness;
 import ec.util.Parameter;
-import jss.evolution.IGroupedIndividual;
 
 public class SingleIndividual implements IGroupedIndividual {
 
@@ -22,7 +20,7 @@ public class SingleIndividual implements IGroupedIndividual {
 	@Override
 	public void groupIndividuals(final EvolutionState state, final int threadnum) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -40,7 +38,7 @@ public class SingleIndividual implements IGroupedIndividual {
 	@Override
 	public void clearForGeneration(final EvolutionState state) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -56,7 +54,7 @@ public class SingleIndividual implements IGroupedIndividual {
 	}
 
 	@Override
-	public List<GPIndividual[]> getGroups(Individual ind) {
+	public GPIndividual[][] getGroups(Individual ind) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -65,7 +63,7 @@ public class SingleIndividual implements IGroupedIndividual {
 	public void updateFitness(EvolutionState state, GPIndividual[] indGroup,
 			double fitness) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

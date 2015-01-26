@@ -31,6 +31,9 @@ public class NCLPriorityTracker extends PriorityTracker {
 		List<Double> indexPriorities = getAllPriorities().get(index);
 		double penalty = 0.0;
 
+		int groupSize = getAllPriorities().size();
+		int prioritySize = indexPriorities.size();
+
 		for (int i = 0; i < indexPriorities.size(); i++) {
 			double partialPenalty = 0.0;
 
@@ -42,7 +45,7 @@ public class NCLPriorityTracker extends PriorityTracker {
 				partialPenalty += (getAllPriorities().get(j).get(i) - 1);
 			}
 
-			penalty += indexPriorities.get(i) * partialPenalty / indexPriorities.size();
+			penalty += (indexPriorities.get(i) - 1) * partialPenalty / (groupSize * prioritySize);
 		}
 
 		return penalty;

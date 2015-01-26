@@ -1,9 +1,11 @@
 package jss.evolution.grouping;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import jss.evolution.IGroupedIndividual;
 import ec.EvolutionState;
@@ -27,7 +29,7 @@ public class EnsembleGroupedIndividual implements IGroupedIndividual {
 	private int groupSize = 1;
 	private int numIterations = 1;
 
-	private Map<GPIndividual, List<GPIndividual[]>> evalGroups = new HashMap<GPIndividual, List<GPIndividual[]>>();
+	private Map<Individual, GPIndividual[][]> evalGroups = new HashMap<Individual, GPIndividual[][]>();
 	private GPIndividual[] bestGroup = null;
 	private KozaFitness bestGroupFitness = new KozaFitness();
 
@@ -52,34 +54,31 @@ public class EnsembleGroupedIndividual implements IGroupedIndividual {
 		Individual[] inds = state.population.subpops[0].individuals;
 
 		for (int i = 0; i < inds.length; i++) {
-			evalGroups.put((GPIndividual) inds[i], new ArrayList<GPIndividual[]>());
+			GPIndividual[][] evalGroup = new GPIndividual[numIterations][groupSize];
 
-			List<GPIndividual> remainingInds = new ArrayList<GPIndividual>();
-			for (int j = 0; j < inds.length; j++) {
-				remainingInds.add((GPIndividual) inds[j]);
+			List<GPIndividual> remainingInds = new ArrayList<GPIndividual>(inds.length-1);
+			for (Individual ind : inds) {
+				remainingInds.add((GPIndividual) ind);
 			}
+			remainingInds.remove(inds[i]);
 
-			int iteration = 0;
-			while (iteration < numIterations && !remainingInds.isEmpty()) {
-				GPIndividual[] indGroup = new GPIndividual[groupSize];
-				indGroup[0] = (GPIndividual) inds[i];
+			Collections.shuffle(remainingInds, new Random(state.random[threadnum].nextLong()));
 
-				int count = 1;
-				while (count < groupSize && !remainingInds.isEmpty()) {
-					int index = state.random[threadnum].nextInt(remainingInds.size());
-					indGroup[count] = remainingInds.remove(index);
-
-					count++;
+			int index = 0;
+			for (int iteration = 0; iteration < numIterations; iteration++) {
+				evalGroup[iteration][0] = (GPIndividual) inds[i];
+				for (int count = 1; count < groupSize; count++) {
+					evalGroup[iteration][count] = remainingInds.get(index);
+					index++;
 				}
-				evalGroups.get(inds[i]).add(indGroup);
-
-				iteration++;
 			}
+
+			evalGroups.put(inds[i], evalGroup);
 		}
 	}
 
 	@Override
-	public List<GPIndividual[]> getGroups(Individual ind) {
+	public GPIndividual[][] getGroups(Individual ind) {
 		return evalGroups.get(ind);
 	}
 

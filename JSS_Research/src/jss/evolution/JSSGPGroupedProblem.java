@@ -109,10 +109,12 @@ public class JSSGPGroupedProblem extends GPProblem {
 			final int subpopulation,
 			final int threadnum) {
 		if (!ind.evaluated) {
+			long startTime = System.currentTimeMillis();
+
 			Statistics stats = new Statistics();
 			stats.addData(TRACKER_DATA, new PenaltyData());
 
-			List<GPIndividual[]> indGroups = individualGrouping.getGroups(ind);
+			GPIndividual[][] indGroups = individualGrouping.getGroups(ind);
 			for (GPIndividual[] indGroup : indGroups) {
 				tracker.loadIndividuals(indGroup);
 
@@ -146,6 +148,10 @@ public class JSSGPGroupedProblem extends GPProblem {
 			((KozaFitness)ind.fitness).setStandardizedFitness(state, fitness.getFitness(stats));
 
 			ind.evaluated = true;
+
+			long endTime = System.currentTimeMillis();
+			long timeDiff = endTime - startTime;
+			System.out.printf("Time diff: %d\n", timeDiff);
 		}
 	}
 

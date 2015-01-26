@@ -52,6 +52,10 @@ public class SinglePopEnsembleDR extends JSSGPRule {
 		double bestPrioritySums = 0.0;
 		int bestPrioritySumsIndex = -1;
 
+		getData().setProblem(problem);
+		getData().setMachine(machine);
+		getData().setCurrentTime(time);
+
 		for (int i = 0; i < getIndividuals().length; i++) {
 			double[] normalisedPriorities = getNormalisedPriorities(getIndividuals()[i],
 					processableJobs,
@@ -106,10 +110,7 @@ public class SinglePopEnsembleDR extends JSSGPRule {
 		double sum = 0.0;
 
 		for (int i = 0; i < processableJobs.size(); i++) {
-			getData().setProblem(problem);
 			getData().setJob(processableJobs.get(i));
-			getData().setMachine(machine);
-			getData().setCurrentTime(time);
 
 			gpInd.trees[0].child.eval(getState(), getThreadnum(), getData(), null, gpInd, null);
 
