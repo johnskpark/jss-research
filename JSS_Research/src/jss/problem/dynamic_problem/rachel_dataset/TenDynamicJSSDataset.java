@@ -47,7 +47,8 @@ public class TenDynamicJSSDataset implements IDataset {
 
 	private List<DynamicInstance> problemInstances = new ArrayList<DynamicInstance>();
 
-	private List<IProblemInstance> trainingSet = new ArrayList<IProblemInstance>();
+	private List<IProblemInstance> trainingSet4Op = new ArrayList<IProblemInstance>();
+	private List<IProblemInstance> trainingSet8Op = new ArrayList<IProblemInstance>();
 	private List<IProblemInstance> testingSet = new ArrayList<IProblemInstance>();
 
 	/**
@@ -78,35 +79,38 @@ public class TenDynamicJSSDataset implements IDataset {
 	}
 
 	private void generateTrainingSet() {
+		generateTrainingSet(0, trainingSet4Op);
+		generateTrainingSet(1, trainingSet8Op);
+	}
+	
+	private void generateTrainingSet(int numOpIndex, List<IProblemInstance> trainingSet) {
 		for (int i = 0; i < TRAINING_SIZE; i++) {
-			for (int j = 0; j < TRAINING_OPERATION_ORDER_SIZE; j++) {
-				int minOperations = PROCESSING_ORDER_GENERATORS[TRAINING_INDEX][i][0];
-				int maxOperations = PROCESSING_ORDER_GENERATORS[TRAINING_INDEX][i][1];
+			int minOperations = PROCESSING_ORDER_GENERATORS[TRAINING_INDEX][numOpIndex][0];
+			int maxOperations = PROCESSING_ORDER_GENERATORS[TRAINING_INDEX][numOpIndex][1];
 
-				double uniformMean = MEAN_PROCESSING_TIMES[TRAINING_INDEX][i];
-				double poissonMean = UTILISATION_RATES[TRAINING_INDEX][i] *
-						MEAN_PROCESSING_TIMES[TRAINING_INDEX][i] *
-						(minOperations + maxOperations) / (2.0 * NUM_MACHINES);
+			double uniformMean = MEAN_PROCESSING_TIMES[TRAINING_INDEX][i];
+			double poissonMean = UTILISATION_RATES[TRAINING_INDEX][i] *
+					MEAN_PROCESSING_TIMES[TRAINING_INDEX][i] *
+					(minOperations + maxOperations) / (2.0 * NUM_MACHINES);
 
-				double[] tightness = DUE_DATE_TIGHTNESS[TRAINING_INDEX][i];
+			double[] tightness = DUE_DATE_TIGHTNESS[TRAINING_INDEX][i];
 
-				DynamicInstance problemInstance = generateProblemInstance(minOperations,
-						maxOperations,
-						uniformMean,
-						poissonMean,
-						tightness);
+			DynamicInstance problemInstance = generateProblemInstance(minOperations,
+					maxOperations,
+					uniformMean,
+					poissonMean,
+					tightness);
 
-				problemInstances.add(problemInstance);
-				trainingSet.add(problemInstance);
-			}
+			problemInstances.add(problemInstance);
+			trainingSet.add(problemInstance);
 		}
 	}
 
 	private void generateTestingSet() {
 		for (int i = 0; i < TESTING_SIZE; i++) {
 			for (int j = 0; j < TESTING_OPERATION_ORDER_SIZE; j++) {
-				int minOperations = PROCESSING_ORDER_GENERATORS[TESTING_INDEX][i][0];
-				int maxOperations = PROCESSING_ORDER_GENERATORS[TESTING_INDEX][i][1];
+				int minOperations = PROCESSING_ORDER_GENERATORS[TESTING_INDEX][j][0];
+				int maxOperations = PROCESSING_ORDER_GENERATORS[TESTING_INDEX][j][1];
 
 				double uniformMean = MEAN_PROCESSING_TIMES[TESTING_INDEX][i];
 				double poissonMean = UTILISATION_RATES[TESTING_INDEX][i] *
@@ -193,7 +197,11 @@ public class TenDynamicJSSDataset implements IDataset {
 
 	@Override
 	public List<IProblemInstance> getTraining(ProblemSize problemSize) {
-		return trainingSet;
+		switch (problemSize) {
+		case SMALL_PROBLEM_SIZE: return trainingSet4Op;
+		case LARGE_PROBLEM_SIZE: return trainingSet8Op;
+		default: throw new RuntimeException("You done goofed");
+		}
 	}
 
 	@Override
