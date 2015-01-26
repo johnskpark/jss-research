@@ -42,6 +42,9 @@ public class MultiMachineDJSEnsemble extends MultiMachineDJS
 	private Individual[] bestGroupOfGeneration = null;
 	private double bestGroupOfGenerationFitness = Double.MAX_VALUE;
 
+	private double[][] priorities = null;
+	private double sumPriorities = 0;
+
 	public void setup(final EvolutionState state, final Parameter base)
 	{
 		super.setup(state, base);
@@ -112,6 +115,7 @@ public class MultiMachineDJSEnsemble extends MultiMachineDJS
 				int[] seeds = {18725838,  794921487};
 
 				double fitness = 0;
+				double penalty = 0;
 				int[] newSeeds = new int[seeds.length];
 				int k = (state.generation-(state.generation%10));
 				for(int m=0; m<newSeeds.length;m++){
@@ -129,6 +133,7 @@ public class MultiMachineDJSEnsemble extends MultiMachineDJS
 						results = simulate(state, ensemble, subpopulation, threadnum, util[i], DIST.UNIFORM, mu[i], 0.0, seeds[i], ddt[i],0);
 					}
 					fitness = fitness + results[0] / util[i];
+					penalty = penalty + results[1]; 
 				}
 
 				seeds[0] = 106345483;
@@ -149,12 +154,13 @@ public class MultiMachineDJSEnsemble extends MultiMachineDJS
 						results = simulate(state, ensemble, subpopulation, threadnum, util[i], DIST.UNIFORM, mu[i], 0.0, seeds[i], ddt[i],0);
 					}
 					fitness = fitness + results[0] / util[i];
+					penalty = penalty + results[1]; 
 				}
 				numOpsConstant=1;
 
-				// TODO need to add in the penalty.
 				fitness = fitness / ((double) seeds.length);
-				sumFitness += fitness;
+				penalty = penalty / ((double) seeds.length);
+				sumFitness += fitness * (1 + 0.5 * penalty); // TODO change number if need be.
 
 				if (fitness < bestGroupFitness) {
 					bestGroup = ensemble;
@@ -432,7 +438,7 @@ public class MultiMachineDJSEnsemble extends MultiMachineDJS
 						//state.output.systemMessage("		ID:"+currentJob.getArrID());
 						if(currentJob.getArrID()>=warmup && currentJob.getArrID()<(warmup+nmeas)){
 							totalWeightTard += currentJob.getWeight()*Math.max(0.0, currentTime - currentJob.getDuedate());
-							penalty += 0.0; // TODO add the penalty factor.
+							penalty += getPenalty(currentMachine.getCurrent());
 							collected++;
 							//state.output.systemMessage("		ID:"+currentJob.getArrID()+"  in range collected:"+collected);
 						}
@@ -482,9 +488,24 @@ public class MultiMachineDJSEnsemble extends MultiMachineDJS
 		//state.output.systemMessage("Total Weighted Tardiness: "+totalWeightTard);
 		if(VERB==1)  state.output.systemMessage("");
 		if(test>0) state.output.systemMessage("Final Clock: "+currentTime);
-		return new double[]{totalWeightTard, penalty};
+		return new double[]{totalWeightTard, penalty / ((double)collected)};
 	}
+	
+	private double getPenalty(int index) {
+		double[] indexPriorities = priorities[index];
+		double penalty = 0.0;
 
+		for (int i = 0; i < indexPriorities.length; i++) {
+			double partialPenalty = 0.0;
+			for (int j = 0; j < priorities.length; j++) {
+				if (index == j) continue;
+				partialPenalty += (priorities[j][i] - 1);
+			}
+			penalty += (indexPriorities[i] - 1) * partialPenalty / ((double)priorities.length);
+		}
+
+		return penalty;
+	}
 
 	/* Evaluates all jobs in the queue at the machine using the current dispatching rule.
 	 * The job with the highest priority is selected to be evaluated next.
@@ -508,7 +529,7 @@ public class MultiMachineDJSEnsemble extends MultiMachineDJS
 		//else 			state.output.systemMessage("Machine "+currentMachine.getMachineID()+" EDD");
 
 
-		double[][] priorities = new double[inds.length][currentMachine.getNumJobQueue()];
+		priorities = new double[inds.length][currentMachine.getNumJobQueue()];
 
 		for(j=0; j < currentMachine.getNumJobQueue(); j++){
 
@@ -559,6 +580,8 @@ public class MultiMachineDJSEnsemble extends MultiMachineDJS
 			int bestIndex = -1;
 			for (int k=0; k < priorities[j].length; k++) {
 				double normalisedPriority = Math.exp(priorities[j][k] - maxPriority - Math.log(sumPriority));
+				priorities[j][k] = normalisedPriority;
+				
 				if (normalisedPriority > bestPriority) {
 					bestPriority = normalisedPriority;
 					bestIndex = k;

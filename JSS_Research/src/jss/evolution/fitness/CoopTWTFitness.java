@@ -26,7 +26,7 @@ public class CoopTWTFitness implements ISimpleFitness {
 		double twt = stats.getAverageTWT();
 		double penalty = ((PenaltyData) stats.getData(JSSGPGroupedProblem.TRACKER_DATA)).getAveragePenalty(0);
 
-		return twt + LEARNING_RATIO * penalty;
+		return twt * (1.0 + LEARNING_RATIO * penalty);
 	}
 
 }

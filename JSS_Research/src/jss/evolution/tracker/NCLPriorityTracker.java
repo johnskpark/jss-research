@@ -31,21 +31,14 @@ public class NCLPriorityTracker extends PriorityTracker {
 		List<Double> indexPriorities = getAllPriorities().get(index);
 		double penalty = 0.0;
 
-		int groupSize = getAllPriorities().size();
-		int prioritySize = indexPriorities.size();
-
 		for (int i = 0; i < indexPriorities.size(); i++) {
 			double partialPenalty = 0.0;
-
 			for (int j = 0; j < getAllPriorities().size(); j++) {
-				if (index == j) {
-					continue;
-				}
-
+				if (index == j) continue;
 				partialPenalty += (getAllPriorities().get(j).get(i) - 1);
 			}
-
-			penalty += (indexPriorities.get(i) - 1) * partialPenalty / (groupSize * prioritySize);
+			penalty += (indexPriorities.get(i) - 1) * partialPenalty / 
+					(getAllPriorities().size() * indexPriorities.size());
 		}
 
 		return penalty;
