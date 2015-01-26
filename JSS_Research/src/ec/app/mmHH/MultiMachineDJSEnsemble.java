@@ -31,8 +31,8 @@ public class MultiMachineDJSEnsemble extends MultiMachineDJS
 	public static final String P_GROUP_SIZE = "group_size";
 	public static final String P_ITER = "iteration";
 
-	private int groupSize = 1;
-	private int numIterations = 1;
+	private int groupSize = 3;
+	private int numIterations = 10;
 
 	public Map<Individual, Individual[][]> evalGroups = new HashMap<Individual, Individual[][]>();
 
@@ -48,9 +48,14 @@ public class MultiMachineDJSEnsemble extends MultiMachineDJS
 	public void setup(final EvolutionState state, final Parameter base)
 	{
 		super.setup(state, base);
+		
+		Parameter def = defaultBase();
 
-		groupSize = state.parameters.getInt(base.push(P_GROUP_SIZE), null);
-		numIterations = state.parameters.getInt(base.push(P_ITER), null);
+		Parameter p = base.push(P_GROUP_SIZE);
+		groupSize = (int)(state.parameters.getIntWithDefault(p, def.push(P_GROUP_SIZE), 3));
+		
+		p = base.push(P_ITER);
+		numIterations = (int)(state.parameters.getIntWithDefault(p, def.push(P_ITER), 10));
 	}
 
 	@Override
@@ -438,7 +443,7 @@ public class MultiMachineDJSEnsemble extends MultiMachineDJS
 						//state.output.systemMessage("		ID:"+currentJob.getArrID());
 						if(currentJob.getArrID()>=warmup && currentJob.getArrID()<(warmup+nmeas)){
 							totalWeightTard += currentJob.getWeight()*Math.max(0.0, currentTime - currentJob.getDuedate());
-							penalty += getPenalty(currentMachine.getCurrent());
+							penalty += getPenalty(0); 
 							collected++;
 							//state.output.systemMessage("		ID:"+currentJob.getArrID()+"  in range collected:"+collected);
 						}
