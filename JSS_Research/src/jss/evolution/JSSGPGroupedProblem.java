@@ -76,6 +76,10 @@ public class JSSGPGroupedProblem extends GPProblem {
 			problemSizeSet = true;
 		}
 
+		List<IProblemInstance> trainingSet = (problemSizeSet) ?
+				dataset.getTraining(problemSize) : dataset.getProblems();
+		fitness.loadDataset(trainingSet);
+
 		// Set the grouping used to group the individuals together
 		individualGrouping = (IGroupedIndividual) state.parameters.getInstanceForParameterEq(base.push(P_GROUP), null, IGroupedIndividual.class);
 		individualGrouping.setup(state, base);
@@ -154,8 +158,13 @@ public class JSSGPGroupedProblem extends GPProblem {
 		JSSGPGroupedProblem newObject = (JSSGPGroupedProblem)super.clone();
 
 		newObject.input = (JSSGPData)input.clone();
-		newObject.dataset = dataset;
 		newObject.solver = solver;
+		newObject.dataset = dataset;
+		newObject.fitness = fitness;
+		newObject.problemSize = problemSize;
+		newObject.problemSizeSet = problemSizeSet;
+		newObject.individualGrouping = individualGrouping;
+		newObject.tracker = tracker;
 
 		return newObject;
 	}

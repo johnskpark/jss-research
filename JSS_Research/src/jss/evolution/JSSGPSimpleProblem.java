@@ -62,6 +62,10 @@ public class JSSGPSimpleProblem extends GPProblem {
 			problemSize = ProblemSize.strToProblemSize(problemSizeStr);
 			problemSizeSet = true;
 		}
+
+		List<IProblemInstance> trainingSet = (problemSizeSet) ?
+				dataset.getTraining(problemSize) : dataset.getProblems();
+		fitness.loadDataset(trainingSet);
 	}
 
 	@Override
@@ -70,6 +74,8 @@ public class JSSGPSimpleProblem extends GPProblem {
 			final int subpopulation,
 			final int threadnum) {
 		if (!ind.evaluated) {
+			long startTime = System.currentTimeMillis();
+
 			Statistics stats = new Statistics();
 
 			JSSGPConfiguration config = new JSSGPConfiguration();
@@ -102,8 +108,11 @@ public class JSSGPSimpleProblem extends GPProblem {
 		JSSGPSimpleProblem newObject = (JSSGPSimpleProblem)super.clone();
 
 		newObject.input = (JSSGPData)input.clone();
-		newObject.dataset = dataset;
 		newObject.solver = solver;
+		newObject.dataset = dataset;
+		newObject.fitness = fitness;
+		newObject.problemSize = problemSize;
+		newObject.problemSizeSet = problemSizeSet;
 
 		return newObject;
 	}

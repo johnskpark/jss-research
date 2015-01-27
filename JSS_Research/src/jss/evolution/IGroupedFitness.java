@@ -1,6 +1,7 @@
 package jss.evolution;
 
 import jss.problem.Statistics;
+import ec.Setup;
 
 /**
  * Represents the fitness of the individual in the GP population for grouped
@@ -9,7 +10,7 @@ import jss.problem.Statistics;
  * @author parkjohn
  *
  */
-public interface IGroupedFitness {
+public interface IGroupedFitness extends Setup {
 
 	/**
 	 * Get the fitness from the solution statistics obtained from a training run.

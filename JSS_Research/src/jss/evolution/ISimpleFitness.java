@@ -4,6 +4,7 @@ import java.util.List;
 
 import jss.IProblemInstance;
 import jss.problem.Statistics;
+import ec.Setup;
 
 /**
  * Represents the fitness of the individual in the GP population for simple
@@ -12,7 +13,7 @@ import jss.problem.Statistics;
  * @author parkjohn
  *
  */
-public interface ISimpleFitness {
+public interface ISimpleFitness extends Setup {
 
 	/**
 	 * TODO javadoc.

@@ -2,6 +2,8 @@ package jss.evolution.fitness;
 
 import java.util.List;
 
+import ec.EvolutionState;
+import ec.util.Parameter;
 import jss.IProblemInstance;
 import jss.evolution.ISimpleFitness;
 import jss.problem.Statistics;
@@ -13,10 +15,16 @@ import jss.problem.Statistics;
  */
 public class MakespanDeviationFitness implements ISimpleFitness {
 
+	private static final long serialVersionUID = 3228606491209119832L;
+
 	/**
 	 * TODO javadoc.
 	 */
 	public MakespanDeviationFitness() {
+	}
+
+	@Override
+	public void setup(final EvolutionState state, final Parameter base) {
 	}
 
 	@Override

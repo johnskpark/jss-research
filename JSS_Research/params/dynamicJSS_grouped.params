@@ -61,11 +61,12 @@ eval.problem.instances = jss.problem.dynamic_problem.rachel_dataset.TenDynamicJS
 eval.problem.instances_seed = 15
 
 eval.problem.solver = jss.evolution.solver.SinglePopEnsembleSolver
-eval.problem.fitness = jss.evolution.fitness.TWTFitness
+eval.problem.fitness = jss.evolution.fitness.CoopTWTFitness
+eval.problem.ratio = 0.0;
 
 eval.problem.group = jss.evolution.grouping.EnsembleGroupedIndividual
 eval.problem.group_size = 3
-eval.problem.iteration = 10
+eval.problem.iteration = 3
 
 eval.problem.tracker = jss.evolution.tracker.NCLPriorityTracker
 
@@ -74,3 +75,6 @@ eval.problem.size = small
 
 # seed.0=26556
 seed.0=17
+
+pop.subpop.0.size = 256
+generations = 25

@@ -12,6 +12,8 @@ import jss.ISolver;
 import jss.evolution.ISimpleFitness;
 import jss.problem.CompletelyReactiveSolver;
 import jss.problem.Statistics;
+import ec.EvolutionState;
+import ec.util.Parameter;
 
 /**
  * TODO javadoc.
@@ -19,6 +21,8 @@ import jss.problem.Statistics;
  *
  */
 public class HildebrandtFitness implements ISimpleFitness {
+
+	private static final long serialVersionUID = -4145970305812990734L;
 
 	private ISolver benchmarkSolver;
 	private Statistics benchmarkStats;
@@ -36,6 +40,10 @@ public class HildebrandtFitness implements ISimpleFitness {
 		benchmarkSolver = solver;
 		benchmarkStats = new Statistics();
 		benchmarkLoaded = false;
+	}
+
+	@Override
+	public void setup(final EvolutionState state, final Parameter base) {
 	}
 
 	@Override
