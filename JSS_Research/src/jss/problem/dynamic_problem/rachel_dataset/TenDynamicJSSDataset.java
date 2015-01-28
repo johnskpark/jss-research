@@ -35,7 +35,6 @@ public class TenDynamicJSSDataset implements IDataset {
 			{{4, 4}, {8, 8}},
 			{{4, 4}, {6, 6}, {8, 8}, {10, 10}, {2, 10}}
 	};
-	private static final int TRAINING_OPERATION_ORDER_SIZE = 2;
 	private static final int TESTING_OPERATION_ORDER_SIZE = 5;
 
 	private static final int NUM_MACHINES = 10;
@@ -82,7 +81,7 @@ public class TenDynamicJSSDataset implements IDataset {
 		generateTrainingSet(0, trainingSet4Op);
 		generateTrainingSet(1, trainingSet8Op);
 	}
-	
+
 	private void generateTrainingSet(int numOpIndex, List<IProblemInstance> trainingSet) {
 		for (int i = 0; i < TRAINING_SIZE; i++) {
 			int minOperations = PROCESSING_ORDER_GENERATORS[TRAINING_INDEX][numOpIndex][0];
