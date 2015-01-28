@@ -4,7 +4,8 @@ import jss.IResult;
 import jss.evaluation.IFitness;
 
 /**
- * TODO javadoc.
+ * Fitness class, where the performance of the solution is measured by
+ * the makespan value.
  * @author parkjohn
  *
  */

@@ -34,7 +34,11 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
- * TODO javadoc.
+ * The "main" class that carries out the evaluation procedure for a set of
+ * rules over a dataset.
+ *
+ * The rules, dataset and performance measure are loaded in using an XML file.
+ * The syntax for the XML file is given by jss_evaluation.xsd.
  *
  * @author John Park
  *
@@ -66,7 +70,7 @@ public class JSSEvalProblem {
 	private RuleParser parser = new RuleParser();
 
 	/**
-	 * TODO javadoc.
+	 * Instantiate a new instance of the evaluation procedure.
 	 * @param xmlFilename
 	 * @throws Exception
 	 */
