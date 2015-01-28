@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<evaluationConfig>
+	<solverConfig>
+		<solverClass>jss.evaluation.solvers.PriorityBasedSolver</solverClass>
+		<solverFile>
+			<ruleNum>1</ruleNum>
+			<ruleFile>4op_edr.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>jss.evaluation.solvers.PriorityBasedSolver</solverClass>
+		<solverFile>
+			<ruleNum>1</ruleNum>
+			<ruleFile>8op_edr.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<datasetConfig>
+		<datasetClass>jss.problem.dynamic_problem.rachel_dataset.TenDynamicJSSDataset</datasetClass>
+	</datasetConfig>
+</evaluationConfig>

@@ -14,6 +14,12 @@ import jss.ISubscriptionHandler;
 
 /**
  * TODO javadoc.
+ *
+ * TODO the following functionalities need to be added:
+ * - Removing event handlers that will not fire events in the future.
+ * - Being able to define parallel and flexible job shop.
+ * - Early termination for ineffective schedulers (in the dynamic case).
+ *
  * @author parkjohn
  *
  */
@@ -23,6 +29,7 @@ public abstract class BaseInstance implements IProblemInstance, ISubscriptionHan
 
 	private Set<BaseMachine> machines = new HashSet<BaseMachine>();
 	private Set<IMachine> availableMachines = new HashSet<IMachine>();
+	private List<IMachine> unavailableMachines = new ArrayList<IMachine>();
 
 	private List<IEventHandler> eventHandlers = new ArrayList<IEventHandler>();
 
@@ -109,10 +116,6 @@ public abstract class BaseInstance implements IProblemInstance, ISubscriptionHan
 	public void onSubscriptionRequest(ISubscriber subscriber) {
 		subscribers.add(subscriber);
 	}
-
-	// TODO make this more standardised.
-
-	private List<IMachine> unavailableMachines = new ArrayList<IMachine>(machines.size());
 
 	public List<IMachine> getUnavailableMachines() {
 		return unavailableMachines;
