@@ -10,17 +10,21 @@ import java.util.List;
  */
 public interface IDataset {
 
+	/**
+	 * Set the seed for generating the dataset, if the dataset is generated
+	 * procedurally.
+	 * @param s the seed value.
+	 */
 	public void setSeed(long s);
 
 	/**
-	 * TODO javadoc.
+	 * Generate the dataset.
 	 */
 	public void generateDataset();
 
 	/**
 	 * Get the list of Job Shop Scheduling problem instances stored in the
 	 * dataset.
-	 * @return
 	 */
 	public List<IProblemInstance> getProblems();
 
@@ -30,14 +34,12 @@ public interface IDataset {
 	 * @param problemSize Specifies the size and complexity of the problem
 	 *                    instances that should be extracted for the training
 	 *                    set.
-	 * @return
 	 */
 	public List<IProblemInstance> getTraining(ProblemSize problemSize);
 
 	/**
 	 * Get a partial list of the problem instances for a test set that can be
 	 * used for testing the trained model.
-	 * @return
 	 */
 	public List<IProblemInstance> getTesting();
 

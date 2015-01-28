@@ -35,8 +35,6 @@ public abstract class BaseInstance implements IProblemInstance, ISubscriptionHan
 
 	private List<ISubscriber> subscribers = new ArrayList<ISubscriber>();
 
-	// TODO the event handlers
-
 	/**
 	 * Generate a new dynamic job shop scheduling problem instance.
 	 */
