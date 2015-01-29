@@ -74,8 +74,6 @@ public class JSSGPSimpleProblem extends GPProblem {
 			final int subpopulation,
 			final int threadnum) {
 		if (!ind.evaluated) {
-			long startTime = System.currentTimeMillis();
-
 			Statistics stats = new Statistics();
 
 			JSSGPConfiguration config = new JSSGPConfiguration();

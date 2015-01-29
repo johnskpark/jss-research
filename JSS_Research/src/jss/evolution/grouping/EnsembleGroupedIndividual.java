@@ -15,7 +15,7 @@ import ec.gp.koza.KozaFitness;
 import ec.util.Parameter;
 
 /**
- * Right, let's do this. TODO javadoc sometime in the future.
+ * TODO javadoc.
  * @author John Park
  *
  */

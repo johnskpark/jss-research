@@ -62,7 +62,7 @@ eval.problem.instances_seed = 15
 
 eval.problem.solver = jss.evolution.solver.SinglePopEnsembleSolver
 eval.problem.fitness = jss.evolution.fitness.CoopTWTFitness
-eval.problem.ratio = 1.0;
+eval.problem.ratio = 0.5;
 
 eval.problem.group = jss.evolution.grouping.EnsembleGroupedIndividual
 eval.problem.group_size = 3
