@@ -3,6 +3,8 @@ package jss.evolution.fitness;
 import java.util.List;
 
 import ec.EvolutionState;
+import ec.Individual;
+import ec.gp.koza.KozaFitness;
 import ec.util.Parameter;
 import jss.IProblemInstance;
 import jss.evolution.ISimpleFitness;
@@ -34,6 +36,15 @@ public class MakespanFitness implements ISimpleFitness {
 	@Override
 	public double getFitness(Statistics stats) {
 		return stats.getAverageMakespan();
+	}
+
+	@Override
+	public void setFitness(final EvolutionState state,
+			final Individual ind,
+			final Statistics stats) {
+		double fitness = getFitness(stats);
+
+		((KozaFitness)ind.fitness).setStandardizedFitness(state, fitness);
 	}
 
 }

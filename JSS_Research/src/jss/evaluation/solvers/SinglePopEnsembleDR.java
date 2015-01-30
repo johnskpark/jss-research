@@ -64,6 +64,8 @@ public class SinglePopEnsembleDR implements IActionHandler {
 			}
 		}
 
+		System.out.println();
+
 		IJob mostVotedJob = processableJobs.get(bestPrioritySumsIndex);
 
 		return mostVotedJob;
@@ -79,6 +81,8 @@ public class SinglePopEnsembleDR implements IActionHandler {
 				bestIndex = i;
 			}
 		}
+
+		System.out.printf("%d,", bestIndex);
 
 		return bestIndex;
 	}

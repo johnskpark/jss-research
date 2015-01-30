@@ -11,7 +11,6 @@ import ec.EvolutionState;
 import ec.Individual;
 import ec.gp.GPIndividual;
 import ec.gp.GPProblem;
-import ec.gp.koza.KozaFitness;
 import ec.util.Parameter;
 
 /**
@@ -93,9 +92,7 @@ public class JSSGPSimpleProblem extends GPProblem {
 				stats.addSolution(problem, solution);
 			}
 
-			double f = fitness.getFitness(stats);
-
-			((KozaFitness)ind.fitness).setStandardizedFitness(state, f);
+			fitness.setFitness(state, ind, stats);
 
 			ind.evaluated = true;
 		}

@@ -13,6 +13,8 @@ import jss.evolution.ISimpleFitness;
 import jss.problem.CompletelyReactiveSolver;
 import jss.problem.Statistics;
 import ec.EvolutionState;
+import ec.Individual;
+import ec.gp.koza.KozaFitness;
 import ec.util.Parameter;
 
 /**
@@ -84,6 +86,15 @@ public class HildebrandtFitness implements ISimpleFitness {
 		fullSystemPenalty = 1.0 / (Math.min(0.9, 1.0 * numJobs / benchmarkNumJobs));
 
 		return performanceIndex * fullSystemPenalty;
+	}
+
+	@Override
+	public void setFitness(final EvolutionState state,
+			final Individual ind,
+			final Statistics stats) {
+		double fitness = getFitness(stats);
+
+		((KozaFitness)ind.fitness).setStandardizedFitness(state, fitness);
 	}
 
 	/**

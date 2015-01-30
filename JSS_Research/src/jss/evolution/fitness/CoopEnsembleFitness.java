@@ -1,11 +1,16 @@
 package jss.evolution.fitness;
 
-import ec.EvolutionState;
-import ec.util.Parameter;
+import java.util.List;
+
+import jss.IProblemInstance;
 import jss.evolution.IGroupedFitness;
 import jss.evolution.JSSGPCoopProblem;
 import jss.evolution.statistic_data.PenaltyData;
 import jss.problem.Statistics;
+import ec.EvolutionState;
+import ec.Individual;
+import ec.gp.koza.KozaFitness;
+import ec.util.Parameter;
 
 /**
  * TODO javadoc.
@@ -36,10 +41,24 @@ public class CoopEnsembleFitness implements IGroupedFitness {
 	}
 
 	@Override
+	public void loadDataset(List<IProblemInstance> problems) {
+	}
+
+	@Override
 	public double getFitness(Statistics stats, int index) {
 		PenaltyData penaltyData = (PenaltyData) stats.getData(JSSGPCoopProblem.TRACKER_DATA);
 
 		return stats.getAverageMakespanDeviation() * (1 + diversityRatio * penaltyData.getAveragePenalty(index));
+	}
+
+	@Override
+	public void setFitness(final EvolutionState state,
+			final Individual ind,
+			final Statistics stats,
+			final int index) {
+		double fitness = getFitness(stats, index);
+
+		((KozaFitness)ind.fitness).setStandardizedFitness(state, fitness);
 	}
 
 }

@@ -3,6 +3,8 @@ package jss.evolution.fitness;
 import java.util.List;
 
 import ec.EvolutionState;
+import ec.Individual;
+import ec.gp.koza.KozaFitness;
 import ec.util.Parameter;
 import jss.IProblemInstance;
 import jss.evolution.ISimpleFitness;
@@ -23,6 +25,12 @@ public class CoopTWTFitness implements ISimpleFitness {
 
 	public double diversityRatio;
 
+	/**
+	 * TODO javadoc.
+	 */
+	public CoopTWTFitness() {
+	}
+
 	@Override
 	public void loadDataset(List<IProblemInstance> problems) {
 	}
@@ -42,6 +50,15 @@ public class CoopTWTFitness implements ISimpleFitness {
 		double penalty = ((PenaltyData) stats.getData(JSSGPGroupedProblem.TRACKER_DATA)).getAveragePenalty(0);
 
 		return twt * (1.0 + diversityRatio * penalty);
+	}
+
+	@Override
+	public void setFitness(final EvolutionState state,
+			final Individual ind,
+			final Statistics stats) {
+		double fitness = getFitness(stats);
+
+		((KozaFitness)ind.fitness).setStandardizedFitness(state, fitness);
 	}
 
 }

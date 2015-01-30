@@ -4,7 +4,7 @@
 		<solverClass>jss.evaluation.solvers.SinglePopEnsembleSolver</solverClass>
 		<solverFile>
 			<ruleNum>3</ruleNum>
-			<ruleFile>4op_edr_full.txt</ruleFile>
+			<ruleFile>4op_edr_half.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
@@ -12,7 +12,7 @@
 		<solverClass>jss.evaluation.solvers.SinglePopEnsembleSolver</solverClass>
 		<solverFile>
 			<ruleNum>3</ruleNum>
-			<ruleFile>8op_edr_full.txt</ruleFile>
+			<ruleFile>8op_edr_half.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 

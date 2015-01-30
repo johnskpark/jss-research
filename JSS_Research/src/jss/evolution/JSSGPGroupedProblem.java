@@ -147,7 +147,7 @@ public class JSSGPGroupedProblem extends GPProblem {
 				individualGrouping.updateFitness(state, indGroup, groupFitness);
 			}
 
-			((KozaFitness)ind.fitness).setStandardizedFitness(state, fitness.getFitness(stats));
+			fitness.setFitness(state, ind, stats);
 
 			ind.evaluated = true;
 		}

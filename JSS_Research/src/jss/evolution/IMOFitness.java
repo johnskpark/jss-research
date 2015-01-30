@@ -9,17 +9,17 @@ import ec.Individual;
 import ec.Setup;
 
 /**
- * Represents the fitness of the individual in the GP population for grouped
- * problems.
+ * Represents the fitness of the individual in the GP population for
+ * multi-objective problems.
  *
  * @author parkjohn
  *
  */
-public interface IGroupedFitness extends Setup {
+public interface IMOFitness extends Setup {
 
 	/**
-	 * Load in the training set if the fitness measure requires it for
-	 * certain calculations (e.g. calculating upper bound).
+	 * Load in the training set if the fitness measure requires it for certain
+	 * calculations (e.g. calculating upper bound).
 	 * @param problems
 	 */
 	public void loadDataset(List<IProblemInstance> problems);
@@ -27,7 +27,7 @@ public interface IGroupedFitness extends Setup {
 	/**
 	 * Get the fitness from the solution statistics obtained from a training run.
 	 */
-	public double getFitness(Statistics stats, int index);
+	public double[] getFitness(Statistics stats);
 
 	/**
 	 * Set the fitness of the individual from the statistic obtained from
@@ -35,7 +35,5 @@ public interface IGroupedFitness extends Setup {
 	 */
 	public void setFitness(final EvolutionState state,
 			final Individual ind,
-			final Statistics stats,
-			final int index);
-
+			final Statistics stats);
 }
