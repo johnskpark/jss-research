@@ -82,7 +82,8 @@ public class JasimaSimpleProblem extends GPProblem {
 
 		experiment.setNumMachines(simConfig.getNumMachines(index));
 		experiment.setUtilLevel(simConfig.getUtilLevel(index));
-		experiment.setDueDateFactor(0); // TODO
+		experiment.setDueDateFactor(simConfig.getDueDateFactor(index));
+		experiment.setWeights(simConfig.getWeight(index));
 		experiment.setOpProcTime(simConfig.getMinOpProc(index), simConfig.getMaxOpProc(index));
 		experiment.setNumOps(simConfig.getMinNumOps(index), simConfig.getMaxNumOps(index));
 		experiment.setInitialSeed(simConfig.getSeed());

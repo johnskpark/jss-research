@@ -1,5 +1,6 @@
 package app.evolution.simConfig.rachelConfig;
 
+import jasima.core.random.continuous.DblStream;
 import app.SimulatorConfiguration;
 
 public class EightOpSimConfig extends SimulatorConfiguration {
@@ -12,6 +13,15 @@ public class EightOpSimConfig extends SimulatorConfiguration {
 	private static final int NUM_MACHINES = 10;
 	
 	private static final int NUM_CONFIG = 2;
+
+	private DblStream weightStream;
+	
+	@Override
+	public void setSeed(long seed) {
+		super.setSeed(seed);
+		
+		weightStream = new WeightStream(seed);
+	}
 	
 	@Override
 	public int getNumMachines(int index) {
@@ -36,6 +46,11 @@ public class EightOpSimConfig extends SimulatorConfiguration {
 	@Override
 	public double getDueDateFactor(int index) {
 		return 0; // TODO
+	}
+
+	@Override
+	public DblStream getWeight(int index) {
+		return weightStream;
 	}
 	
 	@Override

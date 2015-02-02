@@ -1,5 +1,7 @@
 package app;
 
+import jasima.core.random.continuous.DblStream;
+
 public abstract class SimulatorConfiguration {
 
 	// TODO store configuration for the simulator.
@@ -23,6 +25,8 @@ public abstract class SimulatorConfiguration {
 	public abstract double getUtilLevel(int index);
 	
 	public abstract double getDueDateFactor(int index);
+	
+	public abstract DblStream getWeight(int index);
 	
 	public abstract int getMinNumOps(int index);
 
