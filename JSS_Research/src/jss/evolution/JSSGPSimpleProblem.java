@@ -31,7 +31,7 @@ public class JSSGPSimpleProblem extends GPProblem {
 
 	private JSSGPSolver solver;
 	private IDataset dataset;
-	private ISimpleFitness fitness;
+	private IFitness fitness;
 
 	private ProblemSize problemSize;
 	private boolean problemSizeSet = false;
@@ -47,7 +47,7 @@ public class JSSGPSimpleProblem extends GPProblem {
 		// Setup the dataset and the solver
 		solver = (JSSGPSolver) state.parameters.getInstanceForParameterEq(base.push(P_SOLVER), null, JSSGPSolver.class);
 		dataset = (IDataset) state.parameters.getInstanceForParameterEq(base.push(P_INSTANCES), null, IDataset.class);
-		fitness = (ISimpleFitness) state.parameters.getInstanceForParameterEq(base.push(P_FITNESS), null, ISimpleFitness.class);
+		fitness = (IFitness) state.parameters.getInstanceForParameterEq(base.push(P_FITNESS), null, IFitness.class);
 
 		String datasetSeedStr = state.parameters.getString(base.push(P_INSTANCES_SEED), null);
 		if (datasetSeedStr != null) {
