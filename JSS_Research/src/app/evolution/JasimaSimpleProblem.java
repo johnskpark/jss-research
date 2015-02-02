@@ -62,26 +62,29 @@ public class JasimaSimpleProblem extends GPProblem {
 
 			rule.setConfiguration(config);
 
-			Experiment experiment = getExperiment(state, rule);
-
-			experiment.runExperiment();
-			experiment.getResults();
-
-			fitness.setFitness(state, ind, experiment.getResults());
+			// TODO
+			for (int i = 0; i < simConfig.getNumConfigs(); i++) {
+				Experiment experiment = getExperiment(state, rule, i);
+	
+				experiment.runExperiment();
+				experiment.getResults();
+				
+				fitness.setFitness(state, ind, experiment.getResults());
+			}
 
 			ind.evaluated = true;
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	private Experiment getExperiment(final EvolutionState state, AbsPriorityRule rule) {
+	private Experiment getExperiment(final EvolutionState state, AbsPriorityRule rule, int index) {
 		DynamicShopExperiment experiment = new DynamicShopExperiment();
 
-		experiment.setNumMachines(simConfig.getNumMachines());
-		experiment.setUtilLevel(simConfig.getUtilLevel());
+		experiment.setNumMachines(simConfig.getNumMachines(index));
+		experiment.setUtilLevel(simConfig.getUtilLevel(index));
 		experiment.setDueDateFactor(0); // TODO
-		experiment.setOpProcTime(simConfig.getMinOpProc(), simConfig.getMaxOpProc());
-		experiment.setNumOps(simConfig.getMinNumOps(), simConfig.getMaxNumOps());
+		experiment.setOpProcTime(simConfig.getMinOpProc(index), simConfig.getMaxOpProc(index));
+		experiment.setNumOps(simConfig.getMinNumOps(index), simConfig.getMaxNumOps(index));
 		experiment.setInitialSeed(simConfig.getSeed());
 
 		experiment.setShopListener(new NotifierListener[]{new BasicJobStatCollector()});

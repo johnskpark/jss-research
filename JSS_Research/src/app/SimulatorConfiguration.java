@@ -13,17 +13,21 @@ public abstract class SimulatorConfiguration {
 	public void setSeed(long s) {
 		seed = s;
 	}
-
-	public abstract int getNumMachines();
 	
-	public abstract double getUtilLevel();
+	public abstract int getNumMachines(int index);
 	
-	public abstract int getMinOpProc();
+	public abstract int getMinOpProc(int index);
 	
-	public abstract int getMaxOpProc();
+	public abstract int getMaxOpProc(int index);
 
-	public abstract int getMinNumOps();
+	public abstract double getUtilLevel(int index);
+	
+	public abstract double getDueDateFactor(int index);
+	
+	public abstract int getMinNumOps(int index);
 
-	public abstract int getMaxNumOps();
+	public abstract int getMaxNumOps(int index);
+
+	public abstract int getNumConfigs();
 
 }
