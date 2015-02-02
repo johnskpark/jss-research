@@ -55,7 +55,6 @@ public class DynamicShopExperiment extends JobShopExperiment {
 	};
 
 	private static final double DEF_UTIL = 0.85d;
-	private static final double DEF_DUE_DATE = 4.0d;
 	private static final int DEF_MACHINES = 10;
 	private static final int DEF_OPS_MIN = -1;
 	private static final int DEF_OPS_MAX = -1;
@@ -65,7 +64,7 @@ public class DynamicShopExperiment extends JobShopExperiment {
 	private static final double MINUTES_PER_DAY = 24 * 60;
 
 	private double utilLevel = DEF_UTIL;
-	private double dueDateFactor = DEF_DUE_DATE;
+	private DblStream dueDateFactor = null;
 	private int numMachines = DEF_MACHINES;
 	private Scenario scenario = Scenario.JOB_SHOP;
 	private DblStream weights = null;
@@ -182,7 +181,13 @@ public class DynamicShopExperiment extends JobShopExperiment {
 		src.setMachIdx(new IntUniformRange("machIdxStream", 0,
 				getNumMachines() - 1));
 
-		src.setDueDateFactors(new DblConst(getDueDateFactor()));
+		if (getDueDateFactor() != null) {
+			try {
+				src.setDueDateFactors(getDueDateFactor().clone());
+			} catch (CloneNotSupportedException e) {
+				throw new RuntimeException(e);
+			}
+		}
 
 		if (getWeights() != null)
 			try {
@@ -225,11 +230,11 @@ public class DynamicShopExperiment extends JobShopExperiment {
 		this.utilLevel = utilLevel;
 	}
 
-	public double getDueDateFactor() {
+	public DblStream getDueDateFactor() {
 		return dueDateFactor;
 	}
 
-	public void setDueDateFactor(double dueDateFactor) {
+	public void setDueDateFactor(DblStream dueDateFactor) {
 		this.dueDateFactor = dueDateFactor;
 	}
 

@@ -14,12 +14,14 @@ public class EightOpSimConfig extends SimulatorConfiguration {
 	
 	private static final int NUM_CONFIG = 2;
 
+	private DblStream dueDateFactorStream;
 	private DblStream weightStream;
 	
 	@Override
 	public void setSeed(long seed) {
 		super.setSeed(seed);
 		
+		dueDateFactorStream = new TrainDDFStream(seed);
 		weightStream = new WeightStream(seed);
 	}
 	
@@ -44,8 +46,8 @@ public class EightOpSimConfig extends SimulatorConfiguration {
 	}
 	
 	@Override
-	public double getDueDateFactor(int index) {
-		return 0; // TODO
+	public DblStream getDueDateFactor(int index) {
+		return dueDateFactorStream; 
 	}
 
 	@Override

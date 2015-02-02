@@ -24,7 +24,7 @@ public abstract class SimulatorConfiguration {
 
 	public abstract double getUtilLevel(int index);
 	
-	public abstract double getDueDateFactor(int index);
+	public abstract DblStream getDueDateFactor(int index);
 	
 	public abstract DblStream getWeight(int index);
 	
