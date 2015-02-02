@@ -181,20 +181,23 @@ public class DynamicShopExperiment extends JobShopExperiment {
 		src.setMachIdx(new IntUniformRange("machIdxStream", 0,
 				getNumMachines() - 1));
 
-		if (getDueDateFactor() != null) {
-			try {
-				src.setDueDateFactors(getDueDateFactor().clone());
-			} catch (CloneNotSupportedException e) {
-				throw new RuntimeException(e);
-			}
-		}
-
-		if (getWeights() != null)
-			try {
-				src.setJobWeights(getWeights().clone());
-			} catch (CloneNotSupportedException e) {
-				throw new RuntimeException(e);
-			}
+		src.setDueDateFactors(getDueDateFactor());
+		
+		src.setJobWeights(getWeights());
+//		if (getDueDateFactor() != null) {
+//			try {
+//				src.setDueDateFactors(getDueDateFactor().clone());
+//			} catch (CloneNotSupportedException e) {
+//				throw new RuntimeException(e);
+//			}
+//		}
+//
+//		if (getWeights() != null)
+//			try {
+//				src.setJobWeights(getWeights().clone());
+//			} catch (CloneNotSupportedException e) {
+//				throw new RuntimeException(e);
+//			}
 
 		return src;
 	}

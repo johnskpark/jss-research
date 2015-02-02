@@ -39,6 +39,7 @@ public class JasimaSimpleProblem extends GPProblem {
 		// Setup the dataset and the solver
 		rule = (AbsPriorityRule) state.parameters.getInstanceForParameterEq(base.push(P_RULE), null, AbsPriorityRule.class);
 		fitness = (IJasimaFitness) state.parameters.getInstanceForParameterEq(base.push(P_FITNESS), null, IJasimaFitness.class);
+		simConfig = (SimulatorConfiguration) state.parameters.getInstanceForParameterEq(base.push(P_SIMULATOR), null, SimulatorConfiguration.class);
 
 		setupSimulator(state, base.push(P_SIMULATOR));
 	}
@@ -61,11 +62,12 @@ public class JasimaSimpleProblem extends GPProblem {
 			config.setData((JasimaGPData)input);
 
 			rule.setConfiguration(config);
-
+			
 			for (int i = 0; i < simConfig.getNumConfigs(); i++) {
 				Experiment experiment = getExperiment(state, rule, i);
 	
 				experiment.runExperiment();
+				
 				fitness.accumulateFitness(experiment.getResults());
 			}
 			
