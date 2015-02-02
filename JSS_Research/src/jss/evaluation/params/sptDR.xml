@@ -5,10 +5,10 @@
 	</solverConfig>
 
 	<datasetConfig>
-		<datasetClass>jss.problem.static_problem.taillard_dataset.TaillardDataset</datasetClass>
+		<datasetClass>jss.problem.dynamic_problem.rachel_dataset.TenDynamicJSSDataset</datasetClass>
 	</datasetConfig>
 
 	<fitnessConfig>
-		<fitnessClass>jss.evaluation.fitness.MakespanFitness</fitnessClass>
+		<fitnessClass>jss.evaluation.fitness.TWTFitness</fitnessClass>
 	</fitnessConfig>
 </evaluationConfig>
