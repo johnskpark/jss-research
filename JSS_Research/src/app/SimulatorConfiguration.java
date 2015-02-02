@@ -1,37 +1,10 @@
 package app;
 
-public class SimulatorConfiguration {
+public abstract class SimulatorConfiguration {
 
 	// TODO store configuration for the simulator.
 
-	private double meanProcTime;
-	private int numOps;
-
 	private long seed;
-
-	public double getMeanProcTime() {
-		return meanProcTime;
-	}
-
-	public void setMeanProcTime(double m) {
-		meanProcTime = m;
-	}
-
-	public int getMinNumOps() {
-		return numOps;
-	}
-
-	public void setMinNumOps(int n) {
-		numOps = n;
-	}
-
-	public int getMaxNumOps() {
-		return numOps;
-	}
-
-	public void setMaxNumOps(int n) {
-		numOps = n;
-	}
 
 	public long getSeed() {
 		return seed;
@@ -40,5 +13,17 @@ public class SimulatorConfiguration {
 	public void setSeed(long s) {
 		seed = s;
 	}
+
+	public abstract int getNumMachines();
+	
+	public abstract double getUtilLevel();
+	
+	public abstract int getMinOpProc();
+	
+	public abstract int getMaxOpProc();
+
+	public abstract int getMinNumOps();
+
+	public abstract int getMaxNumOps();
 
 }

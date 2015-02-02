@@ -19,14 +19,8 @@ public class JasimaSimpleProblem extends GPProblem {
 	public static final String P_FITNESS = "fitness";
 
 	public static final String P_SIMULATOR = "simulator";
-	public static final String P_PROC_TIME = "procTime";
-	public static final String P_MIN_NUM_OPS = "minNumOps";
-	public static final String P_MAX_NUM_OPS = "maxNumOps";
 	public static final String P_SEED = "seed";
 
-	public static final double DEFAULT_PROC_TIME = 25;
-	public static final int DEFAULT_MIN_NUM_OPS = 4;
-	public static final int DEFAULT_MAX_NUM_OPS = 4;
 	public static final long DEFAULT_SEED = 15;
 
 	private AbsPriorityRule rule;
@@ -50,9 +44,6 @@ public class JasimaSimpleProblem extends GPProblem {
 	}
 
 	private void setupSimulator(final EvolutionState state, final Parameter simBase) {
-		simConfig.setMeanProcTime(state.parameters.getDoubleWithDefault(simBase.push(P_PROC_TIME), null, DEFAULT_PROC_TIME));
-		simConfig.setMinNumOps(state.parameters.getIntWithDefault(simBase.push(P_MIN_NUM_OPS), null, DEFAULT_MIN_NUM_OPS));
-		simConfig.setMaxNumOps(state.parameters.getIntWithDefault(simBase.push(P_MAX_NUM_OPS), null, DEFAULT_MAX_NUM_OPS));
 		simConfig.setSeed(state.parameters.getLongWithDefault(simBase.push(P_SEED), null, DEFAULT_SEED));
 	}
 
@@ -86,6 +77,10 @@ public class JasimaSimpleProblem extends GPProblem {
 	private Experiment getExperiment(final EvolutionState state, AbsPriorityRule rule) {
 		DynamicShopExperiment experiment = new DynamicShopExperiment();
 
+		experiment.setNumMachines(simConfig.getNumMachines());
+		experiment.setUtilLevel(simConfig.getUtilLevel());
+		experiment.setDueDateFactor(0); // TODO
+		experiment.setOpProcTime(simConfig.getMinOpProc(), simConfig.getMaxOpProc());
 		experiment.setNumOps(simConfig.getMinNumOps(), simConfig.getMaxNumOps());
 		experiment.setInitialSeed(simConfig.getSeed());
 
