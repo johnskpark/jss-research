@@ -1,5 +1,6 @@
 package app.evolution;
 
+import app.SimulatorConfiguration;
 import jasima.core.experiment.Experiment;
 import jasima.core.util.observer.NotifierListener;
 import jasima.shopSim.models.dynamicShop.DynamicShopExperiment;
@@ -17,8 +18,21 @@ public class JasimaSimpleProblem extends GPProblem {
 	public static final String P_RULE = "rule";
 	public static final String P_FITNESS = "fitness";
 
+	public static final String P_SIMULATOR = "simulator";
+	public static final String P_PROC_TIME = "procTime";
+	public static final String P_MIN_NUM_OPS = "minNumOps";
+	public static final String P_MAX_NUM_OPS = "maxNumOps";
+	public static final String P_SEED = "seed";
+
+	public static final double DEFAULT_PROC_TIME = 25;
+	public static final int DEFAULT_MIN_NUM_OPS = 4;
+	public static final int DEFAULT_MAX_NUM_OPS = 4;
+	public static final long DEFAULT_SEED = 15;
+
 	private AbsPriorityRule rule;
 	private IJasimaFitness fitness;
+
+	private SimulatorConfiguration simConfig;
 
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
@@ -31,6 +45,15 @@ public class JasimaSimpleProblem extends GPProblem {
 		// Setup the dataset and the solver
 		rule = (AbsPriorityRule) state.parameters.getInstanceForParameterEq(base.push(P_RULE), null, AbsPriorityRule.class);
 		fitness = (IJasimaFitness) state.parameters.getInstanceForParameterEq(base.push(P_FITNESS), null, IJasimaFitness.class);
+
+		setupSimulator(state, base.push(P_SIMULATOR));
+	}
+
+	private void setupSimulator(final EvolutionState state, final Parameter simBase) {
+		simConfig.setMeanProcTime(state.parameters.getDoubleWithDefault(simBase.push(P_PROC_TIME), null, DEFAULT_PROC_TIME));
+		simConfig.setMinNumOps(state.parameters.getIntWithDefault(simBase.push(P_MIN_NUM_OPS), null, DEFAULT_MIN_NUM_OPS));
+		simConfig.setMaxNumOps(state.parameters.getIntWithDefault(simBase.push(P_MAX_NUM_OPS), null, DEFAULT_MAX_NUM_OPS));
+		simConfig.setSeed(state.parameters.getLongWithDefault(simBase.push(P_SEED), null, DEFAULT_SEED));
 	}
 
 	@Override
@@ -48,7 +71,7 @@ public class JasimaSimpleProblem extends GPProblem {
 
 			rule.setConfiguration(config);
 
-			Experiment experiment = getExperiment(rule);
+			Experiment experiment = getExperiment(state, rule);
 
 			experiment.runExperiment();
 			experiment.getResults();
@@ -60,9 +83,12 @@ public class JasimaSimpleProblem extends GPProblem {
 	}
 
 	@SuppressWarnings("unchecked")
-	private Experiment getExperiment(AbsPriorityRule rule) {
+	private Experiment getExperiment(final EvolutionState state, AbsPriorityRule rule) {
 		DynamicShopExperiment experiment = new DynamicShopExperiment();
-		experiment.setInitialSeed(15); // TODO temp seed.
+
+		experiment.setNumOps(simConfig.getMinNumOps(), simConfig.getMaxNumOps());
+		experiment.setInitialSeed(simConfig.getSeed());
+
 		experiment.setShopListener(new NotifierListener[]{new BasicJobStatCollector()});
 		experiment.setSequencingRule(rule);
 		experiment.setScenario(DynamicShopExperiment.Scenario.JOB_SHOP);

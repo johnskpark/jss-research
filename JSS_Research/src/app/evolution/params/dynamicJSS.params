@@ -53,11 +53,10 @@ gp.fs.0.func.14.nc = nc0
 eval.problem = app.evolution.JasimaSimpleProblem
 eval.problem.data = app.evolution.JasimaGPData
 
-eval.problem.instances = jss.problem.dynamic_problem.rachel_dataset.TenDynamicJSSDataset
-eval.problem.instances_seed = 15
-
 eval.problem.rule = app.evolution.priorityRules.BasicPriorityRule
 eval.problem.fitness = app.evolution.fitness.TWTFitness
+
+eval.problem.simulator_seed = 15
 
 # seed.0=26556
 seed.0=17
