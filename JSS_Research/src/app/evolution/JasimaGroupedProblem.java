@@ -56,9 +56,10 @@ public class JasimaGroupedProblem extends GPProblem {
 			Experiment experiment = getExperiment(rule);
 
 			experiment.runExperiment();
-			experiment.getResults();
 
-			fitness.setFitness(state, ind, experiment.getResults());
+			fitness.accumulateFitness(experiment.getResults());
+			fitness.setFitness(state, ind);
+			fitness.clear();
 
 			ind.evaluated = true;
 		}

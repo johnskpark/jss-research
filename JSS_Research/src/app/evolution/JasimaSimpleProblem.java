@@ -62,15 +62,15 @@ public class JasimaSimpleProblem extends GPProblem {
 
 			rule.setConfiguration(config);
 
-			// TODO
 			for (int i = 0; i < simConfig.getNumConfigs(); i++) {
 				Experiment experiment = getExperiment(state, rule, i);
 	
 				experiment.runExperiment();
-				experiment.getResults();
-				
-				fitness.setFitness(state, ind, experiment.getResults());
+				fitness.accumulateFitness(experiment.getResults());
 			}
+			
+			fitness.setFitness(state, ind);
+			fitness.clear();
 
 			ind.evaluated = true;
 		}

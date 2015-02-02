@@ -7,7 +7,10 @@ import ec.Individual;
 
 public interface IJasimaFitness {
 
-	public void setFitness(final EvolutionState state,
-			final Individual ind,
-			final Map<String, Object> results);
+	public void accumulateFitness(final Map<String, Object> results);
+	
+	public void setFitness(final EvolutionState state, final Individual ind);
+	
+	public void clear();
+	
 }

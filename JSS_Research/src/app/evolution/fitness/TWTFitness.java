@@ -13,11 +13,24 @@ public class TWTFitness implements IJasimaFitness {
 
 	private static final String WT_MEAN_STR = "weightedTardMean";
 
-	public void setFitness(final EvolutionState state,
-			final Individual ind,
-			final Map<String, Object> results) {
-		SummaryStat stat = (SummaryStat)results.get(WT_MEAN_STR);
+	private SummaryStat overallStat = new SummaryStat();
 
-		((KozaFitness)ind.fitness).setStandardizedFitness(state, stat.sum());
+	@Override
+	public void accumulateFitness(final Map<String, Object> results) {
+		SummaryStat stat = (SummaryStat)results.get(WT_MEAN_STR);
+		
+		overallStat.combine(stat);
 	}
+	
+	@Override
+	public void setFitness(final EvolutionState state,
+			final Individual ind) {
+		((KozaFitness)ind.fitness).setStandardizedFitness(state, overallStat.sum());
+	}
+
+	@Override
+	public void clear() {
+		overallStat.clear();
+	}
+
 }
