@@ -10,7 +10,7 @@ import ec.gp.GPIndividual;
 import ec.gp.GPProblem;
 import ec.util.Parameter;
 
-public class JasimaGPProblem extends GPProblem {
+public class JasimaSimpleProblem extends GPProblem {
 
 	private static final long serialVersionUID = -3817123526020178300L;
 
@@ -72,7 +72,7 @@ public class JasimaGPProblem extends GPProblem {
 
 	@Override
 	public Object clone() {
-		JasimaGPProblem newObject = (JasimaGPProblem)super.clone();
+		JasimaSimpleProblem newObject = (JasimaSimpleProblem)super.clone();
 
 		newObject.input = (JasimaGPData)input.clone();
 		newObject.rule = rule;

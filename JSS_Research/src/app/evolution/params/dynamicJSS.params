@@ -50,7 +50,7 @@ gp.fs.0.func.13.nc = nc0
 gp.fs.0.func.14 = app.evolution.node.basic.ScoreMachineReadyTime
 gp.fs.0.func.14.nc = nc0
 
-eval.problem = app.evolution.JasimaGPProblem
+eval.problem = app.evolution.JasimaSimpleProblem
 eval.problem.data = app.evolution.JasimaGPData
 
 eval.problem.instances = jss.problem.dynamic_problem.rachel_dataset.TenDynamicJSSDataset
