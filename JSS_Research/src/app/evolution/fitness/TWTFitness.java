@@ -18,10 +18,14 @@ public class TWTFitness implements IJasimaFitness {
 	@Override
 	public void accumulateFitness(final Map<String, Object> results) {
 		SummaryStat stat = (SummaryStat)results.get(WT_MEAN_STR);
-		
+
 		overallStat.combine(stat);
 	}
-	
+
+	@Override
+	public void accumulateTrackerFitness(final SummaryStat trackerStat) {
+	}
+
 	@Override
 	public void setFitness(final EvolutionState state,
 			final Individual ind) {

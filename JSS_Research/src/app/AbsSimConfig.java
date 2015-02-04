@@ -2,11 +2,13 @@ package app;
 
 import jasima.core.random.continuous.DblStream;
 
-public abstract class SimulatorConfiguration {
+import java.util.Random;
 
-	// TODO store configuration for the simulator.
+public abstract class AbsSimConfig {
 
 	private long seed;
+
+	private Random rand;
 
 	public long getSeed() {
 		return seed;
@@ -14,20 +16,25 @@ public abstract class SimulatorConfiguration {
 
 	public void setSeed(long s) {
 		seed = s;
+		rand = new Random(seed);
 	}
-	
+
+	public long getLongValue() {
+		return rand.nextLong();
+	}
+
 	public abstract int getNumMachines(int index);
-	
+
 	public abstract int getMinOpProc(int index);
-	
+
 	public abstract int getMaxOpProc(int index);
 
 	public abstract double getUtilLevel(int index);
-	
+
 	public abstract DblStream getDueDateFactor(int index);
-	
+
 	public abstract DblStream getWeight(int index);
-	
+
 	public abstract int getMinNumOps(int index);
 
 	public abstract int getMaxNumOps(int index);

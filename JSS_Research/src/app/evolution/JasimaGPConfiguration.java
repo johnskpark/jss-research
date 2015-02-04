@@ -11,6 +11,7 @@ public class JasimaGPConfiguration {
 	private int threadnum;
 
 	private JasimaGPData data;
+	private IJasimaTracker tracker;
 
 	public void setState(EvolutionState state) {
 		this.state = state;
@@ -32,6 +33,10 @@ public class JasimaGPConfiguration {
 		this.data = data;
 	}
 
+	public void setTracker(IJasimaTracker tracker) {
+		this.tracker = tracker;
+	}
+
 	public EvolutionState getState() {
 		return state;
 	}
@@ -50,6 +55,10 @@ public class JasimaGPConfiguration {
 
 	public JasimaGPData getData() {
 		return data;
+	}
+
+	public IJasimaTracker getTracker() {
+		return tracker;
 	}
 
 }

@@ -1,9 +1,9 @@
 package app.evolution.simConfig.rachelConfig;
 
 import jasima.core.random.continuous.DblStream;
-import app.SimulatorConfiguration;
+import app.AbsSimConfig;
 
-public class FourOpSimConfig extends SimulatorConfiguration {
+public class FourOpSimConfig extends AbsSimConfig {
 
 	private static final double[] UTIL_LEVEL = new double[]{0.85, 0.95};
 	private static final int MIN_OP_PROC = 1;
@@ -11,25 +11,14 @@ public class FourOpSimConfig extends SimulatorConfiguration {
 	private static final int NUM_OPS = 8;
 
 	private static final int NUM_MACHINES = 10;
-	
+
 	private static final int NUM_CONFIG = 2;
 
-	private DblStream dueDateFactorStream;
-	private DblStream weightStream;
-	
-	@Override
-	public void setSeed(long seed) {
-		super.setSeed(seed);
-		
-		dueDateFactorStream = new TrainDDFStream(seed);
-		weightStream = new WeightStream(seed);
-	}
-	
 	@Override
 	public int getNumMachines(int index) {
 		return NUM_MACHINES;
 	}
-	
+
 	@Override
 	public int getMinOpProc(int index) {
 		return MIN_OP_PROC;
@@ -47,14 +36,14 @@ public class FourOpSimConfig extends SimulatorConfiguration {
 
 	@Override
 	public DblStream getDueDateFactor(int index) {
-		return dueDateFactorStream;
+		return new TrainDDFStream(getLongValue());
 	}
-	
+
 	@Override
 	public DblStream getWeight(int index) {
-		return weightStream;
+		return new WeightStream(getLongValue());
 	}
-	
+
 	@Override
 	public int getMinNumOps(int index) {
 		return NUM_OPS;
@@ -69,5 +58,5 @@ public class FourOpSimConfig extends SimulatorConfiguration {
 	public int getNumConfigs() {
 		return NUM_CONFIG;
 	}
-	
+
 }

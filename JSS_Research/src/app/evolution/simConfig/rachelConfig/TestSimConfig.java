@@ -1,9 +1,9 @@
 package app.evolution.simConfig.rachelConfig;
 
 import jasima.core.random.continuous.DblStream;
-import app.SimulatorConfiguration;
+import app.AbsSimConfig;
 
-public class TestSimConfig extends SimulatorConfiguration {
+public class TestSimConfig extends AbsSimConfig {
 
 	private static final int[] MIN_OP_PROC = new int[]{1, 1, 1, 1};
 	private static final int[] MAX_OP_PROC = new int[]{49, 99, 49, 99};
@@ -14,25 +14,14 @@ public class TestSimConfig extends SimulatorConfiguration {
 	private static final int NUM_MACHINES = 10;
 
 	private static final int NUM_SIM_PROP = 4;
-	
+
 	private static final int NUM_CONFIG = 20;
 
-	private DblStream dueDateFactorStream;
-	private DblStream weightStream;
-	
-	@Override
-	public void setSeed(long seed) {
-		super.setSeed(seed);
-		
-		dueDateFactorStream = new TestDDFStream(seed);
-		weightStream = new WeightStream(seed);
-	}
-	
 	@Override
 	public int getNumMachines(int index) {
 		return NUM_MACHINES;
 	}
-	
+
 	@Override
 	public int getMinOpProc(int index) {
 		return MIN_OP_PROC[index % NUM_SIM_PROP];
@@ -50,14 +39,14 @@ public class TestSimConfig extends SimulatorConfiguration {
 
 	@Override
 	public DblStream getDueDateFactor(int index) {
-		return dueDateFactorStream; 
+		return new TestDDFStream(getLongValue());
 	}
 
 	@Override
 	public DblStream getWeight(int index) {
-		return weightStream;
+		return new WeightStream(getLongValue());
 	}
-	
+
 	@Override
 	public int getMinNumOps(int index) {
 		return MIN_NUM_OPS[index / NUM_SIM_PROP];
@@ -72,5 +61,5 @@ public class TestSimConfig extends SimulatorConfiguration {
 	public int getNumConfigs() {
 		return NUM_CONFIG;
 	}
-	
+
 }

@@ -1,6 +1,6 @@
 package app.evolution;
 
-import app.SimulatorConfiguration;
+import app.AbsSimConfig;
 import jasima.core.experiment.Experiment;
 import jasima.core.util.observer.NotifierListener;
 import jasima.shopSim.models.dynamicShop.DynamicShopExperiment;
@@ -26,26 +26,34 @@ public class JasimaSimpleProblem extends GPProblem {
 	private AbsPriorityRule rule;
 	private IJasimaFitness fitness;
 
-	private SimulatorConfiguration simConfig;
+	private AbsSimConfig simConfig;
+	private long simSeed;
 
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
 		super.setup(state, base);
 
-		// Setup the GPData
+		// Setup the GPData.
 		input = (JasimaGPData) state.parameters.getInstanceForParameterEq(base.push(P_DATA), null, JasimaGPData.class);
 		input.setup(state, base.push(P_DATA));
 
-		// Setup the dataset and the solver
+		// Setup the dataset and the solver.
 		rule = (AbsPriorityRule) state.parameters.getInstanceForParameterEq(base.push(P_RULE), null, AbsPriorityRule.class);
 		fitness = (IJasimaFitness) state.parameters.getInstanceForParameterEq(base.push(P_FITNESS), null, IJasimaFitness.class);
-		simConfig = (SimulatorConfiguration) state.parameters.getInstanceForParameterEq(base.push(P_SIMULATOR), null, SimulatorConfiguration.class);
 
+		// Setup the simulator configurations.
+		simConfig = (AbsSimConfig) state.parameters.getInstanceForParameterEq(base.push(P_SIMULATOR), null, AbsSimConfig.class);
 		setupSimulator(state, base.push(P_SIMULATOR));
 	}
 
 	private void setupSimulator(final EvolutionState state, final Parameter simBase) {
-		simConfig.setSeed(state.parameters.getLongWithDefault(simBase.push(P_SEED), null, DEFAULT_SEED));
+		simSeed = state.parameters.getLongWithDefault(simBase.push(P_SEED), null, DEFAULT_SEED);
+	}
+
+	@Override
+	public void prepareToEvaluate(final EvolutionState state, final int threadnum) {
+		// Reset the seed for the simulator.
+		simConfig.setSeed(simSeed);
 	}
 
 	@Override
@@ -62,15 +70,15 @@ public class JasimaSimpleProblem extends GPProblem {
 			config.setData((JasimaGPData)input);
 
 			rule.setConfiguration(config);
-			
+
 			for (int i = 0; i < simConfig.getNumConfigs(); i++) {
 				Experiment experiment = getExperiment(state, rule, i);
-	
+
 				experiment.runExperiment();
-				
+
 				fitness.accumulateFitness(experiment.getResults());
 			}
-			
+
 			fitness.setFitness(state, ind);
 			fitness.clear();
 
@@ -82,13 +90,13 @@ public class JasimaSimpleProblem extends GPProblem {
 	private Experiment getExperiment(final EvolutionState state, AbsPriorityRule rule, int index) {
 		DynamicShopExperiment experiment = new DynamicShopExperiment();
 
+		experiment.setInitialSeed(simConfig.getLongValue());
 		experiment.setNumMachines(simConfig.getNumMachines(index));
 		experiment.setUtilLevel(simConfig.getUtilLevel(index));
 		experiment.setDueDateFactor(simConfig.getDueDateFactor(index));
 		experiment.setWeights(simConfig.getWeight(index));
 		experiment.setOpProcTime(simConfig.getMinOpProc(index), simConfig.getMaxOpProc(index));
 		experiment.setNumOps(simConfig.getMinNumOps(index), simConfig.getMaxNumOps(index));
-		experiment.setInitialSeed(simConfig.getSeed());
 
 		experiment.setShopListener(new NotifierListener[]{new BasicJobStatCollector()});
 		experiment.setSequencingRule(rule);
