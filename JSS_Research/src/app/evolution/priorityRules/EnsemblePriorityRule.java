@@ -51,6 +51,7 @@ public class EnsemblePriorityRule extends AbsPriorityRule {
 		mostVotedEntry = null;
 		mostVotedPR = Double.POSITIVE_INFINITY;
 
+		// TODO make this more efficient, since its very slow right now.
 		for (int i = 0; i < individuals.length; i++) {
 			// Calculate the priorities and find the vote of the individual rule.
 			for (int j = 0; j < q.size(); j++) {

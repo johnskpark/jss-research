@@ -1,24 +1,28 @@
 package app.evolution.tracker;
 
 import jasima.core.statistics.SummaryStat;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import app.evolution.IJasimaTracker;
 
 public class DecisionTracker implements IJasimaTracker {
 
-	private SummaryStat stat = new SummaryStat();
+	List<Integer> decisions = new ArrayList<Integer>();
 
 	public void addDecision(int decision) {
-		// TODO Hmm now I need to add in the decision factor that Hildebrandt and Branke tried out.
+		decisions.add(decision);
 	}
 
 	@Override
 	public SummaryStat getResults() {
-		return stat;
+		return null; // TODO
 	}
 
 	@Override
 	public void clear() {
-		stat.clear();
+		decisions.clear();
 	}
 
 }
