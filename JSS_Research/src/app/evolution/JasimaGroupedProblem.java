@@ -7,7 +7,6 @@ import jasima.shopSim.util.BasicJobStatCollector;
 import app.AbsSimConfig;
 import ec.EvolutionState;
 import ec.Individual;
-import ec.gp.GPIndividual;
 import ec.gp.GPProblem;
 import ec.util.Parameter;
 
@@ -82,7 +81,7 @@ public class JasimaGroupedProblem extends GPProblem {
 		if (!ind.evaluated) {
 			JasimaGPConfiguration config = new JasimaGPConfiguration();
 			config.setState(state);
-			config.setIndividuals(new GPIndividual[]{(GPIndividual)ind});
+			config.setIndividuals(grouping.getGroups(ind)[0]);
 			config.setSubpopulations(new int[]{subpopulation});
 			config.setThreadnum(threadnum);
 			config.setData((JasimaGPData)input);
