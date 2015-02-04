@@ -30,7 +30,7 @@ public class EnsemblePriorityRule extends AbsPriorityRule {
 
 	private int mostVotes;
 	private PrioRuleTarget mostVotedEntry;
-	private double tieBreaker; // TODO
+	private double mostVotedPR;
 
 	@Override
 	public void setConfiguration(JasimaGPConfiguration config) {
@@ -49,7 +49,7 @@ public class EnsemblePriorityRule extends AbsPriorityRule {
 
 		mostVotes = 0;
 		mostVotedEntry = null;
-		tieBreaker = Double.POSITIVE_INFINITY;
+		mostVotedPR = Double.POSITIVE_INFINITY;
 
 		for (int i = 0; i < individuals.length; i++) {
 			// Calculate the priorities and find the vote of the individual rule.
@@ -75,21 +75,27 @@ public class EnsemblePriorityRule extends AbsPriorityRule {
 			// Update the most voted job.
 			int votes = jobVotes.get(bestEntry);
 			if ((votes > mostVotes) ||
-					(votes == mostVotes && Double.POSITIVE_INFINITY < tieBreaker)) {
+					(votes == mostVotes && bestEntry.currProcTime() < mostVotedPR)) {
 				mostVotes = votes;
 				mostVotedEntry = bestEntry;
-				tieBreaker = Double.POSITIVE_INFINITY; // TODO
+				mostVotedPR = bestEntry.currProcTime();
 			}
 		}
 
-		// Ranking.
+		// Add the rankings into the decisions.
+		for (int i = 0; i < individuals.length; i++) {
+			for (int j = 0; j < q.size(); j++) {
+				if (mostVotedEntry.equals(priorities[i][j].item2)) {
+					tracker.addDecision(j);
+					break;
+				}
+			}
+		}
 	}
 
 	@Override
 	public double calcPrio(PrioRuleTarget entry) {
-		// TODO need to be able to do tie breaking.
-
-		return jobVotes.get(entry);
+		return (entry.equals(mostVotedEntry)) ? 1.0 : 0.0;
 	}
 
 	private class Pair<S extends Comparable<S>, T> implements Comparable<Pair<S, T>> {
