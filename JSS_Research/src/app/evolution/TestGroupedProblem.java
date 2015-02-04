@@ -4,14 +4,20 @@ import jasima.core.experiment.Experiment;
 import jasima.core.util.observer.NotifierListener;
 import jasima.shopSim.models.dynamicShop.DynamicShopExperiment;
 import jasima.shopSim.util.BasicJobStatCollector;
+import app.evolution.fitness.MOTWTFitness;
+import app.evolution.grouping.PopGrouping;
+import app.evolution.priorityRules.BasicPriorityRule;
+import app.evolution.priorityRules.EnsemblePriorityRule;
+import app.evolution.tracker.DecisionTracker;
 import app.simConfig.AbsSimConfig;
+import app.simConfig.rachelConfig.FourOpSimConfig;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.gp.GPIndividual;
 import ec.gp.GPProblem;
 import ec.util.Parameter;
 
-public class JasimaGroupedProblem extends GPProblem {
+public class TestGroupedProblem extends GPProblem {
 
 	private static final long serialVersionUID = -3817123526020178300L;
 
@@ -27,14 +33,15 @@ public class JasimaGroupedProblem extends GPProblem {
 
 	public static final long DEFAULT_SEED = 15;
 
-	private AbsPriorityRule rule;
-	private IJasimaFitness fitness;
+	private AbsPriorityRule indRule = new BasicPriorityRule();
+	private AbsPriorityRule ensembleRule = new EnsemblePriorityRule();
+	private IJasimaFitness fitness = new MOTWTFitness();
 
-	private IJasimaGrouping grouping = null;
-	private IJasimaTracker tracker = null;
+	private IJasimaGrouping grouping = new PopGrouping();
+	private IJasimaTracker tracker = new DecisionTracker();
 
-	private AbsSimConfig simConfig;
-	private long simSeed;
+	private AbsSimConfig simConfig = new FourOpSimConfig();
+	private long simSeed = DEFAULT_SEED;
 
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
@@ -44,24 +51,7 @@ public class JasimaGroupedProblem extends GPProblem {
 		input = (JasimaGPData) state.parameters.getInstanceForParameterEq(base.push(P_DATA), null, JasimaGPData.class);
 		input.setup(state, base.push(P_DATA));
 
-		// Setup the dataset and the solver. TODO need a way of using multiple rules for the single approach.
-		rule = (AbsPriorityRule) state.parameters.getInstanceForParameterEq(base.push(P_RULE), null, AbsPriorityRule.class);
-		fitness = (IJasimaFitness) state.parameters.getInstanceForParameterEq(base.push(P_FITNESS), null, IJasimaFitness.class);
-
-		// Setup the simulator configurations.
-		simConfig = (AbsSimConfig) state.parameters.getInstanceForParameterEq(base.push(P_SIMULATOR), null, AbsSimConfig.class);
-		setupSimulator(state, base.push(P_SIMULATOR));
-
-		// Setup the grouping.
-		grouping = (IJasimaGrouping) state.parameters.getInstanceForParameterEq(base.push(P_GROUPING), null, IJasimaGrouping.class);
 		grouping.setup(state, base.push(P_GROUPING));
-
-		// Setup the tracker.
-		tracker = (IJasimaTracker) state.parameters.getInstanceForParameterEq(base.push(P_TRACKER), null, IJasimaTracker.class);
-	}
-
-	private void setupSimulator(final EvolutionState state, final Parameter simBase) {
-		simSeed = state.parameters.getLongWithDefault(simBase.push(P_SEED), null, DEFAULT_SEED);
 	}
 
 	@Override
@@ -103,9 +93,9 @@ public class JasimaGroupedProblem extends GPProblem {
 			}
 
 			// Evaluate the grouping that the individual's part of.
-			if (grouping.isGroupEvaluated()) {
-				evaluateGroup(state, grouping.getGroups(ind), subpopulation, threadnum);
-			}
+//			if (grouping.isGroupEvaluated()) {
+//				evaluateGroup(state, grouping.getGroups(ind), subpopulation, threadnum);
+//			}
 
 			fitness.setFitness(state, ind);
 			fitness.clear();
@@ -125,10 +115,10 @@ public class JasimaGroupedProblem extends GPProblem {
 		config.setThreadnum(threadnum);
 		config.setData((JasimaGPData)input);
 
-		rule.setConfiguration(config);
+		indRule.setConfiguration(config);
 
 		for (int i = 0; i < simConfig.getNumConfigs(); i++) {
-			Experiment experiment = getExperiment(state, rule, i);
+			Experiment experiment = getExperiment(state, indRule, i);
 
 			experiment.runExperiment();
 
@@ -152,8 +142,10 @@ public class JasimaGroupedProblem extends GPProblem {
 			config.setData((JasimaGPData)input);
 			config.setTracker(tracker);
 
+			ensembleRule.setConfiguration(config);
+
 			for (int j = 0; j < simConfig.getNumConfigs(); j++) {
-				Experiment experiment = getExperiment(state, rule, j);
+				Experiment experiment = getExperiment(state, ensembleRule, j);
 
 				experiment.runExperiment();
 
@@ -184,15 +176,14 @@ public class JasimaGroupedProblem extends GPProblem {
 
 	@Override
 	public Object clone() {
-		JasimaGroupedProblem newObject = (JasimaGroupedProblem)super.clone();
+		TestGroupedProblem newObject = (TestGroupedProblem)super.clone();
 
 		newObject.input = (JasimaGPData)input.clone();
-		newObject.rule = rule;
+		newObject.indRule = indRule;
+		newObject.ensembleRule = ensembleRule;
 		newObject.fitness = fitness;
 		newObject.grouping = grouping;
 		newObject.tracker = tracker;
-		newObject.simConfig = simConfig;
-		newObject.simSeed = simSeed;
 
 		return newObject;
 	}

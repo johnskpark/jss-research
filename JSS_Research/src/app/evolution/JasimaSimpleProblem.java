@@ -112,6 +112,8 @@ public class JasimaSimpleProblem extends GPProblem {
 		newObject.input = (JasimaGPData)input.clone();
 		newObject.rule = rule;
 		newObject.fitness = fitness;
+		newObject.simConfig = simConfig;
+		newObject.simSeed = simSeed;
 
 		return newObject;
 	}

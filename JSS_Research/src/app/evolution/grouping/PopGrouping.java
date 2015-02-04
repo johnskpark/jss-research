@@ -8,6 +8,8 @@ import ec.gp.koza.KozaFitness;
 import ec.util.Parameter;
 import app.evolution.IJasimaGrouping;
 
+// TODO this needs more working as well. There is no such thing as
+// the best ensemble of generation. It's the best individual of generation.
 public class PopGrouping implements IJasimaGrouping {
 
 	private static final long serialVersionUID = 6709369554204377046L;
@@ -35,6 +37,16 @@ public class PopGrouping implements IJasimaGrouping {
 		for (int i = 0; i < population.individuals.length; i++) {
 			ensemble[0][i] = (GPIndividual) population.individuals[i];
 		}
+	}
+
+	@Override
+	public boolean isIndEvaluated() {
+		return true;
+	}
+
+	@Override
+	public boolean isGroupEvaluated() {
+		return true;
 	}
 
 	@Override

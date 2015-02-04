@@ -10,6 +10,10 @@ public interface IJasimaGrouping extends Setup {
 
 	public void groupIndividuals(final EvolutionState state, final int threadnum);
 
+	public boolean isIndEvaluated();
+
+	public boolean isGroupEvaluated();
+
 	public GPIndividual[][] getGroups(final Individual ind);
 
 	public GPIndividual[] getBestGroup();

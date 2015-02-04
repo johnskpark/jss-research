@@ -3,8 +3,10 @@ package app.evolution.priorityRules;
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import app.evolution.AbsPriorityRule;
@@ -25,12 +27,8 @@ public class EnsemblePriorityRule extends AbsPriorityRule {
 	private JasimaGPData data;
 	private DecisionTracker tracker;
 
-	private Map<PrioRuleTarget, Integer> jobVotes = new HashMap<PrioRuleTarget, Integer>();
-	private Pair<Double, PrioRuleTarget>[][] priorities;
-
-	private int mostVotes;
-	private PrioRuleTarget mostVotedEntry;
-	private double mostVotedPR;
+	private Map<PrioRuleTarget, StorageClass> jobVotes = new HashMap<PrioRuleTarget, StorageClass>();
+	private List<StorageClass> jobRanking = new ArrayList<StorageClass>();
 
 	@Override
 	public void setConfiguration(JasimaGPConfiguration config) {
@@ -45,50 +43,51 @@ public class EnsemblePriorityRule extends AbsPriorityRule {
 		super.beforeCalc(q);
 
 		jobVotes.clear();
-		priorities = new Pair[individuals.length][q.size()];
+		jobRanking.clear();
 
-		mostVotes = 0;
-		mostVotedEntry = null;
-		mostVotedPR = Double.POSITIVE_INFINITY;
+		int[] decisions = new int[individuals.length];
 
-		// TODO make this more efficient, since its very slow right now.
+		// TODO make this more efficient later down the line, but first get the functionality working.
 		for (int i = 0; i < individuals.length; i++) {
-			// Calculate the priorities and find the vote of the individual rule.
+			double bestPriority = Double.NEGATIVE_INFINITY;
+			int bestIndex = -1;
+
+			// Find the job selected by the individual rule.
 			for (int j = 0; j < q.size(); j++) {
-				PrioRuleTarget entry = q.get(i);
+				PrioRuleTarget entry = q.get(j);
 				data.setPrioRuleTarget(entry);
 
 				individuals[i].trees[0].child.eval(state, threadnum, data, null, individuals[i], null);
 
 				double priority = data.getPriority();
-				priorities[i][j] = new Pair<Double, PrioRuleTarget>(priority, entry);
+				if (priority > bestPriority) {
+					bestPriority = priority;
+					bestIndex = j;
+				}
 			}
 
-			Arrays.sort(priorities[i]);
-
-			// Add the vote to the pool.
-			PrioRuleTarget bestEntry = priorities[i][0].item2;
+			// Increment the vote on the particular job.
+			PrioRuleTarget bestEntry = q.get(bestIndex);
 			if (!jobVotes.containsKey(bestEntry)) {
-				jobVotes.put(bestEntry, 0);
+				StorageClass sc = new StorageClass(bestIndex, bestEntry);
+				jobVotes.put(bestEntry, sc);
+				jobRanking.add(sc);
 			}
-			jobVotes.put(bestEntry, jobVotes.get(bestEntry) + 1);
+			jobVotes.get(bestEntry).increment();
 
-			// Update the most voted job.
-			int votes = jobVotes.get(bestEntry);
-			if ((votes > mostVotes) ||
-					(votes == mostVotes && bestEntry.currProcTime() < mostVotedPR)) {
-				mostVotes = votes;
-				mostVotedEntry = bestEntry;
-				mostVotedPR = bestEntry.currProcTime();
-			}
+			// Store the decisions.
+			decisions[i] = bestIndex;
 		}
+
+		// Sort the list of jobs.
+		Collections.sort(jobRanking);
 
 		// Add the rankings into the decisions.
 		for (int i = 0; i < individuals.length; i++) {
 			for (int j = 0; j < q.size(); j++) {
-				if (mostVotedEntry.equals(priorities[i][j].item2)) {
+				StorageClass sc = jobRanking.get(j);
+				if (decisions[i] == sc.index) {
 					tracker.addDecision(j);
-					break;
 				}
 			}
 		}
@@ -96,21 +95,38 @@ public class EnsemblePriorityRule extends AbsPriorityRule {
 
 	@Override
 	public double calcPrio(PrioRuleTarget entry) {
-		return (entry.equals(mostVotedEntry)) ? 1.0 : 0.0;
+		return (entry.equals(jobRanking.get(0).entry)) ? 1.0 : 0.0;
 	}
 
-	private class Pair<S extends Comparable<S>, T> implements Comparable<Pair<S, T>> {
-		final S item1;
-		final T item2;
+	// TODO temporary class.
+	private class StorageClass implements Comparable<StorageClass> {
+		final int index;
+		final PrioRuleTarget entry;
+		private int count = 0;
 
-		public Pair(S i1, T i2) {
-			item1 = i1;
-			item2 = i2;
+		public StorageClass(int i, PrioRuleTarget e) {
+			index = i;
+			entry = e;
+		}
+
+		public void increment() {
+			count++;
 		}
 
 		@Override
-		public int compareTo(Pair<S, T> other) {
-			return item1.compareTo(other.item1);
+		public int compareTo(StorageClass other) {
+			int diff = this.count - other.count;
+			if (diff != 0) {
+				return diff;
+			} else {
+				if (this.entry.currProcTime() < other.entry.currProcTime()) {
+					return -1;
+				} else if (this.entry.currProcTime() > other.entry.currProcTime()) {
+					return 1;
+				} else {
+					return 0;
+				}
+			}
 		}
 	}
 
