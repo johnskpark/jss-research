@@ -1,7 +1,7 @@
-package app.evolution.simConfig.hildebrandtConfig;
+package app.simConfig.hildebrandtConfig;
 
 import jasima.core.random.continuous.DblStream;
-import app.AbsSimConfig;
+import app.simConfig.AbsSimConfig;
 
 public class HildebrandtSimConfig extends AbsSimConfig {
 

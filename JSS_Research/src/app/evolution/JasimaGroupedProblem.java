@@ -4,7 +4,7 @@ import jasima.core.experiment.Experiment;
 import jasima.core.util.observer.NotifierListener;
 import jasima.shopSim.models.dynamicShop.DynamicShopExperiment;
 import jasima.shopSim.util.BasicJobStatCollector;
-import app.AbsSimConfig;
+import app.simConfig.AbsSimConfig;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.gp.GPProblem;

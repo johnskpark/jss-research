@@ -1,4 +1,4 @@
-package app;
+package app.simConfig;
 
 import jasima.core.random.continuous.DblStream;
 

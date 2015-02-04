@@ -1,21 +1,21 @@
-package app.evolution.simConfig.rachelConfig;
+package app.simConfig.rachelConfig;
 
 import jasima.core.random.continuous.DblStream;
 
 import java.util.Random;
 
-public class TestDDFStream extends DblStream {
+public class TrainDDFStream extends DblStream {
 
-	private static final long serialVersionUID = -4755681412239405023L;
+	private static final long serialVersionUID = -2055325666025581558L;
 
-	private static final double[] DUE_DATE_FACTOR = new double[]{2, 4, 6};
+	private static final double[] DUE_DATE_FACTOR = new double[]{3, 5, 7};
 	
 	private static final int NUM_FACTORS = 3;
 	
 	private long initSeed;
 	private Random rndGen;
 	
-	public TestDDFStream(long seed) {
+	public TrainDDFStream(long seed) {
 		initSeed = seed;
 		rndGen = new Random(initSeed);
 		setRndGen(rndGen);

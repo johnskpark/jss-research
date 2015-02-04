@@ -1,6 +1,6 @@
 package app.evolution;
 
-import app.AbsSimConfig;
+import app.simConfig.AbsSimConfig;
 import jasima.core.experiment.Experiment;
 import jasima.core.util.observer.NotifierListener;
 import jasima.shopSim.models.dynamicShop.DynamicShopExperiment;

@@ -1,7 +1,7 @@
-package app.evolution.simConfig.rachelConfig;
+package app.simConfig.rachelConfig;
 
 import jasima.core.random.continuous.DblStream;
-import app.AbsSimConfig;
+import app.simConfig.AbsSimConfig;
 
 public class TestSimConfig extends AbsSimConfig {
 
