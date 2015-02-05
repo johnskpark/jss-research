@@ -87,6 +87,8 @@ public class TestGroupedProblem extends GPProblem {
 		// individual.
 
 		if (!ind.evaluated) {
+			long startTime = System.currentTimeMillis();
+
 			// Evaluate the individual separately.
 			if (grouping.isIndEvaluated()) {
 				evaluateInd(state, ind, subpopulation, threadnum);
@@ -101,6 +103,11 @@ public class TestGroupedProblem extends GPProblem {
 			fitness.clear();
 
 			ind.evaluated = true;
+
+			long endTime = System.currentTimeMillis();
+			long timeDiff = endTime - startTime;
+
+			System.out.printf("%d\n", timeDiff);
 		}
 	}
 
