@@ -13,6 +13,8 @@ public interface IJasimaFitness {
 
 	public void setFitness(final EvolutionState state, final Individual ind);
 
-	public void clear();
+	public void clearFitness();
+
+	public void clearTrackerFitness();
 
 }

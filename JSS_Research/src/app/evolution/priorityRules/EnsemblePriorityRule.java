@@ -45,6 +45,12 @@ public class EnsemblePriorityRule extends AbsPriorityRule {
 		jobVotes.clear();
 		jobRanking.clear();
 
+		for (int i = 0; i < q.size(); i++) {
+			EntryVotes ev = new EntryVotes(i, q.get(i));
+			jobVotes.put(q.get(i), ev);
+			jobRanking.add(ev);
+		}
+
 		int[] decisions = new int[individuals.length];
 
 		// TODO make this more efficient later down the line, but first get the functionality working.
@@ -68,11 +74,6 @@ public class EnsemblePriorityRule extends AbsPriorityRule {
 
 			// Increment the vote on the particular job.
 			PrioRuleTarget bestEntry = q.get(bestIndex);
-			if (!jobVotes.containsKey(bestEntry)) {
-				EntryVotes sc = new EntryVotes(bestIndex, bestEntry);
-				jobVotes.put(bestEntry, sc);
-				jobRanking.add(sc);
-			}
 			jobVotes.get(bestEntry).increment();
 
 			// Store the decisions.
@@ -119,6 +120,7 @@ public class EnsemblePriorityRule extends AbsPriorityRule {
 			if (diff != 0) {
 				return diff;
 			} else {
+				// Use SPT for now.
 				if (this.entry.currProcTime() < other.entry.currProcTime()) {
 					return -1;
 				} else if (this.entry.currProcTime() > other.entry.currProcTime()) {

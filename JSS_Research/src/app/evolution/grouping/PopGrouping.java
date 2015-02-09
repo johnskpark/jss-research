@@ -39,6 +39,8 @@ public class PopGrouping implements IJasimaGrouping {
 		for (int i = 0; i < population.individuals.length; i++) {
 			ensemble[0][i] = (GPIndividual) population.individuals[i];
 		}
+
+		groupEvaluated = false;
 	}
 
 	@Override

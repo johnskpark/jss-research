@@ -9,6 +9,7 @@ import app.evolution.GroupResult;
 import app.evolution.IJasimaFitness;
 import ec.EvolutionState;
 import ec.Individual;
+import ec.gp.GPIndividual;
 import ec.multiobjective.MultiObjectiveFitness;
 
 public class MOTWTFitness implements IJasimaFitness {
@@ -29,10 +30,13 @@ public class MOTWTFitness implements IJasimaFitness {
 	@Override
 	public void accumulateTrackerFitness(final GroupResult[] trackerResults) {
 		for (GroupResult result : trackerResults) {
-			if (overallTrackerStat.containsKey(result.getInd())) {
-				overallTrackerStat.put(result.getInd(), new SummaryStat());
+			GPIndividual ind = result.getInd();
+			double fitness = result.getFitness();
+
+			if (!overallTrackerStat.containsKey(ind)) {
+				overallTrackerStat.put(ind, new SummaryStat());
 			}
-			overallTrackerStat.get(result.getInd()).value(result.getFitness());
+			overallTrackerStat.get(ind).value(fitness);
 		}
 	}
 
@@ -48,8 +52,13 @@ public class MOTWTFitness implements IJasimaFitness {
 	}
 
 	@Override
-	public void clear() {
+	public void clearFitness() {
 		overallStat.clear();
+	}
+
+	@Override
+	public void clearTrackerFitness() {
+		overallTrackerStat.clear();
 	}
 
 }

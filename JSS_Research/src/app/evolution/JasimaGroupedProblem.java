@@ -108,7 +108,7 @@ public class JasimaGroupedProblem extends GPProblem {
 			}
 
 			fitness.setFitness(state, ind);
-			fitness.clear();
+			fitness.clearFitness();
 
 			ind.evaluated = true;
 		}

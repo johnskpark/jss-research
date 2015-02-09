@@ -34,8 +34,12 @@ public class TWTFitness implements IJasimaFitness {
 	}
 
 	@Override
-	public void clear() {
+	public void clearFitness() {
 		overallStat.clear();
+	}
+
+	@Override
+	public void clearTrackerFitness() {
 	}
 
 }

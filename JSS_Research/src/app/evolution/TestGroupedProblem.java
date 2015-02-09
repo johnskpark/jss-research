@@ -65,26 +65,18 @@ public class TestGroupedProblem extends GPProblem {
 	}
 
 	@Override
+	public void finishEvaluating(final EvolutionState state, final int threadnum) {
+		fitness.clearTrackerFitness();
+	}
+
+	@Override
 	public void evaluate(final EvolutionState state,
 			final Individual ind,
 			final int subpopulation,
 			final int threadnum) {
-		// TODO so, what do I want here?
-
-		// I want to be able to evaluate the ensemble as a whole, and get penalty from it.
-		// I want to be able to evaluate the individual, and get fitness from it.
-
-		// So I need to have the following:
-		// evaluation for individual, and some fitness component to it.
-		// evaluation for group, and some fitness component to it.
-
-		// Okay, so how do I want to do this fitness part here?
-		// So when the fitness is accumulated for each evaluation component, I need to
-		// get the relevant statistics class into the fitness measure, but what's a
-		// clean way of doing it?
-
-		// Ah fuck it. For now, let's just do tracker fitness for group, regular fitness for
-		// individual.
+		if (ind.evaluated) {
+			System.out.println("This... Complicates things.");
+		}
 
 		if (!ind.evaluated) {
 			long startTime = System.currentTimeMillis();
@@ -100,7 +92,7 @@ public class TestGroupedProblem extends GPProblem {
 			}
 
 			fitness.setFitness(state, ind);
-			fitness.clear();
+			fitness.clearFitness();
 
 			ind.evaluated = true;
 
@@ -130,7 +122,6 @@ public class TestGroupedProblem extends GPProblem {
 			experiment.runExperiment();
 
 			fitness.accumulateFitness(experiment.getResults());
-			tracker.clear();
 		}
 	}
 
