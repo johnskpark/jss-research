@@ -1,9 +1,15 @@
-package app.evolution;
+package app.evolution.test;
 
 import jasima.core.experiment.Experiment;
 import jasima.core.util.observer.NotifierListener;
 import jasima.shopSim.models.dynamicShop.DynamicShopExperiment;
 import jasima.shopSim.util.BasicJobStatCollector;
+import app.evolution.AbsPriorityRule;
+import app.evolution.IJasimaFitness;
+import app.evolution.IJasimaGrouping;
+import app.evolution.IJasimaTracker;
+import app.evolution.JasimaGPConfiguration;
+import app.evolution.JasimaGPData;
 import app.evolution.fitness.MOTWTFitness;
 import app.evolution.grouping.PopGrouping;
 import app.evolution.priorityRules.BasicPriorityRule;
