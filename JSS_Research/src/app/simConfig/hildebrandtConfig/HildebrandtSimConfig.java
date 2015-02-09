@@ -54,6 +54,18 @@ public class HildebrandtSimConfig extends AbsSimConfig {
 	}
 
 	@Override
+	public int getNumIgnore() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int getStopAfterNumJobs() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
 	public int getNumConfigs() {
 		// TODO Auto-generated method stub
 		return 0;

@@ -13,6 +13,9 @@ public class TestSimConfig extends AbsSimConfig {
 
 	private static final int NUM_MACHINES = 10;
 
+	private static final int NUM_IGNORE = 500;
+	private static final int STOP_AFTER_NUM_JOBS = 2500;
+
 	private static final int NUM_SIM_PROP = 4;
 
 	private static final int NUM_CONFIG = 20;
@@ -55,6 +58,16 @@ public class TestSimConfig extends AbsSimConfig {
 	@Override
 	public int getMaxNumOps(int index) {
 		return MAX_NUM_OPS[index / NUM_SIM_PROP];
+	}
+
+	@Override
+	public int getNumIgnore() {
+		return NUM_IGNORE;
+	}
+
+	@Override
+	public int getStopAfterNumJobs() {
+		return STOP_AFTER_NUM_JOBS;
 	}
 
 	@Override

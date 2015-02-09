@@ -39,6 +39,11 @@ public abstract class AbsSimConfig {
 
 	public abstract int getMaxNumOps(int index);
 
+	public abstract int getNumIgnore();
+
+	public abstract int getStopAfterNumJobs();
+
 	public abstract int getNumConfigs();
+
 
 }

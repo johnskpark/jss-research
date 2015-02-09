@@ -12,6 +12,9 @@ public class FourOpSimConfig extends AbsSimConfig {
 
 	private static final int NUM_MACHINES = 10;
 
+	private static final int NUM_IGNORE = 500;
+	private static final int STOP_AFTER_NUM_JOBS = 2500;
+
 	private static final int NUM_CONFIG = 2;
 
 	@Override
@@ -52,6 +55,16 @@ public class FourOpSimConfig extends AbsSimConfig {
 	@Override
 	public int getMaxNumOps(int index) {
 		return NUM_OPS;
+	}
+
+	@Override
+	public int getNumIgnore() {
+		return NUM_IGNORE;
+	}
+
+	@Override
+	public int getStopAfterNumJobs() {
+		return STOP_AFTER_NUM_JOBS;
 	}
 
 	@Override

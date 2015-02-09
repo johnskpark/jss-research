@@ -141,6 +141,7 @@ public class TestGroupedProblem2 extends GPProblem {
 			config.setSubpopulations(new int[]{subpopulation});
 			config.setThreadnum(threadnum);
 			config.setData((JasimaGPData)input);
+			config.setProblem(this);
 
 			ensembleRule.setConfiguration(config);
 
@@ -166,8 +167,12 @@ public class TestGroupedProblem2 extends GPProblem {
 		}
 	}
 
-	public Map<GPIndividual, StatCollector> getEnsembleStats() {
-		return ensembleStats;
+	public int getNumIgnore() {
+		return simConfig.getNumIgnore();
+	}
+
+	public void addEnsembleStats(GPIndividual ind, double value) {
+		ensembleStats.get(ind).add(value);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -182,7 +187,11 @@ public class TestGroupedProblem2 extends GPProblem {
 		experiment.setOpProcTime(simConfig.getMinOpProc(index), simConfig.getMaxOpProc(index));
 		experiment.setNumOps(simConfig.getMinNumOps(index), simConfig.getMaxNumOps(index));
 
-		experiment.setShopListener(new NotifierListener[]{new BasicJobStatCollector()});
+		BasicJobStatCollector statCollector = new BasicJobStatCollector();
+		statCollector.setIgnoreFirst(simConfig.getNumIgnore());
+
+		experiment.setShopListener(new NotifierListener[]{statCollector});
+		experiment.setStopAfterNumJobs(simConfig.getStopAfterNumJobs());
 		experiment.setSequencingRule(rule);
 		experiment.setScenario(DynamicShopExperiment.Scenario.JOB_SHOP);
 

@@ -19,6 +19,8 @@ public class TestEnsembleRule extends AbsPriorityRule {
 
 	private static final long serialVersionUID = -2159123752873667029L;
 
+	private static final int SAMPLE_SIZE = 100;
+
 	private EvolutionState state;
 	private GPIndividual[] individuals;
 	private int threadnum;
@@ -28,6 +30,8 @@ public class TestEnsembleRule extends AbsPriorityRule {
 
 	private Map<PrioRuleTarget, EntryVotes> jobVotes = new HashMap<PrioRuleTarget, EntryVotes>();
 	private List<EntryVotes> jobRanking = new ArrayList<EntryVotes>();
+
+	private int numSampled = 0;
 
 	@Override
 	public void setConfiguration(JasimaGPConfiguration config) {
@@ -83,13 +87,17 @@ public class TestEnsembleRule extends AbsPriorityRule {
 		Collections.sort(jobRanking);
 
 		// Add the rankings into the decisions.
-		for (int i = 0; i < individuals.length; i++) {
-			for (int j = 0; j < q.size(); j++) {
-				EntryVotes sc = jobRanking.get(j);
-				if (decisions[i] == sc.index) {
-					problem.getEnsembleStats().get(individuals[i]).add(j);
+		if ((q.get(0).getShop().jobsFinished >= problem.getNumIgnore()) && (numSampled < SAMPLE_SIZE)) {
+			for (int i = 0; i < individuals.length; i++) {
+				for (int j = 0; j < q.size(); j++) {
+					EntryVotes sc = jobRanking.get(j);
+					if (decisions[i] == sc.index) {
+						problem.addEnsembleStats(individuals[i], j);
+					}
 				}
 			}
+
+			numSampled++;
 		}
 	}
 
