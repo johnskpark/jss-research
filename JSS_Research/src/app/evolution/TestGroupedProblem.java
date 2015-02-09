@@ -90,14 +90,14 @@ public class TestGroupedProblem extends GPProblem {
 			long startTime = System.currentTimeMillis();
 
 			// Evaluate the individual separately.
-			if (grouping.isIndEvaluated()) {
+			if (!grouping.isIndEvaluated()) {
 				evaluateInd(state, ind, subpopulation, threadnum);
 			}
 
 			// Evaluate the grouping that the individual's part of.
-//			if (grouping.isGroupEvaluated()) {
-//				evaluateGroup(state, grouping.getGroups(ind), subpopulation, threadnum);
-//			}
+			if (!grouping.isGroupEvaluated()) {
+				evaluateGroup(state, grouping.getGroups(ind), subpopulation, threadnum);
+			}
 
 			fitness.setFitness(state, ind);
 			fitness.clear();
@@ -160,6 +160,8 @@ public class TestGroupedProblem extends GPProblem {
 				tracker.clear();
 			}
 		}
+
+		grouping.setGroupEvaluated(true);
 	}
 
 	@SuppressWarnings("unchecked")

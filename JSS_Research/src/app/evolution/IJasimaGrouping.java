@@ -10,9 +10,12 @@ public interface IJasimaGrouping extends Setup {
 
 	public void groupIndividuals(final EvolutionState state, final int threadnum);
 
+	// TODO this kinda conflicts with the ind evaluated part.
 	public boolean isIndEvaluated();
 
 	public boolean isGroupEvaluated();
+
+	public void setGroupEvaluated(boolean evaluated);
 
 	public GPIndividual[][] getGroups(final Individual ind);
 

@@ -4,6 +4,7 @@ import jasima.core.statistics.SummaryStat;
 
 import java.util.Map;
 
+import app.evolution.GroupResult;
 import app.evolution.IJasimaFitness;
 import ec.EvolutionState;
 import ec.Individual;
@@ -23,7 +24,7 @@ public class TWTFitness implements IJasimaFitness {
 	}
 
 	@Override
-	public void accumulateTrackerFitness(final SummaryStat trackerStat) {
+	public void accumulateTrackerFitness(final GroupResult[] trackerResults) {
 	}
 
 	@Override

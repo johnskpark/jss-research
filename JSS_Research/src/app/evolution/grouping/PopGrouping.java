@@ -14,6 +14,8 @@ public class PopGrouping implements IJasimaGrouping {
 
 	private static final long serialVersionUID = 6709369554204377046L;
 
+	private boolean groupEvaluated = false;
+
 	private Subpopulation population;
 	private GPIndividual[][] ensemble;
 
@@ -41,12 +43,17 @@ public class PopGrouping implements IJasimaGrouping {
 
 	@Override
 	public boolean isIndEvaluated() {
-		return true;
+		return false;
 	}
 
 	@Override
 	public boolean isGroupEvaluated() {
-		return true;
+		return groupEvaluated;
+	}
+
+	@Override
+	public void setGroupEvaluated(boolean evaluated) {
+		groupEvaluated = evaluated;
 	}
 
 	@Override

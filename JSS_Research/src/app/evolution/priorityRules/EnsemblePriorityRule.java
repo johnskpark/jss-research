@@ -27,8 +27,8 @@ public class EnsemblePriorityRule extends AbsPriorityRule {
 	private JasimaGPData data;
 	private DecisionTracker tracker;
 
-	private Map<PrioRuleTarget, StorageClass> jobVotes = new HashMap<PrioRuleTarget, StorageClass>();
-	private List<StorageClass> jobRanking = new ArrayList<StorageClass>();
+	private Map<PrioRuleTarget, EntryVotes> jobVotes = new HashMap<PrioRuleTarget, EntryVotes>();
+	private List<EntryVotes> jobRanking = new ArrayList<EntryVotes>();
 
 	@Override
 	public void setConfiguration(JasimaGPConfiguration config) {
@@ -69,7 +69,7 @@ public class EnsemblePriorityRule extends AbsPriorityRule {
 			// Increment the vote on the particular job.
 			PrioRuleTarget bestEntry = q.get(bestIndex);
 			if (!jobVotes.containsKey(bestEntry)) {
-				StorageClass sc = new StorageClass(bestIndex, bestEntry);
+				EntryVotes sc = new EntryVotes(bestIndex, bestEntry);
 				jobVotes.put(bestEntry, sc);
 				jobRanking.add(sc);
 			}
@@ -85,9 +85,9 @@ public class EnsemblePriorityRule extends AbsPriorityRule {
 		// Add the rankings into the decisions.
 		for (int i = 0; i < individuals.length; i++) {
 			for (int j = 0; j < q.size(); j++) {
-				StorageClass sc = jobRanking.get(j);
+				EntryVotes sc = jobRanking.get(j);
 				if (decisions[i] == sc.index) {
-					tracker.addDecision(j);
+					tracker.addDecision(individuals[i], j);
 				}
 			}
 		}
@@ -98,13 +98,13 @@ public class EnsemblePriorityRule extends AbsPriorityRule {
 		return (entry.equals(jobRanking.get(0).entry)) ? 1.0 : 0.0;
 	}
 
-	// TODO temporary class.
-	private class StorageClass implements Comparable<StorageClass> {
+	// Stores the votes made on a particular job.
+	private class EntryVotes implements Comparable<EntryVotes> {
 		final int index;
 		final PrioRuleTarget entry;
 		private int count = 0;
 
-		public StorageClass(int i, PrioRuleTarget e) {
+		public EntryVotes(int i, PrioRuleTarget e) {
 			index = i;
 			entry = e;
 		}
@@ -114,7 +114,7 @@ public class EnsemblePriorityRule extends AbsPriorityRule {
 		}
 
 		@Override
-		public int compareTo(StorageClass other) {
+		public int compareTo(EntryVotes other) {
 			int diff = this.count - other.count;
 			if (diff != 0) {
 				return diff;
