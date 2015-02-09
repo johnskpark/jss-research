@@ -2,6 +2,7 @@ package app.evolution;
 
 import ec.EvolutionState;
 import ec.gp.GPIndividual;
+import ec.gp.GPProblem;
 
 public class JasimaGPConfiguration {
 
@@ -10,7 +11,9 @@ public class JasimaGPConfiguration {
 	private int[] subpopulations;
 	private int threadnum;
 
+	private GPProblem problem;
 	private JasimaGPData data;
+
 	private IJasimaTracker tracker;
 
 	public void setState(EvolutionState state) {
@@ -27,6 +30,10 @@ public class JasimaGPConfiguration {
 
 	public void setThreadnum(int threadnum) {
 		this.threadnum = threadnum;
+	}
+
+	public void setProblem(GPProblem problem) {
+		this.problem = problem;
 	}
 
 	public void setData(JasimaGPData data) {
@@ -51,6 +58,10 @@ public class JasimaGPConfiguration {
 
 	public int getThreadnum() {
 		return threadnum;
+	}
+
+	public GPProblem getProblem() {
+		return problem;
 	}
 
 	public JasimaGPData getData() {

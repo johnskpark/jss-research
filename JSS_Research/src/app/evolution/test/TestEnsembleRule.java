@@ -12,7 +12,6 @@ import java.util.Map;
 import app.evolution.AbsPriorityRule;
 import app.evolution.JasimaGPConfiguration;
 import app.evolution.JasimaGPData;
-import app.evolution.tracker.DecisionTracker;
 import ec.EvolutionState;
 import ec.gp.GPIndividual;
 
@@ -25,7 +24,7 @@ public class TestEnsembleRule extends AbsPriorityRule {
 	private int threadnum;
 
 	private JasimaGPData data;
-	private DecisionTracker tracker;
+	private TestGroupedProblem2 problem;
 
 	private Map<PrioRuleTarget, EntryVotes> jobVotes = new HashMap<PrioRuleTarget, EntryVotes>();
 	private List<EntryVotes> jobRanking = new ArrayList<EntryVotes>();
@@ -35,7 +34,7 @@ public class TestEnsembleRule extends AbsPriorityRule {
 		state = config.getState();
 		individuals = config.getIndividuals();
 		data = config.getData();
-		tracker = (DecisionTracker) config.getTracker();
+		problem = (TestGroupedProblem2) config.getProblem();
 	}
 
 	@Override
@@ -88,7 +87,7 @@ public class TestEnsembleRule extends AbsPriorityRule {
 			for (int j = 0; j < q.size(); j++) {
 				EntryVotes sc = jobRanking.get(j);
 				if (decisions[i] == sc.index) {
-					tracker.addDecision(individuals[i], j);
+					problem.getEnsembleStats().get(individuals[i]).add(j);
 				}
 			}
 		}

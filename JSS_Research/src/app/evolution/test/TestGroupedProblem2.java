@@ -79,8 +79,15 @@ public class TestGroupedProblem2 extends GPProblem {
 			final Individual ind,
 			final int subpopulation,
 			final int threadnum) {
+		long startTime = System.currentTimeMillis();
+
 		evaluateInd(state, ind, subpopulation, threadnum);
 		evaluateEnsemble(state, subpopulation, threadnum);
+
+		long endTime = System.currentTimeMillis();
+		long timeDiff = endTime - startTime;
+
+		System.out.printf("%d\n", timeDiff);
 	}
 
 	private void evaluateInd(final EvolutionState state,
@@ -142,12 +149,17 @@ public class TestGroupedProblem2 extends GPProblem {
 
 				experiment.runExperiment();
 
-				//stat.combine((SummaryStat) experiment.getResults().get(WT_MEAN_STR));
+				for (int j = 0; j < ensemble.length; j++) {
+					StatCollector newStat = new StatCollector();
+					newStat.add(Math.sqrt(ensembleStats.get(ensemble[j]).sumSq()));
+
+					ensembleStats.put(ensemble[j], newStat);
+				}
 			}
 
 			for (int i = 0; i < inds.length; i++) {
 				MultiObjectiveFitness fitness = (MultiObjectiveFitness) inds[i].fitness;
-				fitness.getObjectives()[2] = 0; // TODO
+				fitness.getObjectives()[2] = ensembleStats.get(inds[i]).mean();
 			}
 
 			ensembleEvaluated = true;
