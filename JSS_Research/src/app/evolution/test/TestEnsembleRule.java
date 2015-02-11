@@ -2,6 +2,7 @@ package app.evolution.test;
 
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
+import jasima.shopSim.prioRules.basic.ATC;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,6 +20,8 @@ public class TestEnsembleRule extends AbsGPPriorityRule {
 
 	private static final long serialVersionUID = -2159123752873667029L;
 
+	private static final double K_VALUE = 3.0;
+
 	private static final int SAMPLE_SIZE = 2000;
 
 	private EvolutionState state;
@@ -32,6 +35,12 @@ public class TestEnsembleRule extends AbsGPPriorityRule {
 	private List<EntryVotes> jobRanking = new ArrayList<EntryVotes>();
 
 	private int numSampled = 0;
+
+	public TestEnsembleRule() {
+		super();
+
+		setTieBreaker(new ATC(K_VALUE));
+	}
 
 	@Override
 	public void setConfiguration(JasimaGPConfig config) {
@@ -103,7 +112,7 @@ public class TestEnsembleRule extends AbsGPPriorityRule {
 
 	@Override
 	public double calcPrio(PrioRuleTarget entry) {
-		return (entry.equals(jobRanking.get(0).entry)) ? 1.0 : 0.0;
+		return jobVotes.get(entry).getCount();
 	}
 
 	// Stores the votes made on a particular job.
@@ -121,16 +130,22 @@ public class TestEnsembleRule extends AbsGPPriorityRule {
 			count++;
 		}
 
+		public int getCount() {
+			return count;
+		}
+
 		@Override
 		public int compareTo(EntryVotes other) {
 			int diff = this.count - other.count;
 			if (diff != 0) {
 				return diff;
 			} else {
-				// Use SPT for now.
-				if (this.entry.currProcTime() < other.entry.currProcTime()) {
+				double prio1 = getTieBreaker().calcPrio(this.entry);
+				double prio2 = getTieBreaker().calcPrio(other.entry);
+
+				if (prio1 > prio2) {
 					return -1;
-				} else if (this.entry.currProcTime() > other.entry.currProcTime()) {
+				} else if (prio1 < prio2) {
 					return 1;
 				} else {
 					return 0;

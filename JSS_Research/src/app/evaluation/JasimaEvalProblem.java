@@ -58,7 +58,7 @@ public class JasimaEvalProblem {
 	private static final int DEFAULT_SEED = 15;
 
 	private Map<String, List<AbsEvalPriorityRule>> solversMap = new HashMap<String, List<AbsEvalPriorityRule>>();
-	private AbsSimConfig dataset;
+	private AbsSimConfig simConfig;
 	private IJasimaEvalFitness fitness;
 
 	private RuleParser parser = new RuleParser();
@@ -204,8 +204,8 @@ public class JasimaEvalProblem {
 				.item(0)
 				.getTextContent());
 
-		dataset = (AbsSimConfig)datasetClass.newInstance();
-		dataset.setSeed(DEFAULT_SEED); // TODO temporary code.
+		simConfig = (AbsSimConfig)datasetClass.newInstance();
+		simConfig.setSeed(DEFAULT_SEED); // TODO temporary code.
 
 		NodeList datasetFileNodeList = datasetBase.getElementsByTagName(XML_DATASET_FILE);
 		if (datasetFileNodeList.getLength() != 0) {
@@ -243,7 +243,7 @@ public class JasimaEvalProblem {
 			for (AbsEvalPriorityRule solver : solvers) {
 				output.printf("%s,%d", ruleFilename, solver.getSeed());
 
-				for (int i = 0; i < dataset.getNumConfigs(); i++) {
+				for (int i = 0; i < simConfig.getNumConfigs(); i++) {
 					Experiment experiment = getExperiment(solver, i);
 
 					experiment.runExperiment();
@@ -262,15 +262,19 @@ public class JasimaEvalProblem {
 	private Experiment getExperiment(AbsEvalPriorityRule rule, int index) {
 		DynamicShopExperiment experiment = new DynamicShopExperiment();
 
-		experiment.setInitialSeed(dataset.getLongValue());
-		experiment.setNumMachines(dataset.getNumMachines(index));
-		experiment.setUtilLevel(dataset.getUtilLevel(index));
-		experiment.setDueDateFactor(dataset.getDueDateFactor(index));
-		experiment.setWeights(dataset.getWeight(index));
-		experiment.setOpProcTime(dataset.getMinOpProc(index), dataset.getMaxOpProc(index));
-		experiment.setNumOps(dataset.getMinNumOps(index), dataset.getMaxNumOps(index));
+		experiment.setInitialSeed(simConfig.getLongValue());
+		experiment.setNumMachines(simConfig.getNumMachines(index));
+		experiment.setUtilLevel(simConfig.getUtilLevel(index));
+		experiment.setDueDateFactor(simConfig.getDueDateFactor(index));
+		experiment.setWeights(simConfig.getWeight(index));
+		experiment.setOpProcTime(simConfig.getMinOpProc(index), simConfig.getMaxOpProc(index));
+		experiment.setNumOps(simConfig.getMinNumOps(index), simConfig.getMaxNumOps(index));
 
-		experiment.setShopListener(new NotifierListener[]{new BasicJobStatCollector()});
+		BasicJobStatCollector statCollector = new BasicJobStatCollector();
+		statCollector.setIgnoreFirst(simConfig.getNumIgnore());
+
+		experiment.setShopListener(new NotifierListener[]{statCollector});
+		experiment.setStopAfterNumJobs(simConfig.getStopAfterNumJobs());
 		experiment.setSequencingRule(rule);
 		experiment.setScenario(DynamicShopExperiment.Scenario.JOB_SHOP);
 

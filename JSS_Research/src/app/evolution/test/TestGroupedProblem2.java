@@ -21,6 +21,7 @@ import ec.gp.GPProblem;
 import ec.multiobjective.MultiObjectiveFitness;
 import ec.util.Parameter;
 
+// TODO instead of using all individuals, I should be using the Pareto front of the individuals instead.
 public class TestGroupedProblem2 extends GPProblem {
 
 	private static final long serialVersionUID = -3817123526020178300L;
@@ -79,15 +80,8 @@ public class TestGroupedProblem2 extends GPProblem {
 			final Individual ind,
 			final int subpopulation,
 			final int threadnum) {
-		long startTime = System.currentTimeMillis();
-
 		evaluateInd(state, ind, subpopulation, threadnum);
 		evaluateEnsemble(state, subpopulation, threadnum);
-
-		long endTime = System.currentTimeMillis();
-		long timeDiff = endTime - startTime;
-
-		System.out.printf("%d\n", timeDiff);
 	}
 
 	private void evaluateInd(final EvolutionState state,
@@ -146,7 +140,7 @@ public class TestGroupedProblem2 extends GPProblem {
 			ensembleRule.setConfiguration(config);
 
 			for (int i = 0; i < simConfig.getNumConfigs(); i++) {
-				Experiment experiment = getExperiment(state, rule, i);
+				Experiment experiment = getExperiment(state, ensembleRule, i);
 
 				experiment.runExperiment();
 

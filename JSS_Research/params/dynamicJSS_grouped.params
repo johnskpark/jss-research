@@ -2,7 +2,9 @@
 # Licensed under the Academic Free License version 3.0
 # See the file "LICENSE" for more information
 
-parent.0 = koza.params
+parent.0 = koza_mo.params
+
+multi.fitness.num-objectives = 3
 
 # the next four items are already defined in koza.params, but we
 # put them here to be clear.
@@ -16,65 +18,50 @@ gp.fs.0.name = f0
 
 # We have five functions in the function set.  They are:
 
-gp.fs.0.size = 16
-gp.fs.0.func.0 = jss.evolution.node.basic.ERCRandomUniform
+gp.fs.0.size = 15
+gp.fs.0.func.0 = app.evolution.node.basic.ERCRandomUniform
 gp.fs.0.func.0.nc = nc0
 gp.fs.0.func.0.min = 0
 gp.fs.0.func.0.max = 1
-gp.fs.0.func.1 = jss.evolution.node.basic.OpAddition
+gp.fs.0.func.1 = app.evolution.node.basic.OpAddition
 gp.fs.0.func.1.nc = nc2
-gp.fs.0.func.2 = jss.evolution.node.basic.OpConditional
+gp.fs.0.func.2 = app.evolution.node.basic.OpConditional
 gp.fs.0.func.2.nc = nc3
-gp.fs.0.func.3 = jss.evolution.node.basic.OpDivision
+gp.fs.0.func.3 = app.evolution.node.basic.OpDivision
 gp.fs.0.func.3.nc = nc2
-gp.fs.0.func.4 = jss.evolution.node.basic.OpMultiplication
+gp.fs.0.func.4 = app.evolution.node.basic.OpMultiplication
 gp.fs.0.func.4.nc = nc2
-gp.fs.0.func.5 = jss.evolution.node.basic.OpSubtraction
+gp.fs.0.func.5 = app.evolution.node.basic.OpSubtraction
 gp.fs.0.func.5.nc = nc2
-gp.fs.0.func.6 = jss.evolution.node.basic.OpMaximum
+gp.fs.0.func.6 = app.evolution.node.basic.OpMaximum
 gp.fs.0.func.6.nc = nc2
-gp.fs.0.func.7 = jss.evolution.node.basic.OpMinimum
+gp.fs.0.func.7 = app.evolution.node.basic.OpMinimum
 gp.fs.0.func.7.nc = nc2
-gp.fs.0.func.8 = jss.evolution.node.basic.ScoreProcessingTime
+gp.fs.0.func.8 = app.evolution.node.basic.ScoreProcessingTime
 gp.fs.0.func.8.nc = nc0
-gp.fs.0.func.9 = jss.evolution.node.basic.ScoreRemainingOperation
+gp.fs.0.func.9 = app.evolution.node.basic.ScoreRemainingOperation
 gp.fs.0.func.9.nc = nc0
-gp.fs.0.func.10 = jss.evolution.node.basic.ScoreRemainingTime
+gp.fs.0.func.10 = app.evolution.node.basic.ScoreRemainingTime
 gp.fs.0.func.10.nc = nc0
-gp.fs.0.func.11 = jss.evolution.node.basic.ScoreJobReadyTime
+gp.fs.0.func.11 = app.evolution.node.basic.ScoreJobReadyTime
 gp.fs.0.func.11.nc = nc0
-gp.fs.0.func.12 = jss.evolution.node.basic.ScoreDueDate
+gp.fs.0.func.12 = app.evolution.node.basic.ScoreDueDate
 gp.fs.0.func.12.nc = nc0
-gp.fs.0.func.13 = jss.evolution.node.basic.ScorePenalty
+gp.fs.0.func.13 = app.evolution.node.basic.ScorePenalty
 gp.fs.0.func.13.nc = nc0
-gp.fs.0.func.14 = jss.evolution.node.basic.ScoreNumJobsWaiting
+gp.fs.0.func.14 = app.evolution.node.basic.ScoreMachineReadyTime
 gp.fs.0.func.14.nc = nc0
-gp.fs.0.func.15 = jss.evolution.node.basic.ScoreMachineReadyTime
-gp.fs.0.func.15.nc = nc0
 
-stat = jss.evolution.JSSGPGroupedStatistics
+eval.problem = app.evolution.test.TestGroupedProblem2
+eval.problem.data = app.evolution.JasimaGPData
 
-eval.problem = jss.evolution.JSSGPGroupedProblem
-eval.problem.data = jss.evolution.JSSGPData
+#eval.problem.rule = app.evolution.priorityRules.BasicPriorityRule
+#eval.problem.fitness = app.evolution.fitness.TWTFitness
 
-eval.problem.instances = jss.problem.dynamic_problem.rachel_dataset.TenDynamicJSSDataset
-eval.problem.instances_seed = 15
-
-eval.problem.solver = jss.evolution.solver.SinglePopEnsembleSolver
-eval.problem.fitness = jss.evolution.fitness.CoopTWTFitness
-eval.problem.ratio = 1.0;
-
-eval.problem.group = jss.evolution.grouping.EnsembleGroupedIndividual
-eval.problem.group_size = 3
-eval.problem.iteration = 3
-
-eval.problem.tracker = jss.evolution.tracker.NCLPriorityTracker
-
-eval.problem.size = small
-#eval.problem.instances = jss.problem.static_problem.rachel_dataset.TwoStaticJSSDataset
+eval.problem.simulator = app.simConfig.rachelConfig.FourOpSimConfig
+eval.problem.simulator.seed = 15
 
 # seed.0=26556
 seed.0=17
 
-pop.subpop.0.size = 256
-generations = 25
+# pop.subpop.0.size = 200
