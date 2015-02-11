@@ -23,7 +23,7 @@ public class JasimaSimpleProblem extends GPProblem {
 
 	public static final long DEFAULT_SEED = 15;
 
-	private AbsPriorityRule rule;
+	private AbsGPPriorityRule rule;
 	private IJasimaFitness fitness;
 
 	private AbsSimConfig simConfig;
@@ -38,7 +38,7 @@ public class JasimaSimpleProblem extends GPProblem {
 		input.setup(state, base.push(P_DATA));
 
 		// Setup the dataset and the solver.
-		rule = (AbsPriorityRule) state.parameters.getInstanceForParameterEq(base.push(P_RULE), null, AbsPriorityRule.class);
+		rule = (AbsGPPriorityRule) state.parameters.getInstanceForParameterEq(base.push(P_RULE), null, AbsGPPriorityRule.class);
 		fitness = (IJasimaFitness) state.parameters.getInstanceForParameterEq(base.push(P_FITNESS), null, IJasimaFitness.class);
 
 		// Setup the simulator configurations.
@@ -62,7 +62,7 @@ public class JasimaSimpleProblem extends GPProblem {
 			final int subpopulation,
 			final int threadnum) {
 		if (!ind.evaluated) {
-			JasimaGPConfiguration config = new JasimaGPConfiguration();
+			JasimaGPConfig config = new JasimaGPConfig();
 			config.setState(state);
 			config.setIndividuals(new GPIndividual[]{(GPIndividual)ind});
 			config.setSubpopulations(new int[]{subpopulation});
@@ -87,7 +87,7 @@ public class JasimaSimpleProblem extends GPProblem {
 	}
 
 	@SuppressWarnings("unchecked")
-	private Experiment getExperiment(final EvolutionState state, AbsPriorityRule rule, int index) {
+	private Experiment getExperiment(final EvolutionState state, AbsGPPriorityRule rule, int index) {
 		DynamicShopExperiment experiment = new DynamicShopExperiment();
 
 		experiment.setInitialSeed(simConfig.getLongValue());

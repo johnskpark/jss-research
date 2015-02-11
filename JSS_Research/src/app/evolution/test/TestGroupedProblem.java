@@ -4,11 +4,11 @@ import jasima.core.experiment.Experiment;
 import jasima.core.util.observer.NotifierListener;
 import jasima.shopSim.models.dynamicShop.DynamicShopExperiment;
 import jasima.shopSim.util.BasicJobStatCollector;
-import app.evolution.AbsPriorityRule;
+import app.evolution.AbsGPPriorityRule;
 import app.evolution.IJasimaFitness;
 import app.evolution.IJasimaGrouping;
 import app.evolution.IJasimaTracker;
-import app.evolution.JasimaGPConfiguration;
+import app.evolution.JasimaGPConfig;
 import app.evolution.JasimaGPData;
 import app.evolution.fitness.MOTWTFitness;
 import app.evolution.grouping.PopGrouping;
@@ -39,8 +39,8 @@ public class TestGroupedProblem extends GPProblem {
 
 	public static final long DEFAULT_SEED = 15;
 
-	private AbsPriorityRule indRule = new BasicPriorityRule();
-	private AbsPriorityRule ensembleRule = new EnsemblePriorityRule();
+	private AbsGPPriorityRule indRule = new BasicPriorityRule();
+	private AbsGPPriorityRule ensembleRule = new EnsemblePriorityRule();
 	private IJasimaFitness fitness = new MOTWTFitness();
 
 	private IJasimaGrouping grouping = new PopGrouping();
@@ -113,7 +113,7 @@ public class TestGroupedProblem extends GPProblem {
 			final Individual ind,
 			final int subpopulation,
 			final int threadnum) {
-		JasimaGPConfiguration config = new JasimaGPConfiguration();
+		JasimaGPConfig config = new JasimaGPConfig();
 		config.setState(state);
 		config.setIndividuals(new GPIndividual[]{(GPIndividual) ind});
 		config.setSubpopulations(new int[]{subpopulation});
@@ -138,7 +138,7 @@ public class TestGroupedProblem extends GPProblem {
 		for (int i = 0; i < groups.length; i++) {
 			GPIndividual[] group = groups[i];
 
-			JasimaGPConfiguration config = new JasimaGPConfiguration();
+			JasimaGPConfig config = new JasimaGPConfig();
 			config.setState(state);
 			config.setIndividuals(group);
 			config.setSubpopulations(new int[]{subpopulation});
@@ -162,7 +162,7 @@ public class TestGroupedProblem extends GPProblem {
 	}
 
 	@SuppressWarnings("unchecked")
-	private Experiment getExperiment(final EvolutionState state, AbsPriorityRule rule, int index) {
+	private Experiment getExperiment(final EvolutionState state, AbsGPPriorityRule rule, int index) {
 		DynamicShopExperiment experiment = new DynamicShopExperiment();
 
 		experiment.setInitialSeed(simConfig.getLongValue());

@@ -9,14 +9,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import app.evolution.AbsPriorityRule;
-import app.evolution.JasimaGPConfiguration;
+import app.evolution.AbsGPPriorityRule;
+import app.evolution.JasimaGPConfig;
 import app.evolution.JasimaGPData;
 import app.evolution.tracker.DecisionTracker;
 import ec.EvolutionState;
 import ec.gp.GPIndividual;
 
-public class EnsemblePriorityRule extends AbsPriorityRule {
+public class EnsemblePriorityRule extends AbsGPPriorityRule {
 
 	private static final long serialVersionUID = -2159123752873667029L;
 
@@ -31,7 +31,7 @@ public class EnsemblePriorityRule extends AbsPriorityRule {
 	private List<EntryVotes> jobRanking = new ArrayList<EntryVotes>();
 
 	@Override
-	public void setConfiguration(JasimaGPConfiguration config) {
+	public void setConfiguration(JasimaGPConfig config) {
 		state = config.getState();
 		individuals = config.getIndividuals();
 		data = config.getData();

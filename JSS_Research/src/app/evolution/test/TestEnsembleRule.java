@@ -9,13 +9,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import app.evolution.AbsPriorityRule;
-import app.evolution.JasimaGPConfiguration;
+import app.evolution.AbsGPPriorityRule;
+import app.evolution.JasimaGPConfig;
 import app.evolution.JasimaGPData;
 import ec.EvolutionState;
 import ec.gp.GPIndividual;
 
-public class TestEnsembleRule extends AbsPriorityRule {
+public class TestEnsembleRule extends AbsGPPriorityRule {
 
 	private static final long serialVersionUID = -2159123752873667029L;
 
@@ -34,7 +34,7 @@ public class TestEnsembleRule extends AbsPriorityRule {
 	private int numSampled = 0;
 
 	@Override
-	public void setConfiguration(JasimaGPConfiguration config) {
+	public void setConfiguration(JasimaGPConfig config) {
 		state = config.getState();
 		individuals = config.getIndividuals();
 		data = config.getData();

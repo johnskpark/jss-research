@@ -1,13 +1,13 @@
 package app.evolution.priorityRules;
 
 import jasima.shopSim.core.PrioRuleTarget;
-import app.evolution.AbsPriorityRule;
-import app.evolution.JasimaGPConfiguration;
+import app.evolution.AbsGPPriorityRule;
+import app.evolution.JasimaGPConfig;
 import app.evolution.JasimaGPData;
 import ec.EvolutionState;
 import ec.gp.GPIndividual;
 
-public class BasicPriorityRule extends AbsPriorityRule {
+public class BasicPriorityRule extends AbsGPPriorityRule {
 
 	private static final long serialVersionUID = 5215861545303707980L;
 
@@ -18,7 +18,7 @@ public class BasicPriorityRule extends AbsPriorityRule {
 	private JasimaGPData data;
 
 	@Override
-	public void setConfiguration(JasimaGPConfiguration config) {
+	public void setConfiguration(JasimaGPConfig config) {
 		state = config.getState();
 		individual = config.getIndividuals()[0];
 		data = config.getData();

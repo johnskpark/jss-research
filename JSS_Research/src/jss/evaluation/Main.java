@@ -8,7 +8,6 @@ package jss.evaluation;
 public class Main {
 
 	public static void main(String[] args) {
-		//RuleParser parser = new RuleParser(); // TODO temporary code
 		String xmlFilename = args[0];
 		String outputCsv = args[1];
 

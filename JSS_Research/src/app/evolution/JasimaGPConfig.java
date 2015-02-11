@@ -4,7 +4,7 @@ import ec.EvolutionState;
 import ec.gp.GPIndividual;
 import ec.gp.GPProblem;
 
-public class JasimaGPConfiguration {
+public class JasimaGPConfig {
 
 	private EvolutionState state;
 	private GPIndividual[] ind;
