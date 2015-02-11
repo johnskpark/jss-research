@@ -19,7 +19,7 @@ public class TestEnsembleRule extends AbsPriorityRule {
 
 	private static final long serialVersionUID = -2159123752873667029L;
 
-	private static final int SAMPLE_SIZE = 100;
+	private static final int SAMPLE_SIZE = 2000;
 
 	private EvolutionState state;
 	private GPIndividual[] individuals;
