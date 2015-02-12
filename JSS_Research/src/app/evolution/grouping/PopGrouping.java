@@ -1,28 +1,25 @@
 package app.evolution.grouping;
 
+import app.evolution.GroupedIndividual;
+import app.evolution.IJasimaGrouping;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.Subpopulation;
 import ec.gp.GPIndividual;
 import ec.gp.koza.KozaFitness;
 import ec.util.Parameter;
-import app.evolution.IJasimaGrouping;
 
-// TODO this needs more working as well. There is no such thing as
-// the best ensemble of generation. It's the best individual of generation.
 public class PopGrouping implements IJasimaGrouping {
 
 	private static final long serialVersionUID = 6709369554204377046L;
 
-	private boolean groupEvaluated = false;
-
 	private Subpopulation population;
-	private GPIndividual[][] ensemble;
+	private GroupedIndividual ensemble;
 
-	private GPIndividual[] bestEnsemble = null;
+	private GroupedIndividual bestEnsemble = null;
 	private KozaFitness bestEnsembleFitness = new KozaFitness();
 
-	private GPIndividual[] bestEnsembleOfGeneration = null;
+	private GroupedIndividual bestEnsembleOfGeneration = null;
 	private KozaFitness bestEnsembleOfGenerationFitness = new KozaFitness();
 
 	@Override
@@ -34,13 +31,13 @@ public class PopGrouping implements IJasimaGrouping {
 	@Override
 	public void groupIndividuals(EvolutionState state, int threadnum) {
 		population = state.population.subpops[0];
-		ensemble = new GPIndividual[1][population.individuals.length];
+		GPIndividual[] indArray = new GPIndividual[population.individuals.length];
 
 		for (int i = 0; i < population.individuals.length; i++) {
-			ensemble[0][i] = (GPIndividual) population.individuals[i];
+			indArray[i] = (GPIndividual) population.individuals[i];
 		}
 
-		groupEvaluated = false;
+		ensemble = new GroupedIndividual(indArray);
 	}
 
 	@Override
@@ -50,21 +47,16 @@ public class PopGrouping implements IJasimaGrouping {
 
 	@Override
 	public boolean isGroupEvaluated() {
-		return groupEvaluated;
+		return false;
 	}
 
 	@Override
-	public void setGroupEvaluated(boolean evaluated) {
-		groupEvaluated = evaluated;
-	}
-
-	@Override
-	public GPIndividual[][] getGroups(Individual ind) {
+	public GroupedIndividual getGroups(Individual ind) {
 		return ensemble;
 	}
 
 	@Override
-	public GPIndividual[] getBestGroup() {
+	public GroupedIndividual getBestGroup() {
 		return bestEnsemble;
 	}
 
@@ -74,7 +66,7 @@ public class PopGrouping implements IJasimaGrouping {
 	}
 
 	@Override
-	public GPIndividual[] getBestGroupForGeneration() {
+	public GroupedIndividual getBestGroupForGeneration() {
 		return bestEnsembleOfGeneration;
 	}
 
@@ -84,7 +76,7 @@ public class PopGrouping implements IJasimaGrouping {
 	}
 
 	@Override
-	public void updateFitness(EvolutionState state, GPIndividual[] indGroup,
+	public void updateFitness(EvolutionState state, GroupedIndividual indGroup,
 			double fitness) {
 		// Update the best group of generation.
 		if (bestEnsembleOfGenerationFitness.standardizedFitness() > fitness) {

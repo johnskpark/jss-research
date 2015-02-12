@@ -1,4 +1,4 @@
-package app.evolution.grouped_problem;
+package app.evolution;
 
 import ec.gp.GPIndividual;
 

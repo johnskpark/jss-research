@@ -28,7 +28,9 @@ public class JasimaGroupedProblem extends GPProblem implements IJasimaGPProblem 
 	public static final long DEFAULT_SEED = 15;
 
 	private AbsGPPriorityRule rule;
-	private IJasimaFitness fitness;
+	private AbsGPPriorityRule groupRule;
+
+	private IJasimaGroupFitness fitness;
 
 	private IJasimaGrouping grouping = null;
 	private IJasimaTracker tracker = null;
@@ -44,9 +46,12 @@ public class JasimaGroupedProblem extends GPProblem implements IJasimaGPProblem 
 		input = (JasimaGPData) state.parameters.getInstanceForParameterEq(base.push(P_DATA), null, JasimaGPData.class);
 		input.setup(state, base.push(P_DATA));
 
-		// Setup the dataset and the solver. TODO need a way of using multiple rules for the single approach.
+		// Setup the solver.
 		rule = (AbsGPPriorityRule) state.parameters.getInstanceForParameterEq(base.push(P_RULE), null, AbsGPPriorityRule.class);
-		fitness = (IJasimaFitness) state.parameters.getInstanceForParameterEq(base.push(P_FITNESS), null, IJasimaFitness.class);
+		groupRule = (AbsGPPriorityRule) state.parameters.getInstanceForParameterEq(base.push(P_RULE), null, AbsGPPriorityRule.class);
+
+		// Setup the fitness.
+		fitness = (IJasimaGroupFitness) state.parameters.getInstanceForParameterEq(base.push(P_FITNESS), null, IJasimaGroupFitness.class);
 
 		// Setup the simulator configurations.
 		simConfig = (AbsSimConfig) state.parameters.getInstanceForParameterEq(base.push(P_SIMULATOR), null, AbsSimConfig.class);
@@ -79,87 +84,67 @@ public class JasimaGroupedProblem extends GPProblem implements IJasimaGPProblem 
 			final Individual ind,
 			final int subpopulation,
 			final int threadnum) {
-		// TODO so, what do I want here?
-
-		// I want to be able to evaluate the ensemble as a whole, and get penalty from it.
-		// I want to be able to evaluate the individual, and get fitness from it.
-
-		// So I need to have the following:
-		// evaluation for individual, and some fitness component to it.
-		// evaluation for group, and some fitness component to it.
-
-		// Okay, so how do I want to do this fitness part here?
-		// So when the fitness is accumulated for each evaluation component, I need to
-		// get the relevant statistics class into the fitness measure, but what's a
-		// clean way of doing it?
-
-		// Ah fuck it. For now, let's just do tracker fitness for group, regular fitness for
-		// individual.
-
-		if (!ind.evaluated) {
-			// Evaluate the individual separately.
-			if (grouping.isIndEvaluated()) {
-				evaluateInd(state, ind, subpopulation, threadnum);
-			}
-
-			// Evaluate the grouping that the individual's part of.
-			if (grouping.isGroupEvaluated()) {
-				evaluateGroup(state, grouping.getGroups(ind), subpopulation, threadnum);
-			}
-
-			fitness.setFitness(state, ind);
-			fitness.clearFitness();
-
-			ind.evaluated = true;
-		}
+		evaluateInd(state, ind, subpopulation, threadnum);
+		evaluateGroup(state, grouping.getGroups(ind), subpopulation, threadnum);
 	}
 
 	protected void evaluateInd(final EvolutionState state,
 			final Individual ind,
 			final int subpopulation,
 			final int threadnum) {
-		JasimaGPConfig config = new JasimaGPConfig();
-		config.setState(state);
-		config.setIndividuals(new GPIndividual[]{(GPIndividual) ind});
-		config.setSubpopulations(new int[]{subpopulation});
-		config.setThreadnum(threadnum);
-		config.setData((JasimaGPData)input);
+		if (!ind.evaluated) {
+			JasimaGPConfig config = new JasimaGPConfig();
+			config.setState(state);
+			config.setIndividuals(new GPIndividual[]{(GPIndividual) ind});
+			config.setSubpopulations(new int[]{subpopulation});
+			config.setThreadnum(threadnum);
+			config.setData((JasimaGPData)input);
 
-		rule.setConfiguration(config);
+			rule.setConfiguration(config);
 
-		for (int i = 0; i < simConfig.getNumConfigs(); i++) {
-			Experiment experiment = getExperiment(state, rule, i);
+			for (int i = 0; i < simConfig.getNumConfigs(); i++) {
+				Experiment experiment = getExperiment(state, rule, i);
 
-			experiment.runExperiment();
+				experiment.runExperiment();
 
-			fitness.accumulateFitness(experiment.getResults());
-			tracker.clear();
+				fitness.accumulateIndFitness(ind, experiment.getResults());
+			}
+
+			fitness.setIndFitness(state, ind);
+			fitness.clearIndFitness();
+
+			ind.evaluated = true;
 		}
 	}
 
 	protected void evaluateGroup(final EvolutionState state,
-			final GPIndividual[][] groups,
+			final GroupedIndividual group,
 			final int subpopulation,
 			final int threadnum) {
-		for (int i = 0; i < groups.length; i++) {
-			GPIndividual[] group = groups[i];
-
+		if (!group.isEvaluated()) {
 			JasimaGPConfig config = new JasimaGPConfig();
 			config.setState(state);
-			config.setIndividuals(group);
+			config.setIndividuals(group.getInds());
 			config.setSubpopulations(new int[]{subpopulation});
 			config.setThreadnum(threadnum);
 			config.setData((JasimaGPData)input);
 			config.setTracker(tracker);
+
+			groupRule.setConfiguration(config);
 
 			for (int j = 0; j < simConfig.getNumConfigs(); j++) {
 				Experiment experiment = getExperiment(state, rule, j);
 
 				experiment.runExperiment();
 
-				fitness.accumulateTrackerFitness(tracker.getResults());
+				fitness.accumulateGroupFitness(tracker.getResults());
 				tracker.clear();
 			}
+
+			fitness.setGroupFitness(state, group.getInds());
+			fitness.clearGroupFitness();
+
+			group.setEvaluated(true);
 		}
 	}
 
@@ -193,6 +178,7 @@ public class JasimaGroupedProblem extends GPProblem implements IJasimaGPProblem 
 
 		newObject.input = (JasimaGPData)input.clone();
 		newObject.rule = rule;
+		newObject.groupRule = groupRule;
 		newObject.fitness = fitness;
 		newObject.grouping = grouping;
 		newObject.tracker = tracker;
