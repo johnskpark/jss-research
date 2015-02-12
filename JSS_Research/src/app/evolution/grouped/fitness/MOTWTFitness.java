@@ -22,7 +22,7 @@ public class MOTWTFitness implements IJasimaGroupFitness {
 	private Map<GPIndividual, SummaryStat> groupFitness = new HashMap<GPIndividual, SummaryStat>();
 
 	@Override
-	public void accumulateIndFitness(Individual ind, Map<String, Object> results) {
+	public void accumulateIndFitness(final Individual ind, final Map<String, Object> results) {
 		if (this.ind != null && !this.ind.equals(ind)) {
 			throw new RuntimeException("accumulateIndFitness");
 		}
@@ -34,7 +34,7 @@ public class MOTWTFitness implements IJasimaGroupFitness {
 	}
 
 	@Override
-	public void accumulateGroupFitness(Pair<GPIndividual, Double>[] groupResults) {
+	public void accumulateGroupFitness(final Pair<GPIndividual, Double>[] groupResults) {
 		for (Pair<GPIndividual, Double> pair : groupResults) {
 			if (!groupFitness.containsKey(pair.a)) {
 				groupFitness.put(pair.a, new SummaryStat());
@@ -44,7 +44,7 @@ public class MOTWTFitness implements IJasimaGroupFitness {
 	}
 
 	@Override
-	public void setIndFitness(final EvolutionState state, Individual ind) {
+	public void setIndFitness(final EvolutionState state, final Individual ind) {
 		if (this.ind == null || !this.ind.equals(ind)) {
 			throw new RuntimeException("setIndFitness");
 		}
@@ -55,7 +55,7 @@ public class MOTWTFitness implements IJasimaGroupFitness {
 	}
 
 	@Override
-	public void setGroupFitness(final EvolutionState state, GPIndividual[] inds) {
+	public void setGroupFitness(final EvolutionState state, final GPIndividual[] inds) {
 		for (GPIndividual ind : inds) {
 			SummaryStat stat = groupFitness.get(ind);
 			if (stat == null) {
@@ -65,6 +65,13 @@ public class MOTWTFitness implements IJasimaGroupFitness {
 			MultiObjectiveFitness fitness = (MultiObjectiveFitness) ind.fitness;
 			fitness.getObjectives()[2] = stat.mean();
 		}
+	}
+
+	@Override
+	public void setFitness(final EvolutionState state,
+			final Individual ind) {
+		setIndFitness(state, ind);
+		setGroupFitness(state, new GPIndividual[]{(GPIndividual) ind});
 	}
 
 	@Override

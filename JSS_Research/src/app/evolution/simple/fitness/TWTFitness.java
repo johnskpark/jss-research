@@ -1,17 +1,15 @@
 package app.evolution.simple.fitness;
 
 import jasima.core.statistics.SummaryStat;
-import jasima.core.util.Pair;
 
 import java.util.Map;
 
-import app.evolution.IJasimaFitness;
+import app.evolution.simple.IJasimaSimpleFitness;
 import ec.EvolutionState;
 import ec.Individual;
-import ec.gp.GPIndividual;
 import ec.gp.koza.KozaFitness;
 
-public class TWTFitness implements IJasimaFitness {
+public class TWTFitness implements IJasimaSimpleFitness {
 
 	private static final String WT_MEAN_STR = "weightedTardMean";
 
@@ -25,22 +23,14 @@ public class TWTFitness implements IJasimaFitness {
 	}
 
 	@Override
-	public void accumulateTrackerFitness(final Pair<GPIndividual, Double>[] trackerResults) {
-	}
-
-	@Override
 	public void setFitness(final EvolutionState state,
 			final Individual ind) {
 		((KozaFitness)ind.fitness).setStandardizedFitness(state, overallStat.sum());
 	}
 
 	@Override
-	public void clearFitness() {
+	public void clear() {
 		overallStat.clear();
-	}
-
-	@Override
-	public void clearTrackerFitness() {
 	}
 
 }

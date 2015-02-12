@@ -52,17 +52,15 @@ gp.fs.0.func.13.nc = nc0
 gp.fs.0.func.14 = app.evolution.node.basic.ScoreMachineReadyTime
 gp.fs.0.func.14.nc = nc0
 
-eval.problem = app.evolution.JasimaGroupedProblem
+eval.problem = app.evolution.grouped.JasimaGroupedProblem
 eval.problem.data = app.evolution.JasimaGPData
 
 eval.problem.rule = app.evolution.priorityRules.BasicPriorityRule
 eval.problem.groupRule = app.evolution.priorityRules.EnsemblePriorityRule
 
-eval.problem.fitness = app.evolution.fitness.MOTWTFitness
-
-eval.problem.grouping = app.evolution.grouping.PopGrouping
-
-eval.problem.tracker = app.evolution.tracker.DecisionTracker
+eval.problem.fitness = app.evolution.grouped.fitness.MOTWTFitness
+eval.problem.grouping = app.evolution.grouped.grouping.PopGrouping
+eval.problem.tracker = app.evolution.grouped.tracker.DecisionTracker
 
 eval.problem.simulator = app.simConfig.rachelConfig.FourOpSimConfig
 eval.problem.simulator.seed = 15

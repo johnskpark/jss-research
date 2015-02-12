@@ -1,7 +1,6 @@
 package app.evolution.simple;
 
 import app.evolution.AbsGPPriorityRule;
-import app.evolution.IJasimaFitness;
 import app.evolution.JasimaGPConfig;
 import app.evolution.JasimaGPData;
 import app.simConfig.AbsSimConfig;
@@ -28,7 +27,7 @@ public class JasimaSimpleProblem extends GPProblem {
 	public static final long DEFAULT_SEED = 15;
 
 	private AbsGPPriorityRule rule;
-	private IJasimaFitness fitness;
+	private IJasimaSimpleFitness fitness;
 
 	private AbsSimConfig simConfig;
 	private long simSeed;
@@ -43,7 +42,7 @@ public class JasimaSimpleProblem extends GPProblem {
 
 		// Setup the dataset and the solver.
 		rule = (AbsGPPriorityRule) state.parameters.getInstanceForParameterEq(base.push(P_RULE), null, AbsGPPriorityRule.class);
-		fitness = (IJasimaFitness) state.parameters.getInstanceForParameterEq(base.push(P_FITNESS), null, IJasimaFitness.class);
+		fitness = (IJasimaSimpleFitness) state.parameters.getInstanceForParameterEq(base.push(P_FITNESS), null, IJasimaSimpleFitness.class);
 
 		// Setup the simulator configurations.
 		simConfig = (AbsSimConfig) state.parameters.getInstanceForParameterEq(base.push(P_SIMULATOR), null, AbsSimConfig.class);
@@ -84,7 +83,7 @@ public class JasimaSimpleProblem extends GPProblem {
 			}
 
 			fitness.setFitness(state, ind);
-			fitness.clearFitness();
+			fitness.clear();
 
 			ind.evaluated = true;
 		}
