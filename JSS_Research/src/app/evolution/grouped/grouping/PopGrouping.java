@@ -1,7 +1,7 @@
-package app.evolution.grouping;
+package app.evolution.grouped.grouping;
 
-import app.evolution.GroupedIndividual;
-import app.evolution.IJasimaGrouping;
+import app.evolution.grouped.GroupedIndividual;
+import app.evolution.grouped.IJasimaGrouping;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.Subpopulation;

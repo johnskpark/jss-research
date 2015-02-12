@@ -1,4 +1,4 @@
-package app.evolution.fitness;
+package app.evolution.grouped.fitness;
 
 import jasima.core.statistics.SummaryStat;
 import jasima.core.util.Pair;
@@ -6,7 +6,7 @@ import jasima.core.util.Pair;
 import java.util.HashMap;
 import java.util.Map;
 
-import app.evolution.IJasimaGroupFitness;
+import app.evolution.grouped.IJasimaGroupFitness;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.gp.GPIndividual;

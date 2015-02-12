@@ -1,9 +1,13 @@
-package app.evolution;
+package app.evolution.grouped;
 
 import jasima.core.experiment.Experiment;
 import jasima.core.util.observer.NotifierListener;
 import jasima.shopSim.models.dynamicShop.DynamicShopExperiment;
 import jasima.shopSim.util.BasicJobStatCollector;
+import app.evolution.AbsGPPriorityRule;
+import app.evolution.IJasimaGPProblem;
+import app.evolution.JasimaGPConfig;
+import app.evolution.JasimaGPData;
 import app.simConfig.AbsSimConfig;
 import ec.EvolutionState;
 import ec.Individual;
@@ -17,6 +21,8 @@ import ec.util.Parameter;
 // of individuals.
 
 // Also, I need to be able to get the stat file for multi-objective optimisation to be copied over (i.e. the front.stat file).
+
+// Also, it seems that the experiments take longer and longer each time it is run...
 public class JasimaGroupedProblem extends GPProblem implements IJasimaGPProblem {
 
 	private static final long serialVersionUID = -3817123526020178300L;

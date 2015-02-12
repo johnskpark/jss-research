@@ -1,4 +1,4 @@
-package app.evolution;
+package app.evolution.grouped;
 
 import ec.gp.GPIndividual;
 

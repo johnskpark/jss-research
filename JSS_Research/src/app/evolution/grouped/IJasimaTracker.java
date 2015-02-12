@@ -1,5 +1,6 @@
-package app.evolution;
+package app.evolution.grouped;
 
+import app.evolution.IJasimaGPProblem;
 import jasima.core.util.Pair;
 import ec.gp.GPIndividual;
 

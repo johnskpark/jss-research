@@ -1,4 +1,4 @@
-package app.evolution.tracker;
+package app.evolution.grouped.tracker;
 
 import jasima.core.util.Pair;
 
@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import app.evolution.IJasimaGPProblem;
-import app.evolution.IJasimaTracker;
+import app.evolution.grouped.IJasimaTracker;
 import app.util.BasicStatistics;
 import ec.gp.GPIndividual;
 

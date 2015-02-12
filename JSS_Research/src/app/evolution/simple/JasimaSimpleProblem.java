@@ -1,5 +1,9 @@
-package app.evolution;
+package app.evolution.simple;
 
+import app.evolution.AbsGPPriorityRule;
+import app.evolution.IJasimaFitness;
+import app.evolution.JasimaGPConfig;
+import app.evolution.JasimaGPData;
 import app.simConfig.AbsSimConfig;
 import jasima.core.experiment.Experiment;
 import jasima.core.util.observer.NotifierListener;

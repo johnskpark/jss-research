@@ -1,5 +1,6 @@
 package app.evolution;
 
+import app.evolution.grouped.IJasimaTracker;
 import ec.EvolutionState;
 import ec.gp.GPIndividual;
 import ec.gp.GPProblem;

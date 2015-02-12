@@ -1,4 +1,4 @@
-package app.evolution.fitness;
+package app.evolution.simple.fitness;
 
 import jasima.core.statistics.SummaryStat;
 import jasima.core.util.Pair;

@@ -13,7 +13,7 @@ import java.util.Map;
 import app.evolution.AbsGPPriorityRule;
 import app.evolution.JasimaGPConfig;
 import app.evolution.JasimaGPData;
-import app.evolution.tracker.DecisionTracker;
+import app.evolution.grouped.tracker.DecisionTracker;
 import ec.EvolutionState;
 import ec.gp.GPIndividual;
 

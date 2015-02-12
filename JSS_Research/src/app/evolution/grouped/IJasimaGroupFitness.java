@@ -1,4 +1,4 @@
-package app.evolution;
+package app.evolution.grouped;
 
 import jasima.core.util.Pair;
 
