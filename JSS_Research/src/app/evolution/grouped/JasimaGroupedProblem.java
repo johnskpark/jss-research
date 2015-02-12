@@ -15,9 +15,7 @@ import ec.gp.GPIndividual;
 import ec.gp.GPProblem;
 import ec.util.Parameter;
 
-// TODO put this in its own little package, away from the simple classes, after I'm happy with it.
-
-// Also, I need to be able to print out the `best' ensemble that I've made, but for now, let's just use the Pareto front
+// TODO Also, I need to be able to print out the `best' ensemble that I've made, but for now, let's just use the Pareto front
 // of individuals.
 
 // Also, I need to be able to get the stat file for multi-objective optimisation to be copied over (i.e. the front.stat file).
@@ -86,6 +84,10 @@ public class JasimaGroupedProblem extends GPProblem implements IJasimaGPProblem 
 
 	private void setupTracker(final EvolutionState state, final Parameter trackerBase) {
 		tracker.setProblem(this);
+	}
+
+	public IJasimaGrouping getIndGrouping() {
+		return grouping;
 	}
 
 	@Override
@@ -165,6 +167,8 @@ public class JasimaGroupedProblem extends GPProblem implements IJasimaGPProblem 
 				fitness.accumulateGroupFitness(tracker.getResults());
 				tracker.clear();
 			}
+
+			// TODO need to update the best ensemble of the population.
 
 			fitness.setGroupFitness(state, group.getInds());
 			fitness.clearGroupFitness();
