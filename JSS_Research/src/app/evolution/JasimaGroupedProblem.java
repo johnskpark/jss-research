@@ -15,7 +15,9 @@ public class JasimaGroupedProblem extends GPProblem implements IJasimaGPProblem 
 
 	private static final long serialVersionUID = -3817123526020178300L;
 
-	public static final String P_RULE = "rule";
+	public static final String P_IND_RULE = "rule";
+	public static final String P_GROUP_RULE = "groupRule";
+
 	public static final String P_FITNESS = "fitness";
 
 	public static final String P_SIMULATOR = "simulator";
@@ -47,8 +49,8 @@ public class JasimaGroupedProblem extends GPProblem implements IJasimaGPProblem 
 		input.setup(state, base.push(P_DATA));
 
 		// Setup the solver.
-		rule = (AbsGPPriorityRule) state.parameters.getInstanceForParameterEq(base.push(P_RULE), null, AbsGPPriorityRule.class);
-		groupRule = (AbsGPPriorityRule) state.parameters.getInstanceForParameterEq(base.push(P_RULE), null, AbsGPPriorityRule.class);
+		rule = (AbsGPPriorityRule) state.parameters.getInstanceForParameterEq(base.push(P_IND_RULE), null, AbsGPPriorityRule.class);
+		groupRule = (AbsGPPriorityRule) state.parameters.getInstanceForParameterEq(base.push(P_GROUP_RULE), null, AbsGPPriorityRule.class);
 
 		// Setup the fitness.
 		fitness = (IJasimaGroupFitness) state.parameters.getInstanceForParameterEq(base.push(P_FITNESS), null, IJasimaGroupFitness.class);
@@ -89,8 +91,14 @@ public class JasimaGroupedProblem extends GPProblem implements IJasimaGPProblem 
 			final Individual ind,
 			final int subpopulation,
 			final int threadnum) {
+		long startTime = System.currentTimeMillis();
+
 		evaluateInd(state, ind, subpopulation, threadnum);
 		evaluateGroup(state, grouping.getGroups(ind), subpopulation, threadnum);
+
+		long endTime = System.currentTimeMillis();
+		long timeDiff = endTime - startTime;
+		System.out.printf("%d\n", timeDiff);
 	}
 
 	protected void evaluateInd(final EvolutionState state,
@@ -138,7 +146,7 @@ public class JasimaGroupedProblem extends GPProblem implements IJasimaGPProblem 
 			groupRule.setConfiguration(config);
 
 			for (int j = 0; j < simConfig.getNumConfigs(); j++) {
-				Experiment experiment = getExperiment(state, rule, j);
+				Experiment experiment = getExperiment(state, groupRule, j);
 
 				experiment.runExperiment();
 

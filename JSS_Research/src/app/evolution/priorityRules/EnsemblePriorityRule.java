@@ -2,6 +2,7 @@ package app.evolution.priorityRules;
 
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
+import jasima.shopSim.prioRules.basic.ATC;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,6 +21,8 @@ public class EnsemblePriorityRule extends AbsGPPriorityRule {
 
 	private static final long serialVersionUID = -2159123752873667029L;
 
+	public static final double ATC_K_VALUE = 3.0;
+
 	private EvolutionState state;
 	private GPIndividual[] individuals;
 	private int threadnum;
@@ -29,6 +32,11 @@ public class EnsemblePriorityRule extends AbsGPPriorityRule {
 
 	private Map<PrioRuleTarget, EntryVotes> jobVotes = new HashMap<PrioRuleTarget, EntryVotes>();
 	private List<EntryVotes> jobRanking = new ArrayList<EntryVotes>();
+
+	public EnsemblePriorityRule() {
+		super();
+		setTieBreaker(new ATC(ATC_K_VALUE));
+	}
 
 	@Override
 	public void setConfiguration(JasimaGPConfig config) {
@@ -97,7 +105,7 @@ public class EnsemblePriorityRule extends AbsGPPriorityRule {
 
 	@Override
 	public double calcPrio(PrioRuleTarget entry) {
-		return (entry.equals(jobRanking.get(0).entry)) ? 1.0 : 0.0;
+		return jobVotes.get(entry).getCount();
 	}
 
 	// Stores the votes made on a particular job.
@@ -115,16 +123,22 @@ public class EnsemblePriorityRule extends AbsGPPriorityRule {
 			count++;
 		}
 
+		public int getCount() {
+			return count;
+		}
+
 		@Override
 		public int compareTo(EntryVotes other) {
 			int diff = this.count - other.count;
 			if (diff != 0) {
 				return diff;
 			} else {
-				// Use SPT for now.
-				if (this.entry.currProcTime() < other.entry.currProcTime()) {
+				double prio1 = getTieBreaker().calcPrio(this.entry);
+				double prio2 = getTieBreaker().calcPrio(other.entry);
+
+				if (prio1 > prio2) {
 					return -1;
-				} else if (this.entry.currProcTime() > other.entry.currProcTime()) {
+				} else if (prio1 < prio2) {
 					return 1;
 				} else {
 					return 0;

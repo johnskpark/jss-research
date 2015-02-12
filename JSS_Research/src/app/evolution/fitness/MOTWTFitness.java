@@ -24,7 +24,7 @@ public class MOTWTFitness implements IJasimaGroupFitness {
 	@Override
 	public void accumulateIndFitness(Individual ind, Map<String, Object> results) {
 		if (this.ind != null && !this.ind.equals(ind)) {
-			// TODO throw exception.
+			throw new RuntimeException("accumulateIndFitness");
 		}
 
 		SummaryStat stat = (SummaryStat) results.get(WT_MEAN_STR);
@@ -46,7 +46,7 @@ public class MOTWTFitness implements IJasimaGroupFitness {
 	@Override
 	public void setIndFitness(final EvolutionState state, Individual ind) {
 		if (this.ind == null || !this.ind.equals(ind)) {
-			// TODO throw exception.
+			throw new RuntimeException("setIndFitness");
 		}
 
 		MultiObjectiveFitness fitness = (MultiObjectiveFitness) ind.fitness;
@@ -59,7 +59,7 @@ public class MOTWTFitness implements IJasimaGroupFitness {
 		for (GPIndividual ind : inds) {
 			SummaryStat stat = groupFitness.get(ind);
 			if (stat == null) {
-				// TODO throw exception.
+				throw new RuntimeException("setGroupFitness");
 			}
 
 			MultiObjectiveFitness fitness = (MultiObjectiveFitness) ind.fitness;
