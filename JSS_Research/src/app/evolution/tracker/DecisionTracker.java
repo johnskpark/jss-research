@@ -1,49 +1,65 @@
 package app.evolution.tracker;
 
-import java.util.ArrayList;
+import jasima.core.util.Pair;
+
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import app.evolution.GroupResult;
+import app.evolution.IJasimaGPProblem;
 import app.evolution.IJasimaTracker;
+import app.util.BasicStatistics;
 import ec.gp.GPIndividual;
 
 public class DecisionTracker implements IJasimaTracker {
 
-	private Map<GPIndividual, List<Integer>> decisionMap = new HashMap<GPIndividual, List<Integer>>();
+	private Map<GPIndividual, Pair<BasicStatistics, Integer>> decisionStats = new HashMap<GPIndividual, Pair<BasicStatistics, Integer>>();
 
-	public void addDecision(GPIndividual ind, int decision) {
-		if (!decisionMap.containsKey(ind)) {
-			decisionMap.put(ind, new ArrayList<Integer>());
-		}
-		decisionMap.get(ind).add(decision);
+	private IJasimaGPProblem problem;
+
+	public int getNumIgnore() {
+		return problem.getSimConfig().getNumIgnore();
 	}
 
-	@Override
-	public GroupResult[] getResults() {
-		GroupResult[] results = new GroupResult[decisionMap.size()];
+	public void addDecision(GPIndividual ind, int jobFinished, int decision) {
+		if (jobFinished < problem.getSimConfig().getNumIgnore()) {
+			return;
+		}
+
+		if (!decisionStats.containsKey(ind)) {
+			BasicStatistics sc = new BasicStatistics();
+			sc.add(decision);
+			decisionStats.put(ind, new Pair<BasicStatistics, Integer>(sc, jobFinished));
+		} else {
+			Pair<BasicStatistics, Integer> stat = decisionStats.get(ind);
+			if (stat.b != jobFinished) {
+				Pair<BasicStatistics, Integer> newStat = new Pair<BasicStatistics, Integer>(stat.a, jobFinished);
+				newStat.a.add(decision);
+				decisionStats.put(ind, newStat);
+			}
+		}
+	}
+
+	public void setProblem(IJasimaGPProblem problem) {
+		this.problem = problem;
+	}
+
+	public Pair<GPIndividual, Double>[] getResults() {
+		@SuppressWarnings("unchecked")
+		Pair<GPIndividual, Double>[] results = new Pair[decisionStats.size()];
 
 		int index = 0;
-		for (Map.Entry<GPIndividual, List<Integer>> entry : decisionMap.entrySet()) {
+		for (Map.Entry<GPIndividual, Pair<BasicStatistics, Integer>> entry : decisionStats.entrySet()) {
 			GPIndividual ind = entry.getKey();
-			List<Integer> decisions = entry.getValue();
+			BasicStatistics sc = entry.getValue().a;
 
-			double fitness = 0.0;
-			for (int decision : decisions) {
-				fitness += decision * decision;
-			}
-			fitness = Math.sqrt(fitness);
-
-			results[index++] = new GroupResult(ind, fitness);
+			results[index++] = new Pair<GPIndividual, Double>(ind, sc.sumSq());
 		}
 
 		return results;
 	}
 
-	@Override
 	public void clear() {
-		decisionMap.clear();
+		decisionStats.clear();
 	}
 
 }

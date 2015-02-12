@@ -14,6 +14,7 @@ import app.evolution.JasimaGPConfig;
 import app.evolution.JasimaGPData;
 import app.evolution.priorityRules.BasicPriorityRule;
 import app.simConfig.AbsSimConfig;
+import app.util.BasicStatistics;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.gp.GPIndividual;
@@ -44,7 +45,7 @@ public class TestGroupedProblem2 extends GPProblem {
 	private long simSeed;
 
 	private boolean ensembleEvaluated = false;
-	private Map<GPIndividual, StatCollector> ensembleStats = new HashMap<GPIndividual, StatCollector>();
+	private Map<GPIndividual, BasicStatistics> ensembleStats = new HashMap<GPIndividual, BasicStatistics>();
 
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
@@ -126,7 +127,7 @@ public class TestGroupedProblem2 extends GPProblem {
 			for (int i = 0; i < inds.length; i++) {
 				GPIndividual gpInd = (GPIndividual) inds[i];
 				ensemble[i] = gpInd;
-				ensembleStats.put(gpInd, new StatCollector());
+				ensembleStats.put(gpInd, new BasicStatistics());
 			}
 
 			JasimaGPConfig config = new JasimaGPConfig();
@@ -145,7 +146,7 @@ public class TestGroupedProblem2 extends GPProblem {
 				experiment.runExperiment();
 
 				for (int j = 0; j < ensemble.length; j++) {
-					StatCollector newStat = new StatCollector();
+					BasicStatistics newStat = new BasicStatistics();
 					newStat.add(Math.sqrt(ensembleStats.get(ensemble[j]).sumSq()));
 
 					ensembleStats.put(ensemble[j], newStat);
@@ -161,8 +162,14 @@ public class TestGroupedProblem2 extends GPProblem {
 		}
 	}
 
+	// TODO this only applies to dynamic JSS problems. Is there a way to add new statistics into the problem more
+	// effectively?
 	public int getNumIgnore() {
 		return simConfig.getNumIgnore();
+	}
+
+	public int getStopAfterNumJobs() {
+		return simConfig.getStopAfterNumJobs();
 	}
 
 	public void addEnsembleStats(GPIndividual ind, double value) {

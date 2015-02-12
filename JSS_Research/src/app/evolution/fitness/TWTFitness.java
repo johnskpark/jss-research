@@ -1,13 +1,14 @@
 package app.evolution.fitness;
 
 import jasima.core.statistics.SummaryStat;
+import jasima.core.util.Pair;
 
 import java.util.Map;
 
-import app.evolution.GroupResult;
 import app.evolution.IJasimaFitness;
 import ec.EvolutionState;
 import ec.Individual;
+import ec.gp.GPIndividual;
 import ec.gp.koza.KozaFitness;
 
 public class TWTFitness implements IJasimaFitness {
@@ -24,7 +25,7 @@ public class TWTFitness implements IJasimaFitness {
 	}
 
 	@Override
-	public void accumulateTrackerFitness(final GroupResult[] trackerResults) {
+	public void accumulateTrackerFitness(final Pair<GPIndividual, Double>[] trackerResults) {
 	}
 
 	@Override

@@ -11,7 +11,7 @@ import ec.gp.GPIndividual;
 import ec.gp.GPProblem;
 import ec.util.Parameter;
 
-public class JasimaGroupedProblem extends GPProblem {
+public class JasimaGroupedProblem extends GPProblem implements IJasimaGPProblem {
 
 	private static final long serialVersionUID = -3817123526020178300L;
 
@@ -180,6 +180,11 @@ public class JasimaGroupedProblem extends GPProblem {
 		experiment.setScenario(DynamicShopExperiment.Scenario.JOB_SHOP);
 
 		return experiment;
+	}
+
+	@Override
+	public AbsSimConfig getSimConfig() {
+		return simConfig;
 	}
 
 	@Override

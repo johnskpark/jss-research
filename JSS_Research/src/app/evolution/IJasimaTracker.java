@@ -1,9 +1,11 @@
 package app.evolution;
 
+import jasima.core.util.Pair;
+import ec.gp.GPIndividual;
 
 public interface IJasimaTracker {
 
-	public GroupResult[] getResults();
+	public Pair<GPIndividual, Double>[] getResults();
 
 	public void clear();
 

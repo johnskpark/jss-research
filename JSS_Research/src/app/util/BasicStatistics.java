@@ -1,6 +1,6 @@
-package app.evolution.test;
+package app.util;
 
-public class StatCollector {
+public class BasicStatistics {
 
 	private String name;
 	private double sum = 0.0;
@@ -10,11 +10,11 @@ public class StatCollector {
 	private double min;
 	protected double lastVal;
 
-	public StatCollector() {
+	public BasicStatistics() {
 		this.name = null;
 	}
 
-	public StatCollector(String name) {
+	public BasicStatistics(String name) {
 		this.name = name;
 	}
 

@@ -1,11 +1,11 @@
 package app.evolution.fitness;
 
 import jasima.core.statistics.SummaryStat;
+import jasima.core.util.Pair;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import app.evolution.GroupResult;
 import app.evolution.IJasimaFitness;
 import ec.EvolutionState;
 import ec.Individual;
@@ -28,10 +28,10 @@ public class MOTWTFitness implements IJasimaFitness {
 	}
 
 	@Override
-	public void accumulateTrackerFitness(final GroupResult[] trackerResults) {
-		for (GroupResult result : trackerResults) {
-			GPIndividual ind = result.getInd();
-			double fitness = result.getFitness();
+	public void accumulateTrackerFitness(final Pair<GPIndividual, Double>[] trackerResults) {
+		for (Pair<GPIndividual, Double> result : trackerResults) {
+			GPIndividual ind = result.a;
+			double fitness = result.b;
 
 			if (!overallTrackerStat.containsKey(ind)) {
 				overallTrackerStat.put(ind, new SummaryStat());
