@@ -20,8 +20,6 @@ public class EnsemblePriorityRule extends AbsGPPriorityRule {
 
 	private static final long serialVersionUID = -2159123752873667029L;
 
-	private static final int SAMPLE_SIZE = 2000; // TODO convert this later into something else.
-
 	private EvolutionState state;
 	private GPIndividual[] individuals;
 	private int threadnum;
@@ -31,8 +29,6 @@ public class EnsemblePriorityRule extends AbsGPPriorityRule {
 
 	private Map<PrioRuleTarget, EntryVotes> jobVotes = new HashMap<PrioRuleTarget, EntryVotes>();
 	private List<EntryVotes> jobRanking = new ArrayList<EntryVotes>();
-
-	private int numSampled = 0;
 
 	@Override
 	public void setConfiguration(JasimaGPConfig config) {
@@ -88,19 +84,14 @@ public class EnsemblePriorityRule extends AbsGPPriorityRule {
 		Collections.sort(jobRanking);
 
 		// Add the rankings into the decisions.
-		// TODO the num sampled should go into the tracker instead.
-		if (numSampled < SAMPLE_SIZE) {
-			for (int i = 0; i < individuals.length; i++) {
-				for (int j = 0; j < q.size(); j++) {
-					EntryVotes sc = jobRanking.get(j);
-					if (decisions[i] == sc.index) {
-						tracker.addDecision(individuals[i], q.get(0).getShop().jobsFinished, j);
-						break;
-					}
+		for (int i = 0; i < individuals.length; i++) {
+			for (int j = 0; j < q.size(); j++) {
+				EntryVotes sc = jobRanking.get(j);
+				if (decisions[i] == sc.index) {
+					tracker.addDecision(individuals[i], q.get(0).getShop().jobsFinished, j);
+					break;
 				}
 			}
-
-			numSampled++;
 		}
 	}
 

@@ -63,10 +63,15 @@ public class JasimaGroupedProblem extends GPProblem implements IJasimaGPProblem 
 
 		// Setup the tracker.
 		tracker = (IJasimaTracker) state.parameters.getInstanceForParameterEq(base.push(P_TRACKER), null, IJasimaTracker.class);
+		setupTracker(state, base.push(P_TRACKER));
 	}
 
 	private void setupSimulator(final EvolutionState state, final Parameter simBase) {
 		simSeed = state.parameters.getLongWithDefault(simBase.push(P_SEED), null, DEFAULT_SEED);
+	}
+
+	private void setupTracker(final EvolutionState state, final Parameter trackerBase) {
+		tracker.setProblem(this);
 	}
 
 	@Override

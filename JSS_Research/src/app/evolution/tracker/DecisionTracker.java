@@ -12,6 +12,8 @@ import ec.gp.GPIndividual;
 
 public class DecisionTracker implements IJasimaTracker {
 
+	private static final int SAMPLE_SIZE = 2000;
+
 	private Map<GPIndividual, Pair<BasicStatistics, Integer>> decisionStats = new HashMap<GPIndividual, Pair<BasicStatistics, Integer>>();
 
 	private IJasimaGPProblem problem;
@@ -21,7 +23,7 @@ public class DecisionTracker implements IJasimaTracker {
 	}
 
 	public void addDecision(GPIndividual ind, int jobFinished, int decision) {
-		if (jobFinished < problem.getSimConfig().getNumIgnore()) {
+		if (!shouldSample(jobFinished)) {
 			return;
 		}
 
@@ -37,6 +39,11 @@ public class DecisionTracker implements IJasimaTracker {
 				decisionStats.put(ind, newStat);
 			}
 		}
+	}
+
+	private boolean shouldSample(int jobFinished) {
+		return (jobFinished >= problem.getSimConfig().getNumIgnore()) &&
+				(jobFinished < problem.getSimConfig().getNumIgnore() + SAMPLE_SIZE);
 	}
 
 	public void setProblem(IJasimaGPProblem problem) {
