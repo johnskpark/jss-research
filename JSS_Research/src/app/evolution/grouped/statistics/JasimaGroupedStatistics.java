@@ -1,5 +1,8 @@
-package app.evolution.grouped;
+package app.evolution.grouped.statistics;
 
+import app.evolution.grouped.GroupedIndividual;
+import app.evolution.grouped.IJasimaGrouping;
+import app.evolution.grouped.JasimaGroupedProblem;
 import ec.EvolutionState;
 import ec.gp.GPIndividual;
 import ec.simple.SimpleStatistics;
