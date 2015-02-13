@@ -15,9 +15,9 @@ import ec.EvolutionState;
 import java.util.*;
 import ec.*;
 
-/* 
+/*
  * MultiObjectiveFitness.java
- * 
+ *
  * Created: Tue Aug 10 20:27:38 1999
  * By: Sean Luke
  */
@@ -26,28 +26,28 @@ import ec.*;
  * MultiObjectiveFitness is a subclass of Fitness which implements basic
  * multi-objective mechanisms suitable for being used with a variety of
  * multi-objective selection mechanisms, including ones using pareto-optimality.
- * 
+ *
  * <p>
  * The object contains two items: an array of floating point values representing
  * the various multiple fitnesses, and a flag (maximize) indicating whether
  * higher is considered better. By default, isIdealFitness() always returns
  * false; you might want to override that, though it'd be unusual -- what is the
  * ideal fitness from the perspective of a pareto front?
- * 
+ *
  * <p>
  * The object also contains maximum and minimum fitness values suggested for the
  * problem, on a per-objective basis. By default the maximum values are all 1.0
  * and the minimum values are all 0.0, but you can change these. Note that
  * maximum does not mean "best" unless maximize is true.
  *
- * <p>The class also contains utility methods or computing pareto dominance, 
+ * <p>The class also contains utility methods or computing pareto dominance,
  * Pareto Fronts and Pareto Front Ranks, and distance in multiobjective space.
  * The default comparison operators use Pareto Dominance, though this is often
  * overridden by subclasses.
  *
  * <p>The fitness() method returns the maximum of the fitness values, which is
  * clearly nonsensical: you should not be using this method.
- * 
+ *
  * <p>Subclasses of this class may add certain auxiliary fitness measures which
  * are printed out by MultiObjectiveStatistics along with the multiple objectives.
  * To have these values printed out, override the getAuxiliaryFitnessNames()
@@ -62,46 +62,46 @@ import ec.*;
  * <font size=-1>int &gt;= 1</font></td>
  * <td valign=top>(the number of fitnesses in the objectives array)</td>
  * </tr>
- * 
+ *
  * <tr>
  * <td valign=top><i>base</i>.<tt>maximize</tt><br>
  * <font size=-1> bool = <tt>true</tt> (default) or <tt>false</tt></font></td>
  * <td valign=top>(are higher values considered "better"?)
  * </table>
- * 
+ *
  * <tr>
  * <td valign=top><i>base</i>.<tt>maximize</tt>.<i>i</i<br>
  * <font size=-1> bool = <tt>true</tt> (default) or <tt>false</tt></font></td>
  * <td valign=top>(are higher values considered "better"?).  Overrides the
  * all-objecgive maximization setting.
  * </table>
- * 
+ *
  * <tr>
  * <td valign=top><i>base</i>.<tt>max</tt><br>
  * <font size=-1> double (<tt>1.0</tt> default)</font></td>
  * <td valign=top>(maximum fitness value for all objectives)</table>
- * 
+ *
  * <tr>
  * <td valign=top><i>base</i>.<tt>max</tt>.<i>i</i><br>
  * <font size=-1> double (<tt>1.0</tt> default)</font></td>
  * <td valign=top>(maximum fitness value for objective <i>i</i>. Overrides the
  * all-objective maximum fitness.)</table>
- * 
+ *
  * <tr>
  * <td valign=top><i>base</i>.<tt>min</tt><br>
  * <font size=-1> double (<tt>0.0</tt> (default)</font></td>
  * <td valign=top>(minimum fitness value for all objectives)</table>
- * 
+ *
  * <tr>
  * <td valign=top><i>base</i>.<tt>min</tt>.<i>i</i><br>
  * <font size=-1> double = <tt>0.0</tt> (default)</font></td>
  * <td valign=top>(minimum fitness value for objective <i>i</i>. Overrides the
  * all-objective minimum fitness.)</table>
- * 
+ *
  * <p>
  * <b>Default Base</b><br>
  * multi.fitness
- * 
+ *
  * @author Sean Luke
  * @version 1.1
  */
@@ -145,7 +145,7 @@ public class MultiObjectiveFitness extends Fitness
     */
     public double[] getAuxilliaryFitnessValues() { return new double[] { }; }
 
-    /** 
+    /**
         @deprecated Use isMaximizing(objective).  This function now just returns whether the first objective is maximizing.
     */
     public boolean isMaximizing()
@@ -157,10 +157,10 @@ public class MultiObjectiveFitness extends Fitness
         {
         return maximize[objective];
         }
-        
+
 
     public int getNumObjectives() { return objectives.length; }
-        
+
     /**
      * Returns the objectives as an array. Note that this is the *actual array*.
      * Though you could set values in this array, you should NOT do this --
@@ -249,7 +249,7 @@ public class MultiObjectiveFitness extends Fitness
         maxObjective = new double[numFitnesses];
         minObjective = new double[numFitnesses];
         maximize = new boolean[numFitnesses];
-                
+
         for (int i = 0; i < numFitnesses; i++)
             {
             // load default globals
@@ -261,7 +261,7 @@ public class MultiObjectiveFitness extends Fitness
             minObjective[i] = state.parameters.getDoubleWithDefault(base.push(P_MINOBJECTIVES).push("" + i), def.push(P_MINOBJECTIVES).push("" + i), minObjective[i]);
             maxObjective[i] = state.parameters.getDoubleWithDefault(base.push(P_MAXOBJECTIVES).push("" + i), def.push(P_MAXOBJECTIVES).push("" + i), maxObjective[i]);
             maximize[i] = state.parameters.getBoolean(base.push(P_MAXIMIZE).push("" + i), def.push(P_MAXIMIZE).push("" + i), maximize[i]);
-            
+
             // test for validity
             if (minObjective[i] >= maxObjective[i])
                 state.output.error("For objective " + i + "the min fitness must be strictly less than the max fitness.");
@@ -295,12 +295,12 @@ public class MultiObjectiveFitness extends Fitness
 
         if (objectives.length != other.objectives.length)
             throw new RuntimeException("Attempt made to compare two multiobjective fitnesses; but they have different numbers of objectives.");
-        
+
         for (int x = 0; x < objectives.length; x++)
             {
             if (maximize[x] != other.maximize[x])  // uh oh
                 throw new RuntimeException(
-                    "Attempt made to compare two multiobjective fitnesses; but for objective #" + x + 
+                    "Attempt made to compare two multiobjective fitnesses; but for objective #" + x +
                     ", one expects higher values to be better and the other expectes lower values to be better.");
 
             if (maximize[x])
@@ -351,12 +351,12 @@ public class MultiObjectiveFitness extends Fitness
 
         if (objectives.length != other.objectives.length)
             throw new RuntimeException("Attempt made to compare two multiobjective fitnesses; but they have different numbers of objectives.");
-            
+
         for (int x = 0; x < objectives.length; x++)
             {
             if (maximize[x] != other.maximize[x])  // uh oh
                 throw new RuntimeException(
-                    "Attempt made to compare two multiobjective fitnesses; but for objective #" + x + 
+                    "Attempt made to compare two multiobjective fitnesses; but for objective #" + x +
                     ", one expects higher values to be better and the other expectes lower values to be better.");
 
             if (maximize[x])
@@ -374,7 +374,7 @@ public class MultiObjectiveFitness extends Fitness
                     return false;
                 }
             }
-            
+
         return abeatsb;
         }
 
@@ -388,7 +388,7 @@ public class MultiObjectiveFitness extends Fitness
         }
 
     /**
-     * Divides an array of Individuals into the Pareto front and the "nonFront" (everyone else). 
+     * Divides an array of Individuals into the Pareto front and the "nonFront" (everyone else).
      * The Pareto front is returned.  You may provide ArrayLists for the front and a nonFront.
      * If you provide null for the front, an ArrayList will be created for you.  If you provide
      * null for the nonFront, non-front individuals will not be added to it.  This algorithm is
@@ -398,10 +398,10 @@ public class MultiObjectiveFitness extends Fitness
         {
         if (front == null)
             front = new ArrayList();
-                        
+
         // put the first guy in the front
         front.add(inds[0]);
-                
+
         // iterate over all the remaining individuals
         for (int i = 1; i < inds.length; i++)
             {
@@ -409,19 +409,19 @@ public class MultiObjectiveFitness extends Fitness
 
             boolean noOneWasBetter = true;
             int frontSize = front.size();
-                        
+
             // iterate over the entire front
             for (int j = 0; j < frontSize; j++)
                 {
                 Individual frontmember = (Individual) (front.get(j));
-                                
+
                 // if the front member is better than the individual, dump the individual and go to the next one
                 if (((MultiObjectiveFitness) (frontmember.fitness)).paretoDominates((MultiObjectiveFitness) (ind.fitness)))
                     {
                     if (nonFront != null) nonFront.add(ind);
                     noOneWasBetter = false;
                     break;  // failed.  He's not in the front
-                    } 
+                    }
                 // if the individual was better than the front member, dump the front member.  But look over the
                 // other front members (don't break) because others might be dominated by the individual as well.
                 else if (((MultiObjectiveFitness) (ind.fitness)).paretoDominates((MultiObjectiveFitness) (frontmember.fitness)))
@@ -452,7 +452,7 @@ public class MultiObjectiveFitness extends Fitness
             ArrayList front = new ArrayList();
             ArrayList nonFront = new ArrayList();
             MultiObjectiveFitness.partitionIntoParetoFront(inds, front, nonFront);
-                        
+
             // build inds out of remainder
             inds = (Individual[]) nonFront.toArray(dummy);
             frontsByRank.add(front);
@@ -467,12 +467,12 @@ public class MultiObjectiveFitness extends Fitness
         {
         int[] r = new int[inds.length];
         ArrayList ranks = partitionIntoRanks(inds);  // get all the ranks
-        
+
         // build a mapping of Individual -> index in inds array
         HashMap m = new HashMap();
         for(int i = 0; i < inds.length; i++)
             m.put(inds[i], Integer.valueOf(i));
-        
+
         int numRanks = ranks.size();
         for(int rank = 0 ; rank < numRanks; rank++)  // for each rank...
             {

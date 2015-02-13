@@ -5,6 +5,7 @@
 parent.0 = koza_mo.params
 
 multi.fitness.num-objectives = 3
+multi.fitness.maximize = false
 
 # the next four items are already defined in koza.params, but we
 # put them here to be clear.
