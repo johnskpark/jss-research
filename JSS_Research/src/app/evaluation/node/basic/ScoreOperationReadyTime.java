@@ -10,15 +10,15 @@ import app.node.NodeDefinition;
  * @author parkjohn
  *
  */
-@NodeAnnotation(node=NodeDefinition.SCORE_JOB_READY_TIME)
-public class ScoreJobReadyTime implements INode {
+@NodeAnnotation(node=NodeDefinition.SCORE_OPERATION_READY_TIME)
+public class ScoreOperationReadyTime implements INode {
 
-	private static final NodeDefinition NODE_DEFINITION = NodeDefinition.SCORE_JOB_READY_TIME;
+	private static final NodeDefinition NODE_DEFINITION = NodeDefinition.SCORE_OPERATION_READY_TIME;
 
 	/**
 	 * TODO javadoc.
 	 */
-	public ScoreJobReadyTime() {
+	public ScoreOperationReadyTime() {
 	}
 
 	@Override
