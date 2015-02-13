@@ -27,14 +27,13 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
-import jss.evaluation.node.INode;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import app.evaluation.node.INode;
 import app.simConfig.AbsSimConfig;
 
 public class JasimaEvalProblem {

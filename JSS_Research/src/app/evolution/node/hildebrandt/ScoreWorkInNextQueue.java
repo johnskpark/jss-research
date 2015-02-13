@@ -1,6 +1,8 @@
-package app.evolution.node.basic;
+package app.evolution.node.hildebrandt;
 
-import app.node.NodeDefinition;
+import jasima.shopSim.core.PrioRuleTarget;
+import jasima.shopSim.core.WorkStation;
+import jss.node.NodeDefinition;
 import app.evolution.JasimaGPData;
 import ec.EvolutionState;
 import ec.Problem;
@@ -10,18 +12,13 @@ import ec.gp.GPIndividual;
 import ec.gp.GPNode;
 import ec.util.Parameter;
 
-/**
- * TODO javadoc.
- * @author parkjohn
- *
- */
-public class ScoreRemainingTime extends GPNode {
+public class ScoreWorkInNextQueue extends GPNode {
 
-	private static final long serialVersionUID = 5176332159809663461L;
+	private static final long serialVersionUID = 8357230245031223412L;
 
 	@Override
 	public String toString() {
-		return NodeDefinition.SCORE_REMAINING_TIME.toString();
+		return NodeDefinition.SCORE_WORK_IN_NEXT_QUEUE.toString();
 	}
 
 	@Override
@@ -30,7 +27,7 @@ public class ScoreRemainingTime extends GPNode {
 			final GPIndividual typicalIndividual,
 			final Parameter individualBase) {
 		super.checkConstraints(state, tree, typicalIndividual, individualBase);
-		if (children.length != NodeDefinition.SCORE_REMAINING_TIME.numChildren()) {
+		if (children.length != NodeDefinition.SCORE_WORK_IN_NEXT_QUEUE.numChildren()) {
 			state.output.error("Incorrect number of children for node " + toStringForError() + " at " + individualBase);
 		}
 	}
@@ -40,7 +37,15 @@ public class ScoreRemainingTime extends GPNode {
 			ADFStack stack, GPIndividual individual, Problem problem) {
 		JasimaGPData data = (JasimaGPData)input;
 
-		data.setPriority(data.getPrioRuleTarget().remainingProcTime());
+		PrioRuleTarget entry = data.getPrioRuleTarget();
+
+		int nextTask = entry.getTaskNumber() + 1;
+		if (nextTask >= entry.numOps()) {
+			data.setPriority(0);
+		} else {
+			WorkStation nextMachine = entry.getOps()[nextTask].machine;
+			data.setPriority(nextMachine.workContent(false));
+		}
 	}
 
 }

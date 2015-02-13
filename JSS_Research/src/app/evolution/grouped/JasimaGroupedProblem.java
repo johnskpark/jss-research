@@ -32,9 +32,7 @@ public class JasimaGroupedProblem extends GPProblem implements IJasimaGPProblem 
 
 	public static final String P_SIMULATOR = "simulator";
 	public static final String P_SEED = "seed";
-
 	public static final String P_GROUPING = "grouping";
-
 	public static final String P_TRACKER = "tracker";
 
 	public static final long DEFAULT_SEED = 15;

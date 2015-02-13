@@ -1,13 +1,13 @@
-package app.simConfig.rachelConfig;
+package app.simConfig.huntConfig;
 
 import jasima.core.random.continuous.DblStream;
 import app.simConfig.AbsSimConfig;
 
-public class EightOpSimConfig extends AbsSimConfig {
+public class FourOpSimConfig extends AbsSimConfig {
 
+	private static final double[] UTIL_LEVEL = new double[]{0.85, 0.95};
 	private static final int MIN_OP_PROC = 1;
 	private static final int MAX_OP_PROC = 49;
-	private static final double[] UTIL_LEVEL = new double[]{0.85, 0.95};
 	private static final int NUM_OPS = 8;
 
 	private static final int NUM_MACHINES = 10;

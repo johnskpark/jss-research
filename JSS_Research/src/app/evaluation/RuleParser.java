@@ -5,13 +5,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import jss.evaluation.node.INode;
-import jss.evaluation.node.NodeAnnotation;
-import jss.evaluation.node.NodeUtil;
-import jss.evaluation.node.basic.ERCRandom;
-import jss.node.NodeDefinition;
-
 import org.reflections.Reflections;
+
+import app.evaluation.node.INode;
+import app.evaluation.node.NodeAnnotation;
+import app.evaluation.node.NodeUtil;
+import app.evaluation.node.basic.ERCRandom;
+import app.node.NodeDefinition;
 
 /**
  * TODO javadoc.

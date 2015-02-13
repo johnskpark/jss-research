@@ -1,6 +1,6 @@
 package app.evolution.node.basic;
 
-import jss.node.NodeDefinition;
+import app.node.NodeDefinition;
 import app.evolution.JasimaGPData;
 import ec.EvolutionState;
 import ec.Problem;

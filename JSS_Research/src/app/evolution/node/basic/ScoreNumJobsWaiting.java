@@ -1,7 +1,7 @@
 package app.evolution.node.basic;
 
-import app.node.NodeDefinition;
 import app.evolution.JasimaGPData;
+import app.node.NodeDefinition;
 import ec.EvolutionState;
 import ec.Problem;
 import ec.gp.ADFStack;
@@ -15,13 +15,13 @@ import ec.util.Parameter;
  * @author parkjohn
  *
  */
-public class ScoreProcessingTime extends GPNode {
+public class ScoreNumJobsWaiting extends GPNode {
 
-	private static final long serialVersionUID = 4917340755318117709L;
+	private static final long serialVersionUID = -2790466031950356470L;
 
 	@Override
 	public String toString() {
-		return NodeDefinition.SCORE_PROCESSING_TIME.toString();
+		return NodeDefinition.SCORE_NUM_JOBS_WAITING.toString();
 	}
 
 	@Override
@@ -30,7 +30,7 @@ public class ScoreProcessingTime extends GPNode {
 			final GPIndividual typicalIndividual,
 			final Parameter individualBase) {
 		super.checkConstraints(state, tree, typicalIndividual, individualBase);
-		if (children.length != NodeDefinition.SCORE_PROCESSING_TIME.numChildren()) {
+		if (children.length != NodeDefinition.SCORE_NUM_JOBS_WAITING.numChildren()) {
 			state.output.error("Incorrect number of children for node " + toStringForError() + " at " + individualBase);
 		}
 	}
@@ -44,7 +44,7 @@ public class ScoreProcessingTime extends GPNode {
 			final Problem problem) {
 		JasimaGPData data = (JasimaGPData)input;
 
-		data.setPriority(data.getPrioRuleTarget().currProcTime());
+		data.setPriority(data.getPrioRuleTarget().getCurrMachine().numJobsWaiting());
 	}
 
 }

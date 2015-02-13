@@ -1,6 +1,6 @@
 package app.evolution.node.basic;
 
-import jss.node.NodeDefinition;
+import app.node.NodeDefinition;
 import app.evolution.JasimaGPData;
 import ec.EvolutionState;
 import ec.Problem;
@@ -44,7 +44,7 @@ public class ScoreMachineReadyTime extends GPNode {
 			final Problem problem) {
 		JasimaGPData data = (JasimaGPData)input;
 
-		data.setPriority(data.getPrioRuleTarget().getArriveTime());
+		data.setPriority(data.getPrioRuleTarget().getShop().simTime());
 	}
 
 }

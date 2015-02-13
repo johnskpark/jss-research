@@ -1,4 +1,4 @@
-package app.simConfig.rachelConfig;
+package app.simConfig.huntConfig;
 
 import jasima.core.random.continuous.DblStream;
 import app.simConfig.AbsSimConfig;

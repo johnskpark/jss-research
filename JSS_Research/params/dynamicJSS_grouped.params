@@ -58,7 +58,7 @@ eval.problem.data = app.evolution.JasimaGPData
 #eval.problem.rule = app.evolution.priorityRules.BasicPriorityRule
 #eval.problem.fitness = app.evolution.fitness.TWTFitness
 
-eval.problem.simulator = app.simConfig.rachelConfig.FourOpSimConfig
+eval.problem.simulator = app.simConfig.huntConfig.FourOpSimConfig
 eval.problem.simulator.seed = 15
 
 # seed.0=26556
