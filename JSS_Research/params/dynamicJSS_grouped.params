@@ -63,7 +63,7 @@ eval.problem.fitness = app.evolution.grouped.fitness.MOTWTFitness
 eval.problem.grouping = app.evolution.grouped.grouping.PopGrouping
 eval.problem.tracker = app.evolution.grouped.tracker.DecisionTracker
 
-eval.problem.simulator = app.simConfig.huntConfig.FourOpSimConfig
+eval.problem.simulator = app.simConfig.huntConfig.EightOpSimConfig
 eval.problem.simulator.seed = 15
 
 # seed.0=26556

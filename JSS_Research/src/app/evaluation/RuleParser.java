@@ -21,7 +21,7 @@ import app.node.NodeDefinition;
  */
 public class RuleParser {
 
-	private static final String BASE_NODE_DIR = "jss.evaluation.node";
+	private static final String BASE_NODE_DIR = "app.evaluation.node";
 
 	private Map<String, NodeChildrenNumPair> nodeMap = new HashMap<String, NodeChildrenNumPair>();
 

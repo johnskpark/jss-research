@@ -4,7 +4,7 @@
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
 			<ruleNum>1</ruleNum>
-			<ruleFile>priority_rules_small.txt</ruleFile>
+			<ruleFile>4op_dr.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
@@ -12,15 +12,7 @@
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
 			<ruleNum>1</ruleNum>
-			<ruleFile>priority_rules_medium.txt</ruleFile>
-		</solverFile>
-	</solverConfig>
-
-	<solverConfig>
-		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
-		<solverFile>
-			<ruleNum>1</ruleNum>
-			<ruleFile>priority_rules_large.txt</ruleFile>
+			<ruleFile>8op_dr.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 

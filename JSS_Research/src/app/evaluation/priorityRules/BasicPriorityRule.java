@@ -3,19 +3,31 @@ package app.evaluation.priorityRules;
 import jasima.shopSim.core.PrioRuleTarget;
 import app.evaluation.AbsEvalPriorityRule;
 import app.evaluation.JasimaEvalConfig;
+import app.evaluation.JasimaEvalData;
+import app.evaluation.node.INode;
 
 public class BasicPriorityRule extends AbsEvalPriorityRule {
 
+	private static final long serialVersionUID = -4989543026252704190L;
+	private static final int RULE_NUM = 1;
+
+	private INode rule;
+
 	@Override
 	public void setConfiguration(JasimaEvalConfig config) {
-		// TODO Auto-generated method stub
+		if (config.getRuleNum() != RULE_NUM) {
+			throw new RuntimeException("Invalid number of rules: " + config.getRuleNum());
+		}
 
+		this.rule = config.getRules().get(0);
 	}
 
 	@Override
 	public double calcPrio(PrioRuleTarget entry) {
-		// TODO Auto-generated method stub
-		return 0;
+		JasimaEvalData data = new JasimaEvalData();
+		data.setPrioRuleTarget(entry);
+
+		return rule.evaluate(data);
 	}
 
 }
