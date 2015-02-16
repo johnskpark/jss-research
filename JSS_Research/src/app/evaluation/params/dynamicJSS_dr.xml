@@ -3,7 +3,6 @@
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleNum>1</ruleNum>
 			<ruleFile>4op_dr.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
@@ -11,7 +10,6 @@
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleNum>1</ruleNum>
 			<ruleFile>8op_dr.txt</ruleFile>
 		</solverFile>
 	</solverConfig>

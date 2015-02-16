@@ -15,9 +15,10 @@ public class BasicPriorityRule extends AbsEvalPriorityRule {
 
 	@Override
 	public void setConfiguration(JasimaEvalConfig config) {
-		if (config.getRuleNum() != RULE_NUM) {
-			throw new RuntimeException("Invalid number of rules: " + config.getRuleNum());
+		if (config.getRules().size() != RULE_NUM) {
+			throw new RuntimeException("Invalid number of rules: " + config.getRules().size());
 		}
+		setSeed(config.getSeed());
 
 		this.rule = config.getRules().get(0);
 	}

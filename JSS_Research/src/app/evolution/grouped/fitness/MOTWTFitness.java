@@ -63,7 +63,7 @@ public class MOTWTFitness implements IJasimaGroupFitness {
 			}
 
 			MultiObjectiveFitness fitness = (MultiObjectiveFitness) ind.fitness;
-			fitness.getObjectives()[2] = stat.mean();
+			fitness.getObjectives()[2] = -stat.mean();
 		}
 	}
 

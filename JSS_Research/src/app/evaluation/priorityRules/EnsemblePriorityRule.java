@@ -32,8 +32,10 @@ public class EnsemblePriorityRule extends AbsEvalPriorityRule {
 
 	@Override
 	public void setConfiguration(JasimaEvalConfig config) {
+		setSeed(config.getSeed());
+
 		this.rules = config.getRules();
-		this.ruleNum = config.getRuleNum();
+		this.ruleNum = config.getRules().size();
 	}
 
 	@Override

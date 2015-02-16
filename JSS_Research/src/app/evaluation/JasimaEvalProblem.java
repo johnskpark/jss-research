@@ -127,12 +127,9 @@ public class JasimaEvalProblem {
 			if (ruleFileNodeList.getLength() != 0) {
 				Element ruleBase = (Element) ruleFileNodeList.item(0);
 
-				String ruleNumStr = ruleBase.getElementsByTagName(XML_RULE_NUM).item(0).getTextContent();
 				String ruleFilename = ruleBase.getElementsByTagName(XML_RULE_FILE).item(0).getTextContent();
 
-				int ruleNum = Integer.parseInt(ruleNumStr);
-
-				List<AbsEvalPriorityRule> solvers = loadRuleFile(solverClass, ruleNum, ruleFilename);
+				List<AbsEvalPriorityRule> solvers = loadRuleFile(solverClass, ruleFilename);
 				solversMap.put(ruleFilename, solvers);
 			} else {
 				List<AbsEvalPriorityRule> solvers = loadStaticSolvers(solverClass);
@@ -145,7 +142,6 @@ public class JasimaEvalProblem {
 
 	// Load in the rule from the specified file.
 	private List<AbsEvalPriorityRule> loadRuleFile(Class<? extends AbsEvalPriorityRule> solverClass,
-			int numRules,
 			String ruleFilename) throws Exception {
 		InputStream fileStream = new FileInputStream(new File(ruleFilename));
 		InputStreamReader fileReader = new InputStreamReader(fileStream);
@@ -161,11 +157,10 @@ public class JasimaEvalProblem {
 			config.setSeed(Integer.parseInt(split[0]));
 
 			List<INode> roots = new ArrayList<INode>();
-			for (int i = 0; i < numRules; i++) {
-				roots.add(parser.getRuleFromString(split[i+1]));
+			for (int i = 1; i < split.length; i++) {
+				roots.add(parser.getRuleFromString(split[i]));
 			}
 			config.setRules(roots);
-			config.setRuleNum(numRules);
 
 			AbsEvalPriorityRule solver = solverClass.newInstance();
 			solver.setConfiguration(config);
