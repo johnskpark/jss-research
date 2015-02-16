@@ -103,14 +103,8 @@ public class JasimaGroupedProblem extends GPProblem implements IJasimaGPProblem 
 			final Individual ind,
 			final int subpopulation,
 			final int threadnum) {
-		long startTime = System.currentTimeMillis();
-
 		evaluateInd(state, ind, subpopulation, threadnum);
 		evaluateGroup(state, grouping.getGroups(ind), subpopulation, threadnum);
-
-		long endTime = System.currentTimeMillis();
-		long timeDiff = endTime - startTime;
-		System.out.printf("%d\n", timeDiff);
 	}
 
 	protected void evaluateInd(final EvolutionState state,
