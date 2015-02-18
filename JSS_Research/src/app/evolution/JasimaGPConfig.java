@@ -1,6 +1,5 @@
 package app.evolution;
 
-import app.evolution.grouped.IJasimaGroupedTracker;
 import ec.EvolutionState;
 import ec.gp.GPIndividual;
 import ec.gp.GPProblem;
@@ -15,7 +14,7 @@ public class JasimaGPConfig {
 	private GPProblem problem;
 	private JasimaGPData data;
 
-	private IJasimaGroupedTracker tracker;
+	private IJasimaTracker tracker;
 
 	public void setState(EvolutionState state) {
 		this.state = state;
@@ -41,7 +40,7 @@ public class JasimaGPConfig {
 		this.data = data;
 	}
 
-	public void setTracker(IJasimaGroupedTracker tracker) {
+	public void setTracker(IJasimaTracker tracker) {
 		this.tracker = tracker;
 	}
 
@@ -69,7 +68,7 @@ public class JasimaGPConfig {
 		return data;
 	}
 
-	public IJasimaGroupedTracker getTracker() {
+	public IJasimaTracker getTracker() {
 		return tracker;
 	}
 

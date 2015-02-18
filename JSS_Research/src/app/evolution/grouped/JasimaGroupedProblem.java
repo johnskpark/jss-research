@@ -15,12 +15,6 @@ import ec.gp.GPIndividual;
 import ec.gp.GPProblem;
 import ec.util.Parameter;
 
-// TODO Also, I need to be able to print out the `best' ensemble that I've made, but for now, let's just use the Pareto front
-// of individuals.
-
-// Also, I need to be able to get the stat file for multi-objective optimisation to be copied over (i.e. the front.stat file).
-
-// Also, it seems that the experiments take longer and longer each time it is run...
 public class JasimaGroupedProblem extends GPProblem implements IJasimaGPProblem {
 
 	private static final long serialVersionUID = -3817123526020178300L;
@@ -29,11 +23,11 @@ public class JasimaGroupedProblem extends GPProblem implements IJasimaGPProblem 
 	public static final String P_GROUP_RULE = "groupRule";
 
 	public static final String P_FITNESS = "fitness";
+	public static final String P_GROUPING = "grouping";
+	public static final String P_TRACKER = "tracker";
 
 	public static final String P_SIMULATOR = "simulator";
 	public static final String P_SEED = "seed";
-	public static final String P_GROUPING = "grouping";
-	public static final String P_TRACKER = "tracker";
 
 	public static final long DEFAULT_SEED = 15;
 
@@ -41,9 +35,8 @@ public class JasimaGroupedProblem extends GPProblem implements IJasimaGPProblem 
 	private AbsGPPriorityRule groupRule;
 
 	private IJasimaGroupFitness fitness;
-
-	private IJasimaGrouping grouping = null;
-	private IJasimaGroupedTracker tracker = null;
+	private IJasimaGrouping grouping;
+	private IJasimaGroupedTracker tracker;
 
 	private AbsSimConfig simConfig;
 	private long simSeed;
@@ -63,10 +56,6 @@ public class JasimaGroupedProblem extends GPProblem implements IJasimaGPProblem 
 		// Setup the fitness.
 		fitness = (IJasimaGroupFitness) state.parameters.getInstanceForParameterEq(base.push(P_FITNESS), null, IJasimaGroupFitness.class);
 
-		// Setup the simulator configurations.
-		simConfig = (AbsSimConfig) state.parameters.getInstanceForParameterEq(base.push(P_SIMULATOR), null, AbsSimConfig.class);
-		setupSimulator(state, base.push(P_SIMULATOR));
-
 		// Setup the grouping.
 		grouping = (IJasimaGrouping) state.parameters.getInstanceForParameterEq(base.push(P_GROUPING), null, IJasimaGrouping.class);
 		grouping.setup(state, base.push(P_GROUPING));
@@ -74,6 +63,10 @@ public class JasimaGroupedProblem extends GPProblem implements IJasimaGPProblem 
 		// Setup the tracker.
 		tracker = (IJasimaGroupedTracker) state.parameters.getInstanceForParameterEq(base.push(P_TRACKER), null, IJasimaGroupedTracker.class);
 		setupTracker(state, base.push(P_TRACKER));
+
+		// Setup the simulator configurations.
+		simConfig = (AbsSimConfig) state.parameters.getInstanceForParameterEq(base.push(P_SIMULATOR), null, AbsSimConfig.class);
+		setupSimulator(state, base.push(P_SIMULATOR));
 	}
 
 	private void setupSimulator(final EvolutionState state, final Parameter simBase) {
@@ -148,7 +141,7 @@ public class JasimaGroupedProblem extends GPProblem implements IJasimaGPProblem 
 			config.setIndividuals(group.getInds());
 			config.setSubpopulations(new int[]{subpopulation});
 			config.setThreadnum(threadnum);
-			config.setData((JasimaGPData)input);
+			config.setData((JasimaGPData) input);
 			config.setTracker(tracker);
 
 			groupRule.setConfiguration(config);

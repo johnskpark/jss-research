@@ -1,42 +1,45 @@
 package app.evolution.coop;
 
+import jasima.core.experiment.Experiment;
+import jasima.core.util.observer.NotifierListener;
+import jasima.shopSim.models.dynamicShop.DynamicShopExperiment;
+import jasima.shopSim.util.BasicJobStatCollector;
+
 import java.util.ArrayList;
 
 import app.evolution.AbsGPPriorityRule;
 import app.evolution.IJasimaGPProblem;
+import app.evolution.JasimaGPConfig;
 import app.evolution.JasimaGPData;
 import app.simConfig.AbsSimConfig;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.Population;
 import ec.coevolve.GroupedProblemForm;
+import ec.gp.GPIndividual;
 import ec.gp.GPProblem;
 import ec.gp.koza.KozaFitness;
 import ec.util.Parameter;
 
 public class JasimaCoopProblem extends GPProblem implements GroupedProblemForm, IJasimaGPProblem {
 
+	private static final long serialVersionUID = -1068923215891516182L;
+
 	public static final String P_SHOULD_SET_CONTEXT = "set-context";
-	private boolean shouldSetContext;
-
-	public static final String P_IND_RULE = "rule";
-	public static final String P_GROUP_RULE = "groupRule";
-
+	public static final String P_COOP_RULE = "rule";
 	public static final String P_FITNESS = "fitness";
+	public static final String P_TRACKER = "tracker";
 
 	public static final String P_SIMULATOR = "simulator";
 	public static final String P_SEED = "seed";
-//	public static final String P_GROUPING = "grouping";
-	public static final String P_TRACKER = "tracker";
 
 	public static final long DEFAULT_SEED = 15;
 
-	private AbsGPPriorityRule rule;
-	private AbsGPPriorityRule groupRule;
+	private boolean shouldSetContext;
 
+	private AbsGPPriorityRule coopRule;
 	private IJasimaCoopFitness fitness;
-
-	private IJasimaCoopTracker tracker = null;
+	private IJasimaCoopTracker tracker;
 
 	private AbsSimConfig simConfig;
 	private long simSeed;
@@ -45,24 +48,26 @@ public class JasimaCoopProblem extends GPProblem implements GroupedProblemForm, 
 	public void setup(final EvolutionState state, final Parameter base) {
 		super.setup(state, base);
 
+		// Load whether we should set context or not.
+		shouldSetContext = state.parameters.getBoolean(base.push(P_SHOULD_SET_CONTEXT), null, true);
+
 		// Setup the GPData.
 		input = (JasimaGPData) state.parameters.getInstanceForParameterEq(base.push(P_DATA), null, JasimaGPData.class);
 		input.setup(state, base.push(P_DATA));
 
 		// Setup the solver.
-		rule = (AbsGPPriorityRule) state.parameters.getInstanceForParameterEq(base.push(P_IND_RULE), null, AbsGPPriorityRule.class);
-		groupRule = (AbsGPPriorityRule) state.parameters.getInstanceForParameterEq(base.push(P_GROUP_RULE), null, AbsGPPriorityRule.class);
+		coopRule = (AbsGPPriorityRule) state.parameters.getInstanceForParameterEq(base.push(P_COOP_RULE), null, AbsGPPriorityRule.class);
 
 		// Setup the fitness.
 		fitness = (IJasimaCoopFitness) state.parameters.getInstanceForParameterEq(base.push(P_FITNESS), null, IJasimaCoopFitness.class);
 
-		// Setup the simulator configurations.
-		simConfig = (AbsSimConfig) state.parameters.getInstanceForParameterEq(base.push(P_SIMULATOR), null, AbsSimConfig.class);
-		setupSimulator(state, base.push(P_SIMULATOR));
-
 		// Setup the tracker.
 		tracker = (IJasimaCoopTracker) state.parameters.getInstanceForParameterEq(base.push(P_TRACKER), null, IJasimaCoopTracker.class);
 		setupTracker(state, base.push(P_TRACKER));
+
+		// Setup the simulator configurations.
+		simConfig = (AbsSimConfig) state.parameters.getInstanceForParameterEq(base.push(P_SIMULATOR), null, AbsSimConfig.class);
+		setupSimulator(state, base.push(P_SIMULATOR));
 	}
 
 	private void setupSimulator(final EvolutionState state, final Parameter simBase) {
@@ -118,13 +123,85 @@ public class JasimaCoopProblem extends GPProblem implements GroupedProblemForm, 
 
 	@Override
 	public void evaluate(final EvolutionState state,
-			final Individual[] ind,
+			final Individual[] inds,
 			final boolean[] updateFitness,
 			final boolean countVictoriesOnly,
 			final int[] subpops,
 			final int threadnum) {
-		// TODO Auto-generated method stub
+		GPIndividual[] gpInds = new GPIndividual[inds.length];
+		for (int i = 0; i < inds.length; i++) {
+			gpInds[i] = (GPIndividual) inds[i];
+		}
 
+		JasimaGPConfig config = new JasimaGPConfig();
+		config.setState(state);
+		config.setIndividuals(gpInds);
+		config.setSubpopulations(subpops);
+		config.setThreadnum(threadnum);
+		config.setData((JasimaGPData) input);
+		config.setTracker(tracker);
+
+		coopRule.setConfiguration(config);
+
+		for (int i = 0; i < simConfig.getNumConfigs(); i++) {
+			Experiment experiment = getExperiment(state, coopRule, i);
+
+			experiment.runExperiment();
+
+			fitness.accumulateObjectiveFitness(inds, experiment.getResults());
+			fitness.accumulateDiversityFitness(tracker.getResults());
+			tracker.clear();
+		}
+
+		// TODO need to adapt this to use the new fitness measure.
+		for (int i = 0; i < inds.length; i++) {
+//			double trial = fitness.getFitness(stats, i);
+			double trial = Double.POSITIVE_INFINITY;
+
+			if (updateFitness[i]) {
+				GPIndividual gpInd = gpInds[i];
+
+				int len = gpInd.fitness.trials.size();
+
+				// TODO I don't really get this part. What is it used for exactly?
+				if (len == 0) {
+					if (shouldSetContext) {
+						gpInd.fitness.setContext(inds, i);
+					}
+
+					gpInd.fitness.trials.add(new Double(trial));
+				} else if ((Double) gpInd.fitness.trials.get(0) < trial) {
+					if (shouldSetContext) {
+						gpInd.fitness.setContext(inds, i);
+					}
+
+					Object t = gpInd.fitness.trials.get(0);
+					gpInd.fitness.trials.set(0, fitness);
+					gpInd.fitness.trials.add(t);
+				}
+
+				((KozaFitness)gpInd.fitness).setStandardizedFitness(state, trial);
+			}
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private Experiment getExperiment(final EvolutionState state, AbsGPPriorityRule rule, int index) {
+		DynamicShopExperiment experiment = new DynamicShopExperiment();
+
+		experiment.setInitialSeed(simConfig.getLongValue());
+		experiment.setNumMachines(simConfig.getNumMachines(index));
+		experiment.setUtilLevel(simConfig.getUtilLevel(index));
+		experiment.setDueDateFactor(simConfig.getDueDateFactor(index));
+		experiment.setWeights(simConfig.getWeight(index));
+		experiment.setOpProcTime(simConfig.getMinOpProc(index), simConfig.getMaxOpProc(index));
+		experiment.setNumOps(simConfig.getMinNumOps(index), simConfig.getMaxNumOps(index));
+
+		experiment.setShopListener(new NotifierListener[]{new BasicJobStatCollector()});
+		experiment.setSequencingRule(rule);
+		experiment.setScenario(DynamicShopExperiment.Scenario.JOB_SHOP);
+
+		return experiment;
 	}
 
 	@Override
@@ -145,8 +222,7 @@ public class JasimaCoopProblem extends GPProblem implements GroupedProblemForm, 
 		JasimaCoopProblem newObject = (JasimaCoopProblem)super.clone();
 
 		newObject.input = (JasimaGPData)input.clone();
-		newObject.rule = rule;
-		newObject.groupRule = groupRule;
+		newObject.coopRule = coopRule;
 		newObject.fitness = fitness;
 		newObject.tracker = tracker;
 		newObject.simConfig = simConfig;
