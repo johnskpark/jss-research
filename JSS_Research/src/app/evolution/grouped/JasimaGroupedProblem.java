@@ -43,7 +43,7 @@ public class JasimaGroupedProblem extends GPProblem implements IJasimaGPProblem 
 	private IJasimaGroupFitness fitness;
 
 	private IJasimaGrouping grouping = null;
-	private IJasimaTracker tracker = null;
+	private IJasimaGroupedTracker tracker = null;
 
 	private AbsSimConfig simConfig;
 	private long simSeed;
@@ -72,7 +72,7 @@ public class JasimaGroupedProblem extends GPProblem implements IJasimaGPProblem 
 		grouping.setup(state, base.push(P_GROUPING));
 
 		// Setup the tracker.
-		tracker = (IJasimaTracker) state.parameters.getInstanceForParameterEq(base.push(P_TRACKER), null, IJasimaTracker.class);
+		tracker = (IJasimaGroupedTracker) state.parameters.getInstanceForParameterEq(base.push(P_TRACKER), null, IJasimaGroupedTracker.class);
 		setupTracker(state, base.push(P_TRACKER));
 	}
 
@@ -90,6 +90,8 @@ public class JasimaGroupedProblem extends GPProblem implements IJasimaGPProblem 
 
 	@Override
 	public void prepareToEvaluate(final EvolutionState state, final int threadnum) {
+		super.prepareToEvaluate(state, threadnum);
+
 		// Reset the seed for the simulator.
 		simConfig.setSeed(simSeed);
 

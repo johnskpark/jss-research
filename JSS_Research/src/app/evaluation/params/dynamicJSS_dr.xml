@@ -3,14 +3,14 @@
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>4op_dr.txt</ruleFile>
+			<ruleFile>4op_dr_new.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>8op_dr.txt</ruleFile>
+			<ruleFile>8op_dr_new.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
