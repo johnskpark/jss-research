@@ -155,7 +155,7 @@ public class JasimaCoopProblem extends GPProblem implements GroupedProblemForm, 
 			tracker.clear();
 		}
 
-		fitness.setFitness(state, gpInds, shouldSetContext);
+		fitness.setFitness(state, inds, shouldSetContext);
 		fitness.clear();
 	}
 

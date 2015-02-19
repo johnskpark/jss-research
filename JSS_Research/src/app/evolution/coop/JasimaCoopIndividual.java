@@ -1,16 +1,11 @@
-package jss.evolution;
+package app.evolution.coop;
 
 import ec.gp.GPIndividual;
 import ec.gp.GPTree;
 
-/**
- * TODO javadoc.
- * @author parkjohn
- *
- */
-public class JSSGPIndividual extends GPIndividual {
+public class JasimaCoopIndividual extends GPIndividual {
 
-	private static final long serialVersionUID = -5218812585218446585L;
+	private static final long serialVersionUID = 7566878552263864266L;
 
 	@Override
 	public String genotypeToStringForHumans() {
@@ -45,4 +40,5 @@ public class JSSGPIndividual extends GPIndividual {
         default : return tree.child.makeLispTree();
         }
 	}
+
 }

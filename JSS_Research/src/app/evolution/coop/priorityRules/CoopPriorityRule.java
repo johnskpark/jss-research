@@ -19,6 +19,8 @@ import ec.gp.GPIndividual;
 
 public class CoopPriorityRule extends AbsGPPriorityRule {
 
+	private static final long serialVersionUID = 4489763145483422036L;
+
 	public static final double ATC_K_VALUE = 3.0;
 
 	private EvolutionState state;
