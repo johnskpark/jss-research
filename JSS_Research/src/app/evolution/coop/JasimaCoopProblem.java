@@ -143,6 +143,8 @@ public class JasimaCoopProblem extends GPProblem implements GroupedProblemForm, 
 
 		coopRule.setConfiguration(config);
 
+		fitness.loadIndividuals(inds);
+
 		for (int i = 0; i < simConfig.getNumConfigs(); i++) {
 			Experiment experiment = getExperiment(state, coopRule, i);
 
@@ -153,36 +155,8 @@ public class JasimaCoopProblem extends GPProblem implements GroupedProblemForm, 
 			tracker.clear();
 		}
 
-		// TODO need to adapt this to use the new fitness measure.
-		for (int i = 0; i < inds.length; i++) {
-//			double trial = fitness.getFitness(stats, i);
-			double trial = Double.POSITIVE_INFINITY;
-
-			if (updateFitness[i]) {
-				GPIndividual gpInd = gpInds[i];
-
-				int len = gpInd.fitness.trials.size();
-
-				// TODO I don't really get this part. What is it used for exactly?
-				if (len == 0) {
-					if (shouldSetContext) {
-						gpInd.fitness.setContext(inds, i);
-					}
-
-					gpInd.fitness.trials.add(new Double(trial));
-				} else if ((Double) gpInd.fitness.trials.get(0) < trial) {
-					if (shouldSetContext) {
-						gpInd.fitness.setContext(inds, i);
-					}
-
-					Object t = gpInd.fitness.trials.get(0);
-					gpInd.fitness.trials.set(0, fitness);
-					gpInd.fitness.trials.add(t);
-				}
-
-				((KozaFitness)gpInd.fitness).setStandardizedFitness(state, trial);
-			}
-		}
+		fitness.setFitness(state, gpInds, shouldSetContext);
+		fitness.clear();
 	}
 
 	@SuppressWarnings("unchecked")
