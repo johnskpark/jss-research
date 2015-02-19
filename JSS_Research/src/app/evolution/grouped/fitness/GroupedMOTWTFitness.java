@@ -14,7 +14,7 @@ import ec.Individual;
 import ec.gp.GPIndividual;
 import ec.multiobjective.MultiObjectiveFitness;
 
-public class MOTWTFitness implements IJasimaGroupFitness {
+public class GroupedMOTWTFitness implements IJasimaGroupFitness {
 
 	private static final String WT_MEAN_STR = "weightedTardMean";
 

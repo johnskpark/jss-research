@@ -59,7 +59,7 @@ eval.problem.data = app.evolution.JasimaGPData
 eval.problem.rule = app.evolution.priorityRules.BasicPriorityRule
 eval.problem.groupRule = app.evolution.priorityRules.EnsemblePriorityRule
 
-eval.problem.fitness = app.evolution.grouped.fitness.MOTWTFitness
+eval.problem.fitness = app.evolution.grouped.fitness.GroupedMOTWTFitness
 eval.problem.grouping = app.evolution.grouped.grouping.PopGrouping
 eval.problem.tracker = app.evolution.grouped.tracker.DecisionTracker
 

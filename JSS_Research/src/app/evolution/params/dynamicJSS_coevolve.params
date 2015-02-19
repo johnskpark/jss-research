@@ -69,15 +69,12 @@ gp.fs.0.func.14.nc = nc0
 
 stat = app.evolution.coop.statistics.JasimaCoopStatistics
 
-eval.problem = app.evolution.grouped.JasimaGroupedProblem
+eval.problem = app.evolution.coop.JasimaCoopProblem
 eval.problem.data = app.evolution.JasimaGPData
 
 eval.problem.rule = app.evolution.priorityRules.BasicPriorityRule
-eval.problem.groupRule = app.evolution.priorityRules.EnsemblePriorityRule
-
-eval.problem.fitness = app.evolution.grouped.fitness.MOTWTFitness
-eval.problem.grouping = app.evolution.grouped.grouping.PopGrouping
-eval.problem.tracker = app.evolution.grouped.tracker.DecisionTracker
+eval.problem.fitness = app.evolution.coop.fitness.CoopMOTWTFitness
+eval.problem.tracker = app.evolution.coop.tracker.DecisionTracker
 
 eval.problem.simulator = app.simConfig.huntConfig.FourOpSimConfig
 eval.problem.simulator.seed = 15

@@ -1,4 +1,4 @@
-package app.evolution.coop.priorityRules;
+package app.evolution.priorityRules;
 
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;

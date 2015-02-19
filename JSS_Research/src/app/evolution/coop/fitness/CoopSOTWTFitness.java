@@ -12,15 +12,15 @@ import app.evolution.coop.IJasimaCoopFitness;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.gp.GPIndividual;
-import ec.multiobjective.MultiObjectiveFitness;
+import ec.gp.koza.KozaFitness;
 
-public class CoopTWTFitness implements IJasimaCoopFitness {
+public class CoopSOTWTFitness implements IJasimaCoopFitness {
 
 	private static final String WT_MEAN_STR = "weightedTardMean";
 
 	private Individual[] individuals;
 
-	private Map<Individual, Pair<Integer, SummaryStat[]>> fitnessMap = new HashMap<Individual, Pair<Integer, SummaryStat[]>>();
+	private Map<Individual, Pair<Integer, SummaryStat>> fitnessMap = new HashMap<Individual, Pair<Integer, SummaryStat>>();
 
 	@Override
 	public void loadIndividuals(final Individual[] inds) {
@@ -30,11 +30,8 @@ public class CoopTWTFitness implements IJasimaCoopFitness {
 	}
 
 	private void addIndividual(Individual ind, int index) {
-		fitnessMap.put(ind, new Pair<Integer, SummaryStat[]>(index,
-				new SummaryStat[]{
-				new SummaryStat(),
-				new SummaryStat()
-		}));
+		fitnessMap.put(ind, new Pair<Integer, SummaryStat>(index,
+				new SummaryStat()));
 	}
 
 	@Override
@@ -48,23 +45,14 @@ public class CoopTWTFitness implements IJasimaCoopFitness {
 				continue;
 			}
 
-			fitnessMap.get(inds[i]).b[0].combine(stat);
+			fitnessMap.get(inds[i]).b.combine(stat);
 			indSet.add(inds[i]);
 		}
 	}
 
 	@Override
 	public void accumulateDiversityFitness(final Pair<GPIndividual, Double>[] groupResults) {
-		Set<Individual> indSet = new HashSet<Individual>();
-		for (int i = 0; i < groupResults.length; i++) {
-			Pair<GPIndividual, Double> result = groupResults[i];
-			if (indSet.contains(result.a)) {
-				continue;
-			}
-
-			fitnessMap.get(result.a).b[1].value(result.b);
-			indSet.add(result.a);
-		}
+		// Does nothing.
 	}
 
 	@Override
@@ -88,10 +76,10 @@ public class CoopTWTFitness implements IJasimaCoopFitness {
 			final Individual ind,
 			final boolean shouldSetContext) {
 		int index = fitnessMap.get(ind).a;
-		SummaryStat[] indStat = fitnessMap.get(ind).b;
-		double trial = indStat[0].mean();
+		SummaryStat indStat = fitnessMap.get(ind).b;
+		double trial = indStat.mean();
 
-		MultiObjectiveFitness fitness = (MultiObjectiveFitness) ind.fitness;
+		KozaFitness fitness = (KozaFitness) ind.fitness;
 
 		int len = ind.fitness.trials.size();
 		if (len == 0 || (Double) ind.fitness.trials.get(0) < trial) {
@@ -102,9 +90,7 @@ public class CoopTWTFitness implements IJasimaCoopFitness {
 			ind.fitness.trials.add(trial);
 		}
 
-		fitness.getObjectives()[0] = trial;
-		fitness.getObjectives()[1] = ind.size();
-		fitness.getObjectives()[2] = -indStat[1].mean();
+		fitness.setStandardizedFitness(state, trial);
 	}
 
 	@Override
