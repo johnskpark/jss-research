@@ -3,9 +3,10 @@ package app.evolution.coop.fitness;
 import jasima.core.statistics.SummaryStat;
 import jasima.core.util.Pair;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import app.evolution.coop.IJasimaCoopFitness;
 import ec.EvolutionState;
@@ -19,58 +20,57 @@ public class CoopTWTFitness implements IJasimaCoopFitness {
 
 	private Individual[] individuals;
 
-	// I can't use a map here, as duplicate individuals are a possibility.
-	// TODO I can use a map and only count once per individual.
-	private List<Pair<Individual, SummaryStat[]>> fitnesses = new ArrayList<Pair<Individual, SummaryStat[]>>();
+	private Map<Individual, Pair<Integer, SummaryStat[]>> fitnessMap = new HashMap<Individual, Pair<Integer, SummaryStat[]>>();
 
 	@Override
 	public void loadIndividuals(final Individual[] inds) {
-		if (fitnesses.size() == 0) {
-			individuals = new Individual[inds.length];
-
-			for (int i = 0; i < inds.length; i++) {
-				individuals[i] = inds[i];
-
-				fitnesses.add(new Pair<Individual, SummaryStat[]>(inds[i], new SummaryStat[]{
-						new SummaryStat(),
-						new SummaryStat()
-				}));
-			}
+		for (int i = 0; i < inds.length; i++) {
+			addIndividual(inds[i], i);
 		}
+	}
+
+	private void addIndividual(Individual ind, int index) {
+		fitnessMap.put(ind, new Pair<Integer, SummaryStat[]>(index,
+				new SummaryStat[]{
+				new SummaryStat(),
+				new SummaryStat()
+		}));
 	}
 
 	@Override
 	public void accumulateObjectiveFitness(final Individual[] inds,
 			final Map<String, Object> results) {
 		SummaryStat stat = (SummaryStat) results.get(WT_MEAN_STR);
+
+		Set<Individual> indSet = new HashSet<Individual>();
 		for (int i = 0; i < inds.length; i++) {
-			fitnesses.get(i).b[0].combine(stat);
+			if (indSet.contains(inds[i])) {
+				continue;
+			}
+
+			fitnessMap.get(inds[i]).b[0].combine(stat);
+			indSet.add(inds[i]);
 		}
 	}
 
 	@Override
 	public void accumulateDiversityFitness(final Pair<GPIndividual, Double>[] groupResults) {
+		Set<Individual> indSet = new HashSet<Individual>();
 		for (int i = 0; i < groupResults.length; i++) {
-			int index = getIndex(groupResults[i].a, i);
-			fitnesses.get(index).b[1].value(groupResults[i].b);
-		}
-	}
-
-	private int getIndex(Individual ind, int startIndex) {
-		for (int index = 0; index < fitnesses.size(); index++) {
-			if (fitnesses.get((index + startIndex) % fitnesses.size()).a.equals(ind)) {
-				return index;
+			Pair<GPIndividual, Double> result = groupResults[i];
+			if (indSet.contains(result.a)) {
+				continue;
 			}
+
+			fitnessMap.get(result.a).b[1].value(result.b);
+			indSet.add(result.a);
 		}
-		return -1;
 	}
 
 	@Override
 	public void setFitness(final EvolutionState state,
 			final Individual ind) {
-		int index = getIndex(ind, 0);
-
-		setFitness(state, individuals, ind, true, index);
+		setFitness(state, individuals, ind, true);
 	}
 
 	@Override
@@ -78,9 +78,7 @@ public class CoopTWTFitness implements IJasimaCoopFitness {
 			final Individual[] inds,
 			final boolean shouldSetContext) {
 		for (int i = 0; i < inds.length; i++) {
-			int index = getIndex(inds[i], i);
-
-			setFitness(state, inds, inds[i], shouldSetContext, index);
+			setFitness(state, inds, inds[i], shouldSetContext);
 		}
 	}
 
@@ -88,9 +86,9 @@ public class CoopTWTFitness implements IJasimaCoopFitness {
 	private void setFitness(final EvolutionState state,
 			final Individual[] inds,
 			final Individual ind,
-			final boolean shouldSetContext,
-			final int index) {
-		SummaryStat[] indStat = fitnesses.get(index).b;
+			final boolean shouldSetContext) {
+		int index = fitnessMap.get(ind).a;
+		SummaryStat[] indStat = fitnessMap.get(ind).b;
 		double trial = indStat[0].mean();
 
 		MultiObjectiveFitness fitness = (MultiObjectiveFitness) ind.fitness;
@@ -112,7 +110,7 @@ public class CoopTWTFitness implements IJasimaCoopFitness {
 	@Override
 	public void clear() {
 		individuals = null;
-		fitnesses.clear();
+		fitnessMap.clear();
 	}
 
 }

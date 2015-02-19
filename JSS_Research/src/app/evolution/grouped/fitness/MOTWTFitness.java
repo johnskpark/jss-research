@@ -4,7 +4,9 @@ import jasima.core.statistics.SummaryStat;
 import jasima.core.util.Pair;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import app.evolution.grouped.IJasimaGroupFitness;
 import ec.EvolutionState;
@@ -35,11 +37,18 @@ public class MOTWTFitness implements IJasimaGroupFitness {
 
 	@Override
 	public void accumulateGroupFitness(final Pair<GPIndividual, Double>[] groupResults) {
-		for (Pair<GPIndividual, Double> pair : groupResults) {
-			if (!groupFitness.containsKey(pair.a)) {
-				groupFitness.put(pair.a, new SummaryStat());
+		Set<Individual> indSet = new HashSet<Individual>();
+		for (Pair<GPIndividual, Double> result : groupResults) {
+			if (indSet.contains(result.a)) {
+				continue;
 			}
-			groupFitness.get(pair.a).value(pair.b);
+
+			if (!groupFitness.containsKey(result.a)) {
+				groupFitness.put(result.a, new SummaryStat());
+			}
+
+			groupFitness.get(result.a).value(result.b);
+			indSet.add(result.a);
 		}
 	}
 
