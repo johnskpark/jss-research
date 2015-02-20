@@ -73,7 +73,7 @@ stat = app.evolution.coop.statistics.JasimaCoopStatistics
 eval.problem = app.evolution.coop.JasimaCoopProblem
 eval.problem.data = app.evolution.JasimaGPData
 
-eval.problem.rule = app.evolution.priorityRules.BasicPriorityRule
+eval.problem.rule = app.evolution.priorityRules.CoopPriorityRule
 eval.problem.fitness = app.evolution.coop.fitness.CoopMOTWTFitness
 eval.problem.tracker = app.evolution.coop.tracker.DecisionTracker
 

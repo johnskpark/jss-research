@@ -13,6 +13,7 @@ pop.subpops = 10
 pop.default-subpop = 0
 
 pop.subpop.0.size = 102
+pop.subpop.0.species.ind = jss.evolution.JSSGPIndividual
 
 eval = ec.coevolve.MultiPopCoevolutionaryEvaluator
 
