@@ -18,20 +18,19 @@ public class CoopSOTWTFitness implements IJasimaCoopFitness {
 
 	private static final String WT_MEAN_STR = "weightedTardMean";
 
-	private Individual[] individuals;
-
 	private Map<Individual, Pair<Integer, SummaryStat>> fitnessMap = new HashMap<Individual, Pair<Integer, SummaryStat>>();
 
 	@Override
-	public void loadIndividuals(final Individual[] inds) {
+	public void loadIndividuals(Individual[] inds) {
 		for (int i = 0; i < inds.length; i++) {
-			addIndividual(inds[i], i);
+			addIndividual(i, inds[i]);
 		}
 	}
 
-	private void addIndividual(Individual ind, int index) {
-		fitnessMap.put(ind, new Pair<Integer, SummaryStat>(index,
-				new SummaryStat()));
+	private void addIndividual(int index, Individual ind) {
+		if (!fitnessMap.containsKey(ind)) {
+			fitnessMap.put(ind, new Pair<Integer, SummaryStat>(index, new SummaryStat()));
+		}
 	}
 
 	@Override
@@ -58,15 +57,19 @@ public class CoopSOTWTFitness implements IJasimaCoopFitness {
 	@Override
 	public void setFitness(final EvolutionState state,
 			final Individual ind) {
-		setFitness(state, individuals, ind, true);
+		throw new UnsupportedOperationException("Not yet implemented");
+		// setFitness(state, individuals, 0, true);
 	}
 
 	@Override
 	public void setFitness(final EvolutionState state,
 			final Individual[] inds,
+			final boolean[] updateFitness,
 			final boolean shouldSetContext) {
 		for (int i = 0; i < inds.length; i++) {
-			setFitness(state, inds, inds[i], shouldSetContext);
+			if (updateFitness[i]) {
+				setFitness(state, inds, inds[i], shouldSetContext);
+			}
 		}
 	}
 
@@ -95,7 +98,6 @@ public class CoopSOTWTFitness implements IJasimaCoopFitness {
 
 	@Override
 	public void clear() {
-		individuals = null;
 		fitnessMap.clear();
 	}
 

@@ -18,23 +18,22 @@ public class CoopMOTWTFitness implements IJasimaCoopFitness {
 
 	private static final String WT_MEAN_STR = "weightedTardMean";
 
-	private Individual[] individuals;
-
 	private Map<Individual, Pair<Integer, SummaryStat[]>> fitnessMap = new HashMap<Individual, Pair<Integer, SummaryStat[]>>();
 
 	@Override
-	public void loadIndividuals(final Individual[] inds) {
+	public void loadIndividuals(Individual[] inds) {
 		for (int i = 0; i < inds.length; i++) {
-			addIndividual(inds[i], i);
+			addIndividual(i, inds[i]);
 		}
 	}
 
-	private void addIndividual(Individual ind, int index) {
-		fitnessMap.put(ind, new Pair<Integer, SummaryStat[]>(index,
-				new SummaryStat[]{
-				new SummaryStat(),
-				new SummaryStat()
-		}));
+	private void addIndividual(int index, Individual ind) {
+		if (!fitnessMap.containsKey(ind)) {
+			fitnessMap.put(ind, new Pair<Integer, SummaryStat[]>(index, new SummaryStat[]{
+					new SummaryStat(),
+					new SummaryStat()
+			}));
+		}
 	}
 
 	@Override
@@ -70,46 +69,48 @@ public class CoopMOTWTFitness implements IJasimaCoopFitness {
 	@Override
 	public void setFitness(final EvolutionState state,
 			final Individual ind) {
-		setFitness(state, individuals, ind, true);
+		throw new UnsupportedOperationException("Not yet implemented");
+		// setFitness(state, individuals, 0, true);
 	}
 
 	@Override
 	public void setFitness(final EvolutionState state,
 			final Individual[] inds,
+			final boolean[] updateFitness,
 			final boolean shouldSetContext) {
 		for (int i = 0; i < inds.length; i++) {
-			setFitness(state, inds, inds[i], shouldSetContext);
+			if (updateFitness[i]) {
+				setFitness(state, inds, i, shouldSetContext);
+			}
 		}
 	}
 
 	@SuppressWarnings("unchecked")
 	private void setFitness(final EvolutionState state,
 			final Individual[] inds,
-			final Individual ind,
+			final int index,
 			final boolean shouldSetContext) {
-		int index = fitnessMap.get(ind).a;
-		SummaryStat[] indStat = fitnessMap.get(ind).b;
+		SummaryStat[] indStat = fitnessMap.get(inds[index]).b;
 		double trial = indStat[0].mean();
 
-		MultiObjectiveFitness fitness = (MultiObjectiveFitness) ind.fitness;
+		MultiObjectiveFitness fitness = (MultiObjectiveFitness) inds[index].fitness;
 
-		int len = ind.fitness.trials.size();
-		if (len == 0 || (Double) ind.fitness.trials.get(0) < trial) {
-			if (shouldSetContext && inds != null) {
-				ind.fitness.setContext(inds, index);
+		int len = inds[index].fitness.trials.size();
+		if (len == 0 || (Double) inds[index].fitness.trials.get(0) < trial) {
+			if (shouldSetContext) {
+				inds[index].fitness.setContext(inds, index);
 			}
 
-			ind.fitness.trials.add(trial);
+			inds[index].fitness.trials.add(trial);
 		}
 
 		fitness.getObjectives()[0] = trial;
-		fitness.getObjectives()[1] = ind.size();
+		fitness.getObjectives()[1] = inds[index].size();
 		fitness.getObjectives()[2] = -indStat[1].mean();
 	}
 
 	@Override
 	public void clear() {
-		individuals = null;
 		fitnessMap.clear();
 	}
 

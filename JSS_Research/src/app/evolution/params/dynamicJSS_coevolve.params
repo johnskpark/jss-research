@@ -7,7 +7,7 @@ parent.0 = koza_mo.params
 multi.fitness.num-objectives = 3
 multi.fitness.maximize = false
 
-pop.subpops = 3
+pop.subpops = 10
 pop.default-subpop = 0
 
 pop.subpop.0.size = 500

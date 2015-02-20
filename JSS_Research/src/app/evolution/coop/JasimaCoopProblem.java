@@ -13,6 +13,7 @@ import app.evolution.JasimaGPConfig;
 import app.evolution.JasimaGPData;
 import app.simConfig.AbsSimConfig;
 import ec.EvolutionState;
+import ec.Fitness;
 import ec.Individual;
 import ec.Population;
 import ec.coevolve.GroupedProblemForm;
@@ -90,7 +91,7 @@ public class JasimaCoopProblem extends GPProblem implements GroupedProblemForm, 
 		for (int i = 0; i < pop.subpops.length; i++) {
 			if (prepareForFitnessAssessment[i]) {
 				for (int j = 0; j < pop.subpops[i].individuals.length; j++) {
-					KozaFitness fitness = (KozaFitness) pop.subpops[i].individuals[j].fitness;
+					Fitness fitness = pop.subpops[i].individuals[j].fitness;
 					fitness.trials = new ArrayList();
 				}
 			}
@@ -104,6 +105,7 @@ public class JasimaCoopProblem extends GPProblem implements GroupedProblemForm, 
 			final boolean countVictoriesOnly) {
 		for (int i = 0; i < pop.subpops.length; i++ ) {
 			if (assessFitness[i]) {
+				// TODO this is broken.
 				for (int j = 0; j < pop.subpops[i].individuals.length; j++) {
 					KozaFitness fitness = (KozaFitness) pop.subpops[i].individuals[j].fitness;
 
@@ -128,6 +130,8 @@ public class JasimaCoopProblem extends GPProblem implements GroupedProblemForm, 
 			final boolean countVictoriesOnly,
 			final int[] subpops,
 			final int threadnum) {
+		long startTime = System.currentTimeMillis();
+
 		GPIndividual[] gpInds = new GPIndividual[inds.length];
 		for (int i = 0; i < inds.length; i++) {
 			gpInds[i] = (GPIndividual) inds[i];
@@ -155,8 +159,13 @@ public class JasimaCoopProblem extends GPProblem implements GroupedProblemForm, 
 			tracker.clear();
 		}
 
-		fitness.setFitness(state, inds, shouldSetContext);
+		fitness.setFitness(state, inds, updateFitness, shouldSetContext);
 		fitness.clear();
+
+		long endTime = System.currentTimeMillis();
+		long timeDiff = endTime - startTime;
+
+		System.out.printf("%d\n", timeDiff);
 	}
 
 	@SuppressWarnings("unchecked")
