@@ -19,7 +19,6 @@ import ec.Population;
 import ec.coevolve.GroupedProblemForm;
 import ec.gp.GPIndividual;
 import ec.gp.GPProblem;
-import ec.gp.koza.KozaFitness;
 import ec.util.Parameter;
 
 public class JasimaCoopProblem extends GPProblem implements GroupedProblemForm, IJasimaGPProblem {
@@ -105,20 +104,7 @@ public class JasimaCoopProblem extends GPProblem implements GroupedProblemForm, 
 			final boolean countVictoriesOnly) {
 		for (int i = 0; i < pop.subpops.length; i++ ) {
 			if (assessFitness[i]) {
-				// TODO this is broken.
-				for (int j = 0; j < pop.subpops[i].individuals.length; j++) {
-					KozaFitness fitness = (KozaFitness) pop.subpops[i].individuals[j].fitness;
-
-					// we take the minimum over the trials
-					double min = Double.POSITIVE_INFINITY;
-					for (int l = 0; l < fitness.trials.size(); l++) {
-						double trialVal = (Double) fitness.trials.get(l);
-						min = Math.min(trialVal, min);  // it'll be the first one, but whatever
-					}
-
-					fitness.setStandardizedFitness(state, min);
-					pop.subpops[i].individuals[j].evaluated = true;
-				}
+				fitness.setObjectiveFitness(state, pop.subpops[i].individuals);
 			}
 		}
 	}
@@ -159,7 +145,7 @@ public class JasimaCoopProblem extends GPProblem implements GroupedProblemForm, 
 			tracker.clear();
 		}
 
-		fitness.setFitness(state, inds, updateFitness, shouldSetContext);
+		fitness.setTrialFitness(state, inds, updateFitness, shouldSetContext);
 		fitness.clear();
 
 		long endTime = System.currentTimeMillis();

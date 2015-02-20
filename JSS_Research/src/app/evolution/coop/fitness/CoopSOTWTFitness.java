@@ -10,6 +10,7 @@ import java.util.Set;
 
 import app.evolution.coop.IJasimaCoopFitness;
 import ec.EvolutionState;
+import ec.Fitness;
 import ec.Individual;
 import ec.gp.GPIndividual;
 import ec.gp.koza.KozaFitness;
@@ -57,43 +58,59 @@ public class CoopSOTWTFitness implements IJasimaCoopFitness {
 	@Override
 	public void setFitness(final EvolutionState state,
 			final Individual ind) {
-		throw new UnsupportedOperationException("Not yet implemented");
-		// setFitness(state, individuals, 0, true);
+		setTrialFitness(state, new Individual[]{ind}, new boolean[]{true}, true);
+		setDiversityFitness(state, new Individual[]{ind}, new boolean[]{true});
+		setObjectiveFitness(state, new Individual[]{ind});
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public void setFitness(final EvolutionState state,
+	public void setTrialFitness(final EvolutionState state,
 			final Individual[] inds,
 			final boolean[] updateFitness,
 			final boolean shouldSetContext) {
 		for (int i = 0; i < inds.length; i++) {
 			if (updateFitness[i]) {
-				setFitness(state, inds, inds[i], shouldSetContext);
+				SummaryStat indFitness = fitnessMap.get(inds[i]).b;
+				double trial = indFitness.mean();
+				
+				Fitness fitness = inds[i].fitness;
+				
+				int len = fitness.trials.size();
+				if (len == 0 || (Double) fitness.trials.get(0) < trial) {
+					if (shouldSetContext) {
+						fitness.setContext(inds, i);
+					}
+					
+					fitness.trials.add(trial);
+				}
 			}
 		}
 	}
-
-	@SuppressWarnings("unchecked")
-	private void setFitness(final EvolutionState state,
+	
+	@Override
+	public void setDiversityFitness(final EvolutionState state,
 			final Individual[] inds,
-			final Individual ind,
-			final boolean shouldSetContext) {
-		int index = fitnessMap.get(ind).a;
-		SummaryStat indStat = fitnessMap.get(ind).b;
-		double trial = indStat.mean();
+			final boolean[] updateFitness) {
+		// Do nothing.
+	}
+	
+	@Override
+	public void setObjectiveFitness(final EvolutionState state,
+			final Individual[] inds) {
+		for (int i = 0; i < inds.length; i++) {
+			KozaFitness fitness = (KozaFitness) inds[i].fitness;
 
-		KozaFitness fitness = (KozaFitness) ind.fitness;
-
-		int len = ind.fitness.trials.size();
-		if (len == 0 || (Double) ind.fitness.trials.get(0) < trial) {
-			if (shouldSetContext && inds != null) {
-				ind.fitness.setContext(inds, index);
+			// we take the minimum over the trials
+			double min = Double.POSITIVE_INFINITY;
+			for (int l = 0; l < fitness.trials.size(); l++) {
+				double trialVal = (Double) fitness.trials.get(l);
+				min = Math.min(trialVal, min);  // it'll be the first one, but whatever
 			}
 
-			ind.fitness.trials.add(trial);
+			fitness.setStandardizedFitness(state, min);
+			inds[i].evaluated = true;
 		}
-
-		fitness.setStandardizedFitness(state, trial);
 	}
 
 	@Override

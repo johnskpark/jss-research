@@ -10,7 +10,9 @@ multi.fitness.maximize = false
 pop.subpops = 10
 pop.default-subpop = 0
 
-pop.subpop.0.size = 500
+pop.subpop.0.size = 20
+
+generations = 2
 
 eval = ec.coevolve.MultiPopCoevolutionaryEvaluator
 
@@ -81,5 +83,3 @@ eval.problem.simulator.seed = 15
 
 # seed.0=26556
 seed.0=17
-
-pop.subpop.0.size = 200

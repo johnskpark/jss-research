@@ -10,6 +10,7 @@ import java.util.Set;
 
 import app.evolution.coop.IJasimaCoopFitness;
 import ec.EvolutionState;
+import ec.Fitness;
 import ec.Individual;
 import ec.gp.GPIndividual;
 import ec.multiobjective.MultiObjectiveFitness;
@@ -69,44 +70,68 @@ public class CoopMOTWTFitness implements IJasimaCoopFitness {
 	@Override
 	public void setFitness(final EvolutionState state,
 			final Individual ind) {
-		throw new UnsupportedOperationException("Not yet implemented");
-		// setFitness(state, individuals, 0, true);
+		setTrialFitness(state, new Individual[]{ind}, new boolean[]{true}, true);
+		setDiversityFitness(state, new Individual[]{ind}, new boolean[]{true});
+		setObjectiveFitness(state, new Individual[]{ind});
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public void setFitness(final EvolutionState state,
+	public void setTrialFitness(final EvolutionState state,
 			final Individual[] inds,
 			final boolean[] updateFitness,
 			final boolean shouldSetContext) {
 		for (int i = 0; i < inds.length; i++) {
 			if (updateFitness[i]) {
-				setFitness(state, inds, i, shouldSetContext);
+				SummaryStat[] indFitness = fitnessMap.get(inds[i]).b;
+				double trial = indFitness[0].mean();
+				
+				Fitness fitness = inds[i].fitness;
+				
+				int len = fitness.trials.size();
+				if (len == 0 || (Double) fitness.trials.get(0) < trial) {
+					if (shouldSetContext) {
+						fitness.setContext(inds, i);
+					}
+					
+					fitness.trials.add(trial);
+				}
 			}
 		}
 	}
-
-	@SuppressWarnings("unchecked")
-	private void setFitness(final EvolutionState state,
+	
+	@Override
+	public void setDiversityFitness(final EvolutionState state,
 			final Individual[] inds,
-			final int index,
-			final boolean shouldSetContext) {
-		SummaryStat[] indStat = fitnessMap.get(inds[index]).b;
-		double trial = indStat[0].mean();
+			final boolean[] updateFitness) {
+		for (int i = 0; i < inds.length; i++) {
+			if (updateFitness[i]) {
+				SummaryStat[] indFitness = fitnessMap.get(inds[i]).b;
 
-		MultiObjectiveFitness fitness = (MultiObjectiveFitness) inds[index].fitness;
+				MultiObjectiveFitness fitness = (MultiObjectiveFitness) inds[i].fitness;
 
-		int len = inds[index].fitness.trials.size();
-		if (len == 0 || (Double) inds[index].fitness.trials.get(0) < trial) {
-			if (shouldSetContext) {
-				inds[index].fitness.setContext(inds, index);
+				fitness.getObjectives()[1] = inds[i].size();
+				fitness.getObjectives()[2] = -indFitness[1].mean();
+			}
+		}
+	}
+	
+	@Override
+	public void setObjectiveFitness(final EvolutionState state,
+			final Individual[] inds) {
+		for (int i = 0; i < inds.length; i++) {
+			MultiObjectiveFitness fitness = (MultiObjectiveFitness) inds[i].fitness;
+
+			// we take the minimum over the trials
+			double min = Double.POSITIVE_INFINITY;
+			for (int l = 0; l < fitness.trials.size(); l++) {
+				double trialVal = (Double) fitness.trials.get(l);
+				min = Math.min(trialVal, min);  // it'll be the first one, but whatever
 			}
 
-			inds[index].fitness.trials.add(trial);
+			fitness.getObjectives()[0] = min;
+			inds[i].evaluated = true;
 		}
-
-		fitness.getObjectives()[0] = trial;
-		fitness.getObjectives()[1] = inds[index].size();
-		fitness.getObjectives()[2] = -indStat[1].mean();
 	}
 
 	@Override
