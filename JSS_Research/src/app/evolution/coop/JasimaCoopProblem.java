@@ -116,8 +116,6 @@ public class JasimaCoopProblem extends GPProblem implements GroupedProblemForm, 
 			final boolean countVictoriesOnly,
 			final int[] subpops,
 			final int threadnum) {
-		long startTime = System.currentTimeMillis();
-
 		GPIndividual[] gpInds = new GPIndividual[inds.length];
 		for (int i = 0; i < inds.length; i++) {
 			gpInds[i] = (GPIndividual) inds[i];
@@ -148,11 +146,6 @@ public class JasimaCoopProblem extends GPProblem implements GroupedProblemForm, 
 		fitness.setTrialFitness(state, inds, updateFitness, shouldSetContext);
 		fitness.setDiversityFitness(state, inds, updateFitness);
 		fitness.clear();
-
-		long endTime = System.currentTimeMillis();
-		long timeDiff = endTime - startTime;
-
-		System.out.printf("%d\n", timeDiff);
 	}
 
 	@SuppressWarnings("unchecked")
