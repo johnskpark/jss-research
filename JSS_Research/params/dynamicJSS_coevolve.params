@@ -77,7 +77,7 @@ eval.problem.rule = app.evolution.priorityRules.CoopPriorityRule
 eval.problem.fitness = app.evolution.coop.fitness.CoopMOTWTFitness
 eval.problem.tracker = app.evolution.coop.tracker.DecisionTracker
 
-eval.problem.simulator = app.simConfig.huntConfig.FourOpSimConfig
+eval.problem.simulator = app.simConfig.huntConfig.EightOpSimConfig
 eval.problem.simulator.seed = 15
 
 # seed.0=26556
