@@ -27,7 +27,7 @@ public class GroupedSOTWTFitness implements IJasimaGroupFitness {
 		SummaryStat stat = (SummaryStat) results.get(WT_MEAN_STR);
 
 		this.ind = ind;
-		this.indFitness.combine(stat);
+		this.indFitness.value(stat.sum());
 	}
 
 	@Override

@@ -32,7 +32,7 @@ public class GroupedMOTWTFitness implements IJasimaGroupFitness {
 		SummaryStat stat = (SummaryStat) results.get(WT_MEAN_STR);
 
 		this.ind = ind;
-		this.indFitness.combine(stat);
+		this.indFitness.value(stat.sum());
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class GroupedMOTWTFitness implements IJasimaGroupFitness {
 		}
 
 		MultiObjectiveFitness fitness = (MultiObjectiveFitness) ind.fitness;
-		fitness.getObjectives()[0] = indFitness.mean();
+		fitness.getObjectives()[0] = indFitness.sum();
 		fitness.getObjectives()[1] = ind.size();
 	}
 

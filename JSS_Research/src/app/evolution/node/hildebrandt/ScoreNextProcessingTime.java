@@ -40,7 +40,7 @@ public class ScoreNextProcessingTime extends GPNode {
 		int nextTask = entry.getTaskNumber() + 1;
 		if (nextTask >= entry.numOps()) {
 			data.setPriority(0);
-		} else{
+		} else {
 			data.setPriority(entry.getOps()[nextTask].procTime);
 		}
 	}

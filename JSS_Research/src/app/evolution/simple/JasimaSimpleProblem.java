@@ -1,20 +1,21 @@
 package app.evolution.simple;
 
-import app.evolution.AbsGPPriorityRule;
-import app.evolution.JasimaGPConfig;
-import app.evolution.JasimaGPData;
-import app.simConfig.AbsSimConfig;
 import jasima.core.experiment.Experiment;
 import jasima.core.util.observer.NotifierListener;
 import jasima.shopSim.models.dynamicShop.DynamicShopExperiment;
 import jasima.shopSim.util.BasicJobStatCollector;
+import app.evolution.AbsGPPriorityRule;
+import app.evolution.IJasimaGPProblem;
+import app.evolution.JasimaGPConfig;
+import app.evolution.JasimaGPData;
+import app.simConfig.AbsSimConfig;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.gp.GPIndividual;
 import ec.gp.GPProblem;
 import ec.util.Parameter;
 
-public class JasimaSimpleProblem extends GPProblem {
+public class JasimaSimpleProblem extends GPProblem implements IJasimaGPProblem {
 
 	private static final long serialVersionUID = -3817123526020178300L;
 
@@ -40,17 +41,24 @@ public class JasimaSimpleProblem extends GPProblem {
 		input = (JasimaGPData) state.parameters.getInstanceForParameterEq(base.push(P_DATA), null, JasimaGPData.class);
 		input.setup(state, base.push(P_DATA));
 
-		// Setup the dataset and the solver.
+		// Setup the the solver.
 		rule = (AbsGPPriorityRule) state.parameters.getInstanceForParameterEq(base.push(P_RULE), null, AbsGPPriorityRule.class);
-		fitness = (IJasimaSimpleFitness) state.parameters.getInstanceForParameterEq(base.push(P_FITNESS), null, IJasimaSimpleFitness.class);
 
 		// Setup the simulator configurations.
 		simConfig = (AbsSimConfig) state.parameters.getInstanceForParameterEq(base.push(P_SIMULATOR), null, AbsSimConfig.class);
 		setupSimulator(state, base.push(P_SIMULATOR));
+		
+		// Setup the fitness.
+		fitness = (IJasimaSimpleFitness) state.parameters.getInstanceForParameterEq(base.push(P_FITNESS), null, IJasimaSimpleFitness.class);
+		setupFitness(state, base.push(P_FITNESS));
 	}
 
 	private void setupSimulator(final EvolutionState state, final Parameter simBase) {
 		simSeed = state.parameters.getLongWithDefault(simBase.push(P_SEED), null, DEFAULT_SEED);
+	}
+
+	private void setupFitness(final EvolutionState state, final Parameter fitnessBase) {
+		fitness.setProblem(this);
 	}
 
 	@Override
@@ -106,6 +114,11 @@ public class JasimaSimpleProblem extends GPProblem {
 		experiment.setScenario(DynamicShopExperiment.Scenario.JOB_SHOP);
 
 		return experiment;
+	}
+	
+	@Override
+	public AbsSimConfig getSimConfig() {
+		return simConfig;
 	}
 
 	@Override
