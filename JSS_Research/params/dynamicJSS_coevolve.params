@@ -2,10 +2,10 @@
 # Licensed under the Academic Free License version 3.0
 # See the file "LICENSE" for more information
 
-parent.0 = koza_mo.params
+parent.0 = koza.params
 
-multi.fitness.num-objectives = 3
-multi.fitness.maximize = false
+# multi.fitness.num-objectives = 3
+# multi.fitness.maximize = false
 
 eval = ec.coevolve.MultiPopCoevolutionaryEvaluator
 
@@ -74,7 +74,7 @@ eval.problem = app.evolution.coop.JasimaCoopProblem
 eval.problem.data = app.evolution.JasimaGPData
 
 eval.problem.rule = app.evolution.priorityRules.CoopPriorityRule
-eval.problem.fitness = app.evolution.coop.fitness.CoopMOTWTFitness
+eval.problem.fitness = app.evolution.coop.fitness.CoopSOTWTFitness
 eval.problem.tracker = app.evolution.coop.tracker.DecisionTracker
 
 eval.problem.simulator = app.simConfig.huntConfig.EightOpSimConfig
