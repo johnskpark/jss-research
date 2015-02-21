@@ -22,7 +22,10 @@ public class HildebrandtTWTFitness implements IJasimaSimpleFitness {
 	private static final String WT_MEAN_STR = "weightedTardMean";
 	private static final String NJ_FINISHED_STR = "numJobsFinished";
 
-	private SummaryStat overallStat = new SummaryStat();
+	private static final double MIN_PENALTY_RATIO = 0.9;
+	
+	private SummaryStat perfIndexStat = new SummaryStat();
+	private SummaryStat fullSysPenStat = new SummaryStat();
 	
 	private IJasimaGPProblem problem;
 	
@@ -72,22 +75,25 @@ public class HildebrandtTWTFitness implements IJasimaSimpleFitness {
 	}
 	
 	@Override
-	public void accumulateFitness(final Map<String, Object> results) {
+	public void accumulateFitness(final int index, final Map<String, Object> results) {
 		SummaryStat stat = (SummaryStat) results.get(WT_MEAN_STR);
 		int jobsFinished = (Integer) results.get(NJ_FINISHED_STR);
 
-		overallStat.combine(stat);
+		perfIndexStat.value(benchmarkTWTs[index] / stat.sum());
+		fullSysPenStat.value(1.0 / (Math.min(MIN_PENALTY_RATIO, 1.0 * jobsFinished / benchmarkJobsFinished[index])));
 	}
 
 	@Override
 	public void setFitness(final EvolutionState state,
 			final Individual ind) {
-		((KozaFitness) ind.fitness).setStandardizedFitness(state, overallStat.sum());
+		double fitness = perfIndexStat.sum() * fullSysPenStat.sum();
+		((KozaFitness) ind.fitness).setStandardizedFitness(state, fitness);
 	}
 
 	@Override
 	public void clear() {
-		overallStat.clear();
+		perfIndexStat.clear();
+		fullSysPenStat.clear();
 	}
 	
 	private class BenchmarkRule extends PR {

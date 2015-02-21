@@ -9,6 +9,6 @@ public interface IJasimaSimpleFitness extends IJasimaFitness {
 
 	public void setProblem(IJasimaGPProblem problem);
 	
-	public void accumulateFitness(final Map<String, Object> results);
+	public void accumulateFitness(final int index, final Map<String, Object> results);
 
 }

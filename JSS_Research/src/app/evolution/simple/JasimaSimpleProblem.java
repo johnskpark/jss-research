@@ -87,7 +87,7 @@ public class JasimaSimpleProblem extends GPProblem implements IJasimaGPProblem {
 
 				experiment.runExperiment();
 
-				fitness.accumulateFitness(experiment.getResults());
+				fitness.accumulateFitness(i, experiment.getResults());
 			}
 
 			fitness.setFitness(state, ind);
