@@ -2,7 +2,7 @@ package app.evolution.node.hildebrandt;
 
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.WorkStation;
-import jss.node.NodeDefinition;
+import app.node.NodeDefinition;
 import app.evolution.JasimaGPData;
 import ec.EvolutionState;
 import ec.Problem;
