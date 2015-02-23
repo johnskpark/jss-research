@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<evaluationConfig>
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.EvalCOVERT</solverClass>
+	</solverConfig>
+
+	<datasetConfig>
+		<datasetClass>app.simConfig.huntConfig.TestSimConfig</datasetClass>
+	</datasetConfig>
+
+	<fitnessConfig>
+		<fitnessClass>app.evaluation.fitness.TWTFitness</fitnessClass>
+	</fitnessConfig>
+</evaluationConfig>
