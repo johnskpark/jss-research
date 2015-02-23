@@ -1,0 +1,37 @@
+package app.evaluation.node.pickardt;
+
+import jasima.shopSim.core.PrioRuleTarget;
+import jasima.shopSim.core.PriorityQueue;
+import app.evaluation.JasimaEvalData;
+import app.evaluation.node.INode;
+import app.evaluation.node.NodeAnnotation;
+import app.node.NodeDefinition;
+
+@NodeAnnotation(node=NodeDefinition.SCORE_AVERAGE_PROCESSING_TIME_IN_QUEUE)
+public class ScoreAverageProcessingTimeInQueue implements INode {
+
+	private static final NodeDefinition NODE_DEFINITION = NodeDefinition.SCORE_AVERAGE_PROCESSING_TIME_IN_QUEUE;
+
+	public ScoreAverageProcessingTimeInQueue() {
+	}
+
+	@Override
+	public int getChildrenNum() {
+		return NODE_DEFINITION.numChildren();
+	}
+
+	@Override
+	public double evaluate(JasimaEvalData data) {
+		PrioRuleTarget entry = data.getPrioRuleTarget();
+
+		double sumProcTime = 0.0;
+		
+		PriorityQueue<?> q = entry.getCurrMachine().queue;
+		for (int i = 0; i < q.size(); i++) {
+			sumProcTime += q.get(i).currProcTime();
+		}
+		
+		return sumProcTime / q.size();
+	}
+
+}
