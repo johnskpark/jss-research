@@ -22,12 +22,15 @@ public class EvalCOVERT extends AbsEvalPriorityRule {
 		}
 
 		double ff = (entry.getDueDate() - entry.getRelDate()) / entry.procSum();
-
 		double slack = entry.getDueDate() - entry.getShop().simTime() -
 				entry.remainingProcTime();
+
+		double previousWaitTime = ff * 0.0;
 		double remainingWaitTime = ff * entry.remainingProcTime();
+		double totalWaitTime = previousWaitTime + remainingWaitTime;
+
 		double prod = Math.max(1.0 - Math.max(slack, 0.0) /
-				(COVERT_K_VALUE * remainingWaitTime), 0.0);
+				(COVERT_K_VALUE * totalWaitTime), 0.0);
 
 		return entry.getWeight() / entry.currProcTime() * prod;
 	}
