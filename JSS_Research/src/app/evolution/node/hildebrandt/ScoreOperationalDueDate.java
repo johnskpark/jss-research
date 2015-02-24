@@ -1,7 +1,7 @@
 package app.evolution.node.hildebrandt;
 
-import app.node.NodeDefinition;
 import app.evolution.JasimaGPData;
+import app.node.NodeDefinition;
 import ec.EvolutionState;
 import ec.Problem;
 import ec.gp.ADFStack;

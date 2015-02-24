@@ -33,8 +33,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import app.evaluation.node.INode;
+import app.node.INode;
 import app.simConfig.AbsSimConfig;
+import app.util.RuleParser;
 
 public class JasimaEvalProblem {
 

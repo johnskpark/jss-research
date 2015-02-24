@@ -2,7 +2,7 @@ package app.evaluation;
 
 import java.util.List;
 
-import app.evaluation.node.INode;
+import app.node.INode;
 
 public class JasimaEvalConfig {
 
