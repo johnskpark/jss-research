@@ -3,7 +3,6 @@ package app.evaluation.priorityRules;
 import jasima.shopSim.core.PrioRuleTarget;
 import app.evaluation.AbsEvalPriorityRule;
 import app.evaluation.JasimaEvalConfig;
-import app.evaluation.JasimaEvalData;
 import app.node.INode;
 
 public class BasicPriorityRule extends AbsEvalPriorityRule {
