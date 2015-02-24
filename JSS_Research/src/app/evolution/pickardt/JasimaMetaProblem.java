@@ -1,9 +1,12 @@
 package app.evolution.pickardt;
 
+import jasima.shopSim.core.PR;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+import app.node.CompositePR;
 import app.node.INode;
 import app.util.RuleParser;
 import ec.EvolutionState;
@@ -23,11 +26,12 @@ public class JasimaMetaProblem extends Problem implements SimpleProblemForm {
 	public static final String P_GPRULE = "ruleFile";
 
 	private RuleParser parser = new RuleParser();
-	private INode gpRule;
+	private PR gpRule;
 
 	// TODO
-	private INode[] presetRules = new INode[]{
-
+	private PR[] presetRules = new PR[]{
+			// PRFCFS, PRCR, WSPT, WMDD, WMOD, CR, SPT, LWKR, EDD, MDD, ODD, MOD, SLACK,
+			// ATCS, BATCS (k1=2.0,3.0,5.0,6.0, k2=0.005,0.01,0.1,1.0)
 	};
 
 	@Override
@@ -42,7 +46,7 @@ public class JasimaMetaProblem extends Problem implements SimpleProblemForm {
 			fileInputStream.read(buffer);
 			fileInputStream.close();
 
-			gpRule = parser.getRuleFromString(new String(buffer, "UTF-8"));
+			gpRule = new CompositePR(parser.getRuleFromString(new String(buffer, "UTF-8")));
 		} catch (IOException ex) {
 			state.output.fatal("Error while reading GP rule file " + ex.getMessage());
 		}
