@@ -7,7 +7,7 @@ import java.util.Map;
 import app.evolution.pickardt.IJasimaPickardtFitness;
 import ec.EvolutionState;
 import ec.Individual;
-import ec.simple.SimpleFitness;
+import ec.gp.koza.KozaFitness;
 
 public class PickardtTWTFitness implements IJasimaPickardtFitness {
 
@@ -24,7 +24,7 @@ public class PickardtTWTFitness implements IJasimaPickardtFitness {
 
 	@Override
 	public void setFitness(EvolutionState state, Individual ind) {
-		((SimpleFitness) ind.fitness).setFitness(state, -overallStat.mean(), false);
+		((KozaFitness) ind.fitness).setStandardizedFitness(state, overallStat.mean());
 	}
 
 	@Override

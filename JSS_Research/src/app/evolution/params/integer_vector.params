@@ -9,12 +9,17 @@ generations = 51
 pop.subpop.0.species = ec.vector.IntegerVectorSpecies
 pop.subpop.0.species.pipe = ec.vector.breed.VectorMutationPipeline
 pop.subpop.0.species.pipe.source.0 = ec.vector.breed.VectorCrossoverPipeline
-pop.subpop.0.species.pipe.source.0.source.0 = ec.es.ESSelection
+pop.subpop.0.species.pipe.source.0.source.0 = ec.select.TournamentSelection
 pop.subpop.0.species.pipe.source.0.source.1 = same
 
-pop.subpop.0.species.fitness = ec.simple.SimpleFitness
+pop.subpop.0.species.fitness = ec.gp.koza.KozaFitness
 pop.subpop.0.species.ind = ec.vector.IntegerVectorIndividual
 pop.subpop.0.species.mutation-bounded =	true
+
+gp.koza.reproduce.source.0 = ec.es.ESSelection
+gp.koza.xover.source.0 = ec.es.ESSelection
+gp.koza.xover.source.1 = ec.select.TournamentSelection
+gp.koza.mutate.source.0 = ec.es.ESSelection
 
 # You can change these to whatever tickles your fancy
 pop.subpop.0.species.min-gene = 0
