@@ -4,6 +4,10 @@
 
 parent.0 = integer_vector.params
 
+es.mu.0 = 250
+es.lambda.0 = 750
+breed = ec.es.MuPlusLambdaBreeder
+
 # the next four items are already defined in koza.params, but we
 # put them here to be clear.
 
