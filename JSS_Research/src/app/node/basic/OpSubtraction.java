@@ -5,11 +5,6 @@ import app.node.INode;
 import app.node.NodeAnnotation;
 import app.node.NodeDefinition;
 
-/**
- * TODO javadoc.
- * @author parkjohn
- *
- */
 @NodeAnnotation(node=NodeDefinition.OP_SUBTRACTION)
 public class OpSubtraction implements INode {
 
@@ -18,11 +13,6 @@ public class OpSubtraction implements INode {
 	private INode leftChild;
 	private INode rightChild;
 
-	/**
-	 * TODO javadoc.
-	 * @param leftChild
-	 * @param rightChild
-	 */
 	public OpSubtraction(INode leftChild, INode rightChild) {
 		this.leftChild = leftChild;
 		this.rightChild = rightChild;

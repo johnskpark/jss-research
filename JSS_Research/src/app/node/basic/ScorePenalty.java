@@ -5,19 +5,11 @@ import app.node.INode;
 import app.node.NodeAnnotation;
 import app.node.NodeDefinition;
 
-/**
- * TODO javadoc.
- * @author parkjohn
- *
- */
 @NodeAnnotation(node=NodeDefinition.SCORE_PENALTY)
 public class ScorePenalty implements INode {
 
 	private static final NodeDefinition NODE_DEFINITION = NodeDefinition.SCORE_PENALTY;
 
-	/**
-	 * TODO javadoc.
-	 */
 	public ScorePenalty() {
 	}
 

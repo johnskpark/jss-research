@@ -13,11 +13,6 @@ public class OpMinimum implements INode {
 	private INode leftChild;
 	private INode rightChild;
 
-	/**
-	 * TODO javadoc.
-	 * @param leftChild
-	 * @param rightChild
-	 */
 	public OpMinimum(INode leftChild, INode rightChild) {
 		this.leftChild = leftChild;
 		this.rightChild = rightChild;

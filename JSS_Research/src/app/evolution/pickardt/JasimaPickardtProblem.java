@@ -77,6 +77,8 @@ public class JasimaPickardtProblem extends Problem implements SimpleProblemForm 
 			new BATCS(6.0, 1.0)
 	};
 
+	private static final int NUM_RULES = 22;
+
 	private IJasimaPickardtFitness fitness;
 
 	private AbsSimConfig simConfig;
@@ -129,6 +131,8 @@ public class JasimaPickardtProblem extends Problem implements SimpleProblemForm 
 			final int subpopulation,
 			final int threadnum) {
 		if (!ind.evaluated) {
+			checkConstraints(state, ind);
+
 			IntegerVectorIndividual vectorInd = (IntegerVectorIndividual) ind;
 
 			PR[] designatedRules = new PR[vectorInd.genomeLength()];
@@ -148,6 +152,26 @@ public class JasimaPickardtProblem extends Problem implements SimpleProblemForm 
 			fitness.clear();
 
 			ind.evaluated = true;
+		}
+	}
+
+	// Mainly for debugging purposes.
+	private void checkConstraints(final EvolutionState state, final Individual ind) {
+		if (!(ind instanceof IntegerVectorIndividual)) {
+			state.output.fatal("Individual is not an instance of IntegerVectorIndividual");
+		}
+
+		IntegerVectorIndividual vectorInd = (IntegerVectorIndividual) ind;
+		for (int i = 0; i < simConfig.getNumConfigs(); i++) {
+			if (vectorInd.genomeLength() != simConfig.getNumMachines(i)) {
+				state.output.fatal("The genome length does not match the number of machines. Genome length: " + vectorInd.genomeLength() + ". Number of machines: " + simConfig.getNumMachines(i));
+			}
+
+			for (int j = 0; j < vectorInd.genomeLength(); j++) {
+				if (vectorInd.genome[j] < 0 || vectorInd.genome[j] >= NUM_RULES) {
+					state.output.fatal("Invalid genome value at index " + j + ". Value: " +vectorInd.genome[j]);
+				}
+			}
 		}
 	}
 

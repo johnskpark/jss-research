@@ -5,11 +5,6 @@ import app.node.INode;
 import app.node.NodeAnnotation;
 import app.node.NodeDefinition;
 
-/**
- * TODO javadoc.
- * @author parkjohn
- *
- */
 @NodeAnnotation(node=NodeDefinition.SCORE_LARGE_VALUE)
 public class ScoreLargeValue implements INode {
 
@@ -17,9 +12,6 @@ public class ScoreLargeValue implements INode {
 
 	private static final double LARGE_VALUE = 100000000.0;
 
-	/**
-	 * TODO javadoc.
-	 */
 	public ScoreLargeValue() {
 	}
 

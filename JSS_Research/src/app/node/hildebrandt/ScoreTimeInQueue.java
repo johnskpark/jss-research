@@ -5,19 +5,11 @@ import app.node.INode;
 import app.node.NodeAnnotation;
 import app.node.NodeDefinition;
 
-/**
- * TODO javadoc.
- * @author parkjohn
- *
- */
 @NodeAnnotation(node=NodeDefinition.SCORE_TIME_IN_QUEUE)
 public class ScoreTimeInQueue implements INode {
 
 	private static final NodeDefinition NODE_DEFINITION = NodeDefinition.SCORE_TIME_IN_QUEUE;
 
-	/**
-	 * TODO javadoc.
-	 */
 	public ScoreTimeInQueue() {
 	}
 

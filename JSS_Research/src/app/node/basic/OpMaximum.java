@@ -13,11 +13,6 @@ public class OpMaximum implements INode {
 	private INode leftChild;
 	private INode rightChild;
 
-	/**
-	 * TODO javadoc.
-	 * @param leftChild
-	 * @param rightChild
-	 */
 	public OpMaximum(INode leftChild, INode rightChild) {
 		this.leftChild = leftChild;
 		this.rightChild = rightChild;

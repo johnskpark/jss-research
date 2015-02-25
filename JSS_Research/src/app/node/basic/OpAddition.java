@@ -5,11 +5,6 @@ import app.node.INode;
 import app.node.NodeAnnotation;
 import app.node.NodeDefinition;
 
-/**
- * TODO javadoc.
- * @author parkjohn
- *
- */
 @NodeAnnotation(node=NodeDefinition.OP_ADDITION)
 public class OpAddition implements INode {
 
@@ -18,11 +13,6 @@ public class OpAddition implements INode {
 	private INode leftChild;
 	private INode rightChild;
 
-	/**
-	 * TODO javadoc.
-	 * @param leftChild
-	 * @param rightChild
-	 */
 	public OpAddition(INode leftChild, INode rightChild) {
 		this.leftChild = leftChild;
 		this.rightChild = rightChild;

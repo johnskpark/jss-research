@@ -1,0 +1,17 @@
+# Copyright 2006 by Sean Luke and George Mason University
+# Licensed under the Academic Free License version 3.0
+# See the file "LICENSE" for more information
+
+parent.0 = integer_vector.params
+
+# the next four items are already defined in koza.params, but we
+# put them here to be clear.
+
+eval.problem = app.evolution.pickardt.JasimaPickardtProblem
+eval.problem.ruleFile = 4op_dr_best.txt
+eval.problem.fitness = app.evolution.pickardt.fitness.PickardtTWTFitness
+eval.problem.simulator = app.simConfig.huntConfig.FourOpSimConfig
+eval.problem.simulator.seed = 15
+
+# seed.0=26556
+seed.0=17

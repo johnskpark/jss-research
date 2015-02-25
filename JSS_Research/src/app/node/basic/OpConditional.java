@@ -5,11 +5,6 @@ import app.node.INode;
 import app.node.NodeAnnotation;
 import app.node.NodeDefinition;
 
-/**
- * TODO javadoc.
- * @author parkjohn
- *
- */
 @NodeAnnotation(node=NodeDefinition.OP_CONDITIONAL)
 public class OpConditional implements INode {
 
@@ -19,12 +14,6 @@ public class OpConditional implements INode {
 	private INode consequent;
 	private INode alternative;
 
-	/**
-	 * TODO javadoc.
-	 * @param conditional
-	 * @param consequent
-	 * @param alternative
-	 */
 	public OpConditional(INode conditional, INode consequent, INode alternative) {
 		this.conditional = conditional;
 		this.consequent = consequent;

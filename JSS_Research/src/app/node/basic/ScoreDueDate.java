@@ -5,19 +5,11 @@ import app.node.INode;
 import app.node.NodeAnnotation;
 import app.node.NodeDefinition;
 
-/**
- * TODO javadoc.
- * @author parkjohn
- *
- */
 @NodeAnnotation(node=NodeDefinition.SCORE_DUE_DATE)
 public class ScoreDueDate implements INode {
 
 	private static final NodeDefinition NODE_DEFINITION = NodeDefinition.SCORE_DUE_DATE;
 
-	/**
-	 * TODO javadoc.
-	 */
 	public ScoreDueDate() {
 	}
 

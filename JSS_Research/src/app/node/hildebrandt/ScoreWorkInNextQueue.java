@@ -6,19 +6,11 @@ import app.node.INode;
 import app.node.NodeAnnotation;
 import app.node.NodeDefinition;
 
-/**
- * TODO javadoc.
- * @author parkjohn
- *
- */
 @NodeAnnotation(node=NodeDefinition.SCORE_WORK_IN_NEXT_QUEUE)
 public class ScoreWorkInNextQueue implements INode {
 
 	private static final NodeDefinition NODE_DEFINITION = NodeDefinition.SCORE_WORK_IN_NEXT_QUEUE;
 
-	/**
-	 * TODO javadoc.
-	 */
 	public ScoreWorkInNextQueue() {
 	}
 

@@ -15,7 +15,7 @@ import app.node.basic.ERCRandom;
 
 public class RuleParser {
 
-	private static final String BASE_NODE_DIR = "app.evaluation.node";
+	private static final String BASE_NODE_DIR = "app.node";
 
 	private Map<String, NodeChildrenNumPair> nodeMap = new HashMap<String, NodeChildrenNumPair>();
 
