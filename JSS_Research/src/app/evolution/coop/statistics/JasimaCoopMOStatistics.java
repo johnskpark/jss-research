@@ -10,7 +10,7 @@ import ec.simple.SimpleProblemForm;
 import ec.util.QuickSort;
 import ec.util.SortComparator;
 
-public class JasimaCoopStatistics extends MultiObjectiveStatistics {
+public class JasimaCoopMOStatistics extends MultiObjectiveStatistics {
 
 	private static final long serialVersionUID = -84845920561007995L;
 
