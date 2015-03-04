@@ -47,7 +47,7 @@ public class JasimaSimpleProblem extends GPProblem implements IJasimaGPProblem {
 		// Setup the simulator configurations.
 		simConfig = (AbsSimConfig) state.parameters.getInstanceForParameterEq(base.push(P_SIMULATOR), null, AbsSimConfig.class);
 		setupSimulator(state, base.push(P_SIMULATOR));
-		
+
 		// Setup the fitness.
 		fitness = (IJasimaSimpleFitness) state.parameters.getInstanceForParameterEq(base.push(P_FITNESS), null, IJasimaSimpleFitness.class);
 		setupFitness(state, base.push(P_FITNESS));
@@ -115,7 +115,7 @@ public class JasimaSimpleProblem extends GPProblem implements IJasimaGPProblem {
 
 		return experiment;
 	}
-	
+
 	@Override
 	public AbsSimConfig getSimConfig() {
 		return simConfig;

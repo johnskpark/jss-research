@@ -50,13 +50,16 @@ gp.fs.0.func.13.nc = nc0
 gp.fs.0.func.14 = app.evolution.node.basic.ScoreMachineReadyTime
 gp.fs.0.func.14.nc = nc0
 
+stat = app.evolution.simple.statistics.JasimaMultiRuleStatistics
+stat.size = 10
+
 eval.problem = app.evolution.simple.JasimaSimpleProblem
 eval.problem.data = app.evolution.JasimaGPData
 
 eval.problem.rule = app.evolution.priorityRules.BasicPriorityRule
 eval.problem.fitness = app.evolution.simple.fitness.TWTFitness
 
-eval.problem.simulator = app.simConfig.huntConfig.FourOpSimConfig
+eval.problem.simulator = app.simConfig.huntConfig.EightOpSimConfig
 eval.problem.simulator.seed = 15
 
 # seed.0=26556

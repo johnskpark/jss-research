@@ -50,6 +50,9 @@ gp.fs.0.func.13.nc = nc0
 gp.fs.0.func.14 = app.evolution.node.basic.ScoreMachineReadyTime
 gp.fs.0.func.14.nc = nc0
 
+# stat = app.evolution.simple.statistics.JasimaMultiRuleStatistics
+# stat.size = 10
+
 eval.problem = app.evolution.simple.JasimaSimpleProblem
 eval.problem.data = app.evolution.JasimaGPData
 
