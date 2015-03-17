@@ -200,7 +200,6 @@ public class JasimaEvalProblem {
 				.getTextContent());
 
 		simConfig = (AbsSimConfig)datasetClass.newInstance();
-		simConfig.setSeed(DEFAULT_SEED); // TODO temporary code.
 
 		NodeList datasetFileNodeList = datasetBase.getElementsByTagName(XML_DATASET_FILE);
 		if (datasetFileNodeList.getLength() != 0) {
@@ -237,6 +236,7 @@ public class JasimaEvalProblem {
 
 			for (AbsEvalPriorityRule solver : solvers) {
 				output.printf("%s,%d", ruleFilename, solver.getSeed());
+				simConfig.setSeed(DEFAULT_SEED); // TODO temporary code.
 
 				for (int i = 0; i < simConfig.getNumConfigs(); i++) {
 					Experiment experiment = getExperiment(solver, i);
