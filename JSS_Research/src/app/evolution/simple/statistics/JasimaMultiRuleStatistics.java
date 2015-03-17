@@ -36,7 +36,7 @@ public class JasimaMultiRuleStatistics extends SimpleStatistics {
 
 		// for now we just print the best fitness
 
-		if (doFinal) { state.output.println("\nBest Individuals of Run:", statisticslog); }
+		if (doFinal) { state.output.println("\nBest Individual of Run:", statisticslog); }
 		for(int s = 0; s < state.population.subpops.length; s++) {
 			if (doFinal) { state.output.println("Subpopulation " + s + ":", statisticslog); }
 			Object[] inds = state.population.subpops[0].individuals;

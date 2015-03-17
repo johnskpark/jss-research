@@ -102,3 +102,16 @@
 /dynamicJSS_edr2_output.csv
 /atc_output.csv
 /covert_output.csv
+/4op_dr_best.txt
+/4op_edr_1mo.txt
+/4op_edr_2mo.txt
+/4op_edr_3mo.txt
+/4op_edr_so.txt
+/8op_edr_1mo.txt
+/8op_edr_2mo.txt
+/8op_edr_3mo.txt
+/8op_edr_so.txt
+/dynamicJSS_edr_1mo_output.csv
+/dynamicJSS_edr_2mo_output.csv
+/dynamicJSS_edr_3mo_output.csv
+/dynamicJSS_edr_so_output.csv

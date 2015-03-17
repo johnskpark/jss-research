@@ -3,14 +3,14 @@
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>4op_edr_3mo.txt</ruleFile>
+			<ruleFile>4op_edr_so.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>8op_edr_3mo.txt</ruleFile>
+			<ruleFile>8op_edr_so.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
