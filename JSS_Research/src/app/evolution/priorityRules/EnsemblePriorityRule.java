@@ -2,7 +2,6 @@ package app.evolution.priorityRules;
 
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
-import jasima.shopSim.prioRules.basic.ATC;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,6 +13,7 @@ import app.evolution.AbsGPPriorityRule;
 import app.evolution.JasimaGPConfig;
 import app.evolution.JasimaGPData;
 import app.evolution.grouped.tracker.DecisionTracker;
+import app.priorityRules.ATCPR;
 import ec.EvolutionState;
 import ec.gp.GPIndividual;
 
@@ -35,7 +35,7 @@ public class EnsemblePriorityRule extends AbsGPPriorityRule {
 
 	public EnsemblePriorityRule() {
 		super();
-		setTieBreaker(new ATC(ATC_K_VALUE));
+		setTieBreaker(new ATCPR(ATC_K_VALUE));
 	}
 
 	@Override

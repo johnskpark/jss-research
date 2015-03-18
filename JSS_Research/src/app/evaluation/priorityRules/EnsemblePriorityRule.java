@@ -2,7 +2,6 @@ package app.evaluation.priorityRules;
 
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
-import jasima.shopSim.prioRules.basic.ATC;
 
 import java.util.HashMap;
 import java.util.List;
@@ -11,6 +10,7 @@ import java.util.Map;
 import app.evaluation.AbsEvalPriorityRule;
 import app.evaluation.JasimaEvalConfig;
 import app.node.INode;
+import app.priorityRules.ATCPR;
 
 public class EnsemblePriorityRule extends AbsEvalPriorityRule {
 
@@ -26,7 +26,7 @@ public class EnsemblePriorityRule extends AbsEvalPriorityRule {
 	public EnsemblePriorityRule() {
 		super();
 
-		setTieBreaker(new ATC(ATC_K_VALUE));
+		setTieBreaker(new ATCPR(ATC_K_VALUE));
 	}
 
 	@Override
