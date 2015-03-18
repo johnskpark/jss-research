@@ -25,7 +25,7 @@ public class EvalCOVERT extends AbsEvalPriorityRule {
 		double slack = entry.getDueDate() - entry.getShop().simTime() -
 				entry.remainingProcTime();
 
-		double previousWaitTime = ff * 0.0;
+		double previousWaitTime = ff * 0.0; // TODO oh oh...
 		double remainingWaitTime = ff * entry.remainingProcTime();
 		double totalWaitTime = previousWaitTime + remainingWaitTime;
 

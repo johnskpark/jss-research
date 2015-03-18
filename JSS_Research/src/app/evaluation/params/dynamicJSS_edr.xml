@@ -15,7 +15,7 @@
 	</solverConfig>
 
 	<datasetConfig>
-		<datasetClass>app.simConfig.huntConfig.TestSimConfig</datasetClass>
+		<datasetClass>app.simConfig.huntConfig.TrainSimConfig</datasetClass>
 	</datasetConfig>
 
 	<fitnessConfig>
