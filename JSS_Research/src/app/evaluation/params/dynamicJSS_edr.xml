@@ -3,19 +3,19 @@
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>4op_edr_new.txt</ruleFile>
+			<ruleFile>4op_edr_new2.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>8op_edr_new.txt</ruleFile>
+			<ruleFile>8op_edr_new2.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<datasetConfig>
-		<datasetClass>app.simConfig.huntConfig.TestSimConfig</datasetClass>
+		<datasetClass>app.simConfig.huntConfig.TrainSimConfig</datasetClass>
 	</datasetConfig>
 
 	<fitnessConfig>

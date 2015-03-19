@@ -13,7 +13,7 @@ public class MakespanFitness implements IFitness {
 
 	@Override
 	public double getFitness(IResult solution) {
-		return solution.getTWT();
+		return solution.getMakespan();
 	}
 
 }
