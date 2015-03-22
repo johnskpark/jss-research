@@ -5,8 +5,12 @@
 	</solverConfig>
 
 	<datasetConfig>
-		<datasetClass>app.simConfig.huntConfig.TrainSimConfig</datasetClass>
+		<datasetClass>app.simConfig.huntConfig.TestSimConfig</datasetClass>
 	</datasetConfig>
+
+	<outputConfig>
+	    <outputFile>dynamicJSS_atc_output.csv</outputFile>
+	</outputConfig>
 
 	<fitnessConfig>
 		<fitnessClass>app.evaluation.fitness.TWTFitness</fitnessClass>

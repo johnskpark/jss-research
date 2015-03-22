@@ -24,6 +24,13 @@
 	</xs:sequence>
 </xs:complexType>
 
+<!-- Output type definition -->
+<xs:complexType name="outputType">
+	<xs:sequence>
+		<xs:element name="outputFile" type="xs:string" maxOccurs="1" minOccurs="1" />
+	</xs:sequence>
+</xs:complexType>
+
 <!-- Fitness type definition -->
 <xs:complexType name="fitnessType">
 	<xs:sequence>

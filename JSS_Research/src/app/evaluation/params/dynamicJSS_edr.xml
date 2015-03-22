@@ -3,20 +3,24 @@
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>4op_edr_new2.txt</ruleFile>
+			<ruleFile>4op_edr_so.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>8op_edr_new2.txt</ruleFile>
+			<ruleFile>8op_edr_so.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<datasetConfig>
-		<datasetClass>app.simConfig.huntConfig.TrainSimConfig</datasetClass>
+		<datasetClass>app.simConfig.huntConfig.TestSimConfig</datasetClass>
 	</datasetConfig>
+
+	<outputConfig>
+	    <outputFile>dynamicJSS_edr_output.csv</outputFile>
+	</outputConfig>
 
 	<fitnessConfig>
 		<fitnessClass>app.evaluation.fitness.TWTFitness</fitnessClass>
