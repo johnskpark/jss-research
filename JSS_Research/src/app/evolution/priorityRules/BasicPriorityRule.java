@@ -21,6 +21,7 @@ public class BasicPriorityRule extends AbsGPPriorityRule {
 	public void setConfiguration(JasimaGPConfig config) {
 		state = config.getState();
 		individual = config.getIndividuals()[0];
+		threadnum = config.getThreadnum();
 		data = config.getData();
 	}
 
