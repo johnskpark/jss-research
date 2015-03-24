@@ -43,6 +43,7 @@ public class JasimaCoopProblem extends GPProblem implements GroupedProblemForm, 
 
 	private AbsSimConfig simConfig;
 	private long simSeed;
+	private int numSubpops;
 
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
@@ -68,6 +69,9 @@ public class JasimaCoopProblem extends GPProblem implements GroupedProblemForm, 
 		// Setup the simulator configurations.
 		simConfig = (AbsSimConfig) state.parameters.getInstanceForParameterEq(base.push(P_SIMULATOR), null, AbsSimConfig.class);
 		setupSimulator(state, base.push(P_SIMULATOR));
+
+		// Setup the number of subpopulations.
+        int numSubpops = state.parameters.getInt(base.push(Population.P_SIZE),null,1);
 	}
 
 	private void setupSimulator(final EvolutionState state, final Parameter simBase) {
@@ -178,6 +182,11 @@ public class JasimaCoopProblem extends GPProblem implements GroupedProblemForm, 
 	@Override
 	public AbsSimConfig getSimConfig() {
 		return simConfig;
+	}
+
+	@Override
+	public int getNumInds() {
+		return numSubpops;
 	}
 
 	@Override

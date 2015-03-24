@@ -1,16 +1,15 @@
-package app.evolution.grouped.tracker;
-
-import jasima.core.util.Pair;
+package app.evolution.coop.tracker;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import app.evolution.IJasimaGPProblem;
-import app.evolution.grouped.IJasimaGroupedTracker;
-import app.util.BasicStatistics;
+import jasima.core.util.Pair;
 import ec.gp.GPIndividual;
+import app.evolution.IJasimaGPProblem;
+import app.evolution.coop.IJasimaCoopTracker;
+import app.util.BasicStatistics;
 
-public class DecisionTracker implements IJasimaGroupedTracker {
+public class CoopDecisionTracker implements IJasimaCoopTracker {
 
 	private static final int SAMPLE_SIZE = 2000;
 
@@ -28,15 +27,15 @@ public class DecisionTracker implements IJasimaGroupedTracker {
 		}
 
 		if (!decisionStats.containsKey(ind)) {
-			BasicStatistics sc = new BasicStatistics();
-			sc.add(decision);
-			decisionStats.put(ind, new Pair<BasicStatistics, Integer>(sc, jobFinished));
+			BasicStatistics stat = new BasicStatistics();
+			stat.add(decision);
+			decisionStats.put(ind, new Pair<BasicStatistics, Integer>(stat, jobFinished));
 		} else {
-			Pair<BasicStatistics, Integer> stat = decisionStats.get(ind);
-			if (stat.b != jobFinished) {
-				Pair<BasicStatistics, Integer> newStat = new Pair<BasicStatistics, Integer>(stat.a, jobFinished);
-				newStat.a.add(decision);
-				decisionStats.put(ind, newStat);
+			Pair<BasicStatistics, Integer> pair = decisionStats.get(ind);
+			if (pair.b != jobFinished) {
+				Pair<BasicStatistics, Integer> newPair = new Pair<BasicStatistics, Integer>(pair.a, jobFinished);
+				newPair.a.add(decision);
+				decisionStats.put(ind, newPair);
 			}
 		}
 	}
@@ -46,10 +45,12 @@ public class DecisionTracker implements IJasimaGroupedTracker {
 				(jobFinished < problem.getSimConfig().getNumIgnore() + SAMPLE_SIZE);
 	}
 
+	@Override
 	public void setProblem(IJasimaGPProblem problem) {
 		this.problem = problem;
 	}
 
+	@Override
 	public Pair<GPIndividual, Double>[] getResults() {
 		@SuppressWarnings("unchecked")
 		Pair<GPIndividual, Double>[] results = new Pair[decisionStats.size()];
@@ -57,14 +58,15 @@ public class DecisionTracker implements IJasimaGroupedTracker {
 		int index = 0;
 		for (Map.Entry<GPIndividual, Pair<BasicStatistics, Integer>> entry : decisionStats.entrySet()) {
 			GPIndividual ind = entry.getKey();
-			BasicStatistics sc = entry.getValue().a;
+			BasicStatistics stat = entry.getValue().a;
 
-			results[index++] = new Pair<GPIndividual, Double>(ind, sc.sumSq());
+			results[index++] = new Pair<GPIndividual, Double>(ind, stat.sumSq());
 		}
 
 		return results;
 	}
 
+	@Override
 	public void clear() {
 		decisionStats.clear();
 	}

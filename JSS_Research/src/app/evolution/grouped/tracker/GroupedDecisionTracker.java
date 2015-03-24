@@ -1,15 +1,16 @@
-package app.evolution.coop.tracker;
+package app.evolution.grouped.tracker;
+
+import jasima.core.util.Pair;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import jasima.core.util.Pair;
-import ec.gp.GPIndividual;
 import app.evolution.IJasimaGPProblem;
-import app.evolution.coop.IJasimaCoopTracker;
+import app.evolution.grouped.IJasimaGroupedTracker;
 import app.util.BasicStatistics;
+import ec.gp.GPIndividual;
 
-public class DecisionTracker implements IJasimaCoopTracker {
+public class GroupedDecisionTracker implements IJasimaGroupedTracker {
 
 	private static final int SAMPLE_SIZE = 2000;
 

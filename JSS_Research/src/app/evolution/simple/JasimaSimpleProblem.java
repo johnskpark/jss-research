@@ -26,6 +26,7 @@ public class JasimaSimpleProblem extends GPProblem implements IJasimaGPProblem {
 	public static final String P_SEED = "seed";
 
 	public static final long DEFAULT_SEED = 15;
+	public static final int NUM_INDS_IN_EVAL = 1;
 
 	private AbsGPPriorityRule rule;
 	private IJasimaSimpleFitness fitness;
@@ -119,6 +120,11 @@ public class JasimaSimpleProblem extends GPProblem implements IJasimaGPProblem {
 	@Override
 	public AbsSimConfig getSimConfig() {
 		return simConfig;
+	}
+
+	@Override
+	public int getNumInds() {
+		return NUM_INDS_IN_EVAL;
 	}
 
 	@Override

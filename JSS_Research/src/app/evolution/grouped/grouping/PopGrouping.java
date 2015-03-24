@@ -41,6 +41,11 @@ public class PopGrouping implements IJasimaGrouping {
 	}
 
 	@Override
+	public int getGroupSize() {
+		return population.individuals.length;
+	}
+
+	@Override
 	public boolean isIndEvaluated() {
 		return false;
 	}

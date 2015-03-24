@@ -9,6 +9,8 @@ public interface IJasimaGrouping extends Setup {
 
 	public void groupIndividuals(final EvolutionState state, final int threadnum);
 
+	public int getGroupSize();
+
 	public boolean isIndEvaluated();
 
 	public boolean isGroupEvaluated();

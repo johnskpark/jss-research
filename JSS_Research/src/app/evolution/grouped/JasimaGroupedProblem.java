@@ -189,6 +189,11 @@ public class JasimaGroupedProblem extends GPProblem implements IJasimaGPProblem 
 	}
 
 	@Override
+	public int getNumInds() {
+		return grouping.getGroupSize();
+	}
+
+	@Override
 	public Object clone() {
 		JasimaGroupedProblem newObject = (JasimaGroupedProblem)super.clone();
 
