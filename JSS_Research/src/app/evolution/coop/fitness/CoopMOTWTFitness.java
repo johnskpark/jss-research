@@ -85,21 +85,21 @@ public class CoopMOTWTFitness implements IJasimaCoopFitness {
 			if (updateFitness[i]) {
 				SummaryStat[] indFitness = fitnessMap.get(inds[i]).b;
 				double trial = indFitness[0].mean();
-				
+
 				Fitness fitness = inds[i].fitness;
-				
+
 				int len = fitness.trials.size();
 				if (len == 0 || (Double) fitness.trials.get(0) < trial) {
 					if (shouldSetContext) {
 						fitness.setContext(inds, i);
 					}
-					
+
 					fitness.trials.add(trial);
 				}
 			}
 		}
 	}
-	
+
 	@Override
 	public void setDiversityFitness(final EvolutionState state,
 			final Individual[] inds,
@@ -115,7 +115,7 @@ public class CoopMOTWTFitness implements IJasimaCoopFitness {
 			}
 		}
 	}
-	
+
 	@Override
 	public void setObjectiveFitness(final EvolutionState state,
 			final Individual[] inds) {
