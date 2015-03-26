@@ -61,7 +61,7 @@ eval.problem.groupRule = app.evolution.priorityRules.EnsemblePriorityRule
 
 eval.problem.fitness = app.evolution.grouped.fitness.GroupedMOTWTFitness
 eval.problem.grouping = app.evolution.grouped.grouping.PopGrouping
-eval.problem.tracker = app.evolution.grouped.tracker.DecisionTracker
+eval.problem.tracker = app.evolution.grouped.tracker.GroupedDecisionTracker
 
 eval.problem.simulator = app.simConfig.huntConfig.FourOpSimConfig
 eval.problem.simulator.seed = 15

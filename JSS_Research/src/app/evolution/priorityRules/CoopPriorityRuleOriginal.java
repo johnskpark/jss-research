@@ -45,15 +45,16 @@ public class CoopPriorityRuleOriginal extends AbsGPPriorityRule {
 	@Override
 	public void beforeCalc(PriorityQueue<?> q) {
 		jobVotes.clear();
+		for (int i = 0; i < q.size(); i++) {
+			PrioRuleTarget entry = q.get(i);
+			jobVotes.put(entry, new Pair<Integer, Double>(0, 0.0));
+		}
 
 		for (int i = 0; i < individuals.length; i++) {
 			double[] normalisedPriorities = getNormalisedPriorities(i, q);
 
-			Pair<PrioRuleTarget, Double> entryPair = getBestEntry(i, q, normalisedPriorities);
+			Pair<PrioRuleTarget, Double> entryPair = getBestEntry(q, normalisedPriorities);
 
-			if (!jobVotes.containsKey(entryPair.a)) {
-				jobVotes.put(entryPair.a, new Pair<Integer, Double>(0, 0.0));
-			}
 			Pair<Integer, Double> pair = jobVotes.get(entryPair.a);
 			Pair<Integer, Double> newPair = new Pair<Integer, Double>(pair.a + 1, pair.b + entryPair.b);
 
@@ -61,7 +62,7 @@ public class CoopPriorityRuleOriginal extends AbsGPPriorityRule {
 		}
 	}
 
-	private Pair<PrioRuleTarget, Double> getBestEntry(int index, PriorityQueue<?> q, double[] priorities) {
+	private Pair<PrioRuleTarget, Double> getBestEntry(PriorityQueue<?> q, double[] priorities) {
 		PrioRuleTarget bestEntry = null;
 		double bestPriority = Double.NEGATIVE_INFINITY;
 
@@ -89,7 +90,7 @@ public class CoopPriorityRuleOriginal extends AbsGPPriorityRule {
 		}
 
 		for (int i = 0; i < q.size(); i++) {
-			priorities[i] = priorities[i] / sum;
+			priorities[i] = (sum != 0) ? (priorities[i] / sum) : 1.0;
 			tracker.addPriority(individuals[index], q.get(0).getShop().jobsFinished, priorities[i]);
 		}
 
