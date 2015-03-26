@@ -15,6 +15,7 @@ import app.simConfig.AbsSimConfig;
 import ec.EvolutionState;
 import ec.Fitness;
 import ec.Individual;
+import ec.Initializer;
 import ec.Population;
 import ec.coevolve.GroupedProblemForm;
 import ec.gp.GPIndividual;
@@ -71,7 +72,7 @@ public class JasimaCoopProblem extends GPProblem implements GroupedProblemForm, 
 		setupSimulator(state, base.push(P_SIMULATOR));
 
 		// Setup the number of subpopulations.
-        int numSubpops = state.parameters.getInt(base.push(Population.P_SIZE),null,1);
+        numSubpops = state.parameters.getInt((new Parameter(Initializer.P_POP)).push(Population.P_SIZE), null, 1);
 	}
 
 	private void setupSimulator(final EvolutionState state, final Parameter simBase) {
