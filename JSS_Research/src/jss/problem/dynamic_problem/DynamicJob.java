@@ -18,9 +18,9 @@ public class DynamicJob extends BaseJob {
 	 * Generate a new instance of a static job for the static Job Shop
 	 * Scheduling problem instance.
 	 */
-	public DynamicJob(ISubscriptionHandler handler) {
-		super();
-		
+	public DynamicJob(int id, ISubscriptionHandler handler) {
+		super(id);
+
 		subscriptionHandler = handler;
 		jobReadyEvent = new JobReadyEvent(this);
 	}

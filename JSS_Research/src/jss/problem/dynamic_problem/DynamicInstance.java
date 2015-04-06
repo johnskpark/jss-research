@@ -29,6 +29,7 @@ public class DynamicInstance extends BaseInstance {
 	private ITerminationCriterion terminationCriterion;
 
 	private int warmUp = 0;
+	private int count = 0;
 
 	/**
 	 * Generate a new dynamic job shop scheduling problem instance.
@@ -125,6 +126,8 @@ public class DynamicInstance extends BaseInstance {
 
 		processingOrderGenerator.reset();
 
+		count = 0;
+
 		resetProcessingTimeGenerator();
 		resetJobReadyTimeGenerator();
 		resetDueDateGenerator();
@@ -145,7 +148,7 @@ public class DynamicInstance extends BaseInstance {
 
 	// Generate a new job using the generators.
 	private void generateJob(double currentTime) {
-		DynamicJob job = new DynamicJob(this);
+		DynamicJob job = new DynamicJob(count, this);
 
 		// Get the list of machines that the job needs to be processed on into.
 		List<IMachine> machineOrder = processingOrderGenerator.getProcessingOrder();
@@ -163,6 +166,7 @@ public class DynamicInstance extends BaseInstance {
 		unreleasedJobs.add(job);
 
 		addJob(job);
+		count++;
 	}
 
 	// Generate values for the job.

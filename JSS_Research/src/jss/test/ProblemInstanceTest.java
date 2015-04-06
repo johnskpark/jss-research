@@ -53,8 +53,8 @@ public class ProblemInstanceTest {
 	public void staticInstanceTest_AddJobs() {
 		problem = new StaticInstance();
 
-		jobs = new StaticJob[]{new StaticJob(),
-				new StaticJob()};
+		jobs = new StaticJob[]{new StaticJob(0),
+				new StaticJob(1)};
 
 		for (StaticJob job : jobs) {
 			job.offerMachine(new StaticMachine(0, null));

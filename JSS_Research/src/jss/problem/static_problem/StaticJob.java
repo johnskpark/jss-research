@@ -18,8 +18,8 @@ public class StaticJob extends BaseJob {
 	 * Generate a new instance of a static job for the static Job Shop
 	 * Scheduling problem instance.
 	 */
-	public StaticJob() {
-		super();
+	public StaticJob(int id) {
+		super(id);
 	}
 
 	/// IEventHandler

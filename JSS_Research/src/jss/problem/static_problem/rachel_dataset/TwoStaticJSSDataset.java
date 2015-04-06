@@ -126,7 +126,7 @@ public class TwoStaticJSSDataset implements IDataset {
 			problem.addMachine(machine2);
 
 			for (int i = 0; i < numJobs; i++) {
-				StaticJob job = new StaticJob();
+				StaticJob job = new StaticJob(i);
 
 				double machineProb = rand.nextDouble();
 				double processingTime;

@@ -55,6 +55,9 @@ public class JasimaEvalProblem {
 	public static final String XML_FITNESS_BASE = "fitnessConfig";
 	public static final String XML_FITNESS_CLASS = "fitnessClass";
 
+	public static final String XML_OUTPUT_BASE = "outputConfig";
+	public static final String XML_OUTPUT_FILE = "outputFile";
+
 	private static final int DEFAULT_SEED = 15;
 
 	private Map<String, List<AbsEvalPriorityRule>> solversMap = new HashMap<String, List<AbsEvalPriorityRule>>();
@@ -62,6 +65,8 @@ public class JasimaEvalProblem {
 	private IJasimaEvalFitness fitness;
 
 	private RuleParser parser = new RuleParser();
+
+	private String outputCsv = null;
 
 	/**
 	 * Instantiate a new instance of the evaluation procedure.
@@ -101,6 +106,7 @@ public class JasimaEvalProblem {
 		loadSolvers(doc);
 		loadDataset(doc);
 		loadFitness(doc);
+		loadOutput(doc);
 	}
 
 	// Load in the solvers from the XML configuration.
@@ -213,10 +219,10 @@ public class JasimaEvalProblem {
 	private void loadFitness(Document doc) throws Exception {
 		NodeList nList = doc.getElementsByTagName(XML_FITNESS_BASE);
 
-		Node datasetNode = nList.item(0);
-		Element datasetBase = (Element) datasetNode;
+		Node fitnessNode = nList.item(0);
+		Element fitnessBase = (Element) fitnessNode;
 
-		Class<?> fitnessClass = Class.forName(datasetBase
+		Class<?> fitnessClass = Class.forName(fitnessBase
 				.getElementsByTagName(XML_FITNESS_CLASS)
 				.item(0)
 				.getTextContent());
@@ -224,11 +230,23 @@ public class JasimaEvalProblem {
 		fitness = (IJasimaEvalFitness)fitnessClass.newInstance();
 	}
 
+	// Load in the output file name from the XML configuration.
+	private void loadOutput(Document doc) throws Exception {
+		NodeList nList = doc.getElementsByTagName(XML_OUTPUT_BASE);
+
+		Node outputNode = nList.item(0);
+		Element outputBase = (Element) outputNode;
+
+		outputCsv = outputBase
+				.getElementsByTagName(XML_OUTPUT_FILE)
+				.item(0)
+				.getTextContent();
+	}
+
 	/**
 	 * Evaluate the rule over the dataset using the given performance measure.
-	 * @param outputCsv The output CSV file to write the results to.
 	 */
-	public void evaluate(String outputCsv) throws Exception {
+	public void evaluate() throws Exception {
 		PrintStream output = new PrintStream(new File(outputCsv));
 
 		for (String ruleFilename : solversMap.keySet()) {
@@ -279,13 +297,12 @@ public class JasimaEvalProblem {
 	// Main.
 	public static void main(String[] args) {
 		String xmlFilename = args[0];
-		String outputCsv = args[1];
 
 		try {
 			JasimaEvalProblem evalProblem;
 
 			evalProblem = new JasimaEvalProblem(xmlFilename);
-			evalProblem.evaluate(outputCsv);
+			evalProblem.evaluate();
 		} catch (Exception ex) {
 			System.err.println(ex.getMessage());
 			ex.printStackTrace();

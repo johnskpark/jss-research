@@ -117,7 +117,7 @@ public class TaillardDataset implements IDataset {
 
 		StaticJob[] jobs = new StaticJob[rawInstance.numJobs];
 		for (int j = 0; j < rawInstance.numJobs; j++) {
-			jobs[j] = new StaticJob();
+			jobs[j] = new StaticJob(j);
 			instance.addJob(jobs[j]);
 		}
 

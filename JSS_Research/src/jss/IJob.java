@@ -17,6 +17,8 @@ package jss;
  */
 public interface IJob {
 
+	public int getId();
+
 	/**
 	 * Get the release time of the job.
 	 * @return The time that the job is first released into the problem.

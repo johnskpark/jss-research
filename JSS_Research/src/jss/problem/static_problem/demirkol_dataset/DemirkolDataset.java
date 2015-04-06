@@ -95,7 +95,7 @@ public class DemirkolDataset implements IDataset {
 
 					String[] split = line.trim().split("\\s+");
 
-					StaticJob job = new StaticJob();
+					StaticJob job = new StaticJob(j);
 
 					for (int i = 0; i < numMachines; i++) {
 						int machine = Integer.parseInt(split[2 * i]);

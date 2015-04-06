@@ -87,6 +87,8 @@ public class CompletelyReactiveSolver implements ISolver, ISubscriber {
 		if ((lastJob = machine.getLastProcessedJob()) != null) {
 			double completionTime = machine.getReadyTime();
 
+			System.out.printf("Job %d finished on Machine %d at time %.0f\n", lastJob.getId(), machine.getId(), completionTime);
+
 			solution.setMakespan(completionTime);
 
 			if (lastJob.isCompleted()) {
@@ -116,6 +118,9 @@ public class CompletelyReactiveSolver implements ISolver, ISubscriber {
 
 		if (action != null) {
 			solution.addAction(action);
+
+			System.out.printf("Job %d starting on machine %d at time %.0f\n", action.getJob().getId(), action.getMachine().getId(), time);
+
 			machine.processJob(action.getJob(), time);
 		}
 	}

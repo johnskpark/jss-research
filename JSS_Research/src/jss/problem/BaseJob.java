@@ -30,11 +30,18 @@ public abstract class BaseJob implements IJob, IEventHandler {
 
 	private double queueEntryTime = 0;
 
+	private int id;
+
 	/**
 	 * Generate a new instance of a static job for the static Job Shop
 	 * Scheduling problem instance.
 	 */
-	public BaseJob() {
+	public BaseJob(int id) {
+		this.id = id;
+	}
+
+	public int getId() {
+		return id;
 	}
 
 	/**

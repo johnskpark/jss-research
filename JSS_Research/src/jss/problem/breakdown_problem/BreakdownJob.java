@@ -28,7 +28,10 @@ public class BreakdownJob extends BaseJob {
 
 	private IMachine machine;
 
-	public BreakdownJob() {
+	private int id;
+
+	public BreakdownJob(int id) {
+		super(id);
 	}
 
 	/**

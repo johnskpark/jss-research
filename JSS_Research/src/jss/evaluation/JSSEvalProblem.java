@@ -251,11 +251,15 @@ public class JSSEvalProblem {
 			for (JSSEvalSolver solver : solvers) {
 				output.printf("%s,%d", ruleFilename, solver.getSeed());
 
-				for (IProblemInstance problem : dataset.getProblems()) {
-					IResult solution = solver.getSolution(problem);
+//				for (IProblemInstance problem : dataset.getProblems()) {
+//					IResult solution = solver.getSolution(problem);
+//
+//					output.printf(",%f", fitness.getFitness(solution));
+//				}
 
-					output.printf(",%f", fitness.getFitness(solution));
-				}
+				IResult solution = solver.getSolution(dataset.getProblems().get(1));
+
+				output.printf(",%f", fitness.getFitness(solution));
 
 				output.println();
 			}
