@@ -6,6 +6,7 @@ import jasima.shopSim.models.dynamicShop.DynamicShopExperiment;
 import jasima.shopSim.util.BasicJobStatCollector;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import app.evolution.AbsGPPriorityRule;
 import app.evolution.IJasimaGPProblem;
@@ -44,6 +45,7 @@ public class JasimaCoopProblem extends GPProblem implements GroupedProblemForm, 
 	private IJasimaTracker tracker;
 
 	private AbsSimConfig simConfig;
+	private Random rand;
 	private long simSeed;
 	private int numSubpops;
 
@@ -78,6 +80,7 @@ public class JasimaCoopProblem extends GPProblem implements GroupedProblemForm, 
 
 	private void setupSimulator(final EvolutionState state, final Parameter simBase) {
 		simSeed = state.parameters.getLongWithDefault(simBase.push(P_SEED), null, DEFAULT_SEED);
+		rand = new Random(simSeed);
 	}
 
 	private void setupTracker(final EvolutionState state, final Parameter trackerBase) {
@@ -91,7 +94,7 @@ public class JasimaCoopProblem extends GPProblem implements GroupedProblemForm, 
 			final boolean[] prepareForFitnessAssessment,
 			final boolean countVictoriesOnly) {
 		// Reset the seed for the simulator.
-		simConfig.setSeed(simSeed);
+		simConfig.setSeed(rand.nextLong());
 
 		for (int i = 0; i < pop.subpops.length; i++) {
 			if (prepareForFitnessAssessment[i]) {

@@ -4,6 +4,9 @@ import jasima.core.experiment.Experiment;
 import jasima.core.util.observer.NotifierListener;
 import jasima.shopSim.models.dynamicShop.DynamicShopExperiment;
 import jasima.shopSim.util.BasicJobStatCollector;
+
+import java.util.Random;
+
 import app.evolution.AbsGPPriorityRule;
 import app.evolution.IJasimaGPProblem;
 import app.evolution.IJasimaTracker;
@@ -40,6 +43,7 @@ public class JasimaGroupedProblem extends GPProblem implements IJasimaGPProblem 
 	private IJasimaTracker tracker;
 
 	private AbsSimConfig simConfig;
+	private Random rand;
 	private long simSeed;
 
 	@Override
@@ -72,6 +76,7 @@ public class JasimaGroupedProblem extends GPProblem implements IJasimaGPProblem 
 
 	private void setupSimulator(final EvolutionState state, final Parameter simBase) {
 		simSeed = state.parameters.getLongWithDefault(simBase.push(P_SEED), null, DEFAULT_SEED);
+		rand = new Random(simSeed);
 	}
 
 	private void setupTracker(final EvolutionState state, final Parameter trackerBase) {
@@ -87,7 +92,7 @@ public class JasimaGroupedProblem extends GPProblem implements IJasimaGPProblem 
 		super.prepareToEvaluate(state, threadnum);
 
 		// Reset the seed for the simulator.
-		simConfig.setSeed(simSeed);
+		simConfig.setSeed(rand.nextLong());
 
 		// Set the new grouping scheme.
 		grouping.clearForGeneration(state);
