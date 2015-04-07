@@ -155,6 +155,8 @@ public class JasimaCoopProblem extends GPProblem implements GroupedProblemForm, 
 		fitness.setTrialFitness(state, inds, updateFitness, shouldSetContext);
 		fitness.setDiversityFitness(state, inds, updateFitness);
 		fitness.clear();
+
+		simConfig.resetSeed();
 	}
 
 	@SuppressWarnings("unchecked")

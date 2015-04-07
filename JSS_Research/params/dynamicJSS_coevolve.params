@@ -2,7 +2,11 @@
 # Licensed under the Academic Free License version 3.0
 # See the file "LICENSE" for more information
 
-parent.0 = koza.params
+#parent.0 = ../../../ec/gp/koza/koza.params
+
+parent.0 = koza_mo.params
+multi.fitness.num-objectives = 3
+multi.fitness.maximize = false
 
 # multi.fitness.num-objectives = 3
 # multi.fitness.maximize = false
@@ -73,11 +77,11 @@ gp.fs.0.func.14.nc = nc0
 eval.problem = app.evolution.coop.JasimaCoopProblem
 eval.problem.data = app.evolution.JasimaGPData
 
-eval.problem.rule = app.evolution.priorityRules.CoopPriorityRule
-eval.problem.fitness = app.evolution.coop.fitness.CoopSOTWTFitness
-eval.problem.tracker = app.evolution.coop.tracker.CoopDecisionTracker
+eval.problem.rule = app.evolution.priorityRules.EnsemblePriorityRule
+eval.problem.fitness = app.evolution.coop.fitness.CoopMOTWTFitness
+eval.problem.tracker = app.evolution.tracker.EnsembleDecisionTracker
 
-eval.problem.simulator = app.simConfig.huntConfig.EightOpSimConfig
+eval.problem.simulator = app.simConfig.huntConfig.FourOpSimConfig
 eval.problem.simulator.seed = 15
 
 # seed.0=26556

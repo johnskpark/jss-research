@@ -134,6 +134,8 @@ public class JasimaGroupedProblem extends GPProblem implements IJasimaGPProblem 
 			fitness.clearIndFitness();
 
 			ind.evaluated = true;
+
+			simConfig.resetSeed();
 		}
 	}
 
@@ -167,6 +169,8 @@ public class JasimaGroupedProblem extends GPProblem implements IJasimaGPProblem 
 			fitness.clearGroupFitness();
 
 			group.setEvaluated(true);
+
+			simConfig.resetSeed();
 		}
 	}
 

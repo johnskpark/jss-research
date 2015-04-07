@@ -23,6 +23,10 @@ public abstract class AbsSimConfig {
 		return rand.nextLong();
 	}
 
+	public void resetSeed() {
+		rand = new Random(seed);
+	}
+
 	public abstract int getNumMachines(int index);
 
 	public abstract int getMinOpProc(int index);
