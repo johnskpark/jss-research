@@ -1,4 +1,4 @@
-package app.evolution.coop.tracker;
+package app.evolution.tracker;
 
 import jasima.core.util.Pair;
 
@@ -10,7 +10,7 @@ import app.evolution.IJasimaTracker;
 import app.util.BasicStatistics;
 import ec.gp.GPIndividual;
 
-public class CoopDecisionTracker implements IJasimaTracker {
+public class EnsembleDecisionTracker implements IJasimaTracker {
 
 	private static final int SAMPLE_SIZE = 2000;
 
@@ -28,15 +28,15 @@ public class CoopDecisionTracker implements IJasimaTracker {
 		}
 
 		if (!decisionStats.containsKey(ind)) {
-			BasicStatistics stat = new BasicStatistics();
-			stat.add(decision);
-			decisionStats.put(ind, new Pair<BasicStatistics, Integer>(stat, jobFinished));
+			BasicStatistics sc = new BasicStatistics();
+			sc.add(decision);
+			decisionStats.put(ind, new Pair<BasicStatistics, Integer>(sc, jobFinished));
 		} else {
-			Pair<BasicStatistics, Integer> pair = decisionStats.get(ind);
-			if (pair.b != jobFinished) {
-				Pair<BasicStatistics, Integer> newPair = new Pair<BasicStatistics, Integer>(pair.a, jobFinished);
-				newPair.a.add(decision);
-				decisionStats.put(ind, newPair);
+			Pair<BasicStatistics, Integer> stat = decisionStats.get(ind);
+			if (stat.b != jobFinished) {
+				Pair<BasicStatistics, Integer> newStat = new Pair<BasicStatistics, Integer>(stat.a, jobFinished);
+				newStat.a.add(decision);
+				decisionStats.put(ind, newStat);
 			}
 		}
 	}
@@ -46,12 +46,10 @@ public class CoopDecisionTracker implements IJasimaTracker {
 				(jobFinished < problem.getSimConfig().getNumIgnore() + SAMPLE_SIZE);
 	}
 
-	@Override
 	public void setProblem(IJasimaGPProblem problem) {
 		this.problem = problem;
 	}
 
-	@Override
 	public Pair<GPIndividual, Double>[] getResults() {
 		@SuppressWarnings("unchecked")
 		Pair<GPIndividual, Double>[] results = new Pair[decisionStats.size()];
@@ -59,15 +57,14 @@ public class CoopDecisionTracker implements IJasimaTracker {
 		int index = 0;
 		for (Map.Entry<GPIndividual, Pair<BasicStatistics, Integer>> entry : decisionStats.entrySet()) {
 			GPIndividual ind = entry.getKey();
-			BasicStatistics stat = entry.getValue().a;
+			BasicStatistics sc = entry.getValue().a;
 
-			results[index++] = new Pair<GPIndividual, Double>(ind, stat.sumSq());
+			results[index++] = new Pair<GPIndividual, Double>(ind, sc.sumSq());
 		}
 
 		return results;
 	}
 
-	@Override
 	public void clear() {
 		decisionStats.clear();
 	}

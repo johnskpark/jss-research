@@ -6,6 +6,7 @@ import jasima.shopSim.models.dynamicShop.DynamicShopExperiment;
 import jasima.shopSim.util.BasicJobStatCollector;
 import app.evolution.AbsGPPriorityRule;
 import app.evolution.IJasimaGPProblem;
+import app.evolution.IJasimaTracker;
 import app.evolution.JasimaGPConfig;
 import app.evolution.JasimaGPData;
 import app.simConfig.AbsSimConfig;
@@ -36,7 +37,7 @@ public class JasimaGroupedProblem extends GPProblem implements IJasimaGPProblem 
 
 	private IJasimaGroupFitness fitness;
 	private IJasimaGrouping grouping;
-	private IJasimaGroupedTracker tracker;
+	private IJasimaTracker tracker;
 
 	private AbsSimConfig simConfig;
 	private long simSeed;
@@ -61,7 +62,7 @@ public class JasimaGroupedProblem extends GPProblem implements IJasimaGPProblem 
 		grouping.setup(state, base.push(P_GROUPING));
 
 		// Setup the tracker.
-		tracker = (IJasimaGroupedTracker) state.parameters.getInstanceForParameterEq(base.push(P_TRACKER), null, IJasimaGroupedTracker.class);
+		tracker = (IJasimaTracker) state.parameters.getInstanceForParameterEq(base.push(P_TRACKER), null, IJasimaTracker.class);
 		setupTracker(state, base.push(P_TRACKER));
 
 		// Setup the simulator configurations.

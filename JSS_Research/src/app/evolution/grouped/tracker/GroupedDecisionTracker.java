@@ -6,11 +6,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import app.evolution.IJasimaGPProblem;
-import app.evolution.grouped.IJasimaGroupedTracker;
+import app.evolution.IJasimaTracker;
 import app.util.BasicStatistics;
 import ec.gp.GPIndividual;
 
-public class GroupedDecisionTracker implements IJasimaGroupedTracker {
+public class GroupedDecisionTracker implements IJasimaTracker {
 
 	private static final int SAMPLE_SIZE = 2000;
 

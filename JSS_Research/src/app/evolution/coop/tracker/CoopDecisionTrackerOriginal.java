@@ -8,10 +8,10 @@ import java.util.List;
 import java.util.Map;
 
 import app.evolution.IJasimaGPProblem;
-import app.evolution.coop.IJasimaCoopTracker;
+import app.evolution.IJasimaTracker;
 import ec.gp.GPIndividual;
 
-public class CoopDecisionTrackerOriginal implements IJasimaCoopTracker {
+public class CoopDecisionTrackerOriginal implements IJasimaTracker {
 
 	private static final int SAMPLE_SIZE = 2000;
 

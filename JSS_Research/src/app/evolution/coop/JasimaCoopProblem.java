@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import app.evolution.AbsGPPriorityRule;
 import app.evolution.IJasimaGPProblem;
+import app.evolution.IJasimaTracker;
 import app.evolution.JasimaGPConfig;
 import app.evolution.JasimaGPData;
 import app.simConfig.AbsSimConfig;
@@ -40,7 +41,7 @@ public class JasimaCoopProblem extends GPProblem implements GroupedProblemForm, 
 
 	private AbsGPPriorityRule coopRule;
 	private IJasimaCoopFitness fitness;
-	private IJasimaCoopTracker tracker;
+	private IJasimaTracker tracker;
 
 	private AbsSimConfig simConfig;
 	private long simSeed;
@@ -64,7 +65,7 @@ public class JasimaCoopProblem extends GPProblem implements GroupedProblemForm, 
 		fitness = (IJasimaCoopFitness) state.parameters.getInstanceForParameterEq(base.push(P_FITNESS), null, IJasimaCoopFitness.class);
 
 		// Setup the tracker.
-		tracker = (IJasimaCoopTracker) state.parameters.getInstanceForParameterEq(base.push(P_TRACKER), null, IJasimaCoopTracker.class);
+		tracker = (IJasimaTracker) state.parameters.getInstanceForParameterEq(base.push(P_TRACKER), null, IJasimaTracker.class);
 		setupTracker(state, base.push(P_TRACKER));
 
 		// Setup the simulator configurations.
