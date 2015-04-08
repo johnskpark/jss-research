@@ -12,7 +12,6 @@ import java.util.Map;
 import app.evolution.AbsGPPriorityRule;
 import app.evolution.JasimaGPConfig;
 import app.evolution.JasimaGPData;
-import app.evolution.grouped.tracker.GroupedDecisionTracker;
 import app.evolution.tracker.EnsembleDecisionTracker;
 import app.priorityRules.ATCPR;
 import ec.EvolutionState;

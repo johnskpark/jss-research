@@ -100,6 +100,18 @@ public class JasimaGroupedProblem extends GPProblem implements IJasimaGPProblem 
 	}
 
 	@Override
+	public void finishEvaluating(final EvolutionState state, final int threadnum) {
+		super.finishEvaluating(state, threadnum);
+
+		// TODO Temporary code.
+		Runtime runtime = Runtime.getRuntime();
+		runtime.gc();
+
+		long memory = runtime.totalMemory() - runtime.freeMemory();
+		System.out.println("Used memory in bytes: " + memory);
+	}
+
+	@Override
 	public void evaluate(final EvolutionState state,
 			final Individual ind,
 			final int subpopulation,

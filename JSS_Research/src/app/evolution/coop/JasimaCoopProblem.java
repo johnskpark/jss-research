@@ -116,6 +116,13 @@ public class JasimaCoopProblem extends GPProblem implements GroupedProblemForm, 
 				fitness.setObjectiveFitness(state, pop.subpops[i].individuals);
 			}
 		}
+
+		// TODO Temporary code.
+		Runtime runtime = Runtime.getRuntime();
+		runtime.gc();
+
+		long memory = runtime.totalMemory() - runtime.freeMemory();
+		System.out.println("Used memory in bytes: " + memory);
 	}
 
 	@Override
