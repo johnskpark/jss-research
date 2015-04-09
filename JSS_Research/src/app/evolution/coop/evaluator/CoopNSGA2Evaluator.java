@@ -32,6 +32,11 @@ public class CoopNSGA2Evaluator extends MultiPopCoevolutionaryEvaluator {
 		for (int i = 0; i < subpopsLength; i++) {
 			p_subpop = p.push(Population.P_SUBPOP).push("" + i).push(Subpopulation.P_SUBPOPSIZE);
 			originalPopSize[i] = state.parameters.getInt(p_subpop, null, 1);
+
+			// TODO dirty dirty hack.
+			if (originalPopSize[i] == 0 && i > 0) {
+				originalPopSize[i] = originalPopSize[0];
+			}
 		}
 	}
 
