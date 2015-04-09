@@ -7,15 +7,15 @@ public class JasimaCoopIndividual extends GPIndividual {
 
 	private static final long serialVersionUID = 7566878552263864266L;
 
-//	@Override
-//	public String genotypeToStringForHumans() {
-//		return printTreesForCollaborators();
-//	}
+	@Override
+	public String genotypeToStringForHumans() {
+		return printTreesForCollaborators();
+	}
 
-//	@Override
-//	public String genotypeToString() {
-//		return printTreesForCollaborators();
-//	}
+	@Override
+	public String genotypeToString() {
+		return printTreesForCollaborators();
+	}
 
 	private String printTreesForCollaborators() {
 		StringBuilder buf = new StringBuilder();

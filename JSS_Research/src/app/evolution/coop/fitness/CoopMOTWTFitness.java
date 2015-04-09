@@ -89,12 +89,12 @@ public class CoopMOTWTFitness implements IJasimaCoopFitness {
 				Fitness fitness = inds[i].fitness;
 
 				int len = fitness.trials.size();
-				if (len == 0 || (Double) fitness.trials.get(0) < trial) {
+				if (len == 0 || (Double) fitness.trials.get(0) > trial) {
 					if (shouldSetContext) {
 						fitness.setContext(inds, i);
 					}
 
-					fitness.trials.add(trial);
+					fitness.trials.add(0, trial);
 				}
 			}
 		}

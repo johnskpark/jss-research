@@ -111,6 +111,8 @@ public class JasimaCoopProblem extends GPProblem implements GroupedProblemForm, 
 			final Population pop,
 			final boolean[] assessFitness,
 			final boolean countVictoriesOnly) {
+		// TODO this feels like its in the wrong position.
+		// The fitness would have been cleared by then.
 		for (int i = 0; i < pop.subpops.length; i++ ) {
 			if (assessFitness[i]) {
 				fitness.setObjectiveFitness(state, pop.subpops[i].individuals);
@@ -122,7 +124,7 @@ public class JasimaCoopProblem extends GPProblem implements GroupedProblemForm, 
 		runtime.gc();
 
 		long memory = runtime.totalMemory() - runtime.freeMemory();
-		System.out.println("Used memory in bytes: " + memory);
+		System.err.println("Used memory in bytes: " + memory);
 	}
 
 	@Override
@@ -210,7 +212,10 @@ public class JasimaCoopProblem extends GPProblem implements GroupedProblemForm, 
 		newObject.input = (JasimaGPData)input.clone();
 		newObject.coopRule = coopRule;
 		newObject.fitness = fitness;
+
 		newObject.tracker = tracker;
+		newObject.tracker.setProblem(newObject);
+
 		newObject.simConfig = simConfig;
 		newObject.simSeed = simSeed;
 
