@@ -106,7 +106,7 @@ public class CoopSPEA2Evaluator extends MultiPopCoevolutionaryEvaluator {
 		int q = randomizedPartition(array, p, r, rng);
 		int k = q - p + 1;
 		if (i<=k) {
-			return randomizedSelect(array, p, q, i,rng);
+			return randomizedSelect(array, p, q, i, rng);
 		} else {
 			return randomizedSelect(array, q+1, r, i-k,rng);
 		}

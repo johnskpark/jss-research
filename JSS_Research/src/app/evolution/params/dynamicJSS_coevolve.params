@@ -11,7 +11,7 @@ multi.fitness.maximize = false
 # multi.fitness.num-objectives = 3
 # multi.fitness.maximize = false
 
-eval = app.evolution.coop.evaluator.CoopNSGA2Evaluator
+eval = app.evolution.coop.evaluator.CoopSPEA2Evaluator
 
 eval.num-shuffled =	0
 eval.num-current = 0

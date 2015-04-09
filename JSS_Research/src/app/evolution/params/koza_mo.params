@@ -14,7 +14,7 @@
 # from ../../simple/params, which defines
 # generational, basic evolutionary mechanisms, selection mechanisms...
 
-parent.0 = ../../../ec/multiobjective/nsga2/nsga2.params
+parent.0 = ../../../ec/multiobjective/spea2/spea2.params
 
 
 #
