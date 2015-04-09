@@ -16,6 +16,8 @@
 
 parent.0 = spea2.params
 
+breed.elite.0 =	128
+
 eval = app.evolution.coop.evaluator.CoopSPEA2Evaluator
 
 eval.num-shuffled =	0

@@ -14,7 +14,7 @@
 # from ../../simple/params, which defines
 # generational, basic evolutionary mechanisms, selection mechanisms...
 
-parent.0 = nsga2.params
+parent.0 = spea2.params
 
 #
 # We define the fitness of an individual to use the traditional
