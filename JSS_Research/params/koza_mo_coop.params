@@ -14,7 +14,16 @@
 # from ../../simple/params, which defines
 # generational, basic evolutionary mechanisms, selection mechanisms...
 
-parent.0 = nsga2.params
+parent.0 = spea2.params
+
+eval = app.evolution.coop.evaluator.CoopSPEA2Evaluator
+
+eval.num-shuffled =	0
+eval.num-current = 0
+eval.num-elites = 1
+eval.num-prev = 0
+eval.select-current = ec.select.RandomSelection
+eval.select-prev = ec.select.RandomSelection
 
 #
 # We define the fitness of an individual to use the traditional

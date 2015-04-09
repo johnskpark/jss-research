@@ -4,21 +4,12 @@
 
 #parent.0 = ../../../ec/gp/koza/koza.params
 
-parent.0 = koza_mo.params
+parent.0 = koza_mo_coop.params
 multi.fitness.num-objectives = 3
 multi.fitness.maximize = false
 
 # multi.fitness.num-objectives = 3
 # multi.fitness.maximize = false
-
-eval = app.evolution.coop.evaluator.CoopNSGA2Evaluator
-
-eval.num-shuffled =	0
-eval.num-current = 0
-eval.num-elites = 1
-eval.num-prev = 0
-eval.select-current = ec.select.RandomSelection
-eval.select-prev = ec.select.RandomSelection
 
 pop.subpops = 4
 pop.default-subpop = 0
