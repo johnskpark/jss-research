@@ -13,8 +13,10 @@ public class PopGrouping implements IJasimaGrouping {
 
 	private static final long serialVersionUID = 6709369554204377046L;
 
+	public static final int NUM_TRIALS = 1;
+
 	private Subpopulation population;
-	private GroupedIndividual ensemble;
+	private GroupedIndividual[] ensemble = new GroupedIndividual[1];
 
 	private GroupedIndividual bestEnsemble = null;
 	private KozaFitness bestEnsembleFitness = new KozaFitness();
@@ -37,12 +39,17 @@ public class PopGrouping implements IJasimaGrouping {
 			indArray[i] = (GPIndividual) population.individuals[i];
 		}
 
-		ensemble = new GroupedIndividual(indArray);
+		ensemble[0] = new GroupedIndividual(indArray);
 	}
 
 	@Override
 	public int getGroupSize() {
 		return population.individuals.length;
+	}
+
+	@Override
+	public int getNumTrials() {
+		return NUM_TRIALS;
 	}
 
 	@Override
@@ -56,7 +63,7 @@ public class PopGrouping implements IJasimaGrouping {
 	}
 
 	@Override
-	public GroupedIndividual getGroups(Individual ind) {
+	public GroupedIndividual[] getGroups(Individual ind) {
 		return ensemble;
 	}
 

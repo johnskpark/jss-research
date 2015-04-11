@@ -38,15 +38,11 @@ public class EnsembleGroupedIndividual implements IGroupedIndividual {
 
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
-		try {
 			groupSize = state.parameters.getInt(base.push(P_GROUP_SIZE), null);
 			numIterations = state.parameters.getInt(base.push(P_ITER), null);
 
 			bestGroupFitness.setStandardizedFitness(state, Double.MAX_VALUE);
 			bestGroupOfGenerationFitness.setStandardizedFitness(state, Double.MAX_VALUE);
-		} catch (NumberFormatException ex) {
-			state.output.fatal(ex.getMessage());
-		}
 	}
 
 	@Override

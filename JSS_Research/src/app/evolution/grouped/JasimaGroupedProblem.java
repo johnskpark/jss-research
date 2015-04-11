@@ -145,13 +145,13 @@ public class JasimaGroupedProblem extends GPProblem implements IJasimaGPProblem 
 	}
 
 	protected void evaluateGroup(final EvolutionState state,
-			final GroupedIndividual group,
+			final GroupedIndividual[] group,
 			final int subpopulation,
 			final int threadnum) {
-		if (!group.isEvaluated()) {
+		if (!group[0].isEvaluated()) {
 			JasimaGPConfig config = new JasimaGPConfig();
 			config.setState(state);
-			config.setIndividuals(group.getInds());
+			config.setIndividuals(group[0].getInds());
 			config.setSubpopulations(new int[]{subpopulation});
 			config.setThreadnum(threadnum);
 			config.setData((JasimaGPData) input);
@@ -170,10 +170,10 @@ public class JasimaGroupedProblem extends GPProblem implements IJasimaGPProblem 
 
 			// TODO need to update the best ensemble of the population.
 
-			fitness.setGroupFitness(state, group.getInds());
+			fitness.setGroupFitness(state, group[0].getInds());
 			fitness.clearGroupFitness();
 
-			group.setEvaluated(true);
+			group[0].setEvaluated(true);
 
 			simConfig.resetSeed();
 		}

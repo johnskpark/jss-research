@@ -11,11 +11,13 @@ public interface IJasimaGrouping extends Setup {
 
 	public int getGroupSize();
 
+	public int getNumTrials();
+
 	public boolean isIndEvaluated();
 
 	public boolean isGroupEvaluated();
 
-	public GroupedIndividual getGroups(final Individual ind);
+	public GroupedIndividual[] getGroups(final Individual ind);
 
 	public GroupedIndividual getBestGroup();
 
