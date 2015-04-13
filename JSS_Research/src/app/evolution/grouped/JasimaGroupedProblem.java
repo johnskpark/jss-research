@@ -152,7 +152,7 @@ public class JasimaGroupedProblem extends GPProblem implements IJasimaGPProblem 
 			if (!group[i].isEvaluated()) {
 				JasimaGPConfig config = new JasimaGPConfig();
 				config.setState(state);
-				config.setIndividuals(group[0].getInds());
+				config.setIndividuals(group[i].getInds());
 				config.setSubpopulations(new int[]{subpopulation});
 				config.setThreadnum(threadnum);
 				config.setData((JasimaGPData) input);
