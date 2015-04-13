@@ -148,34 +148,36 @@ public class JasimaGroupedProblem extends GPProblem implements IJasimaGPProblem 
 			final GroupedIndividual[] group,
 			final int subpopulation,
 			final int threadnum) {
-		if (!group[0].isEvaluated()) {
-			JasimaGPConfig config = new JasimaGPConfig();
-			config.setState(state);
-			config.setIndividuals(group[0].getInds());
-			config.setSubpopulations(new int[]{subpopulation});
-			config.setThreadnum(threadnum);
-			config.setData((JasimaGPData) input);
-			config.setTracker(tracker);
+		for (int i = 0; i < group.length; i++) {
+			if (!group[i].isEvaluated()) {
+				JasimaGPConfig config = new JasimaGPConfig();
+				config.setState(state);
+				config.setIndividuals(group[0].getInds());
+				config.setSubpopulations(new int[]{subpopulation});
+				config.setThreadnum(threadnum);
+				config.setData((JasimaGPData) input);
+				config.setTracker(tracker);
 
-			groupRule.setConfiguration(config);
+				groupRule.setConfiguration(config);
 
-			for (int j = 0; j < simConfig.getNumConfigs(); j++) {
-				Experiment experiment = getExperiment(state, groupRule, j);
+				for (int j = 0; j < simConfig.getNumConfigs(); j++) {
+					Experiment experiment = getExperiment(state, groupRule, j);
 
-				experiment.runExperiment();
+					experiment.runExperiment();
 
-				fitness.accumulateGroupFitness(tracker.getResults());
-				tracker.clear();
+					fitness.accumulateGroupFitness(tracker.getResults());
+					tracker.clear();
+				}
+
+				// TODO need to update the best ensemble of the population.
+
+				fitness.setGroupFitness(state, group[i].getInds());
+				fitness.clearGroupFitness();
+
+				group[i].setEvaluated(true);
+
+				simConfig.resetSeed();
 			}
-
-			// TODO need to update the best ensemble of the population.
-
-			fitness.setGroupFitness(state, group[0].getInds());
-			fitness.clearGroupFitness();
-
-			group[0].setEvaluated(true);
-
-			simConfig.resetSeed();
 		}
 	}
 

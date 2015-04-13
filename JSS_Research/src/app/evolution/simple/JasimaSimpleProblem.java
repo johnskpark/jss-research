@@ -4,6 +4,9 @@ import jasima.core.experiment.Experiment;
 import jasima.core.util.observer.NotifierListener;
 import jasima.shopSim.models.dynamicShop.DynamicShopExperiment;
 import jasima.shopSim.util.BasicJobStatCollector;
+
+import java.util.Random;
+
 import app.evolution.AbsGPPriorityRule;
 import app.evolution.IJasimaGPProblem;
 import app.evolution.JasimaGPConfig;
@@ -32,6 +35,7 @@ public class JasimaSimpleProblem extends GPProblem implements IJasimaGPProblem {
 	private IJasimaSimpleFitness fitness;
 
 	private AbsSimConfig simConfig;
+	private Random rand;
 	private long simSeed;
 
 	@Override
@@ -56,6 +60,7 @@ public class JasimaSimpleProblem extends GPProblem implements IJasimaGPProblem {
 
 	private void setupSimulator(final EvolutionState state, final Parameter simBase) {
 		simSeed = state.parameters.getLongWithDefault(simBase.push(P_SEED), null, DEFAULT_SEED);
+		rand = new Random(simSeed);
 	}
 
 	private void setupFitness(final EvolutionState state, final Parameter fitnessBase) {
@@ -65,7 +70,7 @@ public class JasimaSimpleProblem extends GPProblem implements IJasimaGPProblem {
 	@Override
 	public void prepareToEvaluate(final EvolutionState state, final int threadnum) {
 		// Reset the seed for the simulator.
-		simConfig.setSeed(simSeed);
+		simConfig.setSeed(rand.nextLong());
 	}
 
 	@Override
