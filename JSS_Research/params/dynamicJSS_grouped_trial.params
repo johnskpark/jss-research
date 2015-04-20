@@ -56,14 +56,17 @@ gp.fs.0.func.14.nc = nc0
 eval.problem = app.evolution.grouped.JasimaGroupedProblem
 eval.problem.data = app.evolution.JasimaGPData
 
-eval.problem.rule = app.evolution.priorityRules.BasicPriorityRule
 eval.problem.groupRule = app.evolution.priorityRules.EnsemblePriorityRule
 
-eval.problem.fitness = app.evolution.grouped.fitness.GroupedMOTWTFitness
-eval.problem.grouping = app.evolution.grouped.grouping.PopGrouping
+eval.problem.fitness = app.evolution.grouped.fitness.TrialMOTWTFitness
+
+eval.problem.grouping = app.evolution.grouped.grouping.TrialGrouping
+eval.problem.grouping.group_size = 3
+eval.problem.grouping.num_trials = 3
+
 eval.problem.tracker = app.evolution.tracker.EnsembleDecisionTracker
 
-eval.problem.simulator = app.simConfig.huntConfig.EightOpSimConfig
+eval.problem.simulator = app.simConfig.huntConfig.FourOpSimConfig
 eval.problem.simulator.seed = 15
 
 # seed.0=26556
