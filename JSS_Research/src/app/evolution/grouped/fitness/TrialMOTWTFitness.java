@@ -14,7 +14,8 @@ import ec.Individual;
 import ec.gp.GPIndividual;
 import ec.multiobjective.MultiObjectiveFitness;
 
-public class GroupedMOTWTFitness implements IJasimaGroupFitness {
+// TODO need to fix.
+public class TrialMOTWTFitness implements IJasimaGroupFitness {
 
 	private static final String WT_MEAN_STR = "weightedTardMean";
 
@@ -39,6 +40,9 @@ public class GroupedMOTWTFitness implements IJasimaGroupFitness {
 	public void accumulateGroupFitness(final Individual ind,
 			final Map<String, Object> results,
 			final Pair<GPIndividual, Double>[] groupResults) {
+		accumulateIndFitness(ind, results);
+
+		// TODO need to fix.
 		Set<Individual> indSet = new HashSet<Individual>();
 		for (Pair<GPIndividual, Double> result : groupResults) {
 			if (indSet.contains(result.a)) {

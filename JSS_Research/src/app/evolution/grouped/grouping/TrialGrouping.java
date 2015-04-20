@@ -14,6 +14,7 @@ import ec.gp.GPIndividual;
 import ec.gp.koza.KozaFitness;
 import ec.util.Parameter;
 
+// TODO need to fix.
 public class TrialGrouping implements IJasimaGrouping {
 
 	private static final long serialVersionUID = -6134155663644563813L;
@@ -21,7 +22,7 @@ public class TrialGrouping implements IJasimaGrouping {
 	private Map<GPIndividual, GroupedIndividual[]> indGroupMap = new HashMap<GPIndividual, GroupedIndividual[]>();
 
 	public static final String P_GROUP_SIZE = "group_size";
-	public static final String P_NUM_TRIALS = "iteration";
+	public static final String P_NUM_TRIALS = "num_trials";
 
 	public static final int DEFAULT_GROUP_SIZE = 3;
 	public static final int DEFAULT_NUM_TRIALS = 3;

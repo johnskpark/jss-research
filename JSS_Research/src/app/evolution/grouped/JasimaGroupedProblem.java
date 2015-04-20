@@ -109,9 +109,18 @@ public class JasimaGroupedProblem extends GPProblem implements IJasimaGPProblem 
 			final Individual ind,
 			final int subpopulation,
 			final int threadnum) {
-		evaluateInd(state, ind, subpopulation, threadnum);
-		evaluateGroup(state, grouping.getGroups(ind), subpopulation, threadnum);
+		if (rule != null) {
+			evaluateInd(state, ind, subpopulation, threadnum);
+		}
+
+		if (groupRule != null) {
+			evaluateGroup(state, ind, grouping.getGroups(ind), subpopulation, threadnum);
+		}
 	}
+
+	// TODO Notes:
+	// * I need to add in the ability to not go into evaluateInd() or evaluateGroup().
+	// * I need to be able to obtain the TWT and add it to the fitness for grouped.
 
 	protected void evaluateInd(final EvolutionState state,
 			final Individual ind,
@@ -145,6 +154,7 @@ public class JasimaGroupedProblem extends GPProblem implements IJasimaGPProblem 
 	}
 
 	protected void evaluateGroup(final EvolutionState state,
+			final Individual ind,
 			final GroupedIndividual[] group,
 			final int subpopulation,
 			final int threadnum) {
@@ -165,19 +175,23 @@ public class JasimaGroupedProblem extends GPProblem implements IJasimaGPProblem 
 
 					experiment.runExperiment();
 
-					fitness.accumulateGroupFitness(tracker.getResults());
+					fitness.accumulateGroupFitness(ind, experiment.getResults(), tracker.getResults());
 					tracker.clear();
 				}
 
-				// TODO need to update the best ensemble of the population.
-
-				fitness.setGroupFitness(state, group[i].getInds());
-				fitness.clearGroupFitness();
+				// TODO
+				// Need to update the best ensemble of the population...
+				// The seed changes each time, meaning that the simulations are never the same.
 
 				group[i].setEvaluated(true);
 
 				simConfig.resetSeed();
 			}
+		}
+
+		for (int i = 0; i < group.length; i++) {
+			fitness.setGroupFitness(state, ind, group[i].getInds());
+			fitness.clearGroupFitness();
 		}
 	}
 

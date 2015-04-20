@@ -31,7 +31,9 @@ public class GroupedSOTWTFitness implements IJasimaGroupFitness {
 	}
 
 	@Override
-	public void accumulateGroupFitness(final Pair<GPIndividual, Double>[] groupResults) {
+	public void accumulateGroupFitness(final Individual ind,
+			final Map<String, Object> results,
+			final Pair<GPIndividual, Double>[] groupResults) {
 		// Does nothing.
 	}
 
@@ -46,7 +48,9 @@ public class GroupedSOTWTFitness implements IJasimaGroupFitness {
 	}
 
 	@Override
-	public void setGroupFitness(final EvolutionState state, final GPIndividual[] inds) {
+	public void setGroupFitness(final EvolutionState state,
+			final Individual ind,
+			final GPIndividual[] inds) {
 		// Does nothing.
 	}
 
@@ -54,7 +58,7 @@ public class GroupedSOTWTFitness implements IJasimaGroupFitness {
 	public void setFitness(final EvolutionState state,
 			final Individual ind) {
 		setIndFitness(state, ind);
-		setGroupFitness(state, new GPIndividual[]{(GPIndividual) ind});
+		setGroupFitness(state, ind, new GPIndividual[]{(GPIndividual) ind});
 	}
 
 	@Override
