@@ -21,7 +21,7 @@ public interface IJasimaGroupFitness extends IJasimaFitness {
 
 	public void setGroupFitness(final EvolutionState state,
 			final Individual ind,
-			final GPIndividual[] inds);
+			final GroupedIndividual group);
 
 	public void clearIndFitness();
 

@@ -5,6 +5,7 @@ import jasima.core.util.Pair;
 
 import java.util.Map;
 
+import app.evolution.grouped.GroupedIndividual;
 import app.evolution.grouped.IJasimaGroupFitness;
 import ec.EvolutionState;
 import ec.Individual;
@@ -50,7 +51,7 @@ public class GroupedSOTWTFitness implements IJasimaGroupFitness {
 	@Override
 	public void setGroupFitness(final EvolutionState state,
 			final Individual ind,
-			final GPIndividual[] inds) {
+			final GroupedIndividual group) {
 		// Does nothing.
 	}
 
@@ -58,7 +59,7 @@ public class GroupedSOTWTFitness implements IJasimaGroupFitness {
 	public void setFitness(final EvolutionState state,
 			final Individual ind) {
 		setIndFitness(state, ind);
-		setGroupFitness(state, ind, new GPIndividual[]{(GPIndividual) ind});
+		setGroupFitness(state, ind, new GroupedIndividual(new GPIndividual[]{(GPIndividual) ind}));
 	}
 
 	@Override

@@ -54,9 +54,14 @@ public class JasimaGroupedProblem extends GPProblem implements IJasimaGPProblem 
 		input = (JasimaGPData) state.parameters.getInstanceForParameterEq(base.push(P_DATA), null, JasimaGPData.class);
 		input.setup(state, base.push(P_DATA));
 
-		// Setup the solver.
-		rule = (AbsGPPriorityRule) state.parameters.getInstanceForParameterEq(base.push(P_IND_RULE), null, AbsGPPriorityRule.class);
-		groupRule = (AbsGPPriorityRule) state.parameters.getInstanceForParameterEq(base.push(P_GROUP_RULE), null, AbsGPPriorityRule.class);
+		// Setup the solvers.
+		if (state.parameters.exists(base.push(P_IND_RULE), null)) {
+			rule = (AbsGPPriorityRule) state.parameters.getInstanceForParameterEq(base.push(P_IND_RULE), null, AbsGPPriorityRule.class);
+		}
+
+		if (state.parameters.exists(base.push(P_GROUP_RULE), null)) {
+			groupRule = (AbsGPPriorityRule) state.parameters.getInstanceForParameterEq(base.push(P_GROUP_RULE), null, AbsGPPriorityRule.class);
+		}
 
 		// Setup the fitness.
 		fitness = (IJasimaGroupFitness) state.parameters.getInstanceForParameterEq(base.push(P_FITNESS), null, IJasimaGroupFitness.class);
@@ -147,8 +152,6 @@ public class JasimaGroupedProblem extends GPProblem implements IJasimaGPProblem 
 			fitness.setIndFitness(state, ind);
 			fitness.clearIndFitness();
 
-			ind.evaluated = true;
-
 			simConfig.resetSeed();
 		}
 	}
@@ -158,6 +161,7 @@ public class JasimaGroupedProblem extends GPProblem implements IJasimaGPProblem 
 			final GroupedIndividual[] group,
 			final int subpopulation,
 			final int threadnum) {
+		// Evaluate the groups one by one.
 		for (int i = 0; i < group.length; i++) {
 			if (!group[i].isEvaluated()) {
 				JasimaGPConfig config = new JasimaGPConfig();
@@ -179,20 +183,19 @@ public class JasimaGroupedProblem extends GPProblem implements IJasimaGPProblem 
 					tracker.clear();
 				}
 
-				// TODO
-				// Need to update the best ensemble of the population...
-				// The seed changes each time, meaning that the simulations are never the same.
-
-				group[i].setEvaluated(true);
-
 				simConfig.resetSeed();
 			}
 		}
 
+		// Set the fitnesses of the groups.
 		for (int i = 0; i < group.length; i++) {
-			fitness.setGroupFitness(state, ind, group[i].getInds());
-			fitness.clearGroupFitness();
+			if (!group[i].isEvaluated()) {
+				fitness.setGroupFitness(state, ind, group[i]);
+			}
 		}
+
+		// Clear the fitness from the groups.
+		fitness.clearGroupFitness();
 	}
 
 	@SuppressWarnings("unchecked")

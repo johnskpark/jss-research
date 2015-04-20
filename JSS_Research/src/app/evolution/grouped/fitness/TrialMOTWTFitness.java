@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import app.evolution.grouped.GroupedIndividual;
 import app.evolution.grouped.IJasimaGroupFitness;
 import ec.EvolutionState;
 import ec.Individual;
@@ -67,13 +68,17 @@ public class TrialMOTWTFitness implements IJasimaGroupFitness {
 		MultiObjectiveFitness fitness = (MultiObjectiveFitness) ind.fitness;
 		fitness.getObjectives()[0] = indFitness.sum();
 		fitness.getObjectives()[1] = ind.size();
+
+		ind.evaluated = true;
 	}
 
 	@Override
 	public void setGroupFitness(final EvolutionState state,
 			final Individual ind,
-			final GPIndividual[] inds) {
-		for (GPIndividual i : inds) {
+			final GroupedIndividual group) {
+		setIndFitness(state, ind);
+
+		for (GPIndividual i : group.getInds()) {
 			SummaryStat stat = groupFitness.get(i);
 			if (stat == null) {
 				throw new RuntimeException("setGroupFitness");
@@ -81,6 +86,8 @@ public class TrialMOTWTFitness implements IJasimaGroupFitness {
 
 			MultiObjectiveFitness fitness = (MultiObjectiveFitness) i.fitness;
 			fitness.getObjectives()[2] = -stat.mean();
+
+			group.setEvaluated(true);
 		}
 	}
 
@@ -88,7 +95,7 @@ public class TrialMOTWTFitness implements IJasimaGroupFitness {
 	public void setFitness(final EvolutionState state,
 			final Individual ind) {
 		setIndFitness(state, ind);
-		setGroupFitness(state, ind, new GPIndividual[]{(GPIndividual) ind});
+		setGroupFitness(state, ind, new GroupedIndividual(new GPIndividual[]{(GPIndividual) ind}));
 	}
 
 	@Override
@@ -99,6 +106,8 @@ public class TrialMOTWTFitness implements IJasimaGroupFitness {
 
 	@Override
 	public void clearGroupFitness() {
+		clearIndFitness();
+
 		groupFitness.clear();
 	}
 
