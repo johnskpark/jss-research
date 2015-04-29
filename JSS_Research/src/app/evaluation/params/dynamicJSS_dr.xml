@@ -3,14 +3,14 @@
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>4op_dr.txt</ruleFile>
+			<ruleFile>standard_4op.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>8op_dr.txt</ruleFile>
+			<ruleFile>standard_8op.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
@@ -19,7 +19,7 @@
 	</datasetConfig>
 
 	<outputConfig>
-	    <outputFile>dynamicJSS_dr_output.csv</outputFile>
+	    <outputFile>standard_output.csv</outputFile>
 	</outputConfig>
 
 	<fitnessConfig>

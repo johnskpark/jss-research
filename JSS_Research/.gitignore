@@ -152,3 +152,12 @@
 /grouped_trial_nsga_8op.txt
 /grouped_trial_spea_4op.txt
 /grouped_trial_spea_8op.txt
+/coevolve_nsga_output.csv
+/coevolve_spea_output.csv
+/grouped_pop_nsga_output.csv
+/grouped_pop_spea_output.csv
+/grouped_trial_nsga_output.csv
+/grouped_trial_spea_output.csv
+/standard_4op.txt
+/standard_8op.txt
+/standard_output.csv
