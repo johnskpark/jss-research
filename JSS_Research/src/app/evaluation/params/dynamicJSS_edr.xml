@@ -3,14 +3,14 @@
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>grouped_trial_spea_4op.txt</ruleFile>
+			<ruleFile>grouped_pop_nsga_4op.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>grouped_trial_spea_8op.txt</ruleFile>
+			<ruleFile>grouped_pop_nsga_8op.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
@@ -19,7 +19,7 @@
 	</datasetConfig>
 
 	<outputConfig>
-	    <outputFile>grouped_trial_spea_output.csv</outputFile>
+	    <outputFile>grouped_pop_nsga_output.csv</outputFile>
 	</outputConfig>
 
 	<fitnessConfig>

@@ -20,7 +20,7 @@ gp.fs.0.name = f0
 # We have five functions in the function set.  They are:
 
 gp.fs.0.size = 15
-gp.fs.0.func.0 = app.evolution.node.basic.ERCRandomUniform
+gp.fs.0.func.0 = app.evolution.node.hildebrandt.ERCDiscreteUniform
 gp.fs.0.func.0.nc = nc0
 gp.fs.0.func.0.min = 0
 gp.fs.0.func.0.max = 1
