@@ -170,7 +170,7 @@ public class EuroGPProblem extends GPProblem implements GroupedProblemForm, IJas
 			tracker.clear();
 		}
 
-		fitness.setFitness(state, inds);
+		fitness.setFitness(state, inds, updateFitness, shouldSetContext);
 		fitness.clear();
 
 		simConfig.resetSeed();

@@ -7,10 +7,11 @@ import app.evolution.IJasimaTracker;
 
 public class EuroGPTracker implements IJasimaTracker {
 
+	private EuroGPProblem problem;
+
 	@Override
 	public void setProblem(IJasimaGPProblem problem) {
-		// TODO Auto-generated method stub
-
+		this.problem = (EuroGPProblem) problem;
 	}
 
 	@Override
