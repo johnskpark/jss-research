@@ -19,9 +19,11 @@ import ec.Fitness;
 import ec.Individual;
 import ec.Initializer;
 import ec.Population;
+import ec.Subpopulation;
 import ec.coevolve.GroupedProblemForm;
 import ec.gp.GPIndividual;
 import ec.gp.GPProblem;
+import ec.gp.koza.KozaFitness;
 import ec.util.Parameter;
 
 public class EuroGPProblem extends GPProblem implements GroupedProblemForm, IJasimaGPProblem {
@@ -87,7 +89,8 @@ public class EuroGPProblem extends GPProblem implements GroupedProblemForm, IJas
 		tracker.setProblem(this);
 	}
 
-	@SuppressWarnings("rawtypes")
+	/************************************************/
+
 	@Override
 	public void preprocessPopulation(final EvolutionState state,
 			final Population pop,
@@ -98,34 +101,54 @@ public class EuroGPProblem extends GPProblem implements GroupedProblemForm, IJas
 
 		for (int i = 0; i < pop.subpops.length; i++) {
 			if (prepareForFitnessAssessment[i]) {
-				for (int j = 0; j < pop.subpops[i].individuals.length; j++) {
-					Fitness fitness = pop.subpops[i].individuals[j].fitness;
-					fitness.trials = new ArrayList();
-				}
+				preprocessSubpopulation(state, pop.subpops[i]);
 			}
 		}
 	}
+
+	private void preprocessSubpopulation(final EvolutionState state,
+			Subpopulation subpop) {
+		for (int j = 0; j < subpop.individuals.length; j++) {
+			subpop.individuals[j].fitness.trials = new ArrayList();
+		}
+	}
+
+	/************************************************/
 
 	@Override
 	public void postprocessPopulation(final EvolutionState state,
-			final Population pop,
+			Population pop,
 			final boolean[] assessFitness,
 			final boolean countVictoriesOnly) {
-		// TODO this feels like its in the wrong position.
-		// The fitness would have been cleared by then.
 		for (int i = 0; i < pop.subpops.length; i++ ) {
 			if (assessFitness[i]) {
-				fitness.setObjectiveFitness(state, pop.subpops[i].individuals);
+				postprocessSubpopulation(state, pop.subpops[i]);
 			}
 		}
-
-		// TODO Temporary code.
-		Runtime runtime = Runtime.getRuntime();
-		runtime.gc();
-
-		long memory = runtime.totalMemory() - runtime.freeMemory();
-		System.err.println("Used memory in bytes: " + memory);
 	}
+
+	private void postprocessSubpopulation(final EvolutionState state,
+			Subpopulation subpop) {
+		for (int j = 0; j < subpop.individuals.length; j++ ) {
+			KozaFitness fit = (KozaFitness) subpop.individuals[j].fitness;
+
+			// we take the max over the trials
+			double min = getMinimumOverTrials(fit.trials);
+
+			fit.setStandardizedFitness(state, min);
+			subpop.individuals[j].evaluated = true;
+		}
+	}
+
+	private double getMinimumOverTrials(ArrayList trials) {
+		double min = Double.POSITIVE_INFINITY;
+		for (int i = 0; i < trials.size(); i++) {
+			min = Math.min((Double) trials.get(i), min);
+		}
+		return min;
+	}
+
+	/************************************************/
 
 	@Override
 	public void evaluate(final EvolutionState state,
@@ -149,26 +172,27 @@ public class EuroGPProblem extends GPProblem implements GroupedProblemForm, IJas
 
 		coopRule.setConfiguration(config);
 
-		fitness.loadIndividuals(inds);
-
-		for (int i = 0; i < simConfig.getNumConfigs(); i++) {
-			Experiment experiment = getExperiment(state, coopRule, i);
-
-			experiment.runExperiment();
-
-			fitness.accumulateObjectiveFitness(inds, experiment.getResults());
-			fitness.accumulateDiversityFitness(tracker.getResults());
-			tracker.clear();
-		}
-
-		fitness.setTrialFitness(state, inds, updateFitness, shouldSetContext);
-		fitness.setDiversityFitness(state, inds, updateFitness);
-		fitness.clear();
+//		fitness.loadIndividuals(inds);
+//
+//		for (int i = 0; i < simConfig.getNumConfigs(); i++) {
+//			Experiment experiment = getExperiment(state, coopRule, i);
+//
+//			experiment.runExperiment();
+//
+//			fitness.accumulateObjectiveFitness(inds, experiment.getResults());
+//			fitness.accumulateDiversityFitness(tracker.getResults());
+//			tracker.clear();
+//		}
+//
+//		fitness.setTrialFitness(state, inds, updateFitness, shouldSetContext);
+//		fitness.setDiversityFitness(state, inds, updateFitness);
+//		fitness.clear();
 
 		simConfig.resetSeed();
 	}
 
-	@SuppressWarnings("unchecked")
+	// TODO this should be part of the simConfig right?
+
 	private Experiment getExperiment(final EvolutionState state, AbsGPPriorityRule rule, int index) {
 		DynamicShopExperiment experiment = new DynamicShopExperiment();
 
@@ -186,6 +210,8 @@ public class EuroGPProblem extends GPProblem implements GroupedProblemForm, IJas
 
 		return experiment;
 	}
+
+	/************************************************/
 
 	@Override
 	public void evaluate(final EvolutionState state,
