@@ -10,14 +10,11 @@ import java.util.Random;
 
 import app.evolution.AbsGPPriorityRule;
 import app.evolution.IJasimaGPProblem;
-import app.evolution.IJasimaTracker;
 import app.evolution.JasimaGPConfig;
 import app.evolution.JasimaGPData;
 import app.simConfig.AbsSimConfig;
 import ec.EvolutionState;
-import ec.Fitness;
 import ec.Individual;
-import ec.Initializer;
 import ec.Population;
 import ec.Subpopulation;
 import ec.coevolve.GroupedProblemForm;
@@ -42,9 +39,9 @@ public class EuroGPProblem extends GPProblem implements GroupedProblemForm, IJas
 
 	private boolean shouldSetContext;
 
-	private AbsGPPriorityRule coopRule;
+	private EuroGPPR rule;
 	private EuroGPFitness fitness;
-	private IJasimaTracker tracker;
+	private EuroGPTracker tracker;
 
 	private AbsSimConfig simConfig;
 	private Random rand;
@@ -62,31 +59,20 @@ public class EuroGPProblem extends GPProblem implements GroupedProblemForm, IJas
 		input = (JasimaGPData) state.parameters.getInstanceForParameterEq(base.push(P_DATA), null, JasimaGPData.class);
 		input.setup(state, base.push(P_DATA));
 
-		// Setup the solver.
-		coopRule = (AbsGPPriorityRule) state.parameters.getInstanceForParameterEq(base.push(P_COOP_RULE), null, AbsGPPriorityRule.class);
+		rule = new EuroGPPR();
+		fitness = new EuroGPFitness();
+		tracker = new EuroGPTracker();
 
-		// Setup the fitness.
-		fitness = (EuroGPFitness) state.parameters.getInstanceForParameterEq(base.push(P_FITNESS), null, EuroGPFitness.class);
-
-		// Setup the tracker.
-		tracker = (IJasimaTracker) state.parameters.getInstanceForParameterEq(base.push(P_TRACKER), null, IJasimaTracker.class);
-		setupTracker(state, base.push(P_TRACKER));
+		tracker.setProblem(this);
 
 		// Setup the simulator configurations.
 		simConfig = (AbsSimConfig) state.parameters.getInstanceForParameterEq(base.push(P_SIMULATOR), null, AbsSimConfig.class);
 		setupSimulator(state, base.push(P_SIMULATOR));
-
-		// Setup the number of subpopulations.
-        numSubpops = state.parameters.getInt((new Parameter(Initializer.P_POP)).push(Population.P_SIZE), null, 1);
 	}
 
 	private void setupSimulator(final EvolutionState state, final Parameter simBase) {
 		simSeed = state.parameters.getLongWithDefault(simBase.push(P_SEED), null, DEFAULT_SEED);
 		rand = new Random(simSeed);
-	}
-
-	private void setupTracker(final EvolutionState state, final Parameter trackerBase) {
-		tracker.setProblem(this);
 	}
 
 	/************************************************/
@@ -99,6 +85,7 @@ public class EuroGPProblem extends GPProblem implements GroupedProblemForm, IJas
 		// Reset the seed for the simulator.
 		simConfig.setSeed(rand.nextLong());
 
+		numSubpops = pop.subpops.length;
 		for (int i = 0; i < pop.subpops.length; i++) {
 			if (prepareForFitnessAssessment[i]) {
 				preprocessSubpopulation(state, pop.subpops[i]);
@@ -170,28 +157,26 @@ public class EuroGPProblem extends GPProblem implements GroupedProblemForm, IJas
 		config.setData((JasimaGPData) input);
 		config.setTracker(tracker);
 
-		coopRule.setConfiguration(config);
+		rule.setConfiguration(config);
 
-//		fitness.loadIndividuals(inds);
-//
-//		for (int i = 0; i < simConfig.getNumConfigs(); i++) {
-//			Experiment experiment = getExperiment(state, coopRule, i);
-//
-//			experiment.runExperiment();
-//
-//			fitness.accumulateObjectiveFitness(inds, experiment.getResults());
-//			fitness.accumulateDiversityFitness(tracker.getResults());
-//			tracker.clear();
-//		}
-//
-//		fitness.setTrialFitness(state, inds, updateFitness, shouldSetContext);
-//		fitness.setDiversityFitness(state, inds, updateFitness);
-//		fitness.clear();
+		fitness.loadIndividuals(gpInds);
+
+		for (int i = 0; i < simConfig.getNumConfigs(); i++) {
+			Experiment experiment = getExperiment(state, rule, i);
+
+			experiment.runExperiment();
+
+			fitness.accumulateFitness(gpInds, experiment, tracker);
+			tracker.clear();
+		}
+
+		fitness.setFitness(state, inds);
+		fitness.clear();
 
 		simConfig.resetSeed();
 	}
 
-	// TODO this should be part of the simConfig right?
+	// FIXME This should be part of the simulation config later down the line.
 
 	private Experiment getExperiment(final EvolutionState state, AbsGPPriorityRule rule, int index) {
 		DynamicShopExperiment experiment = new DynamicShopExperiment();
@@ -236,7 +221,7 @@ public class EuroGPProblem extends GPProblem implements GroupedProblemForm, IJas
 		EuroGPProblem newObject = (EuroGPProblem)super.clone();
 
 		newObject.input = (JasimaGPData)input.clone();
-		newObject.coopRule = coopRule;
+		newObject.rule = rule;
 		newObject.fitness = fitness;
 
 		newObject.tracker = tracker;
