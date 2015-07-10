@@ -130,7 +130,7 @@ public class EnsemblePriorityRule extends AbsGPPriorityRule {
 
 		@Override
 		public int compareTo(EntryVotes other) {
-			int diff = this.count - other.count;
+			int diff = other.count - this.count;
 			if (diff != 0) {
 				return diff;
 			} else {
