@@ -1,6 +1,7 @@
 package app.node;
 
 public enum NodeDefinition {
+	// Basic node definitions
 	OP_ADDITION("+", 2),
 	OP_CONDITIONAL("If", 3),
 	OP_DIVISION("/", 2),
@@ -20,7 +21,12 @@ public enum NodeDefinition {
 	SCORE_PENALTY("W", 0),
 	SCORE_CURRENT_TIME("CT", 0),
 
+	// Node definitions from Hunt
 	SCORE_NEXT_PROCESSING_TIME("NPT", 0),
+	SCORE_NUMBER_WAITING_NEXT_MACHINE("NNQ", 0),
+	SCORE_AVERAGE_WAIT_TIME_NEXT_MACHINE("NQW", 0),
+	SCORE_AVERAGE_WAIT_TIME_ALL_MACHINE("AQW", 0),
+
 	SCORE_OPERATIONAL_DUE_DATE("ODD", 0),
 	SCORE_SLACK("SL", 0),
 	SCORE_TIME_IN_QUEUE("TIQ", 0),

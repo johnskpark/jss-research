@@ -13,6 +13,7 @@ import app.evolution.IJasimaGPProblem;
 import app.evolution.IJasimaTracker;
 import app.evolution.JasimaGPConfig;
 import app.evolution.JasimaGPData;
+import app.listener.hunt.HuntListener;
 import app.simConfig.AbsSimConfig;
 import ec.EvolutionState;
 import ec.Fitness;
@@ -49,6 +50,8 @@ public class JasimaCoopProblem extends GPProblem implements GroupedProblemForm, 
 	private long simSeed;
 	private int numSubpops;
 
+	private HuntListener huntListener = new HuntListener(5); // FIXME Incorporate into the parameter.
+
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
 		super.setup(state, base);
@@ -76,6 +79,8 @@ public class JasimaCoopProblem extends GPProblem implements GroupedProblemForm, 
 
 		// Setup the number of subpopulations.
         numSubpops = state.parameters.getInt((new Parameter(Initializer.P_POP)).push(Population.P_SIZE), null, 1);
+
+        ((JasimaGPData) input).setWorkStationListener(huntListener);
 	}
 
 	private void setupSimulator(final EvolutionState state, final Parameter simBase) {
@@ -180,7 +185,7 @@ public class JasimaCoopProblem extends GPProblem implements GroupedProblemForm, 
 		experiment.setOpProcTime(simConfig.getMinOpProc(index), simConfig.getMaxOpProc(index));
 		experiment.setNumOps(simConfig.getMinNumOps(index), simConfig.getMaxNumOps(index));
 
-		experiment.setShopListener(new NotifierListener[]{new BasicJobStatCollector()});
+		experiment.setShopListener(new NotifierListener[]{new BasicJobStatCollector(), huntListener});
 		experiment.setSequencingRule(rule);
 		experiment.setScenario(DynamicShopExperiment.Scenario.JOB_SHOP);
 

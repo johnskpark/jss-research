@@ -14,11 +14,11 @@
 # from ../../simple/params, which defines
 # generational, basic evolutionary mechanisms, selection mechanisms...
 
-parent.0 = spea2.params
+parent.0 = nsga2.params
 
-breed.elite.0 =	128
+# breed.elite.0 = 32
 
-eval = app.evolution.coop.evaluator.CoopSPEA2Evaluator
+eval = app.evolution.coop.evaluator.CoopNSGA2Evaluator
 
 eval.num-shuffled =	0
 eval.num-current = 0
