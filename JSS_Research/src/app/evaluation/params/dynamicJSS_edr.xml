@@ -3,14 +3,14 @@
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>grouped_pop_nsga_4op.txt</ruleFile>
+			<ruleFile>djss_e1_4op_nsga.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>grouped_pop_nsga_8op.txt</ruleFile>
+			<ruleFile>djss_e1_8op_nsga.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
@@ -19,7 +19,7 @@
 	</datasetConfig>
 
 	<outputConfig>
-	    <outputFile>grouped_pop_nsga_output.csv</outputFile>
+	    <outputFile>djss_e1_nsga_output.csv</outputFile>
 	</outputConfig>
 
 	<fitnessConfig>

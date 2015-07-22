@@ -185,7 +185,8 @@ public class JasimaCoopProblem extends GPProblem implements GroupedProblemForm, 
 		experiment.setOpProcTime(simConfig.getMinOpProc(index), simConfig.getMaxOpProc(index));
 		experiment.setNumOps(simConfig.getMinNumOps(index), simConfig.getMaxNumOps(index));
 
-		experiment.setShopListener(new NotifierListener[]{new BasicJobStatCollector(), huntListener});
+		experiment.setShopListener(new NotifierListener[]{new BasicJobStatCollector()});
+		experiment.addMachineListener(huntListener);
 		experiment.setSequencingRule(rule);
 		experiment.setScenario(DynamicShopExperiment.Scenario.JOB_SHOP);
 

@@ -41,7 +41,7 @@ public class CoopTWTFitness implements IJasimaCoopFitness {
 				continue;
 			}
 
-			fitnessMap.get(inds[i]).combine(stat);
+			fitnessMap.get(inds[i]).value(stat.sum());
 			indSet.add(inds[i]);
 		}
 	}

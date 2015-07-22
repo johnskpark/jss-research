@@ -23,17 +23,9 @@ public class HuntListener implements NotifierListener<WorkStation, WorkStationEv
 
 	@Override
 	public void update(WorkStation notifier, WorkStationEvent event) {
-		if (event != WorkStation.WS_JOB_COMPLETED || event != WorkStation.WS_JOB_SELECTED) {
-			return;
-		}
-
-		if (!completedJobs.containsKey(notifier)) {
-			completedJobs.put(notifier, new LinkedList<OperationCompletionStat>());
-		}
-
 		if (event == WorkStation.WS_JOB_SELECTED) {
 			operationStart(notifier);
-		} else {
+		} else if (event == WorkStation.WS_JOB_COMPLETED){
 			operationComplete(notifier);
 		}
 	}
@@ -51,6 +43,10 @@ public class HuntListener implements NotifierListener<WorkStation, WorkStationEv
 
 	public void operationComplete(WorkStation machine) {
 		assert startedJobs.get(machine).entry == machine.justCompleted;
+
+		if (!completedJobs.containsKey(machine)) {
+			completedJobs.put(machine, new LinkedList<OperationCompletionStat>());
+		}
 
 		OperationStartStat startStat = startedJobs.get(machine);
 

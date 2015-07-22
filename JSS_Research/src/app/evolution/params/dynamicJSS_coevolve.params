@@ -2,11 +2,20 @@
 # Licensed under the Academic Free License version 3.0
 # See the file "LICENSE" for more information
 
-#parent.0 = ../../../ec/gp/koza/koza.params
+parent.0 = ../../../ec/gp/koza/koza.params
 
-parent.0 = koza_mo_coop.params
-multi.fitness.num-objectives = 3
-multi.fitness.maximize = false
+eval = ec.coevolve.MultiPopCoevolutionaryEvaluator
+
+eval.num-shuffled =	0
+eval.num-current = 0
+eval.num-elites = 1
+eval.num-prev = 0
+eval.select-current = ec.select.RandomSelection
+eval.select-prev = ec.select.RandomSelection
+
+#parent.0 = koza_mo_coop.params
+#multi.fitness.num-objectives = 3
+#multi.fitness.maximize = false
 
 # multi.fitness.num-objectives = 3
 # multi.fitness.maximize = false
@@ -66,10 +75,10 @@ gp.fs.0.func.15 = app.evolution.node.hunt.ScoreAverageWaitTimeAllMachines
 gp.fs.0.func.15.nc = nc0
 gp.fs.0.func.16 = app.evolution.node.hunt.ScoreAverageWaitTimeNextMachine
 gp.fs.0.func.16.nc = nc0
-gp.fs.0.func.16 = app.evolution.node.hunt.ScoreNextProcessingTime
-gp.fs.0.func.16.nc = nc0
-gp.fs.0.func.16 = app.evolution.node.hunt.ScoreNumberWaitingNextMachine
-gp.fs.0.func.16.nc = nc0
+gp.fs.0.func.17 = app.evolution.node.hunt.ScoreNextProcessingTime
+gp.fs.0.func.17.nc = nc0
+gp.fs.0.func.18 = app.evolution.node.hunt.ScoreNumberWaitingNextMachine
+gp.fs.0.func.18.nc = nc0
 
 # stat = app.evolution.coop.statistics.JasimaCoopMOStatistics
 
@@ -77,7 +86,7 @@ eval.problem = app.evolution.coop.JasimaCoopProblem
 eval.problem.data = app.evolution.JasimaGPData
 
 eval.problem.rule = app.evolution.priorityRules.EnsemblePriorityRule
-eval.problem.fitness = app.evolution.coop.fitness.CoopMOTWTFitness
+eval.problem.fitness = app.evolution.coop.fitness.CoopTWTFitness
 eval.problem.tracker = app.evolution.tracker.EnsembleDecisionTracker
 
 eval.problem.simulator = app.simConfig.huntConfig.FourOpSimConfig

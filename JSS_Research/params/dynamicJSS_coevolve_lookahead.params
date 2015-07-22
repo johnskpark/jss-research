@@ -2,7 +2,20 @@
 # Licensed under the Academic Free License version 3.0
 # See the file "LICENSE" for more information
 
-parent.0 = koza.params
+#parent.0 = ../../../ec/gp/koza/koza.params
+
+parent.0 = koza_mo_coop.params
+multi.fitness.num-objectives = 3
+multi.fitness.maximize = false
+
+# multi.fitness.num-objectives = 3
+# multi.fitness.maximize = false
+
+pop.subpops = 4
+pop.default-subpop = 0
+
+pop.subpop.0.size = 256
+pop.subpop.0.species.ind = app.evolution.coop.JasimaCoopIndividual
 
 # the next four items are already defined in koza.params, but we
 # put them here to be clear.
@@ -16,8 +29,8 @@ gp.fs.0.name = f0
 
 # We have five functions in the function set.  They are:
 
-gp.fs.0.size = 15
-gp.fs.0.func.0 = app.evolution.node.basic.ERCRandomUniform
+gp.fs.0.size = 19
+gp.fs.0.func.0 = app.evolution.node.hildebrandt.ERCDiscreteUniform
 gp.fs.0.func.0.nc = nc0
 gp.fs.0.func.0.min = 0
 gp.fs.0.func.0.max = 1
@@ -49,17 +62,26 @@ gp.fs.0.func.13 = app.evolution.node.basic.ScorePenalty
 gp.fs.0.func.13.nc = nc0
 gp.fs.0.func.14 = app.evolution.node.basic.ScoreMachineReadyTime
 gp.fs.0.func.14.nc = nc0
+gp.fs.0.func.15 = app.evolution.node.hunt.ScoreAverageWaitTimeAllMachines
+gp.fs.0.func.15.nc = nc0
+gp.fs.0.func.16 = app.evolution.node.hunt.ScoreAverageWaitTimeNextMachine
+gp.fs.0.func.16.nc = nc0
+gp.fs.0.func.17 = app.evolution.node.hunt.ScoreNextProcessingTime
+gp.fs.0.func.17.nc = nc0
+gp.fs.0.func.18 = app.evolution.node.hunt.ScoreNumberWaitingNextMachine
+gp.fs.0.func.18.nc = nc0
 
-#stat = app.evolution.simple.statistics.JasimaMultiRuleStatistics
-#stat.size = 10
+# stat = app.evolution.coop.statistics.JasimaCoopMOStatistics
 
-eval.problem = app.evolution.simple.JasimaSimpleProblem
+eval.problem = app.evolution.coop.JasimaCoopProblem
 eval.problem.data = app.evolution.JasimaGPData
 
-eval.problem.rule = app.evolution.priorityRules.BasicPriorityRule
-eval.problem.fitness = app.evolution.simple.fitness.TWTFitness
+eval.problem.rule = app.evolution.priorityRules.EnsemblePriorityRule
 
-eval.problem.simulator = app.simConfig.huntConfig.EightOpSimConfig
+eval.problem.fitness = app.evolution.coop.fitness.CoopMOTWTFitness
+eval.problem.tracker = app.evolution.tracker.EnsembleDecisionTracker
+
+eval.problem.simulator = app.simConfig.huntConfig.FourOpSimConfig
 eval.problem.simulator.seed = 15
 
 # seed.0=26556

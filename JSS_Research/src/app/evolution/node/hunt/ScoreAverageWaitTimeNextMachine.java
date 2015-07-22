@@ -52,14 +52,17 @@ public class ScoreAverageWaitTimeNextMachine extends GPNode {
 			WorkStation machine = entry.getOps()[nextTask].machine;
 
 			Queue<OperationCompletionStat> completedJobsQueue = listener.getLastCompletedJobs(machine);
+			if (completedJobsQueue == null) {
+				data.setPriority(0);
+			} else {
+				double averageWaitTime = 0.0;
+				for (OperationCompletionStat stat : completedJobsQueue) {
+					averageWaitTime += stat.getWaitTime();
+				}
+				averageWaitTime /= completedJobsQueue.size();
 
-			double averageWaitTime = 0.0;
-			for (OperationCompletionStat stat : completedJobsQueue) {
-				averageWaitTime += stat.getWaitTime();
+				data.setPriority(averageWaitTime);
 			}
-			averageWaitTime /= completedJobsQueue.size();
-
-			data.setPriority(averageWaitTime);
 		}
 	}
 

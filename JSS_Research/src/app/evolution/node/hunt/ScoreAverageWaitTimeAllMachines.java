@@ -54,6 +54,10 @@ public class ScoreAverageWaitTimeAllMachines extends GPNode {
 			double averageWaitTime = 0.0;
 			for (WorkStation machine : machines) {
 				Queue<OperationCompletionStat> completedJobsQueue = listener.getLastCompletedJobs(machine);
+				if (completedJobsQueue == null) {
+					continue;
+				}
+
 				double machineWaitTime = 0.0;
 
 				for (OperationCompletionStat stat : completedJobsQueue) {

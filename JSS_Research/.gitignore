@@ -161,3 +161,13 @@
 /standard_4op.txt
 /standard_8op.txt
 /standard_output.csv
+/djss_e1_4op_nsga.txt
+/djss_e1_8op_nsga.txt
+/p2_nsga_4op.txt
+/p2_nsga_8op.txt
+/p2_spea_4op.txt
+/p2_spea_8op.txt
+/p3_nsga_4op.txt
+/p3_nsga_8op.txt
+/p3_spea_4op.txt
+/p3_spea_8op.txt
