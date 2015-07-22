@@ -7,7 +7,7 @@ import java.util.Queue;
 
 import app.evolution.JasimaGPData;
 import app.listener.hunt.HuntListener;
-import app.listener.hunt.OperationCompletionStats;
+import app.listener.hunt.OperationCompletionStat;
 import app.node.NodeDefinition;
 import ec.EvolutionState;
 import ec.Problem;
@@ -18,10 +18,9 @@ import ec.gp.GPNode;
 import ec.util.Parameter;
 
 //The average wait time of last five jobs processed all machines on the shop floor.
-public class ScoreAverageWaitTimeAllMachine extends GPNode {
+public class ScoreAverageWaitTimeAllMachines extends GPNode {
 
 	private static final long serialVersionUID = -2890903764607495129L;
-	private static final int NUM_JOBS_SAMPLED = 5;
 
 	@Override
 	public String toString() {
@@ -42,7 +41,6 @@ public class ScoreAverageWaitTimeAllMachine extends GPNode {
 	@Override
 	public void eval(EvolutionState state, int thread, GPData input,
 			ADFStack stack, GPIndividual individual, Problem problem) {
-		// TODO for all machines.
 		JasimaGPData data = (JasimaGPData) input;
 		PrioRuleTarget entry = data.getPrioRuleTarget();
 		HuntListener listener = (HuntListener) data.getWorkStationListener();
@@ -51,17 +49,23 @@ public class ScoreAverageWaitTimeAllMachine extends GPNode {
 		if (nextTask >= entry.numOps()) {
 			data.setPriority(0);
 		} else {
-			WorkStation machine = entry.getOps()[nextTask].machine;
-
-			Queue<OperationCompletionStats> completedJobsQueue = listener.getLastCompletedJobs(machine);
+			WorkStation[] machines = entry.getShop().getMachines();
 
 			double averageWaitTime = 0.0;
-			for (OperationCompletionStats stat : completedJobsQueue) {
-//				averageWaitTime += nextEntry.get;
+			for (WorkStation machine : machines) {
+				Queue<OperationCompletionStat> completedJobsQueue = listener.getLastCompletedJobs(machine);
+				double machineWaitTime = 0.0;
+
+				for (OperationCompletionStat stat : completedJobsQueue) {
+					machineWaitTime += stat.getWaitTime();
+				}
+
+				averageWaitTime += machineWaitTime / completedJobsQueue.size();
 			}
-			averageWaitTime /= completedJobsQueue.size();
+			averageWaitTime /= machines.length;
 
 			data.setPriority(averageWaitTime);
+
 		}
 	}
 

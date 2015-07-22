@@ -2,7 +2,7 @@ package app.listener.hunt;
 
 import jasima.shopSim.core.PrioRuleTarget;
 
-public class OperationCompletionStats {
+public class OperationCompletionStat {
 
 	private PrioRuleTarget entry;
 
@@ -11,7 +11,7 @@ public class OperationCompletionStats {
 	private double waitTime;
 	private double completionTime;
 
-	public OperationCompletionStats(PrioRuleTarget entry) {
+	public OperationCompletionStat(PrioRuleTarget entry) {
 		this.entry = entry;
 	}
 

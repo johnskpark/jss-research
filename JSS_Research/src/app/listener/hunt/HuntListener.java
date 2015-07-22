@@ -14,8 +14,8 @@ public class HuntListener implements NotifierListener<WorkStation, WorkStationEv
 
 	private int maxSize;
 
-	private Map<WorkStation, Queue<OperationCompletionStats>> completedJobs = new HashMap<WorkStation, Queue<OperationCompletionStats>>();
-	private Map<WorkStation, OperationStartStats> startedJobs = new HashMap<WorkStation, OperationStartStats>();
+	private Map<WorkStation, Queue<OperationCompletionStat>> completedJobs = new HashMap<WorkStation, Queue<OperationCompletionStat>>();
+	private Map<WorkStation, OperationStartStat> startedJobs = new HashMap<WorkStation, OperationStartStat>();
 
 	public HuntListener(int max) {
 		maxSize = max;
@@ -23,35 +23,53 @@ public class HuntListener implements NotifierListener<WorkStation, WorkStationEv
 
 	@Override
 	public void update(WorkStation notifier, WorkStationEvent event) {
-		// TODO this needs to be
 		if (event != WorkStation.WS_JOB_COMPLETED || event != WorkStation.WS_JOB_SELECTED) {
 			return;
 		}
 
 		if (!completedJobs.containsKey(notifier)) {
-			completedJobs.put(notifier, new LinkedList<OperationCompletionStats>());
+			completedJobs.put(notifier, new LinkedList<OperationCompletionStat>());
 		}
-		Queue<OperationCompletionStats> data = completedJobs.get(notifier);
 
-		if (data.size() == maxSize) {
-			data.poll();
+		if (event == WorkStation.WS_JOB_SELECTED) {
+			operationStart(notifier);
+		} else {
+			operationComplete(notifier);
 		}
-		PrioRuleTarget entry = notifier.justCompleted;
-
-		// TODO Hmm... It seems that the workstation doesn't actually have the
-		// processing start time available for information...
-		OperationCompletionStats stats = new OperationCompletionStats(entry,
-				entry.getArriveTime(), // Arrival time
-				0, // Start time
-				0, // Wait time
-				entry.getShop().simTime()); // Completion time
-
-
-
-		data.offer(stats);
 	}
 
-	public Queue<OperationCompletionStats> getLastCompletedJobs(WorkStation machine) {
+	public void operationStart(WorkStation machine) {
+		assert startedJobs.get(machine) == null;
+
+		OperationStartStat stat = new OperationStartStat();
+		stat.entry = machine.justStarted;
+		stat.arrivalTime = stat.entry.getArriveTime();
+		stat.startTime = stat.entry.getShop().simTime();
+
+		startedJobs.put(machine, stat);
+	}
+
+	public void operationComplete(WorkStation machine) {
+		assert startedJobs.get(machine).entry == machine.justCompleted;
+
+		OperationStartStat startStat = startedJobs.get(machine);
+
+		OperationCompletionStat stat = new OperationCompletionStat(startStat.entry);
+		stat.setArrivalTime(startStat.arrivalTime);
+		stat.setStartTime(startStat.startTime);
+		stat.setWaitTime(startStat.startTime - startStat.arrivalTime);
+		stat.setCompletionTime(startStat.entry.getShop().simTime());
+
+		Queue<OperationCompletionStat> queue = completedJobs.get(machine);
+		if (queue.size() == maxSize) {
+			queue.poll();
+		}
+		queue.offer(stat);
+
+		startedJobs.put(machine, null);
+	}
+
+	public Queue<OperationCompletionStat> getLastCompletedJobs(WorkStation machine) {
 		return completedJobs.get(machine);
 	}
 
@@ -59,7 +77,7 @@ public class HuntListener implements NotifierListener<WorkStation, WorkStationEv
 		completedJobs.clear();
 	}
 
-	private class OperationStartStats {
+	private class OperationStartStat {
 		PrioRuleTarget entry;
 
 		double arrivalTime;

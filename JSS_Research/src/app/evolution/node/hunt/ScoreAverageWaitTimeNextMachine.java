@@ -7,7 +7,7 @@ import java.util.Queue;
 
 import app.evolution.JasimaGPData;
 import app.listener.hunt.HuntListener;
-import app.listener.hunt.OperationCompletionStats;
+import app.listener.hunt.OperationCompletionStat;
 import app.node.NodeDefinition;
 import ec.EvolutionState;
 import ec.Problem;
@@ -21,7 +21,6 @@ import ec.util.Parameter;
 public class ScoreAverageWaitTimeNextMachine extends GPNode {
 
 	private static final long serialVersionUID = -8680402164419018880L;
-	private static final int NUM_JOBS_SAMPLED = 5;
 
 	@Override
 	public String toString() {
@@ -52,14 +51,12 @@ public class ScoreAverageWaitTimeNextMachine extends GPNode {
 		} else {
 			WorkStation machine = entry.getOps()[nextTask].machine;
 
-			Queue<OperationCompletionStats> completedJobsQueue = listener.getLastCompletedJobs(machine);
+			Queue<OperationCompletionStat> completedJobsQueue = listener.getLastCompletedJobs(machine);
 
 			double averageWaitTime = 0.0;
-//			for (int i = 0; i < Math.min(completedJobsQueue.size(), NUM_JOBS_SAMPLED); i++) {
-//				PrioRuleTarget completedJobsQueue.
-//
-//				averageWaitTime += 0.0; // TODO
-//			}
+			for (OperationCompletionStat stat : completedJobsQueue) {
+				averageWaitTime += stat.getWaitTime();
+			}
 			averageWaitTime /= completedJobsQueue.size();
 
 			data.setPriority(averageWaitTime);
