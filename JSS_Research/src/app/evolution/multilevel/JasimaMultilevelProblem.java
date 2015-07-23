@@ -20,6 +20,8 @@ import ec.util.Parameter;
 
 public class JasimaMultilevelProblem extends GPProblem implements GroupedProblemForm, IJasimaGPProblem {
 
+	private static final long serialVersionUID = -5150181943760622786L;
+
 	private AbsSimConfig simConfig;
 	private Random rand;
 	private long simSeed;
