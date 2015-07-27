@@ -1,11 +1,27 @@
 package app.evolution.multilevel;
 
 import ec.EvolutionState;
+import ec.Population;
 import ec.util.Checkpoint;
+import ec.util.Parameter;
 
 public class MultilevelSelectionEvolutionState extends EvolutionState {
 
 	// Evaluator can breed the subpopulation from here.
+
+	/**
+	 * metaPopulation stores the intermediate subpopulations of individuals
+	 * which are constructed for the multi-level selection procedure.
+	 */
+	public Population metaPopulation;
+
+	public void setup(final EvolutionState state, final Parameter base) {
+		super.setup(state, base);
+
+		// Checks to make sure that the different components are capable
+		// of handling multilevel selection.
+		
+	}
 
 	public void startFresh() {
 		output.message("Setting up");
