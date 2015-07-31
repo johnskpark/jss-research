@@ -1,11 +1,14 @@
 package app.evolution.multilevel;
 
 import ec.EvolutionState;
+import ec.Individual;
 import ec.Population;
+import ec.Subpopulation;
+import ec.simple.SimpleEvolutionState;
 import ec.util.Checkpoint;
 import ec.util.Parameter;
 
-public class MultilevelSelectionEvolutionState extends EvolutionState {
+public class MultilevelSelectionEvolutionState extends SimpleEvolutionState {
 
 	// Evaluator can breed the subpopulation from here.
 
@@ -20,47 +23,25 @@ public class MultilevelSelectionEvolutionState extends EvolutionState {
 
 		// Checks to make sure that the different components are capable
 		// of handling multilevel selection.
-		
+		if (!(state.evaluator instanceof MultilevelSelectionEvaluator)) {
+			state.output.fatal("Evaluator is not an instance of MultilevelSelectionEvaluator");
+		}
+
+		if (!(state.breeder instanceof MultilevelSelectionBreeder)) {
+			state.output.fatal("Breeder is not an instance of MultilevelSelectionBreeder");
+		}
 	}
 
 	public void startFresh() {
-		output.message("Setting up");
-		setup(this,null);  // a garbage Parameter
+		super.startFresh();
 
-		// POPULATION INITIALIZATION
-		output.message("Initializing Generation 0");
-		statistics.preInitializationStatistics(this);
-		population = initializer.initialPopulation(this, 0); // unthreaded
-		statistics.postInitializationStatistics(this);
+		// Specific to multilevel selection.
+		metaPopulation = (Population) population.emptyClone();
+		metaPopulation.subpops = new Subpopulation[population.subpops.length * 2];
 
-		// Compute generations from evaluations if necessary
-		if (numEvaluations > UNDEFINED) {
-			// compute a generation's number of individuals
-			int generationSize = 0;
-			for (int sub=0; sub < population.subpops.length; sub++) {
-				generationSize += population.subpops[sub].individuals.length;  // so our sum total 'generationSize' will be the initial total number of individuals
-			}
-
-			if (numEvaluations < generationSize) {
-				numEvaluations = generationSize;
-				numGenerations = 1;
-				output.warning("Using evaluations, but evaluations is less than the initial total population size (" + generationSize + ").  Setting to the populatiion size.");
-			}
-			else {
-				if (numEvaluations % generationSize != 0) {
-					output.warning("Using evaluations, but initial total population size does not divide evenly into it.  Modifying evaluations to a smaller value (" + ((numEvaluations / generationSize) * generationSize) +") which divides evenly.");  // note integer division
-				}
-				numGenerations = (int)(numEvaluations / generationSize);  // note integer division
-				numEvaluations = numGenerations * generationSize;
-			}
-			output.message("Generations will be " + numGenerations);
+		for (int i = 0; i < metaPopulation.subpops.length; i++) {
+			metaPopulation.subpops[i] = (Subpopulation) population.subpops[i/2].emptyClone();
 		}
-
-		// INITIALIZE CONTACTS -- done after initialization to allow
-		// a hook for the user to do things in Initializer before
-		// an attempt is made to connect to island models etc.
-		exchanger.initializeContacts(this);
-		evaluator.initializeContacts(this);
 	}
 
 	// TODO need to modify this to
@@ -83,11 +64,9 @@ public class MultilevelSelectionEvolutionState extends EvolutionState {
 			return R_FAILURE;
 		}
 
-		// TODO create a meta-population which consists of the constructed groups and individuals.
-
 		// PRE-BREEDING EXCHANGING
 		statistics.prePreBreedingExchangeStatistics(this);
-		population = exchanger.preBreedingExchangePopulation(this);
+		metaPopulation = exchanger.preBreedingExchangePopulation(this);
 		statistics.postPreBreedingExchangeStatistics(this);
 
 		String exchangerWantsToShutdown = exchanger.runComplete(this);
@@ -111,14 +90,14 @@ public class MultilevelSelectionEvolutionState extends EvolutionState {
 		// BREEDING
 		statistics.preBreedingStatistics(this);
 
-		population = breeder.breedPopulation(this);
+		metaPopulation = ((MultilevelSelectionBreeder) breeder).breedMetaPopulation(this, metaPopulation);
 
 		// POST-BREEDING EXCHANGING
 		statistics.postBreedingStatistics(this);
 
 		// POST-BREEDING EXCHANGING
 		statistics.prePostBreedingExchangeStatistics(this);
-		population = exchanger.postBreedingExchangePopulation(this);
+		metaPopulation = exchanger.postBreedingExchangePopulation(this);
 		statistics.postPostBreedingExchangeStatistics(this);
 
 		// EVALUATION
@@ -127,7 +106,7 @@ public class MultilevelSelectionEvolutionState extends EvolutionState {
 		statistics.postEvaluationStatistics(this);
 
 		// SELECTION
-		// TODO
+		population = ((MultilevelSelectionBreeder) breeder).breedFinalPopulation(this, metaPopulation);
 
 		// INCREMENT GENERATION AND CHECKPOINT
 		generation++;
@@ -139,6 +118,18 @@ public class MultilevelSelectionEvolutionState extends EvolutionState {
 		}
 
 		return R_NOTDONE;
+	}
+
+	protected void breedMetaPopulation() {
+		// TODO
+	}
+
+	protected void evaluateMetaPopulation() {
+		// TODO
+	}
+
+	protected void selectMetaPopulation() {
+		// TODO
 	}
 
 	public void finish(int result) {

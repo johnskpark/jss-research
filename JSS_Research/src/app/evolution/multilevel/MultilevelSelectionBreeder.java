@@ -2,6 +2,7 @@ package app.evolution.multilevel;
 
 import ec.Breeder;
 import ec.EvolutionState;
+import ec.Individual;
 import ec.Initializer;
 import ec.Population;
 import ec.Subpopulation;
@@ -150,16 +151,83 @@ public class MultilevelSelectionBreeder extends Breeder {
 		return null;
 	}
 
-	private Population breedIntermediatePopulation(final EvolutionState state, final Subpopulation[] subpops) {
-		// TODO Auto-generated method stub
-		// Breed the subpopulations
+	public Population breedMetaPopulation(final EvolutionState state, final Population metaPop) {
+		Population newPop = null;
+
+		if (clonePipelineAndPopulation) {
+			newPop = (Population) metaPop.emptyClone();
+		} else {
+			if (backupPopulation == null) {
+				backupPopulation = (Population) metaPop.emptyClone();
+			}
+			newPop = backupPopulation;
+			newPop.clear();
+			backupPopulation = metaPop;
+		}
+
+		// Load the individuals into the meta population
+		loadPopulation(state, newPop);
+		breedSubpopulations(state, newPop);
+		breedIndividuals(state, newPop);
+
+		return newPop;
+	}
+
+	protected void loadPopulation(EvolutionState state, Population pop) {
+		// Load in the subpopulations into the meta population.
+		for (int i = 0; i < state.population.subpops.length; i++) {
+			Subpopulation subpop = state.population.subpops[i];
+			pop.subpops[i] = (Subpopulation) subpop.emptyClone();
+
+			for (int j = 0; j < subpop.individuals.length; j++) {
+				pop.subpops[i].individuals[j] = (Individual) subpop.individuals[j].clone();
+			}
+		}
+	}
+
+	// Updates the population provided in the reference.
+	protected void breedSubpopulations(EvolutionState state, Population pop) {
+		// The maximum number of threads required is the
+		// number of subpopulations to breed.
+		int subpopDiff = pop.subpops.length - state.population.subpops.length;
+		int numThreads = Math.min(subpopDiff, state.breedthreads);
+
+		if (numThreads < state.breedthreads) {
+			state.output.warnOnce("Number of subpopulations to breed (" + numThreads +") is smaller than number of breedthreads (" + state.breedthreads + "), so fewer breedthreads will be created.");
+		}
+
+		// Breed the groups, i.e., the subpopulations.
+		// TODO need to have another look at this.
+		int numGroups[][] = new int[numThreads][pop.subpops.length];
+		int from[][] = new int[numThreads][pop.subpops.length];
+
+		for (int i = 0; i < numThreads; i++) {
+			// TODO
+		}
+	}
+
+	// Updates the population provided in the reference.
+	protected void breedIndividuals(EvolutionState state, Population pop) {
+		// Use the maximum number of threads for MLS breeding,
+		// as the subpopulation sizes are variable in MLS.
+
+		int numThreads = state.breedthreads;
+		// TODO
+	}
+
+	public Population breedFinalPopulation(final EvolutionState state, final Population metaPop) {
+		Population newPop = null;
+
 
 		return null;
 	}
 
-	private Population breedFinalPopulation(final EvolutionState state, final Subpopulation[] subpops) {
-		// TODO Auto-generated method stub
-		return null;
+	private class MultilevelSelectionBreederThread implements Runnable {
+		// TODO
+
+		public void run() {
+
+		}
 	}
 
 }
