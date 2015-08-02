@@ -1,6 +1,7 @@
 package app.evolution.multilevel;
 
 import ec.Breeder;
+import ec.BreedingPipeline;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.Initializer;
@@ -147,6 +148,7 @@ public class MultilevelSelectionBreeder extends Breeder {
 
 		Subpopulation[] interSubpops = new Subpopulation[state.population.subpops.length];
 
+		// TODO
 
 		return null;
 	}
@@ -197,13 +199,60 @@ public class MultilevelSelectionBreeder extends Breeder {
 		}
 
 		// Breed the groups, i.e., the subpopulations.
-		// TODO need to have another look at this.
-		int numGroups[][] = new int[numThreads][pop.subpops.length];
-		int from[][] = new int[numThreads][pop.subpops.length];
+		int numGroups[] = new int[numThreads];
+		int from[] = new int[numThreads];
+
+		int subpopsPerThread = subpopDiff / numThreads;
+		int slop = subpopDiff - numThreads * subpopsPerThread;
+		int currentFrom = 0;
 
 		for (int i = 0; i < numThreads; i++) {
+			if (slop > 0) {
+				numGroups[i] = subpopsPerThread + 1;
+				slop--;
+			} else {
+				numGroups[i] = subpopsPerThread;
+			}
+
+			if (numGroups[i] == 0) {
+				state.output.warnOnce("More threads exist than can be used to breed some subpopulations");
+			}
+
+			from[i] = currentFrom;
+			currentFrom += numGroups[i];
+		}
+
+		if (numThreads==1) {
+			breedSubpopChunk(pop, state, numGroups[0], from[0], 0);
+		} else {
+			for (int i = 0; i < numThreads; i++) {
+				SubpopBreederThread r = new SubpopBreederThread();
+				r.newpop = pop;
+				r.numGroup = numGroups[i];
+				r.from = from[i];
+				r.threadnum = i;
+				r.parent = this;
+				pool.start(r, "ECJ Breeding Thread " + i);
+			}
+			pool.joinAll();
+		}
+	}
+
+	protected void breedSubpopChunk(Population newpop,
+			EvolutionState state,
+			int numGroup,
+			int from,
+			int threadnum) {
+		// TODO work on the shouldBreedSubpop later down the line.
+		BreedingPipeline bp = null;
+		if (clonePipelineAndPopulation) {
+			// TODO
+		} else {
 			// TODO
 		}
+
+		int index;
+		// TODO
 	}
 
 	// Updates the population provided in the reference.
@@ -215,6 +264,14 @@ public class MultilevelSelectionBreeder extends Breeder {
 		// TODO
 	}
 
+	protected void breedIndChunk(Population newpop,
+			EvolutionState state,
+			int[] numinds,
+			int[] from,
+			int threadnum) {
+		// TODO
+	}
+
 	public Population breedFinalPopulation(final EvolutionState state, final Population metaPop) {
 		Population newPop = null;
 
@@ -222,8 +279,26 @@ public class MultilevelSelectionBreeder extends Breeder {
 		return null;
 	}
 
-	private class MultilevelSelectionBreederThread implements Runnable {
-		// TODO
+	private class SubpopBreederThread implements Runnable {
+		Population newpop;
+		int numGroup;
+		int from;
+		EvolutionState state;
+		int threadnum;
+		MultilevelSelectionBreeder parent;
+
+		public void run() {
+			parent.breedSubpopChunk(newpop, state, numGroup, from, threadnum);
+		}
+	}
+
+	private class IndividualBreederThread implements Runnable {
+		Population newpop;
+		int[] numInds;
+		int[] from;
+		EvolutionState state;
+		int threadnum;
+		MultilevelSelectionBreeder parent;
 
 		public void run() {
 
