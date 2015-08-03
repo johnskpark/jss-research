@@ -1,13 +1,18 @@
 package app.evolution.multilevel;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+
 import ec.Breeder;
-import ec.BreedingPipeline;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.Initializer;
 import ec.Population;
 import ec.Subpopulation;
 import ec.util.Parameter;
+import ec.util.RandomChoice;
 import ec.util.ThreadPool;
 
 // In multilevel selection, the subpopulations represent the groups,
@@ -23,6 +28,11 @@ public class MLSBreeder extends Breeder {
     public static final String P_MUTATION_PROB = "mutation-prob";
 
     public static final int NOT_SET = -1;
+
+    public static final int CROSSOVER_PARENTS_REQUIRED = 2;
+    public static final int MUTATION_PARENTS_REQUIRED = 1;
+    public static final int CROSSOVER_INDS_PRODUCED = 2;
+    public static final int MUTATION_INDS_PRODUCED = 1;
 
     /** An array[subpop] of the number of elites to keep for that subpopulation */
     private int[] elite;
@@ -290,28 +300,74 @@ public class MLSBreeder extends Breeder {
 
 	private int produceSubpopCrossover(final int min,
 			final int max,
-			final int index,
+			final int start,
 			final Population newpop,
 			final EvolutionState state,
 			final int threadnum) {
-		int total = 1;
+		if (start < CROSSOVER_PARENTS_REQUIRED) {
+			state.output.fatal("TODO"); // TODO not enough parents.
+		}
 
-		// TODO
+		int n = CROSSOVER_INDS_PRODUCED;
+		if (n < min) n = min;
+		if (n > max) n = max;
 
-		return total;
+		for (int i = start; i < n + start; i++) {
+			// Select two random subpopulations from 0 to (start-1) to crossover based on their fitness.
+			double[] fitnesses1 = new double[start];
+			double[] fitnesses2 = new double[start-1];
+			for (int j = 0; j < start - 1; j++) {
+				fitnesses1[j] = fitnesses2[j] = ((MLSSubpopulation) newpop.subpops[j]).getFitness().fitness();
+			}
+			fitnesses1[start-1] = ((MLSSubpopulation) newpop.subpops[start-1]).getFitness().fitness();
+
+			// Randomly select the parents for crossover.
+			int parent1 = RandomChoice.pickFromDistribution(fitnesses1, state.random[threadnum].nextDouble());
+
+			// Replace the selected parent with the subpopulation at start-1 so that its not considered for selection.
+			// TODO don't know if this is correct or not.
+			if (parent1 != start - 1) {
+				fitnesses2[parent1] = fitnesses2[start-1];
+			}
+			int parent2 = RandomChoice.pickFromDistribution(fitnesses2, state.random[threadnum].nextDouble());
+
+			if (parent1 == parent2) {
+				parent2 = start-1;
+			}
+
+			// TODO
+		}
+
+		return n;
 	}
 
 	private int produceSubpopMutation(final int min,
 			final int max,
-			final int index,
+			final int start,
 			final Population newpop,
 			final EvolutionState state,
 			final int threadnum) {
-		int total = 1;
+		if (start < MUTATION_PARENTS_REQUIRED) {
+			state.output.fatal("TODO");
+		}
 
-		// TODO
+		int n = MUTATION_INDS_PRODUCED;
+		if (n < min) n = min;
+		if (n > max) n = max;
 
-		return total;
+		for (int i = 0; i < n + start; i++) {
+			// Select a random subpopulation from 0 to (start-1) to mutate based on their fitness.
+
+			double[] fitnesses = new double[start];
+			for (int j = 0; j < start; j++) {
+				fitnesses[j] = ((MLSSubpopulation) newpop.subpops[j]).getFitness().fitness();
+			}
+
+			// Randomly select the parents for crossover.
+			int parent = RandomChoice.pickFromDistribution(fitnesses, state.random[threadnum].nextDouble());
+		}
+
+		return n;
 	}
 
 	// Updates the population provided in the reference.
