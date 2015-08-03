@@ -6,7 +6,7 @@ import ec.simple.SimpleBreeder;
 import ec.util.Parameter;
 
 // TODO right, I need a selection evaluator and a breeder perhaps?
-public class MultilevelSelectionEvaluator extends Evaluator {
+public class MLSEvaluator extends Evaluator {
 
     // the preamble for selecting partners from each subpopulation
     public static final String P_SUBPOP = "subpop";

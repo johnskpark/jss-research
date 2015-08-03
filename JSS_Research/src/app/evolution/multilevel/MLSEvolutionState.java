@@ -8,7 +8,8 @@ import ec.simple.SimpleEvolutionState;
 import ec.util.Checkpoint;
 import ec.util.Parameter;
 
-public class MultilevelSelectionEvolutionState extends SimpleEvolutionState {
+// FIXME make MLSEvolutionState extend EvolutionState instead of SimpleEvolutionState.
+public class MLSEvolutionState extends SimpleEvolutionState {
 
 	// Evaluator can breed the subpopulation from here.
 
@@ -23,11 +24,11 @@ public class MultilevelSelectionEvolutionState extends SimpleEvolutionState {
 
 		// Checks to make sure that the different components are capable
 		// of handling multilevel selection.
-		if (!(state.evaluator instanceof MultilevelSelectionEvaluator)) {
+		if (!(state.evaluator instanceof MLSEvaluator)) {
 			state.output.fatal("Evaluator is not an instance of MultilevelSelectionEvaluator");
 		}
 
-		if (!(state.breeder instanceof MultilevelSelectionBreeder)) {
+		if (!(state.breeder instanceof MLSBreeder)) {
 			state.output.fatal("Breeder is not an instance of MultilevelSelectionBreeder");
 		}
 	}
@@ -52,6 +53,11 @@ public class MultilevelSelectionEvolutionState extends SimpleEvolutionState {
 		if (generation > 0) {
 			output.message("Generation " + generation);
 		}
+
+		// EVALUATION
+		statistics.preEvaluationStatistics(this);
+		evaluator.evaluatePopulation(this);
+		statistics.postEvaluationStatistics(this);
 
 		// SHOULD WE QUIT?
 		if (evaluator.runComplete(this) && quitOnRunComplete) {
@@ -90,7 +96,7 @@ public class MultilevelSelectionEvolutionState extends SimpleEvolutionState {
 		// BREEDING
 		statistics.preBreedingStatistics(this);
 
-		metaPopulation = ((MultilevelSelectionBreeder) breeder).breedMetaPopulation(this, metaPopulation);
+		metaPopulation = ((MLSBreeder) breeder).breedMetaPopulation(this, metaPopulation);
 
 		// POST-BREEDING EXCHANGING
 		statistics.postBreedingStatistics(this);
@@ -100,13 +106,8 @@ public class MultilevelSelectionEvolutionState extends SimpleEvolutionState {
 		metaPopulation = exchanger.postBreedingExchangePopulation(this);
 		statistics.postPostBreedingExchangeStatistics(this);
 
-		// EVALUATION
-		statistics.preEvaluationStatistics(this);
-		evaluator.evaluatePopulation(this);
-		statistics.postEvaluationStatistics(this);
-
 		// SELECTION
-		population = ((MultilevelSelectionBreeder) breeder).breedFinalPopulation(this, metaPopulation);
+		population = ((MLSBreeder) breeder).breedFinalPopulation(this, metaPopulation);
 
 		// INCREMENT GENERATION AND CHECKPOINT
 		generation++;

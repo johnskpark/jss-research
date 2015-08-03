@@ -12,24 +12,31 @@ import ec.util.ThreadPool;
 
 // In multilevel selection, the subpopulations represent the groups,
 // in which individuals can be a part of.
-public class MultilevelSelectionBreeder extends Breeder {
+public class MLSBreeder extends Breeder {
 
     public static final String P_ELITE = "elite";
     public static final String P_ELITE_FRAC = "elite-fraction";
     public static final String P_REEVALUATE_ELITES = "reevaluate-elites";
     public static final String P_SEQUENTIAL_BREEDING = "sequential";
     public static final String P_CLONE_PIPELINE_AND_POPULATION = "clone-pipeline-and-population";
-    /** An array[subpop] of the number of elites to keep for that subpopulation */
-    public int[] elite;
-    public double[] eliteFrac;
-    public boolean[] reevaluateElites;
-    public boolean sequentialBreeding;
-    public boolean clonePipelineAndPopulation;
-    public Population backupPopulation = null;
+    public static final String P_CROSSOVER_PROB = "crossover-prob";
+    public static final String P_MUTATION_PROB = "mutation-prob";
 
     public static final int NOT_SET = -1;
 
-    public ThreadPool pool = new ThreadPool();
+    /** An array[subpop] of the number of elites to keep for that subpopulation */
+    private int[] elite;
+    private double[] eliteFrac;
+    private boolean[] reevaluateElites;
+    private boolean sequentialBreeding;
+    private boolean clonePipelineAndPopulation;
+    private Population backupPopulation = null;
+
+    // TODO temporary code.
+    private double groupCrossoverRate = 0.9;
+    private double groupMutationRate = 0.1;
+
+    private ThreadPool pool = new ThreadPool();
 
     public boolean usingElitism(int subpopulation) {
     	return (elite[subpopulation] > 0 ) || (eliteFrac[subpopulation] > 0);
@@ -119,6 +126,8 @@ public class MultilevelSelectionBreeder extends Breeder {
     		}
     	}
 
+    	// TODO get the crossover and mutation rates.
+
     	state.output.exitIfErrors();
     }
 
@@ -140,7 +149,7 @@ public class MultilevelSelectionBreeder extends Breeder {
 			}
 			newPop = backupPopulation;
 			newPop.clear();
-			backupPopulation = state.population;  // swap in
+			backupPopulation = (Population) state.population;  // swap in
 		}
 
 	    // load elites into top of newpop
@@ -164,7 +173,7 @@ public class MultilevelSelectionBreeder extends Breeder {
 			}
 			newPop = backupPopulation;
 			newPop.clear();
-			backupPopulation = metaPop;
+			backupPopulation = (Population) metaPop;
 		}
 
 		// Load the individuals into the meta population
@@ -198,7 +207,7 @@ public class MultilevelSelectionBreeder extends Breeder {
 			state.output.warnOnce("Number of subpopulations to breed (" + numThreads +") is smaller than number of breedthreads (" + state.breedthreads + "), so fewer breedthreads will be created.");
 		}
 
-		// Breed the groups, i.e., the subpopulations.
+		// Partition the groups into the thread for multithreading purposes.
 		int numGroups[] = new int[numThreads];
 		int from[] = new int[numThreads];
 
@@ -222,6 +231,7 @@ public class MultilevelSelectionBreeder extends Breeder {
 			currentFrom += numGroups[i];
 		}
 
+		// Breed the groups, i.e., the subpopulations.
 		if (numThreads==1) {
 			breedSubpopChunk(pop, state, numGroups[0], from[0], 0);
 		} else {
@@ -243,16 +253,65 @@ public class MultilevelSelectionBreeder extends Breeder {
 			int numGroup,
 			int from,
 			int threadnum) {
-		// TODO work on the shouldBreedSubpop later down the line.
-		BreedingPipeline bp = null;
-		if (clonePipelineAndPopulation) {
-			// TODO
+		// FIXME The breeding of the subpopulations is hard coded into the breeder.
+		// This will need to be fixed sometime later down the line.
+		int index = from;
+		int upperBound = from + numGroup;
+		while (index < upperBound) {
+			index += produceSubpop(1, upperBound - index, index, newpop, state, threadnum);
+
+			// TODO how will I determine the number of individuals generated at the end will be?
+
+			if (index > upperBound) {
+				state.output.fatal("TODO"); // TODO
+			}
+		}
+	}
+
+	private int produceSubpop(final int min,
+			final int max,
+			final int index,
+			final Population newpop,
+			final EvolutionState state,
+			final int threadnum) {
+		double value = state.random[threadnum].nextDouble();
+		int total = 0;
+
+		if (value < groupCrossoverRate) {
+			total = produceSubpopCrossover(min, max, index, newpop, state, threadnum);
+		} else if (value < groupCrossoverRate + groupMutationRate) { // Should always happen for the current code.
+			total = produceSubpopMutation(min, max, index, newpop, state, threadnum);
 		} else {
-			// TODO
+			state.output.fatal("TODO"); // TODO
 		}
 
-		int index;
+		return total; // TODO
+	}
+
+	private int produceSubpopCrossover(final int min,
+			final int max,
+			final int index,
+			final Population newpop,
+			final EvolutionState state,
+			final int threadnum) {
+		int total = 1;
+
 		// TODO
+
+		return total;
+	}
+
+	private int produceSubpopMutation(final int min,
+			final int max,
+			final int index,
+			final Population newpop,
+			final EvolutionState state,
+			final int threadnum) {
+		int total = 1;
+
+		// TODO
+
+		return total;
 	}
 
 	// Updates the population provided in the reference.
@@ -285,7 +344,7 @@ public class MultilevelSelectionBreeder extends Breeder {
 		int from;
 		EvolutionState state;
 		int threadnum;
-		MultilevelSelectionBreeder parent;
+		MLSBreeder parent;
 
 		public void run() {
 			parent.breedSubpopChunk(newpop, state, numGroup, from, threadnum);
@@ -298,7 +357,7 @@ public class MultilevelSelectionBreeder extends Breeder {
 		int[] from;
 		EvolutionState state;
 		int threadnum;
-		MultilevelSelectionBreeder parent;
+		MLSBreeder parent;
 
 		public void run() {
 
