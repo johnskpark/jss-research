@@ -17,7 +17,9 @@ public class MLSEvolutionState extends SimpleEvolutionState {
 	 * metaPopulation stores the intermediate subpopulations of individuals
 	 * which are constructed for the multi-level selection procedure.
 	 */
-	public Population metaPopulation;
+	private Population metaPopulation;
+
+	private int numIndividuals;
 
 	public void setup(final EvolutionState state, final Parameter base) {
 		super.setup(state, base);
@@ -25,16 +27,27 @@ public class MLSEvolutionState extends SimpleEvolutionState {
 		// Checks to make sure that the different components are capable
 		// of handling multilevel selection.
 		if (!(state.evaluator instanceof MLSEvaluator)) {
-			state.output.fatal("Evaluator is not an instance of MultilevelSelectionEvaluator");
+			output.fatal("Evaluator is not an instance of MultilevelSelectionEvaluator");
 		}
 
 		if (!(state.breeder instanceof MLSBreeder)) {
-			state.output.fatal("Breeder is not an instance of MultilevelSelectionBreeder");
+			output.fatal("Breeder is not an instance of MultilevelSelectionBreeder");
 		}
 	}
 
 	public void startFresh() {
 		super.startFresh();
+
+		numIndividuals = 0;
+
+		// Check to ensure that the subpopulation is a type of MLSSubpopulation.
+		for (int subpop = 0; subpop < population.subpops.length; subpop++) {
+			if (!(population.subpops[subpop] instanceof MLSSubpopulation)) {
+				output.fatal("Subpopulation " + subpop + " is not of type MLSSubpopulation.");
+			}
+
+			numIndividuals += population.subpops[subpop].individuals.length;
+		}
 
 		// Specific to multilevel selection.
 		metaPopulation = (Population) population.emptyClone();
@@ -122,7 +135,7 @@ public class MLSEvolutionState extends SimpleEvolutionState {
 	}
 
 	protected void breedMetaPopulation() {
-		// TODO
+		// TODO Right, need to incorporate this into the program later down the line.
 	}
 
 	protected void evaluateMetaPopulation() {
@@ -133,10 +146,15 @@ public class MLSEvolutionState extends SimpleEvolutionState {
 		// TODO
 	}
 
+	@Override
 	public void finish(int result) {
         statistics.finalStatistics(this,result);
         finisher.finishPopulation(this,result);
         exchanger.closeContacts(this,result);
         evaluator.closeContacts(this,result);
+	}
+
+	public int getTotalNumIndividuals() {
+		return numIndividuals;
 	}
 }
