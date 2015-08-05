@@ -376,7 +376,7 @@ public class MLSBreeder extends Breeder {
 			final EvolutionState state,
 			final int threadnum) {
 		if (start < MUTATION_PARENTS_REQUIRED) {
-			state.output.fatal("TODO");
+			state.output.fatal("There are insufficient number of subpopulations to generate new subpopulations. Number of subpopulations: " + start + ", subpopulations required: " + MUTATION_PARENTS_REQUIRED);
 		}
 
 		int n = MUTATION_INDS_PRODUCED;
@@ -440,11 +440,17 @@ public class MLSBreeder extends Breeder {
 
 	// Updates the population provided in the reference.
 	protected void breedIndividuals(EvolutionState state, Population pop) {
-		// Use the maximum number of threads for MLS breeding,
-		// as the subpopulation sizes are variable in MLS.
+		// The number of threads will either be amount of threads specified,
+		// or the number of individuals which need to be generated
+		// (whichever one is smaller).
 
-		int numThreads = state.breedthreads;
+		int numInds = ((MLSEvolutionState) state).getTotalNumIndividuals();
+		int numThreads = Math.min(numInds, state.breedthreads);
+
 		// TODO Count the total number of individuals in the population. This will need to be fixed to some size.
+		for (int ind = 0; ind < numInds; ind++) {
+
+		}
 	}
 
 	protected void breedIndChunk(Population newpop,
@@ -460,6 +466,27 @@ public class MLSBreeder extends Breeder {
 
 
 		return null;
+	}
+
+	private int selectSubpopulation(final EvolutionState state,
+			final Subpopulation[] subpops,
+			final int threadnum,
+			final int length) {
+		// Assume Koza, i.e., between [0,inf) by normalising it using the softmax sigmoid.
+		double[] fitnesses = new double[length];
+		double totalFitness = 0.0;
+		for (int i = 0; i < length; i++) {
+			MLSSubpopulation subpop = (MLSSubpopulation) subpops[i];
+			fitnesses[i] = subpop.getFitness().fitness();
+			totalFitness += fitnesses[i];
+		}
+
+		fitnesses[0] /= totalFitness;
+		for (int i = 1; i < length; i++) {
+			fitnesses[i] = fitnesses[i] / totalFitness + fitnesses[i-1];
+		}
+
+		return RandomChoice.pickFromDistribution(fitnesses, state.random[threadnum].nextDouble());
 	}
 
 	private class SubpopBreederThread implements Runnable {
