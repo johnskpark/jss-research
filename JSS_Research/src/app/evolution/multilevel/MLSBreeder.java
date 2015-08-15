@@ -505,6 +505,9 @@ public class MLSBreeder extends Breeder {
 			int from,
 			int threadnum) {
 		// TODO
+
+		// I might need to keep a tracker on what the latest individual has been generated. Also need to ensure
+		// that adding an individual to a subpopulation is synchronised.
 	}
 
 	public Population breedFinalPopulation(final EvolutionState state, final Population metaPop) {
