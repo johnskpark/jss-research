@@ -450,8 +450,6 @@ public class MLSBreeder extends Breeder {
 		// or the number of individuals which need to be generated
 		// (whichever one is smaller).
 
-		// TODO right, I need to figure out how many individuals are currently in the subpopulations.
-
 		int numInds = ((MLSEvolutionState) state).getTotalNumIndividuals();
 		int numThreads = Math.min(numInds, state.breedthreads);
 
@@ -459,16 +457,52 @@ public class MLSBreeder extends Breeder {
 			state.output.warnOnce("Number of subpopulations to breed (" + numThreads +") is smaller than number of breedthreads (" + state.breedthreads + "), so fewer breedthreads will be created.");
 		}
 
-		// TODO Count the total number of individuals in the population. This will need to be fixed to some size.
-		for (int ind = 0; ind < numInds; ind++) {
-			// TODO right, what do I do here?
+		// FIXME Refactor it sometime later down the line.
+		// Partition the groups into the thread for multithreading purposes.
+		int numToBreed[] = new int[numThreads];
+		int from[] = new int[numThreads];
+
+		int indsPerThread = numInds / numThreads;
+		int slop = numInds - numThreads * indsPerThread;
+		int currentFrom = 0;
+
+		for (int thread = 0; thread < numThreads; thread++) {
+			if (slop > 0) {
+				numToBreed[thread] = indsPerThread + 1;
+				slop--;
+			} else {
+				numToBreed[thread] = indsPerThread;
+			}
+
+			if (numToBreed[thread] == 0) {
+				state.output.warnOnce("More threads exist than can be used to breed some subpopulations");
+			}
+
+			from[thread] = currentFrom;
+			currentFrom += numToBreed[thread];
+		}
+
+		// Breed the groups, i.e., the subpopulations.
+		if (numThreads==1) {
+			breedIndChunk(pop, state, numToBreed[0], from[0], 0);
+		} else {
+			for (int i = 0; i < numThreads; i++) {
+				IndividualBreederThread r = new IndividualBreederThread();
+				r.newpop = pop;
+				r.numInds = numToBreed[i];
+				r.from = from[i];
+				r.threadnum = i;
+				r.parent = this;
+				pool.start(r, "ECJ Breeding Thread " + i);
+			}
+			pool.joinAll();
 		}
 	}
 
 	protected void breedIndChunk(Population newpop,
 			EvolutionState state,
-			int[] numinds,
-			int[] from,
+			int numInds,
+			int from,
 			int threadnum) {
 		// TODO
 	}
@@ -501,6 +535,32 @@ public class MLSBreeder extends Breeder {
 		return RandomChoice.pickFromDistribution(fitnesses, state.random[threadnum].nextDouble());
 	}
 
+	private interface BreederThreadFactory {
+		public Runnable createBreederThread(Population newpop,
+				int numToBreed,
+				int from,
+				EvolutionState state,
+				int threadnum,
+				MLSBreeder parent);
+	}
+
+	private class SubpopBreederThreadFactory implements BreederThreadFactory {
+		public Runnable createBreederThread(Population newpop,
+				int numToBreed,
+				int from,
+				EvolutionState state,
+				int threadnum,
+				MLSBreeder parent) {
+			SubpopBreederThread r = new SubpopBreederThread();
+			r.newpop = newpop;
+			r.numGroup = numToBreed;
+			r.from = from;
+			r.threadnum = threadnum;
+			r.parent = parent;
+			return r;
+		}
+	}
+
 	private class SubpopBreederThread implements Runnable {
 		Population newpop;
 		int numGroup;
@@ -514,16 +574,33 @@ public class MLSBreeder extends Breeder {
 		}
 	}
 
+	private class IndividualBreederThreadFactory implements BreederThreadFactory {
+		public Runnable createBreederThread(Population newpop,
+				int numToBreed,
+				int from,
+				EvolutionState state,
+				int threadnum,
+				MLSBreeder parent) {
+			IndividualBreederThread r = new IndividualBreederThread();
+			r.newpop = newpop;
+			r.numInds = numToBreed;
+			r.from = from;
+			r.threadnum = threadnum;
+			r.parent = parent;
+			return r;
+		}
+	}
+
 	private class IndividualBreederThread implements Runnable {
 		Population newpop;
-		int[] numInds;
-		int[] from;
+		int numInds;
+		int from;
 		EvolutionState state;
 		int threadnum;
 		MLSBreeder parent;
 
 		public void run() {
-
+			parent.breedIndChunk(newpop, state, numInds, from, threadnum);
 		}
 	}
 
