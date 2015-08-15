@@ -1,10 +1,5 @@
 package app.evolution.multilevel;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
-
 import ec.Breeder;
 import ec.EvolutionState;
 import ec.Individual;
@@ -17,9 +12,18 @@ import ec.util.ThreadPool;
 
 // In multilevel selection, the subpopulations represent the groups,
 // in which individuals can be a part of.
+
+/**
+ * TODO javadoc.
+ *
+ * @author parkjohn
+ *
+ */
 public class MLSBreeder extends Breeder {
 
-    public static final String P_ELITE = "elite";
+	private static final long serialVersionUID = -6914152113435773281L;
+
+	public static final String P_ELITE = "elite";
     public static final String P_ELITE_FRAC = "elite-fraction";
     public static final String P_REEVALUATE_ELITES = "reevaluate-elites";
     public static final String P_SEQUENTIAL_BREEDING = "sequential";
@@ -42,7 +46,7 @@ public class MLSBreeder extends Breeder {
     private boolean clonePipelineAndPopulation;
     private Population backupPopulation = null;
 
-    // TODO temporary code.
+    // TODO temporary default parameters.
     private double groupCrossoverRate = 0.9;
     private double groupMutationRate = 0.1;
 
@@ -162,9 +166,6 @@ public class MLSBreeder extends Breeder {
 			backupPopulation = (Population) state.population;  // swap in
 		}
 
-	    // load elites into top of newpop
-		// loadElites(state, newPop);
-
 		Subpopulation[] interSubpops = new Subpopulation[state.population.subpops.length];
 
 		// TODO
@@ -195,10 +196,14 @@ public class MLSBreeder extends Breeder {
 	}
 
 	protected void loadPopulation(EvolutionState state, Population pop) {
+		int buffer = ((MLSEvolutionState) state).getTotalNumIndividuals();
+
 		// Load in the subpopulations into the meta population.
 		for (int i = 0; i < state.population.subpops.length; i++) {
 			Subpopulation subpop = state.population.subpops[i];
+
 			pop.subpops[i] = (Subpopulation) subpop.emptyClone();
+			pop.subpops[i].individuals = new Individual[subpop.individuals.length + buffer];
 
 			for (int j = 0; j < subpop.individuals.length; j++) {
 				pop.subpops[i].individuals[j] = (Individual) subpop.individuals[j].clone();
@@ -208,8 +213,7 @@ public class MLSBreeder extends Breeder {
 
 	// Updates the population provided in the reference.
 	protected void breedSubpopulations(EvolutionState state, Population pop) {
-		// The maximum number of threads required is the
-		// number of subpopulations to breed.
+		// The maximum number of threads required is the number of subpopulations to breed.
 		int subpopDiff = pop.subpops.length - state.population.subpops.length;
 		int numThreads = Math.min(subpopDiff, state.breedthreads);
 
@@ -348,6 +352,7 @@ public class MLSBreeder extends Breeder {
 			for (int child = 0; child < n; child++) {
 				// Populate the child subpopulation with individuals.
 				children[child] = (MLSSubpopulation) parents[child].emptyClone();
+
 				for (int ind = 0; ind < parents[child].individuals.length; ind++) {
 					if (ind == swapIndices[child]) {
 						children[child].individuals[ind] = parents[(child+1)%length].individuals[swapIndices[(child+1)%length]];
@@ -399,6 +404,7 @@ public class MLSBreeder extends Breeder {
 
 			for (int child = 0; child < n; child++) {
 				boolean addIndividual = state.random[threadnum].nextBoolean();
+
 				if (addIndividual) {
 					// Add a new individual to the subpopulation.
 					children[child] = (MLSSubpopulation) parent.emptyClone();
@@ -444,12 +450,18 @@ public class MLSBreeder extends Breeder {
 		// or the number of individuals which need to be generated
 		// (whichever one is smaller).
 
+		// TODO right, I need to figure out how many individuals are currently in the subpopulations.
+
 		int numInds = ((MLSEvolutionState) state).getTotalNumIndividuals();
 		int numThreads = Math.min(numInds, state.breedthreads);
 
+		if (numThreads < state.breedthreads) {
+			state.output.warnOnce("Number of subpopulations to breed (" + numThreads +") is smaller than number of breedthreads (" + state.breedthreads + "), so fewer breedthreads will be created.");
+		}
+
 		// TODO Count the total number of individuals in the population. This will need to be fixed to some size.
 		for (int ind = 0; ind < numInds; ind++) {
-
+			// TODO right, what do I do here?
 		}
 	}
 
