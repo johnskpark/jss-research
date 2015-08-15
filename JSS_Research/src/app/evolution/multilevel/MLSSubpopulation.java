@@ -3,10 +3,13 @@ package app.evolution.multilevel;
 import ec.EvolutionState;
 import ec.Fitness;
 import ec.Group;
+import ec.Individual;
 import ec.Subpopulation;
 import ec.util.Parameter;
 
 public class MLSSubpopulation extends Subpopulation {
+
+	private static final long serialVersionUID = 1740278116450965418L;
 
 	public static final String P_FITNESS = "fitness";
 
@@ -25,10 +28,18 @@ public class MLSSubpopulation extends Subpopulation {
 
 	@Override
 	public Group emptyClone() {
-		// TODO this is ambiguous, might need to fix sometime later down the line.
-		MLSSubpopulation clone = (MLSSubpopulation) super.emptyClone();
-		clone.fitness = fitness;
-		return clone;
+		try {
+			// super.emptyClone() can't be called here.
+			MLSSubpopulation p = (MLSSubpopulation)clone();
+
+			p.species = species;
+			p.individuals = new Individual[individuals.length];
+			p.fitness = fitness;
+
+			return p;
+		} catch (CloneNotSupportedException e) {
+			throw new InternalError();
+		}
 	}
 
 	public Fitness getFitness() {

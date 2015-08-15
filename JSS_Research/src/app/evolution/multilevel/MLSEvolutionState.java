@@ -1,14 +1,14 @@
 package app.evolution.multilevel;
 
 import ec.EvolutionState;
-import ec.Individual;
 import ec.Population;
 import ec.Subpopulation;
-import ec.simple.SimpleEvolutionState;
 import ec.util.Checkpoint;
 import ec.util.Parameter;
 
 public class MLSEvolutionState extends EvolutionState {
+
+	private static final long serialVersionUID = -1318016754719247209L;
 
 	// Evaluator can breed the subpopulation from here.
 
