@@ -16,8 +16,7 @@ public class MLSEvaluator extends Evaluator {
 
 		// TODO check what sequential breeder means.
 		// Check the type of the breeders, which are set up after the evaluators.
-		if (state.breeder instanceof SimpleBreeder &&
-				((SimpleBreeder) state.breeder).sequentialBreeding) {
+		if (state.breeder instanceof MLSBreeder && ((MLSBreeder) state.breeder).isSequentialBreeding()) {
 			state.output.message("The Breeder is breeding sequentially, so the MultilevelSelectionEvaluator is also evaluating sequentially.");
 		}
 

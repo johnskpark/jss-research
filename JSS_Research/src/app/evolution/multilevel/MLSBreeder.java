@@ -189,6 +189,10 @@ public class MLSBreeder extends Breeder {
 		return null;
 	}
 
+	public boolean isSequentialBreeding() {
+		return sequentialBreeding;
+	}
+
 	public Population breedMetaPopulation(final EvolutionState state, final Population metaPop) {
 		Population newPop = null;
 
@@ -636,14 +640,14 @@ public class MLSBreeder extends Breeder {
 		List<Subpopulation> metaSubpops = Arrays.asList(metaPop.subpops);
 		Collections.sort(metaSubpops, new SubpopulationComparator());
 
-		List<Data> bestGroupInds = new ArrayList<Data>(numIndividuals);
+		List<IndividualSubpop> bestGroupInds = new ArrayList<IndividualSubpop>(numIndividuals);
 
 		for (int s = 0; s < pop.subpops.length; s++) {
 			Subpopulation subpop = metaSubpops.get(s);
 			pop.subpops[s] = subpop;
 
 			for (int i = 0; i < subpop.individuals.length; i++) {
-				Data d = new Data();
+				IndividualSubpop d = new IndividualSubpop();
 				d.ind = subpop.individuals[i];
 				d.subpop = s;
 				bestGroupInds.add(d);
@@ -656,7 +660,7 @@ public class MLSBreeder extends Breeder {
 		Map<Integer, List<Individual>> subpopMap = new HashMap<Integer, List<Individual>>();
 
 		for (int i = 0; i < numIndividuals; i++) {
-			Data d = bestGroupInds.get(i);
+			IndividualSubpop d = bestGroupInds.get(i);
 
 			if (!subpopMap.containsKey(d.subpop)) {
 				subpopMap.put(d.subpop, new ArrayList<Individual>());
@@ -802,13 +806,13 @@ public class MLSBreeder extends Breeder {
 		}
 	}
 
-	private class Data {
+	private class IndividualSubpop {
 		Individual ind;
 		int subpop;
 	}
 
-	private class IndividualComparator implements Comparator<Data> {
-		public int compare(Data d1, Data d2) {
+	private class IndividualComparator implements Comparator<IndividualSubpop> {
+		public int compare(IndividualSubpop d1, IndividualSubpop d2) {
 			if (d1.ind.fitness.betterThan(d2.ind.fitness)) {
 				return -1;
 			} else if (d1.ind.fitness.betterThan(d2.ind.fitness)) {
