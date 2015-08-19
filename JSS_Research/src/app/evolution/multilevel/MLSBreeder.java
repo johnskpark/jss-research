@@ -207,8 +207,18 @@ public class MLSBreeder extends Breeder {
 		return null;
 	}
 
+	/**
+	 * Returns true if we're doing sequential breeding.
+	 */
 	public boolean isSequentialBreeding() {
 		return sequentialBreeding;
+	}
+
+	/**
+	 * Returns true if we're doing sequential breeding and it's the subpopulation's turn (round robin, one subpopulation per generation).
+	 */
+	public boolean shouldBreedSubpop(EvolutionState state, int subpop, int threadnum) {
+		return !sequentialBreeding || (state.generation % state.population.subpops.length) == subpop;
 	}
 
 	public Population breedMetaPopulation(final EvolutionState state, final Population metaPop) {
