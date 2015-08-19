@@ -2,7 +2,7 @@ package app.evolution.multilevel;
 
 import ec.Evaluator;
 import ec.EvolutionState;
-import ec.simple.SimpleBreeder;
+import ec.Individual;
 import ec.util.Parameter;
 
 // TODO right, I need a selection evaluator and a breeder perhaps?
@@ -32,18 +32,23 @@ public class MLSEvaluator extends Evaluator {
 	}
 
 	@Override
-	public boolean runComplete(final EvolutionState state) {
-		return false;
-	}
-
-	@Override
 	public void evaluatePopulation(final EvolutionState state) {
 		// TODO Auto-generated method stub
 
+		// Right, how will this be done?
 	}
 
 	public void evaluateSubpopulation(final EvolutionState state, MLSSubpopulation subpop) {
-		// TODO Auto-generated method stub
+		// TODO Auto-generated method stub.
+	}
+
+	public void evaluateIndividual(final EvolutionState state, Individual ind) {
+		// TODO Auto-generated method stub.
+	}
+
+	@Override
+	public boolean runComplete(final EvolutionState state) {
+		return false;
 	}
 
 }

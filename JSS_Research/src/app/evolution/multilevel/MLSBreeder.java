@@ -24,7 +24,7 @@ import ec.util.ThreadPool;
 // in which individuals can be a part of.
 
 /**
- * TODO javadoc.
+ * TODO javadoc. Write down what the MLS breeder does.
  *
  * @author parkjohn
  *
@@ -59,9 +59,8 @@ public class MLSBreeder extends Breeder {
     private Population backupMetaPopulation = null;
     private Population backupPopulation = null;
 
-    // TODO temporary default parameters.
-    private double groupCrossoverRate = 0.9;
-    private double groupMutationRate = 0.1;
+    private double groupCrossoverRate;
+    private double groupMutationRate;
 
     // Temporary field variable to store the number of individuals
     // in each subpopulation in the meta population.
@@ -111,7 +110,7 @@ public class MLSBreeder extends Breeder {
     	}
 
     	int defaultSubpop = state.parameters.getInt(new Parameter(Initializer.P_POP).push(Population.P_DEFAULT_SUBPOP), null, 0);
-    	for(int x=0;x<size;x++) {
+    	for(int x = 0; x < size; x++) {
     		// get elites
     		if (state.parameters.exists(base.push(P_ELITE).push(""+x),null)) {
     			if (state.parameters.exists(base.push(P_ELITE_FRAC).push(""+x),null)) {
@@ -156,7 +155,26 @@ public class MLSBreeder extends Breeder {
     		}
     	}
 
-    	// TODO get the crossover and mutation rates.
+    	groupCrossoverRate = state.parameters.getDouble(base.push(P_CROSSOVER_PROB), null, 0);
+    	if (groupCrossoverRate < 0.0) {
+    		state.output.error("Group crossover rate must have a probability >= 0.0");
+    	}
+
+    	groupMutationRate = state.parameters.getDouble(base.push(P_MUTATION_PROB), null, 0);
+    	if (groupMutationRate < 0.0) {
+    		state.output.error("Group mutation rate must have a probability >= 0.0");
+    	}
+
+    	if (groupCrossoverRate + groupMutationRate == 0.0) {
+    		// Assign equal probabilities to crossover and mutation if both probabilities are zero.
+    		state.output.warning("The group probabilities have all zero probabilities -- this will be treated as a uniform distribution.  This could be an error.");
+    		groupCrossoverRate = 0.5;
+    		groupMutationRate = 0.5;
+    	} else if (groupCrossoverRate + groupMutationRate >= 1.0) {
+    		// Normalise if probabilities are greater than 1.0.
+    		groupCrossoverRate = groupCrossoverRate / (groupCrossoverRate + groupMutationRate);
+    		groupMutationRate = groupMutationRate / (groupCrossoverRate + groupMutationRate);
+    	}
 
     	state.output.exitIfErrors();
     }
