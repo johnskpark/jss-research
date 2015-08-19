@@ -66,14 +66,15 @@ public class MLSEvaluator extends Evaluator {
 			preAssessFitness[i] = postAssessFitness[i] || (state.generation == 0);  // always prepare (set up trials) on generation 0
 		}
 
-		GroupedProblemForm groupedProblem = (GroupedProblemForm) p_problem;
-		groupedProblem.preprocessPopulation(state, state.population, preAssessFitness, false);
+		// Should I be using the grouped problem form for this?
+		MLSProblemForm mlsProblem = (MLSProblemForm) p_problem;
+		mlsProblem.preprocessPopulation(state, state.population, preAssessFitness, false);
 
 		for (int subpop = 0; subpop < state.population.subpops.length; subpop++) {
 			evaluateSubpopulation(state, (MLSSubpopulation) state.population.subpops[subpop]);
 		}
 
-		groupedProblem.postprocessPopulation(state, state.population, postAssessFitness, false);
+		mlsProblem.postprocessPopulation(state, state.population, postAssessFitness, false);
 
         // TODO do evaluation. How will this work for MLS? Fuck, I don't really know what to do here.
 //		beforeCoevolutionaryEvaluation( state, state.population, (GroupedProblemForm)p_problem );
@@ -88,7 +89,7 @@ public class MLSEvaluator extends Evaluator {
 	public void evaluateSubpopulation(final EvolutionState state, MLSSubpopulation subpop) {
 		// TODO Auto-generated method stub.
 
-		// TODO How will I incorporate this along with the grouped problem form thing?
+		// How will I incorporate this along with the grouped problem form thing?
 	}
 
 	public void evaluateIndividual(final EvolutionState state, MLSSubpopulation subpop, Individual ind) {

@@ -18,7 +18,7 @@ import ec.coevolve.GroupedProblemForm;
 import ec.gp.GPProblem;
 import ec.util.Parameter;
 
-public class JasimaMultilevelProblem extends GPProblem implements GroupedProblemForm, IJasimaGPProblem {
+public class JasimaMultilevelProblem extends GPProblem implements MLSProblemForm, IJasimaGPProblem {
 
 	private static final long serialVersionUID = -5150181943760622786L;
 
@@ -51,11 +51,20 @@ public class JasimaMultilevelProblem extends GPProblem implements GroupedProblem
 	}
 
 	@Override
-	public void evaluate(final EvolutionState state,
-			final Individual[] ind,
+	public void evaluateSubpop(final EvolutionState state,
+			final MLSSubpopulation subpop,
 			final boolean[] updateFitness,
 			final boolean countVictoriesOnly,
 			final int[] subpops,
+			final int threadnum) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void evaluateInd(final EvolutionState state,
+			final Individual ind,
+			final int subpopulation,
 			final int threadnum) {
 		// TODO Auto-generated method stub
 
