@@ -418,7 +418,7 @@ public class MLSBreeder extends Breeder {
 				}
 
 				// Evaluate the child subpopulation.
-				((MLSEvaluator) state.evaluator).evaluateSubpopulation(state, children[child]);
+				((MLSEvaluator) state.evaluator).evaluateSubpopulation(state, children[child], index+child);
 
 				// Add the subpopulation to the population
 				newpop.subpops[index+child] = children[child];
@@ -500,7 +500,7 @@ public class MLSBreeder extends Breeder {
 				numIndividuals += numIndividualsPerSubpop[index+child];
 
 				// Evaluate the child subpopulation.
-				((MLSEvaluator) state.evaluator).evaluateSubpopulation(state, children[child]);
+				((MLSEvaluator) state.evaluator).evaluateSubpopulation(state, children[child], index+child);
 
 				// Add the subpopulation to the population
 				newpop.subpops[index+child] = children[child];
@@ -599,46 +599,58 @@ public class MLSBreeder extends Breeder {
 			final double[] subpopFitnesses,
 			int threadnum) {
 		// Randomly select a parent based on the fitness.
-		int subpop = selectFitness(subpopFitnesses, state.random[threadnum].nextDouble());
+		int subpopIndex = selectFitness(subpopFitnesses, state.random[threadnum].nextDouble());
+
+		MLSSubpopulation subpop = (MLSSubpopulation) newpop.subpops[subpopIndex];
 
 		// Get the breeding pipeline from the subpopulation.
 		BreedingPipeline bp = null;
 		if (clonePipelineAndPopulation) {
-			bp = (BreedingPipeline) newpop.subpops[subpop].species.pipe_prototype.clone();
+			bp = (BreedingPipeline) subpop.species.pipe_prototype.clone();
 		} else {
-			bp = (BreedingPipeline) newpop.subpops[subpop].species.pipe_prototype;
+			bp = (BreedingPipeline) subpop.species.pipe_prototype;
 		}
 
 		// Check to make sure that the breeding pipeline produces
         // the right kind of individuals.  Don't want a mistake there! :-)
         int index;
-        if (!bp.produces(state,newpop,subpop,threadnum)) {
-            state.output.fatal("The Breeding Pipeline of subpopulation " + subpop + " does not produce individuals of the expected species " + newpop.subpops[subpop].species.getClass().getName() + " or fitness " + newpop.subpops[subpop].species.f_prototype );
+        if (!bp.produces(state, newpop, subpopIndex, threadnum)) {
+            state.output.fatal("The Breeding Pipeline of subpopulation " + subpopIndex + " does not produce individuals of the expected species " + newpop.subpops[subpopIndex].species.getClass().getName() + " or fitness " + newpop.subpops[subpopIndex].species.f_prototype );
         }
-        bp.prepareToProduce(state,subpop,threadnum);
+        bp.prepareToProduce(state, subpopIndex, threadnum);
 
         // Start breeding!
-        index = from[subpop];
-        int upperbound = from[subpop] + numInds[subpop];
+        index = from[subpopIndex];
+        int upperbound = from[subpopIndex] + numInds[subpopIndex];
 
         while(index < upperbound) {
         	int numBreed = bp.produce(1,
             		upperbound-index,
             		index,
-            		subpop,
-            		newpop.subpops[subpop].individuals,
+            		subpopIndex,
+            		subpop.individuals,
             		state,
             		threadnum);
-        	numIndividualsPerSubpop[subpop] += numBreed;
+        	numIndividualsPerSubpop[subpopIndex] += numBreed;
         	numIndividuals += numBreed;
+
+        	// Evaluate the offspring individuals as they are being generated.
+        	for (int i = index; i < index + numBreed; i++) {
+        		if (subpop.individuals[i] == null) {
+        			state.output.fatal("The individuals were not breed at the subpopulation " + subpopIndex + ".");
+        		}
+
+        		((MLSEvaluator) state.evaluator).evaluateIndividual(state, subpop, subpopIndex, subpop.individuals[i]);
+        	}
+
             index += numBreed;
         }
 
         if (index > upperbound) {
-            state.output.fatal("Whoa!  A breeding pipeline overwrote the space of another pipeline in subpopulation " + subpop + ".  You need to check your breeding pipeline code (in produce() ).");
+            state.output.fatal("Whoa!  A breeding pipeline overwrote the space of another pipeline in subpopulation " + subpopIndex + ".  You need to check your breeding pipeline code (in produce() ).");
         }
 
-        bp.finishProducing(state,subpop,threadnum);
+        bp.finishProducing(state,subpopIndex,threadnum);
 	}
 
 	public Population breedFinalPopulation(final EvolutionState state, final Population metaPop) {
@@ -662,7 +674,7 @@ public class MLSBreeder extends Breeder {
 	}
 
 	protected void loadElites(EvolutionState state, Population pop, Population metaPop) {
-		// TODO probably split this into multiple smaller methods.
+		// FIXME probably split this into multiple smaller methods.
 
 		// Sort and load in the best groups.
 		List<Subpopulation> metaSubpops = Arrays.asList(metaPop.subpops);
