@@ -14,7 +14,6 @@ import app.simConfig.AbsSimConfig;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.Population;
-import ec.coevolve.GroupedProblemForm;
 import ec.gp.GPProblem;
 import ec.util.Parameter;
 
@@ -27,26 +26,27 @@ public class JasimaMultilevelProblem extends GPProblem implements MLSProblemForm
 	private long simSeed;
 	private int numSubpops;
 
-	private HuntListener huntListener = new HuntListener(5);
+	private HuntListener huntListener = new HuntListener(5); // TODO this is temporary, I think?
 
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
 		super.setup(state, base);
 
-		// TODO
+		// TODO Auto-generated method stub
+
 	}
 
 	@Override
 	public void preprocessPopulation(EvolutionState state, Population pop,
 			boolean[] prepareForFitnessAssessment, boolean countVictoriesOnly) {
-		// TODO Auto-generated method stub
+		// TODO Auto-generated method stub. Will this be same as the GroupedProblemForm?
 
 	}
 
 	@Override
 	public void postprocessPopulation(EvolutionState state, Population pop,
 			boolean[] assessFitness, boolean countVictoriesOnly) {
-		// TODO Auto-generated method stub
+		// TODO Auto-generated method stub. Will this be same as the GroupedProblemForm?
 
 	}
 

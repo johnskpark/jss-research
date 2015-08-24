@@ -5,8 +5,6 @@ import java.util.Arrays;
 import ec.Evaluator;
 import ec.EvolutionState;
 import ec.Individual;
-import ec.coevolve.GroupedProblemForm;
-import ec.simple.SimpleBreeder;
 import ec.util.Parameter;
 
 // TODO
