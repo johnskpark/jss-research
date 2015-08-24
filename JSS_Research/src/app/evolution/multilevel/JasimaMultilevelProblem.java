@@ -9,10 +9,13 @@ import java.util.Random;
 
 import app.evolution.AbsGPPriorityRule;
 import app.evolution.IJasimaGPProblem;
+import app.evolution.IJasimaTracker;
+import app.evolution.JasimaGPData;
 import app.listener.hunt.HuntListener;
 import app.simConfig.AbsSimConfig;
 import ec.EvolutionState;
 import ec.Individual;
+import ec.Initializer;
 import ec.Population;
 import ec.gp.GPProblem;
 import ec.util.Parameter;
@@ -21,19 +24,71 @@ public class JasimaMultilevelProblem extends GPProblem implements MLSProblemForm
 
 	private static final long serialVersionUID = -5150181943760622786L;
 
+	public static final String P_SHOULD_SET_CONTEXT = "set-context";
+
+	public static final String P_GROUP_RULE = "group-rule";
+	public static final String P_GROUP_FITNESS = "group-fitness";
+
+	public static final String P_IND_RULE = "ind-rule";
+	public static final String P_IND_FITNESS = "ind-fitness";
+
+	public static final String P_SIMULATOR = "simulator";
+	public static final String P_SEED = "seed";
+	public static final String P_TRACKER = "tracker";
+
+	public static final long DEFAULT_SEED = 15;
+
+	private boolean shouldSetContext;
+
+	private AbsGPPriorityRule groupRule;
+	private IJasimaMultilevelGroupFitness groupFitness;
+
+	private AbsGPPriorityRule indRule;
+	private IJasimaMultilevelIndividualFitness indFitness;
+
 	private AbsSimConfig simConfig;
-	private Random rand;
 	private long simSeed;
+	private Random rand;
+
+	private IJasimaTracker tracker;
+
 	private int numSubpops;
 
-	private HuntListener huntListener = new HuntListener(5); // TODO this is temporary, I think?
+	private HuntListener huntListener = new HuntListener(5);  // FIXME Incorporate into the parameter.
 
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
 		super.setup(state, base);
 
-		// TODO Auto-generated method stub
+		// Load whether we should set context or not.
+		shouldSetContext = state.parameters.getBoolean(base.push(P_SHOULD_SET_CONTEXT), null, true);
 
+		// Setup the GPData.
+		input = (JasimaGPData) state.parameters.getInstanceForParameterEq(base.push(P_DATA), null, JasimaGPData.class);
+		input.setup(state, base.push(P_DATA));
+
+		// Setup the individual solver for evaluating groups.
+		groupRule = (AbsGPPriorityRule) state.parameters.getInstanceForParameterEq(base.push(P_GROUP_RULE), null, AbsGPPriorityRule.class);
+		groupFitness = (IJasimaMultilevelGroupFitness) state.parameters.getInstanceForParameterEq(base.push(P_GROUP_FITNESS), null, IJasimaMultilevelGroupFitness.class);
+
+		// Setup the individual solver for evaluating individuals.
+		indRule = (AbsGPPriorityRule) state.parameters.getInstanceForParameterEq(base.push(P_IND_RULE), null, AbsGPPriorityRule.class);
+		indFitness = (IJasimaMultilevelIndividualFitness) state.parameters.getInstanceForParameterEq(base.push(P_IND_FITNESS), null, IJasimaMultilevelIndividualFitness.class);
+
+		// Setup the simulator configurations.
+		simConfig = (AbsSimConfig) state.parameters.getInstanceForParameterEq(base.push(P_SIMULATOR), null, AbsSimConfig.class);
+		simSeed = state.parameters.getLongWithDefault(base.push(P_SIMULATOR).push(P_SEED), null, DEFAULT_SEED);
+		rand = new Random(simSeed);
+
+		// Setup the tracker.
+		tracker = (IJasimaTracker) state.parameters.getInstanceForParameterEq(base.push(P_TRACKER), null, IJasimaTracker.class);
+		tracker.setProblem(this);
+
+		// Setup the number of subpopulations.
+        numSubpops = state.parameters.getInt((new Parameter(Initializer.P_POP)).push(Population.P_SIZE), null, 1);
+
+		// Feed in the shop simulation listener to input.
+        ((JasimaGPData) input).setWorkStationListener(huntListener);
 	}
 
 	@Override

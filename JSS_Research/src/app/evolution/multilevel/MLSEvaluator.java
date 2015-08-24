@@ -93,6 +93,13 @@ public class MLSEvaluator extends Evaluator {
 		int[] indices = new int[subpop.individuals.length];
 		Arrays.fill(indices, subpopIndex);
 
+		// TODO Right, how do I do this????
+
+		// Evaluate the individuals of the subpopulation.
+		for (int ind = 0; ind < subpop.individuals.length; ind++) {
+			mlsProblem.evaluateInd(state, subpop.individuals[ind], subpopIndex, 0);
+		}
+
 		// Evaluate the subpopulation of individuals.
 		mlsProblem.evaluateSubpop(state, subpop, updates, false, indices, 0);
 	}
@@ -110,6 +117,7 @@ public class MLSEvaluator extends Evaluator {
 			Individual ind) {
 		MLSProblemForm mlsProblem = (MLSProblemForm) p_problem;
 
+		// Evaluate the individual.
 		mlsProblem.evaluateInd(state, ind, subpopIndex, 0);
 	}
 
