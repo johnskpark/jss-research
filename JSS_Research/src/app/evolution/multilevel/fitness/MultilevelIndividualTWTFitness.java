@@ -6,6 +6,12 @@ import ec.EvolutionState;
 import ec.Individual;
 import app.evolution.multilevel.IJasimaMultilevelIndividualFitness;
 
+/**
+ * TODO javadoc.
+ *
+ * @author parkjohn
+ *
+ */
 public class MultilevelIndividualTWTFitness implements IJasimaMultilevelIndividualFitness {
 
 	@Override

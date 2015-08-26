@@ -100,6 +100,8 @@ public class JasimaMultilevelProblem extends GPProblem implements MLSProblemForm
 			Population pop,
 			boolean[] prepareForFitnessAssessment,
 			boolean countVictoriesOnly) {
+		// TODO right, this will need to be called by the breeder as its producing subpopulations.
+
 		// Reset the seed for the simulator.
 		simConfig.setSeed(rand.nextLong());
 

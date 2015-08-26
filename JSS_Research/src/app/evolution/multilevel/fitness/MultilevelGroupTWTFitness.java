@@ -9,6 +9,12 @@ import ec.gp.GPIndividual;
 import app.evolution.IJasimaTracker;
 import app.evolution.multilevel.IJasimaMultilevelGroupFitness;
 
+/**
+ * TODO javadoc.
+ *
+ * @author parkjohn
+ *
+ */
 public class MultilevelGroupTWTFitness implements IJasimaMultilevelGroupFitness {
 
 	@Override
