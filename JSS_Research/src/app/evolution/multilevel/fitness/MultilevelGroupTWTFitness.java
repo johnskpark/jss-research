@@ -2,12 +2,11 @@ package app.evolution.multilevel.fitness;
 
 import java.util.Map;
 
-import ec.EvolutionState;
-import ec.Individual;
-import ec.Subpopulation;
-import ec.gp.GPIndividual;
 import app.evolution.IJasimaTracker;
 import app.evolution.multilevel.IJasimaMultilevelGroupFitness;
+import app.evolution.multilevel.MLSSubpopulation;
+import ec.EvolutionState;
+import ec.Individual;
 
 /**
  * TODO javadoc.
@@ -18,14 +17,8 @@ import app.evolution.multilevel.IJasimaMultilevelGroupFitness;
 public class MultilevelGroupTWTFitness implements IJasimaMultilevelGroupFitness {
 
 	@Override
-	public void loadIndividuals(GPIndividual[] inds) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public void accumulateFitness(int expIndex,
-			GPIndividual[] gpInds,
+			MLSSubpopulation subpop,
 			Map<String, Object> results,
 			IJasimaTracker tracker) {
 		// TODO Auto-generated method stub
@@ -34,7 +27,7 @@ public class MultilevelGroupTWTFitness implements IJasimaMultilevelGroupFitness 
 
 	@Override
 	public void setFitness(EvolutionState state,
-			Subpopulation subpop,
+			MLSSubpopulation subpop,
 			boolean[] updateFitness,
 			boolean shouldSetContext) {
 		// TODO Auto-generated method stub

@@ -5,7 +5,6 @@ import jasima.core.util.observer.NotifierListener;
 import jasima.shopSim.models.dynamicShop.DynamicShopExperiment;
 import jasima.shopSim.util.BasicJobStatCollector;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 import app.evolution.AbsGPPriorityRule;
@@ -16,7 +15,6 @@ import app.evolution.JasimaGPData;
 import app.listener.hunt.HuntListener;
 import app.simConfig.AbsSimConfig;
 import ec.EvolutionState;
-import ec.Fitness;
 import ec.Individual;
 import ec.Initializer;
 import ec.Population;
@@ -52,7 +50,7 @@ public class JasimaMultilevelProblem extends GPProblem implements MLSProblemForm
 
 	private AbsSimConfig simConfig;
 	private long simSeed;
-	private Random rand;
+	private Random rand; // TODO whereabouts is this being used??
 
 	private IJasimaTracker tracker;
 
@@ -96,34 +94,9 @@ public class JasimaMultilevelProblem extends GPProblem implements MLSProblemForm
 	}
 
 	@Override
-	public void preprocessPopulation(EvolutionState state,
-			Population pop,
-			boolean[] prepareForFitnessAssessment,
-			boolean countVictoriesOnly) {
-		// TODO right, this will need to be called by the breeder as its producing subpopulations.
-
+	public void beforeEvaluation(final EvolutionState state, Population pop) {
 		// Reset the seed for the simulator.
 		simConfig.setSeed(rand.nextLong());
-
-		for (int i = 0; i < pop.subpops.length; i++) {
-			if (!prepareForFitnessAssessment[i]) {
-				continue;
-			}
-
-			for (int j = 0; j < pop.subpops[i].individuals.length; j++) {
-				Fitness fitness = pop.subpops[i].individuals[j].fitness;
-				fitness.trials = new ArrayList();
-			}
-		}
-	}
-
-	@Override
-	public void postprocessPopulation(EvolutionState state,
-			Population pop,
-			boolean[] assessFitness,
-			boolean countVictoriesOnly) {
-		// TODO Auto-generated method stub. Will this be same as the GroupedProblemForm?
-
 	}
 
 	@Override
@@ -147,14 +120,13 @@ public class JasimaMultilevelProblem extends GPProblem implements MLSProblemForm
 		config.setTracker(tracker);
 
 		groupRule.setConfiguration(config);
-		groupFitness.loadIndividuals(gpInds);
 
 		for (int expIndex = 0; expIndex < simConfig.getNumConfigs(); expIndex++) {
 			Experiment experiment = getExperiment(state, groupRule, expIndex);
 
 			experiment.runExperiment();
 
-			groupFitness.accumulateFitness(expIndex, gpInds, experiment.getResults(), tracker);
+			groupFitness.accumulateFitness(expIndex, subpop, experiment.getResults(), tracker);
 			tracker.clear();
 		}
 

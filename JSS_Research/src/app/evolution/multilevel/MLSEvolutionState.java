@@ -91,6 +91,11 @@ public class MLSEvolutionState extends EvolutionState {
 		for (int i = 0; i < metaPopulation.subpops.length; i++) {
 			metaPopulation.subpops[i] = (Subpopulation) population.subpops[i/2].emptyClone();
 		}
+
+		// Evaluate the newly generated population.
+		statistics.preEvaluationStatistics(this);
+		evaluator.evaluatePopulation(this);
+		statistics.postEvaluationStatistics(this);
 	}
 
 	@Override
@@ -98,11 +103,6 @@ public class MLSEvolutionState extends EvolutionState {
 		if (generation > 0) {
 			output.message("Generation " + generation);
 		}
-
-		// EVALUATION
-		statistics.preEvaluationStatistics(this);
-		evaluator.evaluatePopulation(this);
-		statistics.postEvaluationStatistics(this);
 
 		// SHOULD WE QUIT?
 		if (evaluator.runComplete(this) && quitOnRunComplete) {
@@ -164,18 +164,6 @@ public class MLSEvolutionState extends EvolutionState {
 		}
 
 		return R_NOTDONE;
-	}
-
-	protected void breedMetaPopulation() {
-		// TODO Right, need to incorporate this into the program later down the line.
-	}
-
-	protected void evaluateMetaPopulation() {
-		// TODO
-	}
-
-	protected void selectMetaPopulation() {
-		// TODO
 	}
 
 	@Override

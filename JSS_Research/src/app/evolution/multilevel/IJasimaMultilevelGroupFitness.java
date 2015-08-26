@@ -5,8 +5,6 @@ import java.util.Map;
 import app.evolution.IJasimaFitness;
 import app.evolution.IJasimaTracker;
 import ec.EvolutionState;
-import ec.Subpopulation;
-import ec.gp.GPIndividual;
 
 /**
  * TODO javadoc.
@@ -18,19 +16,13 @@ public interface IJasimaMultilevelGroupFitness extends IJasimaFitness {
 
 	/**
 	 * TODO javadoc.
-	 * @param inds
-	 */
-	public void loadIndividuals(GPIndividual[] inds);
-
-	/**
-	 * TODO javadoc.
 	 * @param expIndex
 	 * @param gpInds
 	 * @param results
 	 * @param tracker
 	 */
 	public void accumulateFitness(int expIndex,
-			GPIndividual[] gpInds,
+			MLSSubpopulation subpop,
 			Map<String, Object> results,
 			IJasimaTracker tracker);
 
@@ -42,7 +34,7 @@ public interface IJasimaMultilevelGroupFitness extends IJasimaFitness {
 	 * @param shouldSetContext
 	 */
 	public void setFitness(EvolutionState state,
-			Subpopulation subpop,
+			MLSSubpopulation subpop,
 			boolean[] updateFitness,
 			boolean shouldSetContext);
 

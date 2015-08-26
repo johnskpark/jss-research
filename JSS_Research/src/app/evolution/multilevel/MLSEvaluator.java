@@ -66,15 +66,11 @@ public class MLSEvaluator extends Evaluator {
 			preAssessFitness[i] = postAssessFitness[i] || (state.generation == 0);  // always prepare (set up trials) on generation 0
 		}
 
-		// Should I be using the grouped problem form for this?
-		MLSProblemForm mlsProblem = (MLSProblemForm) p_problem;
-		mlsProblem.preprocessPopulation(state, state.population, preAssessFitness, false);
+		((MLSProblemForm) p_problem).beforeEvaluation(state, state.population);
 
 		for (int subpop = 0; subpop < state.population.subpops.length; subpop++) {
 			evaluateSubpopulation(state, (MLSSubpopulation) state.population.subpops[subpop], subpop);
 		}
-
-		mlsProblem.postprocessPopulation(state, state.population, postAssessFitness, false);
 	}
 
 	/**
@@ -92,8 +88,6 @@ public class MLSEvaluator extends Evaluator {
 
 		int[] indices = new int[subpop.individuals.length];
 		Arrays.fill(indices, subpopIndex);
-
-		// TODO Right, how do I do this????
 
 		// Evaluate the individuals of the subpopulation.
 		for (int ind = 0; ind < subpop.individuals.length; ind++) {

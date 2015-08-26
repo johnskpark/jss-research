@@ -16,19 +16,8 @@ public interface MLSProblemForm {
 	 * TODO javadoc.
 	 * @param state
 	 * @param pop
-	 * @param prepareForFitnessAssessment
-	 * @param countVictoriesOnly
 	 */
-	public void preprocessPopulation(final EvolutionState state, Population pop, final boolean[] prepareForFitnessAssessment, final boolean countVictoriesOnly);
-
-	/**
-	 * TODO javadoc.
-	 * @param state
-	 * @param pop
-	 * @param assessFitness
-	 * @param countVictoriesOnly
-	 */
-	public void postprocessPopulation(final EvolutionState state, Population pop, final boolean[] assessFitness, final boolean countVictoriesOnly);
+	public void beforeEvaluation(final EvolutionState state, Population pop);
 
 	/**
 	 * TODO javadoc.
@@ -40,7 +29,7 @@ public interface MLSProblemForm {
 	 * @param threadnum
 	 */
 	public void evaluateSubpop(final EvolutionState state,
-			final MLSSubpopulation subpop,
+			MLSSubpopulation subpop,
 			final boolean[] updateFitness,
 			final boolean countVictoriesOnly,
 			final int[] subpops,
@@ -54,7 +43,7 @@ public interface MLSProblemForm {
 	 * @param threadnum
 	 */
 	public void evaluateInd(final EvolutionState state,
-			final Individual ind,
+			Individual ind,
 			final int subpopulation,
 			final int threadnum);
 }
