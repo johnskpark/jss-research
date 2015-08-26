@@ -5,18 +5,22 @@ import jasima.core.util.observer.NotifierListener;
 import jasima.shopSim.models.dynamicShop.DynamicShopExperiment;
 import jasima.shopSim.util.BasicJobStatCollector;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import app.evolution.AbsGPPriorityRule;
 import app.evolution.IJasimaGPProblem;
 import app.evolution.IJasimaTracker;
+import app.evolution.JasimaGPConfig;
 import app.evolution.JasimaGPData;
 import app.listener.hunt.HuntListener;
 import app.simConfig.AbsSimConfig;
 import ec.EvolutionState;
+import ec.Fitness;
 import ec.Individual;
 import ec.Initializer;
 import ec.Population;
+import ec.gp.GPIndividual;
 import ec.gp.GPProblem;
 import ec.util.Parameter;
 
@@ -92,15 +96,30 @@ public class JasimaMultilevelProblem extends GPProblem implements MLSProblemForm
 	}
 
 	@Override
-	public void preprocessPopulation(EvolutionState state, Population pop,
-			boolean[] prepareForFitnessAssessment, boolean countVictoriesOnly) {
-		// TODO Auto-generated method stub. Will this be same as the GroupedProblemForm?
+	public void preprocessPopulation(EvolutionState state,
+			Population pop,
+			boolean[] prepareForFitnessAssessment,
+			boolean countVictoriesOnly) {
+		// Reset the seed for the simulator.
+		simConfig.setSeed(rand.nextLong());
 
+		for (int i = 0; i < pop.subpops.length; i++) {
+			if (!prepareForFitnessAssessment[i]) {
+				continue;
+			}
+
+			for (int j = 0; j < pop.subpops[i].individuals.length; j++) {
+				Fitness fitness = pop.subpops[i].individuals[j].fitness;
+				fitness.trials = new ArrayList();
+			}
+		}
 	}
 
 	@Override
-	public void postprocessPopulation(EvolutionState state, Population pop,
-			boolean[] assessFitness, boolean countVictoriesOnly) {
+	public void postprocessPopulation(EvolutionState state,
+			Population pop,
+			boolean[] assessFitness,
+			boolean countVictoriesOnly) {
 		// TODO Auto-generated method stub. Will this be same as the GroupedProblemForm?
 
 	}
@@ -112,8 +131,35 @@ public class JasimaMultilevelProblem extends GPProblem implements MLSProblemForm
 			final boolean countVictoriesOnly,
 			final int[] subpops,
 			final int threadnum) {
-		// TODO Auto-generated method stub
+		GPIndividual[] gpInds = new GPIndividual[subpop.individuals.length];
+		for (int i = 0; i < subpop.individuals.length; i++) {
+			gpInds[i] = (GPIndividual) subpop.individuals[i];
+		}
 
+		JasimaGPConfig config = new JasimaGPConfig();
+		config.setState(state);
+		config.setIndividuals(gpInds);
+		config.setSubpopulations(subpops);
+		config.setThreadnum(threadnum);
+		config.setData((JasimaGPData) input);
+		config.setTracker(tracker);
+
+		groupRule.setConfiguration(config);
+		groupFitness.loadIndividuals(gpInds);
+
+		for (int expIndex = 0; expIndex < simConfig.getNumConfigs(); expIndex++) {
+			Experiment experiment = getExperiment(state, groupRule, expIndex);
+
+			experiment.runExperiment();
+
+			groupFitness.accumulateFitness(expIndex, gpInds, experiment.getResults(), tracker);
+			tracker.clear();
+		}
+
+		groupFitness.setFitness(state, subpop, updateFitness, shouldSetContext);
+		groupFitness.clear();
+
+		simConfig.resetSeed();
 	}
 
 	@Override
@@ -121,8 +167,28 @@ public class JasimaMultilevelProblem extends GPProblem implements MLSProblemForm
 			final Individual ind,
 			final int subpopulation,
 			final int threadnum) {
-		// TODO Auto-generated method stub
+		JasimaGPConfig config = new JasimaGPConfig();
+		config.setState(state);
+		config.setIndividuals(new GPIndividual[]{(GPIndividual) ind});
+		config.setSubpopulations(new int[]{subpopulation});
+		config.setThreadnum(threadnum);
+		config.setData((JasimaGPData) input);
+		config.setTracker(tracker);
 
+		indRule.setConfiguration(config);
+
+		for (int expIndex = 0; expIndex < simConfig.getNumConfigs(); expIndex++) {
+			Experiment experiment = getExperiment(state, indRule, expIndex);
+
+			experiment.runExperiment();
+
+			indFitness.accumulateFitness(expIndex, experiment.getResults());
+		}
+
+		indFitness.setFitness(state, ind);
+		indFitness.clear();
+
+		simConfig.resetSeed();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -150,7 +216,9 @@ public class JasimaMultilevelProblem extends GPProblem implements MLSProblemForm
 			final Individual ind,
 			final int subpopulation,
 			final int threadnum) {
-		state.output.fatal("JasimaMultilevelProblem must be used in a grouped problem form");
+		state.output.warning("evaluateInd should be called instead of evaluate for JasimaMultilevelProblem.");
+
+		evaluateInd(state, ind, subpopulation, threadnum);
 	}
 
 	@Override
