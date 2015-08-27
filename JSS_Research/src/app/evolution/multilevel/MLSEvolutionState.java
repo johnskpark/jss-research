@@ -6,6 +6,12 @@ import ec.Subpopulation;
 import ec.util.Checkpoint;
 import ec.util.Parameter;
 
+/**
+ * TODO javadoc.
+ *
+ * @author parkjohn
+ *
+ */
 public class MLSEvolutionState extends EvolutionState {
 
 	private static final long serialVersionUID = -1318016754719247209L;
@@ -18,7 +24,7 @@ public class MLSEvolutionState extends EvolutionState {
 	 */
 	private Population metaPopulation;
 
-	private int numIndividuals;
+	private int totalNumIndividuals;
 
 	public void setup(final EvolutionState state, final Parameter base) {
 		super.setup(state, base);
@@ -73,7 +79,7 @@ public class MLSEvolutionState extends EvolutionState {
         exchanger.initializeContacts(this);
         evaluator.initializeContacts(this);
 
-		numIndividuals = 0;
+		totalNumIndividuals = 0;
 
 		// Check to ensure that the subpopulation is a type of MLSSubpopulation.
 		for (int subpop = 0; subpop < population.subpops.length; subpop++) {
@@ -81,7 +87,7 @@ public class MLSEvolutionState extends EvolutionState {
 				output.fatal("Subpopulation " + subpop + " is not of type MLSSubpopulation.");
 			}
 
-			numIndividuals += population.subpops[subpop].individuals.length;
+			totalNumIndividuals += population.subpops[subpop].individuals.length;
 		}
 
 		// Specific to multilevel selection.
@@ -174,7 +180,18 @@ public class MLSEvolutionState extends EvolutionState {
         evaluator.closeContacts(this,result);
 	}
 
+	/**
+	 * Returns the total number of individuals in the population.
+	 */
 	public int getTotalNumIndividuals() {
-		return numIndividuals;
+		return totalNumIndividuals;
 	}
+
+	/**
+	 * Returns the reference to the meta population.
+	 */
+	public Population getMetaPopulation() {
+		return metaPopulation;
+	}
+
 }

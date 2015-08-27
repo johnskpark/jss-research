@@ -30,7 +30,7 @@ import ec.util.ThreadPool;
  *
  */
 
-// FIXME Refactor the threading sometime later down the line.
+// FIXME Refactor the threading to use a factory sometime later down the line.
 public class MLSBreeder extends Breeder {
 
 	private static final long serialVersionUID = -6914152113435773281L;
@@ -51,6 +51,7 @@ public class MLSBreeder extends Breeder {
     public static final int MUTATION_INDS_PRODUCED = 1;
 
     /** An array[subpop] of the number of elites to keep for that subpopulation */
+    // FIXME check which ones are being used later down the line.
     private int[] elite;
     private double[] eliteFrac;
     private boolean[] reevaluateElites;
@@ -188,23 +189,12 @@ public class MLSBreeder extends Breeder {
 		// half the groups and individuals are removed from the
 		// intermediate population to obtain the next generation.
 
-		Population newPop = null;
-		if (clonePipelineAndPopulation) {
-			newPop = (Population) state.population.emptyClone();
-		} else {
-			if (backupPopulation == null) {
-				backupPopulation = (Population) state.population.emptyClone();
-			}
-			newPop = backupPopulation;
-			newPop.clear();
-			backupPopulation = (Population) state.population;  // swap in
-		}
+		Population initPop = ((MLSEvolutionState) state).getMetaPopulation();
 
-		Subpopulation[] interSubpops = new Subpopulation[state.population.subpops.length];
+		Population metaPop = breedMetaPopulation(state, initPop);
+		Population finalPop = breedFinalPopulation(state, metaPop);
 
-		// TODO This will definitely need to be fixed as well in the future.
-
-		return null;
+		return finalPop;
 	}
 
 	/**
@@ -760,31 +750,32 @@ public class MLSBreeder extends Breeder {
 		return RandomChoice.pickFromDistribution(probs, probabilities);
 	}
 
-	private interface BreederThreadFactory {
-		public Runnable createBreederThread(Population newpop,
-				int numToBreed,
-				int from,
-				EvolutionState state,
-				int threadnum,
-				MLSBreeder parent);
-	}
+	// FIXME Either fix this or remove it later down the line.
+//	private interface BreederThreadFactory {
+//		public Runnable createBreederThread(Population newpop,
+//				int numToBreed,
+//				int from,
+//				EvolutionState state,
+//				int threadnum,
+//				MLSBreeder parent);
+//	}
 
-	private class SubpopBreederThreadFactory implements BreederThreadFactory {
-		public Runnable createBreederThread(Population newpop,
-				int numToBreed,
-				int from,
-				EvolutionState state,
-				int threadnum,
-				MLSBreeder parent) {
-			SubpopBreederThread r = new SubpopBreederThread();
-			r.newpop = newpop;
-			r.numGroup = numToBreed;
-			r.from = from;
-			r.threadnum = threadnum;
-			r.parent = parent;
-			return r;
-		}
-	}
+//	private class SubpopBreederThreadFactory implements BreederThreadFactory {
+//		public Runnable createBreederThread(Population newpop,
+//				int numToBreed,
+//				int from,
+//				EvolutionState state,
+//				int threadnum,
+//				MLSBreeder parent) {
+//			SubpopBreederThread r = new SubpopBreederThread();
+//			r.newpop = newpop;
+//			r.numGroup = numToBreed;
+//			r.from = from;
+//			r.threadnum = threadnum;
+//			r.parent = parent;
+//			return r;
+//		}
+//	}
 
 	private class SubpopBreederThread implements Runnable {
 		Population newpop;
@@ -799,7 +790,6 @@ public class MLSBreeder extends Breeder {
 		}
 	}
 
-	// FIXME Either fix this or remove it later down the line.
 //	private class IndividualBreederThreadFactory implements BreederThreadFactory {
 //		public Runnable createBreederThread(Population newpop,
 //				int numToBreed,
