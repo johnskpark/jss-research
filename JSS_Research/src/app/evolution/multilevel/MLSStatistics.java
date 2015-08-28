@@ -6,7 +6,6 @@ import java.io.IOException;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.Statistics;
-import ec.Subpopulation;
 import ec.util.Output;
 import ec.util.Parameter;
 
@@ -71,6 +70,7 @@ public class MLSStatistics extends Statistics {
 		for (int s = 0; s < state.population.subpops.length; s++) {
 			MLSSubpopulation subpop = (MLSSubpopulation) state.population.subpops[s];
 
+			// Find the best individuals from each subpopulation of the generation.
 			bestOfSubpop[s] = subpop.individuals[0];
 			for (int i = 1; i < subpop.individuals.length; i++) {
 				if (subpop.individuals[i].fitness.betterThan(bestOfSubpop[s].fitness)) {
@@ -78,11 +78,24 @@ public class MLSStatistics extends Statistics {
 				}
 			}
 
+			// Find the best subpopulation of the generation.
+			if (bestSubpop == null || subpop.getFitness().betterThan(bestSubpop.getFitness())) {
+				bestSubpop = subpop;
+			}
+
+			// Update the best individuals of the run.
 			if (bestIndsOfRun[s] == null || bestOfSubpop[s].fitness.betterThan(bestIndsOfRun[s].fitness)) {
 				bestIndsOfRun[s] = (Individual) (bestOfSubpop[s].clone());
 			}
 		}
 
+		// Update the best subpopulation of the run.
+		if (bestSubpopOfRun == null || bestSubpop.getFitness().betterThan(bestSubpopOfRun.getFitness())) {
+			bestSubpopOfRun = bestSubpop;
+		}
+
+
+		// Print the current generation.
 		if (doGeneration) {
 			state.output.println("\nGeneration: " + state.generation, statisticsLog);
 			state.output.println("Best Individual:", statisticsLog);
@@ -90,32 +103,43 @@ public class MLSStatistics extends Statistics {
 
 		// Print the best fitness of an individual per subpopulation.
 		for (int s = 0; s < state.population.subpops.length; s++) {
+			MLSSubpopulation subpop = (MLSSubpopulation) state.population.subpops[s];
+
 			if (doGeneration) {
-				state.output.println("Subpopulation " + s + ":", statisticsLog);
+				state.output.println("Subpopulation " + s + ": " + subpop.getFitness().fitnessToStringForHumans(), statisticsLog);
 				bestOfSubpop[s].printIndividualForHumans(state, statisticsLog);
 			}
 
 			if (doMessage && !silentPrint) {
 				state.output.message("Subpop " + s + " best fitness of generation" + (bestOfSubpop[s].evaluated ? " " : " (evaluated flag not set): ") + bestOfSubpop[s].fitness.fitnessToStringForHumans());
 			}
-
-			if (doGeneration && doPerGenerationDescription) {
-				// TODO
-			}
 		}
-
-		// Print the best subpopulation of the generation.
-		// TODO
-
-		// Print the best individual of the generation.
-		// TODO
-
 	}
 
 	public void finalStatistics(final EvolutionState state, final int result) {
 		super.finalStatistics(state, result);
 
-		// TODO
+		// I need to print out the best individuals and the best subpopulation.
+
+		// TODO Right, what do I need to write here?
+		// Print out the best individuals of each subpopulation.
+		if (doFinal) {
+			// TODO
+		}
+		for (int s = 0; s < state.population.subpops.length; s++) {
+			if (doFinal) {
+				// TODO
+			}
+
+			if (doMessage && !silentPrint) {
+				// TODO
+			}
+		}
+
+		// Print out the individuals making up the best subpopulation.
+		if (doFinal) {
+			// TODO
+		}
 	}
 
 }
