@@ -14,6 +14,7 @@ public class MLSSubpopulation extends Subpopulation {
 	public static final String P_FITNESS = "fitness";
 
 	private Fitness fitness;
+	private boolean evaluated;
 
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
@@ -24,6 +25,7 @@ public class MLSSubpopulation extends Subpopulation {
 		fitness = (Fitness) state.parameters.getInstanceForParameter(base.push(P_FITNESS),
 				def.push(P_FITNESS),
 				Fitness.class);
+		evaluated = false;
 	}
 
 	@Override
@@ -35,6 +37,7 @@ public class MLSSubpopulation extends Subpopulation {
 			p.species = species;
 			p.individuals = new Individual[individuals.length];
 			p.fitness = fitness;
+			p.evaluated = false;
 
 			return p;
 		} catch (CloneNotSupportedException e) {
@@ -42,8 +45,18 @@ public class MLSSubpopulation extends Subpopulation {
 		}
 	}
 
+	/**
+	 * Returns the fitness of the subpopulation.
+	 */
 	public Fitness getFitness() {
 		return fitness;
+	}
+
+	/**
+	 * Returns true if the subpopulation has been evaluated.
+	 */
+	public boolean isEvaluated() {
+		return evaluated;
 	}
 
 }

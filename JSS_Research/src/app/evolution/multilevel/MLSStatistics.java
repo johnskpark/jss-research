@@ -9,7 +9,15 @@ import ec.Statistics;
 import ec.util.Output;
 import ec.util.Parameter;
 
+/**
+ * TODO javadoc.
+ *
+ * @author parkjohn
+ *
+ */
 public class MLSStatistics extends Statistics {
+
+	private static final long serialVersionUID = 2693112218608601218L;
 
 	public static final String P_STATISTICS_FILE = "file";
 
@@ -25,13 +33,12 @@ public class MLSStatistics extends Statistics {
 
 	private Individual[] bestIndsOfRun = null;
 	private MLSSubpopulation bestSubpopOfRun = null;
+	private int bestSubpopIndexOfRun = -1;
 
 	private boolean compress;
 	private boolean doFinal;
 	private boolean doGeneration;
 	private boolean doMessage;
-	private boolean doDescription;
-	private boolean doPerGenerationDescription;
 
 	public void setup(final EvolutionState state, final Parameter base) {
 		super.setup(state, base);
@@ -66,6 +73,7 @@ public class MLSStatistics extends Statistics {
 
 		Individual[] bestOfSubpop = new Individual[state.population.subpops.length];
 		MLSSubpopulation bestSubpop = null;
+		int bestSubpopIndex = -1;
 
 		for (int s = 0; s < state.population.subpops.length; s++) {
 			MLSSubpopulation subpop = (MLSSubpopulation) state.population.subpops[s];
@@ -86,12 +94,14 @@ public class MLSStatistics extends Statistics {
 			// Update the best individuals of the run.
 			if (bestIndsOfRun[s] == null || bestOfSubpop[s].fitness.betterThan(bestIndsOfRun[s].fitness)) {
 				bestIndsOfRun[s] = (Individual) (bestOfSubpop[s].clone());
+				bestSubpopIndex = s;
 			}
 		}
 
 		// Update the best subpopulation of the run.
 		if (bestSubpopOfRun == null || bestSubpop.getFitness().betterThan(bestSubpopOfRun.getFitness())) {
 			bestSubpopOfRun = bestSubpop;
+			bestSubpopIndexOfRun = bestSubpopIndex;
 		}
 
 
@@ -99,6 +109,19 @@ public class MLSStatistics extends Statistics {
 		if (doGeneration) {
 			state.output.println("\nGeneration: " + state.generation, statisticsLog);
 			state.output.println("Best Individual:", statisticsLog);
+		}
+
+		// Print the best fitness of a subpopulation.
+		if (doGeneration) {
+			String evaluatedStr;
+
+			if (bestSubpop.isEvaluated()) {
+				evaluatedStr = " ";
+			} else {
+				evaluatedStr = " (evaluated flag not set): ";
+			}
+
+			state.output.message("Best subpop fitness of generation " + evaluatedStr + bestSubpop.getFitness().fitnessToStringForHumans());
 		}
 
 		// Print the best fitness of an individual per subpopulation.
@@ -111,7 +134,15 @@ public class MLSStatistics extends Statistics {
 			}
 
 			if (doMessage && !silentPrint) {
-				state.output.message("Subpop " + s + " best fitness of generation" + (bestOfSubpop[s].evaluated ? " " : " (evaluated flag not set): ") + bestOfSubpop[s].fitness.fitnessToStringForHumans());
+				String evaluatedStr;
+
+				if (bestOfSubpop[s].evaluated) {
+					evaluatedStr = " ";
+				} else {
+					evaluatedStr = " (evaluated flag not set): ";
+				}
+
+				state.output.message("Subpop " + s + " best fitness of generation " + evaluatedStr + bestOfSubpop[s].fitness.fitnessToStringForHumans());
 			}
 		}
 	}
@@ -119,26 +150,29 @@ public class MLSStatistics extends Statistics {
 	public void finalStatistics(final EvolutionState state, final int result) {
 		super.finalStatistics(state, result);
 
-		// I need to print out the best individuals and the best subpopulation.
-
-		// TODO Right, what do I need to write here?
 		// Print out the best individuals of each subpopulation.
 		if (doFinal) {
-			// TODO
+			state.output.println("\nBest Individual of Run:", statisticsLog);
 		}
 		for (int s = 0; s < state.population.subpops.length; s++) {
 			if (doFinal) {
-				// TODO
+				state.output.println("Subpopulation " + s + ":", statisticsLog);
+				bestIndsOfRun[s].printIndividualForHumans(state, statisticsLog);
 			}
 
 			if (doMessage && !silentPrint) {
-				// TODO
+				state.output.message("Subpop " + s + " best fitness of run: " + bestIndsOfRun[s].fitness.fitnessToStringForHumans());
 			}
 		}
 
 		// Print out the individuals making up the best subpopulation.
 		if (doFinal) {
-			// TODO
+			state.output.println("\nBest Subpopulation of Run: " + bestSubpopIndexOfRun + ", Fitness: " + bestSubpopOfRun.getFitness().fitnessToStringForHumans(), statisticsLog);
+
+			for (int i = 0; i < bestSubpopOfRun.individuals.length; i++) {
+				state.output.println("Individual " + i, statisticsLog);
+				bestSubpopOfRun.individuals[i].printIndividualForHumans(state, statisticsLog);
+			}
 		}
 	}
 
