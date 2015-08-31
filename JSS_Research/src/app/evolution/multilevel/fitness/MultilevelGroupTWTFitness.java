@@ -6,10 +6,10 @@ import java.util.Map;
 
 import app.evolution.IJasimaTracker;
 import app.evolution.multilevel.IJasimaMultilevelGroupFitness;
-import app.evolution.multilevel.MLSSubpopulation;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.gp.koza.KozaFitness;
+import ec.multilevel.MLSSubpopulation;
 
 /**
  * TODO javadoc.

@@ -15,8 +15,8 @@ parent.0 = ../ec.params
 # ec.Evolve
 # ==============================
 
-# simple generational evolution
-state = 				ec.simple.SimpleEvolutionState
+# Use the multilevel selection state for evolution
+state = ec.multilevel.MLSEvolutionState
 
 
 
@@ -24,26 +24,26 @@ state = 				ec.simple.SimpleEvolutionState
 # ==============================
 
 # We're using the standard initialization method
-init = 					ec.simple.SimpleInitializer
+init = ec.simple.SimpleInitializer
 
 # We're using the standard (empty) finalization method
-finish = 	        		ec.simple.SimpleFinisher
+finish = ec.simple.SimpleFinisher
 
 # We're using the standard (empty) exchange method
-exch = 					ec.simple.SimpleExchanger
+exch = ec.simple.SimpleExchanger
 
 # We're using standard breeding -- no cross-population breeding
-breed =					ec.simple.SimpleBreeder
+breed =	ec.multilevel.MLSBreeder
 
 # We're using standard evaluation -- no coevolution
-eval =					ec.simple.SimpleEvaluator
+eval = ec.multilevel.MLSEvaluator
 
 # We're using simple statistics
-stat =					ec.simple.SimpleStatistics
+stat = ec.multilevel.MLSStatistics
 
 # run for 51 generations, quit prematurely if I find something ideal
-generations =				51
-quit-on-run-complete =			true
+generations = 51
+quit-on-run-complete = true
 
 
 
@@ -57,18 +57,18 @@ pop = 					ec.Population
 # ==============================
 
 # No multiple populations
-pop.subpops =				1
-pop.subpop.0 = 				ec.Subpopulation
+pop.subpops = 4
+pop.subpop.0 = ec.multilevel.MLSSubpopulation
 
 
 # ec.Subpopulation
 # ==============================
 
 # subpop size is 1024 individuals
-pop.subpop.0.size =			1024
+pop.subpop.0.size =	256
 # don't bother trying to eliminate duplicates from the
 # initial population
-pop.subpop.0.duplicate-retries =	0
+pop.subpop.0.duplicate-retries = 0
 
 # ==You need to provide the species info for the subpopulation.==
 
@@ -78,7 +78,7 @@ pop.subpop.0.duplicate-retries =	0
 # By default elitism isn't done.  If you want to do elitism for, say,
 # the top 10 individuals in subpopulation 0, you'd say:
 
-# breed.elite.0 = 			10
+# breed.elite.0 = 10
 
 
 # ec.SimpleStatistics

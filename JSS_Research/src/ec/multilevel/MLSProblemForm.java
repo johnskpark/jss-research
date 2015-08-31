@@ -1,4 +1,4 @@
-package app.evolution.multilevel;
+package ec.multilevel;
 
 import ec.EvolutionState;
 import ec.Individual;

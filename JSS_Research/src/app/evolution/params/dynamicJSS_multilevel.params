@@ -3,7 +3,7 @@
 # See the file "LICENSE" for more information
 # TODO right, need to get the parameter file written up.
 
-parent.0 = ../../../ec/gp/koza/koza.params
+parent.0 = koza_mls.params
 
 eval = ec.coevolve.MultiPopCoevolutionaryEvaluator
 

@@ -5,6 +5,7 @@ import java.util.Map;
 import app.evolution.IJasimaFitness;
 import app.evolution.IJasimaTracker;
 import ec.EvolutionState;
+import ec.multilevel.MLSSubpopulation;
 
 /**
  * TODO javadoc.

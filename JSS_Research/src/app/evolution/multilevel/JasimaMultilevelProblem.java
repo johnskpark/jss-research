@@ -20,6 +20,8 @@ import ec.Initializer;
 import ec.Population;
 import ec.gp.GPIndividual;
 import ec.gp.GPProblem;
+import ec.multilevel.MLSProblemForm;
+import ec.multilevel.MLSSubpopulation;
 import ec.util.Parameter;
 
 public class JasimaMultilevelProblem extends GPProblem implements MLSProblemForm, IJasimaGPProblem {
