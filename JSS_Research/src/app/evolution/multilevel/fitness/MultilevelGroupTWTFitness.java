@@ -17,6 +17,8 @@ import ec.multilevel.MLSSubpopulation;
  * @author parkjohn
  *
  */
+
+// TODO there can be null individuals in the subpopulation.
 public class MultilevelGroupTWTFitness implements IJasimaMultilevelGroupFitness {
 
 	private static final String WEIGHTED_TARDINESS = "weightedTardMean";
@@ -41,19 +43,27 @@ public class MultilevelGroupTWTFitness implements IJasimaMultilevelGroupFitness 
 			MLSSubpopulation subpop,
 			boolean[] updateFitness,
 			boolean shouldSetContext) {
-		int groupSize = subpop.individuals.length;
+		int groupSize = 0;
 
 		// In the MLSEvaluator, the individuals should have
 		// been evaluated, so I can safely get their fitnesses
 		// to calculate the fitness of the subpopulation.
 		double avgIndFitnesses = 0.0;
 
-		for (int i = 0; i < groupSize; i++) {
+		for (int i = 0; i < subpop.individuals.length; i++) {
+			if (subpop.individuals[i] == null) {
+				continue;
+			}
+
 			assert subpop.individuals[i].evaluated;
 
 			KozaFitness fitness = (KozaFitness) subpop.individuals[i].fitness;
 			avgIndFitnesses += fitness.standardizedFitness();
+
+			groupSize++;
 		}
+
+		assert groupSize != 0;
 
 		avgIndFitnesses /= groupSize;
 

@@ -123,6 +123,10 @@ public class JasimaMultilevelProblem extends GPProblem implements MLSProblemForm
 
 		List<GPIndividual> indsList = new ArrayList<GPIndividual>();
 		for (Individual ind : subpop.individuals) {
+			if (ind == null) {
+				continue;
+			}
+
 			indsList.add((GPIndividual) ind);
 		}
 

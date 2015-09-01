@@ -189,8 +189,6 @@ public class MLSBreeder extends Breeder {
 		// half the groups and individuals are removed from the
 		// intermediate population to obtain the next generation.
 
-		// TODO The code never gets here?
-
 		Population initPop = ((MLSEvolutionState) state).getMetaPopulation();
 
 		Population metaPop = breedMetaPopulation(state, initPop);
@@ -213,7 +211,16 @@ public class MLSBreeder extends Breeder {
 		return !sequentialBreeding || (state.generation % state.population.subpops.length) == subpop;
 	}
 
-	public Population breedMetaPopulation(final EvolutionState state, final Population metaPop) {
+	/**
+	 * Breeds the subpopulations and individuals for the meta-population.
+	 *
+	 * A template which contains the information for the number of subpopulations
+	 * to breed is passed into this method as a parameter.
+	 *
+	 * @return A meta-population cloned from the template, then populated with
+	 * subpopulations and individuals from the population in EvolutionState.
+	 */
+	public Population breedMetaPopulation(final EvolutionState state, Population metaPop) {
 		Population newPop = null;
 
 		if (clonePipelineAndPopulation) {
@@ -238,6 +245,10 @@ public class MLSBreeder extends Breeder {
 		return newPop;
 	}
 
+	/**
+	 * Load in the original subpopulations of individuals from the EvolutionState
+	 * into the Population passed in as parameter.
+	 */
 	protected void loadPopulation(EvolutionState state, Population pop) {
 		int buffer = ((MLSEvolutionState) state).getTotalNumIndividuals();
 
@@ -257,7 +268,10 @@ public class MLSBreeder extends Breeder {
 		}
 	}
 
-	// Updates the population provided in the reference.
+	/**
+	 * Breed the subpopulations to fill out the vacant slots in the meta-population,
+	 * which is the Population provided in the parameter.
+	 */
 	protected void breedSubpopulations(EvolutionState state, Population pop) {
 		// The maximum number of threads required is the number of subpopulations to breed.
 		int subpopDiff = pop.subpops.length - state.population.subpops.length;
@@ -309,13 +323,14 @@ public class MLSBreeder extends Breeder {
 		}
 	}
 
+	/**
+	 * Breed the subpopulations in the chunk of the population provided.
+	 */
 	protected void breedSubpopChunk(Population newpop,
 			EvolutionState state,
 			int numGroup,
 			int from,
 			int threadnum) {
-		// FIXME The breeding of the subpopulations is hard coded into the breeder.
-		// This will need to be fixed sometime later down the line.
 		int index = from;
 		int upperBound = from + numGroup;
 		while (index < upperBound) {
@@ -327,6 +342,8 @@ public class MLSBreeder extends Breeder {
 		}
 	}
 
+	// FIXME The breeding of the subpopulations is hard coded into the breeder.
+	// This will need to be fixed sometime later down the line.
 	private int produceSubpop(final int min,
 			final int max,
 			final int index,
@@ -504,6 +521,11 @@ public class MLSBreeder extends Breeder {
 		return n;
 	}
 
+	/**
+	 * TODO javadoc.
+	 * @param state
+	 * @param newPop
+	 */
 	// Updates the population provided in the reference.
 	protected void breedIndividuals(EvolutionState state, Population newPop) {
 		// The number of threads will either be amount of threads specified,
@@ -584,6 +606,15 @@ public class MLSBreeder extends Breeder {
 		}
 	}
 
+	/**
+	 * TODO javadoc.
+	 * @param newpop
+	 * @param state
+	 * @param numInds
+	 * @param from
+	 * @param subpopFitnesses
+	 * @param threadnum
+	 */
 	protected void breedIndChunk(Population newpop,
 			EvolutionState state,
 			int[] numInds,
@@ -645,6 +676,13 @@ public class MLSBreeder extends Breeder {
         bp.finishProducing(state,subpopIndex,threadnum);
 	}
 
+	/**
+	 * TODO javadoc.
+	 * @param state
+	 * @param metaPop
+	 * @return
+	 */
+	// TODO this needs to trim out the null individuals from the subpopulations.
 	public Population breedFinalPopulation(final EvolutionState state, final Population metaPop) {
 		Population newPop = null;
 
@@ -665,6 +703,12 @@ public class MLSBreeder extends Breeder {
 		return newPop;
 	}
 
+	/**
+	 * TODO javadoc.
+	 * @param state
+	 * @param pop
+	 * @param metaPop
+	 */
 	protected void loadElites(EvolutionState state, Population pop, Population metaPop) {
 		// Sort and load in the best groups.
 		List<Subpopulation> metaSubpops = Arrays.asList(metaPop.subpops);
@@ -677,6 +721,10 @@ public class MLSBreeder extends Breeder {
 			pop.subpops[s] = subpop;
 
 			for (int i = 0; i < subpop.individuals.length; i++) {
+				if (subpop.individuals[i] == null) {
+					continue;
+				}
+
 				IndividualSubpop d = new IndividualSubpop();
 				d.ind = subpop.individuals[i];
 				d.subpop = s;
@@ -689,7 +737,7 @@ public class MLSBreeder extends Breeder {
 
 		Map<Integer, List<Individual>> subpopMap = new HashMap<Integer, List<Individual>>();
 
-		for (int i = 0; i < numIndividuals; i++) {
+		for (int i = 0; i < bestGroupInds.size(); i++) {
 			IndividualSubpop d = bestGroupInds.get(i);
 
 			if (!subpopMap.containsKey(d.subpop)) {
@@ -732,6 +780,12 @@ public class MLSBreeder extends Breeder {
 		state.population.subpops = retainedSubpops;
 	}
 
+	/**
+	 * TODO javadoc.
+	 * @param fitnesses
+	 * @param probabilities
+	 * @return
+	 */
 	// Helper method for selecting a subpopulation out of a population based on its fitness.
 	protected static int selectFitness(final double[] fitnesses, final double probabilities) {
 		// Assume Koza, i.e., between [0,inf) by normalising it using the softmax sigmoid.
