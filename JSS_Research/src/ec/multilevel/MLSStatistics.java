@@ -60,14 +60,16 @@ public class MLSStatistics extends Statistics {
 		}
 	}
 
-	public void postInitialisationStatsitics(final EvolutionState state) {
-		super.postInitializationStatistics(state);
+	@Override
+	public void preEvaluationStatistics(final EvolutionState state) {
+		super.preEvaluationStatistics(state);
 
 		// Set up the bestOfRun array. This cannot be carried out in setup,
 		// as the number of subpopulation may not have been determined yet.
 		bestIndsOfRun = new Individual[state.population.subpops.length];
 	}
 
+	@Override
 	public void postEvaluationStatistics(final EvolutionState state) {
 		super.postEvaluationStatistics(state);
 
@@ -147,6 +149,7 @@ public class MLSStatistics extends Statistics {
 		}
 	}
 
+	@Override
 	public void finalStatistics(final EvolutionState state, final int result) {
 		super.finalStatistics(state, result);
 

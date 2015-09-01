@@ -22,6 +22,7 @@ import ec.gp.GPIndividual;
 import ec.gp.GPProblem;
 import ec.multilevel.MLSProblemForm;
 import ec.multilevel.MLSSubpopulation;
+import ec.util.ParamClassLoadException;
 import ec.util.Parameter;
 
 public class JasimaMultilevelProblem extends GPProblem implements MLSProblemForm, IJasimaGPProblem {
@@ -85,8 +86,12 @@ public class JasimaMultilevelProblem extends GPProblem implements MLSProblemForm
 		rand = new Random(simSeed);
 
 		// Setup the tracker.
-		tracker = (IJasimaTracker) state.parameters.getInstanceForParameterEq(base.push(P_TRACKER), null, IJasimaTracker.class);
-		tracker.setProblem(this);
+		try {
+			tracker = (IJasimaTracker) state.parameters.getInstanceForParameterEq(base.push(P_TRACKER), null, IJasimaTracker.class);
+			tracker.setProblem(this);
+		} catch (ParamClassLoadException ex) {
+			state.output.warning("No tracker provided for JasimaMultilevelProblem.");
+		}
 
 		// Setup the number of subpopulations.
         numSubpops = state.parameters.getInt((new Parameter(Initializer.P_POP)).push(Population.P_SIZE), null, 1);
@@ -129,7 +134,9 @@ public class JasimaMultilevelProblem extends GPProblem implements MLSProblemForm
 			experiment.runExperiment();
 
 			groupFitness.accumulateFitness(expIndex, subpop, experiment.getResults(), tracker);
-			tracker.clear();
+			if (tracker != null) {
+				tracker.clear();
+			}
 		}
 
 		groupFitness.setFitness(state, subpop, updateFitness, shouldSetContext);
