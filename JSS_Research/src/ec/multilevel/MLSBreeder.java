@@ -189,6 +189,8 @@ public class MLSBreeder extends Breeder {
 		// half the groups and individuals are removed from the
 		// intermediate population to obtain the next generation.
 
+		// TODO The code never gets here?
+
 		Population initPop = ((MLSEvolutionState) state).getMetaPopulation();
 
 		Population metaPop = breedMetaPopulation(state, initPop);
@@ -271,7 +273,7 @@ public class MLSBreeder extends Breeder {
 
 		int subpopsPerThread = subpopDiff / numThreads;
 		int slop = subpopDiff - numThreads * subpopsPerThread;
-		int currentFrom = 0;
+		int currentFrom = state.population.subpops.length;
 
 		for (int thread = 0; thread < numThreads; thread++) {
 			if (slop > 0) {
@@ -374,7 +376,7 @@ public class MLSBreeder extends Breeder {
 
 			// Replace the selected parent with the subpopulation at start-1 so that its not considered for selection.
 			if (parentIndex1 != start - 1) {
-				fitnesses2[parentIndex1] = fitnesses2[start-1];
+				fitnesses2[parentIndex1] = fitnesses1[start-1];
 			}
 			int parentIndex2 = selectFitness(fitnesses2, state.random[threadnum].nextDouble());
 
@@ -664,8 +666,6 @@ public class MLSBreeder extends Breeder {
 	}
 
 	protected void loadElites(EvolutionState state, Population pop, Population metaPop) {
-		// FIXME probably split this into multiple smaller methods.
-
 		// Sort and load in the best groups.
 		List<Subpopulation> metaSubpops = Arrays.asList(metaPop.subpops);
 		Collections.sort(metaSubpops, new SubpopulationComparator());
@@ -733,9 +733,9 @@ public class MLSBreeder extends Breeder {
 	}
 
 	// Helper method for selecting a subpopulation out of a population based on its fitness.
-	protected static int selectFitness(final double[] fitnesses,
-			final double probabilities) {
+	protected static int selectFitness(final double[] fitnesses, final double probabilities) {
 		// Assume Koza, i.e., between [0,inf) by normalising it using the softmax sigmoid.
+		// FIXME need this to be more generic in the future.
 		double[] probs = new double[fitnesses.length];
 		double totalFitness = 0.0;
 		for (int i = 0; i < fitnesses.length; i++) {
@@ -750,33 +750,6 @@ public class MLSBreeder extends Breeder {
 		return RandomChoice.pickFromDistribution(probs, probabilities);
 	}
 
-	// FIXME Either fix this or remove it later down the line.
-//	private interface BreederThreadFactory {
-//		public Runnable createBreederThread(Population newpop,
-//				int numToBreed,
-//				int from,
-//				EvolutionState state,
-//				int threadnum,
-//				MLSBreeder parent);
-//	}
-
-//	private class SubpopBreederThreadFactory implements BreederThreadFactory {
-//		public Runnable createBreederThread(Population newpop,
-//				int numToBreed,
-//				int from,
-//				EvolutionState state,
-//				int threadnum,
-//				MLSBreeder parent) {
-//			SubpopBreederThread r = new SubpopBreederThread();
-//			r.newpop = newpop;
-//			r.numGroup = numToBreed;
-//			r.from = from;
-//			r.threadnum = threadnum;
-//			r.parent = parent;
-//			return r;
-//		}
-//	}
-
 	private class SubpopBreederThread implements Runnable {
 		Population newpop;
 		int numGroup;
@@ -789,23 +762,6 @@ public class MLSBreeder extends Breeder {
 			parent.breedSubpopChunk(newpop, state, numGroup, from, threadnum);
 		}
 	}
-
-//	private class IndividualBreederThreadFactory implements BreederThreadFactory {
-//		public Runnable createBreederThread(Population newpop,
-//				int numToBreed,
-//				int from,
-//				EvolutionState state,
-//				int threadnum,
-//				MLSBreeder parent) {
-//			IndividualBreederThread r = new IndividualBreederThread();
-//			r.newpop = newpop;
-//			r.numInds = numToBreed;
-//			r.from = from;
-//			r.threadnum = threadnum;
-//			r.parent = parent;
-//			return r;
-//		}
-//	}
 
 	private class IndividualBreederThread implements Runnable {
 		Population newpop;

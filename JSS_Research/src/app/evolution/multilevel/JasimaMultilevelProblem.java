@@ -5,6 +5,8 @@ import jasima.core.util.observer.NotifierListener;
 import jasima.shopSim.models.dynamicShop.DynamicShopExperiment;
 import jasima.shopSim.util.BasicJobStatCollector;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import app.evolution.AbsGPPriorityRule;
@@ -113,10 +115,19 @@ public class JasimaMultilevelProblem extends GPProblem implements MLSProblemForm
 			final boolean countVictoriesOnly,
 			final int[] subpops,
 			final int threadnum) {
-		GPIndividual[] gpInds = new GPIndividual[subpop.individuals.length];
-		for (int i = 0; i < subpop.individuals.length; i++) {
-			gpInds[i] = (GPIndividual) subpop.individuals[i];
+		// If the subpopulation has already been evaluated,
+		// don't bother re-evaluating.
+		if (subpop.isEvaluated()) {
+			return;
 		}
+
+		List<GPIndividual> indsList = new ArrayList<GPIndividual>();
+		for (Individual ind : subpop.individuals) {
+			indsList.add((GPIndividual) ind);
+		}
+
+		GPIndividual[] gpInds = new GPIndividual[indsList.size()];
+		indsList.toArray(gpInds);
 
 		JasimaGPConfig config = new JasimaGPConfig();
 		config.setState(state);
@@ -150,6 +161,12 @@ public class JasimaMultilevelProblem extends GPProblem implements MLSProblemForm
 			final Individual ind,
 			final int subpopulation,
 			final int threadnum) {
+		// If the individual has already been evaluated,
+		// don't bother re-evaluating.
+		if (ind.evaluated) {
+			return;
+		}
+
 		JasimaGPConfig config = new JasimaGPConfig();
 		config.setState(state);
 		config.setIndividuals(new GPIndividual[]{(GPIndividual) ind});

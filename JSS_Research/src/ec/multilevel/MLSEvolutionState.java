@@ -121,10 +121,7 @@ public class MLSEvolutionState extends EvolutionState {
 			return R_FAILURE;
 		}
 
-		// PRE-BREEDING EXCHANGING
-		statistics.prePreBreedingExchangeStatistics(this);
-		metaPopulation = exchanger.preBreedingExchangePopulation(this);
-		statistics.postPreBreedingExchangeStatistics(this);
+		// Pre-breeding exchange is not called for MLSEvolutionState (for now).
 
 		String exchangerWantsToShutdown = exchanger.runComplete(this);
 		if (exchangerWantsToShutdown!=null) {
@@ -152,10 +149,7 @@ public class MLSEvolutionState extends EvolutionState {
 		// POST-BREEDING EXCHANGING
 		statistics.postBreedingStatistics(this);
 
-		// POST-BREEDING EXCHANGING
-		statistics.prePostBreedingExchangeStatistics(this);
-		metaPopulation = exchanger.postBreedingExchangePopulation(this);
-		statistics.postPostBreedingExchangeStatistics(this);
+		// Post-breeding exchange is not called for MLSEvolutionState (for now).
 
 		// SELECTION
 		population = ((MLSBreeder) breeder).breedFinalPopulation(this, metaPopulation);
