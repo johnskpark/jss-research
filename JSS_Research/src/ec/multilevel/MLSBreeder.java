@@ -252,25 +252,36 @@ public class MLSBreeder extends Breeder {
 	protected void loadPopulation(EvolutionState state, Population pop) {
 		int buffer = ((MLSEvolutionState) state).getTotalNumIndividuals();
 
+		// TODO temporary message.
+		System.out.println("Number of subpopulations: " + state.population.subpops.length);
+
 		// Load in the subpopulations into the meta population.
-		for (int i = 0; i < state.population.subpops.length; i++) {
-			Subpopulation subpop = state.population.subpops[i];
+		for (int s = 0; s < state.population.subpops.length; s++) {
+			Subpopulation subpop = state.population.subpops[s];
 
-			pop.subpops[i] = (Subpopulation) subpop.emptyClone();
-			pop.subpops[i].individuals = new Individual[subpop.individuals.length + buffer];
+			pop.subpops[s] = (Subpopulation) subpop.emptyClone();
+			pop.subpops[s].individuals = new Individual[subpop.individuals.length + buffer];
 
-			numIndividualsPerSubpop[i] = subpop.individuals.length;
-			numIndividuals += numIndividualsPerSubpop[i];
+			// TODO temporary message.
+			System.out.println("Number of individuals in subpop " + s + ": " + subpop.individuals.length);
 
-			for (int j = 0; j < subpop.individuals.length; j++) {
-				pop.subpops[i].individuals[j] = (Individual) subpop.individuals[j].clone();
+			numIndividualsPerSubpop[s] = subpop.individuals.length;
+			numIndividuals += numIndividualsPerSubpop[s];
+
+			for (int i = 0; i < subpop.individuals.length; i++) {
+				// TODO
+				if (subpop.individuals[i] == null) {
+					state.output.fatal("An individual is null.");
+				}
+
+				pop.subpops[s].individuals[i] = (Individual) subpop.individuals[i].clone();
 			}
 		}
 	}
 
 	/**
-	 * Breed the subpopulations to fill out the vacant slots in the meta-population,
-	 * which is the Population provided in the parameter.
+	 * Breed the subpopulations to fill out the vacant slots in the meta-population.
+	 * The Population provided in the parameter and is updated by reference.
 	 */
 	protected void breedSubpopulations(EvolutionState state, Population pop) {
 		// The maximum number of threads required is the number of subpopulations to breed.
@@ -522,11 +533,10 @@ public class MLSBreeder extends Breeder {
 	}
 
 	/**
-	 * TODO javadoc.
-	 * @param state
-	 * @param newPop
+	 * Breed the individuals to fill out the vacant slots in the individuals array in
+	 * the subpopulations of the meta-population. The meta-population is the Population
+	 * provided in the parameter and is updated by reference.
 	 */
-	// Updates the population provided in the reference.
 	protected void breedIndividuals(EvolutionState state, Population newPop) {
 		// The number of threads will either be amount of threads specified,
 		// or the number of individuals which need to be generated
@@ -607,13 +617,7 @@ public class MLSBreeder extends Breeder {
 	}
 
 	/**
-	 * TODO javadoc.
-	 * @param newpop
-	 * @param state
-	 * @param numInds
-	 * @param from
-	 * @param subpopFitnesses
-	 * @param threadnum
+	 * Breed the individuals in the chunk of the subpopulation provided.
 	 */
 	protected void breedIndChunk(Population newpop,
 			EvolutionState state,
@@ -677,12 +681,13 @@ public class MLSBreeder extends Breeder {
 	}
 
 	/**
-	 * TODO javadoc.
-	 * @param state
-	 * @param metaPop
-	 * @return
+	 * Breeds the subpopulations and individuals for the final population from the
+	 * meta-population provided.
+	 *
+	 * @return The final-population cloned from the population in EvolutionState,
+	 * then populated by the elite subpopulations and individuals from the meta-
+	 * population.
 	 */
-	// TODO this needs to trim out the null individuals from the subpopulations.
 	public Population breedFinalPopulation(final EvolutionState state, final Population metaPop) {
 		Population newPop = null;
 
@@ -704,11 +709,10 @@ public class MLSBreeder extends Breeder {
 	}
 
 	/**
-	 * TODO javadoc.
-	 * @param state
-	 * @param pop
-	 * @param metaPop
+	 * Filters out the elite subpopulations and individuals from the meta-population
+	 * and inserts them into the final population.
 	 */
+	// TODO I'm not keeping track of the number of individuals.
 	protected void loadElites(EvolutionState state, Population pop, Population metaPop) {
 		// Sort and load in the best groups.
 		List<Subpopulation> metaSubpops = Arrays.asList(metaPop.subpops);
@@ -737,7 +741,7 @@ public class MLSBreeder extends Breeder {
 
 		Map<Integer, List<Individual>> subpopMap = new HashMap<Integer, List<Individual>>();
 
-		for (int i = 0; i < bestGroupInds.size(); i++) {
+		for (int i = 0; i < ((MLSEvolutionState) state).getTotalNumIndividuals(); i++) {
 			IndividualSubpop d = bestGroupInds.get(i);
 
 			if (!subpopMap.containsKey(d.subpop)) {
@@ -748,7 +752,9 @@ public class MLSBreeder extends Breeder {
 		}
 
 		// Upload the elite indviduals to the state, removing any empty subpopulations.
-		boolean[] isEmpty = new boolean[state.population.subpops.length];
+		boolean[] subpopIsEmpty = new boolean[state.population.subpops.length];
+		boolean anySubpopIsEmpty = false;
+
 		int numRetain = 0;
 
 		for (int s = 0; s < state.population.subpops.length; s++) {
@@ -762,22 +768,27 @@ public class MLSBreeder extends Breeder {
 					subpop.individuals[i] = inds.get(i);
 				}
 
-				isEmpty[s] = false;
+				subpopIsEmpty[s] = false;
 				numRetain++;
 			} else {
-				isEmpty[s] = true;
+				subpopIsEmpty[s] = true;
+				anySubpopIsEmpty = true;
 			}
 		}
 
-		Subpopulation[] retainedSubpops = new Subpopulation[numRetain];
-		int index = 0;
-		for (int s = 0; s < state.population.subpops.length; s++) {
-			if (!isEmpty[s]) {
-				retainedSubpops[index++] = state.population.subpops[s];
+		// If there is a case where subpopulation is empty due to individual filtering,
+		// then remove the particular subpopulation.
+		if (anySubpopIsEmpty) {
+			Subpopulation[] retainedSubpops = new Subpopulation[numRetain];
+			int index = 0;
+			for (int s = 0; s < state.population.subpops.length; s++) {
+				if (!subpopIsEmpty[s]) {
+					retainedSubpops[index++] = state.population.subpops[s];
+				}
 			}
-		}
 
-		state.population.subpops = retainedSubpops;
+			state.population.subpops = retainedSubpops;
+		}
 	}
 
 	/**
@@ -804,6 +815,7 @@ public class MLSBreeder extends Breeder {
 		return RandomChoice.pickFromDistribution(probs, probabilities);
 	}
 
+	// Threads for breeding subpopulations.
 	private class SubpopBreederThread implements Runnable {
 		Population newpop;
 		int numGroup;
@@ -817,6 +829,7 @@ public class MLSBreeder extends Breeder {
 		}
 	}
 
+	// Thread for breeding individuals.
 	private class IndividualBreederThread implements Runnable {
 		Population newpop;
 		int[] numInds;
@@ -831,6 +844,7 @@ public class MLSBreeder extends Breeder {
 		}
 	}
 
+	// Compares the fitnesses of the subpopulations.
 	private class SubpopulationComparator implements Comparator<Subpopulation> {
 		public int compare(Subpopulation s1, Subpopulation s2) {
 			Fitness fitness1 = ((MLSSubpopulation) s1).getFitness();
@@ -846,11 +860,13 @@ public class MLSBreeder extends Breeder {
 		}
 	}
 
+	// Storage class for storing the individual and the subpopulation it belongs to.
 	private class IndividualSubpop {
 		Individual ind;
 		int subpop;
 	}
 
+	// Compares the fitnesses of the individuals.
 	private class IndividualComparator implements Comparator<IndividualSubpop> {
 		public int compare(IndividualSubpop d1, IndividualSubpop d2) {
 			if (d1.ind.fitness.betterThan(d2.ind.fitness)) {
