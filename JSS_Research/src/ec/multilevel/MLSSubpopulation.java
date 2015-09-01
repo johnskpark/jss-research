@@ -7,6 +7,12 @@ import ec.Individual;
 import ec.Subpopulation;
 import ec.util.Parameter;
 
+/**
+ * TODO javadoc.
+ *
+ * @author parkjohn
+ *
+ */
 public class MLSSubpopulation extends Subpopulation {
 
 	private static final long serialVersionUID = 1740278116450965418L;

@@ -5,27 +5,9 @@
 
 parent.0 = koza_mls.params
 
-eval = ec.coevolve.MultiPopCoevolutionaryEvaluator
-
-eval.num-shuffled =	0
-eval.num-current = 0
-eval.num-elites = 1
-eval.num-prev = 0
-eval.select-current = ec.select.RandomSelection
-eval.select-prev = ec.select.RandomSelection
-
-#parent.0 = koza_mo_coop.params
-#multi.fitness.num-objectives = 3
-#multi.fitness.maximize = false
-
-# multi.fitness.num-objectives = 3
-# multi.fitness.maximize = false
-
 pop.subpops = 4
-pop.default-subpop = 0
-
 pop.subpop.0.size = 256
-pop.subpop.0.species.ind = app.evolution.coop.JasimaCoopIndividual
+pop.subpop.0.species.ind = app.evolution.multilevel.JasimaMultilevelIndividual
 
 # the next four items are already defined in koza.params, but we
 # put them here to be clear.
@@ -83,12 +65,14 @@ gp.fs.0.func.18.nc = nc0
 
 # stat = app.evolution.coop.statistics.JasimaCoopMOStatistics
 
-eval.problem = app.evolution.coop.JasimaCoopProblem
+eval.problem = app.evolution.multilevel.JasimaMultilevelProblem
 eval.problem.data = app.evolution.JasimaGPData
 
-eval.problem.rule = app.evolution.priorityRules.EnsemblePriorityRule
-eval.problem.fitness = app.evolution.coop.fitness.CoopTWTFitness
-eval.problem.tracker = app.evolution.tracker.EnsembleDecisionTracker
+eval.problem.group-rule = app.evolution.priorityRules.EnsemblePriorityRule
+eval.problem.group-fitness = app.evolution.multilevel.fitness.MultilevelGroupTWTFitness
+
+eval.problem.ind-rule = app.evolution.priorityRules.BasicPriorityRule
+eval.problem.ind-fitness = app.evolution.multilevel.fitness.MultilevelIndividualTWTFitness
 
 eval.problem.simulator = app.simConfig.huntConfig.FourOpSimConfig
 eval.problem.simulator.seed = 15

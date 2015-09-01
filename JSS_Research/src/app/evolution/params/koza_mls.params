@@ -22,6 +22,7 @@ parent.0 = ../../../ec/multilevel.params
 # Koza-style fitness metrics, just to make everyone happy :-)
 #
 
+pop.subpop.0.fitness = ec.gp.koza.KozaFitness
 pop.subpop.0.species.fitness = ec.gp.koza.KozaFitness
 
 #
