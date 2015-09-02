@@ -16,6 +16,7 @@ import ec.Individual;
 import ec.Initializer;
 import ec.Population;
 import ec.Subpopulation;
+import ec.util.Pair;
 import ec.util.Parameter;
 import ec.util.RandomChoice;
 import ec.util.ThreadPool;
@@ -641,76 +642,8 @@ public class MLSBreeder extends Breeder {
 	/**
 	 * Breed the individuals in the chunk of the subpopulation provided.
 	 */
-
 	// TODO ah right, this is single threaded, so it will only breed in that
 	// one particular subpopulation.
-
-	// FIXME For now, this assumes that the BreedingPipline for all
-	// subpopulations will produce the same type of individuals.
-	// This will need to be fixed sometime in the future.
-//	protected void breedIndChunk(Population newpop,
-//			EvolutionState state,
-//			int numInds,
-//			int[] from,
-//			final double[] subpopFitnesses,
-//			int threadnum) {
-//		// Randomly select a parent based on the fitness.
-//		int subpopIndex = selectFitness(subpopFitnesses, state.random[threadnum].nextDouble());
-//
-//		MLSSubpopulation subpop = (MLSSubpopulation) newpop.subpops[subpopIndex];
-//
-//		// Get the breeding pipeline from the subpopulation.
-//		BreedingPipeline bp = null;
-//		if (clonePipelineAndPopulation) {
-//			bp = (BreedingPipeline) subpop.species.pipe_prototype.clone();
-//		} else {
-//			bp = (BreedingPipeline) subpop.species.pipe_prototype;
-//		}
-//
-//		// Check to make sure that the breeding pipeline produces
-//		// the right kind of individuals.  Don't want a mistake there! :-)
-//		int index;
-//		if (!bp.produces(state, newpop, subpopIndex, threadnum)) {
-//			state.output.fatal("The Breeding Pipeline of subpopulation " + subpopIndex + " does not produce individuals of the expected species " + newpop.subpops[subpopIndex].species.getClass().getName() + " or fitness " + newpop.subpops[subpopIndex].species.f_prototype );
-//		}
-//		bp.prepareToProduce(state, subpopIndex, threadnum);
-//
-//		// Start breeding!
-//		index = from[subpopIndex];
-//		int upperbound = from[subpopIndex] + numInds;
-//
-//		while(index < upperbound) {
-//			// TODO right, put the code in here.
-//
-//			int numBreed = bp.produce(1,
-//					upperbound - index,
-//					index,
-//					subpopIndex,
-//					subpop.individuals,
-//					state,
-//					threadnum);
-//			numIndividualsPerSubpop[subpopIndex] += numBreed;
-//			numIndividuals += numBreed;
-//
-//			// Evaluate the offspring individuals as they are being generated.
-//			for (int i = index; i < index + numBreed; i++) {
-//				if (subpop.individuals[i] == null) {
-//					state.output.fatal("The individuals were not breed at the subpopulation " + subpopIndex + ".");
-//				}
-//
-//				((MLSEvaluator) state.evaluator).evaluateIndividual(state, subpop, subpopIndex, subpop.individuals[i]);
-//			}
-//
-//			index += numBreed;
-//		}
-//
-//		if (index > upperbound) {
-//			state.output.fatal("Whoa!  A breeding pipeline overwrote the space of another pipeline in subpopulation " + subpopIndex + ".  You need to check your breeding pipeline code (in produce() ).");
-//		}
-//
-//		bp.finishProducing(state,subpopIndex,threadnum);
-//	}
-
 	protected void breedIndChunk(Population newpop,
 			EvolutionState state,
 			int numInds,
@@ -743,6 +676,8 @@ public class MLSBreeder extends Breeder {
 			// Start breeding!
 			int index = from[subpopIndex] + totalNumBred;
 			int upperBound = from[subpopIndex] + numInds;
+
+			System.out.println("Index: " + index);
 
 			int numBred = bp.produce(1,
 					upperBound - index,
@@ -811,7 +746,7 @@ public class MLSBreeder extends Breeder {
 		List<Subpopulation> metaSubpops = Arrays.asList(metaPop.subpops);
 		Collections.sort(metaSubpops, new SubpopulationComparator());
 
-		List<IndividualSubpop> bestGroupInds = new ArrayList<IndividualSubpop>(numIndividuals);
+		List<Pair<Individual, Integer>> bestGroupInds = new ArrayList<Pair<Individual, Integer>>(numIndividuals);
 
 		for (int s = 0; s < pop.subpops.length; s++) {
 			Subpopulation subpop = metaSubpops.get(s);
@@ -822,9 +757,7 @@ public class MLSBreeder extends Breeder {
 					continue;
 				}
 
-				IndividualSubpop d = new IndividualSubpop();
-				d.ind = subpop.individuals[i];
-				d.subpop = s;
+				Pair<Individual, Integer> d = new Pair<Individual, Integer>(subpop.individuals[i], s);
 				bestGroupInds.add(d);
 			}
 		}
@@ -835,13 +768,13 @@ public class MLSBreeder extends Breeder {
 		Map<Integer, List<Individual>> subpopMap = new HashMap<Integer, List<Individual>>();
 
 		for (int i = 0; i < ((MLSEvolutionState) state).getTotalNumIndividuals(); i++) {
-			IndividualSubpop d = bestGroupInds.get(i);
+			Pair<Individual, Integer> d = bestGroupInds.get(i);
 
-			if (!subpopMap.containsKey(d.subpop)) {
-				subpopMap.put(d.subpop, new ArrayList<Individual>());
+			if (!subpopMap.containsKey(d.i2)) {
+				subpopMap.put(d.i2, new ArrayList<Individual>());
 			}
 
-			subpopMap.get(d.subpop).add(d.ind);
+			subpopMap.get(d.i2).add(d.i1);
 		}
 
 		// Upload the elite indviduals to the state, removing any empty subpopulations.
@@ -953,18 +886,12 @@ public class MLSBreeder extends Breeder {
 		}
 	}
 
-	// Storage class for storing the individual and the subpopulation it belongs to.
-	private class IndividualSubpop {
-		Individual ind;
-		int subpop;
-	}
-
 	// Compares the fitnesses of the individuals.
-	private class IndividualComparator implements Comparator<IndividualSubpop> {
-		public int compare(IndividualSubpop d1, IndividualSubpop d2) {
-			if (d1.ind.fitness.betterThan(d2.ind.fitness)) {
+	private class IndividualComparator implements Comparator<Pair<Individual, Integer>> {
+		public int compare(Pair<Individual, Integer> d1, Pair<Individual, Integer> d2) {
+			if (d1.i1.fitness.betterThan(d2.i1.fitness)) {
 				return -1;
-			} else if (d1.ind.fitness.betterThan(d2.ind.fitness)) {
+			} else if (d1.i1.fitness.betterThan(d2.i1.fitness)) {
 				return 1;
 			} else {
 				return 0;

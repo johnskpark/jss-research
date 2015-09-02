@@ -2,7 +2,8 @@
 # Licensed under the Academic Free License version 3.0
 # See the file "LICENSE" for more information
 
-# TODO we don't want to use tournament selection here, but use random selection.
+# TODO we don't want to use tournament selection here, but use random selection for the individuals.
+# TODO It is also causing an error, where the subpopulation provided in the parameter isn't being used.
 
 #
 # This file roughly defines a typeless, Koza-I-style
@@ -76,12 +77,12 @@ pop.subpop.0.species.pipe.source.1.prob = 0.1
 # level of course.
 #
 
-# Reproduction will use Tournament Selection
-breed.reproduce.source.0 = ec.select.TournamentSelection
+# Reproduction will use MLSRandomSelection
+breed.reproduce.source.0 = ec.multilevel.MLSRandomSelection
 
 # Crossover will use Tournament Selection, try only 1
 # time, have a max depth of 17, and use KozaNodeSelector
-gp.koza.xover.source.0 = ec.select.TournamentSelection
+gp.koza.xover.source.0 = ec.multilevel.MLSRandomSelection
 gp.koza.xover.source.1 = same
 gp.koza.xover.ns.0 = ec.gp.koza.KozaNodeSelector
 gp.koza.xover.ns.1 = same
@@ -99,7 +100,7 @@ gp.koza.xover.tries = 1
 # and GROW for building.  Also, Point Mutation uses a GrowBuilder
 # by default, with a default of min-depth=max-depth=5
 # as shown a ways below
-gp.koza.mutate.source.0 = ec.select.TournamentSelection
+gp.koza.mutate.source.0 = ec.multilevel.MLSRandomSelection
 gp.koza.mutate.ns.0 = ec.gp.koza.KozaNodeSelector
 gp.koza.mutate.build.0 = ec.gp.koza.GrowBuilder
 gp.koza.mutate.maxdepth = 17
@@ -115,7 +116,7 @@ gp.koza.mutate.tries = 1
 # The default tournament size for TournamentSelection is 7
 #
 
-select.tournament.size = 7
+# select.tournament.size = 7
 
 
 
