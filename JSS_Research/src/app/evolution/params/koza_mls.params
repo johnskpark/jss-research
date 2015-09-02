@@ -2,6 +2,8 @@
 # Licensed under the Academic Free License version 3.0
 # See the file "LICENSE" for more information
 
+# TODO we don't want to use tournament selection here, but use random selection.
+
 #
 # This file roughly defines a typeless, Koza-I-style
 # generational GP system with a single tree (meaning
