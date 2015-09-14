@@ -24,6 +24,12 @@ public class MLSEvolutionState extends EvolutionState {
 	 */
 	private Population metaPopulation;
 
+	/**
+	 * Stores the temporary subpopulations of individuals after the
+	 * subpopulation breeding phase.
+	 */
+	private Population tempPopulation;  // TODO rename this later down the line.
+
 	private int totalNumIndividuals;
 
 	public void setup(final EvolutionState state, final Parameter base) {
@@ -186,6 +192,20 @@ public class MLSEvolutionState extends EvolutionState {
 	 */
 	public Population getMetaPopulation() {
 		return metaPopulation;
+	}
+
+	/**
+	 * Returns the reference to the temporary population
+	 */
+	public Population getTempPopulation() {
+		return tempPopulation;
+	}
+
+	/**
+	 * Setter for the temporary population.
+	 */
+	public void setTempPopulation(Population tempPop) {
+		tempPopulation = tempPop;
 	}
 
 }

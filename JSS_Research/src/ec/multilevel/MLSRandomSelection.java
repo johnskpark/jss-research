@@ -5,6 +5,7 @@ import java.util.List;
 
 import ec.EvolutionState;
 import ec.Individual;
+import ec.Subpopulation;
 import ec.select.RandomSelection;
 import ec.util.Pair;
 
@@ -28,7 +29,10 @@ public class MLSRandomSelection extends RandomSelection {
 			final Individual[] inds,
 			final EvolutionState state,
 			final int thread) {
-		System.out.println("Start: " + start);
+		// TODO
+		System.out.printf("Index: %d, Start: %d, Size: %d\n", subpopulation, start, inds.length);
+
+		Subpopulation tempSubpop = ((MLSEvolutionState) state).getTempPopulation().subpops[subpopulation];
 
 		int n = INDS_PRODUCED;
 		if (n < min) n = min;
@@ -36,9 +40,9 @@ public class MLSRandomSelection extends RandomSelection {
 
 		// Get all of the non-null individuals in the inds array.
 		List<Pair<Individual, Integer>> nonNullInds = new ArrayList<Pair<Individual, Integer>>();
-		for (int i = 0; i < start; i++) {
-			if (inds[i] != null) {
-				nonNullInds.add(new Pair<Individual, Integer>(inds[i], i));
+		for (int i = 0; i < tempSubpop.individuals.length; i++) {
+			if (tempSubpop.individuals[i] != null) {
+				nonNullInds.add(new Pair<Individual, Integer>(tempSubpop.individuals[i], i));
 			}
 		}
 
@@ -48,7 +52,7 @@ public class MLSRandomSelection extends RandomSelection {
 			inds[start+i] = nonNullInds.get(index).i1;
 		}
 
-		return 0;
+		return n;
 	}
 
 }
