@@ -400,8 +400,6 @@ public class MLSBreeder extends Breeder {
 			final Population newpop,
 			final EvolutionState state,
 			final int threadnum) {
-		System.out.println("Crossover");
-
 		if (start < CROSSOVER_PARENTS_REQUIRED) {
 			state.output.fatal("There are insufficient number of subpopulations to generate new subpopulations. Number of subpopulations: " + start + ", subpopulations required: " + CROSSOVER_PARENTS_REQUIRED);
 		}
@@ -433,7 +431,12 @@ public class MLSBreeder extends Breeder {
 				parentIndex2 = start-1;
 			}
 
-			Subpopulation[] parents = new Subpopulation[]{newpop.subpops[parentIndex1], newpop.subpops[parentIndex2]};
+			// FIXME could probably do away with this right?
+			@SuppressWarnings("unchecked")
+			Pair<Subpopulation, Integer>[] parents = new Pair[]{
+					new Pair<Subpopulation, Integer>(newpop.subpops[parentIndex1], parentIndex1),
+					new Pair<Subpopulation, Integer>(newpop.subpops[parentIndex2], parentIndex2)
+			};
 
 			// Arbitrarily select the individuals to exchange in between the two subpopulations.
 			int[] swapIndices = new int[]{
@@ -443,28 +446,27 @@ public class MLSBreeder extends Breeder {
 			int length = CROSSOVER_PARENTS_REQUIRED;
 
 			// Only generate as many children as required.
-			MLSSubpopulation[] children = new MLSSubpopulation[n];
 			for (int child = 0; child < n; child++) {
-				int parentIndex = child % length;
-
 				// Populate the child subpopulation with individuals.
-				children[child] = (MLSSubpopulation) parents[parentIndex].emptyClone();
+				MLSSubpopulation childSubpop = (MLSSubpopulation) parents[child%length].i1.emptyClone();
 
-				for (int ind = 0; ind < parents[child%length].individuals.length; ind++) { // TODO
+				int parentLength = numIndividualsPerSubpop[parents[child%length].i2];
+
+				for (int ind = 0; ind < parentLength; ind++) {
 					if (ind == swapIndices[child]) {
-						children[child].individuals[ind] = parents[(child+1)%length].individuals[swapIndices[(child+1)%length]];
+						childSubpop.individuals[ind] = parents[(child+1)%length].i1.individuals[swapIndices[(child+1)%length]];
 					} else {
-						children[child].individuals[ind] = parents[parentIndex].individuals[ind];
+						childSubpop.individuals[ind] = parents[child%length].i1.individuals[ind];
 					}
 				}
 
 				// Evaluate the child subpopulation.
-				((MLSEvaluator) state.evaluator).evaluateSubpopulation(state, children[child], index+child);
+				((MLSEvaluator) state.evaluator).evaluateSubpopulation(state, childSubpop, index+child);
 
 				// Add the subpopulation to the population
-				newpop.subpops[index+child] = children[child];
+				newpop.subpops[index+child] = childSubpop;
 
-				numIndividualsPerSubpop[index+child] = numIndividualsPerSubpop[parentIndex];
+				numIndividualsPerSubpop[index+child] = parentLength;
 				numIndividuals += numIndividualsPerSubpop[index+child];
 			}
 

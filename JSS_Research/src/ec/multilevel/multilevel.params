@@ -40,7 +40,7 @@ breed.mutation-prob = 0.1
 # We're using standard evaluation -- no coevolution
 eval = ec.multilevel.MLSEvaluator
 
-# We're using simple statistics
+# We're using multilevel selection statistics
 stat = ec.multilevel.MLSStatistics
 
 # run for 51 generations, quit prematurely if I find something ideal
