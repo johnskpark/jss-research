@@ -83,7 +83,7 @@ pop.subpop.0.duplicate-retries = 0
 # breed.elite.0 = 10
 
 
-# ec.SimpleStatistics
+# ec.multilevel.MLSStatistics
 # ==============================
 
 # output statistics to the file "out.stat" in the directory

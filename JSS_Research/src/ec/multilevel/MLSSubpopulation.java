@@ -65,4 +65,11 @@ public class MLSSubpopulation extends Subpopulation {
 		return evaluated;
 	}
 
+	/**
+	 * Set whether the subpopulation it is evaluated or not.
+	 */
+	public void setEvaluated(boolean eval) {
+		evaluated = eval;
+	}
+
 }

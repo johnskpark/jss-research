@@ -2,9 +2,6 @@
 # Licensed under the Academic Free License version 3.0
 # See the file "LICENSE" for more information
 
-# TODO we don't want to use tournament selection here, but use random selection for the individuals.
-# TODO It is also causing an error, where the subpopulation provided in the parameter isn't being used.
-
 #
 # This file roughly defines a typeless, Koza-I-style
 # generational GP system with a single tree (meaning

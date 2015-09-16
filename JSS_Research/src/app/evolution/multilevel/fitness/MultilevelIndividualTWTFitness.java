@@ -36,6 +36,8 @@ public class MultilevelIndividualTWTFitness implements IJasimaMultilevelIndividu
 		// Set the fitness is the mean total weighted
 		// tardiness over the problem instances.
 		((KozaFitness) ind.fitness).setStandardizedFitness(state, overallStat.mean());
+
+		ind.evaluated = true;
 	}
 
 	@Override

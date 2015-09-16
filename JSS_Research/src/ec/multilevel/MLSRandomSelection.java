@@ -29,9 +29,6 @@ public class MLSRandomSelection extends RandomSelection {
 			final Individual[] inds,
 			final EvolutionState state,
 			final int thread) {
-		// TODO
-		System.out.printf("Index: %d, Start: %d, Size: %d\n", subpopulation, start, inds.length);
-
 		Subpopulation tempSubpop = ((MLSEvolutionState) state).getTempPopulation().subpops[subpopulation];
 
 		int n = INDS_PRODUCED;

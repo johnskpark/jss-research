@@ -47,6 +47,10 @@ public class MLSStatistics extends Statistics {
 
 		File statisticsFile = state.parameters.getFile(base.push(P_STATISTICS_FILE), null);
 
+        doFinal = state.parameters.getBoolean(base.push(P_DO_FINAL),null,true);
+        doGeneration = state.parameters.getBoolean(base.push(P_DO_GENERATION),null,true);
+        doMessage = state.parameters.getBoolean(base.push(P_DO_MESSAGE),null,true);
+
 		if (silentFile) {
 			statisticsLog = Output.NO_LOGS;
 		} else if (statisticsFile != null) {
@@ -58,6 +62,8 @@ public class MLSStatistics extends Statistics {
 		} else {
 			state.output.warning("No statistics file specified, printing to stdout at end.", base.push(P_STATISTICS_FILE));
 		}
+
+		// TODO need to load in the doGeneration and such.
 	}
 
 	@Override
@@ -118,9 +124,9 @@ public class MLSStatistics extends Statistics {
 			String evaluatedStr;
 
 			if (bestSubpop.isEvaluated()) {
-				evaluatedStr = " ";
+				evaluatedStr = "";
 			} else {
-				evaluatedStr = " (evaluated flag not set): ";
+				evaluatedStr = "(evaluated flag not set): ";
 			}
 
 			state.output.message("Best subpop fitness of generation " + evaluatedStr + bestSubpop.getFitness().fitnessToStringForHumans());
@@ -139,9 +145,9 @@ public class MLSStatistics extends Statistics {
 				String evaluatedStr;
 
 				if (bestOfSubpop[s].evaluated) {
-					evaluatedStr = " ";
+					evaluatedStr = "";
 				} else {
-					evaluatedStr = " (evaluated flag not set): ";
+					evaluatedStr = "(evaluated flag not set): ";
 				}
 
 				state.output.message("Subpop " + s + " best fitness of generation " + evaluatedStr + bestOfSubpop[s].fitness.fitnessToStringForHumans());

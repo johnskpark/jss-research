@@ -75,6 +75,8 @@ public class MultilevelGroupTWTFitness implements IJasimaMultilevelGroupFitness 
 		groupFitness *= Math.sqrt((2.0 + groupSize) / (2.0 * groupSize));
 
 		((KozaFitness) subpop.getFitness()).setStandardizedFitness(state, groupFitness);
+
+		subpop.setEvaluated(true);
 	}
 
 	@Override

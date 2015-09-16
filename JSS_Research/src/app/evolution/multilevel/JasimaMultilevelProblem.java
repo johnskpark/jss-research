@@ -20,6 +20,7 @@ import ec.EvolutionState;
 import ec.Individual;
 import ec.Initializer;
 import ec.Population;
+import ec.Subpopulation;
 import ec.gp.GPIndividual;
 import ec.gp.GPProblem;
 import ec.multilevel.MLSProblemForm;
@@ -106,6 +107,11 @@ public class JasimaMultilevelProblem extends GPProblem implements MLSProblemForm
 	public void beforeEvaluation(final EvolutionState state, Population pop) {
 		// Reset the seed for the simulator.
 		simConfig.setSeed(rand.nextLong());
+
+		// Set the subpopulation to not being evaluated.
+		for (Subpopulation subpop : pop.subpops) {
+			((MLSSubpopulation) subpop).setEvaluated(false);
+		}
 	}
 
 	@Override

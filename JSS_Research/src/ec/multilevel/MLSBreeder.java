@@ -240,20 +240,6 @@ public class MLSBreeder extends Breeder {
 		// Load the individuals into the meta population
 		loadPopulation(state, newPop);
 		breedSubpopulations(state, newPop);
-
-		// TODO temporary code.
-		System.out.println("Before individual breeding:");
-
-		for (int s = 0; s < newPop.subpops.length; s++) {
-			int numNonNullInds = 0;
-			for (int i = 0; i < newPop.subpops[s].individuals.length; i++) {
-				if (newPop.subpops[s].individuals[i] != null) {
-					numNonNullInds++;
-				}
-			}
-			System.out.printf("Number of individuals in subpop %d: %d\n", s, numNonNullInds);
-		}
-
 		breedIndividuals(state, newPop);
 
 		// TODO temporary code.
@@ -410,6 +396,7 @@ public class MLSBreeder extends Breeder {
 
 		int index = start;
 		while (index < n + start) { // To be perfectly honest, this loop isn't necessary.
+			// FIXME probably make this generic/faster later down the line.
 			// Select two random subpopulations from 0 to (start-1) to crossover based on their fitness.
 			double[] fitnesses1 = new double[start];
 			double[] fitnesses2 = new double[start-1];
@@ -482,8 +469,6 @@ public class MLSBreeder extends Breeder {
 			final Population newpop,
 			final EvolutionState state,
 			final int threadnum) {
-		System.out.println("Mutation");
-
 		if (start < MUTATION_PARENTS_REQUIRED) {
 			state.output.fatal("There are insufficient number of subpopulations to generate new subpopulations. Number of subpopulations: " + start + ", subpopulations required: " + MUTATION_PARENTS_REQUIRED);
 		}
@@ -595,8 +580,6 @@ public class MLSBreeder extends Breeder {
 			}
 		}
 
-		// TODO all the froms are shifted one spot over.
-		// Or not. It seems that the the from and the number of individuals in the subpopulation differ. I wonder why.
 		for (int subpop = 0; subpop < newPop.subpops.length; subpop++) {
 			// Copy the fitnesses of the subpopulations.
 			subpopFitnesses[subpop] = ((MLSSubpopulation) newPop.subpops[subpop]).getFitness().fitness();
@@ -606,8 +589,6 @@ public class MLSBreeder extends Breeder {
 			for (int thread = 1; thread < numThreads; thread++) {
 				from[thread][subpop] = from[thread-1][subpop] + numInds[thread];
 			}
-
-			System.out.printf("From %d: %d\n", subpop, from[0][subpop]);
 		}
 
 		// TODO temporary sanity check code.
@@ -669,6 +650,7 @@ public class MLSBreeder extends Breeder {
 
 		while(totalNumBred < numInds) {
 			// FIXME make this a little faster.
+
 			// Randomly select a parent based on the fitness.
 			int subpopIndex = selectFitness(subpopFitnesses, state.random[threadnum].nextDouble());
 
@@ -693,10 +675,6 @@ public class MLSBreeder extends Breeder {
 			int index = from[subpopIndex] + totalNumBred;
 			int upperBound = from[subpopIndex] + numInds;
 
-			if (state.generation == 4 && totalNumBred == 73) {
-				System.out.printf("Subpop index: %d, from: %d, start: %d, upperBound: %d\n", subpopIndex, from[subpopIndex], index, upperBound);
-			}
-
 			int numBred = bp.produce(1,
 					upperBound - index,
 					index,
@@ -717,8 +695,6 @@ public class MLSBreeder extends Breeder {
 			}
 
 			totalNumBred += numBred;
-
-			System.out.printf("Total num bred: %d, Num inds: %d\n", totalNumBred, numInds);
 
 			bp.finishProducing(state, subpopIndex, threadnum);
 		}
@@ -854,8 +830,9 @@ public class MLSBreeder extends Breeder {
 	 */
 	// Helper method for selecting a subpopulation out of a population based on its fitness.
 	protected static int selectFitness(final double[] fitnesses, final double probabilities) {
-		// Assume Koza, i.e., between [0,inf) by normalising it using the softmax sigmoid.
 		// FIXME need this to be more generic in the future.
+
+		// Assume Koza, i.e., between [0,inf) by normalising it using the softmax sigmoid.
 		double[] probs = new double[fitnesses.length];
 		double totalFitness = 0.0;
 		for (int i = 0; i < fitnesses.length; i++) {
