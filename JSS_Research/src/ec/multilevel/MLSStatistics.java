@@ -77,6 +77,8 @@ public class MLSStatistics extends Statistics {
 
 	@Override
 	public void postEvaluationStatistics(final EvolutionState state) {
+		// TODO its currently not printing out the statistics, nor is it writing to the stats file. What gives?
+
 		super.postEvaluationStatistics(state);
 
 		Individual[] bestOfSubpop = new Individual[state.population.subpops.length];

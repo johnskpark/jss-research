@@ -28,7 +28,7 @@ public class MLSEvolutionState extends EvolutionState {
 	 * Stores the temporary subpopulations of individuals after the
 	 * subpopulation breeding phase.
 	 */
-	private Population tempPopulation;  // TODO rename this later down the line.
+	private Population tempPopulation;
 
 	private int totalNumIndividuals;
 
@@ -103,11 +103,6 @@ public class MLSEvolutionState extends EvolutionState {
 		for (int i = 0; i < metaPopulation.subpops.length; i++) {
 			metaPopulation.subpops[i] = (Subpopulation) population.subpops[i/2].emptyClone();
 		}
-
-		// Evaluate the newly generated population.
-		statistics.preEvaluationStatistics(this);
-		evaluator.evaluatePopulation(this);
-		statistics.postEvaluationStatistics(this);
 	}
 
 	@Override
@@ -115,6 +110,11 @@ public class MLSEvolutionState extends EvolutionState {
 		if (generation > 0) {
 			output.message("Generation " + generation);
 		}
+
+		// Evaluate the newly generated population.
+		statistics.preEvaluationStatistics(this);
+		evaluator.evaluatePopulation(this);
+		statistics.postEvaluationStatistics(this);
 
 		// SHOULD WE QUIT?
 		if (evaluator.runComplete(this) && quitOnRunComplete) {
