@@ -62,8 +62,6 @@ public class MLSStatistics extends Statistics {
 		} else {
 			state.output.warning("No statistics file specified, printing to stdout at end.", base.push(P_STATISTICS_FILE));
 		}
-
-		// TODO need to load in the doGeneration and such.
 	}
 
 	@Override
@@ -77,8 +75,6 @@ public class MLSStatistics extends Statistics {
 
 	@Override
 	public void postEvaluationStatistics(final EvolutionState state) {
-		// TODO its currently not printing out the statistics, nor is it writing to the stats file. What gives?
-
 		super.postEvaluationStatistics(state);
 
 		Individual[] bestOfSubpop = new Individual[state.population.subpops.length];
@@ -99,20 +95,26 @@ public class MLSStatistics extends Statistics {
 			// Find the best subpopulation of the generation.
 			if (bestSubpop == null || subpop.getFitness().betterThan(bestSubpop.getFitness())) {
 				bestSubpop = subpop;
+				bestSubpopIndex = s;
 			}
 
 			// Update the best individuals of the run.
 			if (bestIndsOfRun[s] == null || bestOfSubpop[s].fitness.betterThan(bestIndsOfRun[s].fitness)) {
 				bestIndsOfRun[s] = (Individual) (bestOfSubpop[s].clone());
-				bestSubpopIndex = s;
 			}
 		}
 
 		// Update the best subpopulation of the run.
 		if (bestSubpopOfRun == null || bestSubpop.getFitness().betterThan(bestSubpopOfRun.getFitness())) {
-			bestSubpopOfRun = bestSubpop;
+			bestSubpopOfRun = (MLSSubpopulation) bestSubpop.emptyClone();
+			for (int i = 0; i < bestSubpop.individuals.length; i++) {
+				bestSubpopOfRun.individuals[i] = (Individual) bestSubpop.individuals[i].clone();
+			}
+
 			bestSubpopIndexOfRun = bestSubpopIndex;
 		}
+
+		System.out.println("Best subpop size: " + bestSubpopOfRun.individuals.length);
 
 
 		// Print the current generation.
@@ -152,7 +154,7 @@ public class MLSStatistics extends Statistics {
 					evaluatedStr = "(evaluated flag not set): ";
 				}
 
-				state.output.message("Subpop " + s + " best fitness of generation " + evaluatedStr + bestOfSubpop[s].fitness.fitnessToStringForHumans());
+				state.output.message("Subpop " + s + " best fitness of generation: " + evaluatedStr + bestOfSubpop[s].fitness.fitnessToStringForHumans());
 			}
 		}
 	}
@@ -177,8 +179,12 @@ public class MLSStatistics extends Statistics {
 		}
 
 		// Print out the individuals making up the best subpopulation.
+
+		// TODO now its not printing out all of the individuals.
 		if (doFinal) {
 			state.output.println("\nBest Subpopulation of Run: " + bestSubpopIndexOfRun + ", Fitness: " + bestSubpopOfRun.getFitness().fitnessToStringForHumans(), statisticsLog);
+
+			System.out.println("Number of individuals: " + bestSubpopOfRun.individuals.length);
 
 			for (int i = 0; i < bestSubpopOfRun.individuals.length; i++) {
 				state.output.println("Individual " + i, statisticsLog);

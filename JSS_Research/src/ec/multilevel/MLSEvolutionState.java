@@ -155,8 +155,6 @@ public class MLSEvolutionState extends EvolutionState {
 		// POST-BREEDING EXCHANGING
 		statistics.postBreedingStatistics(this);
 
-		// Post-breeding exchange is not called for MLSEvolutionState (for now).
-
 		// SELECTION
 		population = ((MLSBreeder) breeder).breedFinalPopulation(this, metaPopulation);
 

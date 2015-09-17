@@ -98,6 +98,9 @@ public class MLSEvaluator extends Evaluator {
 			mlsProblem.evaluateInd(state, ind, subpopIndex, 0);
 		}
 
+		// TODO temporary code
+		System.out.println("Evaluate subpopulation -> Subpopulation size: " + subpop.individuals.length);
+
 		// Evaluate the subpopulation of individuals, which also includes null individuals.
 		mlsProblem.evaluateSubpop(state, subpop, updates, false, indices, 0);
 	}
