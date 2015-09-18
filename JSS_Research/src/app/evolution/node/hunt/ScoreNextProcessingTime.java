@@ -2,16 +2,16 @@ package app.evolution.node.hunt;
 
 import jasima.shopSim.core.PrioRuleTarget;
 import app.evolution.JasimaGPData;
+import app.evolution.node.GPSingleLinePrintNode;
 import app.node.NodeDefinition;
 import ec.EvolutionState;
 import ec.Problem;
 import ec.gp.ADFStack;
 import ec.gp.GPData;
 import ec.gp.GPIndividual;
-import ec.gp.GPNode;
 import ec.util.Parameter;
 
-public class ScoreNextProcessingTime extends GPNode {
+public class ScoreNextProcessingTime extends GPSingleLinePrintNode	 {
 
 	private static final long serialVersionUID = 6065575150331988114L;
 

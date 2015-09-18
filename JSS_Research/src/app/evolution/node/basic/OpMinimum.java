@@ -1,16 +1,23 @@
 package app.evolution.node.basic;
 
 import app.evolution.JasimaGPData;
+import app.evolution.node.GPSingleLinePrintNode;
 import app.node.NodeDefinition;
 import ec.EvolutionState;
 import ec.Problem;
 import ec.gp.ADFStack;
 import ec.gp.GPData;
 import ec.gp.GPIndividual;
-import ec.gp.GPNode;
 import ec.util.Parameter;
 
-public class OpMinimum extends GPNode {
+/**
+ * Non-terminal node representing the minimum operator in an arithmetic function tree,
+ * where the minimum of the two arguments is returned.
+ *
+ * @author parkjohn
+ *
+ */
+public class OpMinimum extends GPSingleLinePrintNode {
 
 	private static final long serialVersionUID = -947705173425463215L;
 

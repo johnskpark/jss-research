@@ -1,22 +1,23 @@
 package app.evolution.node.basic;
 
 import app.evolution.JasimaGPData;
+import app.evolution.node.GPSingleLinePrintNode;
 import app.node.NodeDefinition;
 import ec.EvolutionState;
 import ec.Problem;
 import ec.gp.ADFStack;
 import ec.gp.GPData;
 import ec.gp.GPIndividual;
-import ec.gp.GPNode;
 import ec.util.Parameter;
 
 /**
- * TODO javadoc.
+ * Non-terminal node representing the subtraction operator in a arithmetic
+ * function tree.
  *
  * @author parkjohn
  *
  */
-public class OpSubtraction extends GPNode {
+public class OpSubtraction extends GPSingleLinePrintNode {
 
 	private static final long serialVersionUID = -4259728422320985825L;
 

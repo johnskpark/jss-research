@@ -1,16 +1,16 @@
 package app.evolution.node.basic;
 
 import app.evolution.JasimaGPData;
+import app.evolution.node.GPSingleLinePrintNode;
 import app.node.NodeDefinition;
 import ec.EvolutionState;
 import ec.Problem;
 import ec.gp.ADFStack;
 import ec.gp.GPData;
 import ec.gp.GPIndividual;
-import ec.gp.GPNode;
 import ec.util.Parameter;
 
-public class ScoreOperationReadyTime extends GPNode {
+public class ScoreOperationReadyTime extends GPSingleLinePrintNode {
 
 	private static final long serialVersionUID = -1153623043250724347L;
 

@@ -578,15 +578,6 @@ public class MLSBreeder extends Breeder {
 			}
 		}
 
-		// TODO temporary sanity check code.
-		for (int subpop = 0; subpop < newPop.subpops.length; subpop++) {
-			for (int i = 0; i < from[0][subpop]; i++) {
-				if (newPop.subpops[subpop].individuals[i] == null) {
-					state.output.fatal("Null individual in the from for subpopulation " + subpop + ". This should not happen.");
-				}
-			}
-		}
-
 		// Breed the groups, i.e., the subpopulations.
 		if (numThreads==1) {
 			breedIndChunk(newPop, state, numInds[0], from[0], subpopFitnesses, 0);
@@ -717,17 +708,6 @@ public class MLSBreeder extends Breeder {
 		// Keep the best individuals and the best groups.
 		loadElites(state, newPop, metaPop);
 
-		// TODO temporary code.
-		for (int s = 0; s < newPop.subpops.length; s++) {
-			System.out.printf("Subpopulation size: %d\n", newPop.subpops[s].individuals.length);
-
-			for (int i = 0; i < newPop.subpops[s].individuals.length; i++) {
-				if (newPop.subpops[s].individuals[i] == null) {
-					state.output.fatal("There is a null individual in the final subpopulation " + s);
-				}
-			}
-		}
-
 		return newPop;
 	}
 
@@ -735,7 +715,6 @@ public class MLSBreeder extends Breeder {
 	 * Filters out the elite subpopulations and individuals from the meta-population
 	 * and inserts them into the final population.
 	 */
-	// TODO Is there a bug here?
 	protected void loadElites(EvolutionState state, Population pop, Population metaPop) {
 		// Sort and load in the best groups.
 		List<Subpopulation> metaSubpops = Arrays.asList(metaPop.subpops);

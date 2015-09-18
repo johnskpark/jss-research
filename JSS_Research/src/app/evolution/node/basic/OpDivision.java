@@ -1,22 +1,27 @@
 package app.evolution.node.basic;
 
 import app.evolution.JasimaGPData;
+import app.evolution.node.GPSingleLinePrintNode;
 import app.node.NodeDefinition;
 import ec.EvolutionState;
 import ec.Problem;
 import ec.gp.ADFStack;
 import ec.gp.GPData;
 import ec.gp.GPIndividual;
-import ec.gp.GPNode;
 import ec.util.Parameter;
 
 /**
- * TODO javadoc.
+ * Non-terminal node representing the protected division on an arithmetic
+ * function tree.
+ *
+ * In protected division, the value of the nominator divided by the denominator is
+ * returned if the denominator does not equal zero. Otherwise, it returns the value
+ * 1.0.
  *
  * @author parkjohn
  *
  */
-public class OpDivision extends GPNode {
+public class OpDivision extends GPSingleLinePrintNode {
 
 	private static final long serialVersionUID = 2589591919537774922L;
 

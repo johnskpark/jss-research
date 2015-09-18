@@ -40,6 +40,7 @@ public class MLSStatistics extends Statistics {
 	private boolean doGeneration;
 	private boolean doMessage;
 
+	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
 		super.setup(state, base);
 
@@ -114,9 +115,6 @@ public class MLSStatistics extends Statistics {
 			bestSubpopIndexOfRun = bestSubpopIndex;
 		}
 
-		System.out.println("Best subpop size: " + bestSubpopOfRun.individuals.length);
-
-
 		// Print the current generation.
 		if (doGeneration) {
 			state.output.println("\nGeneration: " + state.generation, statisticsLog);
@@ -128,15 +126,17 @@ public class MLSStatistics extends Statistics {
 			String evaluatedStr;
 
 			if (bestSubpop.isEvaluated()) {
-				evaluatedStr = "";
+				evaluatedStr = " ";
 			} else {
-				evaluatedStr = "(evaluated flag not set): ";
+				evaluatedStr = " (evaluated flag not set): ";
 			}
 
-			state.output.message("Best subpop fitness of generation " + evaluatedStr + bestSubpop.getFitness().fitnessToStringForHumans());
+			state.output.message("Best subpop of generation: " + bestSubpopIndex + evaluatedStr + bestSubpop.getFitness().fitnessToStringForHumans());
 		}
 
 		// Print the best fitness of an individual per subpopulation.
+
+		// TODO make it print out the tree in a single line.
 		for (int s = 0; s < state.population.subpops.length; s++) {
 			MLSSubpopulation subpop = (MLSSubpopulation) state.population.subpops[s];
 
@@ -180,7 +180,7 @@ public class MLSStatistics extends Statistics {
 
 		// Print out the individuals making up the best subpopulation.
 
-		// TODO now its not printing out all of the individuals.
+		// TODO make it print out the tree in a single line.
 		if (doFinal) {
 			state.output.println("\nBest Subpopulation of Run: " + bestSubpopIndexOfRun + ", Fitness: " + bestSubpopOfRun.getFitness().fitnessToStringForHumans(), statisticsLog);
 

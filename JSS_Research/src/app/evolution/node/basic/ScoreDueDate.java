@@ -1,21 +1,23 @@
 package app.evolution.node.basic;
 
 import app.evolution.JasimaGPData;
+import app.evolution.node.GPSingleLinePrintNode;
 import app.node.NodeDefinition;
 import ec.EvolutionState;
 import ec.Problem;
 import ec.gp.ADFStack;
 import ec.gp.GPData;
 import ec.gp.GPIndividual;
-import ec.gp.GPNode;
 import ec.util.Parameter;
 
 /**
- * TODO javadoc.
+ * Terminal node which returns the value of the due date of a job for an arithmetic
+ * function tree.
+ *
  * @author parkjohn
  *
  */
-public class ScoreDueDate extends GPNode {
+public class ScoreDueDate extends GPSingleLinePrintNode {
 
 	private static final long serialVersionUID = -4015393052275553333L;
 

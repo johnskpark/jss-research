@@ -1,13 +1,13 @@
 package app.evolution.node.basic;
 
 import app.evolution.JasimaGPData;
+import app.evolution.node.GPSingleLinePrintNode;
 import app.node.NodeDefinition;
 import ec.EvolutionState;
 import ec.Problem;
 import ec.gp.ADFStack;
 import ec.gp.GPData;
 import ec.gp.GPIndividual;
-import ec.gp.GPNode;
 import ec.util.Parameter;
 
 /**
@@ -15,7 +15,7 @@ import ec.util.Parameter;
  * @author parkjohn
  *
  */
-public class ScoreRemainingTime extends GPNode {
+public class ScoreRemainingTime extends GPSingleLinePrintNode {
 
 	private static final long serialVersionUID = 5176332159809663461L;
 

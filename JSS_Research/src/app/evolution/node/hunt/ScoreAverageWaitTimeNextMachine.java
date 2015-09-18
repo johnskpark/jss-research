@@ -6,6 +6,7 @@ import jasima.shopSim.core.WorkStation;
 import java.util.Queue;
 
 import app.evolution.JasimaGPData;
+import app.evolution.node.GPSingleLinePrintNode;
 import app.listener.hunt.HuntListener;
 import app.listener.hunt.OperationCompletionStat;
 import app.node.NodeDefinition;
@@ -14,11 +15,10 @@ import ec.Problem;
 import ec.gp.ADFStack;
 import ec.gp.GPData;
 import ec.gp.GPIndividual;
-import ec.gp.GPNode;
 import ec.util.Parameter;
 
 // The average wait time of last five jobs processed at the next machine job visits.
-public class ScoreAverageWaitTimeNextMachine extends GPNode {
+public class ScoreAverageWaitTimeNextMachine extends GPSingleLinePrintNode {
 
 	private static final long serialVersionUID = -8680402164419018880L;
 

@@ -1,16 +1,23 @@
 package app.evolution.node.basic;
 
 import app.evolution.JasimaGPData;
+import app.evolution.node.GPSingleLinePrintNode;
 import app.node.NodeDefinition;
 import ec.EvolutionState;
 import ec.Problem;
 import ec.gp.ADFStack;
 import ec.gp.GPData;
 import ec.gp.GPIndividual;
-import ec.gp.GPNode;
 import ec.util.Parameter;
 
-public class OpMaximum extends GPNode {
+/**
+ * Non-terminal node representing the maximum operator in an arithmetic function tree,
+ * where the maximum of the two arguments is returned.
+ *
+ * @author parkjohn
+ *
+ */
+public class OpMaximum extends GPSingleLinePrintNode {
 
 	private static final long serialVersionUID = 2561827321918468718L;
 

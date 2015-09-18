@@ -1,22 +1,22 @@
 package app.evolution.node.basic;
 
 import app.evolution.JasimaGPData;
+import app.evolution.node.GPSingleLinePrintNode;
 import app.node.NodeDefinition;
 import ec.EvolutionState;
 import ec.Problem;
 import ec.gp.ADFStack;
 import ec.gp.GPData;
 import ec.gp.GPIndividual;
-import ec.gp.GPNode;
 import ec.util.Parameter;
 
 /**
- * TODO javadoc.
+ * Non-terminal node representing the addition operator in a arithmetic function tree.
  *
  * @author parkjohn
  *
  */
-public class OpAddition extends GPNode {
+public class OpAddition extends GPSingleLinePrintNode {
 
 	private static final long serialVersionUID = -4233800502828347443L;
 

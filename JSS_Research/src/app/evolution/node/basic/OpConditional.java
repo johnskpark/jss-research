@@ -1,22 +1,28 @@
 package app.evolution.node.basic;
 
 import app.evolution.JasimaGPData;
+import app.evolution.node.GPSingleLinePrintNode;
 import app.node.NodeDefinition;
 import ec.EvolutionState;
 import ec.Problem;
 import ec.gp.ADFStack;
 import ec.gp.GPData;
 import ec.gp.GPIndividual;
-import ec.gp.GPNode;
 import ec.util.Parameter;
 
 /**
- * TODO javadoc.
+ * Non-terminal operator representing the greater than or equal to zero (>= 0)
+ * conditional operator in an arithmetic function tree.
+ *
+ * The (>= 0) conditional is a ternary operator, where the first argument
+ * determine whether to return the value of the second argument or the third
+ * argument. If the first argument is >= 0, then the second argument is returned
+ * as a value. Otherwise, the third argument is returned.
  *
  * @author parkjohn
  *
  */
-public class OpConditional extends GPNode {
+public class OpConditional extends GPSingleLinePrintNode {
 
 	private static final long serialVersionUID = -8055215086941685756L;
 

@@ -1,21 +1,23 @@
 package app.evolution.node.basic;
 
 import app.evolution.JasimaGPData;
+import app.evolution.node.GPSingleLinePrintNode;
 import app.node.NodeDefinition;
 import ec.EvolutionState;
 import ec.Problem;
 import ec.gp.ADFStack;
 import ec.gp.GPData;
 import ec.gp.GPIndividual;
-import ec.gp.GPNode;
 import ec.util.Parameter;
 
 /**
- * TODO javadoc.
+ * Terminal node which returns a sufficiently large value for an arithmetic
+ * function tree.
+ *
  * @author parkjohn
  *
  */
-public class ScoreLargeValue extends GPNode {
+public class ScoreLargeValue extends GPSingleLinePrintNode {
 
 	private static final long serialVersionUID = -5825676453528932050L;
 
