@@ -23,6 +23,7 @@ import ec.multilevel.MLSSubpopulation;
  *
  */
 
+// TODO got a bad fitness warning, might want to fix this.
 public class MultilevelGroupTWTFitness implements IJasimaMultilevelGroupFitness {
 
 	private static final String WEIGHTED_TARDINESS = "weightedTardMean";
