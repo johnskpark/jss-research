@@ -16,7 +16,7 @@ gp.fs.0.name = f0
 
 # We have five functions in the function set.  They are:
 
-gp.fs.0.size = 15
+gp.fs.0.size = 19
 gp.fs.0.func.0 = app.evolution.node.basic.ERCRandomUniform
 gp.fs.0.func.0.nc = nc0
 gp.fs.0.func.0.min = 0
@@ -49,6 +49,14 @@ gp.fs.0.func.13 = app.evolution.node.basic.ScorePenalty
 gp.fs.0.func.13.nc = nc0
 gp.fs.0.func.14 = app.evolution.node.basic.ScoreMachineReadyTime
 gp.fs.0.func.14.nc = nc0
+gp.fs.0.func.15 = app.evolution.node.hunt.ScoreAverageWaitTimeAllMachines
+gp.fs.0.func.15.nc = nc0
+gp.fs.0.func.16 = app.evolution.node.hunt.ScoreAverageWaitTimeNextMachine
+gp.fs.0.func.16.nc = nc0
+gp.fs.0.func.17 = app.evolution.node.hunt.ScoreNextProcessingTime
+gp.fs.0.func.17.nc = nc0
+gp.fs.0.func.18 = app.evolution.node.hunt.ScoreNumberWaitingNextMachine
+gp.fs.0.func.18.nc = nc0
 
 #stat = app.evolution.simple.statistics.JasimaMultiRuleStatistics
 #stat.size = 10
@@ -61,6 +69,9 @@ eval.problem.fitness = app.evolution.simple.fitness.TWTFitness
 
 eval.problem.simulator = app.simConfig.huntConfig.EightOpSimConfig
 eval.problem.simulator.seed = 15
+
+eval.problem.workstation = app.listener.hunt.HuntListener
+eval.problem.workstation.max-jobs = 5
 
 # seed.0=26556
 seed.0=17

@@ -77,5 +77,8 @@ eval.problem.ind-fitness = app.evolution.multilevel.fitness.MultilevelIndividual
 eval.problem.simulator = app.simConfig.huntConfig.FourOpSimConfig
 eval.problem.simulator.seed = 15
 
+eval.problem.workstation = app.listener.hunt.HuntListener
+eval.problem.workstation.max-jobs = 5
+
 # seed.0=26556
 seed.0=17

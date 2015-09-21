@@ -10,11 +10,11 @@ import java.util.List;
 import java.util.Random;
 
 import app.evolution.AbsGPPriorityRule;
+import app.evolution.AbsWorkStationListener;
 import app.evolution.IJasimaGPProblem;
 import app.evolution.IJasimaTracker;
 import app.evolution.JasimaGPConfig;
 import app.evolution.JasimaGPData;
-import app.listener.hunt.HuntListener;
 import app.simConfig.AbsSimConfig;
 import ec.EvolutionState;
 import ec.Individual;
@@ -44,6 +44,8 @@ public class JasimaMultilevelProblem extends GPProblem implements MLSProblemForm
 	public static final String P_SEED = "seed";
 	public static final String P_TRACKER = "tracker";
 
+	public static final String P_WORKSTATION = "workstation";
+
 	public static final long DEFAULT_SEED = 15;
 
 	private boolean shouldSetContext;
@@ -56,13 +58,13 @@ public class JasimaMultilevelProblem extends GPProblem implements MLSProblemForm
 
 	private AbsSimConfig simConfig;
 	private long simSeed;
-	private Random rand; // TODO whereabouts is this being used??
+	private Random rand;
 
 	private IJasimaTracker tracker;
 
 	private int numSubpops;
 
-	private HuntListener huntListener = new HuntListener(5);  // FIXME Incorporate into the parameter.
+	private AbsWorkStationListener workstationListener;
 
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
@@ -99,8 +101,16 @@ public class JasimaMultilevelProblem extends GPProblem implements MLSProblemForm
 		// Setup the number of subpopulations.
         numSubpops = state.parameters.getInt((new Parameter(Initializer.P_POP)).push(Population.P_SIZE), null, 1);
 
-		// Feed in the shop simulation listener to input.
-        ((JasimaGPData) input).setWorkStationListener(huntListener);
+        // Setup the workstation listener.
+        try {
+        	workstationListener = (AbsWorkStationListener) state.parameters.getInstanceForParameterEq(base.push(P_WORKSTATION), null, AbsWorkStationListener.class);
+        	workstationListener.setup(state, base.push(P_WORKSTATION));
+
+    		// Feed in the shop simulation listener to input.
+            ((JasimaGPData) input).setWorkStationListener(workstationListener);
+        } catch (ParamClassLoadException ex) {
+        	state.output.warning("No workstation listener provided for JasimaMultilevelProblem.");
+        }
 	}
 
 	@Override
@@ -155,9 +165,8 @@ public class JasimaMultilevelProblem extends GPProblem implements MLSProblemForm
 			experiment.runExperiment();
 
 			groupFitness.accumulateFitness(expIndex, subpop, experiment.getResults(), tracker);
-			if (tracker != null) {
-				tracker.clear();
-			}
+			if (tracker != null) { tracker.clear(); }
+			if (workstationListener != null) { workstationListener.clear(); }
 		}
 
 		groupFitness.setFitness(state, subpop, updateFitness, shouldSetContext);
@@ -193,6 +202,7 @@ public class JasimaMultilevelProblem extends GPProblem implements MLSProblemForm
 			experiment.runExperiment();
 
 			indFitness.accumulateFitness(expIndex, experiment.getResults());
+			if (workstationListener != null) { workstationListener.clear(); }
 		}
 
 		indFitness.setFitness(state, ind);
@@ -214,7 +224,7 @@ public class JasimaMultilevelProblem extends GPProblem implements MLSProblemForm
 		experiment.setNumOps(simConfig.getMinNumOps(index), simConfig.getMaxNumOps(index));
 
 		experiment.setShopListener(new NotifierListener[]{new BasicJobStatCollector()});
-		experiment.addMachineListener(huntListener);
+		experiment.addMachineListener(workstationListener);
 		experiment.setSequencingRule(rule);
 		experiment.setScenario(DynamicShopExperiment.Scenario.JOB_SHOP);
 

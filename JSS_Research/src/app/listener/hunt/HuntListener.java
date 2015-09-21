@@ -1,6 +1,5 @@
 package app.listener.hunt;
 
-import jasima.core.util.observer.NotifierListener;
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.WorkStation;
 import jasima.shopSim.core.WorkStation.WorkStationEvent;
@@ -10,15 +9,28 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 
-public class HuntListener implements NotifierListener<WorkStation, WorkStationEvent> {
+import app.evolution.AbsWorkStationListener;
+import ec.EvolutionState;
+import ec.util.Parameter;
+
+public class HuntListener extends AbsWorkStationListener {
+
+	private static final long serialVersionUID = -3624321421753776979L;
+
+	public static final String P_MAX_JOBS = "max-jobs";
 
 	private int maxSize;
 
 	private Map<WorkStation, Queue<OperationCompletionStat>> completedJobs = new HashMap<WorkStation, Queue<OperationCompletionStat>>();
 	private Map<WorkStation, OperationStartStat> startedJobs = new HashMap<WorkStation, OperationStartStat>();
 
-	public HuntListener(int max) {
-		maxSize = max;
+	@Override
+	public void setup(final EvolutionState state, final Parameter base) {
+		try {
+			maxSize = state.parameters.getInt(base.push(P_MAX_JOBS), null);
+		} catch (NumberFormatException ex) {
+			state.output.fatal("Maximum number of job size not set for HuntListener.");
+		}
 	}
 
 	@Override

@@ -8,6 +8,7 @@ import jasima.shopSim.util.BasicJobStatCollector;
 import java.util.Random;
 
 import app.evolution.AbsGPPriorityRule;
+import app.evolution.AbsWorkStationListener;
 import app.evolution.IJasimaGPProblem;
 import app.evolution.JasimaGPConfig;
 import app.evolution.JasimaGPData;
@@ -16,6 +17,7 @@ import ec.EvolutionState;
 import ec.Individual;
 import ec.gp.GPIndividual;
 import ec.gp.GPProblem;
+import ec.util.ParamClassLoadException;
 import ec.util.Parameter;
 
 public class JasimaSimpleProblem extends GPProblem implements IJasimaGPProblem {
@@ -28,6 +30,8 @@ public class JasimaSimpleProblem extends GPProblem implements IJasimaGPProblem {
 	public static final String P_SIMULATOR = "simulator";
 	public static final String P_SEED = "seed";
 
+	public static final String P_WORKSTATION = "workstation";
+
 	public static final long DEFAULT_SEED = 15;
 	public static final int NUM_INDS_IN_EVAL = 1;
 
@@ -37,6 +41,8 @@ public class JasimaSimpleProblem extends GPProblem implements IJasimaGPProblem {
 	private AbsSimConfig simConfig;
 	private Random rand;
 	private long simSeed;
+
+	private AbsWorkStationListener workstationListener;
 
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
@@ -56,6 +62,17 @@ public class JasimaSimpleProblem extends GPProblem implements IJasimaGPProblem {
 		// Setup the fitness.
 		fitness = (IJasimaSimpleFitness) state.parameters.getInstanceForParameterEq(base.push(P_FITNESS), null, IJasimaSimpleFitness.class);
 		setupFitness(state, base.push(P_FITNESS));
+
+        // Setup the workstation listener.
+        try {
+        	workstationListener = (AbsWorkStationListener) state.parameters.getInstanceForParameterEq(base.push(P_WORKSTATION), null, AbsWorkStationListener.class);
+        	workstationListener.setup(state, base.push(P_WORKSTATION));
+
+    		// Feed in the shop simulation listener to input.
+            ((JasimaGPData) input).setWorkStationListener(workstationListener);
+        } catch (ParamClassLoadException ex) {
+        	state.output.warning("No workstation listener provided for JasimaMultilevelProblem.");
+        }
 	}
 
 	private void setupSimulator(final EvolutionState state, final Parameter simBase) {
@@ -94,6 +111,7 @@ public class JasimaSimpleProblem extends GPProblem implements IJasimaGPProblem {
 				experiment.runExperiment();
 
 				fitness.accumulateFitness(i, experiment.getResults());
+				if (workstationListener != null) { workstationListener.clear(); }
 			}
 
 			fitness.setFitness(state, ind);
@@ -116,6 +134,7 @@ public class JasimaSimpleProblem extends GPProblem implements IJasimaGPProblem {
 		experiment.setNumOps(simConfig.getMinNumOps(index), simConfig.getMaxNumOps(index));
 
 		experiment.setShopListener(new NotifierListener[]{new BasicJobStatCollector()});
+		experiment.addMachineListener(workstationListener);
 		experiment.setSequencingRule(rule);
 		experiment.setScenario(DynamicShopExperiment.Scenario.JOB_SHOP);
 
