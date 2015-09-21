@@ -180,11 +180,8 @@ public class MLSStatistics extends Statistics {
 
 		// Print out the individuals making up the best subpopulation.
 
-		// TODO make it print out the tree in a single line.
 		if (doFinal) {
 			state.output.println("\nBest Subpopulation of Run: " + bestSubpopIndexOfRun + ", Fitness: " + bestSubpopOfRun.getFitness().fitnessToStringForHumans(), statisticsLog);
-
-			System.out.println("Number of individuals: " + bestSubpopOfRun.individuals.length);
 
 			for (int i = 0; i < bestSubpopOfRun.individuals.length; i++) {
 				state.output.println("Individual " + i, statisticsLog);

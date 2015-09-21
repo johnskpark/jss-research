@@ -10,7 +10,11 @@ import ec.Individual;
 import ec.gp.koza.KozaFitness;
 
 /**
- * TODO javadoc.
+ * Fitness calculator for an individual in JasimaMultilevelProblem.
+ *
+ * Calculates the mean total weighted tardiness (TWT) value to use as the fitness
+ * of the individual when the individual is applied to Jasima simulation as a
+ * priority-based dispatching rule.
  *
  * @author parkjohn
  *

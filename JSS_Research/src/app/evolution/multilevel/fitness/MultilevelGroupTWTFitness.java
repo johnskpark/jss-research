@@ -12,13 +12,17 @@ import ec.gp.koza.KozaFitness;
 import ec.multilevel.MLSSubpopulation;
 
 /**
- * TODO javadoc.
+ * Fitness calculator for a group of individuals in JasimaMultilevelProblem.
+ *
+ * Calculates the mean total weighted tardiness (TWT) value of the group when
+ * applied to Jasima simulations as an ensemble, and combines it with the
+ * size of the group and the individuals' fitnesses to calculate a fitness
+ * value for the group as a whole.
  *
  * @author parkjohn
  *
  */
 
-// TODO there can be null individuals in the subpopulation.
 public class MultilevelGroupTWTFitness implements IJasimaMultilevelGroupFitness {
 
 	private static final String WEIGHTED_TARDINESS = "weightedTardMean";
@@ -55,6 +59,7 @@ public class MultilevelGroupTWTFitness implements IJasimaMultilevelGroupFitness 
 				continue;
 			}
 
+			// Sanity check to ensure that a particular individual has been evaluated.
 			assert subpop.individuals[i].evaluated;
 
 			KozaFitness fitness = (KozaFitness) subpop.individuals[i].fitness;
@@ -63,6 +68,7 @@ public class MultilevelGroupTWTFitness implements IJasimaMultilevelGroupFitness 
 			groupSize++;
 		}
 
+		// Another sanity check. We can't evaluate a group of size zero.
 		assert groupSize != 0;
 
 		avgIndFitnesses /= groupSize;
@@ -72,7 +78,7 @@ public class MultilevelGroupTWTFitness implements IJasimaMultilevelGroupFitness 
 		// fitness, multiplied by a size penalty factor.
 		double groupFitness;
 		groupFitness = (0.5 * avgIndFitnesses + 0.5 * ensembleStat.mean());
-		groupFitness *= Math.sqrt((2.0 + groupSize) / (2.0 * groupSize));
+		groupFitness *= Math.sqrt(groupSize * groupSize / (2.0 * groupSize));
 
 		((KozaFitness) subpop.getFitness()).setStandardizedFitness(state, groupFitness);
 

@@ -31,6 +31,7 @@ public class MLSEvolutionState extends EvolutionState {
 	private Population tempPopulation;
 
 	private int totalNumIndividuals;
+	private int initNumSubpops;
 
 	public void setup(final EvolutionState state, final Parameter base) {
 		super.setup(state, base);
@@ -86,6 +87,7 @@ public class MLSEvolutionState extends EvolutionState {
         evaluator.initializeContacts(this);
 
 		totalNumIndividuals = 0;
+		initNumSubpops = population.subpops.length;
 
 		// Check to ensure that the subpopulation is a type of MLSSubpopulation.
 		for (int subpop = 0; subpop < population.subpops.length; subpop++) {
@@ -183,6 +185,13 @@ public class MLSEvolutionState extends EvolutionState {
 	 */
 	public int getTotalNumIndividuals() {
 		return totalNumIndividuals;
+	}
+
+	/**
+	 * Returns the number of subpopulations in the population in the initialisation.
+	 */
+	public int getInitNumSubpops() {
+		return initNumSubpops;
 	}
 
 	/**

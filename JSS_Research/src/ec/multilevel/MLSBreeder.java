@@ -32,6 +32,8 @@ import ec.util.ThreadPool;
  */
 
 // FIXME Refactor the threading to use a factory sometime later down the line.
+
+// TODO need to use getInitNumSubpops() to fix this.
 public class MLSBreeder extends Breeder {
 
 	private static final long serialVersionUID = -6914152113435773281L;
@@ -52,10 +54,6 @@ public class MLSBreeder extends Breeder {
 	public static final int MUTATION_INDS_PRODUCED = 1;
 
 	/** An array[subpop] of the number of elites to keep for that subpopulation */
-	// FIXME check which ones are being used later down the line.
-	private int[] elite;
-	private double[] eliteFrac;
-	private boolean[] reevaluateElites;
 	private boolean sequentialBreeding;
 	private boolean clonePipelineAndPopulation;
 	private Population backupMetaPopulation = null;
@@ -69,37 +67,10 @@ public class MLSBreeder extends Breeder {
 	private int[] numIndividualsPerSubpop;
 	private int numIndividuals;
 
-	public boolean usingElitism(int subpopulation) {
-		return (elite[subpopulation] > 0 ) || (eliteFrac[subpopulation] > 0);
-	}
-
-	public int numElites(EvolutionState state, int subpopulation) {
-		if (elite[subpopulation] != NOT_SET) {
-			return elite[subpopulation];
-		}
-		else if (eliteFrac[subpopulation] == 0) {
-			return 0; // no elites
-		}
-		else if (eliteFrac[subpopulation] != NOT_SET) {
-			return (int) Math.max(Math.floor(state.population.subpops[subpopulation].individuals.length * eliteFrac[subpopulation]), 1.0);  // AT LEAST 1 ELITE
-		}
-		else {
-			state.output.warnOnce("Elitism error (SimpleBreeder).  This shouldn't be able to happen.  Please report.");
-			return 0;  // this shouldn't happen
-		}
-	}
-
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
 		Parameter p = new Parameter(Initializer.P_POP).push(Population.P_SIZE);
 		int size = state.parameters.getInt(p,null,1);  // if size is wrong, we'll let Population complain about it -- for us, we'll just make 0-sized arrays and drop out.
-
-		eliteFrac = new double[size];
-		elite = new int[size];
-		for(int i = 0; i < size; i++) {
-			eliteFrac[i] = elite[i] = NOT_SET;
-		}
-		reevaluateElites = new boolean[size];
 
 		sequentialBreeding = state.parameters.getBoolean(base.push(P_SEQUENTIAL_BREEDING), null, false);
 		if (sequentialBreeding && (size == 1)) { // uh oh, this can't be right
@@ -109,52 +80,6 @@ public class MLSBreeder extends Breeder {
 		clonePipelineAndPopulation =state.parameters.getBoolean(base.push(P_CLONE_PIPELINE_AND_POPULATION), null, true);
 		if (!clonePipelineAndPopulation && (state.breedthreads > 1)) { // uh oh, this can't be right
 			state.output.fatal("The Breeder is not cloning its pipeline and population, but you have more than one thread.", base.push(P_CLONE_PIPELINE_AND_POPULATION));
-		}
-
-		int defaultSubpop = state.parameters.getInt(new Parameter(Initializer.P_POP).push(Population.P_DEFAULT_SUBPOP), null, 0);
-		for(int x = 0; x < size; x++) {
-			// get elites
-			if (state.parameters.exists(base.push(P_ELITE).push(""+x),null)) {
-				if (state.parameters.exists(base.push(P_ELITE_FRAC).push(""+x),null)) {
-					state.output.error("Both elite and elite-frac specified for subpouplation " + x + ".", base.push(P_ELITE_FRAC).push(""+x), base.push(P_ELITE_FRAC).push(""+x));
-				} else {
-					elite[x] = state.parameters.getIntWithDefault(base.push(P_ELITE).push(""+x),null,0);
-					if (elite[x] < 0) {
-						state.output.error("Elites for subpopulation " + x + " must be an integer >= 0", base.push(P_ELITE).push(""+x));
-					}
-				}
-			} else if (state.parameters.exists(base.push(P_ELITE_FRAC).push(""+x),null)) {
-				eliteFrac[x] = state.parameters.getDoubleWithMax(base.push(P_ELITE_FRAC).push(""+x),null,0.0, 1.0);
-				if (eliteFrac[x] < 0.0) {
-					state.output.error("Elite Fraction of subpopulation " + x + " must be a real value between 0.0 and 1.0 inclusive", base.push(P_ELITE_FRAC).push(""+x));
-				}
-			} else if (defaultSubpop >= 0) {
-				if (state.parameters.exists(base.push(P_ELITE).push(""+defaultSubpop),null)) {
-					elite[x] = state.parameters.getIntWithDefault(base.push(P_ELITE).push(""+defaultSubpop),null,0);
-					if (elite[x] < 0) {
-						state.output.warning("Invalid default subpopulation elite value.");  // we'll fail later
-					}
-				} else if (state.parameters.exists(base.push(P_ELITE_FRAC).push(""+defaultSubpop),null)) {
-					eliteFrac[x] = state.parameters.getDoubleWithMax(base.push(P_ELITE_FRAC).push(""+defaultSubpop),null,0.0, 1.0);
-					if (eliteFrac[x] < 0.0) {
-						state.output.warning("Invalid default subpopulation elite-frac value.");  // we'll fail later
-					}
-				} else { // elitism is 0
-					elite[x] = 0;
-				}
-			} else { // elitism is 0
-				elite[x] = 0;
-			}
-
-			// get reevaluation
-			if (defaultSubpop >= 0 && !state.parameters.exists(base.push(P_REEVALUATE_ELITES).push(""+x),null)) {
-				reevaluateElites[x] = state.parameters.getBoolean(base.push(P_REEVALUATE_ELITES).push(""+defaultSubpop), null, false);
-				if (reevaluateElites[x]) {
-					state.output.warning("Elite reevaluation not specified for subpopulation " + x + ".  Using values for default subpopulation " + defaultSubpop + ": " + reevaluateElites[x]);
-				}
-			} else {
-				reevaluateElites[x] = state.parameters.getBoolean(base.push(P_REEVALUATE_ELITES).push(""+x), null, false);
-			}
 		}
 
 		groupCrossoverRate = state.parameters.getDouble(base.push(P_CROSSOVER_PROB), null, 0);
@@ -708,6 +633,11 @@ public class MLSBreeder extends Breeder {
 		// Keep the best individuals and the best groups.
 		loadElites(state, newPop, metaPop);
 
+		// TODO temporary code to check population growth.
+		for (int subpop = 0; subpop < newPop.subpops.length; subpop++) {
+			System.out.println("Subpopulation " + subpop + " size: " + newPop.subpops[subpop].individuals.length);
+		}
+
 		return newPop;
 	}
 
@@ -715,21 +645,19 @@ public class MLSBreeder extends Breeder {
 	 * Filters out the elite subpopulations and individuals from the meta-population
 	 * and inserts them into the final population.
 	 */
-	protected void loadElites(EvolutionState state, Population pop, Population metaPop) {
+	protected void loadElites(EvolutionState state, Population newPop, Population metaPop) {
 		// Sort and load in the best groups.
 		List<Subpopulation> metaSubpops = Arrays.asList(metaPop.subpops);
 		Collections.sort(metaSubpops, new SubpopulationComparator());
 
 		List<Pair<Individual, Integer>> bestGroupInds = new ArrayList<Pair<Individual, Integer>>(numIndividuals);
 
-		for (int s = 0; s < pop.subpops.length; s++) {
+		for (int s = 0; s < newPop.subpops.length; s++) {
 			Subpopulation subpop = metaSubpops.get(s);
-			pop.subpops[s] = subpop;
+			newPop.subpops[s] = subpop;
 
 			for (int i = 0; i < subpop.individuals.length; i++) {
-				if (subpop.individuals[i] == null) {
-					continue;
-				}
+				if (subpop.individuals[i] == null) { continue; }
 
 				Pair<Individual, Integer> d = new Pair<Individual, Integer>(subpop.individuals[i], s);
 				bestGroupInds.add(d);
@@ -757,7 +685,7 @@ public class MLSBreeder extends Breeder {
 
 		int numRetain = 0;
 
-		for (int s = 0; s < state.population.subpops.length; s++) {
+		for (int s = 0; s < newPop.subpops.length; s++) {
 			List<Individual> inds = subpopMap.get(s);
 
 			if (inds != null) {
@@ -776,18 +704,21 @@ public class MLSBreeder extends Breeder {
 			}
 		}
 
+		// TODO temporary code.
+		System.out.println("Number of subpopulations to retain: " + numRetain);
+
 		// If there is a case where subpopulation is empty due to individual filtering,
 		// then remove the particular subpopulation.
 		if (anySubpopIsEmpty) {
 			Subpopulation[] retainedSubpops = new Subpopulation[numRetain];
 			int index = 0;
-			for (int s = 0; s < state.population.subpops.length; s++) {
+			for (int s = 0; s < newPop.subpops.length; s++) {
 				if (!subpopIsEmpty[s]) {
-					retainedSubpops[index++] = state.population.subpops[s];
+					retainedSubpops[index++] = newPop.subpops[s];
 				}
 			}
 
-			state.population.subpops = retainedSubpops;
+			newPop.subpops = retainedSubpops;
 		}
 	}
 
