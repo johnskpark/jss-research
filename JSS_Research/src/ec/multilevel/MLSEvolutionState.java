@@ -100,10 +100,12 @@ public class MLSEvolutionState extends EvolutionState {
 
 		// Specific to multilevel selection.
 		metaPopulation = (Population) population.emptyClone();
-		metaPopulation.subpops = new Subpopulation[population.subpops.length*2];
+		metaPopulation.subpops = new Subpopulation[population.subpops.length + initNumSubpops];
 
 		for (int i = 0; i < metaPopulation.subpops.length; i++) {
-			metaPopulation.subpops[i] = (Subpopulation) population.subpops[i/2].emptyClone();
+			// The MLSBreeder will generate the appropriate individuals array size for the meta-population,
+			// so simply use the first subpopulation to clone (for now).
+			metaPopulation.subpops[i] = (Subpopulation) population.subpops[0].emptyClone();
 		}
 	}
 
