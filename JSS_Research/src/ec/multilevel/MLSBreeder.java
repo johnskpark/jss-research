@@ -707,11 +707,12 @@ public class MLSBreeder extends Breeder {
 			}
 		}
 
-		// TODO temporary code.
-		System.out.println("Number of subpopulations to retain: " + numRetain);
-
 		// If there is a case where subpopulation is empty due to individual filtering,
 		// then remove the particular subpopulation.
+
+		// If there is a case where subpopulation is empty due to individual filtering,
+		// then repopulate the subpopulation with new individuals: half from "good"
+		// subpopulations, other half randomly.
 		if (anySubpopIsEmpty) {
 			Subpopulation[] retainedSubpops = new Subpopulation[numRetain];
 			int index = 0;
@@ -723,6 +724,7 @@ public class MLSBreeder extends Breeder {
 
 			newPop.subpops = retainedSubpops;
 		}
+
 	}
 
 	/**
