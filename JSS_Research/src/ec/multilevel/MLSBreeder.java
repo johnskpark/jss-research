@@ -10,7 +10,6 @@ import java.util.Map;
 import ec.Breeder;
 import ec.BreedingPipeline;
 import ec.EvolutionState;
-import ec.Fitness;
 import ec.Individual;
 import ec.Initializer;
 import ec.Population;
@@ -65,6 +64,9 @@ public class MLSBreeder extends Breeder {
 	// in each subpopulation in the meta population.
 	private int[] numIndividualsPerSubpop;
 	private int numIndividuals;
+
+	private Comparator<Pair<Subpopulation, Integer>> subpopComparator = new SubpopulationComparator();
+	private Comparator<Pair<Individual, Integer>> individualComparator = new IndividualComparator();
 
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
@@ -558,7 +560,7 @@ public class MLSBreeder extends Breeder {
 
 			MLSSubpopulation subpop = (MLSSubpopulation) newpop.subpops[subpopIndex];
 
-			// Get the breeding pipeline from the subpopulation.
+			// Get the breeding pipeline from the subpopulation. // TODO this needs to be fixed so that its only done once.
 			BreedingPipeline bp = null;
 			if (clonePipelineAndPopulation) {
 				bp = (BreedingPipeline) subpop.species.pipe_prototype.clone();
@@ -632,11 +634,6 @@ public class MLSBreeder extends Breeder {
 		// Keep the best individuals and the best groups.
 		loadElites(state, newPop, metaPop);
 
-		// TODO temporary code to check population growth.
-		for (int subpop = 0; subpop < newPop.subpops.length; subpop++) {
-			System.out.println("Subpopulation " + subpop + " size: " + newPop.subpops[subpop].individuals.length);
-		}
-
 		return newPop;
 	}
 
@@ -651,7 +648,7 @@ public class MLSBreeder extends Breeder {
 			metaSubpops.add(new Pair<Subpopulation, Integer>(metaPop.subpops[s], s));
 		}
 
-		Collections.sort(metaSubpops, new SubpopulationComparator());
+		Collections.sort(metaSubpops, subpopComparator);
 
 		List<Pair<Individual, Integer>> bestGroupInds = new ArrayList<Pair<Individual, Integer>>(numIndividuals);
 
@@ -672,7 +669,7 @@ public class MLSBreeder extends Breeder {
 		}
 
 		// Find and temporary store the elite individuals in the population.
-		Collections.sort(bestGroupInds, new IndividualComparator());
+		Collections.sort(bestGroupInds, individualComparator);
 
 		Map<Integer, List<Individual>> subpopMap = new HashMap<Integer, List<Individual>>();
 
@@ -709,21 +706,6 @@ public class MLSBreeder extends Breeder {
 				anySubpopIsEmpty = true;
 			}
 		}
-
-		// If there is a case where subpopulation is empty due to individual filtering,
-		// then remove the particular subpopulation.
-		// TODO remove this if my algorithm does work.
-//		if (anySubpopIsEmpty) {
-//			Subpopulation[] retainedSubpops = new Subpopulation[numRetain];
-//			int index = 0;
-//			for (int s = 0; s < newPop.subpops.length; s++) {
-//				if (!subpopIsEmpty[s]) {
-//					retainedSubpops[index++] = newPop.subpops[s];
-//				}
-//			}
-//
-//			newPop.subpops = retainedSubpops;
-//		}
 
 		// If there is a case where subpopulation is empty due to individual filtering,
 		// then repopulate the subpopulation with new individuals: half from "good"
@@ -812,12 +794,9 @@ public class MLSBreeder extends Breeder {
 	// Compares the fitnesses of the subpopulations.
 	private class SubpopulationComparator implements Comparator<Pair<Subpopulation, Integer>> {
 		public int compare(Pair<Subpopulation, Integer> s1, Pair<Subpopulation, Integer> s2) {
-			Fitness fitness1 = ((MLSSubpopulation) s1.i1).getFitness();
-			Fitness fitness2 = ((MLSSubpopulation) s2.i1).getFitness();
-
-			if (fitness1.betterThan(fitness2)) {
+			if (((MLSSubpopulation) s1.i1).getFitness().betterThan(((MLSSubpopulation) s2.i1).getFitness())) {
 				return -1;
-			} else if (fitness2.betterThan(fitness1)) {
+			} else if (((MLSSubpopulation) s2.i1).getFitness().betterThan(((MLSSubpopulation) s1.i1).getFitness())) {
 				return 1;
 			} else {
 				return 0;
