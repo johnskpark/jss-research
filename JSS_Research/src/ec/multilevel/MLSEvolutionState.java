@@ -9,6 +9,8 @@ import ec.util.Parameter;
 /**
  * TODO javadoc.
  *
+ * Needs same subpopulation size for all subpopulation.
+ *
  * @author parkjohn
  *
  */
@@ -32,6 +34,7 @@ public class MLSEvolutionState extends EvolutionState {
 
 	private int totalNumIndividuals;
 	private int initNumSubpops;
+	private int initSubpopSize;
 
 	public void setup(final EvolutionState state, final Parameter base) {
 		super.setup(state, base);
@@ -88,11 +91,16 @@ public class MLSEvolutionState extends EvolutionState {
 
 		totalNumIndividuals = 0;
 		initNumSubpops = population.subpops.length;
+		initSubpopSize = population.subpops[0].individuals.length;
 
 		// Check to ensure that the subpopulation is a type of MLSSubpopulation.
 		for (int subpop = 0; subpop < population.subpops.length; subpop++) {
 			if (!(population.subpops[subpop] instanceof MLSSubpopulation)) {
 				output.fatal("Subpopulation " + subpop + " is not of type MLSSubpopulation.");
+			}
+
+			if (initSubpopSize != population.subpops[subpop].individuals.length) {
+				output.fatal("Subpopulation " + subpop + " has different subpopulation size.");
 			}
 
 			totalNumIndividuals += population.subpops[subpop].individuals.length;
@@ -194,6 +202,13 @@ public class MLSEvolutionState extends EvolutionState {
 	 */
 	public int getInitNumSubpops() {
 		return initNumSubpops;
+	}
+
+	/**
+	 * Returns the size of subpopulations in the population in the initialisation.
+	 */
+	public int getInitSubpopSize() {
+		return initSubpopSize;
 	}
 
 	/**

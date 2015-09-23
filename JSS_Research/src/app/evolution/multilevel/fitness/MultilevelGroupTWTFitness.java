@@ -48,6 +48,7 @@ public class MultilevelGroupTWTFitness implements IJasimaMultilevelGroupFitness 
 			MLSSubpopulation subpop,
 			boolean[] updateFitness,
 			boolean shouldSetContext) {
+		// TODO I'm getting zero group size. This is fucked up shit.
 		int groupSize = 0;
 
 		// In the MLSEvaluator, the individuals should have
@@ -61,7 +62,9 @@ public class MultilevelGroupTWTFitness implements IJasimaMultilevelGroupFitness 
 			}
 
 			// Sanity check to ensure that a particular individual has been evaluated.
-			assert subpop.individuals[i].evaluated;
+			if (!subpop.individuals[i].evaluated) {
+				state.output.fatal("All non-null individuals in the subpopulation must have been evaluated.");
+			}
 
 			KozaFitness fitness = (KozaFitness) subpop.individuals[i].fitness;
 			avgIndFitnesses += fitness.standardizedFitness();
@@ -70,7 +73,9 @@ public class MultilevelGroupTWTFitness implements IJasimaMultilevelGroupFitness 
 		}
 
 		// Another sanity check. We can't evaluate a group of size zero.
-		assert groupSize != 0;
+		if (groupSize == 0) {
+			state.output.fatal("Cannot evaluate a subpopulation of size zero.");
+		}
 
 		avgIndFitnesses /= groupSize;
 

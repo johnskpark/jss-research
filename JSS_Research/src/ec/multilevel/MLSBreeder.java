@@ -1,7 +1,6 @@
 package ec.multilevel;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -330,7 +329,6 @@ public class MLSBreeder extends Breeder {
 				parentIndex2 = start-1;
 			}
 
-			// FIXME could probably do away with this right?
 			@SuppressWarnings("unchecked")
 			Pair<Subpopulation, Integer>[] parents = new Pair[]{
 					new Pair<Subpopulation, Integer>(newPop.subpops[parentIndex1], parentIndex1),
@@ -408,7 +406,8 @@ public class MLSBreeder extends Breeder {
 
 				numIndividualsPerSubpop[index+child] = numIndividualsPerSubpop[parentIndex];
 
-				if (addIndividual) {
+				// FIXME hack to force adding individuals if there's only one individual in the parent subpopulation.
+				if (addIndividual || numIndividualsPerSubpop[index+child] == 1) {
 					// Add a new individual to the subpopulation.
 					children[child] = (MLSSubpopulation) parent.emptyClone();
 					children[child].individuals = new Individual[parent.individuals.length+1];
@@ -647,7 +646,11 @@ public class MLSBreeder extends Breeder {
 	 */
 	protected void loadElites(EvolutionState state, Population newPop, Population metaPop) {
 		// Sort and load in the best groups.
-		List<Subpopulation> metaSubpops = Arrays.asList(metaPop.subpops);
+		List<Pair<Subpopulation, Integer>> metaSubpops = new ArrayList<Pair<Subpopulation, Integer>>();
+		for (int s = 0; s < metaPop.subpops.length; s++) {
+			metaSubpops.add(new Pair<Subpopulation, Integer>(metaPop.subpops[s], s));
+		}
+
 		Collections.sort(metaSubpops, new SubpopulationComparator());
 
 		List<Pair<Individual, Integer>> bestGroupInds = new ArrayList<Pair<Individual, Integer>>(numIndividuals);
@@ -657,7 +660,7 @@ public class MLSBreeder extends Breeder {
 
 		// Retain as many subpopulations as the number of subpopulations initially generated.
 		for (int s = 0; s < ((MLSEvolutionState) state).getInitNumSubpops(); s++) {
-			Subpopulation subpop = metaSubpops.get(s);
+			Subpopulation subpop = metaSubpops.get(s).i1;
 			newPop.subpops[s] = subpop;
 
 			for (int i = 0; i < subpop.individuals.length; i++) {
@@ -687,7 +690,7 @@ public class MLSBreeder extends Breeder {
 		boolean[] subpopIsEmpty = new boolean[newPop.subpops.length];
 		boolean anySubpopIsEmpty = false;
 
-		int numRetain = 0;
+		List<Subpopulation> nonEmptySubpops = new ArrayList<Subpopulation>();
 
 		for (int s = 0; s < newPop.subpops.length; s++) {
 			List<Individual> inds = subpopMap.get(s);
@@ -700,7 +703,7 @@ public class MLSBreeder extends Breeder {
 				}
 
 				subpopIsEmpty[s] = false;
-				numRetain++;
+				nonEmptySubpops.add(newPop.subpops[s]);
 			} else {
 				subpopIsEmpty[s] = true;
 				anySubpopIsEmpty = true;
@@ -709,22 +712,48 @@ public class MLSBreeder extends Breeder {
 
 		// If there is a case where subpopulation is empty due to individual filtering,
 		// then remove the particular subpopulation.
+		// TODO remove this if my algorithm does work.
+//		if (anySubpopIsEmpty) {
+//			Subpopulation[] retainedSubpops = new Subpopulation[numRetain];
+//			int index = 0;
+//			for (int s = 0; s < newPop.subpops.length; s++) {
+//				if (!subpopIsEmpty[s]) {
+//					retainedSubpops[index++] = newPop.subpops[s];
+//				}
+//			}
+//
+//			newPop.subpops = retainedSubpops;
+//		}
 
 		// If there is a case where subpopulation is empty due to individual filtering,
 		// then repopulate the subpopulation with new individuals: half from "good"
 		// subpopulations, other half randomly.
 		if (anySubpopIsEmpty) {
-			Subpopulation[] retainedSubpops = new Subpopulation[numRetain];
-			int index = 0;
 			for (int s = 0; s < newPop.subpops.length; s++) {
-				if (!subpopIsEmpty[s]) {
-					retainedSubpops[index++] = newPop.subpops[s];
+				if (subpopIsEmpty[s]) {
+					repopulateSubpopulation(state, nonEmptySubpops, newPop.subpops[s]);
 				}
 			}
-
-			newPop.subpops = retainedSubpops;
 		}
+	}
 
+	private void repopulateSubpopulation(EvolutionState state, List<Subpopulation> nonEmptySubpops, Subpopulation emptySubpop) {
+		int initSubpopSize = ((MLSEvolutionState) state).getInitSubpopSize();
+
+		emptySubpop.individuals = new Individual[initSubpopSize];
+		for (int i = 0; i < initSubpopSize; i++) {
+			// Select a subpopulation to sample from.
+			double[] fitnesses = new double[nonEmptySubpops.size()];
+			for (int s = 0; s < nonEmptySubpops.size(); s++) {
+				fitnesses[s] = ((MLSSubpopulation) nonEmptySubpops.get(s)).getFitness().fitness();
+			}
+
+			Subpopulation subpop = nonEmptySubpops.get(selectFitness(fitnesses, state.random[0].nextDouble()));
+
+			// Select an individual from the subpopulation.
+			Individual ind = subpop.individuals[state.random[0].nextInt(subpop.individuals.length)];
+			emptySubpop.individuals[i] = (Individual) ind.clone();
+		}
 	}
 
 	/**
@@ -735,9 +764,8 @@ public class MLSBreeder extends Breeder {
 	 */
 	// Helper method for selecting a subpopulation out of a population based on its fitness.
 	protected static int selectFitness(final double[] fitnesses, final double probabilities) {
-		// FIXME need this to be more generic in the future.
-
-		// Assume Koza, i.e., between [0,inf) by normalising it using the softmax sigmoid.
+		// Assume that the fitnesses have already been normalised between [0,1).
+		// (KozaFitness does this, but the other fitnesses don't)
 		double[] probs = new double[fitnesses.length];
 		double totalFitness = 0.0;
 		for (int i = 0; i < fitnesses.length; i++) {
@@ -782,10 +810,10 @@ public class MLSBreeder extends Breeder {
 	}
 
 	// Compares the fitnesses of the subpopulations.
-	private class SubpopulationComparator implements Comparator<Subpopulation> {
-		public int compare(Subpopulation s1, Subpopulation s2) {
-			Fitness fitness1 = ((MLSSubpopulation) s1).getFitness();
-			Fitness fitness2 = ((MLSSubpopulation) s2).getFitness();
+	private class SubpopulationComparator implements Comparator<Pair<Subpopulation, Integer>> {
+		public int compare(Pair<Subpopulation, Integer> s1, Pair<Subpopulation, Integer> s2) {
+			Fitness fitness1 = ((MLSSubpopulation) s1.i1).getFitness();
+			Fitness fitness2 = ((MLSSubpopulation) s2.i1).getFitness();
 
 			if (fitness1.betterThan(fitness2)) {
 				return -1;
