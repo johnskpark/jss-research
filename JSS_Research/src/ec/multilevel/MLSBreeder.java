@@ -30,8 +30,6 @@ import ec.util.ThreadPool;
  */
 
 // FIXME Refactor the threading to use a factory sometime later down the line.
-
-// TODO need to use getInitNumSubpops() to fix this.
 public class MLSBreeder extends Breeder {
 
 	private static final long serialVersionUID = -6914152113435773281L;
@@ -64,6 +62,10 @@ public class MLSBreeder extends Breeder {
 	// in each subpopulation in the meta population.
 	private int[] numIndividualsPerSubpop;
 	private int numIndividuals;
+
+	// TODO more temporary variables for storing fitnesses.
+	private double[] subpopFitnesses;
+	private int subpopIndex;
 
 	private Comparator<Pair<Subpopulation, Integer>> subpopComparator = new SubpopulationComparator();
 	private Comparator<Pair<Individual, Integer>> individualComparator = new IndividualComparator();
@@ -163,6 +165,9 @@ public class MLSBreeder extends Breeder {
 		numIndividualsPerSubpop = new int[newPop.subpops.length];
 		numIndividuals = 0;
 
+		subpopFitnesses = new double[newPop.subpops.length];
+		subpopIndex = state.population.subpops.length;
+
 		// Load the individuals into the meta population
 		loadPopulation(state, newPop);
 		breedSubpopulations(state, newPop);
@@ -191,6 +196,9 @@ public class MLSBreeder extends Breeder {
 			for (int i = 0; i < subpop.individuals.length; i++) {
 				metaPop.subpops[s].individuals[i] = (Individual) subpop.individuals[i].clone();
 			}
+
+			// Load in the fitnesses of the subpopulations.
+			subpopFitnesses[s] = ((MLSSubpopulation) subpop).getFitness().fitness();
 		}
 	}
 
@@ -373,6 +381,32 @@ public class MLSBreeder extends Breeder {
 		}
 
 		return n;
+	}
+
+	// TODO worry about synchronization later down the line.
+	private int[] getCrossoverParents(EvolutionState state, int threadnum, int length) {
+		int parentIndex1 = selectFitness(length, state.random[threadnum].nextDouble());
+
+		if (parentIndex1 != length - 1) {
+			// Swap the fitnesses.
+			subpopFitnesses[parentIndex1] = subpopFitnesses[length-1];
+		}
+
+		int parentIndex2 = selectFitness(length-1, state.random[threadnum].nextDouble());
+
+		if (parentIndex1 == parentIndex2) {
+			parentIndex2 = length-1;
+		}
+
+		// TODO
+
+		return new int[]{parentIndex1, parentIndex2};
+	}
+
+	private static int selectFitness(int length, double prob) {
+		// TODO
+
+		return 0;
 	}
 
 	private int produceSubpopMutation(final int min,
@@ -746,6 +780,8 @@ public class MLSBreeder extends Breeder {
 	 */
 	// Helper method for selecting a subpopulation out of a population based on its fitness.
 	protected static int selectFitness(final double[] fitnesses, final double probabilities) {
+		// TODO Right, I need to rewrite this section.
+
 		// Assume that the fitnesses have already been normalised between [0,1).
 		// (KozaFitness does this, but the other fitnesses don't)
 		double[] probs = new double[fitnesses.length];
