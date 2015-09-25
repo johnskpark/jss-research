@@ -29,7 +29,9 @@ import ec.util.ThreadPool;
  *
  */
 
-// FIXME Refactor the threading to use a factory sometime later down the line.
+// FIXME
+// - Refactor the threading to use a factory sometime later down the line.
+// - Make the selection of parents work with synchronization later down the line.
 public class MLSBreeder extends Breeder {
 
 	private static final long serialVersionUID = -6914152113435773281L;
@@ -49,6 +51,8 @@ public class MLSBreeder extends Breeder {
 	public static final int CROSSOVER_INDS_PRODUCED = 2;
 	public static final int MUTATION_INDS_PRODUCED = 1;
 
+	public static final int BINARY_SEARCH_BOUNDARY = 8;
+
 	/** An array[subpop] of the number of elites to keep for that subpopulation */
 	private boolean sequentialBreeding;
 	private boolean clonePipelineAndPopulation;
@@ -63,8 +67,11 @@ public class MLSBreeder extends Breeder {
 	private int[] numIndividualsPerSubpop;
 	private int numIndividuals;
 
-	// TODO more temporary variables for storing fitnesses.
+	// Temporary field variables for storing fitnesses. This is used
+	// during crossover and mutation operations.
+	// TODO explain how this works.
 	private double[] subpopFitnesses;
+	private double[] bufferFitnesses;
 	private int subpopIndex;
 
 	private Comparator<Pair<Subpopulation, Integer>> subpopComparator = new SubpopulationComparator();
@@ -199,6 +206,7 @@ public class MLSBreeder extends Breeder {
 
 			// Load in the fitnesses of the subpopulations.
 			subpopFitnesses[s] = ((MLSSubpopulation) subpop).getFitness().fitness();
+			bufferFitnesses[s] = ((MLSSubpopulation) subpop).getFitness().fitness();
 		}
 	}
 
@@ -383,30 +391,30 @@ public class MLSBreeder extends Breeder {
 		return n;
 	}
 
-	// TODO worry about synchronization later down the line.
 	private int[] getCrossoverParents(EvolutionState state, int threadnum, int length) {
-		int parentIndex1 = selectFitness(length, state.random[threadnum].nextDouble());
+		int parentIndex1 = selectFitness(subpopFitnesses, bufferFitnesses, length, state.random[threadnum].nextDouble());
 
 		if (parentIndex1 != length - 1) {
 			// Swap the fitnesses.
+			double temp = subpopFitnesses[parentIndex1];
 			subpopFitnesses[parentIndex1] = subpopFitnesses[length-1];
+			subpopFitnesses[length-1] = temp;
 		}
 
-		int parentIndex2 = selectFitness(length-1, state.random[threadnum].nextDouble());
+		int parentIndex2 = selectFitness(subpopFitnesses, bufferFitnesses, length-1, state.random[threadnum].nextDouble());
 
 		if (parentIndex1 == parentIndex2) {
 			parentIndex2 = length-1;
 		}
 
-		// TODO
+		if (parentIndex1 != length - 1) {
+			// Swap back the fitnesses.
+			double temp = subpopFitnesses[parentIndex1];
+			subpopFitnesses[parentIndex1] = subpopFitnesses[length-1];
+			subpopFitnesses[length-1] = temp;
+		}
 
 		return new int[]{parentIndex1, parentIndex2};
-	}
-
-	private static int selectFitness(int length, double prob) {
-		// TODO
-
-		return 0;
 	}
 
 	private int produceSubpopMutation(final int min,
@@ -486,6 +494,10 @@ public class MLSBreeder extends Breeder {
 		}
 
 		return n;
+	}
+
+	private int getMutationParent(EvolutionState state, int threadnum, int length) {
+		return selectFitness(subpopFitnesses, bufferFitnesses, length, state.random[threadnum].nextDouble());
 	}
 
 	/**
@@ -797,6 +809,68 @@ public class MLSBreeder extends Breeder {
 
 		return RandomChoice.pickFromDistribution(probs, probabilities);
 	}
+
+	protected static final int selectFitness(double[] fitnesses, double[] buffer, int length, double prob) {
+		// Quick pre-check.
+		if (length == 1) {
+			return 0;
+		}
+
+		// Load in the fitnesses into the buffer.
+		buffer[0] = fitnesses[0];
+		for (int i = 1; i < length; i++) {
+			buffer[i] = buffer[i-1] + fitnesses[i];
+		}
+
+		// Instead of scaling the probabilities down so that they sum to 1.0,
+		// multiply the random value by the sum.
+		double value = prob * buffer[length-1];
+
+		if (length < BINARY_SEARCH_BOUNDARY) {
+			// Carry out a linear search.
+			for (int i = 0; i < length-1; i++) {
+				if (buffer[i] > value) {
+					return exemptZeroes(fitnesses, i);
+				}
+			}
+			return exemptZeroes(fitnesses, length-1);
+		} else {
+			// Carry out the binary search.
+			int top = length - 1;
+			int bottom = 0;
+			int cur;
+
+			while (top != bottom) {
+                cur = (top + bottom) / 2; // integer division
+
+                if (buffer[cur] > value) {
+                    if (cur == 0 || buffer[cur-1] <= prob) {
+                        return exemptZeroes(fitnesses, cur);
+                    } else { // step down
+                        top = cur;
+                    }
+                } else if (cur == buffer.length-1) { // oops
+                    return exemptZeroes(fitnesses, cur);
+                } else if (bottom == cur) { // step up
+                    bottom++;  // (8 + 9)/2 = 8
+                } else {
+                    bottom = cur;  // (8 + 10) / 2 = 9
+                }
+			}
+			return exemptZeroes(fitnesses, bottom);
+		}
+	}
+
+	private static final int exemptZeroes(double[] fitnesses, int index) {
+	    if (fitnesses[index] == 0.0) { // I need to scan forward because I'm in a left-trail
+	        // scan forward
+	        while (index < fitnesses.length-1 && fitnesses[index] == 0.0) { index++; }
+	    } else {
+	        // scan backwards
+	        while (index > 0 && fitnesses[index] == fitnesses[index-1]) { index--; }
+	    }
+	    return index;
+    }
 
 	// Threads for breeding subpopulations.
 	private class SubpopBreederThread implements Runnable {
