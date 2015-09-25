@@ -32,6 +32,8 @@ import ec.util.ThreadPool;
 // FIXME
 // - Refactor the threading to use a factory sometime later down the line.
 // - Make the selection of parents work with synchronization later down the line.
+
+// TODO remove all the commented out statements.
 public class MLSBreeder extends Breeder {
 
 	private static final long serialVersionUID = -6914152113435773281L;
@@ -327,51 +329,56 @@ public class MLSBreeder extends Breeder {
 		while (index < n + start) { // To be perfectly honest, this loop isn't necessary.
 			// FIXME probably make this generic/faster later down the line.
 			// Select two random subpopulations from 0 to (start-1) to crossover based on their fitness.
-			double[] fitnesses1 = new double[start];
-			double[] fitnesses2 = new double[start-1];
-			for (int j = 0; j < start - 1; j++) {
-				fitnesses1[j] = fitnesses2[j] = ((MLSSubpopulation) newPop.subpops[j]).getFitness().fitness();
-			}
-			fitnesses1[start-1] = ((MLSSubpopulation) newPop.subpops[start-1]).getFitness().fitness();
+//			double[] fitnesses1 = new double[start];
+//			double[] fitnesses2 = new double[start-1];
+//			for (int j = 0; j < start - 1; j++) {
+//				fitnesses1[j] = fitnesses2[j] = ((MLSSubpopulation) newPop.subpops[j]).getFitness().fitness();
+//			}
+//			fitnesses1[start-1] = ((MLSSubpopulation) newPop.subpops[start-1]).getFitness().fitness();
+//
+//			// Randomly select the parents for crossover.
+//			int parentIndex1 = selectFitness(fitnesses1, state.random[threadnum].nextDouble());
+//
+//			// Replace the selected parent with the subpopulation at start-1 so that its not considered for selection.
+//			if (parentIndex1 != start - 1) {
+//				fitnesses2[parentIndex1] = fitnesses1[start-1];
+//			}
+//			int parentIndex2 = selectFitness(fitnesses2, state.random[threadnum].nextDouble());
+//
+//			if (parentIndex1 == parentIndex2) {
+//				parentIndex2 = start-1;
+//			}
 
-			// Randomly select the parents for crossover.
-			int parentIndex1 = selectFitness(fitnesses1, state.random[threadnum].nextDouble());
+			int[] parentIndices = getCrossoverParents(state, threadnum, subpopIndex);
+			Subpopulation[] parents = new Subpopulation[] { newPop.subpops[parentIndices[0]], newPop.subpops[parentIndices[1]] };
 
-			// Replace the selected parent with the subpopulation at start-1 so that its not considered for selection.
-			if (parentIndex1 != start - 1) {
-				fitnesses2[parentIndex1] = fitnesses1[start-1];
-			}
-			int parentIndex2 = selectFitness(fitnesses2, state.random[threadnum].nextDouble());
-
-			if (parentIndex1 == parentIndex2) {
-				parentIndex2 = start-1;
-			}
-
-			@SuppressWarnings("unchecked")
-			Pair<Subpopulation, Integer>[] parents = new Pair[]{
-					new Pair<Subpopulation, Integer>(newPop.subpops[parentIndex1], parentIndex1),
-					new Pair<Subpopulation, Integer>(newPop.subpops[parentIndex2], parentIndex2)
-			};
+//			@SuppressWarnings("unchecked")
+//			Pair<Subpopulation, Integer>[] parents = new Pair[]{
+//					new Pair<Subpopulation, Integer>(newPop.subpops[parentIndex1], parentIndex1),
+//					new Pair<Subpopulation, Integer>(newPop.subpops[parentIndex2], parentIndex2)
+//			};
 
 			// Arbitrarily select the individuals to exchange in between the two subpopulations.
 			int[] swapIndices = new int[]{
-					state.random[threadnum].nextInt(numIndividualsPerSubpop[parentIndex1]),
-					state.random[threadnum].nextInt(numIndividualsPerSubpop[parentIndex2])
+					state.random[threadnum].nextInt(numIndividualsPerSubpop[parentIndices[0]]),
+					state.random[threadnum].nextInt(numIndividualsPerSubpop[parentIndices[1]])
 			};
 			int length = CROSSOVER_PARENTS_REQUIRED;
 
 			// Only generate as many children as required.
 			for (int child = 0; child < n; child++) {
 				// Populate the child subpopulation with individuals.
-				MLSSubpopulation childSubpop = (MLSSubpopulation) parents[child%length].i1.emptyClone();
+//				MLSSubpopulation childSubpop = (MLSSubpopulation) parents[child%length].i1.emptyClone();
+				MLSSubpopulation childSubpop = (MLSSubpopulation) parents[child%length].emptyClone();
 
-				int parentLength = numIndividualsPerSubpop[parents[child%length].i2];
+//				int parentLength = numIndividualsPerSubpop[parents[child%length].i2];
+				int parentLength = numIndividualsPerSubpop[parentIndices[child%length]];
 
 				for (int ind = 0; ind < parentLength; ind++) {
 					if (ind == swapIndices[child]) {
-						childSubpop.individuals[ind] = parents[(child+1)%length].i1.individuals[swapIndices[(child+1)%length]];
+						childSubpop.individuals[ind] = parents[(child+1)%length].individuals[swapIndices[(child+1)%length]];
 					} else {
-						childSubpop.individuals[ind] = parents[child%length].i1.individuals[ind];
+						childSubpop.individuals[ind] = parents[child%length].individuals[ind];
 					}
 				}
 
@@ -383,6 +390,9 @@ public class MLSBreeder extends Breeder {
 
 				numIndividualsPerSubpop[index+child] = parentLength;
 				numIndividuals += numIndividualsPerSubpop[index+child];
+
+				subpopFitnesses[index+child] = ((MLSSubpopulation) childSubpop).getFitness().fitness();
+				subpopIndex++;
 			}
 
 			index += n;
@@ -434,13 +444,15 @@ public class MLSBreeder extends Breeder {
 		int index = start;
 		while (index < n + start) {
 			// Select a random subpopulation from 0 to (start-1) to mutate based on their fitness.
-			double[] fitnesses = new double[start];
-			for (int j = 0; j < start; j++) {
-				fitnesses[j] = ((MLSSubpopulation) newpop.subpops[j]).getFitness().fitness();
-			}
+//			double[] fitnesses = new double[start];
+//			for (int j = 0; j < start; j++) {
+//				fitnesses[j] = ((MLSSubpopulation) newpop.subpops[j]).getFitness().fitness();
+//			}
+//
+//			// Randomly select the parents for crossover.
+//			int parentIndex = selectFitness(fitnesses, state.random[threadnum].nextDouble());
+			int parentIndex = getMutationParent(state, threadnum, subpopIndex);
 
-			// Randomly select the parents for crossover.
-			int parentIndex = selectFitness(fitnesses, state.random[threadnum].nextDouble());
 			Subpopulation parent = newpop.subpops[parentIndex];
 			MLSSubpopulation[] children = new MLSSubpopulation[n];
 
@@ -481,13 +493,16 @@ public class MLSBreeder extends Breeder {
 					numIndividualsPerSubpop[index+child]--;
 				}
 
-				numIndividuals += numIndividualsPerSubpop[index+child];
-
 				// Evaluate the child subpopulation.
 				((MLSEvaluator) state.evaluator).evaluateSubpopulation(state, children[child], index+child);
 
 				// Add the subpopulation to the population
 				newpop.subpops[index+child] = children[child];
+
+				numIndividuals += numIndividualsPerSubpop[index+child];
+
+				subpopFitnesses[index+child] = ((MLSSubpopulation) children[child]).getFitness().fitness();
+				subpopIndex++;
 			}
 
 			index += n;
@@ -506,6 +521,8 @@ public class MLSBreeder extends Breeder {
 	 * provided in the parameter and is updated by reference.
 	 */
 	protected void breedIndividuals(EvolutionState state, Population newPop) {
+		// TODO put the breeding pipeline here.
+
 		// The number of threads will either be amount of threads specified,
 		// or the number of individuals which need to be generated
 		// (whichever one is smaller).
