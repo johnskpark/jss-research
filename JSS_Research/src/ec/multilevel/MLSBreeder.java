@@ -521,8 +521,6 @@ public class MLSBreeder extends Breeder {
 	 * provided in the parameter and is updated by reference.
 	 */
 	protected void breedIndividuals(EvolutionState state, Population newPop) {
-		// TODO put the breeding pipeline here.
-
 		// The number of threads will either be amount of threads specified,
 		// or the number of individuals which need to be generated
 		// (whichever one is smaller).
@@ -537,6 +535,7 @@ public class MLSBreeder extends Breeder {
 		int numInds[] = new int[numThreads];
 		int from[][] = new int[numThreads][newPop.subpops.length];
 		double[] subpopFitnesses = new double[newPop.subpops.length];
+		BreedingPipeline[] breedingPipelines = new BreedingPipeline[newPop.subpops.length];
 
 		// We will have some extra individuals.  We distribute these among the early subpopulations.
 		int subpopsPerThread = numToBreed / numThreads;  // integer division
@@ -556,20 +555,39 @@ public class MLSBreeder extends Breeder {
 			}
 		}
 
-		for (int subpop = 0; subpop < newPop.subpops.length; subpop++) {
+		for (int s = 0; s < newPop.subpops.length; s++) {
+			MLSSubpopulation subpop = (MLSSubpopulation) newPop.subpops[s];
+
 			// Copy the fitnesses of the subpopulations.
-			subpopFitnesses[subpop] = ((MLSSubpopulation) newPop.subpops[subpop]).getFitness().fitness();
+			subpopFitnesses[s] = subpop.getFitness().fitness();
+
+			// Copy the breeding pipeline of the subpopulations.
+			breedingPipelines[s] = (BreedingPipeline) ((clonePipelineAndPopulation) ?
+					subpop.species.pipe_prototype.clone() :
+						subpop.species.pipe_prototype);
 
 			// Find the starting points for each subpopulation.
-			from[0][subpop] = numIndividualsPerSubpop[subpop];
+			from[0][s] = numIndividualsPerSubpop[s];
 			for (int thread = 1; thread < numThreads; thread++) {
-				from[thread][subpop] = from[thread-1][subpop] + numInds[thread];
+				from[thread][s] = from[thread-1][s] + numInds[thread];
+			}
+		}
+
+		// Setup all of the individual breeding pipelines.
+		for (int thread = 0; thread < numThreads; thread++) {
+			for (int subpop = 0; subpop < newPop.subpops.length; subpop++) {
+				// Check to make sure that the breeding pipeline produces
+				// the right kind of individuals.  Don't want a mistake there! :-)
+				if (!breedingPipelines[subpop].produces(state, newPop, subpop, thread)) {
+					state.output.fatal("The Breeding Pipeline of subpopulation " + subpopIndex + " does not produce individuals of the expected species " + newPop.subpops[subpop].species.getClass().getName() + " or fitness " + newPop.subpops[subpop].species.f_prototype );
+				}
+				breedingPipelines[subpopIndex].prepareToProduce(state, subpopIndex, thread);
 			}
 		}
 
 		// Breed the groups, i.e., the subpopulations.
 		if (numThreads==1) {
-			breedIndChunk(newPop, state, numInds[0], from[0], subpopFitnesses, 0);
+			breedIndChunk(newPop, state, numInds[0], from[0], subpopFitnesses, breedingPipelines, 0);
 		} else {
 			ThreadPool pool = new ThreadPool();
 			for (int i = 0; i < numThreads; i++) {
@@ -578,11 +596,19 @@ public class MLSBreeder extends Breeder {
 				r.numInds = numInds[i];
 				r.from = from[i];
 				r.fitnesses = subpopFitnesses;
+				r.breedingPipelines = breedingPipelines;
 				r.threadnum = i;
 				r.parent = this;
 				pool.start(r, "ECJ Breeding Thread " + i);
 			}
 			pool.joinAll();
+		}
+
+		// Close all of the individual breeding pipelines.
+		for (int thread = 0; thread < numThreads; thread++) {
+			for (int subpop = 0; subpop < newPop.subpops.length; subpop++) {
+				breedingPipelines[subpop].finishProducing(state, subpop, thread);
+			}
 		}
 
 		// Trim the individuals array.
@@ -607,42 +633,26 @@ public class MLSBreeder extends Breeder {
 	/**
 	 * Breed the individuals in the chunk of the subpopulation provided.
 	 */
-	protected void breedIndChunk(Population newpop,
+	protected void breedIndChunk(Population newPop,
 			EvolutionState state,
 			int numInds,
 			int[] from,
 			final double[] subpopFitnesses,
+			final BreedingPipeline[] breedingPipelines,
 			int threadnum) {
 		int totalNumBred = 0;
 
 		while(totalNumBred < numInds) {
-			// FIXME make this a little faster.
-
 			// Randomly select a parent based on the fitness.
 			int subpopIndex = selectFitness(subpopFitnesses, state.random[threadnum].nextDouble());
 
-			MLSSubpopulation subpop = (MLSSubpopulation) newpop.subpops[subpopIndex];
-
-			// Get the breeding pipeline from the subpopulation. // TODO this needs to be fixed so that its only done once.
-			BreedingPipeline bp = null;
-			if (clonePipelineAndPopulation) {
-				bp = (BreedingPipeline) subpop.species.pipe_prototype.clone();
-			} else {
-				bp = (BreedingPipeline) subpop.species.pipe_prototype;
-			}
-
-			// Check to make sure that the breeding pipeline produces
-			// the right kind of individuals.  Don't want a mistake there! :-)
-			if (!bp.produces(state, newpop, subpopIndex, threadnum)) {
-				state.output.fatal("The Breeding Pipeline of subpopulation " + subpopIndex + " does not produce individuals of the expected species " + newpop.subpops[subpopIndex].species.getClass().getName() + " or fitness " + newpop.subpops[subpopIndex].species.f_prototype );
-			}
-			bp.prepareToProduce(state, subpopIndex, threadnum);
+			MLSSubpopulation subpop = (MLSSubpopulation) newPop.subpops[subpopIndex];
 
 			// Start breeding!
 			int index = from[subpopIndex] + totalNumBred;
 			int upperBound = from[subpopIndex] + numInds;
 
-			int numBred = bp.produce(1,
+			int numBred = breedingPipelines[subpopIndex].produce(1,
 					upperBound - index,
 					index,
 					subpopIndex,
@@ -662,8 +672,6 @@ public class MLSBreeder extends Breeder {
 			}
 
 			totalNumBred += numBred;
-
-			bp.finishProducing(state, subpopIndex, threadnum);
 		}
 
 		// Safety check to ensure that you don't override another section of the pipeline.
@@ -909,12 +917,13 @@ public class MLSBreeder extends Breeder {
 		int numInds;
 		int[] from;
 		double[] fitnesses;
+		BreedingPipeline[] breedingPipelines;
 		EvolutionState state;
 		int threadnum;
 		MLSBreeder parent;
 
 		public void run() {
-			parent.breedIndChunk(newpop, state, numInds, from, fitnesses, threadnum);
+			parent.breedIndChunk(newpop, state, numInds, from, fitnesses, breedingPipelines, threadnum);
 		}
 	}
 
