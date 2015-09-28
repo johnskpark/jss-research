@@ -83,8 +83,7 @@ public class MultilevelGroupTWTFitness implements IJasimaMultilevelGroupFitness 
 		// average of the individuals fitnesses and the ensemble's
 		// fitness, multiplied by a size penalty factor.
 		double groupFitness;
-		groupFitness = (0.5 * avgIndFitnesses + 0.5 * ensembleStat.mean());
-		groupFitness *= Math.sqrt(groupSize * groupSize / (2.0 * groupSize));
+		groupFitness = (0.5 * avgIndFitnesses + 0.5 * ensembleStat.mean()) * (groupSize * groupSize);
 
 		((KozaFitness) subpop.getFitness()).setStandardizedFitness(state, groupFitness);
 
