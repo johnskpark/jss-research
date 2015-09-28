@@ -545,6 +545,7 @@ public class MLSBreeder extends Breeder {
 
 		// Setup the arrays required for subpopulation fitnesses.
 		double[] subpopFits = new double[selectableSubpops.size()];
+		double[] buffer = new double[selectableSubpops.size()];
 		int[] subpopIndices = new int[selectableSubpops.size()];
 
 		for (int i = 0; i < selectableSubpops.size(); i++) {
@@ -566,7 +567,7 @@ public class MLSBreeder extends Breeder {
 
 		// Breed the groups, i.e., the subpopulations.
 		if (numThreads==1) {
-			breedIndChunk(newPop, state, numInds[0], from[0], breedingPipelines, 0);
+			breedIndChunk(newPop, state, numInds[0], from[0], subpopFits, buffer, subpopIndices, breedingPipelines, 0);
 		} else {
 			ThreadPool pool = new ThreadPool();
 			for (int i = 0; i < numThreads; i++) {
@@ -574,7 +575,8 @@ public class MLSBreeder extends Breeder {
 				r.newpop = newPop;
 				r.numInds = numInds[i];
 				r.from = from[i];
-				r.subpopFitnesses = subpopFits;
+				r.subpopFits = subpopFits;
+				r.buffer = buffer;
 				r.subpopIndices = subpopIndices;
 				r.breedingPipelines = breedingPipelines;
 				r.threadnum = i;
@@ -617,13 +619,17 @@ public class MLSBreeder extends Breeder {
 			EvolutionState state,
 			int numInds,
 			int[] from,
+			double[] subpopFits,
+			double[] buffer,
+			int[] subpopIndices,
 			final BreedingPipeline[] breedingPipelines,
 			int threadnum) {
 		int totalNumBred = 0;
 
 		while(totalNumBred < numInds) {
 			// Randomly select a parent based on the fitness.
-			int subpopIndex = selectFitness(subpopFitnesses, bufferFitnesses, bufferIndex, state.random[threadnum].nextDouble());
+			int pseudoIndex = selectFitness(subpopFits, buffer, subpopFits.length, state.random[threadnum].nextDouble());
+			int subpopIndex = subpopIndices[pseudoIndex];
 
 			MLSSubpopulation subpop = (MLSSubpopulation) newPop.subpops[subpopIndex];
 
@@ -878,7 +884,8 @@ public class MLSBreeder extends Breeder {
 		Population newpop;
 		int numInds;
 		int[] from;
-		double[] subpopFitnesses;
+		double[] subpopFits;
+		double[] buffer;
 		int[] subpopIndices;
 		BreedingPipeline[] breedingPipelines;
 		EvolutionState state;
@@ -886,7 +893,7 @@ public class MLSBreeder extends Breeder {
 		MLSBreeder parent;
 
 		public void run() {
-			parent.breedIndChunk(newpop, state, numInds, from, breedingPipelines, threadnum);
+			parent.breedIndChunk(newpop, state, numInds, from, subpopFits, buffer, subpopIndices, breedingPipelines, threadnum);
 		}
 	}
 
