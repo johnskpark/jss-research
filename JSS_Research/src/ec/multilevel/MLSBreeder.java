@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.rules.TemporaryFolder;
+
 import ec.Breeder;
 import ec.BreedingPipeline;
 import ec.EvolutionState;
@@ -32,7 +34,8 @@ import ec.util.ThreadPool;
 // - Refactor the threading to use a factory sometime later down the line.
 // - Make the selection of parents work with synchronization later down the line.
 
-// TODO add a max subpopulation size to the individuals.
+// TODO In addition, limiting the subpopulation size seems to make the population stagnant.
+// Is there a way to promote exploration a little bit more?
 public class MLSBreeder extends Breeder {
 
 	private static final long serialVersionUID = -6914152113435773281L;
@@ -53,6 +56,8 @@ public class MLSBreeder extends Breeder {
 	public static final int MUTATION_INDS_PRODUCED = 1;
 
 	public static final int BINARY_SEARCH_BOUNDARY = 8;
+
+	public static final double TEMP_SIZE_MULTIPLIER = 4;
 
 	/** An array[subpop] of the number of elites to keep for that subpopulation */
 	private boolean sequentialBreeding;
@@ -171,6 +176,11 @@ public class MLSBreeder extends Breeder {
 			newPop.clear();
 			backupMetaPopulation = (Population) metaPop;
 		}
+
+		// TODO temporary code.
+//		if (state.generation == 2) {
+//			System.out.println("Analysing generation 2:");
+//		}
 
 		numIndividualsPerSubpop = new int[newPop.subpops.length];
 		numIndividuals = 0;
@@ -527,7 +537,10 @@ public class MLSBreeder extends Breeder {
 
 			// Subpopulation needs to have less than double the initial
 			// number of individuals to be considered for selection.
-			if (numIndividualsPerSubpop[s] < 2 * ((MLSEvolutionState) state).getInitSubpopSize()) {
+			// FIXME This part will need to be cleaned up later down the line.
+			if (numIndividualsPerSubpop[s] < TEMP_SIZE_MULTIPLIER * ((MLSEvolutionState) state).getInitSubpopSize()) {
+				System.out.println("Adding subpopulation " + s + " with size " + numIndividualsPerSubpop[s]);
+
 				selectableSubpops.add(new Pair<Double, Integer>(subpop.getFitness().fitness(), s));
 			}
 
@@ -625,10 +638,13 @@ public class MLSBreeder extends Breeder {
 			final BreedingPipeline[] breedingPipelines,
 			int threadnum) {
 		int totalNumBred = 0;
+		int selectionSize = subpopFits.length;
 
 		while(totalNumBred < numInds) {
+			// TODO restrict the subpopulation size here. A subpopulation can exceed the maximum size if the value was added after the fact.
 			// Randomly select a parent based on the fitness.
-			int pseudoIndex = selectFitness(subpopFits, buffer, subpopFits.length, state.random[threadnum].nextDouble());
+
+			int pseudoIndex = selectFitness(subpopFits, buffer, selectionSize, state.random[threadnum].nextDouble());
 			int subpopIndex = subpopIndices[pseudoIndex];
 
 			MLSSubpopulation subpop = (MLSSubpopulation) newPop.subpops[subpopIndex];
@@ -654,6 +670,20 @@ public class MLSBreeder extends Breeder {
 				}
 
 				((MLSEvaluator) state.evaluator).evaluateIndividual(state, subpop, subpopIndex, subpop.individuals[i]);
+			}
+
+			// If the size of the subpopulation reaches the threshold, remove it from the selection.
+			if (numIndividualsPerSubpop[subpopIndex] > TEMP_SIZE_MULTIPLIER * ((MLSEvolutionState) state).getInitSubpopSize()) {
+				// FIXME this is DEFINITELY not thread-safe.
+				double tempFit = subpopFits[pseudoIndex];
+				subpopFits[pseudoIndex] = subpopFits[selectionSize-1];
+				subpopFits[selectionSize-1] = tempFit;
+
+				int tempIndex = subpopIndices[pseudoIndex];
+				subpopIndices[pseudoIndex] = subpopIndices[selectionSize-1];
+				subpopIndices[selectionSize-1] = tempIndex;
+
+				selectionSize--;
 			}
 
 			totalNumBred += numBred;
@@ -689,6 +719,10 @@ public class MLSBreeder extends Breeder {
 
 		// Keep the best individuals and the best groups.
 		loadElites(state, newPop, metaPop);
+
+		for (int s = 0; s < newPop.subpops.length; s++) {
+			System.out.println("Number of individuals in subpopulation " + s + ": " + newPop.subpops[s].individuals.length);
+		}
 
 		return newPop;
 	}
