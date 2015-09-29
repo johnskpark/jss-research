@@ -123,38 +123,24 @@ public class MLSStatistics extends Statistics {
 
 		// Print the best fitness of a subpopulation.
 		if (doGeneration) {
-			String evaluatedStr;
-
-			if (bestSubpop.isEvaluated()) {
-				evaluatedStr = " ";
-			} else {
-				evaluatedStr = " (evaluated flag not set): ";
-			}
+			String evaluatedStr = (bestSubpop.isEvaluated()) ? " " : " (evaluated flag not set): ";
 
 			state.output.message("Best subpop of generation: " + bestSubpopIndex + evaluatedStr + bestSubpop.getFitness().fitnessToStringForHumans());
 		}
 
 		// Print the best fitness of an individual per subpopulation.
-
-		// TODO make it print out the tree in a single line.
 		for (int s = 0; s < state.population.subpops.length; s++) {
 			MLSSubpopulation subpop = (MLSSubpopulation) state.population.subpops[s];
 
 			if (doGeneration) {
-				state.output.println("Subpopulation " + s + ": " + subpop.getFitness().fitnessToStringForHumans(), statisticsLog);
+				state.output.println("Subpopulation " + s + ": " + subpop.getFitness().fitnessToStringForHumans() + ", Size: " + subpop.individuals.length, statisticsLog);
 				bestOfSubpop[s].printIndividualForHumans(state, statisticsLog);
 			}
 
 			if (doMessage && !silentPrint) {
-				String evaluatedStr;
+				String evaluatedStr = (bestOfSubpop[s].evaluated) ? "" : "(evaluated flag not set): ";
 
-				if (bestOfSubpop[s].evaluated) {
-					evaluatedStr = "";
-				} else {
-					evaluatedStr = "(evaluated flag not set): ";
-				}
-
-				state.output.message("Subpop " + s + " best fitness of generation: " + evaluatedStr + bestOfSubpop[s].fitness.fitnessToStringForHumans());
+				state.output.message("Subpop " + s + " fitness: " + subpop.getFitness().fitnessToStringForHumans() + ", Size: " + subpop.individuals.length + ", Individual: " + evaluatedStr + bestOfSubpop[s].fitness.fitnessToStringForHumans());
 			}
 		}
 	}
