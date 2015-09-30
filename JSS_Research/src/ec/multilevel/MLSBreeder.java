@@ -734,6 +734,8 @@ public class MLSBreeder extends Breeder {
 		// Load elite will copy over the individual subpopulations.
 		newPop.subpops = new Subpopulation[((MLSEvolutionState) state).getInitNumSubpops()];
 
+		int numLeftoverIndividuals = 0;
+
 		// Retain as many subpopulations as the number of subpopulations initially generated.
 		for (int s = 0; s < ((MLSEvolutionState) state).getInitNumSubpops(); s++) {
 			Subpopulation subpop = metaSubpops.get(s).i1;
@@ -744,6 +746,7 @@ public class MLSBreeder extends Breeder {
 
 				Pair<Individual, Integer> d = new Pair<Individual, Integer>(subpop.individuals[i], s);
 				bestGroupInds.add(d);
+				numLeftoverIndividuals++;
 			}
 		}
 
@@ -752,7 +755,7 @@ public class MLSBreeder extends Breeder {
 
 		Map<Integer, List<Individual>> subpopMap = new HashMap<Integer, List<Individual>>();
 
-		for (int i = 0; i < ((MLSEvolutionState) state).getTotalNumIndividuals(); i++) {
+		for (int i = 0; i < Math.min(((MLSEvolutionState) state).getTotalNumIndividuals(), numLeftoverIndividuals); i++) {
 			Pair<Individual, Integer> d = bestGroupInds.get(i);
 
 			if (!subpopMap.containsKey(d.i2)) {

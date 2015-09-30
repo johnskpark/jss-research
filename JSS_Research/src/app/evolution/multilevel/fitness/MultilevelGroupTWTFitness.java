@@ -48,7 +48,6 @@ public class MultilevelGroupTWTFitness implements IJasimaMultilevelGroupFitness 
 			MLSSubpopulation subpop,
 			boolean[] updateFitness,
 			boolean shouldSetContext) {
-		// TODO I'm getting zero group size. This is fucked up shit.
 		int groupSize = 0;
 
 		// In the MLSEvaluator, the individuals should have
