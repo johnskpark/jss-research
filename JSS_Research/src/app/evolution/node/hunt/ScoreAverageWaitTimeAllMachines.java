@@ -45,32 +45,26 @@ public class ScoreAverageWaitTimeAllMachines extends GPSingleLinePrintNode {
 		PrioRuleTarget entry = data.getPrioRuleTarget();
 		HuntListener listener = (HuntListener) data.getWorkStationListener();
 
-		int nextTask = entry.getTaskNumber() + 1;
-		if (nextTask >= entry.numOps()) {
-			data.setPriority(0);
-		} else {
-			WorkStation[] machines = entry.getShop().getMachines();
+		WorkStation[] machines = entry.getShop().getMachines();
 
-			double averageWaitTime = 0.0;
-			for (WorkStation machine : machines) {
-				Queue<OperationCompletionStat> completedJobsQueue = listener.getLastCompletedJobs(machine);
-				if (completedJobsQueue == null) {
-					continue;
-				}
-
-				double machineWaitTime = 0.0;
-
-				for (OperationCompletionStat stat : completedJobsQueue) {
-					machineWaitTime += stat.getWaitTime();
-				}
-
-				averageWaitTime += machineWaitTime / completedJobsQueue.size();
+		double averageWaitTime = 0.0;
+		for (WorkStation machine : machines) {
+			Queue<OperationCompletionStat> completedJobsQueue = listener.getLastCompletedJobs(machine);
+			if (completedJobsQueue == null) {
+				continue;
 			}
-			averageWaitTime /= machines.length;
 
-			data.setPriority(averageWaitTime);
+			double machineWaitTime = 0.0;
 
+			for (OperationCompletionStat stat : completedJobsQueue) {
+				machineWaitTime += stat.getWaitTime();
+			}
+
+			averageWaitTime += machineWaitTime / completedJobsQueue.size();
 		}
+		averageWaitTime /= machines.length;
+
+		data.setPriority(averageWaitTime);
 	}
 
 }

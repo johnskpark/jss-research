@@ -83,6 +83,7 @@ public class HuntListener extends AbsWorkStationListener {
 
 	public void clear() {
 		completedJobs.clear();
+		startedJobs.clear();
 	}
 
 	private class OperationStartStat {
