@@ -73,7 +73,7 @@ pop.subpop.0.species.pipe.source.1.prob = 0.1
 # level of course.
 #
 
-# Reproduction will use Tournament Selection 
+# Reproduction will use Tournament Selection
 breed.reproduce.source.0 = ec.select.TournamentSelection
 
 # Crossover will use Tournament Selection, try only 1
@@ -121,7 +121,7 @@ select.tournament.size = 7
 # the Koza-standard subtree mutation GROW values for the
 # default for GROW as a whole.  This default is
 # min-depth=max-depth=5, which I don't like very much,
-# but hey, that's the standard.  
+# but hey, that's the standard.
 # This means that if someone decided to use GROW to generate
 # new individual trees, it's also use the defaults below
 # unless he overrided them locally.
@@ -131,18 +131,18 @@ gp.koza.grow.max-depth = 5
 
 
 #
-# We specify a few things about ADFs  -- what kind 
+# We specify a few things about ADFs  -- what kind
 # of stack they use, and what kind of context
 #
 
 gp.problem.stack = ec.gp.ADFStack
 gp.adf-stack.context = ec.gp.ADFContext
 
-# 
+#
 # Here we define the default values for KozaNodeSelection;
 # as always, these can be overridden by values hanging off
 # of the Crossover/Reproduction/Mutation/whatever pipelines,
-# like we did for node-building, but hey, whatever. 
+# like we did for node-building, but hey, whatever.
 # The default is 10% terminals, 90% nonterminals when possible,
 # 0% "always pick the root", 0% "pick any node"
 
@@ -153,8 +153,8 @@ gp.koza.ns.root = 0.0
 
 
 
-# You need to create at least one function set, 
-# called "f0", which your first tree will use.  
+# You need to create at least one function set,
+# called "f0", which your first tree will use.
 # You don't need to include the class declaration here,
 # but it quiets warnings.
 

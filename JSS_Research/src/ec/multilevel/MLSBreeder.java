@@ -177,11 +177,6 @@ public class MLSBreeder extends Breeder {
 			backupMetaPopulation = (Population) metaPop;
 		}
 
-		// TODO temporary code.
-//		if (state.generation == 2) {
-//			System.out.println("Analysing generation 2:");
-//		}
-
 		numIndividualsPerSubpop = new int[newPop.subpops.length];
 		numIndividuals = 0;
 
@@ -539,8 +534,6 @@ public class MLSBreeder extends Breeder {
 			// number of individuals to be considered for selection.
 			// FIXME This part will need to be cleaned up later down the line.
 			if (numIndividualsPerSubpop[s] < TEMP_SIZE_MULTIPLIER * ((MLSEvolutionState) state).getInitSubpopSize()) {
-				System.out.println("Adding subpopulation " + s + " with size " + numIndividualsPerSubpop[s]);
-
 				selectableSubpops.add(new Pair<Double, Integer>(subpop.getFitness().fitness(), s));
 			}
 
@@ -720,10 +713,6 @@ public class MLSBreeder extends Breeder {
 		// Keep the best individuals and the best groups.
 		loadElites(state, newPop, metaPop);
 
-		for (int s = 0; s < newPop.subpops.length; s++) {
-			System.out.println("Number of individuals in subpopulation " + s + ": " + newPop.subpops[s].individuals.length);
-		}
-
 		return newPop;
 	}
 
@@ -762,9 +751,6 @@ public class MLSBreeder extends Breeder {
 		Collections.sort(bestGroupInds, individualComparator);
 
 		Map<Integer, List<Individual>> subpopMap = new HashMap<Integer, List<Individual>>();
-
-		System.out.println("Number of individuals generated: " + numIndividuals);
-		System.out.println("Number of individuals to keep: " + ((MLSEvolutionState) state).getTotalNumIndividuals());
 
 		for (int i = 0; i < ((MLSEvolutionState) state).getTotalNumIndividuals(); i++) {
 			Pair<Individual, Integer> d = bestGroupInds.get(i);
@@ -813,8 +799,6 @@ public class MLSBreeder extends Breeder {
 	}
 
 	private void repopulateSubpopulation(EvolutionState state, List<Subpopulation> nonEmptySubpops, Subpopulation emptySubpop) {
-		System.out.println("Repopulating subpopulation:");
-
 		int initSubpopSize = ((MLSEvolutionState) state).getInitSubpopSize();
 
 		emptySubpop.individuals = new Individual[initSubpopSize];

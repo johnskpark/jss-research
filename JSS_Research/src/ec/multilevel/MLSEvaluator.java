@@ -69,33 +69,6 @@ public class MLSEvaluator extends Evaluator {
 
 		for (int subpop = 0; subpop < state.population.subpops.length; subpop++) {
 			evaluateSubpopulation(state, (MLSSubpopulation) state.population.subpops[subpop], subpop);
-
-			// TODO remove these later down the line.
-//			KozaFitness fit = (KozaFitness) ((MLSSubpopulation) state.population.subpops[subpop]).getFitness();
-//
-//			System.out.printf("Subpop index: %d, subpop size: %d, subpop fitness: %f\n",
-//					subpop,
-//					state.population.subpops[subpop].individuals.length,
-//					fit.standardizedFitness());
-//
-//			if (state.generation == 4 && subpop == 9) {
-//				KozaFitness fit1 = (KozaFitness) ((MLSSubpopulation) state.population.subpops[0]).getFitness();
-//				KozaFitness fit2 = (KozaFitness) ((MLSSubpopulation) state.population.subpops[9]).getFitness();
-//
-//				System.out.printf("Subpop index: %d, subpop size: %d, subpop fitness: %f\n",
-//						0,
-//						state.population.subpops[0].individuals.length,
-//						fit1.standardizedFitness());
-//
-//				System.out.printf("Subpop index: %d, subpop size: %d, subpop fitness: %f\n",
-//						9,
-//						state.population.subpops[9].individuals.length,
-//						fit2.standardizedFitness());
-//
-//				System.out.println("Is better: " + fit.betterThan(((MLSSubpopulation) state.population.subpops[0]).getFitness()));
-//
-//				System.out.println();
-//			}
 		}
 	}
 
