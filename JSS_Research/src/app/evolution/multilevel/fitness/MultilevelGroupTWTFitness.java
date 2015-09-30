@@ -23,7 +23,7 @@ import ec.multilevel.MLSSubpopulation;
  *
  */
 
-// TODO got a bad fitness warning, might want to fix this.
+// TODO this gives terrible results, try to figure out why this is the case.
 public class MultilevelGroupTWTFitness implements IJasimaMultilevelGroupFitness {
 
 	private static final String WEIGHTED_TARDINESS = "weightedTardMean";
@@ -82,8 +82,7 @@ public class MultilevelGroupTWTFitness implements IJasimaMultilevelGroupFitness 
 		// The final fitness is the linear combination of the
 		// average of the individuals fitnesses and the ensemble's
 		// fitness, multiplied by a size penalty factor.
-		double groupFitness;
-		groupFitness = (0.5 * avgIndFitnesses + 0.5 * ensembleStat.mean()) * (groupSize * groupSize);
+		double groupFitness = (0.5 * avgIndFitnesses + 0.5 * ensembleStat.mean()) * Math.sqrt(groupSize);
 
 		((KozaFitness) subpop.getFitness()).setStandardizedFitness(state, groupFitness);
 

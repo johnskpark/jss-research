@@ -42,7 +42,7 @@ public class MLSSubpopulation extends Subpopulation {
 
 			p.species = species;
 			p.individuals = new Individual[individuals.length];
-			p.fitness = fitness;
+			p.fitness = (Fitness) fitness.clone();
 			p.evaluated = false;
 
 			return p;
