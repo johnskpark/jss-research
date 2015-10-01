@@ -9,6 +9,7 @@ import app.evolution.multilevel.IJasimaMultilevelGroupFitness;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.gp.koza.KozaFitness;
+import ec.multilevel.MLSEvolutionState;
 import ec.multilevel.MLSSubpopulation;
 
 /**
@@ -81,7 +82,9 @@ public class MultilevelGroupTWTFitness implements IJasimaMultilevelGroupFitness 
 		// The final fitness is the linear combination of the
 		// average of the individuals fitnesses and the ensemble's
 		// fitness, multiplied by a size penalty factor.
-		double groupFitness = (0.5 * avgIndFitnesses + 0.5 * ensembleStat.mean()) * Math.sqrt(groupSize);
+		double performanceFactor = (0.5 * avgIndFitnesses + 0.5 * ensembleStat.mean());
+		double sizeFactor = Math.sqrt((((MLSEvolutionState) state).getInitSubpopSize() + groupSize) / (2.0 * groupSize));
+		double groupFitness = performanceFactor * sizeFactor;
 
 		((KozaFitness) subpop.getFitness()).setStandardizedFitness(state, groupFitness);
 
