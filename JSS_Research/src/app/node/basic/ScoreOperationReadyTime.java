@@ -23,4 +23,9 @@ public class ScoreOperationReadyTime implements INode {
 		return data.getEntry().getArriveTime();
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		return o != null && o.getClass() == this.getClass();
+	}
+
 }

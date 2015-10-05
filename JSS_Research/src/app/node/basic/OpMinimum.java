@@ -31,4 +31,14 @@ public class OpMinimum implements INode {
 		return Math.min(leftEval, rightEval);
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (o == null || o.getClass() != this.getClass()) {
+			return false;
+		}
+		OpMinimum other = (OpMinimum) o;
+		return this.leftChild.equals(other.leftChild) &&
+				this.rightChild.equals(other.rightChild);
+	}
+
 }

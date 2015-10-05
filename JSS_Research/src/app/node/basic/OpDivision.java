@@ -35,4 +35,14 @@ public class OpDivision implements INode {
 		}
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (o == null || o.getClass() != this.getClass()) {
+			return false;
+		}
+		OpDivision other = (OpDivision) o;
+		return this.leftChild.equals(other.leftChild) &&
+				this.rightChild.equals(other.rightChild);
+	}
+
 }

@@ -23,4 +23,9 @@ public class ScoreProcessingTime implements INode {
 		return data.getEntry().currProcTime();
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		return o != null && o.getClass() == this.getClass();
+	}
+
 }

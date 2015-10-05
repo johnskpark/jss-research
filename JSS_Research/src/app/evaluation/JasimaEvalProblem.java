@@ -36,6 +36,7 @@ import org.xml.sax.SAXException;
 
 import app.listener.AbsWorkStationListener;
 import app.node.INode;
+import app.node.NodeData;
 import app.simConfig.AbsSimConfig;
 import app.util.RuleParser;
 
@@ -110,10 +111,10 @@ public class JasimaEvalProblem {
 
 		doc.getDocumentElement().normalize();
 
+		loadListener(doc);
 		loadSolvers(doc);
 		loadDataset(doc);
 		loadFitness(doc);
-		loadListener(doc);
 		loadOutput(doc);
 	}
 
@@ -170,6 +171,10 @@ public class JasimaEvalProblem {
 
 			JasimaEvalConfig config = new JasimaEvalConfig();
 			config.setSeed(Integer.parseInt(split[0]));
+
+			NodeData data = new NodeData();
+			data.setWorkStationListener(workstationListener);
+			config.setNodeData(data);
 
 			List<INode> roots = new ArrayList<INode>();
 			for (int i = 1; i < split.length; i++) {
@@ -291,6 +296,8 @@ public class JasimaEvalProblem {
 					experiment.runExperiment();
 
 					output.printf(",%f", fitness.getRelevantResult(experiment.getResults()));
+
+					workstationListener.clear();
 				}
 
 				output.println();
@@ -316,7 +323,7 @@ public class JasimaEvalProblem {
 		statCollector.setIgnoreFirst(simConfig.getNumIgnore());
 
 		experiment.setShopListener(new NotifierListener[]{statCollector});
-		experiment.addMachineListener(workstationListener);
+		if (workstationListener != null) { experiment.addMachineListener(workstationListener); }
 		experiment.setStopAfterNumJobs(simConfig.getStopAfterNumJobs());
 		experiment.setSequencingRule(rule);
 		experiment.setScenario(DynamicShopExperiment.Scenario.JOB_SHOP);

@@ -23,4 +23,9 @@ public class ScoreDueDate implements INode {
 		return data.getEntry().getDueDate();
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		return o != null && o.getClass() == this.getClass();
+	}
+
 }

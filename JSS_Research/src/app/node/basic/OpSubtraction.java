@@ -28,4 +28,14 @@ public class OpSubtraction implements INode {
 		return leftChild.evaluate(data) - rightChild.evaluate(data);
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (o == null || o.getClass() != this.getClass()) {
+			return false;
+		}
+		OpSubtraction other = (OpSubtraction) o;
+		return this.leftChild.equals(other.leftChild) &&
+				this.rightChild.equals(other.rightChild);
+	}
+
 }

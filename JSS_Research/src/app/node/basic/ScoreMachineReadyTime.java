@@ -23,4 +23,9 @@ public class ScoreMachineReadyTime implements INode {
 		return data.getEntry().getShop().simTime();
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		return o != null && o.getClass() == this.getClass();
+	}
+
 }

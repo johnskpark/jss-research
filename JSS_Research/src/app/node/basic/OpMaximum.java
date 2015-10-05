@@ -31,4 +31,14 @@ public class OpMaximum implements INode {
 		return Math.max(leftEval, rightEval);
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (o == null || o.getClass() != this.getClass()) {
+			return false;
+		}
+		OpMaximum other = (OpMaximum) o;
+		return this.leftChild.equals(other.leftChild) &&
+				this.rightChild.equals(other.rightChild);
+	}
+
 }

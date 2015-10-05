@@ -23,4 +23,9 @@ public class ScorePenalty implements INode {
 		return data.getEntry().getWeight();
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		return o != null && o.getClass() == this.getClass();
+	}
+
 }

@@ -26,4 +26,12 @@ public class ERCRandom implements INode {
 		return value;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (o == null || o.getClass() != this.getClass()) {
+			return false;
+		}
+		return this.value == ((ERCRandom) o).value;
+	}
+
 }

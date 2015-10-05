@@ -25,4 +25,9 @@ public class ScoreLargeValue implements INode {
 		return LARGE_VALUE;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		return o != null && o.getClass() == this.getClass();
+	}
+
 }

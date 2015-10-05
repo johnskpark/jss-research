@@ -23,4 +23,9 @@ public class ScoreRemainingOperation implements INode {
 		return data.getEntry().numOpsLeft();
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		return o != null && o.getClass() == this.getClass();
+	}
+
 }

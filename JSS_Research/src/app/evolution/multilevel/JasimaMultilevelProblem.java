@@ -224,7 +224,7 @@ public class JasimaMultilevelProblem extends GPProblem implements MLSProblemForm
 		experiment.setNumOps(simConfig.getMinNumOps(index), simConfig.getMaxNumOps(index));
 
 		experiment.setShopListener(new NotifierListener[]{new BasicJobStatCollector()});
-		experiment.addMachineListener(workstationListener);
+		if (workstationListener != null) { experiment.addMachineListener(workstationListener); }
 		experiment.setSequencingRule(rule);
 		experiment.setScenario(DynamicShopExperiment.Scenario.JOB_SHOP);
 

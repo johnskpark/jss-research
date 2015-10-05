@@ -34,4 +34,15 @@ public class OpConditional implements INode {
 		}
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (o == null || o.getClass() != this.getClass()) {
+			return false;
+		}
+		OpConditional other = (OpConditional) o;
+		return this.conditional.equals(other.conditional) &&
+				this.consequent.equals(other.consequent) &&
+				this.alternative.equals(other.alternative);
+	}
+
 }
