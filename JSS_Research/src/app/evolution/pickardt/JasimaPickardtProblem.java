@@ -23,15 +23,19 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+import app.evolution.JasimaGPData;
 import app.evolution.pickardt.presetRules.PRCR;
 import app.evolution.pickardt.presetRules.PRFCFS;
+import app.listener.AbsWorkStationListener;
 import app.node.CompositePR;
+import app.node.NodeData;
 import app.simConfig.AbsSimConfig;
 import app.util.RuleParser;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.Problem;
 import ec.simple.SimpleProblemForm;
+import ec.util.ParamClassLoadException;
 import ec.util.Parameter;
 import ec.vector.IntegerVectorIndividual;
 
@@ -44,6 +48,8 @@ public class JasimaPickardtProblem extends Problem implements SimpleProblemForm 
 
 	public static final String P_SIMULATOR = "simulator";
 	public static final String P_SEED = "seed";
+
+	public static final String P_WORKSTATION = "workstation";
 
 	public static final long DEFAULT_SEED = 15;
 
@@ -84,9 +90,23 @@ public class JasimaPickardtProblem extends Problem implements SimpleProblemForm 
 	private AbsSimConfig simConfig;
 	private long simSeed;
 
+	private AbsWorkStationListener workstationListener;
+	private NodeData nodeData = new NodeData();
+
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
 		super.setup(state, base);
+
+        // Setup the workstation listener.
+        try {
+        	workstationListener = (AbsWorkStationListener) state.parameters.getInstanceForParameterEq(base.push(P_WORKSTATION), null, AbsWorkStationListener.class);
+        	workstationListener.setup(state, base.push(P_WORKSTATION));
+
+    		// Feed in the shop simulation listener to input.
+            nodeData.setWorkStationListener(workstationListener);
+        } catch (ParamClassLoadException ex) {
+        	state.output.warning("No workstation listener provided for JasimaMultilevelProblem.");
+        }
 
 		try {
 			File file = new File(state.parameters.getString(base.push(P_RULE), null));
@@ -96,7 +116,7 @@ public class JasimaPickardtProblem extends Problem implements SimpleProblemForm 
 			fileInputStream.read(buffer);
 			fileInputStream.close();
 
-			gpRule = new CompositePR(parser.getRuleFromString(new String(buffer, "UTF-8")));
+			gpRule = new CompositePR(parser.getRuleFromString(new String(buffer, "UTF-8")), nodeData);
 			rules[0] = gpRule;
 		} catch (IOException ex) {
 			state.output.fatal("Error while reading GP rule file " + ex.getMessage());

@@ -1,4 +1,4 @@
-package app.node.hildebrandt;
+package app.node.hunt;
 
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.WorkStation;
@@ -7,12 +7,12 @@ import app.node.NodeAnnotation;
 import app.node.NodeData;
 import app.node.NodeDefinition;
 
-@NodeAnnotation(node=NodeDefinition.SCORE_WORK_IN_NEXT_QUEUE)
-public class ScoreWorkInNextQueue implements INode {
+@NodeAnnotation(node=NodeDefinition.SCORE_NUMBER_WAITING_NEXT_MACHINE)
+public class ScoreNumberWaitingNextMachine implements INode {
 
-	private static final NodeDefinition NODE_DEFINITION = NodeDefinition.SCORE_WORK_IN_NEXT_QUEUE;
+	private static final NodeDefinition NODE_DEFINITION = NodeDefinition.SCORE_NUMBER_WAITING_NEXT_MACHINE;
 
-	public ScoreWorkInNextQueue() {
+	public ScoreNumberWaitingNextMachine() {
 	}
 
 	@Override
@@ -27,10 +27,10 @@ public class ScoreWorkInNextQueue implements INode {
 		int nextTask = entry.getTaskNumber() + 1;
 		if (nextTask >= entry.numOps()) {
 			return 0;
+		} else {
+			WorkStation machine = entry.getOps()[nextTask].machine;
+			return machine.numJobsWaiting();
 		}
-		WorkStation nextMachine = entry.getOps()[nextTask].machine;
-
-		return nextMachine.workContent(false);
 	}
 
 }

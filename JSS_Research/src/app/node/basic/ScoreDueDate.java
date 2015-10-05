@@ -1,8 +1,8 @@
 package app.node.basic;
 
-import jasima.shopSim.core.PrioRuleTarget;
 import app.node.INode;
 import app.node.NodeAnnotation;
+import app.node.NodeData;
 import app.node.NodeDefinition;
 
 @NodeAnnotation(node=NodeDefinition.SCORE_DUE_DATE)
@@ -19,8 +19,8 @@ public class ScoreDueDate implements INode {
 	}
 
 	@Override
-	public double evaluate(PrioRuleTarget entry) {
-		return entry.getDueDate();
+	public double evaluate(NodeData data) {
+		return data.getEntry().getDueDate();
 	}
 
 }

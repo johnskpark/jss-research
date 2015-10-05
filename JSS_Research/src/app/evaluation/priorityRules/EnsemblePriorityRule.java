@@ -10,6 +10,7 @@ import java.util.Map;
 import app.evaluation.AbsEvalPriorityRule;
 import app.evaluation.JasimaEvalConfig;
 import app.node.INode;
+import app.node.NodeData;
 import app.priorityRules.ATCPR;
 
 public class EnsemblePriorityRule extends AbsEvalPriorityRule {
@@ -20,6 +21,8 @@ public class EnsemblePriorityRule extends AbsEvalPriorityRule {
 
 	private List<INode> rules;
 	private int ruleNum;
+
+	private NodeData data;
 
 	private Map<PrioRuleTarget, Integer> jobVotes = new HashMap<PrioRuleTarget, Integer>();
 
@@ -35,6 +38,8 @@ public class EnsemblePriorityRule extends AbsEvalPriorityRule {
 
 		this.rules = config.getRules();
 		this.ruleNum = config.getRules().size();
+
+		this.data = config.getNodeData();
 	}
 
 	@Override
@@ -56,9 +61,9 @@ public class EnsemblePriorityRule extends AbsEvalPriorityRule {
 
 			// Find the job selected by the individual rule.
 			for (int j = 0; j < q.size(); j++) {
-				PrioRuleTarget entry = q.get(j);
+				data.setEntry(q.get(j));
 
-				double priority = rules.get(i).evaluate(entry);
+				double priority = rules.get(i).evaluate(data);
 				if (priority > bestPriority) {
 					bestPriority = priority;
 					bestIndex = j;

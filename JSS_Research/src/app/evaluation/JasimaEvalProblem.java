@@ -8,6 +8,7 @@ import jasima.shopSim.util.BasicJobStatCollector;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
@@ -33,6 +34,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import app.listener.AbsWorkStationListener;
 import app.node.INode;
 import app.simConfig.AbsSimConfig;
 import app.util.RuleParser;
@@ -55,6 +57,9 @@ public class JasimaEvalProblem {
 	public static final String XML_FITNESS_BASE = "fitnessConfig";
 	public static final String XML_FITNESS_CLASS = "fitnessClass";
 
+	public static final String XML_LISTENER_BASE = "listenerConfig";
+	public static final String XML_LISTENER_CLASS = "listenerClass";
+
 	public static final String XML_OUTPUT_BASE = "outputConfig";
 	public static final String XML_OUTPUT_FILE = "outputFile";
 
@@ -65,6 +70,8 @@ public class JasimaEvalProblem {
 	private IJasimaEvalFitness fitness;
 
 	private RuleParser parser = new RuleParser();
+
+	private AbsWorkStationListener workstationListener;
 
 	private String outputCsv = null;
 
@@ -106,6 +113,7 @@ public class JasimaEvalProblem {
 		loadSolvers(doc);
 		loadDataset(doc);
 		loadFitness(doc);
+		loadListener(doc);
 		loadOutput(doc);
 	}
 
@@ -205,14 +213,18 @@ public class JasimaEvalProblem {
 				.item(0)
 				.getTextContent());
 
-		simConfig = (AbsSimConfig)datasetClass.newInstance();
+		simConfig = (AbsSimConfig) datasetClass.newInstance();
 
 		NodeList datasetFileNodeList = datasetBase.getElementsByTagName(XML_DATASET_FILE);
 		if (datasetFileNodeList.getLength() != 0) {
 			String filename = datasetFileNodeList.item(0).getTextContent();
 
-			// TODO load the file into the dataset.
+			loadDatasetFile(filename);
 		}
+	}
+
+	private void loadDatasetFile(String filename) throws IOException {
+		// FIXME add in the functionality to add in files.
 	}
 
 	// Load in the performance measure from the XML configuration.
@@ -227,7 +239,24 @@ public class JasimaEvalProblem {
 				.item(0)
 				.getTextContent());
 
-		fitness = (IJasimaEvalFitness)fitnessClass.newInstance();
+		fitness = (IJasimaEvalFitness) fitnessClass.newInstance();
+	}
+
+	// Load in the workstation listener from the XML configuration (Optional).
+	private void loadListener(Document doc) throws Exception {
+		NodeList nList = doc.getElementsByTagName(XML_LISTENER_BASE);
+
+		if (nList.getLength() != 0) {
+			Node listenerNode = nList.item(0);
+			Element listenerBase = (Element) listenerNode;
+
+			Class<?> listenerClass = Class.forName(listenerBase
+					.getElementsByTagName(XML_LISTENER_CLASS)
+					.item(0)
+					.getTextContent());
+
+			workstationListener = (AbsWorkStationListener) listenerClass.newInstance();
+		}
 	}
 
 	// Load in the output file name from the XML configuration.
@@ -254,7 +283,7 @@ public class JasimaEvalProblem {
 
 			for (AbsEvalPriorityRule solver : solvers) {
 				output.printf("%s,%d", ruleFilename, solver.getSeed());
-				simConfig.setSeed(DEFAULT_SEED); // TODO temporary code.
+				simConfig.setSeed(DEFAULT_SEED); // FIXME temporary code.
 
 				for (int i = 0; i < simConfig.getNumConfigs(); i++) {
 					Experiment experiment = getExperiment(solver, i);
@@ -287,6 +316,7 @@ public class JasimaEvalProblem {
 		statCollector.setIgnoreFirst(simConfig.getNumIgnore());
 
 		experiment.setShopListener(new NotifierListener[]{statCollector});
+		experiment.addMachineListener(workstationListener);
 		experiment.setStopAfterNumJobs(simConfig.getStopAfterNumJobs());
 		experiment.setSequencingRule(rule);
 		experiment.setScenario(DynamicShopExperiment.Scenario.JOB_SHOP);

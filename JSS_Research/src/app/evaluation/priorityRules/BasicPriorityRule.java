@@ -4,6 +4,7 @@ import jasima.shopSim.core.PrioRuleTarget;
 import app.evaluation.AbsEvalPriorityRule;
 import app.evaluation.JasimaEvalConfig;
 import app.node.INode;
+import app.node.NodeData;
 
 public class BasicPriorityRule extends AbsEvalPriorityRule {
 
@@ -11,6 +12,8 @@ public class BasicPriorityRule extends AbsEvalPriorityRule {
 	private static final int RULE_NUM = 1;
 
 	private INode rule;
+
+	private NodeData data;
 
 	@Override
 	public void setConfiguration(JasimaEvalConfig config) {
@@ -20,11 +23,14 @@ public class BasicPriorityRule extends AbsEvalPriorityRule {
 		setSeed(config.getSeed());
 
 		this.rule = config.getRules().get(0);
+		this.data = config.getNodeData();
 	}
 
 	@Override
 	public double calcPrio(PrioRuleTarget entry) {
-		return rule.evaluate(entry);
+		data.setEntry(entry);
+
+		return rule.evaluate(data);
 	}
 
 }

@@ -9,7 +9,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 
-import app.evolution.AbsWorkStationListener;
+import app.listener.AbsWorkStationListener;
 import ec.EvolutionState;
 import ec.util.Parameter;
 

@@ -1,8 +1,8 @@
 package app.node.basic;
 
-import jasima.shopSim.core.PrioRuleTarget;
 import app.node.INode;
 import app.node.NodeAnnotation;
+import app.node.NodeData;
 import app.node.NodeDefinition;
 
 @NodeAnnotation(node=NodeDefinition.SCORE_LARGE_VALUE)
@@ -21,7 +21,7 @@ public class ScoreLargeValue implements INode {
 	}
 
 	@Override
-	public double evaluate(PrioRuleTarget entry) {
+	public double evaluate(NodeData data) {
 		return LARGE_VALUE;
 	}
 

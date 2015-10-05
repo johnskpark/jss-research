@@ -1,8 +1,8 @@
 package app.node.basic;
 
-import jasima.shopSim.core.PrioRuleTarget;
 import app.node.INode;
 import app.node.NodeAnnotation;
+import app.node.NodeData;
 import app.node.NodeDefinition;
 
 @NodeAnnotation(node=NodeDefinition.OP_CONDITIONAL)
@@ -26,11 +26,11 @@ public class OpConditional implements INode {
 	}
 
 	@Override
-	public double evaluate(PrioRuleTarget entry) {
-		if (conditional.evaluate(entry) >= 0) {
-			return consequent.evaluate(entry);
+	public double evaluate(NodeData data) {
+		if (conditional.evaluate(data) >= 0) {
+			return consequent.evaluate(data);
 		} else {
-			return alternative.evaluate(entry);
+			return alternative.evaluate(data);
 		}
 	}
 

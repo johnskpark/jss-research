@@ -3,14 +3,14 @@
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>djss_e1_4op_nsga.txt</ruleFile>
+			<ruleFile>4op_mls.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>djss_e1_8op_nsga.txt</ruleFile>
+			<ruleFile>8op_mls.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
@@ -19,10 +19,14 @@
 	</datasetConfig>
 
 	<outputConfig>
-	    <outputFile>djss_e1_nsga_output.csv</outputFile>
+	    <outputFile>mls_output.csv</outputFile>
 	</outputConfig>
 
 	<fitnessConfig>
 		<fitnessClass>app.evaluation.fitness.TWTFitness</fitnessClass>
 	</fitnessConfig>
+
+	<listenerConfig>
+	    <listenerClass>app.listener.hunt.HuntListener</listenerClass>
+	</listenerConfig>
 </evaluationConfig>

@@ -9,11 +9,11 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import app.evolution.AbsGPPriorityRule;
-import app.evolution.AbsWorkStationListener;
 import app.evolution.IJasimaGPProblem;
 import app.evolution.IJasimaTracker;
 import app.evolution.JasimaGPConfig;
 import app.evolution.JasimaGPData;
+import app.listener.AbsWorkStationListener;
 import app.simConfig.AbsSimConfig;
 import ec.EvolutionState;
 import ec.Fitness;

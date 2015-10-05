@@ -1,8 +1,8 @@
 package app.node.basic;
 
-import jasima.shopSim.core.PrioRuleTarget;
 import app.node.INode;
 import app.node.NodeAnnotation;
+import app.node.NodeData;
 import app.node.NodeDefinition;
 
 @NodeAnnotation(node=NodeDefinition.OP_MINIMUM)
@@ -24,9 +24,9 @@ public class OpMinimum implements INode {
 	}
 
 	@Override
-	public double evaluate(PrioRuleTarget entry) {
-		double leftEval = leftChild.evaluate(entry);
-		double rightEval = rightChild.evaluate(entry);
+	public double evaluate(NodeData data) {
+		double leftEval = leftChild.evaluate(data);
+		double rightEval = rightChild.evaluate(data);
 
 		return Math.min(leftEval, rightEval);
 	}

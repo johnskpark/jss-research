@@ -4,6 +4,7 @@ import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
 import app.node.INode;
 import app.node.NodeAnnotation;
+import app.node.NodeData;
 import app.node.NodeDefinition;
 
 @NodeAnnotation(node=NodeDefinition.SCORE_AVERAGE_PROCESSING_TIME_IN_QUEUE)
@@ -20,7 +21,9 @@ public class ScoreAverageProcessingTimeInQueue implements INode {
 	}
 
 	@Override
-	public double evaluate(PrioRuleTarget entry) {
+	public double evaluate(NodeData data) {
+		PrioRuleTarget entry = data.getEntry();
+
 		double sumProcTime = 0.0;
 
 		PriorityQueue<?> q = entry.getCurrMachine().queue;

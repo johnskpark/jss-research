@@ -1,8 +1,8 @@
 package app.node.basic;
 
-import jasima.shopSim.core.PrioRuleTarget;
 import app.node.INode;
 import app.node.NodeAnnotation;
+import app.node.NodeData;
 import app.node.NodeDefinition;
 
 @NodeAnnotation(node=NodeDefinition.SCORE_NUM_JOBS_WAITING)
@@ -19,8 +19,8 @@ public class ScoreNumJobsWaiting implements INode {
 	}
 
 	@Override
-	public double evaluate(PrioRuleTarget entry) {
-		return entry.getCurrMachine().numJobsWaiting();
+	public double evaluate(NodeData data) {
+		return data.getEntry().getCurrMachine().numJobsWaiting();
 	}
 
 }

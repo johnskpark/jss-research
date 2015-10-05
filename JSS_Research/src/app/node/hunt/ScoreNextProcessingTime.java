@@ -1,4 +1,4 @@
-package app.node.hildebrandt;
+package app.node.hunt;
 
 import jasima.shopSim.core.PrioRuleTarget;
 import app.node.INode;
@@ -26,9 +26,9 @@ public class ScoreNextProcessingTime implements INode {
 		int nextTask = entry.getTaskNumber() + 1;
 		if (nextTask >= entry.numOps()) {
 			return 0;
+		} else {
+			return entry.getOps()[nextTask].procTime;
 		}
-
-		return entry.getOps()[nextTask].procTime;
 	}
 
 }

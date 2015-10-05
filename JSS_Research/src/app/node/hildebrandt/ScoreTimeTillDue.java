@@ -3,6 +3,7 @@ package app.node.hildebrandt;
 import jasima.shopSim.core.PrioRuleTarget;
 import app.node.INode;
 import app.node.NodeAnnotation;
+import app.node.NodeData;
 import app.node.NodeDefinition;
 
 @NodeAnnotation(node=NodeDefinition.SCORE_TIME_TILL_DUE)
@@ -19,7 +20,9 @@ public class ScoreTimeTillDue implements INode {
 	}
 
 	@Override
-	public double evaluate(PrioRuleTarget entry) {
+	public double evaluate(NodeData data) {
+		PrioRuleTarget entry = data.getEntry();
+
 		return Math.max(entry.getDueDate() - entry.getShop().simTime(), 0);
 	}
 

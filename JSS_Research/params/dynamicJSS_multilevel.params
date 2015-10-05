@@ -6,7 +6,7 @@
 parent.0 = koza_mls.params
 
 pop.subpops = 20
-pop.subpop.0.size = 50
+pop.subpop.0.size = 25
 pop.subpop.0.species.ind = app.evolution.multilevel.JasimaMultilevelIndividual
 
 pop.default-subpop = 0

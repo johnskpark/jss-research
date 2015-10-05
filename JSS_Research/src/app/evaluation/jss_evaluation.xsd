@@ -38,6 +38,13 @@
 	</xs:sequence>
 </xs:complexType>
 
+<!-- Workstation Listener type definition -->
+<xs:complexType name="listenerType">
+	<xs:sequence>
+		<xs:element name="listenerClass" type="xs:string" maxOccurs="1" minOccurs="1" />
+	</xs:sequence>
+</xs:complexType>
+
 <xs:element name="evaluationConfig">
 	<xs:complexType>
 		<xs:sequence>
@@ -45,6 +52,7 @@
 			<xs:element name="datasetConfig" type="datasetType" minOccurs="1" maxOccurs="1"/>
 			<xs:element name="outputConfig" type="outputType" minOccurs="1" maxOccurs="1" />
 			<xs:element name="fitnessConfig" type="fitnessType" minOccurs="1" maxOccurs="1" />
+			<xs:element name="listenerConfig" type="listenerType" minOccurs="0" maxOccurs="1" /> <!-- Optional -->
 		</xs:sequence>
 	</xs:complexType>
 </xs:element>
