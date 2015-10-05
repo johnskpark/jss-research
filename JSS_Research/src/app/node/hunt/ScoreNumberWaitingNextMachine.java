@@ -33,4 +33,9 @@ public class ScoreNumberWaitingNextMachine implements INode {
 		}
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		return o != null && o.getClass() == this.getClass();
+	}
+
 }

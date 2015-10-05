@@ -13,6 +13,8 @@ import app.node.NodeData;
 import app.node.NodeDefinition;
 
 //The average wait time of last five jobs processed all machines on the shop floor.
+
+// TODO this node is super expensive to calculate.
 @NodeAnnotation(node=NodeDefinition.SCORE_AVERAGE_WAIT_TIME_ALL_MACHINE)
 public class ScoreAverageWaitTimeAllMachines implements INode {
 
@@ -28,6 +30,9 @@ public class ScoreAverageWaitTimeAllMachines implements INode {
 
 	@Override
 	public double evaluate(NodeData data) {
+		// TODO temporary time keeping.
+		long startTime = System.nanoTime();
+
 		PrioRuleTarget entry = data.getEntry();
 		HuntListener listener = (HuntListener) data.getWorkStationListener();
 
@@ -50,7 +55,17 @@ public class ScoreAverageWaitTimeAllMachines implements INode {
 		}
 		averageWaitTime /= machines.length;
 
+		long endTime = System.nanoTime();
+		long timeDiff = endTime - startTime;
+
+		System.out.printf("ScoreAverageWaitTimeAllMachines: %d\n", timeDiff);
+
 		return averageWaitTime;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		return o != null && o.getClass() == this.getClass();
 	}
 
 }

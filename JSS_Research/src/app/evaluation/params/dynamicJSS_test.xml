@@ -20,7 +20,7 @@
 	</datasetConfig>
 
 	<outputConfig>
-	    <outputFile>simple_output.csv</outputFile>
+	    <outputFile>temp.csv</outputFile>
 	</outputConfig>
 
 	<fitnessConfig>

@@ -31,4 +31,9 @@ public class ScoreNextProcessingTime implements INode {
 		}
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		return o != null && o.getClass() == this.getClass();
+	}
+
 }

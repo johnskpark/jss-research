@@ -21,8 +21,13 @@ public class HuntListener extends AbsWorkStationListener {
 
 	private int maxSize;
 
-	private Map<WorkStation, Queue<OperationCompletionStat>> completedJobs = new HashMap<WorkStation, Queue<OperationCompletionStat>>();
 	private Map<WorkStation, OperationStartStat> startedJobs = new HashMap<WorkStation, OperationStartStat>();
+
+	private Map<WorkStation, Queue<OperationCompletionStat>> completedJobs = new HashMap<WorkStation, Queue<OperationCompletionStat>>();
+
+	// TODO
+	private double sumWaitTimes = 0.0;
+	private int numCompleted = 0;
 
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
@@ -72,13 +77,20 @@ public class HuntListener extends AbsWorkStationListener {
 		if (queue.size() == maxSize) {
 			queue.poll();
 		}
+
 		queue.offer(stat);
+
+		// TODO
 
 		startedJobs.put(machine, null);
 	}
 
 	public Queue<OperationCompletionStat> getLastCompletedJobs(WorkStation machine) {
 		return completedJobs.get(machine);
+	}
+
+	public double getAverageWaitTimesAllMachines() {
+		return sumWaitTimes / numCompleted;
 	}
 
 	public void clear() {

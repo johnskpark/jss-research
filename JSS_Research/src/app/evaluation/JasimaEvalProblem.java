@@ -53,6 +53,7 @@ public class JasimaEvalProblem {
 
 	public static final String XML_DATASET_BASE = "datasetConfig";
 	public static final String XML_DATASET_CLASS = "datasetClass";
+	public static final String XML_DATASET_SEED = "datasetSeed";
 	public static final String XML_DATASET_FILE = "datasetFile";
 
 	public static final String XML_FITNESS_BASE = "fitnessConfig";
@@ -67,7 +68,10 @@ public class JasimaEvalProblem {
 	private static final int DEFAULT_SEED = 15;
 
 	private Map<String, List<AbsEvalPriorityRule>> solversMap = new HashMap<String, List<AbsEvalPriorityRule>>();
+
 	private AbsSimConfig simConfig;
+	private long seed = DEFAULT_SEED;
+
 	private IJasimaEvalFitness fitness;
 
 	private RuleParser parser = new RuleParser();
@@ -220,6 +224,11 @@ public class JasimaEvalProblem {
 
 		simConfig = (AbsSimConfig) datasetClass.newInstance();
 
+		NodeList datasetSeedNodeList = datasetBase.getElementsByTagName(XML_DATASET_SEED);
+		if (datasetSeedNodeList.getLength() != 0) {
+			seed = Integer.parseInt(datasetSeedNodeList.item(0).getTextContent());
+		}
+
 		NodeList datasetFileNodeList = datasetBase.getElementsByTagName(XML_DATASET_FILE);
 		if (datasetFileNodeList.getLength() != 0) {
 			String filename = datasetFileNodeList.item(0).getTextContent();
@@ -288,11 +297,10 @@ public class JasimaEvalProblem {
 
 			for (AbsEvalPriorityRule solver : solvers) {
 				output.printf("%s,%d", ruleFilename, solver.getSeed());
-				simConfig.setSeed(DEFAULT_SEED); // FIXME temporary code.
+				simConfig.setSeed(seed);
 
 				for (int i = 0; i < simConfig.getNumConfigs(); i++) {
 					Experiment experiment = getExperiment(solver, i);
-
 					experiment.runExperiment();
 
 					output.printf(",%f", fitness.getRelevantResult(experiment.getResults()));
@@ -329,21 +337,6 @@ public class JasimaEvalProblem {
 		experiment.setScenario(DynamicShopExperiment.Scenario.JOB_SHOP);
 
 		return experiment;
-	}
-
-	// Main.
-	public static void main(String[] args) {
-		String xmlFilename = args[0];
-
-		try {
-			JasimaEvalProblem evalProblem;
-
-			evalProblem = new JasimaEvalProblem(xmlFilename);
-			evalProblem.evaluate();
-		} catch (Exception ex) {
-			System.err.println(ex.getMessage());
-			ex.printStackTrace();
-		}
 	}
 
 }

@@ -16,6 +16,7 @@
 
 	<datasetConfig>
 		<datasetClass>app.simConfig.huntConfig.TestSimConfig</datasetClass>
+		<datasetSeed>15</datasetSeed>
 	</datasetConfig>
 
 	<outputConfig>

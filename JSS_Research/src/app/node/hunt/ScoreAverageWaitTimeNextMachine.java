@@ -28,20 +28,20 @@ public class ScoreAverageWaitTimeNextMachine implements INode {
 
 	@Override
 	public double evaluate(NodeData data) {
+		// TODO temporary time keeping.
+		long startTime = System.nanoTime();
+
 		PrioRuleTarget entry = data.getEntry();
 		HuntListener listener = (HuntListener) data.getWorkStationListener();
 
+		double averageWaitTime = 0.0;
+
 		int nextTask = entry.getTaskNumber() + 1;
-		if (nextTask >= entry.numOps()) {
-			return 0;
-		} else {
+		if (nextTask < entry.numOps()) {
 			WorkStation machine = entry.getOps()[nextTask].machine;
 
 			Queue<OperationCompletionStat> completedJobsQueue = listener.getLastCompletedJobs(machine);
-			if (completedJobsQueue == null) {
-				return 0;
-			} else {
-				double averageWaitTime = 0.0;
+			if (completedJobsQueue != null) {
 				for (OperationCompletionStat stat : completedJobsQueue) {
 					averageWaitTime += stat.getWaitTime();
 				}
@@ -50,6 +50,18 @@ public class ScoreAverageWaitTimeNextMachine implements INode {
 				return averageWaitTime;
 			}
 		}
+
+		long endTime = System.nanoTime();
+		long timeDiff = endTime - startTime;
+
+		System.out.printf("ScoreAverageWaitTimeNextMachine: %d\n", timeDiff);
+
+		return averageWaitTime;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		return o != null && o.getClass() == this.getClass();
 	}
 
 }
