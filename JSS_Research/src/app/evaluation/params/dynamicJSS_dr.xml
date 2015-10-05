@@ -3,14 +3,14 @@
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>standard_4op.txt</ruleFile>
+			<ruleFile>4op_simple.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>standard_8op.txt</ruleFile>
+			<ruleFile>8op_simple.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
@@ -19,10 +19,14 @@
 	</datasetConfig>
 
 	<outputConfig>
-	    <outputFile>standard_output.csv</outputFile>
+	    <outputFile>simple_output.csv</outputFile>
 	</outputConfig>
 
 	<fitnessConfig>
 		<fitnessClass>app.evaluation.fitness.TWTFitness</fitnessClass>
 	</fitnessConfig>
+
+	<listenerConfig>
+	    <listenerClass>app.listener.hunt.HuntListener</listenerClass>
+	</listenerConfig>
 </evaluationConfig>
