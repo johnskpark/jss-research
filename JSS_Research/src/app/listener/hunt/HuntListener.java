@@ -25,7 +25,6 @@ public class HuntListener extends AbsWorkStationListener {
 
 	private Map<WorkStation, Queue<OperationCompletionStat>> completedJobs = new HashMap<WorkStation, Queue<OperationCompletionStat>>();
 
-	// TODO
 	private double sumWaitTimes = 0.0;
 	private int numCompleted = 0;
 
@@ -48,7 +47,9 @@ public class HuntListener extends AbsWorkStationListener {
 	}
 
 	public void operationStart(WorkStation machine) {
-		assert startedJobs.get(machine) == null;
+		if (startedJobs.get(machine) != null) {
+			throw new RuntimeException("The machine should not currently be processing any jobs");
+		}
 
 		OperationStartStat stat = new OperationStartStat();
 		stat.entry = machine.justStarted;
@@ -59,7 +60,9 @@ public class HuntListener extends AbsWorkStationListener {
 	}
 
 	public void operationComplete(WorkStation machine) {
-		assert startedJobs.get(machine).entry == machine.justCompleted;
+		if (startedJobs.get(machine).entry != machine.justCompleted) {
+			throw new RuntimeException("The job selected to be processed on the machine does not match with the completed job");
+		}
 
 		if (!completedJobs.containsKey(machine)) {
 			completedJobs.put(machine, new LinkedList<OperationCompletionStat>());
@@ -75,12 +78,16 @@ public class HuntListener extends AbsWorkStationListener {
 
 		Queue<OperationCompletionStat> queue = completedJobs.get(machine);
 		if (queue.size() == maxSize) {
-			queue.poll();
+			OperationCompletionStat oldStat = queue.poll();
+
+			sumWaitTimes -= oldStat.getWaitTime();
+			numCompleted--;
 		}
 
 		queue.offer(stat);
 
-		// TODO
+		sumWaitTimes += stat.getWaitTime();
+		numCompleted++;
 
 		startedJobs.put(machine, null);
 	}
@@ -90,7 +97,7 @@ public class HuntListener extends AbsWorkStationListener {
 	}
 
 	public double getAverageWaitTimesAllMachines() {
-		return sumWaitTimes / numCompleted;
+		return (sumWaitTimes != 0.0) ? (sumWaitTimes / numCompleted) : 0.0;
 	}
 
 	public void clear() {

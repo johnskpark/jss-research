@@ -1,12 +1,6 @@
 package app.node.hunt;
 
-import jasima.shopSim.core.PrioRuleTarget;
-import jasima.shopSim.core.WorkStation;
-
-import java.util.Queue;
-
 import app.listener.hunt.HuntListener;
-import app.listener.hunt.OperationCompletionStat;
 import app.node.INode;
 import app.node.NodeAnnotation;
 import app.node.NodeData;
@@ -31,36 +25,39 @@ public class ScoreAverageWaitTimeAllMachines implements INode {
 	@Override
 	public double evaluate(NodeData data) {
 		// TODO temporary time keeping.
-		long startTime = System.nanoTime();
-
-		PrioRuleTarget entry = data.getEntry();
+//		long startTime = System.nanoTime();
+//
+//		PrioRuleTarget entry = data.getEntry();
+//		HuntListener listener = (HuntListener) data.getWorkStationListener();
+//
+//		WorkStation[] machines = entry.getShop().getMachines();
+//
+//		double averageWaitTime = 0.0;
+//		for (WorkStation machine : machines) {
+//			Queue<OperationCompletionStat> completedJobsQueue = listener.getLastCompletedJobs(machine);
+//			if (completedJobsQueue == null) {
+//				continue;
+//			}
+//
+//			double machineWaitTime = 0.0;
+//
+//			for (OperationCompletionStat stat : completedJobsQueue) {
+//				machineWaitTime += stat.getWaitTime();
+//			}
+//
+//			averageWaitTime += machineWaitTime / completedJobsQueue.size();
+//		}
+//		averageWaitTime /= machines.length;
+//
+//		long endTime = System.nanoTime();
+//		long timeDiff = endTime - startTime;
+//
+//		System.out.printf("ScoreAverageWaitTimeAllMachines: %d\n", timeDiff);
+//
+//		return averageWaitTime;
 		HuntListener listener = (HuntListener) data.getWorkStationListener();
 
-		WorkStation[] machines = entry.getShop().getMachines();
-
-		double averageWaitTime = 0.0;
-		for (WorkStation machine : machines) {
-			Queue<OperationCompletionStat> completedJobsQueue = listener.getLastCompletedJobs(machine);
-			if (completedJobsQueue == null) {
-				continue;
-			}
-
-			double machineWaitTime = 0.0;
-
-			for (OperationCompletionStat stat : completedJobsQueue) {
-				machineWaitTime += stat.getWaitTime();
-			}
-
-			averageWaitTime += machineWaitTime / completedJobsQueue.size();
-		}
-		averageWaitTime /= machines.length;
-
-		long endTime = System.nanoTime();
-		long timeDiff = endTime - startTime;
-
-		System.out.printf("ScoreAverageWaitTimeAllMachines: %d\n", timeDiff);
-
-		return averageWaitTime;
+		return listener.getAverageWaitTimesAllMachines();
 	}
 
 	@Override
