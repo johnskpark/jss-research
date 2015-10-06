@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <evaluationConfig>
 	<solverConfig>
-		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>4op_simple.txt</ruleFile>
+			<ruleFile>4op_mls.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
-		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>8op_simple.txt</ruleFile>
+			<ruleFile>8op_mls.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
