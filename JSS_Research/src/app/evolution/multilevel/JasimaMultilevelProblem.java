@@ -12,9 +12,10 @@ import java.util.Random;
 import app.evolution.AbsGPPriorityRule;
 import app.evolution.IJasimaGPProblem;
 import app.evolution.IJasimaTracker;
+import app.evolution.IWorkStationListenerEvolveFactory;
 import app.evolution.JasimaGPConfig;
 import app.evolution.JasimaGPData;
-import app.listener.AbsWorkStationListener;
+import app.listener.IWorkStationListener;
 import app.simConfig.AbsSimConfig;
 import ec.EvolutionState;
 import ec.Individual;
@@ -64,7 +65,7 @@ public class JasimaMultilevelProblem extends GPProblem implements MLSProblemForm
 
 	private int numSubpops;
 
-	private AbsWorkStationListener workstationListener;
+	private IWorkStationListener workstationListener;
 
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
@@ -103,8 +104,10 @@ public class JasimaMultilevelProblem extends GPProblem implements MLSProblemForm
 
         // Setup the workstation listener.
         try {
-        	workstationListener = (AbsWorkStationListener) state.parameters.getInstanceForParameterEq(base.push(P_WORKSTATION), null, AbsWorkStationListener.class);
-        	workstationListener.setup(state, base.push(P_WORKSTATION));
+        	IWorkStationListenerEvolveFactory factory = (IWorkStationListenerEvolveFactory) state.parameters.getInstanceForParameterEq(base.push(P_WORKSTATION), null, IWorkStationListener.class);
+        	factory.setup(state, base.push(P_WORKSTATION));
+
+        	workstationListener = factory.generateWorkStationListener();
 
     		// Feed in the shop simulation listener to input.
             ((JasimaGPData) input).setWorkStationListener(workstationListener);

@@ -9,15 +9,9 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 
-import app.listener.AbsWorkStationListener;
-import ec.EvolutionState;
-import ec.util.Parameter;
+import app.listener.IWorkStationListener;
 
-public class HuntListener extends AbsWorkStationListener {
-
-	private static final long serialVersionUID = -3624321421753776979L;
-
-	public static final String P_MAX_JOBS = "max-jobs";
+public class HuntListener implements IWorkStationListener {
 
 	private int maxSize;
 
@@ -28,13 +22,8 @@ public class HuntListener extends AbsWorkStationListener {
 	private double sumWaitTimes = 0.0;
 	private int numCompleted = 0;
 
-	@Override
-	public void setup(final EvolutionState state, final Parameter base) {
-		try {
-			maxSize = state.parameters.getInt(base.push(P_MAX_JOBS), null);
-		} catch (NumberFormatException ex) {
-			state.output.fatal("Maximum number of job size not set for HuntListener.");
-		}
+	public HuntListener(int maxSize) {
+		this.maxSize = maxSize;
 	}
 
 	@Override

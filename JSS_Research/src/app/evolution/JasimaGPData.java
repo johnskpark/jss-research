@@ -1,6 +1,6 @@
 package app.evolution;
 
-import app.listener.AbsWorkStationListener;
+import app.listener.IWorkStationListener;
 import jasima.shopSim.core.PrioRuleTarget;
 import ec.gp.GPData;
 
@@ -10,7 +10,7 @@ public class JasimaGPData extends GPData {
 
 	private PrioRuleTarget entry;
 	private double priority;
-	private AbsWorkStationListener workStationListener;
+	private IWorkStationListener workStationListener;
 
 	public PrioRuleTarget getPrioRuleTarget() {
 		return entry;
@@ -24,7 +24,7 @@ public class JasimaGPData extends GPData {
 		return priority;
 	}
 
-	public AbsWorkStationListener getWorkStationListener() {
+	public IWorkStationListener getWorkStationListener() {
 		return workStationListener;
 	}
 
@@ -32,7 +32,7 @@ public class JasimaGPData extends GPData {
 		this.priority = priority;
 	}
 
-	public void setWorkStationListener(AbsWorkStationListener listener) {
+	public void setWorkStationListener(IWorkStationListener listener) {
 		this.workStationListener = listener;
 	}
 

@@ -23,10 +23,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-import app.evolution.JasimaGPData;
+import app.evolution.IWorkStationListenerEvolveFactory;
 import app.evolution.pickardt.presetRules.PRCR;
 import app.evolution.pickardt.presetRules.PRFCFS;
-import app.listener.AbsWorkStationListener;
+import app.listener.IWorkStationListener;
 import app.node.CompositePR;
 import app.node.NodeData;
 import app.simConfig.AbsSimConfig;
@@ -90,7 +90,7 @@ public class JasimaPickardtProblem extends Problem implements SimpleProblemForm 
 	private AbsSimConfig simConfig;
 	private long simSeed;
 
-	private AbsWorkStationListener workstationListener;
+	private IWorkStationListener workstationListener;
 	private NodeData nodeData = new NodeData();
 
 	@Override
@@ -99,8 +99,10 @@ public class JasimaPickardtProblem extends Problem implements SimpleProblemForm 
 
         // Setup the workstation listener.
         try {
-        	workstationListener = (AbsWorkStationListener) state.parameters.getInstanceForParameterEq(base.push(P_WORKSTATION), null, AbsWorkStationListener.class);
-        	workstationListener.setup(state, base.push(P_WORKSTATION));
+        	IWorkStationListenerEvolveFactory factory = (IWorkStationListenerEvolveFactory) state.parameters.getInstanceForParameterEq(base.push(P_WORKSTATION), null, IWorkStationListener.class);
+        	factory.setup(state, base.push(P_WORKSTATION));
+
+        	workstationListener = factory.generateWorkStationListener();
 
     		// Feed in the shop simulation listener to input.
             nodeData.setWorkStationListener(workstationListener);

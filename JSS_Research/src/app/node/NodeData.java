@@ -1,12 +1,12 @@
 package app.node;
 
-import app.listener.AbsWorkStationListener;
+import app.listener.IWorkStationListener;
 import jasima.shopSim.core.PrioRuleTarget;
 
 public class NodeData {
 
 	private PrioRuleTarget entry;
-	private AbsWorkStationListener listener;
+	private IWorkStationListener listener;
 
 	public NodeData() {
 	}
@@ -15,7 +15,7 @@ public class NodeData {
 		return entry;
 	}
 
-	public AbsWorkStationListener getWorkStationListener() {
+	public IWorkStationListener getWorkStationListener() {
 		return listener;
 	}
 
@@ -23,7 +23,7 @@ public class NodeData {
 		this.entry = entry;
 	}
 
-	public void setWorkStationListener(AbsWorkStationListener listener) {
+	public void setWorkStationListener(IWorkStationListener listener) {
 		this.listener = listener;
 	}
 }

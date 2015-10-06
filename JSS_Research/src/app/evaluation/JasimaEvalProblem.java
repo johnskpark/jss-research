@@ -34,7 +34,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import app.listener.AbsWorkStationListener;
+import app.listener.IWorkStationListener;
 import app.node.INode;
 import app.node.NodeData;
 import app.simConfig.AbsSimConfig;
@@ -76,7 +76,7 @@ public class JasimaEvalProblem {
 
 	private RuleParser parser = new RuleParser();
 
-	private AbsWorkStationListener workstationListener;
+	private IWorkStationListener workstationListener;
 
 	private String outputCsv = null;
 
@@ -269,7 +269,9 @@ public class JasimaEvalProblem {
 					.item(0)
 					.getTextContent());
 
-			workstationListener = (AbsWorkStationListener) listenerClass.newInstance();
+			IWorkStationListenerEvalFactory factory = (IWorkStationListenerEvalFactory) listenerClass.newInstance();
+
+			workstationListener = factory.generateWorkStationListener();
 		}
 	}
 
