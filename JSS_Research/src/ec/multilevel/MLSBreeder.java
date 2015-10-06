@@ -7,8 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.rules.TemporaryFolder;
-
 import ec.Breeder;
 import ec.BreedingPipeline;
 import ec.EvolutionState;
@@ -635,8 +633,8 @@ public class MLSBreeder extends Breeder {
 
 		while(totalNumBred < numInds) {
 			// TODO restrict the subpopulation size here. A subpopulation can exceed the maximum size if the value was added after the fact.
-			// Randomly select a parent based on the fitness.
 
+			// Randomly select a parent based on the fitness.
 			int pseudoIndex = selectFitness(subpopFits, buffer, selectionSize, state.random[threadnum].nextDouble());
 			int subpopIndex = subpopIndices[pseudoIndex];
 

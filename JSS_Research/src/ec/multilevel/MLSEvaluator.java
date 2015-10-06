@@ -5,7 +5,6 @@ import java.util.Arrays;
 import ec.Evaluator;
 import ec.EvolutionState;
 import ec.Individual;
-import ec.gp.koza.KozaFitness;
 import ec.util.Parameter;
 
 /**

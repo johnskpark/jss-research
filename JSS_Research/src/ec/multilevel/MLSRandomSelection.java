@@ -10,7 +10,7 @@ import ec.select.RandomSelection;
 import ec.util.Pair;
 
 /**
- * TODO javadoc.
+ * A method of randomly selecting individuals for breeding adapted for MLSBreeder.
  *
  * @author parkjohn
  *
@@ -20,6 +20,14 @@ public class MLSRandomSelection extends RandomSelection {
 	private static final long serialVersionUID = 4123260959395843573L;
 
 	public static final int INDS_PRODUCED = 1;
+
+	@Override
+	public int produce(final int subpopulation,
+			final EvolutionState state,
+			final int thread) {
+		// TODO Auto-generated method stub.
+		return super.produce(subpopulation, state, thread);
+	}
 
 	@Override
 	public int produce(final int min,
