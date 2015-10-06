@@ -28,20 +28,9 @@ public class BasicPriorityRule extends AbsEvalPriorityRule {
 
 	@Override
 	public double calcPrio(PrioRuleTarget entry) {
-		// TODO temporary time keeping.
-		long startTime = System.nanoTime();
-
 		data.setEntry(entry);
 
-		double prio = rule.evaluate(data);
-
-		long endTime = System.nanoTime();
-		long timeDiff = endTime - startTime;
-
-		System.out.printf("Prio calc: %d\n", timeDiff);
-
-
-		return prio;
+		return rule.evaluate(data);
 	}
 
 }

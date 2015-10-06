@@ -28,9 +28,6 @@ public class ScoreAverageWaitTimeNextMachine implements INode {
 
 	@Override
 	public double evaluate(NodeData data) {
-		// TODO temporary time keeping.
-		long startTime = System.nanoTime();
-
 		PrioRuleTarget entry = data.getEntry();
 		HuntListener listener = (HuntListener) data.getWorkStationListener();
 
@@ -50,11 +47,6 @@ public class ScoreAverageWaitTimeNextMachine implements INode {
 				return averageWaitTime;
 			}
 		}
-
-		long endTime = System.nanoTime();
-		long timeDiff = endTime - startTime;
-
-		System.out.printf("ScoreAverageWaitTimeNextMachine: %d\n", timeDiff);
 
 		return averageWaitTime;
 	}
