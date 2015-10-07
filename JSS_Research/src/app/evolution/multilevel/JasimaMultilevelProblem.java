@@ -104,7 +104,7 @@ public class JasimaMultilevelProblem extends GPProblem implements MLSProblemForm
 
         // Setup the workstation listener.
         try {
-        	IWorkStationListenerEvolveFactory factory = (IWorkStationListenerEvolveFactory) state.parameters.getInstanceForParameterEq(base.push(P_WORKSTATION), null, IWorkStationListener.class);
+        	IWorkStationListenerEvolveFactory factory = (IWorkStationListenerEvolveFactory) state.parameters.getInstanceForParameterEq(base.push(P_WORKSTATION), null, IWorkStationListenerEvolveFactory.class);
         	factory.setup(state, base.push(P_WORKSTATION));
 
         	workstationListener = factory.generateWorkStationListener();

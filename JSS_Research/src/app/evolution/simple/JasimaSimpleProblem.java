@@ -66,7 +66,7 @@ public class JasimaSimpleProblem extends GPProblem implements IJasimaGPProblem {
 
         // Setup the workstation listener.
         try {
-        	IWorkStationListenerEvolveFactory factory = (IWorkStationListenerEvolveFactory) state.parameters.getInstanceForParameterEq(base.push(P_WORKSTATION), null, IWorkStationListener.class);
+        	IWorkStationListenerEvolveFactory factory = (IWorkStationListenerEvolveFactory) state.parameters.getInstanceForParameterEq(base.push(P_WORKSTATION), null, IWorkStationListenerEvolveFactory.class);
         	factory.setup(state, base.push(P_WORKSTATION));
 
         	workstationListener = factory.generateWorkStationListener();
@@ -74,7 +74,7 @@ public class JasimaSimpleProblem extends GPProblem implements IJasimaGPProblem {
     		// Feed in the shop simulation listener to input.
             ((JasimaGPData) input).setWorkStationListener(workstationListener);
         } catch (ParamClassLoadException ex) {
-        	state.output.warning("No workstation listener provided for JasimaMultilevelProblem.");
+        	state.output.warning("No workstation listener provided for JasimaSimpleProblem.");
         }
 	}
 
