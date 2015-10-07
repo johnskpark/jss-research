@@ -25,8 +25,11 @@ public class MLSRandomSelection extends RandomSelection {
 	public int produce(final int subpopulation,
 			final EvolutionState state,
 			final int thread) {
-		// TODO Auto-generated method stub.
-		return super.produce(subpopulation, state, thread);
+		List<Pair<Individual, Integer>> nonNullInds = getNonNullInds(state, subpopulation);
+
+		int index = state.random[thread].nextInt(nonNullInds.size());
+
+		return nonNullInds.get(index).i2;
 	}
 
 	@Override
@@ -37,11 +40,23 @@ public class MLSRandomSelection extends RandomSelection {
 			final Individual[] inds,
 			final EvolutionState state,
 			final int thread) {
-		Subpopulation tempSubpop = ((MLSEvolutionState) state).getTempPopulation().subpops[subpopulation];
+		List<Pair<Individual, Integer>> nonNullInds = getNonNullInds(state, subpopulation);
 
 		int n = INDS_PRODUCED;
 		if (n < min) n = min;
 		if (n > max) n = max;
+
+		// In multilevel, the selection is carried within the individuals array.
+		for (int i = 0; i < n; i++) {
+			int index = state.random[thread].nextInt(nonNullInds.size());
+			inds[start+i] = nonNullInds.get(index).i1;
+		}
+
+		return n;
+	}
+
+	private List<Pair<Individual, Integer>> getNonNullInds(EvolutionState state, int subpopulation) {
+		Subpopulation tempSubpop = ((MLSEvolutionState) state).getTempPopulation().subpops[subpopulation];
 
 		// Get all of the non-null individuals in the inds array.
 		List<Pair<Individual, Integer>> nonNullInds = new ArrayList<Pair<Individual, Integer>>();
@@ -51,13 +66,7 @@ public class MLSRandomSelection extends RandomSelection {
 			}
 		}
 
-		// In multilevel, the selection is carried within the individuals array.
-		for (int i = 0; i < n; i++) {
-			int index = state.random[thread].nextInt(nonNullInds.size());
-			inds[start+i] = nonNullInds.get(index).i1;
-		}
-
-		return n;
+		return nonNullInds;
 	}
 
 }
