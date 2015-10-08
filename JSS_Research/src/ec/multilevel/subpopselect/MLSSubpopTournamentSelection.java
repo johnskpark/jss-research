@@ -1,5 +1,7 @@
 package ec.multilevel.subpopselect;
 
-public class MLSSubpopTournamentSelection {
+import ec.multilevel.MLSSubpopSelection;
+
+public class MLSSubpopTournamentSelection extends MLSSubpopSelection {
 
 }
