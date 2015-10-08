@@ -1,14 +1,13 @@
-package ec.multilevel.select;
+package ec.multilevel;
 
 import ec.EvolutionState;
 import ec.Individual;
 import ec.SelectionMethod;
-import ec.multilevel.MLSDefaults;
 import ec.util.Parameter;
 
 // TODO this acts as a wrapper around either random or tournament selection.
 // TODO I probably won't need this.
-public class MLSSelection extends SelectionMethod {
+public class MLSSubpopSelection extends SelectionMethod {
 
 	private static final long serialVersionUID = 3810191251873503242L;
 

@@ -11,7 +11,7 @@ import ec.select.TournamentSelection;
 import ec.util.Pair;
 
 
-public class MLSTournamentSelection extends TournamentSelection {
+public class MLSIndividualTournamentSelection extends TournamentSelection {
 
 	private static final long serialVersionUID = 6365227684890903499L;
 

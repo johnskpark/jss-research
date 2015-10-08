@@ -16,7 +16,7 @@ import ec.util.Pair;
  * @author parkjohn
  *
  */
-public class MLSRandomSelection extends RandomSelection {
+public class MLSIndividualRandomSelection extends RandomSelection {
 
 	private static final long serialVersionUID = 4123260959395843573L;
 
