@@ -1,4 +1,4 @@
-package ec.multilevel;
+package ec.multilevel.select;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,6 +6,7 @@ import java.util.List;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.Subpopulation;
+import ec.multilevel.MLSEvolutionState;
 import ec.select.TournamentSelection;
 import ec.util.Pair;
 

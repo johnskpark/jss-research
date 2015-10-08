@@ -1,8 +1,9 @@
-package ec.multilevel;
+package ec.multilevel.select;
 
 import ec.EvolutionState;
 import ec.Individual;
 import ec.SelectionMethod;
+import ec.multilevel.MLSDefaults;
 import ec.util.Parameter;
 
 // TODO this acts as a wrapper around either random or tournament selection.
