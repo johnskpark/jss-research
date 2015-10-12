@@ -196,6 +196,11 @@ public class MLSBreeder extends Breeder {
 	 * Returns true if we're doing sequential breeding and it's the subpopulation's turn (round robin, one subpopulation per generation).
 	 */
 	public boolean shouldBreedSubpop(EvolutionState state, int subpop, int threadnum) {
+		// Do not breed subpopulation 0, as it is the non-group subpopulation that stores all the individuals.
+		if (subpop == 0) {
+			return false;
+		} 
+		
 		return !sequentialBreeding || (state.generation % state.population.subpops.length) == subpop;
 	}
 

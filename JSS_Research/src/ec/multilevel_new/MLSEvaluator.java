@@ -14,6 +14,7 @@ import ec.util.Parameter;
  *
  */
 
+// TODO don't evaluate the first subpopulation, since that's not a group.
 public class MLSEvaluator extends Evaluator {
 
 	private static final long serialVersionUID = 4348544338928828593L;
@@ -32,8 +33,8 @@ public class MLSEvaluator extends Evaluator {
         // At this point, we do not know the number of subpopulations, so we read it as well from the parameters file.
         Parameter tempSubpop = new Parameter(ec.Initializer.P_POP).push(ec.Population.P_SIZE);
         int numSubpopulations = state.parameters.getInt(tempSubpop, null, 0);
-        if (numSubpopulations <= 1) {
-            state.output.fatal("There must be at least 2 subpopulations for MultilevelSelectionEvaluator", tempSubpop);
+        if (numSubpopulations <= 0) {
+            state.output.fatal("There must be at least one subpopulation for MultilevelSelectionEvaluator", tempSubpop);
         }
 	}
 
@@ -59,7 +60,7 @@ public class MLSEvaluator extends Evaluator {
 		// Determine who needs to be evaluated.
 		boolean[] preAssessFitness = new boolean[state.population.subpops.length];
 		boolean[] postAssessFitness = new boolean[state.population.subpops.length];
-		for(int i = 0; i < state.population.subpops.length; i++) {
+		for(int i = 1; i < state.population.subpops.length; i++) {
 			postAssessFitness[i] = shouldEvaluateSubpop(state, i, 0);
 			preAssessFitness[i] = postAssessFitness[i] || (state.generation == 0);  // always prepare (set up trials) on generation 0
 		}
