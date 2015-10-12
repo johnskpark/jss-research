@@ -13,7 +13,7 @@ import ec.util.Parameter;
  * @author parkjohn
  *
  */
-public class MLSSubpopulation extends Subpopulation {
+public class MLSSubpopulation extends Subpopulation implements IMLSCoopEntity {
 
 	private static final long serialVersionUID = 1740278116450965418L;
 
@@ -51,11 +51,19 @@ public class MLSSubpopulation extends Subpopulation {
 		}
 	}
 
-	/**
-	 * Returns the fitness of the subpopulation.
-	 */
+	@Override
 	public Fitness getFitness() {
 		return fitness;
+	}
+
+	@Override
+	public Individual[] getIndividuals() {
+		return individuals;
+	}
+
+	@Override
+	public IMLSCoopEntity combine(final EvolutionState state, final IMLSCoopEntity other) {
+		return MLSCoopCombiner.COOP_COMBINER.combine(state, this, other);
 	}
 
 	/**

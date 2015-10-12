@@ -11,6 +11,7 @@ import java.util.Map;
 import ec.Breeder;
 import ec.BreedingPipeline;
 import ec.EvolutionState;
+import ec.Fitness;
 import ec.Individual;
 import ec.Initializer;
 import ec.Population;
@@ -86,15 +87,7 @@ public class MLSBreeder extends Breeder {
 	private double groupMutationRate;
 	private double tournamentSize;
 
-	// Temporary field variable to store the number of individuals
-	// in each subpopulation in the meta population.
-	private int[] numIndividualsPerSubpop;
-	private int numIndividuals;
-
-	// Temporary field variables for storing fitnesses. This is used
-	// during crossover and mutation operations.
-	private double[] subpopFitnesses;
-	private int subpopFitnessIndex;
+	private MLSCoopPopulation coopPopulation;
 
 	private Comparator<Pair<Subpopulation, Integer>> subpopComparator = new SubpopulationComparator();
 	private Comparator<Pair<Individual, Integer>> individualComparator = new IndividualComparator();
@@ -199,8 +192,8 @@ public class MLSBreeder extends Breeder {
 		// Do not breed subpopulation 0, as it is the non-group subpopulation that stores all the individuals.
 		if (subpop == 0) {
 			return false;
-		} 
-		
+		}
+
 		return !sequentialBreeding || (state.generation % state.population.subpops.length) == subpop;
 	}
 
@@ -229,15 +222,15 @@ public class MLSBreeder extends Breeder {
 			backupMetaPopulation = (Population) metaPop;
 		}
 
-		numIndividualsPerSubpop = new int[newPop.subpops.length];
-		numIndividuals = 0;
+		// The numbers of groups and individuals that will be generated.
+		int numMetaGroups = newPop.subpops.length - 1;
+		int numMetaInds = 2 * state.population.subpops[0].individuals.length;
 
-		subpopFitnesses = new double[newPop.subpops.length];
-		subpopFitnessIndex = state.population.subpops.length;
+		coopPopulation = new MLSCoopPopulation(numMetaGroups, numMetaInds);
 
 		// Load the individuals into the meta population
 		loadPopulation(state, newPop);
-		breedSubpopulations(state, newPop);
+		breedGroups(state, newPop);
 		breedIndividuals(state, newPop);
 
 		return newPop;
@@ -248,32 +241,28 @@ public class MLSBreeder extends Breeder {
 	 * into the Population passed in as parameter.
 	 */
 	protected void loadPopulation(EvolutionState state, Population metaPop) {
-		int buffer = ((MLSEvolutionState) state).getTotalNumIndividuals();
-
 		// Copy the entire population stored in the first subpopulation.
 		Subpopulation overallSubpop = state.population.subpops[0];
-
-		metaPop.subpops[0] = (Subpopulation) overallSubpop.emptyClone();
-		metaPop.subpops[0].individuals = new Individual[overallSubpop.individuals.length + buffer];
-
 		for (int i = 0; i < overallSubpop.individuals.length; i++) {
-			metaPop.subpops[0].individuals[i] = overallSubpop.individuals[i];
+			coopPopulation.addIndividual((MLSGPIndividual) overallSubpop.individuals[i]);
 		}
 
-		// Load in the groups in the subsequent subpopulations.
+		// Copy the groups represented by subsequent subpopulations.
 		for (int i = 1; i < state.population.subpops.length; i++) {
-			metaPop.subpops[i] = state.population.subpops[i];
+			coopPopulation.addGroup((MLSSubpopulation) state.population.subpops[i]);
 		}
+
+		// Load the population of cooperative entities into the state.
+		((MLSEvolutionState) state).setCoopPopulation(coopPopulation);
 	}
 
 	/**
 	 * Breed the subpopulations to fill out the vacant slots in the meta-population.
 	 * The Population provided in the parameter and is updated by reference.
 	 */
-	protected void breedSubpopulations(EvolutionState state, Population metaPop) {
+	protected void breedGroups(EvolutionState state, Population metaPop) {
 		// The maximum number of threads required is the number of subpopulations to breed.
-		int subpopDiff = metaPop.subpops.length - state.population.subpops.length;
-		int numThreads = Math.min(subpopDiff, state.breedthreads);
+		int numThreads = Math.min(numGroupBreed, state.breedthreads);
 
 		if (numThreads < state.breedthreads) {
 			state.output.warnOnce("Number of subpopulations to breed (" + numThreads +") is smaller than number of breedthreads (" + state.breedthreads + "), so fewer breedthreads will be created.");
@@ -283,8 +272,8 @@ public class MLSBreeder extends Breeder {
 		int numGroups[] = new int[numThreads];
 		int from[] = new int[numThreads];
 
-		int subpopsPerThread = subpopDiff / numThreads;
-		int slop = subpopDiff - numThreads * subpopsPerThread;
+		int subpopsPerThread = numGroupBreed / numThreads;
+		int slop = numGroupBreed - numThreads * subpopsPerThread;
 		int currentFrom = state.population.subpops.length;
 
 		for (int thread = 0; thread < numThreads; thread++) {
@@ -319,9 +308,6 @@ public class MLSBreeder extends Breeder {
 			}
 			pool.joinAll();
 		}
-
-		// Load the population into the temporary population in evolution state.
-		((MLSEvolutionState) state).setTempPopulation(metaPop);
 	}
 
 	/**
@@ -373,7 +359,8 @@ public class MLSBreeder extends Breeder {
 			final Population newPop,
 			final EvolutionState state,
 			final int threadnum) {
-		// TODO Auto-generated method stub
+		// TODO
+
 		return 0;
 	}
 
@@ -395,13 +382,13 @@ public class MLSBreeder extends Breeder {
 		while (index < n + start) { // To be perfectly honest, this loop isn't necessary.
 			// Select two random subpopulations from 0 to (start-1) to crossover based on their fitness.
 //			int[] parentIndices = getCrossoverParentsRouletteWheel(state, threadnum, subpopFitnessIndex);
-			int[] parentIndices = getCrossoverParentsTournament(state, threadnum, subpopFitnessIndex);
+			int[] parentIndices = getCrossoverParentsTournament(state, threadnum, groupFitnessIndex);
 			Subpopulation[] parents = new Subpopulation[] { newPop.subpops[parentIndices[0]], newPop.subpops[parentIndices[1]] };
 
 			// Arbitrarily select the individuals to exchange in between the two subpopulations.
 			int[] swapIndices = new int[]{
-					state.random[threadnum].nextInt(numIndividualsPerSubpop[parentIndices[0]]),
-					state.random[threadnum].nextInt(numIndividualsPerSubpop[parentIndices[1]])
+					state.random[threadnum].nextInt(numIndividualsPerGroup[parentIndices[0]]),
+					state.random[threadnum].nextInt(numIndividualsPerGroup[parentIndices[1]])
 			};
 			int length = CROSSOVER_PARENTS_REQUIRED;
 
@@ -410,7 +397,7 @@ public class MLSBreeder extends Breeder {
 				// Populate the child subpopulation with individuals.
 				MLSSubpopulation childSubpop = (MLSSubpopulation) parents[child%length].emptyClone();
 
-				int parentLength = numIndividualsPerSubpop[parentIndices[child%length]];
+				int parentLength = numIndividualsPerGroup[parentIndices[child%length]];
 
 				for (int ind = 0; ind < parentLength; ind++) {
 					if (ind == swapIndices[child]) {
@@ -426,11 +413,11 @@ public class MLSBreeder extends Breeder {
 				// Add the subpopulation to the population
 				newPop.subpops[index+child] = childSubpop;
 
-				numIndividualsPerSubpop[index+child] = parentLength;
-				numIndividuals += numIndividualsPerSubpop[index+child];
+				numIndividualsPerGroup[index+child] = parentLength;
+				numIndividuals += numIndividualsPerGroup[index+child];
 
-				subpopFitnesses[index+child] = ((MLSSubpopulation) childSubpop).getFitness().fitness();
-				subpopFitnessIndex++;
+				groupFitnesses[index+child] = ((MLSSubpopulation) childSubpop).getFitness();
+				groupFitnessIndex++;
 			}
 
 			index += n;
@@ -440,7 +427,10 @@ public class MLSBreeder extends Breeder {
 	}
 
 	private int[] getCrossoverParentsRouletteWheel(EvolutionState state, int threadnum, int length) {
-		double[] copy = Arrays.copyOf(subpopFitnesses, length);
+		double[] copy = new double[length];
+		for (int i = 0; i < length; i++) {
+			copy[i] = groupFitnesses[i].fitness();
+		}
 
 		int parentIndex1 = rouletteSelect(copy, length, state.random[threadnum]);
 
@@ -468,8 +458,13 @@ public class MLSBreeder extends Breeder {
 	}
 
 	private int[] getCrossoverParentsTournament(EvolutionState state, int threadnum, int length) {
-		int parentIndex1 = tournamentSelect(subpopFitnesses, length, tournamentSize, state.random[threadnum]);
-		int parentIndex2 = tournamentSelect(subpopFitnesses, length, tournamentSize, state.random[threadnum]);
+		double[] copy = new double[length];
+		for (int i = 0; i < length; i++) {
+			copy[i] = groupFitnesses[i].fitness();
+		}
+
+		int parentIndex1 = tournamentSelect(copy, length, tournamentSize, state.random[threadnum]);
+		int parentIndex2 = tournamentSelect(copy, length, tournamentSize, state.random[threadnum]);
 
 		return new int[]{parentIndex1, parentIndex2};
 	}
@@ -492,7 +487,7 @@ public class MLSBreeder extends Breeder {
 		while (index < n + start) {
 			// Select a random subpopulation from 0 to (start-1) to mutate based on their fitness.
 //			int parentIndex = getMutationParentRouletteWheel(state, threadnum, subpopFitnessIndex);
-			int parentIndex = getMutationParentTournament(state, threadnum, subpopFitnessIndex);
+			int parentIndex = getMutationParentTournament(state, threadnum, groupFitnessIndex);
 
 			Subpopulation parent = newpop.subpops[parentIndex];
 			MLSSubpopulation[] children = new MLSSubpopulation[n];
@@ -500,28 +495,28 @@ public class MLSBreeder extends Breeder {
 			for (int child = 0; child < n; child++) {
 				boolean addIndividual = state.random[threadnum].nextBoolean();
 
-				numIndividualsPerSubpop[index+child] = numIndividualsPerSubpop[parentIndex];
+				numIndividualsPerGroup[index+child] = numIndividualsPerGroup[parentIndex];
 
 				if (shouldAddIndividual(addIndividual, index + child)) {
 					// Add a new individual to the subpopulation.
 					children[child] = (MLSSubpopulation) parent.emptyClone();
 					children[child].individuals = new Individual[parent.individuals.length+1];
 
-					for (int ind = 0; ind < numIndividualsPerSubpop[parentIndex]; ind++) {
+					for (int ind = 0; ind < numIndividualsPerGroup[parentIndex]; ind++) {
 						children[child].individuals[ind] = parent.individuals[ind];
 					}
 
-					children[child].individuals[numIndividualsPerSubpop[parentIndex]] = parent.species.newIndividual(state, threadnum);
+					children[child].individuals[numIndividualsPerGroup[parentIndex]] = parent.species.newIndividual(state, threadnum);
 
-					numIndividualsPerSubpop[index+child]++;
+					numIndividualsPerGroup[index+child]++;
 				} else {
 					// Remove an arbitrary individual from the subpopulation.
 					children[child] = (MLSSubpopulation) parent.emptyClone();
 					children[child].individuals = new Individual[parent.individuals.length-1];
 
-					int indIndex = state.random[threadnum].nextInt(numIndividualsPerSubpop[parentIndex]);
+					int indIndex = state.random[threadnum].nextInt(numIndividualsPerGroup[parentIndex]);
 
-					for (int ind = 0; ind < numIndividualsPerSubpop[parentIndex]; ind++) {
+					for (int ind = 0; ind < numIndividualsPerGroup[parentIndex]; ind++) {
 						if (ind < indIndex) {
 							children[child].individuals[ind] = parent.individuals[ind];
 						} else {
@@ -529,7 +524,7 @@ public class MLSBreeder extends Breeder {
 						}
 					}
 
-					numIndividualsPerSubpop[index+child]--;
+					numIndividualsPerGroup[index+child]--;
 				}
 
 				// Evaluate the child subpopulation.
@@ -538,10 +533,10 @@ public class MLSBreeder extends Breeder {
 				// Add the subpopulation to the population
 				newpop.subpops[index+child] = children[child];
 
-				numIndividuals += numIndividualsPerSubpop[index+child];
+				numIndividuals += numIndividualsPerGroup[index+child];
 
-				subpopFitnesses[index+child] = ((MLSSubpopulation) children[child]).getFitness().fitness();
-				subpopFitnessIndex++;
+				groupFitnesses[index+child] = ((MLSSubpopulation) children[child]).getFitness();
+				groupFitnessIndex++;
 			}
 
 			index += n;
@@ -551,16 +546,26 @@ public class MLSBreeder extends Breeder {
 	}
 
 	private boolean shouldAddIndividual(boolean addIndividual, int index) {
-		return (minSubpopSize != NOT_SET && numIndividualsPerSubpop[index] == minSubpopSize) ||
-				(addIndividual && maxSubpopSize != NOT_SET && numIndividualsPerSubpop[index] == maxSubpopSize);
+		return (minSubpopSize != NOT_SET && numIndividualsPerGroup[index] == minSubpopSize) ||
+				(addIndividual && maxSubpopSize != NOT_SET && numIndividualsPerGroup[index] == maxSubpopSize);
 	}
 
 	private int getMutationParentRouletteWheel(EvolutionState state, int threadnum, int length) {
-		return rouletteSelect(subpopFitnesses, length, state.random[threadnum]);
+		double[] copy = new double[length];
+		for (int i = 0; i < length; i++) {
+			copy[i] = groupFitnesses[i].fitness();
+		}
+
+		return rouletteSelect(copy, length, state.random[threadnum]);
 	}
 
 	private int getMutationParentTournament(EvolutionState state, int threadnum, int length) {
-		return tournamentSelect(subpopFitnesses, length, tournamentSize, state.random[threadnum]);
+		double[] copy = new double[length];
+		for (int i = 0; i < length; i++) {
+			copy[i] = groupFitnesses[i].fitness();
+		}
+
+		return tournamentSelect(copy, length, tournamentSize, state.random[threadnum]);
 	}
 
 	/**
@@ -608,7 +613,7 @@ public class MLSBreeder extends Breeder {
 			MLSSubpopulation subpop = (MLSSubpopulation) newPop.subpops[s];
 
 			// Ensure that the subpopulation never exceeds the maximum size.
-			if (maxSubpopSize == NOT_SET || numIndividualsPerSubpop[s] < maxSubpopSize) {
+			if (maxSubpopSize == NOT_SET || numIndividualsPerGroup[s] < maxSubpopSize) {
 				selectableSubpops.add(new Pair<Double, Integer>(subpop.getFitness().fitness(), s));
 			}
 
@@ -618,7 +623,7 @@ public class MLSBreeder extends Breeder {
 						subpop.species.pipe_prototype);
 
 			// Find the starting points for each subpopulation.
-			from[0][s] = numIndividualsPerSubpop[s];
+			from[0][s] = numIndividualsPerGroup[s];
 			for (int thread = 1; thread < numThreads; thread++) {
 				from[thread][s] = from[thread-1][s] + numInds[thread];
 			}
@@ -641,7 +646,7 @@ public class MLSBreeder extends Breeder {
 				// Check to make sure that the breeding pipeline produces
 				// the right kind of individuals.  Don't want a mistake there! :-)
 				if (!breedingPipelines[subpop].produces(state, newPop, subpop, thread)) {
-					state.output.fatal("The Breeding Pipeline of subpopulation " + subpopFitnessIndex + " does not produce individuals of the expected species " + newPop.subpops[subpop].species.getClass().getName() + " or fitness " + newPop.subpops[subpop].species.f_prototype );
+					state.output.fatal("The Breeding Pipeline of subpopulation " + groupFitnessIndex + " does not produce individuals of the expected species " + newPop.subpops[subpop].species.getClass().getName() + " or fitness " + newPop.subpops[subpop].species.f_prototype );
 				}
 				breedingPipelines[subpop].prepareToProduce(state, subpop, thread);
 			}
@@ -677,7 +682,7 @@ public class MLSBreeder extends Breeder {
 		// Trim the individuals array.
 		for (int subpop = 0; subpop < newPop.subpops.length; subpop++) {
 			Individual[] curInds = newPop.subpops[subpop].individuals;
-			Individual[] trimInds = new Individual[numIndividualsPerSubpop[subpop]];
+			Individual[] trimInds = new Individual[numIndividualsPerGroup[subpop]];
 
 			int curIndex = 0;
 			int trimIndex = 0;
@@ -726,7 +731,7 @@ public class MLSBreeder extends Breeder {
 					subpop.individuals,
 					state,
 					threadnum);
-			numIndividualsPerSubpop[subpopIndex] += numBred;
+			numIndividualsPerGroup[subpopIndex] += numBred;
 			numIndividuals += numBred;
 
 			// Evaluate the offspring individuals as they are being generated.
@@ -739,7 +744,7 @@ public class MLSBreeder extends Breeder {
 			}
 
 			// If the size of the subpopulation reaches the threshold, remove it from the selection.
-			if (maxSubpopSize != NOT_SET && numIndividualsPerSubpop[subpopIndex] >= maxSubpopSize) {
+			if (maxSubpopSize != NOT_SET && numIndividualsPerGroup[subpopIndex] >= maxSubpopSize) {
 				double tempFit = subpopFits[pseudoIndex];
 				subpopFits[pseudoIndex] = subpopFits[selectionSize-1];
 				subpopFits[selectionSize-1] = tempFit;

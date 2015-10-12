@@ -4,7 +4,7 @@ import ec.EvolutionState;
 import ec.Setup;
 import ec.util.Parameter;
 
-public abstract class MLSSubpopBreedingPipeline implements Setup {
+public abstract class MLSGroupBreedingPipeline implements Setup {
 
 	private static final long serialVersionUID = -6523109545940475436L;
 

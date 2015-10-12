@@ -3,7 +3,6 @@ package ec.multilevel_new;
 import ec.EvolutionState;
 import ec.Population;
 import ec.Subpopulation;
-import ec.multilevel.MLSSubpopulation;
 import ec.util.Checkpoint;
 import ec.util.Parameter;
 
@@ -31,11 +30,7 @@ public class MLSEvolutionState extends EvolutionState {
 	 */
 	private Population metaPopulation;
 
-	/**
-	 * Stores the temporary subpopulations of individuals after the
-	 * subpopulation breeding phase.
-	 */
-	private Population tempPopulation;
+	private MLSCoopPopulation coopPopulation;;
 
 	private int totalNumIndividuals;
 	private int initNumSubpops;
@@ -227,18 +222,12 @@ public class MLSEvolutionState extends EvolutionState {
 		return metaPopulation;
 	}
 
-	/**
-	 * Returns the reference to the temporary population
-	 */
-	public Population getTempPopulation() {
-		return tempPopulation;
+	public MLSCoopPopulation getCoopPopulation() {
+		return coopPopulation;
 	}
 
-	/**
-	 * Setter for the temporary population.
-	 */
-	public void setTempPopulation(Population tempPop) {
-		tempPopulation = tempPop;
+	public void setCoopPopulation(MLSCoopPopulation coopPopulation) {
+		this.coopPopulation = coopPopulation;
 	}
 
 }
