@@ -3,6 +3,7 @@ package ec.multilevel_new;
 import ec.EvolutionState;
 import ec.Population;
 import ec.Subpopulation;
+import ec.multilevel.MLSSubpopulation;
 import ec.util.Checkpoint;
 import ec.util.Parameter;
 
@@ -55,6 +56,8 @@ public class MLSEvolutionState extends EvolutionState {
 	}
 
 	public void startFresh() {
+		// TODO Right, I need to fix this.
+
         output.message("Setting up");
         setup(this, null);  // a garbage Parameter
 
@@ -97,22 +100,24 @@ public class MLSEvolutionState extends EvolutionState {
 		initNumSubpops = population.subpops.length;
 		initSubpopSize = population.subpops[0].individuals.length;
 
-		// Check to ensure that the subpopulation is a type of MLSSubpopulation.
+		// FIXME Check to ensure that you start with a single population.
+		if (population.subpops.length != 1) {
+			output.fatal("TEMPORARY: You must start with a single population.");
+		}
+
+		// Ensure that the subpopulations are a type of MLSSubpopulation.
 		for (int subpop = 0; subpop < population.subpops.length; subpop++) {
 			if (!(population.subpops[subpop] instanceof MLSSubpopulation)) {
 				output.fatal("Subpopulation " + subpop + " is not of type MLSSubpopulation.");
 			}
 
-			if (initSubpopSize != population.subpops[subpop].individuals.length) {
-				output.fatal("Subpopulation " + subpop + " has different subpopulation size.");
-			}
-
 			totalNumIndividuals += population.subpops[subpop].individuals.length;
 		}
+	}
 
-		// Specific to multilevel selection.
+	public void initialiseMetaPopulation(int numToBreed) {
 		metaPopulation = (Population) population.emptyClone();
-		metaPopulation.subpops = new Subpopulation[population.subpops.length + initNumSubpops];
+		metaPopulation.subpops = new Subpopulation[population.subpops.length + numToBreed];
 
 		for (int i = 0; i < metaPopulation.subpops.length; i++) {
 			// The MLSBreeder will generate the appropriate individuals array size for the meta-population,

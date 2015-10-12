@@ -49,6 +49,7 @@ public class MLSBreeder extends Breeder {
 	public static final String P_SEQUENTIAL_BREEDING = "sequential";
 	public static final String P_CLONE_PIPELINE_AND_POPULATION = "clone-pipeline-and-population";
 
+	public static final String P_NUM_GROUP_BREED = "num-breed";
 	public static final String P_MAX_GROUP_NUM = "max-group-num";
 	public static final String P_MIN_SUBPOP_SIZE = "min-subpop-size";
 	public static final String P_MAX_SUBPOP_SIZE = "max-subpop-size";
@@ -60,8 +61,10 @@ public class MLSBreeder extends Breeder {
 
 	public static final int NOT_SET = -1;
 
+	public static final int COOPERATION_PARENTS_REQUIRED = 2;
 	public static final int CROSSOVER_PARENTS_REQUIRED = 2;
 	public static final int MUTATION_PARENTS_REQUIRED = 1;
+	public static final int COOPERATION_INDS_PRODUCED = 2;
 	public static final int CROSSOVER_INDS_PRODUCED = 2;
 	public static final int MUTATION_INDS_PRODUCED = 1;
 
@@ -73,6 +76,7 @@ public class MLSBreeder extends Breeder {
 	private Population backupMetaPopulation = null;
 	private Population backupPopulation = null;
 
+	private int numGroupBreed = NOT_SET;
 	private int maxGroupNum = NOT_SET;
 	private int minSubpopSize = NOT_SET;
 	private int maxSubpopSize = NOT_SET;
@@ -110,7 +114,16 @@ public class MLSBreeder extends Breeder {
 			state.output.fatal("The Breeder is not cloning its pipeline and population, but you have more than one thread.", base.push(P_CLONE_PIPELINE_AND_POPULATION));
 		}
 
+		numGroupBreed = state.parameters.getIntWithDefault(base.push(P_NUM_GROUP_BREED), null, NOT_SET);
+		if (numGroupBreed == NOT_SET) {
+			state.output.fatal("Need to set the number of group to breed");
+		}
+
 		maxGroupNum = state.parameters.getIntWithDefault(base.push(P_MAX_GROUP_NUM), null, NOT_SET);
+		if (maxGroupNum == NOT_SET) {
+			state.output.fatal("Need to set the number of group to retain");
+		}
+
 		minSubpopSize = state.parameters.getIntWithDefault(base.push(P_MIN_SUBPOP_SIZE), null, NOT_SET);
 		maxSubpopSize = state.parameters.getIntWithDefault(base.push(P_MAX_SUBPOP_SIZE), null, NOT_SET);
 
@@ -198,6 +211,8 @@ public class MLSBreeder extends Breeder {
 	public Population breedMetaPopulation(final EvolutionState state, Population metaPop) {
 		Population newPop = null;
 
+		((MLSEvolutionState) state).initialiseMetaPopulation(numGroupBreed);
+
 		if (clonePipelineAndPopulation) {
 			newPop = (Population) metaPop.emptyClone();
 		} else {
@@ -230,22 +245,19 @@ public class MLSBreeder extends Breeder {
 	protected void loadPopulation(EvolutionState state, Population metaPop) {
 		int buffer = ((MLSEvolutionState) state).getTotalNumIndividuals();
 
-		// Load in the subpopulations into the meta population.
-		for (int s = 0; s < state.population.subpops.length; s++) {
-			Subpopulation subpop = state.population.subpops[s];
+		// Copy the entire population stored in the first subpopulation.
+		Subpopulation overallSubpop = state.population.subpops[0];
 
-			metaPop.subpops[s] = (Subpopulation) subpop.emptyClone();
-			metaPop.subpops[s].individuals = new Individual[subpop.individuals.length + buffer];
+		metaPop.subpops[0] = (Subpopulation) overallSubpop.emptyClone();
+		metaPop.subpops[0].individuals = new Individual[overallSubpop.individuals.length + buffer];
 
-			numIndividualsPerSubpop[s] = subpop.individuals.length;
-			numIndividuals += numIndividualsPerSubpop[s];
+		for (int i = 0; i < overallSubpop.individuals.length; i++) {
+			metaPop.subpops[0].individuals[i] = overallSubpop.individuals[i];
+		}
 
-			for (int i = 0; i < subpop.individuals.length; i++) {
-				metaPop.subpops[s].individuals[i] = (Individual) subpop.individuals[i].clone();
-			}
-
-			// Load in the fitnesses of the subpopulations.
-			subpopFitnesses[s] = ((MLSSubpopulation) subpop).getFitness().fitness();
+		// Load in the groups in the subsequent subpopulations.
+		for (int i = 1; i < state.population.subpops.length; i++) {
+			metaPop.subpops[i] = state.population.subpops[i];
 		}
 	}
 
@@ -337,15 +349,27 @@ public class MLSBreeder extends Breeder {
 		double value = state.random[threadnum].nextDouble();
 		int total = 0;
 
-		if (value < groupCrossoverRate) {
+		if (value < groupCooperationRate) {
+			total = produceSubpopCooperation(min, max, index, newPop, state, threadnum);
+		} else if (value < groupCooperationRate + groupCrossoverRate) {
 			total = produceSubpopCrossover(min, max, index, newPop, state, threadnum);
-		} else if (value < groupCrossoverRate + groupMutationRate) { // Should always happen for the current code.
+		} else if (value < groupCooperationRate + groupCrossoverRate + groupMutationRate) { // Should always happen for the current code.
 			total = produceSubpopMutation(min, max, index, newPop, state, threadnum);
 		} else {
 			state.output.fatal("The possible methods of producing subpopulations do not sufficiently cover for the random value.");
 		}
 
 		return total;
+	}
+
+	private int produceSubpopCooperation(final int min,
+			final int max,
+			final int index,
+			final Population newPop,
+			final EvolutionState state,
+			final int threadnum) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 	private int produceSubpopCrossover(final int min,
