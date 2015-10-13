@@ -77,10 +77,8 @@ public class MLSBreeder extends Breeder {
 	private int minSubpopSize = NOT_SET;
 	private int maxSubpopSize = NOT_SET;
 
-	private double groupCooperationRate;
 	private double groupCrossoverRate;
 	private double groupMutationRate;
-	private double tournamentSize;
 
 	// Temporary field variable to store the number of individuals
 	// in each subpopulation in the meta population.
@@ -114,12 +112,6 @@ public class MLSBreeder extends Breeder {
 		minSubpopSize = state.parameters.getIntWithDefault(base.push(P_MIN_SUBPOP_SIZE), null, NOT_SET);
 		maxSubpopSize = state.parameters.getIntWithDefault(base.push(P_MAX_SUBPOP_SIZE), null, NOT_SET);
 
-		groupCooperationRate = state.parameters.getDouble(base.push(P_COOPERATION_PROB), null, 0);
-		if (groupCooperationRate < 0.0) {
-			state.output.error("Group cooperation rate must have a probability >= 0.0. Defaulting to 0.0");
-			groupCooperationRate = 0.0;
-		}
-
 		groupCrossoverRate = state.parameters.getDouble(base.push(P_CROSSOVER_PROB), null, 0);
 		if (groupCrossoverRate < 0.0) {
 			state.output.error("Group crossover rate must have a probability >= 0.0. Defaulting to 0.0");
@@ -133,22 +125,15 @@ public class MLSBreeder extends Breeder {
 
 		}
 
-		tournamentSize = state.parameters.getDouble(base.push(P_TOURNAMENT_SIZE), null, NOT_SET);
-		if (tournamentSize < 1.0) {
-			state.output.fatal("Tournament size must be >= 1.", base.push(P_TOURNAMENT_SIZE), base.push(P_TOURNAMENT_SIZE));
-		}
-
-		if (groupCooperationRate + groupCrossoverRate + groupMutationRate == 0.0) {
+		if (groupCrossoverRate + groupMutationRate == 0.0) {
 			// Assign equal probabilities to crossover and mutation if both probabilities are zero.
 			state.output.warning("The group probabilities have all zero probabilities -- this will be treated as a uniform distribution.  This could be an error.");
-			groupCooperationRate = 1.0 / 3.0;
-			groupCrossoverRate = 1.0 / 3.0;
-			groupMutationRate = 1.0 / 3.0;
-		} else if (groupCooperationRate + groupCrossoverRate + groupMutationRate >= 1.0) {
+			groupCrossoverRate = 1.0 / 2.0;
+			groupMutationRate = 1.0 / 2.0;
+		} else if (groupCrossoverRate + groupMutationRate >= 1.0) {
 			// Normalise if probabilities are greater than 1.0.
-			double sum = groupCooperationRate + groupCrossoverRate + groupMutationRate;
+			double sum = groupCrossoverRate + groupMutationRate;
 
-			groupCooperationRate = 1.0 * groupCooperationRate / sum;
 			groupCrossoverRate = 1.0 * groupCrossoverRate / sum;
 			groupMutationRate = 1.0 * groupMutationRate / sum;
 		}
@@ -365,8 +350,8 @@ public class MLSBreeder extends Breeder {
 		int index = start;
 		while (index < n + start) { // To be perfectly honest, this loop isn't necessary.
 			// Select two random subpopulations from 0 to (start-1) to crossover based on their fitness.
-//			int[] parentIndices = getCrossoverParentsRouletteWheel(state, threadnum, subpopFitnessIndex);
-			int[] parentIndices = getCrossoverParentsTournament(state, threadnum, subpopFitnessIndex);
+			int[] parentIndices = getCrossoverParentsRouletteWheel(state, threadnum, subpopFitnessIndex);
+//			int[] parentIndices = getCrossoverParentsTournament(state, threadnum, subpopFitnessIndex);
 			Subpopulation[] parents = new Subpopulation[] { newPop.subpops[parentIndices[0]], newPop.subpops[parentIndices[1]] };
 
 			// Arbitrarily select the individuals to exchange in between the two subpopulations.
@@ -439,10 +424,12 @@ public class MLSBreeder extends Breeder {
 	}
 
 	private int[] getCrossoverParentsTournament(EvolutionState state, int threadnum, int length) {
-		int parentIndex1 = tournamentSelect(subpopFitnesses, length, tournamentSize, state.random[threadnum]);
-		int parentIndex2 = tournamentSelect(subpopFitnesses, length, tournamentSize, state.random[threadnum]);
+		throw new UnsupportedOperationException("getCrossoverparentsTournament unsupported");
 
-		return new int[]{parentIndex1, parentIndex2};
+//		int parentIndex1 = tournamentSelect(subpopFitnesses, length, tournamentSize, state.random[threadnum]);
+//		int parentIndex2 = tournamentSelect(subpopFitnesses, length, tournamentSize, state.random[threadnum]);
+//
+//		return new int[]{parentIndex1, parentIndex2};
 	}
 
 	private int produceSubpopMutation(final int min,
@@ -462,8 +449,8 @@ public class MLSBreeder extends Breeder {
 		int index = start;
 		while (index < n + start) {
 			// Select a random subpopulation from 0 to (start-1) to mutate based on their fitness.
-//			int parentIndex = getMutationParentRouletteWheel(state, threadnum, subpopFitnessIndex);
-			int parentIndex = getMutationParentTournament(state, threadnum, subpopFitnessIndex);
+			int parentIndex = getMutationParentRouletteWheel(state, threadnum, subpopFitnessIndex);
+//			int parentIndex = getMutationParentTournament(state, threadnum, subpopFitnessIndex);
 
 			Subpopulation parent = newpop.subpops[parentIndex];
 			MLSSubpopulation[] children = new MLSSubpopulation[n];
@@ -531,7 +518,8 @@ public class MLSBreeder extends Breeder {
 	}
 
 	private int getMutationParentTournament(EvolutionState state, int threadnum, int length) {
-		return tournamentSelect(subpopFitnesses, length, tournamentSize, state.random[threadnum]);
+		throw new UnsupportedOperationException("getMutationParentTournament unsupported");
+//		return tournamentSelect(subpopFitnesses, length, tournamentSize, state.random[threadnum]);
 	}
 
 	/**
@@ -680,8 +668,8 @@ public class MLSBreeder extends Breeder {
 
 		while(totalNumBred < numInds) {
 			// Randomly select a parent based on the fitness.
-//			int pseudoIndex = rouletteSelect(subpopFits, selectionSize, state.random[threadnum]);
-			int pseudoIndex = tournamentSelect(subpopFits, selectionSize, tournamentSize, state.random[threadnum]);
+			int pseudoIndex = rouletteSelect(subpopFits, selectionSize, state.random[threadnum]);
+//			int pseudoIndex = tournamentSelect(subpopFits, selectionSize, tournamentSize, state.random[threadnum]);
 			int subpopIndex = subpopIndices[pseudoIndex];
 
 			MLSSubpopulation subpop = (MLSSubpopulation) newPop.subpops[subpopIndex];

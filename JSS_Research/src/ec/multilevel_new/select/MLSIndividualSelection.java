@@ -11,8 +11,12 @@ import ec.select.SelectDefaults;
 import ec.util.MersenneTwisterFast;
 import ec.util.Parameter;
 
-// TODO this will need to select based on the fitness of the groups.
+// TODO this will need to select based on the fitness of the groups. I need to fix
+
+// How am I going to make this select from the same group for crossover?
 public class MLSIndividualSelection extends SelectionMethod {
+
+	private static final long serialVersionUID = 8108053943862048578L;
 
 	public static final String P_MULTILEVEL = "multilevel";
     public static final String P_SIZE = "size";
