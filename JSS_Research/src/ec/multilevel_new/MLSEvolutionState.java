@@ -32,10 +32,6 @@ public class MLSEvolutionState extends EvolutionState {
 
 	private MLSCoopPopulation coopPopulation;;
 
-	private int totalNumIndividuals;
-	private int initNumSubpops;
-	private int initSubpopSize;
-
 	public void setup(final EvolutionState state, final Parameter base) {
 		super.setup(state, base);
 
@@ -51,8 +47,6 @@ public class MLSEvolutionState extends EvolutionState {
 	}
 
 	public void startFresh() {
-		// TODO Right, I need to fix this.
-
         output.message("Setting up");
         setup(this, null);  // a garbage Parameter
 
@@ -91,22 +85,25 @@ public class MLSEvolutionState extends EvolutionState {
         exchanger.initializeContacts(this);
         evaluator.initializeContacts(this);
 
-		totalNumIndividuals = 0;
-		initNumSubpops = population.subpops.length;
-		initSubpopSize = population.subpops[0].individuals.length;
-
 		// FIXME Check to ensure that you start with a single population.
 		if (population.subpops.length != 1) {
 			output.fatal("TEMPORARY: You must start with a single population.");
 		}
 
-		// Ensure that the subpopulations are a type of MLSSubpopulation.
 		for (int subpop = 0; subpop < population.subpops.length; subpop++) {
-			if (!(population.subpops[subpop] instanceof MLSSubpopulation)) {
+			Subpopulation subpopulation = population.subpops[subpop];
+
+			// Ensure that the subpopulations are a type of MLSSubpopulation
+			if (!(subpopulation instanceof MLSSubpopulation)) {
 				output.fatal("Subpopulation " + subpop + " is not of type MLSSubpopulation.");
 			}
 
-			totalNumIndividuals += population.subpops[subpop].individuals.length;
+			// Ensure that the individuals are a type of MLSGPIndividual
+			for (int ind = 0; ind < subpopulation.individuals.length; ind++) {
+				if (!(subpopulation.individuals[ind] instanceof MLSGPIndividual)) {
+					output.fatal("Individual " + ind + " in subpopulation " + subpop + " is not of type MLSGPIndividual.");
+				}
+			}
 		}
 	}
 
