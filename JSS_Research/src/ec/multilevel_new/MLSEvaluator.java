@@ -88,15 +88,6 @@ public class MLSEvaluator extends Evaluator {
 		int[] indices = new int[subpop.individuals.length];
 		Arrays.fill(indices, subpopIndex);
 
-		// Evaluate the individuals of the subpopulation, but ignore any null individuals.
-		for (Individual ind : subpop.individuals) {
-			if (ind == null) {
-				continue;
-			}
-
-			mlsProblem.evaluateInd(state, ind, subpopIndex, 0);
-		}
-
 		// Evaluate the subpopulation of individuals, which also includes null individuals.
 		mlsProblem.evaluateSubpop(state, subpop, updates, false, indices, 0);
 	}
