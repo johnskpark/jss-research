@@ -1,5 +1,8 @@
 package ec.multilevel_new;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ec.EvolutionState;
 import ec.Individual;
 
@@ -22,15 +25,22 @@ public class MLSCoopCombiner {
 	 * generated cooperative component. This will need to be done externally.
 	 */
 	public IMLSCoopEntity combine(final EvolutionState state, final IMLSCoopEntity coop1, final IMLSCoopEntity coop2) {
-		Individual[] inds1 = coop1.getIndividuals();
-		Individual[] inds2 = coop2.getIndividuals();
+		// Use a list to remove duplicates. Sets cannot be used, as memory blocks
+		// are used to represent individuals in a set, and therefore is not consistent.
+		List<Individual> indList = new ArrayList<Individual>(coop1.getIndividuals().length + coop2.getIndividuals().length);
+		for (Individual ind : coop1.getIndividuals()) {
+			if (!indList.contains(ind)) { indList.add(ind); }
+		}
+		for (Individual ind : coop2.getIndividuals()) {
+			if (!indList.contains(ind)) { indList.add(ind); }
+		}
 
-		// Simply clone the first subpopulation in the population.
+		// Simply clone the first subpopulation in the population for the new group.
 		MLSSubpopulation subpop = (MLSSubpopulation) state.population.subpops[0].emptyClone();
-		subpop.individuals = new Individual[inds1.length + inds2.length];
+		subpop.individuals = new Individual[indList.size()];
 
-		for (int i = 0; i < inds1.length; i++) { subpop.individuals[i] = inds1[i]; }
-		for (int i = 0; i < inds2.length; i++) { subpop.individuals[i + inds1.length] = inds2[i]; }
+		// Copy the individuals from the set into the subpopulation.
+		indList.toArray(subpop.individuals);
 
 		return subpop;
 	}

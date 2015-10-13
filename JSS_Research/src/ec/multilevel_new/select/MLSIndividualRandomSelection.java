@@ -16,6 +16,7 @@ import ec.util.Pair;
  * @author parkjohn
  *
  */
+// TODO need to use the coopPopulation here instead.
 public class MLSIndividualRandomSelection extends RandomSelection {
 
 	private static final long serialVersionUID = 4123260959395843573L;

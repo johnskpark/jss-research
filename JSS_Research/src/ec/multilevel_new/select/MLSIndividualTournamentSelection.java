@@ -11,6 +11,7 @@ import ec.select.TournamentSelection;
 import ec.util.Pair;
 
 
+//TODO need to use the coopPopulation here instead.
 public class MLSIndividualTournamentSelection extends TournamentSelection {
 
 	private static final long serialVersionUID = 6365227684890903499L;

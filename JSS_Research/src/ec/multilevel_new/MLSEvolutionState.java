@@ -195,27 +195,6 @@ public class MLSEvolutionState extends EvolutionState {
 	}
 
 	/**
-	 * Returns the total number of individuals in the population.
-	 */
-	public int getTotalNumIndividuals() {
-		return totalNumIndividuals;
-	}
-
-	/**
-	 * Returns the number of subpopulations in the population in the initialisation.
-	 */
-	public int getInitNumSubpops() {
-		return initNumSubpops;
-	}
-
-	/**
-	 * Returns the size of subpopulations in the population in the initialisation.
-	 */
-	public int getInitSubpopSize() {
-		return initSubpopSize;
-	}
-
-	/**
 	 * Returns the reference to the meta population.
 	 */
 	public Population getMetaPopulation() {
