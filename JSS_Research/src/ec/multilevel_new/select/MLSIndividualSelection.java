@@ -21,7 +21,7 @@ public class MLSIndividualSelection extends SelectionMethod {
 	public static final String P_MULTILEVEL = "multilevel";
     public static final String P_SIZE = "size";
 
-	public static final int INDS_SELECTED = 1;
+	public static final int INDS_PRODUCED = 1;
 
 	private int baseTournamentSize;
 	private double probabilityOfPickingSizePlusOne;
@@ -63,18 +63,7 @@ public class MLSIndividualSelection extends SelectionMethod {
 	public int produce(final int subpopulation,
 			final EvolutionState state,
 			final int thread) {
-		MLSCoopPopulation coopPop = ((MLSEvolutionState) state).getCoopPopulation();
-
-		if (coopPop.getNumGroups() == 0) {
-			// If there's no groups, then apply tournament selection.
-
-			// TODO
-		} else {
-			// Otherwise, select a group from fitness proportionate selection.
-			// TODO
-		}
-
-		return 0;
+		return getIndividualFromCoopPopulation(state, thread);
 	}
 
 	@Override
@@ -85,60 +74,87 @@ public class MLSIndividualSelection extends SelectionMethod {
 			final Individual[] inds,
 			final EvolutionState state,
 			final int thread) {
-		MLSCoopPopulation coopPop = ((MLSEvolutionState) state).getCoopPopulation();
+		int n = INDS_PRODUCED;
+		if (n < min) n = min;
+		if (n > max) n = max;
 
-		if (coopPop.getNumGroups() == 0) {
-			// If there's no groups, then apply tournament selection.
-			int size = getTournamentSizeToUse(state.random[thread]);
-
-
-			// TODO
-		} else {
-			// Otherwise, select a group from fitness proportionate selection.
+		for (int i = 0; i < n; i++) {
 			// TODO
 		}
 
-		return 0;
+		return n;
 	}
 
-	protected final int getIndividualFromCoopPopulation(final EvolutionState state, final int thread) {
-		MLSCoopPopulation coopPop = ((MLSEvolutionState) state).getCoopPopulation();
-
-		int index;
-
-		if (coopPop.getNumGroups() == 0) {
-			// If there's no groups, then apply tournament selection.
-			int size = getTournamentSizeToUse(state.random[thread]);
-
-			MLSGPIndividual[] inds = coopPop.getIndividuals();
-
-			index = state.random[thread].nextInt(coopPop.getNumIndividuals());
-			for (int i = 1; i < size; i++) {
-				int j = state.random[thread].nextInt(coopPop.getNumIndividuals());
-
-				if (inds[j].fitness.betterThan(inds[index].fitness)) {
-					index = j;
-				}
-			}
+	// Select an individual from the population of cooperative entities.
+	protected int getIndividualFromCoopPopulation(final EvolutionState state, final int thread) {
+		if (((MLSEvolutionState) state).getCoopPopulation().getNumGroups() != 0) {
+			return getGroupedIndividual(state, thread);
 		} else {
-			// Otherwise, select a group from fitness proportionate selection.
-			MLSSubpopulation[] groups = coopPop.getGroups();
+			return getUngroupedIndividual(state, thread);
+		}
+	}
 
-			double[] stackedGroupFitnesses = new double[coopPop.getNumGroups()];
-			for (int i = 0; i < coopPop.getNumGroups(); i++) {
-				stackedGroupFitnesses[i] = groups[i].getFitness().fitness();
+	// Select an individual from any group in the population.
+	protected int getGroupedIndividual(final EvolutionState state, final int thread) {
+		int groupIndex = getGroup(state, thread);
+
+		return getGroupedIndividual(state, thread, groupIndex);
+
+	}
+
+	// Select an individual from the specified group.
+	protected int getGroupedIndividual(final EvolutionState state, final int thread, final int groupIndex) {
+		MLSCoopPopulation coopPop = ((MLSEvolutionState) state).getCoopPopulation();
+		MLSSubpopulation group = coopPop.getGroups()[groupIndex];
+
+		// Randomly select an individual from the group.
+		Individual ind = group.individuals[state.random[thread].nextInt(group.individuals.length)];
+
+		for (int index = 0; index < coopPop.getNumIndividuals(); index++) {
+			if (coopPop.getIndividuals()[index] == ind) {
+				return index;
 			}
-
-			// TODO select
-			int groupIndex = rouletteWheel(stackedGroupFitnesses, coopPop.getNumGroups(), state.random[thread]);
-
-			index = 0;
 		}
 
-		return index;
+		state.output.fatal("The individual does not exist in the population of cooperative entities.");
+
+		return 0; // Never reaches this point.
 	}
 
-	protected final int rouletteWheel(double[] stackedFitnesses, int length, MersenneTwisterFast random) {
+	// Select a group to select from.
+	protected int getGroup(final EvolutionState state, final int thread) {
+		MLSCoopPopulation coopPop = ((MLSEvolutionState) state).getCoopPopulation();
+		MLSSubpopulation[] groups = coopPop.getGroups();
+
+		double[] stackedGroupFitnesses = new double[coopPop.getNumGroups()];
+		for (int i = 0; i < coopPop.getNumGroups(); i++) {
+			stackedGroupFitnesses[i] = groups[i].getFitness().fitness();
+		}
+
+		// Randomly choose a group proportionate to its fitness.
+		return fitnessProportionate(stackedGroupFitnesses, coopPop.getNumGroups(), state.random[thread]);
+	}
+
+	// Select an individual from the lowest level, since there is no group to select from.
+	protected int getUngroupedIndividual(final EvolutionState state, final int thread) {
+		MLSCoopPopulation coopPop = ((MLSEvolutionState) state).getCoopPopulation();
+		MLSGPIndividual[] inds = coopPop.getIndividuals();
+
+		int size = getTournamentSizeToUse(state.random[thread]);
+
+		int best = state.random[thread].nextInt(coopPop.getNumIndividuals());
+		for (int i = 1; i < size; i++) {
+			int j = state.random[thread].nextInt(coopPop.getNumIndividuals());
+
+			if (inds[j].fitness.betterThan(inds[best].fitness)) {
+				best = j;
+			}
+		}
+
+		return best;
+	}
+
+	protected final int fitnessProportionate(double[] stackedFitnesses, int length, MersenneTwisterFast random) {
 		double prob = random.nextDouble();
 
 		double[] stackedProb = new double[length];
