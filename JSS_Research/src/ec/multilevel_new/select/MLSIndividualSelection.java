@@ -10,6 +10,7 @@ import ec.multilevel_new.MLSSubpopulation;
 import ec.select.SelectDefaults;
 import ec.util.MersenneTwisterFast;
 import ec.util.Parameter;
+import ec.util.RandomChoice;
 
 // TODO this will need to select based on the fitness of the groups. I need to fix
 
@@ -78,8 +79,13 @@ public class MLSIndividualSelection extends SelectionMethod {
 		if (n < min) n = min;
 		if (n > max) n = max;
 
+		int groupIndex = getGroup(state, thread);
+
+		MLSCoopPopulation coopPop = ((MLSEvolutionState) state).getCoopPopulation();
+
 		for (int i = 0; i < n; i++) {
-			// TODO
+			int indIndex = getGroupedIndividual(state, thread, groupIndex);
+			inds[start + i] = coopPop.getIndividuals()[indIndex];
 		}
 
 		return n;
@@ -162,7 +168,7 @@ public class MLSIndividualSelection extends SelectionMethod {
 			stackedProb[i] = stackedFitnesses[i] / stackedFitnesses[stackedFitnesses.length - 1];
 		}
 
-		return 0;
+		return RandomChoice.pickFromDistribution(stackedProb, prob);
 	}
 
 }
