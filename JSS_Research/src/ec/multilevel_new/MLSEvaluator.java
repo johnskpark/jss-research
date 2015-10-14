@@ -14,7 +14,6 @@ import ec.util.Parameter;
  *
  */
 
-// TODO don't evaluate the first subpopulation, since that's not a group.
 public class MLSEvaluator extends Evaluator {
 
 	private static final long serialVersionUID = 4348544338928828593L;
@@ -67,8 +66,13 @@ public class MLSEvaluator extends Evaluator {
 
 		((MLSProblemForm) p_problem).beforeEvaluation(state, state.population);
 
-		for (int subpop = 0; subpop < state.population.subpops.length; subpop++) {
-			evaluateSubpopulation(state, (MLSSubpopulation) state.population.subpops[subpop], subpop);
+		MLSSubpopulation pop = (MLSSubpopulation) state.population.subpops[0];
+		for (int ind = 0; ind < pop.individuals.length; ind++) {
+			evaluateIndividual(state, pop, 0, pop.individuals[ind]);
+		}
+
+		for (int group = 1; group < state.population.subpops.length; group++) {
+			evaluateGroup(state, (MLSSubpopulation) state.population.subpops[group], group);
 		}
 	}
 
@@ -78,7 +82,7 @@ public class MLSEvaluator extends Evaluator {
 	 * @param subpop
 	 * @param subpopIndex
 	 */
-	public void evaluateSubpopulation(final EvolutionState state, MLSSubpopulation subpop, int subpopIndex) {
+	public void evaluateGroup(final EvolutionState state, MLSSubpopulation subpop, int subpopIndex) {
 		MLSProblemForm mlsProblem = (MLSProblemForm) p_problem;
 
 		// By default, we update the fitnesses of all individual in the subpopulation.

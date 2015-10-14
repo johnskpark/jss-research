@@ -4,7 +4,7 @@ import jasima.core.statistics.SummaryStat;
 
 import java.util.Map;
 
-import app.evolution.multilevel.IJasimaMultilevelIndividualFitness;
+import app.evolution.multilevel_new.IJasimaMultilevelIndividualFitness;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.gp.koza.KozaFitness;

@@ -37,14 +37,11 @@ public class MLSBreeder extends Breeder {
 	public static final String P_CLONE_PIPELINE_AND_POPULATION = "clone-pipeline-and-population";
 
 	public static final String P_NUM_GROUP_BREED = "num-breed";
-	public static final String P_MAX_GROUP_NUM = "max-group-num";
-	public static final String P_MIN_SUBPOP_SIZE = "min-subpop-size";
-	public static final String P_MAX_SUBPOP_SIZE = "max-subpop-size";
+	public static final String P_NUM_GROUP_RETAIN = "num-retain";
 
 	public static final String P_COOPERATION_PROB = "cooperation-prob"; // FIXME remove these parameters when I make breeding more generic.
 	public static final String P_CROSSOVER_PROB = "crossover-prob";
 	public static final String P_MUTATION_PROB = "mutation-prob";
-	public static final String P_TOURNAMENT_SIZE = "tournament-size";
 
 	public static final int NOT_SET = -1;
 
@@ -64,11 +61,11 @@ public class MLSBreeder extends Breeder {
 	private Population backupPopulation = null;
 
 	private int numGroupBreed = NOT_SET;
+	private int numGroupRetain = NOT_SET;
 
 	private double groupCooperationRate;
 	private double groupCrossoverRate;
 	private double groupMutationRate;
-	private double tournamentSize;
 
 	private MLSCoopPopulation coopPopulation;
 
@@ -95,6 +92,11 @@ public class MLSBreeder extends Breeder {
 			state.output.fatal("Need to set the number of group to breed");
 		}
 
+		numGroupRetain = state.parameters.getIntWithDefault(base.push(P_NUM_GROUP_RETAIN), null, NOT_SET);
+		if (numGroupRetain == NOT_SET) {
+			state.output.fatal("Need to set the number of group to breed");
+		}
+
 		groupCooperationRate = state.parameters.getDouble(base.push(P_COOPERATION_PROB), null, 0);
 		if (groupCooperationRate < 0.0) {
 			state.output.error("Group cooperation rate must have a probability >= 0.0. Defaulting to 0.0");
@@ -112,11 +114,6 @@ public class MLSBreeder extends Breeder {
 			state.output.error("Group mutation rate must have a probability >= 0.0. Defaulting to 0.0");
 			groupMutationRate = 0.0;
 
-		}
-
-		tournamentSize = state.parameters.getDouble(base.push(P_TOURNAMENT_SIZE), null, NOT_SET);
-		if (tournamentSize < 1.0) {
-			state.output.fatal("Tournament size must be >= 1.", base.push(P_TOURNAMENT_SIZE), base.push(P_TOURNAMENT_SIZE));
 		}
 
 		if (groupCooperationRate + groupCrossoverRate + groupMutationRate == 0.0) {
@@ -145,7 +142,11 @@ public class MLSBreeder extends Breeder {
 		// individuals in the intermediate population. Afterwards,
 		// half the groups and individuals are removed from the
 		// intermediate population to obtain the next generation.
-		Population initPop = ((MLSEvolutionState) state).getMetaPopulation();
+		MLSEvolutionState mlsState = (MLSEvolutionState) state;
+
+		mlsState.initialiseMetaPopulation(numGroupBreed);
+
+		Population initPop = mlsState.getMetaPopulation();
 
 		Population metaPop = breedMetaPopulation(state, initPop);
 		Population finalPop = breedFinalPopulation(state, metaPop);
@@ -173,6 +174,20 @@ public class MLSBreeder extends Breeder {
 	}
 
 	/**
+	 * Returns the number of groups that will be breed.
+	 */
+	public int getNumGroupBreed() {
+		return numGroupBreed;
+	}
+
+	/**
+	 * Returns the number of groups to retain.
+	 */
+	public int getNumGroupRetain() {
+		return numGroupRetain;
+	}
+
+	/**
 	 * Breeds the subpopulations and individuals for the meta-population.
 	 *
 	 * A template which contains the information for the number of subpopulations
@@ -182,8 +197,6 @@ public class MLSBreeder extends Breeder {
 	 * subpopulations and individuals from the population in EvolutionState.
 	 */
 	public Population breedMetaPopulation(final EvolutionState state, Population metaPop) {
-		((MLSEvolutionState) state).initialiseMetaPopulation(numGroupBreed);
-
 		Population newPop = null;
 		if (clonePipelineAndPopulation) {
 			newPop = (Population) metaPop.emptyClone();
@@ -361,7 +374,7 @@ public class MLSBreeder extends Breeder {
 			MLSSubpopulation child = (MLSSubpopulation) parents[0].combine(state, parents[1]);
 
 			// Evaluate the newly generated group.
-			((MLSEvaluator) state.evaluator).evaluateSubpopulation(state, child, index + 1);
+			((MLSEvaluator) state.evaluator).evaluateGroup(state, child, index + 1);
 
 			// Add the group to the meta population and the list of entities.
 			newPop.subpops[index] = child;
@@ -434,7 +447,7 @@ public class MLSBreeder extends Breeder {
 				}
 
 				// Evaluate the child group.
-				((MLSEvaluator) state.evaluator).evaluateSubpopulation(state, childSubpop, index + child);
+				((MLSEvaluator) state.evaluator).evaluateGroup(state, childSubpop, index + child);
 
 				// Add the group to the meta population and the list of entities.
 				newPop.subpops[index + child] = childSubpop;
@@ -514,7 +527,7 @@ public class MLSBreeder extends Breeder {
 			}
 
 			// Evaluate the child subpopulation.
-			((MLSEvaluator) state.evaluator).evaluateSubpopulation(state, child, index);
+			((MLSEvaluator) state.evaluator).evaluateGroup(state, child, index);
 
 			// Add the group to the meta population and the list of entities.
 			newPop.subpops[index] = child;

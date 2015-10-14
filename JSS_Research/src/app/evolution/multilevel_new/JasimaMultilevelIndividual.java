@@ -1,9 +1,9 @@
 package app.evolution.multilevel_new;
 
-import ec.gp.GPIndividual;
 import ec.gp.GPTree;
+import ec.multilevel_new.MLSGPIndividual;
 
-public class JasimaMultilevelIndividual extends GPIndividual {
+public class JasimaMultilevelIndividual extends MLSGPIndividual {
 
 	private static final long serialVersionUID = -1819545258972420086L;
 

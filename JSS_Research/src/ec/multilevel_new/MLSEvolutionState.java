@@ -107,6 +107,10 @@ public class MLSEvolutionState extends EvolutionState {
 		}
 	}
 
+	/**
+	 * TODO Javadoc.
+	 * @param numToBreed
+	 */
 	public void initialiseMetaPopulation(int numToBreed) {
 		metaPopulation = (Population) population.emptyClone();
 		metaPopulation.subpops = new Subpopulation[population.subpops.length + numToBreed];
@@ -116,6 +120,15 @@ public class MLSEvolutionState extends EvolutionState {
 			// so simply use the first subpopulation to clone (for now).
 			metaPopulation.subpops[i] = (Subpopulation) population.subpops[0].emptyClone();
 		}
+	}
+
+	public void initialiseFinalPopulation(int numToRetain) {
+		Population newPop = (Population) population.emptyClone();
+		newPop.subpops = new Subpopulation[population.subpops.length + numToRetain];
+
+		newPop.subpops[0] = (Subpopulation) population.subpops[0].emptyClone();
+
+		population = newPop;
 	}
 
 	@Override
@@ -160,16 +173,21 @@ public class MLSEvolutionState extends EvolutionState {
 			return R_SUCCESS;
 		}
 
+
+		MLSBreeder mlsBreeder = (MLSBreeder) breeder;
+
 		// BREEDING
 		statistics.preBreedingStatistics(this);
 
-		metaPopulation = ((MLSBreeder) breeder).breedMetaPopulation(this, metaPopulation);
+		initialiseMetaPopulation(mlsBreeder.getNumGroupBreed());
+		metaPopulation = mlsBreeder.breedMetaPopulation(this, metaPopulation);
 
 		// POST-BREEDING EXCHANGING
 		statistics.postBreedingStatistics(this);
 
 		// SELECTION
-		population = ((MLSBreeder) breeder).breedFinalPopulation(this, metaPopulation);
+		initialiseFinalPopulation(mlsBreeder.getNumGroupRetain());
+		population = mlsBreeder.breedFinalPopulation(this, metaPopulation);
 
 		// INCREMENT GENERATION AND CHECKPOINT
 		generation++;
