@@ -335,12 +335,14 @@ public class MLSBreeder extends Breeder {
 		double value = state.random[threadnum].nextDouble();
 		int total = 0;
 
-		if (value < groupCooperationRate) {
+		MLSCoopPopulation coopPop = ((MLSEvolutionState) state).getCoopPopulation();
+
+		if (value < groupCooperationRate || coopPop.getNumGroups() == 0) {
 			total = produceSubpopCooperation(min, max, index, newPop, state, threadnum);
-		} else if (value < groupCooperationRate + groupCrossoverRate) {
-			total = produceSubpopCrossover(min, max, index, newPop, state, threadnum);
-		} else if (value < groupCooperationRate + groupCrossoverRate + groupMutationRate) { // Should always happen for the current code.
+		} else if (value < groupCooperationRate + groupMutationRate || coopPop.getNumGroups() == 1) {
 			total = produceSubpopMutation(min, max, index, newPop, state, threadnum);
+		} else if (value < groupCooperationRate + groupMutationRate + groupCrossoverRate) { // Should always happen for the current code.
+			total = produceSubpopCrossover(min, max, index, newPop, state, threadnum);
 		} else {
 			state.output.fatal("The possible methods of producing subpopulations do not sufficiently cover for the random value.");
 		}
@@ -513,11 +515,11 @@ public class MLSBreeder extends Breeder {
 				child.individuals[child.individuals.length - 1] = ungroupedInds[indIndex];
 			} else {
 				// Copy over all but one individual in the parent group.
-				child.individuals = new Individual[parent.individuals.length-1];
+				child.individuals = new Individual[parent.individuals.length - 1];
 
 				int indIndex = state.random[threadnum].nextInt(parent.individuals.length);
 
-				for (int ind = 0; ind < parent.individuals.length; ind++) {
+				for (int ind = 0; ind < child.individuals.length; ind++) {
 					if (ind < indIndex) {
 						child.individuals[ind] = parent.individuals[ind];
 					} else {

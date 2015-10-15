@@ -122,11 +122,17 @@ public class MLSEvolutionState extends EvolutionState {
 		}
 	}
 
+	/**
+	 * TODO Javadoc.
+	 * @param numToRetain
+	 */
 	public void initialiseFinalPopulation(int numToRetain) {
 		Population newPop = (Population) population.emptyClone();
-		newPop.subpops = new Subpopulation[population.subpops.length + numToRetain];
+		newPop.subpops = new Subpopulation[numToRetain + 1];
 
-		newPop.subpops[0] = (Subpopulation) population.subpops[0].emptyClone();
+		for (int i = 0; i < newPop.subpops.length; i++) {
+			newPop.subpops[i] = (Subpopulation) population.subpops[0].emptyClone();
+		}
 
 		population = newPop;
 	}

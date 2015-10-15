@@ -31,9 +31,10 @@ public class MLSStatistics extends Statistics {
 
 	private int statisticsLog = 0; // stdout
 
-	private Individual[] bestIndsOfRun = null;
-	private MLSSubpopulation bestSubpopOfRun = null;
-	private int bestSubpopIndexOfRun = -1;
+	private Individual bestIndOfRun = null;
+	private Individual[] bestIndsOfGroupsOfRun = null;
+	private MLSSubpopulation bestGroupOfRun = null;
+	private int bestGroupIndexOfRun = -1;
 
 	private boolean compress;
 	private boolean doFinal;
@@ -71,76 +72,119 @@ public class MLSStatistics extends Statistics {
 
 		// Set up the bestOfRun array. This cannot be carried out in setup,
 		// as the number of subpopulation may not have been determined yet.
-		bestIndsOfRun = new Individual[state.population.subpops.length];
+		bestIndsOfGroupsOfRun = new Individual[state.population.subpops.length];
 	}
 
 	@Override
 	public void postEvaluationStatistics(final EvolutionState state) {
 		super.postEvaluationStatistics(state);
 
-		Individual[] bestOfSubpop = new Individual[state.population.subpops.length];
-		MLSSubpopulation bestSubpop = null;
-		int bestSubpopIndex = -1;
-
-		for (int s = 0; s < state.population.subpops.length; s++) {
-			MLSSubpopulation subpop = (MLSSubpopulation) state.population.subpops[s];
-
-			// Find the best individuals from each subpopulation of the generation.
-			bestOfSubpop[s] = subpop.individuals[0];
-			for (int i = 1; i < subpop.individuals.length; i++) {
-				if (subpop.individuals[i].fitness.betterThan(bestOfSubpop[s].fitness)) {
-					bestOfSubpop[s] = subpop.individuals[i];
-				}
-			}
-
-			// Find the best subpopulation of the generation.
-			if (bestSubpop == null || subpop.getFitness().betterThan(bestSubpop.getFitness())) {
-				bestSubpop = subpop;
-				bestSubpopIndex = s;
-			}
-
-			// Update the best individuals of the run.
-			if (bestIndsOfRun[s] == null || bestOfSubpop[s].fitness.betterThan(bestIndsOfRun[s].fitness)) {
-				bestIndsOfRun[s] = (Individual) (bestOfSubpop[s].clone());
-			}
-		}
-
-		// Update the best subpopulation of the run.
-		if (bestSubpopOfRun == null || bestSubpop.getFitness().betterThan(bestSubpopOfRun.getFitness())) {
-			bestSubpopOfRun = (MLSSubpopulation) bestSubpop.emptyClone();
-			for (int i = 0; i < bestSubpop.individuals.length; i++) {
-				bestSubpopOfRun.individuals[i] = (Individual) bestSubpop.individuals[i].clone();
-			}
-
-			bestSubpopIndexOfRun = bestSubpopIndex;
-		}
-
 		// Print the current generation.
 		if (doGeneration) {
 			state.output.println("\nGeneration: " + state.generation, statisticsLog);
-			state.output.println("Best Individual:", statisticsLog);
 		}
 
-		// Print the best fitness of a subpopulation.
+		// Carry out the statistics for the separate components.
+		individualStatistics(state);
+		groupStatistics(state);
+
+	}
+
+	protected void individualStatistics(final EvolutionState state) {
+		Individual bestInd = null;
+
+		// Update the best individual of generation.
+		for (int i = 0; i < state.population.subpops[0].individuals.length; i++) {
+			Individual ind = state.population.subpops[0].individuals[i];
+
+			if (bestInd == null || ind.fitness.betterThan(bestInd.fitness)) {
+				bestInd = ind;
+			}
+		}
+
+		// Update the best individual of the run.
+		if (bestIndOfRun == null || bestInd.fitness.betterThan(bestIndOfRun.fitness)) {
+			bestIndOfRun = (Individual) bestInd.clone();
+		}
+
+		// Print the best individual's fitness to stdout.
 		if (doGeneration) {
-			String evaluatedStr = (bestSubpop.isEvaluated()) ? " " : " (evaluated flag not set): ";
-
-			state.output.message("Best subpop of generation: " + bestSubpopIndex + evaluatedStr + bestSubpop.getFitness().fitnessToStringForHumans());
+			String evaluatedStr = (bestInd.evaluated) ? " " : " (evaluated flag not set): ";
+			state.output.message("Best individual of generation: " + evaluatedStr + bestInd.fitness.fitnessToStringForHumans());
 		}
 
-		// Print the best fitness of an individual per subpopulation.
-		for (int s = 0; s < state.population.subpops.length; s++) {
-			MLSSubpopulation subpop = (MLSSubpopulation) state.population.subpops[s];
+		// Print the best individual and its fitness to output file.
+		if (doGeneration) {
+			state.output.println("Best Individual:", statisticsLog);
+			bestInd.printIndividualForHumans(state, statisticsLog);
+		}
+	}
+
+	protected void groupStatistics(final EvolutionState state) {
+		// Immediately return if there is no groups.
+		if (state.population.subpops.length == 1) {
+			state.output.message("No groups in generation " + state.generation);
+			return;
+		}
+
+		Individual[] bestOfGroups = new Individual[state.population.subpops.length - 1];
+
+		MLSSubpopulation bestGroup = null;
+		int bestGroupIndex = -1;
+
+		for (int g = 0; g < state.population.subpops.length - 1; g++) {
+			MLSSubpopulation group = (MLSSubpopulation) state.population.subpops[g + 1];
+
+			// Update the best indivdual of group of generation.
+			for (int i = 0; i < group.individuals.length; i++) {
+				if (bestOfGroups[g] == null || group.individuals[i].fitness.betterThan(bestOfGroups[g].fitness)) {
+					bestOfGroups[g] = group.individuals[i];
+				}
+			}
+
+			// Update the best group of generation.
+			if (bestGroup == null || group.getFitness().betterThan(bestGroup.getFitness())) {
+				bestGroup = group;
+				bestGroupIndex = g;
+			}
+
+			// Update the best individuals of groups of the run.
+			if (bestIndsOfGroupsOfRun[g] == null || bestOfGroups[g].fitness.betterThan(bestIndsOfGroupsOfRun[g].fitness)) {
+				bestIndsOfGroupsOfRun[g] = (Individual) bestOfGroups[g].clone();
+			}
+		}
+
+		// Update the best group of the run.
+		if (bestGroupOfRun == null || bestGroup.getFitness().betterThan(bestGroupOfRun.getFitness())) {
+			bestGroupOfRun = (MLSSubpopulation) bestGroup.emptyClone();
+
+			for (int i = 0; i < bestGroup.individuals.length; i++) {
+				bestGroupOfRun.individuals[i] = (Individual) bestGroup.individuals[i].clone();
+			}
+
+			bestGroupIndexOfRun = bestGroupIndex;
+		}
+
+		// Print the best fitness of a group.
+		if (doGeneration) {
+			String evaluatedStr = (bestGroup.isEvaluated()) ? " " : " (evaluated flag not set): ";
+
+			state.output.message("Best group of generation: " + bestGroupIndex + evaluatedStr + bestGroup.getFitness().fitnessToStringForHumans());
+		}
+
+		// Print the best fitness of an individual per group.
+		for (int g = 0; g < state.population.subpops.length - 1; g++) {
+			MLSSubpopulation group = (MLSSubpopulation) state.population.subpops[g + 1];
 
 			if (doGeneration) {
-				state.output.println("Subpopulation " + s + ": " + subpop.getFitness().fitnessToStringForHumans() + ", Size: " + subpop.individuals.length, statisticsLog);
-				bestOfSubpop[s].printIndividualForHumans(state, statisticsLog);
+				state.output.println("Group " + g + " fitness: " + group.getFitness().fitnessToStringForHumans() + ", Size: " + group.individuals.length, statisticsLog);
+				bestOfGroups[g].printIndividualForHumans(state, statisticsLog);
 			}
 
 			if (doMessage && !silentPrint) {
-				String evaluatedStr = (bestOfSubpop[s].evaluated) ? "" : "(evaluated flag not set): ";
+				String evaluatedStr = (bestOfGroups[g].evaluated) ? "" : "(evaluated flag not set): ";
 
-				state.output.message("Subpop " + s + " fitness: " + subpop.getFitness().fitnessToStringForHumans() + ", Size: " + subpop.individuals.length + ", Individual: " + evaluatedStr + bestOfSubpop[s].fitness.fitnessToStringForHumans());
+				state.output.message("Group " + g + " fitness: " + group.getFitness().fitnessToStringForHumans() + ", Size: " + group.individuals.length + ", Individual: " + evaluatedStr + bestOfGroups[g].fitness.fitnessToStringForHumans());
 			}
 		}
 	}
@@ -149,29 +193,35 @@ public class MLSStatistics extends Statistics {
 	public void finalStatistics(final EvolutionState state, final int result) {
 		super.finalStatistics(state, result);
 
-		// Print out the best individuals of each subpopulation.
+		// Print out the best individual.
 		if (doFinal) {
-			state.output.println("\nBest Individual of Run:", statisticsLog);
+			state.output.println("\nBest Individual of Run:" , statisticsLog);
+			bestIndOfRun.printIndividualForHumans(state, statisticsLog);
 		}
-		for (int s = 0; s < state.population.subpops.length; s++) {
+
+		// Print out the best individuals of each group.
+		if (doFinal) {
+			state.output.println("\nBest Individuals in each Groups of Run:", statisticsLog);
+		}
+
+		for (int g = 0; g < state.population.subpops.length - 1; g++) {
 			if (doFinal) {
-				state.output.println("Subpopulation " + s + ":", statisticsLog);
-				bestIndsOfRun[s].printIndividualForHumans(state, statisticsLog);
+				state.output.println("Group " + g + ":", statisticsLog);
+				bestIndsOfGroupsOfRun[g].printIndividualForHumans(state, statisticsLog);
 			}
 
 			if (doMessage && !silentPrint) {
-				state.output.message("Subpop " + s + " best fitness of run: " + bestIndsOfRun[s].fitness.fitnessToStringForHumans());
+				state.output.message("Group " + g + " best fitness of run: " + bestIndsOfGroupsOfRun[g].fitness.fitnessToStringForHumans());
 			}
 		}
 
-		// Print out the individuals making up the best subpopulation.
-
+		// Print out the individuals making up the best group.
 		if (doFinal) {
-			state.output.println("\nBest Subpopulation of Run: " + bestSubpopIndexOfRun + ", Fitness: " + bestSubpopOfRun.getFitness().fitnessToStringForHumans(), statisticsLog);
+			state.output.println("\nBest Group of Run: " + bestGroupIndexOfRun + ", Fitness: " + bestGroupOfRun.getFitness().fitnessToStringForHumans(), statisticsLog);
 
-			for (int i = 0; i < bestSubpopOfRun.individuals.length; i++) {
+			for (int i = 0; i < bestGroupOfRun.individuals.length; i++) {
 				state.output.println("Individual " + i, statisticsLog);
-				bestSubpopOfRun.individuals[i].printIndividualForHumans(state, statisticsLog);
+				bestGroupOfRun.individuals[i].printIndividualForHumans(state, statisticsLog);
 			}
 		}
 	}
