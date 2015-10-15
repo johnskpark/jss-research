@@ -15,6 +15,9 @@ import ec.util.Parameter;
  * @author parkjohn
  *
  */
+
+// TODO currently its printing out that the best individual is W / PR
+// (which is clearly not the case), so need to fix this.
 public class MLSStatistics extends Statistics {
 
 	private static final long serialVersionUID = 2693112218608601218L;
