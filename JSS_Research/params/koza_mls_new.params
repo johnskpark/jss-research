@@ -14,7 +14,7 @@
 # from ../../simple/params, which defines
 # generational, basic evolutionary mechanisms, selection mechanisms...
 
-parent.0 = ../../../ec/multilevel_new/multilevel_new.params
+parent.0 = multilevel_new.params
 
 
 #
