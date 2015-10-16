@@ -5,7 +5,6 @@ import jasima.core.util.Pair;
 import java.util.HashMap;
 import java.util.Map;
 
-import app.evolution.IJasimaGPProblem;
 import app.evolution.IJasimaTracker;
 import app.evolution.JasimaGPProblem;
 import app.util.BasicStatistics;
@@ -17,7 +16,7 @@ public class CoopDecisionTracker implements IJasimaTracker {
 
 	private Map<GPIndividual, Pair<BasicStatistics, Integer>> decisionStats = new HashMap<GPIndividual, Pair<BasicStatistics, Integer>>();
 
-	private IJasimaGPProblem problem;
+	private JasimaGPProblem problem;
 
 	public int getNumIgnore() {
 		return problem.getSimConfig().getNumIgnore();
@@ -48,12 +47,8 @@ public class CoopDecisionTracker implements IJasimaTracker {
 	}
 
 	@Override
-	public void setProblem(IJasimaGPProblem problem) {
-		this.problem = problem;
-	}
-
 	public void setProblem(JasimaGPProblem problem) {
-		// TODO
+		this.problem = problem;
 	}
 
 	@Override

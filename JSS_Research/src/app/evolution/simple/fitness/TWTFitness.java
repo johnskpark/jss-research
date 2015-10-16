@@ -4,7 +4,7 @@ import jasima.core.statistics.SummaryStat;
 
 import java.util.Map;
 
-import app.evolution.IJasimaGPProblem;
+import app.evolution.JasimaGPProblem;
 import app.evolution.simple.IJasimaSimpleFitness;
 import ec.EvolutionState;
 import ec.Individual;
@@ -17,10 +17,10 @@ public class TWTFitness implements IJasimaSimpleFitness {
 	private SummaryStat overallStat = new SummaryStat();
 
 	@Override
-	public void setProblem(IJasimaGPProblem problem) {
+	public void setProblem(JasimaGPProblem problem) {
 		// Do nothing.
 	}
-	
+
 	@Override
 	public void accumulateFitness(final int index, final Map<String, Object> results) {
 		SummaryStat stat = (SummaryStat) results.get(WT_MEAN_STR);

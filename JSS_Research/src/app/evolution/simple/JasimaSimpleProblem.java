@@ -4,83 +4,38 @@ import jasima.core.experiment.Experiment;
 import jasima.core.util.observer.NotifierListener;
 import jasima.shopSim.models.dynamicShop.DynamicShopExperiment;
 import jasima.shopSim.util.BasicJobStatCollector;
-
-import java.util.Random;
-
 import app.evolution.AbsGPPriorityRule;
-import app.evolution.IJasimaGPProblem;
-import app.evolution.IWorkStationListenerEvolveFactory;
 import app.evolution.JasimaGPConfig;
 import app.evolution.JasimaGPData;
-import app.listener.IWorkStationListener;
+import app.evolution.JasimaGPProblem;
 import app.simConfig.AbsSimConfig;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.gp.GPIndividual;
-import ec.gp.GPProblem;
-import ec.util.ParamClassLoadException;
 import ec.util.Parameter;
 
-public class JasimaSimpleProblem extends GPProblem implements IJasimaGPProblem {
+public class JasimaSimpleProblem extends JasimaGPProblem {
 
 	private static final long serialVersionUID = -3817123526020178300L;
 
 	public static final String P_RULE = "rule";
 	public static final String P_FITNESS = "fitness";
 
-	public static final String P_SIMULATOR = "simulator";
-	public static final String P_SEED = "seed";
-
-	public static final String P_WORKSTATION = "workstation";
-
-	public static final long DEFAULT_SEED = 15;
 	public static final int NUM_INDS_IN_EVAL = 1;
 
 	private AbsGPPriorityRule rule;
 	private IJasimaSimpleFitness fitness;
 
-	private AbsSimConfig simConfig;
-	private Random rand;
-	private long simSeed;
-
-	private IWorkStationListener workstationListener;
-
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
 		super.setup(state, base);
 
-		// Setup the GPData.
-		input = (JasimaGPData) state.parameters.getInstanceForParameterEq(base.push(P_DATA), null, JasimaGPData.class);
-		input.setup(state, base.push(P_DATA));
-
 		// Setup the the solver.
 		rule = (AbsGPPriorityRule) state.parameters.getInstanceForParameterEq(base.push(P_RULE), null, AbsGPPriorityRule.class);
-
-		// Setup the simulator configurations.
-		simConfig = (AbsSimConfig) state.parameters.getInstanceForParameterEq(base.push(P_SIMULATOR), null, AbsSimConfig.class);
-		setupSimulator(state, base.push(P_SIMULATOR));
 
 		// Setup the fitness.
 		fitness = (IJasimaSimpleFitness) state.parameters.getInstanceForParameterEq(base.push(P_FITNESS), null, IJasimaSimpleFitness.class);
 		setupFitness(state, base.push(P_FITNESS));
-
-        // Setup the workstation listener.
-        try {
-        	IWorkStationListenerEvolveFactory factory = (IWorkStationListenerEvolveFactory) state.parameters.getInstanceForParameterEq(base.push(P_WORKSTATION), null, IWorkStationListenerEvolveFactory.class);
-        	factory.setup(state, base.push(P_WORKSTATION));
-
-        	workstationListener = factory.generateWorkStationListener();
-
-    		// Feed in the shop simulation listener to input.
-            ((JasimaGPData) input).setWorkStationListener(workstationListener);
-        } catch (ParamClassLoadException ex) {
-        	state.output.warning("No workstation listener provided for JasimaSimpleProblem.");
-        }
-	}
-
-	private void setupSimulator(final EvolutionState state, final Parameter simBase) {
-		simSeed = state.parameters.getLongWithDefault(simBase.push(P_SEED), null, DEFAULT_SEED);
-		rand = new Random(simSeed);
 	}
 
 	private void setupFitness(final EvolutionState state, final Parameter fitnessBase) {
@@ -90,7 +45,7 @@ public class JasimaSimpleProblem extends GPProblem implements IJasimaGPProblem {
 	@Override
 	public void prepareToEvaluate(final EvolutionState state, final int threadnum) {
 		// Reset the seed for the simulator.
-		simConfig.setSeed(rand.nextLong());
+		getSimConfig().setSeed(getRandom().nextLong());
 	}
 
 	@Override
@@ -108,13 +63,13 @@ public class JasimaSimpleProblem extends GPProblem implements IJasimaGPProblem {
 
 			rule.setConfiguration(config);
 
-			for (int i = 0; i < simConfig.getNumConfigs(); i++) {
+			for (int i = 0; i < getSimConfig().getNumConfigs(); i++) {
 				Experiment experiment = getExperiment(state, rule, i);
 
 				experiment.runExperiment();
 
 				fitness.accumulateFitness(i, experiment.getResults());
-				if (workstationListener != null) { workstationListener.clear(); }
+				if (hasWorkStationListener()) { getWorkStationListener().clear(); }
 			}
 
 			fitness.setFitness(state, ind);
@@ -124,36 +79,6 @@ public class JasimaSimpleProblem extends GPProblem implements IJasimaGPProblem {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	private Experiment getExperiment(final EvolutionState state, AbsGPPriorityRule rule, int index) {
-		DynamicShopExperiment experiment = new DynamicShopExperiment();
-
-		experiment.setInitialSeed(simConfig.getLongValue());
-		experiment.setNumMachines(simConfig.getNumMachines(index));
-		experiment.setUtilLevel(simConfig.getUtilLevel(index));
-		experiment.setDueDateFactor(simConfig.getDueDateFactor(index));
-		experiment.setWeights(simConfig.getWeight(index));
-		experiment.setOpProcTime(simConfig.getMinOpProc(index), simConfig.getMaxOpProc(index));
-		experiment.setNumOps(simConfig.getMinNumOps(index), simConfig.getMaxNumOps(index));
-
-		experiment.setShopListener(new NotifierListener[]{new BasicJobStatCollector()});
-		if (workstationListener != null) { experiment.addMachineListener(workstationListener); }
-		experiment.setSequencingRule(rule);
-		experiment.setScenario(DynamicShopExperiment.Scenario.JOB_SHOP);
-
-		return experiment;
-	}
-
-	@Override
-	public AbsSimConfig getSimConfig() {
-		return simConfig;
-	}
-
-	@Override
-	public int getNumInds() {
-		return NUM_INDS_IN_EVAL;
-	}
-
 	@Override
 	public Object clone() {
 		JasimaSimpleProblem newObject = (JasimaSimpleProblem)super.clone();
@@ -161,8 +86,6 @@ public class JasimaSimpleProblem extends GPProblem implements IJasimaGPProblem {
 		newObject.input = (JasimaGPData)input.clone();
 		newObject.rule = rule;
 		newObject.fitness = fitness;
-		newObject.simConfig = simConfig;
-		newObject.simSeed = simSeed;
 
 		return newObject;
 	}

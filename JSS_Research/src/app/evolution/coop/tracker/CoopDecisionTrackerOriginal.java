@@ -7,9 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import app.evolution.IJasimaGPProblem;
 import app.evolution.IJasimaTracker;
 import app.evolution.JasimaGPProblem;
+import app.evolution.coop.JasimaCoopProblem;
 import ec.gp.GPIndividual;
 
 public class CoopDecisionTrackerOriginal implements IJasimaTracker {
@@ -18,7 +18,7 @@ public class CoopDecisionTrackerOriginal implements IJasimaTracker {
 
 	private Map<GPIndividual, Pair<List<Double>, Integer>> priorityStats = new HashMap<GPIndividual, Pair<List<Double>, Integer>>();
 
-	private IJasimaGPProblem problem;
+	private JasimaCoopProblem problem;
 
 	public int getNumIgnore() {
 		return problem.getSimConfig().getNumIgnore();
@@ -49,12 +49,8 @@ public class CoopDecisionTrackerOriginal implements IJasimaTracker {
 	}
 
 	@Override
-	public void setProblem(IJasimaGPProblem problem) {
-		this.problem = problem;
-	}
-
 	public void setProblem(JasimaGPProblem problem) {
-		// TODO
+		this.problem = (JasimaCoopProblem) problem;
 	}
 
 	@Override
@@ -98,7 +94,7 @@ public class CoopDecisionTrackerOriginal implements IJasimaTracker {
 	}
 
 	private int getCoopSize() {
-		return problem.getNumInds();
+		return problem.getNumSubpops();
 	}
 
 	@Override

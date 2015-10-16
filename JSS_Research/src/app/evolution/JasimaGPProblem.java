@@ -78,7 +78,7 @@ public abstract class JasimaGPProblem extends GPProblem {
 		return shouldSetContext;
 	}
 
-	protected AbsSimConfig getSimConfig() {
+	public AbsSimConfig getSimConfig() {
 		return simConfig;
 	}
 

@@ -130,6 +130,10 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 		state.output.fatal("JasimaCoopProblem must be used in a grouped problem form");
 	}
 
+	public int getNumSubpops() {
+		return numSubpops;
+	}
+
 	@Override
 	public Object clone() {
 		JasimaCoopProblem newObject = (JasimaCoopProblem)super.clone();

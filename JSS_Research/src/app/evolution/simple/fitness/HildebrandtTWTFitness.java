@@ -11,7 +11,7 @@ import jasima.shopSim.util.BasicJobStatCollector;
 
 import java.util.Map;
 
-import app.evolution.IJasimaGPProblem;
+import app.evolution.JasimaGPProblem;
 import app.evolution.simple.IJasimaSimpleFitness;
 import ec.EvolutionState;
 import ec.Individual;
@@ -23,33 +23,33 @@ public class HildebrandtTWTFitness implements IJasimaSimpleFitness {
 	private static final String NJ_FINISHED_STR = "numJobsFinished";
 
 	private static final double MIN_PENALTY_RATIO = 0.9;
-	
+
 	private SummaryStat perfIndexStat = new SummaryStat();
 	private SummaryStat fullSysPenStat = new SummaryStat();
-	
-	private IJasimaGPProblem problem;
-	
+
+	private JasimaGPProblem problem;
+
 	private double[] benchmarkTWTs;
 	private int[] benchmarkJobsFinished;
 
 	@Override
-	public void setProblem(IJasimaGPProblem problem) {
+	public void setProblem(JasimaGPProblem problem) {
 		this.problem = problem;
-		
+
 		setupBenchmark();
 	}
-	
+
 	private void setupBenchmark() {
 		benchmarkTWTs = new double[problem.getSimConfig().getNumConfigs()];
 		benchmarkJobsFinished = new int[problem.getSimConfig().getNumConfigs()];
-		
+
 		BenchmarkRule rule = new BenchmarkRule();
 		for (int i = 0; i < problem.getSimConfig().getNumConfigs(); i++) {
 			Experiment experiment = getExperiment(rule, i);
 			experiment.runExperiment();
-			
+
 			Map<String, Object> results = experiment.getResults();
-			
+
 			benchmarkTWTs[i] = ((SummaryStat) results.get(WT_MEAN_STR)).sum();
 			benchmarkJobsFinished[i] = (Integer) results.get(NJ_FINISHED_STR);
 		}
@@ -73,7 +73,7 @@ public class HildebrandtTWTFitness implements IJasimaSimpleFitness {
 
 		return experiment;
 	}
-	
+
 	@Override
 	public void accumulateFitness(final int index, final Map<String, Object> results) {
 		SummaryStat stat = (SummaryStat) results.get(WT_MEAN_STR);
@@ -95,7 +95,7 @@ public class HildebrandtTWTFitness implements IJasimaSimpleFitness {
 		perfIndexStat.clear();
 		fullSysPenStat.clear();
 	}
-	
+
 	private class BenchmarkRule extends PR {
 
 		private static final long serialVersionUID = 4224225415226813544L;
@@ -105,16 +105,16 @@ public class HildebrandtTWTFitness implements IJasimaSimpleFitness {
 			double pt = entry.currProcTime();
 			double winq = 0;
 			double npt = 0;
-			
+
 			int nextTask = entry.getTaskNumber() + 1;
 			if (nextTask < entry.numOps()) {
 				WorkStation nextMachine = entry.getOps()[nextTask].machine;
 				winq = nextMachine.workContent(false);
 				npt = entry.getOps()[nextTask].procTime;
 			}
-			
+
 			return -(2 * pt + winq + npt);
 		}
 	}
-	
+
 }
