@@ -68,13 +68,14 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 			final Population pop,
 			final boolean[] assessFitness,
 			final boolean countVictoriesOnly) {
-		// TODO this feels like its in the wrong position.
 		// The fitness would have been cleared by then.
 		for (int i = 0; i < pop.subpops.length; i++ ) {
 			if (assessFitness[i]) {
 				fitness.setObjectiveFitness(state, pop.subpops[i].individuals);
 			}
 		}
+
+		fitness.clear();
 	}
 
 	@Override
@@ -117,8 +118,6 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 
 		fitness.setTrialFitness(state, inds, updateFitness, shouldSetContext());
 		fitness.setDiversityFitness(state, inds, updateFitness);
-		fitness.setObjectiveFitness(state, inds);
-		fitness.clear();
 
 		getSimConfig().resetSeed();
 	}
