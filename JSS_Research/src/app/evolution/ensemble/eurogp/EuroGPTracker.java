@@ -1,9 +1,10 @@
 package app.evolution.ensemble.eurogp;
 
 import jasima.core.util.Pair;
-import ec.gp.GPIndividual;
 import app.evolution.IJasimaGPProblem;
 import app.evolution.IJasimaTracker;
+import app.evolution.JasimaGPProblem;
+import ec.gp.GPIndividual;
 
 public class EuroGPTracker implements IJasimaTracker {
 
@@ -12,6 +13,10 @@ public class EuroGPTracker implements IJasimaTracker {
 	@Override
 	public void setProblem(IJasimaGPProblem problem) {
 		this.problem = (EuroGPProblem) problem;
+	}
+
+	public void setProblem(JasimaGPProblem problem) {
+		// TODO
 	}
 
 	@Override

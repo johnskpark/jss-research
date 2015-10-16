@@ -1,21 +1,13 @@
 package app.evolution.coop;
 
 import jasima.core.experiment.Experiment;
-import jasima.core.util.observer.NotifierListener;
-import jasima.shopSim.models.dynamicShop.DynamicShopExperiment;
-import jasima.shopSim.util.BasicJobStatCollector;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 import app.evolution.AbsGPPriorityRule;
-import app.evolution.IJasimaGPProblem;
-import app.evolution.IJasimaTracker;
-import app.evolution.IWorkStationListenerEvolveFactory;
 import app.evolution.JasimaGPConfig;
 import app.evolution.JasimaGPData;
-import app.listener.IWorkStationListener;
-import app.simConfig.AbsSimConfig;
+import app.evolution.JasimaGPProblem;
 import ec.EvolutionState;
 import ec.Fitness;
 import ec.Individual;
@@ -23,49 +15,23 @@ import ec.Initializer;
 import ec.Population;
 import ec.coevolve.GroupedProblemForm;
 import ec.gp.GPIndividual;
-import ec.gp.GPProblem;
-import ec.util.ParamClassLoadException;
 import ec.util.Parameter;
 
-public class JasimaCoopProblem extends GPProblem implements GroupedProblemForm, IJasimaGPProblem {
+public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblemForm {
 
 	private static final long serialVersionUID = -1068923215891516182L;
 
-	public static final String P_SHOULD_SET_CONTEXT = "set-context";
 	public static final String P_COOP_RULE = "rule";
 	public static final String P_FITNESS = "fitness";
-	public static final String P_TRACKER = "tracker";
-
-	public static final String P_SIMULATOR = "simulator";
-	public static final String P_SEED = "seed";
-
-	public static final String P_WORKSTATION = "workstation";
-
-	public static final long DEFAULT_SEED = 15;
-
-	private boolean shouldSetContext;
 
 	private AbsGPPriorityRule coopRule;
 	private IJasimaCoopFitness fitness;
-	private IJasimaTracker tracker;
 
-	private AbsSimConfig simConfig;
-	private Random rand;
-	private long simSeed;
 	private int numSubpops;
-
-	private IWorkStationListener workstationListener;
 
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
 		super.setup(state, base);
-
-		// Load whether we should set context or not.
-		shouldSetContext = state.parameters.getBoolean(base.push(P_SHOULD_SET_CONTEXT), null, true);
-
-		// Setup the GPData.
-		input = (JasimaGPData) state.parameters.getInstanceForParameterEq(base.push(P_DATA), null, JasimaGPData.class);
-		input.setup(state, base.push(P_DATA));
 
 		// Setup the solver.
 		coopRule = (AbsGPPriorityRule) state.parameters.getInstanceForParameterEq(base.push(P_COOP_RULE), null, AbsGPPriorityRule.class);
@@ -73,38 +39,9 @@ public class JasimaCoopProblem extends GPProblem implements GroupedProblemForm, 
 		// Setup the fitness.
 		fitness = (IJasimaCoopFitness) state.parameters.getInstanceForParameterEq(base.push(P_FITNESS), null, IJasimaCoopFitness.class);
 
-		// Setup the tracker.
-		tracker = (IJasimaTracker) state.parameters.getInstanceForParameterEq(base.push(P_TRACKER), null, IJasimaTracker.class);
-		setupTracker(state, base.push(P_TRACKER));
-
-		// Setup the simulator configurations.
-		simConfig = (AbsSimConfig) state.parameters.getInstanceForParameterEq(base.push(P_SIMULATOR), null, AbsSimConfig.class);
-		setupSimulator(state, base.push(P_SIMULATOR));
-
 		// Setup the number of subpopulations.
         numSubpops = state.parameters.getInt((new Parameter(Initializer.P_POP)).push(Population.P_SIZE), null, 1);
 
-        // Setup the workstation listener.
-        try {
-        	IWorkStationListenerEvolveFactory factory = (IWorkStationListenerEvolveFactory) state.parameters.getInstanceForParameterEq(base.push(P_WORKSTATION), null, IWorkStationListenerEvolveFactory.class);
-        	factory.setup(state, base.push(P_WORKSTATION));
-
-        	workstationListener = factory.generateWorkStationListener();
-
-    		// Feed in the shop simulation listener to input.
-            ((JasimaGPData) input).setWorkStationListener(workstationListener);
-        } catch (ParamClassLoadException ex) {
-        	state.output.warning("No workstation listener provided for JasimaCoopProblem.");
-        }
-	}
-
-	private void setupSimulator(final EvolutionState state, final Parameter simBase) {
-		simSeed = state.parameters.getLongWithDefault(simBase.push(P_SEED), null, DEFAULT_SEED);
-		rand = new Random(simSeed);
-	}
-
-	private void setupTracker(final EvolutionState state, final Parameter trackerBase) {
-		tracker.setProblem(this);
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -114,7 +51,7 @@ public class JasimaCoopProblem extends GPProblem implements GroupedProblemForm, 
 			final boolean[] prepareForFitnessAssessment,
 			final boolean countVictoriesOnly) {
 		// Reset the seed for the simulator.
-		simConfig.setSeed(rand.nextLong());
+		getSimConfig().setSeed(getRandom().nextLong());
 
 		for (int i = 0; i < pop.subpops.length; i++) {
 			if (prepareForFitnessAssessment[i]) {
@@ -138,13 +75,6 @@ public class JasimaCoopProblem extends GPProblem implements GroupedProblemForm, 
 				fitness.setObjectiveFitness(state, pop.subpops[i].individuals);
 			}
 		}
-
-		// TODO Temporary code.
-		Runtime runtime = Runtime.getRuntime();
-		runtime.gc();
-
-		long memory = runtime.totalMemory() - runtime.freeMemory();
-		System.err.println("Used memory in bytes: " + memory);
 	}
 
 	@Override
@@ -165,48 +95,32 @@ public class JasimaCoopProblem extends GPProblem implements GroupedProblemForm, 
 		config.setSubpopulations(subpops);
 		config.setThreadnum(threadnum);
 		config.setData((JasimaGPData) input);
-		config.setTracker(tracker);
+		if (hasTracker()) { config.setTracker(getTracker()); }
 
 		coopRule.setConfiguration(config);
 
 		fitness.loadIndividuals(inds);
 
-		for (int i = 0; i < simConfig.getNumConfigs(); i++) {
+		for (int i = 0; i < getSimConfig().getNumConfigs(); i++) {
 			Experiment experiment = getExperiment(state, coopRule, i);
 
 			experiment.runExperiment();
 
 			fitness.accumulateObjectiveFitness(inds, experiment.getResults());
-			fitness.accumulateDiversityFitness(tracker.getResults());
-			if (tracker != null) { tracker.clear(); }
-			if (workstationListener != null) { workstationListener.clear(); }
+
+			if (hasTracker()) {
+				fitness.accumulateDiversityFitness(getTracker().getResults());
+				getTracker().clear();
+			}
+			if (hasWorkStationListener()) { getWorkStationListener().clear(); }
 		}
 
-		fitness.setTrialFitness(state, inds, updateFitness, shouldSetContext);
+		fitness.setTrialFitness(state, inds, updateFitness, shouldSetContext());
 		fitness.setDiversityFitness(state, inds, updateFitness);
+		fitness.setObjectiveFitness(state, inds);
 		fitness.clear();
 
-		simConfig.resetSeed();
-	}
-
-	@SuppressWarnings("unchecked")
-	private Experiment getExperiment(final EvolutionState state, AbsGPPriorityRule rule, int index) {
-		DynamicShopExperiment experiment = new DynamicShopExperiment();
-
-		experiment.setInitialSeed(simConfig.getLongValue());
-		experiment.setNumMachines(simConfig.getNumMachines(index));
-		experiment.setUtilLevel(simConfig.getUtilLevel(index));
-		experiment.setDueDateFactor(simConfig.getDueDateFactor(index));
-		experiment.setWeights(simConfig.getWeight(index));
-		experiment.setOpProcTime(simConfig.getMinOpProc(index), simConfig.getMaxOpProc(index));
-		experiment.setNumOps(simConfig.getMinNumOps(index), simConfig.getMaxNumOps(index));
-
-		experiment.setShopListener(new NotifierListener[]{new BasicJobStatCollector()});
-		experiment.addMachineListener(workstationListener);
-		experiment.setSequencingRule(rule);
-		experiment.setScenario(DynamicShopExperiment.Scenario.JOB_SHOP);
-
-		return experiment;
+		getSimConfig().resetSeed();
 	}
 
 	@Override
@@ -218,28 +132,12 @@ public class JasimaCoopProblem extends GPProblem implements GroupedProblemForm, 
 	}
 
 	@Override
-	public AbsSimConfig getSimConfig() {
-		return simConfig;
-	}
-
-	@Override
-	public int getNumInds() {
-		return numSubpops;
-	}
-
-	@Override
 	public Object clone() {
 		JasimaCoopProblem newObject = (JasimaCoopProblem)super.clone();
 
-		newObject.input = (JasimaGPData)input.clone();
 		newObject.coopRule = coopRule;
 		newObject.fitness = fitness;
-
-		newObject.tracker = tracker;
-		newObject.tracker.setProblem(newObject);
-
-		newObject.simConfig = simConfig;
-		newObject.simSeed = simSeed;
+		newObject.numSubpops = numSubpops;
 
 		return newObject;
 	}

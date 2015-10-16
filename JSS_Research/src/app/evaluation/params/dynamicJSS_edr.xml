@@ -20,7 +20,7 @@
 	</datasetConfig>
 
 	<outputConfig>
-	    <outputFile>mls_output.csv</outputFile>
+	    <outputFile>mls_output_new.csv</outputFile>
 	</outputConfig>
 
 	<fitnessConfig>

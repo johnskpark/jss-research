@@ -375,6 +375,10 @@ public class MLSBreeder extends Breeder {
 			// Generate a child from the two cooperative entities selected.
 			MLSSubpopulation child = (MLSSubpopulation) parents[0].combine(state, parents[1]);
 
+			if (child.individuals.length == 0) {
+				state.output.fatal("Error happening in crossover");
+			}
+
 			// Evaluate the newly generated group.
 			((MLSEvaluator) state.evaluator).evaluateGroup(state, child, index + 1);
 
@@ -434,27 +438,31 @@ public class MLSBreeder extends Breeder {
 			int length = CROSSOVER_PARENTS_REQUIRED;
 
 			// Only generate as many children as required.
-			for (int child = 0; child < n; child++) {
+			for (int c = 0; c < n; c++) {
 				// Populate the child group with individuals.
-				MLSSubpopulation childSubpop = (MLSSubpopulation) parents[child % length].emptyClone();
+				MLSSubpopulation child = (MLSSubpopulation) parents[c % length].emptyClone();
 
-				int parentLength = parents[child % length].individuals.length;
+				int parentLength = parents[c % length].individuals.length;
 
 				for (int ind = 0; ind < parentLength; ind++) {
-					if (ind == swapIndices[child]) {
-						childSubpop.individuals[ind] = parents[(child + 1) % length].individuals[swapIndices[(child + 1) % length]];
+					if (ind == swapIndices[c]) {
+						child.individuals[ind] = parents[(c + 1) % length].individuals[swapIndices[(c + 1) % length]];
 					} else {
-						childSubpop.individuals[ind] = parents[child % length].individuals[ind];
+						child.individuals[ind] = parents[c % length].individuals[ind];
 					}
 				}
 
+				if (child.individuals.length == 0) {
+					state.output.fatal("Error happening in cooperation");
+				}
+
 				// Evaluate the child group.
-				((MLSEvaluator) state.evaluator).evaluateGroup(state, childSubpop, index + child);
+				((MLSEvaluator) state.evaluator).evaluateGroup(state, child, index + c);
 
 				// Add the group to the meta population and the list of entities.
-				newPop.subpops[index + child] = childSubpop;
+				newPop.subpops[index + c] = child;
 
-				coopPopulation.addGroup(childSubpop);
+				coopPopulation.addGroup(child);
 			}
 
 			index += n;
@@ -500,7 +508,7 @@ public class MLSBreeder extends Breeder {
 			MLSSubpopulation child = (MLSSubpopulation) parent.emptyClone();
 
 			boolean addIndividual = state.random[threadnum].nextBoolean();
-			if (addIndividual) {
+			if (addIndividual || parent.individuals.length == 1) {
 				// Copy over the individuals in the parent group.
 				child.individuals = new Individual[parent.individuals.length + 1];
 
@@ -526,6 +534,10 @@ public class MLSBreeder extends Breeder {
 						child.individuals[ind] = parent.individuals[ind + 1];
 					}
 				}
+			}
+
+			if (child.individuals.length == 0) {
+				state.output.fatal("Error happening in mutation");
 			}
 
 			// Evaluate the child subpopulation.

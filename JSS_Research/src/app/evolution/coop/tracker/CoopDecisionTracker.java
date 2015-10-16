@@ -7,6 +7,7 @@ import java.util.Map;
 
 import app.evolution.IJasimaGPProblem;
 import app.evolution.IJasimaTracker;
+import app.evolution.JasimaGPProblem;
 import app.util.BasicStatistics;
 import ec.gp.GPIndividual;
 
@@ -49,6 +50,10 @@ public class CoopDecisionTracker implements IJasimaTracker {
 	@Override
 	public void setProblem(IJasimaGPProblem problem) {
 		this.problem = problem;
+	}
+
+	public void setProblem(JasimaGPProblem problem) {
+		// TODO
 	}
 
 	@Override

@@ -62,7 +62,6 @@ public class EnsemblePriorityRule extends AbsGPPriorityRule {
 
 		int[] decisions = new int[individuals.length];
 
-		// TODO make this more efficient later down the line, but first get the functionality working.
 		for (int i = 0; i < individuals.length; i++) {
 			double bestPriority = Double.NEGATIVE_INFINITY;
 			int bestIndex = -1;
@@ -93,12 +92,14 @@ public class EnsemblePriorityRule extends AbsGPPriorityRule {
 		Collections.sort(jobRanking);
 
 		// Add the rankings into the decisions.
-		for (int i = 0; i < individuals.length; i++) {
-			for (int j = 0; j < q.size(); j++) {
-				EntryVotes sc = jobRanking.get(j);
-				if (decisions[i] == sc.index) {
-					tracker.addDecision(individuals[i], q.get(0).getShop().jobsFinished, j);
-					break;
+		if (tracker != null) {
+			for (int i = 0; i < individuals.length; i++) {
+				for (int j = 0; j < q.size(); j++) {
+					EntryVotes sc = jobRanking.get(j);
+					if (decisions[i] == sc.index) {
+						tracker.addDecision(individuals[i], q.get(0).getShop().jobsFinished, j);
+						break;
+					}
 				}
 			}
 		}
