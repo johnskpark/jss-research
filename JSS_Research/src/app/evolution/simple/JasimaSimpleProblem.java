@@ -1,18 +1,14 @@
 package app.evolution.simple;
 
-import jasima.core.experiment.Experiment;
-import jasima.core.util.observer.NotifierListener;
-import jasima.shopSim.models.dynamicShop.DynamicShopExperiment;
-import jasima.shopSim.util.BasicJobStatCollector;
 import app.evolution.AbsGPPriorityRule;
 import app.evolution.JasimaGPConfig;
 import app.evolution.JasimaGPData;
 import app.evolution.JasimaGPProblem;
-import app.simConfig.AbsSimConfig;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.gp.GPIndividual;
 import ec.util.Parameter;
+import jasima.core.experiment.Experiment;
 
 public class JasimaSimpleProblem extends JasimaGPProblem {
 
