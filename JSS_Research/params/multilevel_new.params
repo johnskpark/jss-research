@@ -34,11 +34,6 @@ exch = ec.simple.SimpleExchanger
 
 # We're using standard breeding -- no cross-population breeding
 breed =	ec.multilevel_new.MLSBreeder
-breed.cooperation-prob = 0.45
-breed.crossover-prob = 0.45
-breed.mutation-prob = 0.1
-breed.num-breed = 20
-breed.num-retain = 10
 
 # We're using standard evaluation -- no coevolution
 eval = ec.multilevel_new.MLSEvaluator

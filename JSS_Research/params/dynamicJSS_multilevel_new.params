@@ -9,6 +9,12 @@ pop.subpop.0.species.ind = app.evolution.multilevel_new.JasimaMultilevelIndividu
 
 pop.default-subpop = 0
 
+breed.cooperation-prob = 0.5
+breed.crossover-prob = 0.8
+breed.mutation-prob = 0.3
+breed.num-breed = 200
+breed.num-retain = 100
+
 # the next four items are already defined in koza.params, but we
 # put them here to be clear.
 
@@ -66,7 +72,7 @@ gp.fs.0.func.18.nc = nc0
 eval.problem = app.evolution.multilevel_new.JasimaMultilevelProblem
 eval.problem.data = app.evolution.JasimaGPData
 
-eval.problem.group-rule = app.evolution.priorityRules.EnsemblePriorityRule2
+eval.problem.group-rule = app.evolution.priorityRules.EnsemblePriorityRule
 eval.problem.group-fitness = app.evolution.multilevel_new.fitness.MultilevelGroupTWTFitness
 
 eval.problem.ind-rule = app.evolution.priorityRules.BasicPriorityRule
