@@ -3,14 +3,14 @@
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>4op_mls_new.txt</ruleFile>
+			<ruleFile>4op_coop.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>8op_mls_new.txt</ruleFile>
+			<ruleFile>8op_coop.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
@@ -20,7 +20,7 @@
 	</datasetConfig>
 
 	<outputConfig>
-	    <outputFile>mls_output_new.csv</outputFile>
+	    <outputFile>coop_output.csv</outputFile>
 	</outputConfig>
 
 	<fitnessConfig>
