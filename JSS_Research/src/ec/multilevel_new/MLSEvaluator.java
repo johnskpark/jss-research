@@ -93,7 +93,7 @@ public class MLSEvaluator extends Evaluator {
 		Arrays.fill(indices, subpopIndex);
 
 		// Evaluate the subpopulation of individuals, which also includes null individuals.
-		mlsProblem.evaluateSubpop(state, subpop, updates, false, indices, 0);
+		mlsProblem.evaluateGroup(state, subpop, updates, false, indices, 0);
 	}
 
 	/**

@@ -9,6 +9,13 @@ pop.subpop.0.species.ind = app.evolution.multilevel_new.JasimaMultilevelIndividu
 
 pop.default-subpop = 0
 
+breed.cooperation-prob = 0.5
+breed.crossover-prob = 0.8
+breed.mutation-prob = 0.3
+breed.num-breed = 20
+breed.num-retain = 10
+breed.bias-factor = 0.7
+
 # the next four items are already defined in koza.params, but we
 # put them here to be clear.
 

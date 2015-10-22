@@ -43,6 +43,8 @@ public class MLSBreeder extends Breeder {
 	public static final String P_CROSSOVER_PROB = "crossover-prob";
 	public static final String P_MUTATION_PROB = "mutation-prob";
 
+	public static final String P_BIAS_FACTOR = "bias-factor";
+
 	public static final int NOT_SET = -1;
 
 	public static final int COOPERATION_PARENTS_REQUIRED = 2;
@@ -66,6 +68,8 @@ public class MLSBreeder extends Breeder {
 	private double groupCooperationRate;
 	private double groupCrossoverRate;
 	private double groupMutationRate;
+
+	private double biasFactor;
 
 	private MLSCoopPopulation coopPopulation;
 
@@ -115,6 +119,8 @@ public class MLSBreeder extends Breeder {
 			groupMutationRate = 0.0;
 
 		}
+
+		biasFactor = state.parameters.getDouble(base.push(P_BIAS_FACTOR), null, 1.0);
 
 		if (groupCooperationRate + groupCrossoverRate + groupMutationRate == 0.0) {
 			// Assign equal probabilities to crossover and mutation if both probabilities are zero.
@@ -401,8 +407,8 @@ public class MLSBreeder extends Breeder {
 			copy[i] = coopPopulation.getAllEntities()[i].getFitness().fitness();
 		}
 
-		int parentIndex1 = rouletteSelect(copy, length, state.random[threadnum]);
-		int parentIndex2 = rouletteSelect(copy, length, state.random[threadnum]);
+		int parentIndex1 = rouletteSelect(copy, biasFactor, length, state.random[threadnum]);
+		int parentIndex2 = rouletteSelect(copy, biasFactor, length, state.random[threadnum]);
 
 		return new int[]{parentIndex1, parentIndex2};
 	}
@@ -479,8 +485,8 @@ public class MLSBreeder extends Breeder {
 			copy[i] = coopPopulation.getGroups()[i].getFitness().fitness();
 		}
 
-		int parentIndex1 = rouletteSelect(copy, length, state.random[threadnum]);
-		int parentIndex2 = rouletteSelect(copy, length, state.random[threadnum]);
+		int parentIndex1 = rouletteSelect(copy, biasFactor, length, state.random[threadnum]);
+		int parentIndex2 = rouletteSelect(copy, biasFactor, length, state.random[threadnum]);
 
 		return new int[]{parentIndex1, parentIndex2};
 	}
@@ -562,7 +568,7 @@ public class MLSBreeder extends Breeder {
 			copy[i] = coopPopulation.getGroups()[i].getFitness().fitness();
 		}
 
-		return rouletteSelect(copy, length, state.random[threadnum]);
+		return rouletteSelect(copy, biasFactor, length, state.random[threadnum]);
 	}
 
 	/**
@@ -726,7 +732,7 @@ public class MLSBreeder extends Breeder {
 	}
 
 	// Helper method for selecting a subpopulation out of a population based on its fitness.
-	protected static final int rouletteSelect(double[] fitnesses, int length, MersenneTwisterFast rand) {
+	protected static final int rouletteSelect(double[] fitnesses, double biasFactor, int length, MersenneTwisterFast rand) {
 		// Quick pre-check.
 		if (length == 1) {
 			return 0;
@@ -736,9 +742,9 @@ public class MLSBreeder extends Breeder {
 		double[] buffer = new double[length];
 
 		// Load in the fitnesses into the buffer.
-		buffer[0] = fitnesses[0];
+		buffer[0] = Math.pow(fitnesses[0], biasFactor);
 		for (int i = 1; i < length; i++) {
-			buffer[i] = buffer[i-1] + fitnesses[i];
+			buffer[i] = buffer[i-1] + Math.pow(fitnesses[i], biasFactor);
 		}
 
 		// Normalise the buffer to probability values.

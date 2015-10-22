@@ -28,7 +28,7 @@ public interface MLSProblemForm {
 	 * @param subpops
 	 * @param threadnum
 	 */
-	public void evaluateSubpop(final EvolutionState state,
+	public void evaluateGroup(final EvolutionState state,
 			MLSSubpopulation subpop,
 			final boolean[] updateFitness,
 			final boolean countVictoriesOnly,

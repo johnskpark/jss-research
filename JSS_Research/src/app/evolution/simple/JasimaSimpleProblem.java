@@ -49,30 +49,31 @@ public class JasimaSimpleProblem extends JasimaGPProblem {
 			final Individual ind,
 			final int subpopulation,
 			final int threadnum) {
-		if (!ind.evaluated) {
-			JasimaGPConfig config = new JasimaGPConfig();
-			config.setState(state);
-			config.setIndividuals(new GPIndividual[]{(GPIndividual) ind});
-			config.setSubpopulations(new int[]{subpopulation});
-			config.setThreadnum(threadnum);
-			config.setData((JasimaGPData)input);
+		// We don't care if the individual's been evaluated previously,
+		// since the simulation changes at each generation.
 
-			rule.setConfiguration(config);
+		JasimaGPConfig config = new JasimaGPConfig();
+		config.setState(state);
+		config.setIndividuals(new GPIndividual[]{(GPIndividual) ind});
+		config.setSubpopulations(new int[]{subpopulation});
+		config.setThreadnum(threadnum);
+		config.setData((JasimaGPData)input);
 
-			for (int i = 0; i < getSimConfig().getNumConfigs(); i++) {
-				Experiment experiment = getExperiment(state, rule, i);
+		rule.setConfiguration(config);
 
-				experiment.runExperiment();
+		for (int i = 0; i < getSimConfig().getNumConfigs(); i++) {
+			Experiment experiment = getExperiment(state, rule, i);
 
-				fitness.accumulateFitness(i, experiment.getResults());
-				if (hasWorkStationListener()) { getWorkStationListener().clear(); }
-			}
+			experiment.runExperiment();
 
-			fitness.setFitness(state, ind);
-			fitness.clear();
-
-			ind.evaluated = true;
+			fitness.accumulateFitness(i, experiment.getResults());
+			if (hasWorkStationListener()) { getWorkStationListener().clear(); }
 		}
+
+		fitness.setFitness(state, ind);
+		fitness.clear();
+
+		ind.evaluated = true;
 	}
 
 	@Override

@@ -59,17 +59,14 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 	}
 
 	@Override
-	public void evaluateSubpop(final EvolutionState state,
+	public void evaluateGroup(final EvolutionState state,
 			final MLSSubpopulation subpop,
 			final boolean[] updateFitness,
 			final boolean countVictoriesOnly,
 			final int[] subpops,
 			final int threadnum) {
-		// If the subpopulation has already been evaluated,
-		// don't bother re-evaluating.
-		if (subpop.isEvaluated()) {
-			return;
-		}
+		// We don't care if the group's been evaluated previously,
+		// since the simulation changes at each generation.
 
 		List<GPIndividual> indsList = new ArrayList<GPIndividual>();
 		for (Individual ind : subpop.individuals) {
@@ -114,11 +111,8 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 			final Individual ind,
 			final int subpopulation,
 			final int threadnum) {
-		// If the individual has already been evaluated,
-		// don't bother re-evaluating.
-		if (ind.evaluated) {
-			return;
-		}
+		// We don't care if the individual's been evaluated previously,
+		// since the simulation changes at each generation.
 
 		JasimaGPConfig config = new JasimaGPConfig();
 		config.setState(state);

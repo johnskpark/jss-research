@@ -14,10 +14,6 @@ import ec.util.Parameter;
  * @author parkjohn
  *
  */
-
-// TODO right, I need to make it as follows:
-// - If the number of subpopulations is 1, then there is no "group".
-// - If the number of subpopulations is greater than 1, then each subpopulation forms a "group".
 public class MLSEvolutionState extends EvolutionState {
 
 	private static final long serialVersionUID = -1318016754719247209L;
@@ -85,7 +81,8 @@ public class MLSEvolutionState extends EvolutionState {
         exchanger.initializeContacts(this);
         evaluator.initializeContacts(this);
 
-		// FIXME Check to ensure that you start with a single population.
+		// Check to ensure that you start with a single population.
+        // FIXME This will need to be modified later down the line.
 		if (population.subpops.length != 1) {
 			output.fatal("TEMPORARY: You must start with a single population.");
 		}
@@ -108,8 +105,7 @@ public class MLSEvolutionState extends EvolutionState {
 	}
 
 	/**
-	 * TODO Javadoc.
-	 * @param numToBreed
+	 * Initialise the meta population with the buffer space for the number of groups to breed.
 	 */
 	public void initialiseMetaPopulation(int numToBreed) {
 		metaPopulation = (Population) population.emptyClone();
@@ -123,8 +119,7 @@ public class MLSEvolutionState extends EvolutionState {
 	}
 
 	/**
-	 * TODO Javadoc.
-	 * @param numToRetain
+	 * Initialise the final population with the buffer space for the number of groups to retain.
 	 */
 	public void initialiseFinalPopulation(int numToRetain) {
 		Population newPop = (Population) population.emptyClone();
