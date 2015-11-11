@@ -1,7 +1,6 @@
 package ec.multilevel_new;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -459,7 +458,7 @@ public class MLSBreeder extends Breeder {
 				}
 			}
 
-			List<Pair<Integer, Individual>> indList2 = getListWithIndices(parents[1].individuals, commonInds);
+			List<Pair<Integer, Individual>> indList2 = new ArrayList<Pair<Integer, Individual>>();
 			for (int i = 0; i < parents[1].individuals.length; i++) {
 				if (!commonInds.contains(parents[1].individuals[i])) {
 					indList2.add(new Pair<Integer, Individual>(i, parents[1].individuals[i]));
@@ -871,14 +870,6 @@ public class MLSBreeder extends Breeder {
 			return (int) val + (random.nextBoolean(p) ? 1 : 0);
 		}
     }
-
-	private static <T> List<Pair<Integer, T>> getListWithIndices (T[] array, Set<T> common) {
-		return IntStream.range(0, array.length)
-				.mapToObj(idx -> new Pair<Integer, T>(idx, array[idx]))
-				.filter(pair -> common.contains(pair.i2))
-				.collect(Collectors.toList());
-
-	}
 
 	// Threads for breeding subpopulations.
 	private class SubpopBreederThread implements Runnable {

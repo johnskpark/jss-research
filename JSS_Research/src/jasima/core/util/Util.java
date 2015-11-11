@@ -45,7 +45,7 @@ import java.util.StringTokenizer;
 
 /**
  * Some static utility methods that don't really fit anywhere else.
- * 
+ *
  * @author Torsten Hildebrandt
  * @version "$Id: Util.java 185 2014-10-24 12:21:43Z THildebrandt@gmail.com $"
  */
@@ -67,7 +67,7 @@ public class Util {
 	/**
 	 * Returns a new array with a certain number of new objects of a certain
 	 * type.
-	 * 
+	 *
 	 * @param numElements
 	 *            Number of elements in the result array.
 	 * @param componentType
@@ -128,7 +128,7 @@ public class Util {
 	 * value of the input object's {@link Object#toString()} method. Any object
 	 * can be converted to {@link Integer}, {@link Double} and {@link Boolean},
 	 * but those conversions can throw exceptions.
-	 * 
+	 *
 	 * @param o
 	 *            the object to be converted
 	 * @param klass
@@ -141,7 +141,7 @@ public class Util {
 	 *             the return value of its {@link Object#toString()} method
 	 *             can't be converted to the numeric target type
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static <E> E convert(Object o, Class<E> klass)
 			throws IllegalArgumentException {
 
@@ -184,7 +184,7 @@ public class Util {
 		}
 
 		if (klass.isEnum()) {
-			return (E) Enum.valueOf(klass.asSubclass(Enum.class), o.toString());
+			return (E) Enum.valueOf((Class<Enum>) klass.asSubclass(Enum.class), o.toString());
 		}
 
 		throw new IllegalArgumentException(String.format(
@@ -194,7 +194,7 @@ public class Util {
 
 	/**
 	 * Sets a property named with propPath to a certain value using reflection.
-	 * 
+	 *
 	 * Example: setProperty( obj, "a.b.c", 5 ); is equivalent to a direct call
 	 * obj.getA().getB().setC(5)
 	 */
@@ -240,7 +240,7 @@ public class Util {
 
 	/**
 	 * Determines the type of a property named with propPath using reflection.
-	 * 
+	 *
 	 * This method interprets propPath the same way as
 	 * {@link #getProperty(Object, String)} does.
 	 */
@@ -281,7 +281,7 @@ public class Util {
 
 	/**
 	 * Gets a property named with propPath using reflection.
-	 * 
+	 *
 	 * Example: getProperty( obj, "a.b.c" ); is equivalent to a direct call
 	 * obj.getA().getB().getC()
 	 */
@@ -346,7 +346,7 @@ public class Util {
 	 * The clone is created by calling <code>clone()</code> using Java
 	 * reflection, therefore <code>clone()</code> not necessarily has to be
 	 * public.
-	 * 
+	 *
 	 * @param o
 	 *            The object to be cloned.
 	 * @return A clone of o was cloneable, or otherwise the original object.
@@ -378,7 +378,7 @@ public class Util {
 	 * Produces a deep clone of {@code array}, i.e., for each element of
 	 * {@code array} creating a clone is attempted using
 	 * {@link #cloneIfPossible(Object)}.
-	 * 
+	 *
 	 * @param array
 	 *            The array to be cloned.
 	 * @return A clone of {@code array} with each element also cloned.
@@ -450,7 +450,7 @@ public class Util {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return An array containing all entries of "ss" not starting with
 	 *         "prefix".
 	 */
@@ -692,7 +692,7 @@ public class Util {
 	/**
 	 * Rounds the given double value to a certain number of decimal places.
 	 * {@code decimals} can be positive or negative.
-	 * 
+	 *
 	 * @see #round(double[], int)
 	 */
 	public static double round(final double val, final int decimals) {
@@ -719,9 +719,9 @@ public class Util {
 	 * Rounds all values in the double array {@code vs} to a certain number of
 	 * decimal places. This method does not create a copy of {@code vs}, but
 	 * modifies its contents.
-	 * 
+	 *
 	 * @return the parameter {@code vs} to allow easy chaining of method calls.
-	 * 
+	 *
 	 * @see #round(double, int)
 	 */
 	public static double[] round(final double[] vs, final int decimals) {
@@ -772,7 +772,7 @@ public class Util {
 	/**
 	 * Convenience method to put mean, max and variance of a ValueStat object in
 	 * a result map.
-	 * 
+	 *
 	 * @param vs
 	 *            the statistic
 	 * @param prefix
