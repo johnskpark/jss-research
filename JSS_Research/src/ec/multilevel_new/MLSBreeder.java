@@ -1,9 +1,14 @@
 package ec.multilevel_new;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import ec.Breeder;
 import ec.BreedingPipeline;
@@ -436,11 +441,40 @@ public class MLSBreeder extends Breeder {
 					coopPopulation.getGroups()[parentIndices[1]]
 			};
 
-			// Arbitrarily select the individuals to exchange in between the two groups.
+			// Find the common individuals between the two groups.
+			Set<Individual> commonInds = new HashSet<Individual>();
+			for (int i = 0; i < parents[0].individuals.length; i++) {
+				for (int j = 0; j < parents[1].individuals.length; j++) {
+					if (parents[0].individuals[i] == parents[1].individuals[j]) {
+						commonInds.add(parents[0].individuals[i]);
+					}
+				}
+			}
+
+			// Filter out the common individuals from the two arrays.
+			List<Pair<Integer, Individual>> indList1 = new ArrayList<Pair<Integer, Individual>>();
+			for (int i = 0; i < parents[0].individuals.length; i++) {
+				if (!commonInds.contains(parents[0].individuals[i])) {
+					indList1.add(new Pair<Integer, Individual>(i, parents[0].individuals[i]));
+				}
+			}
+
+			List<Pair<Integer, Individual>> indList2 = getListWithIndices(parents[1].individuals, commonInds);
+			for (int i = 0; i < parents[1].individuals.length; i++) {
+				if (!commonInds.contains(parents[1].individuals[i])) {
+					indList2.add(new Pair<Integer, Individual>(i, parents[1].individuals[i]));
+				}
+			}
+
+			if (indList1.size() == 0 || indList2.size() == 0) {
+				return 0;
+			}
+
 			int[] swapIndices = new int[]{
-					state.random[threadnum].nextInt(parents[0].individuals.length),
-					state.random[threadnum].nextInt(parents[1].individuals.length)
+					indList1.get(state.random[threadnum].nextInt(indList1.size())).i1,
+					indList2.get(state.random[threadnum].nextInt(indList2.size())).i1,
 			};
+
 			int length = CROSSOVER_PARENTS_REQUIRED;
 
 			// Only generate as many children as required.
@@ -522,11 +556,25 @@ public class MLSBreeder extends Breeder {
 					child.individuals[ind] = parent.individuals[ind];
 				}
 
-				MLSGPIndividual[] ungroupedInds = coopPopulation.getUngroupedIndividuals();
-				int indIndex = state.random[threadnum].nextInt(ungroupedInds.length);
+				Set<Individual> parentInds = new HashSet<Individual>(parent.individuals.length);
+				for (Individual ind : parent.individuals) {
+					parentInds.add(ind);
+				}
+
+				MLSGPIndividual[] allInds = coopPopulation.getIndividuals();
+
+				// Find the individuals in the individual pool that are not already part of the group.
+				List<Individual> inds = new ArrayList<Individual>();
+				for (int i = 0; i < allInds.length; i++) {
+					if (allInds[i] != null && !parentInds.contains(allInds[i])) {
+						inds.add(allInds[i]);
+					}
+				}
+
+				int indIndex = state.random[threadnum].nextInt(inds.size());
 
 				// Add an individual that's not already part of a group to the child group.
-				child.individuals[child.individuals.length - 1] = ungroupedInds[indIndex];
+				child.individuals[child.individuals.length - 1] = inds.get(indIndex);
 			} else {
 				// Copy over all but one individual in the parent group.
 				child.individuals = new Individual[parent.individuals.length - 1];
@@ -823,6 +871,14 @@ public class MLSBreeder extends Breeder {
 			return (int) val + (random.nextBoolean(p) ? 1 : 0);
 		}
     }
+
+	private static <T> List<Pair<Integer, T>> getListWithIndices (T[] array, Set<T> common) {
+		return IntStream.range(0, array.length)
+				.mapToObj(idx -> new Pair<Integer, T>(idx, array[idx]))
+				.filter(pair -> common.contains(pair.i2))
+				.collect(Collectors.toList());
+
+	}
 
 	// Threads for breeding subpopulations.
 	private class SubpopBreederThread implements Runnable {
