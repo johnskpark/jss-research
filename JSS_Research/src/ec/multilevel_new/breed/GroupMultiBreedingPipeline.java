@@ -16,6 +16,8 @@ public class GroupMultiBreedingPipeline implements MLSGroupBreedingPipeline {
 
 	public static final int DYNAMIC_SOURCES = 0;
 
+	public static final double NO_PROBABILITY = 0.0;
+
 	private Parameter myBase;
 
 	private MLSGroupBreedingPipeline[] sources;
@@ -42,7 +44,21 @@ public class GroupMultiBreedingPipeline implements MLSGroupBreedingPipeline {
 		sources = new MLSGroupBreedingPipeline[numSources];
 
 		for (int i = 0; i < sources.length; i++) {
+			Parameter p = base.push(P_SOURCE).push("" + i);
+			Parameter d = def.push(P_SOURCE).push("" + i);
+
+			sources[i] = (MLSGroupBreedingPipeline) state.parameters.getInstanceForParameter(p, d, MLSGroupBreedingPipeline.class);
+
+			if (!state.parameters.exists(p.push(P_PROB), d.push(P_PROB))) {
+				probs[i] = NO_PROBABILITY;
+				if (probs[i] < 0.0) {
+					state.output.error("Breeding Source's probability must be a double floating point value >= 0.0, or empty, which represents NO_PROABILITY.", base.push(P_PROB), def.push(P_PROB));
+				}
+			}
+
+			state.output.exitIfErrors();
 			
+			// 
 		}
 	}
 
