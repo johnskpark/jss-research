@@ -6,8 +6,6 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import ec.Breeder;
 import ec.BreedingPipeline;

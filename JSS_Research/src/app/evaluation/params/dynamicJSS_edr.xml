@@ -15,12 +15,12 @@
 	</solverConfig>
 
 	<datasetConfig>
-		<datasetClass>app.simConfig.huntConfig.TestSimConfig</datasetClass>
+		<datasetClass>app.simConfig.huntConfig.TrainSimConfig</datasetClass>
 		<datasetSeed>15</datasetSeed>
 	</datasetConfig>
 
 	<outputConfig>
-	    <outputFile>coop_output.csv</outputFile>
+	    <outputFile>coop_train_output.csv</outputFile>
 	</outputConfig>
 
 	<fitnessConfig>
