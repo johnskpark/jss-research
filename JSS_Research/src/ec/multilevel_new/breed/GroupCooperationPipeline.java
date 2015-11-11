@@ -4,7 +4,7 @@ import ec.EvolutionState;
 import ec.multilevel_new.MLSGroupBreedingPipeline;
 import ec.util.Parameter;
 
-public class GroupCooperationPipeline implements MLSGroupBreedingPipeline {
+public class GroupCooperationPipeline extends MLSGroupBreedingPipeline {
 
 	@Override
 	public void setup(EvolutionState state, Parameter base) {
