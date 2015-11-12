@@ -7,6 +7,8 @@ import ec.util.Parameter;
 
 public class HuntListenerEvolveFactory implements IWorkStationListenerEvolveFactory {
 
+	private static final long serialVersionUID = -8366845139333729953L;
+
 	public static final String P_MAX_JOBS = "max-jobs";
 
 	private int maxSize;
