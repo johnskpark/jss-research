@@ -1,8 +1,11 @@
 package ec.multilevel_new.breed;
 
 import ec.EvolutionState;
+import ec.Individual;
 import ec.multilevel_new.MLSDefaults;
 import ec.multilevel_new.MLSGroupBreedingPipeline;
+import ec.multilevel_new.MLSGroupBreedingSource;
+import ec.multilevel_new.MLSGroupSelection;
 import ec.util.Parameter;
 
 public class GroupMultiBreedingPipeline extends MLSGroupBreedingPipeline {
@@ -27,7 +30,7 @@ public class GroupMultiBreedingPipeline extends MLSGroupBreedingPipeline {
 	private int maxGeneratable;
 	private boolean generateMax;
 
-	private MLSGroupBreedingPipeline[] sources;
+	private MLSGroupBreedingSource[] sources;
 	private double[] probs;
 
 	public Parameter defaultBase() {
@@ -49,7 +52,7 @@ public class GroupMultiBreedingPipeline extends MLSGroupBreedingPipeline {
 					def.push(P_NUMSOURCES));
 		}
 
-		sources = new MLSGroupBreedingPipeline[numSources];
+		sources = new MLSGroupBreedingSource[numSources];
 
 		double total = 0.0;
 		
@@ -57,7 +60,7 @@ public class GroupMultiBreedingPipeline extends MLSGroupBreedingPipeline {
 			Parameter p = base.push(P_SOURCE).push("" + i);
 			Parameter d = def.push(P_SOURCE).push("" + i);
 
-			sources[i] = (MLSGroupBreedingPipeline) state.parameters.getInstanceForParameter(p, d, MLSGroupBreedingPipeline.class);
+			sources[i] = (MLSGroupBreedingSource) state.parameters.getInstanceForParameter(p, d, MLSGroupBreedingPipeline.class);
 			if (!(sources[i] instanceof MLSGroupBreedingPipeline)) {
 				state.output.error("Group breeding source #" + i + "is not a MLSGroupBreedingPipeline");
 			}
@@ -161,11 +164,31 @@ public class GroupMultiBreedingPipeline extends MLSGroupBreedingPipeline {
 			final int start, 
 			final EvolutionState state,
 			final int thread) {
-		// TODO Auto-generated method stub
-		return 0;
+		MLSGroupBreedingSource s = sources[pickRandom(probs, state.random[thread].nextDouble())];
+		int total;
+		
+		if (generateMax) {
+			int n = getMaxGeneratable();
+			if (n < min) { n = min; }
+			if (n > max) { n = max; }
+			
+			total = s.produce(min, max, start, state, thread);
+		} else {
+			total = s.produce(min, max, start, state, thread);
+		}
+		
+		// Clone if necessary.
+		if (s instanceof MLSGroupSelection) {
+			for (int i = start; i < total + start; i++) {
+				// TODO 
+//				inds[i] = (Individual) inds[i].clone();
+			}
+		}
+		
+		return total;
 	}
 	
-	private void normaliseProbabilities(double[] probs) {
+	private static void normaliseProbabilities(double[] probs) {
 		// Find the total sum of the probabilities.
 		double total = 0.0;
 		for (double prob : probs) {
@@ -183,6 +206,20 @@ public class GroupMultiBreedingPipeline extends MLSGroupBreedingPipeline {
 				probs[i] = 1.0 * probs[i] / total;
 			}
 		}
+	}
+	
+	private static int pickRandom(double[] probs, double rand) {
+		double accumProb = 0.0;
+		
+		for (int i = 0; i < probs.length; i++) {
+			accumProb += probs[i];
+			
+			if (rand < accumProb) {
+				return i;
+			}
+		}
+		
+		return probs.length - 1;
 	}
 	
 	@Override
