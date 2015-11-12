@@ -1,7 +1,6 @@
 package ec.multilevel_new.breed;
 
 import ec.EvolutionState;
-import ec.Individual;
 import ec.multilevel_new.MLSDefaults;
 import ec.multilevel_new.MLSGroupBreedingPipeline;
 import ec.multilevel_new.MLSGroupBreedingSource;

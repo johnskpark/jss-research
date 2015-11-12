@@ -10,6 +10,7 @@ import app.evolution.JasimaGPProblem;
 import app.util.BasicStatistics;
 import ec.gp.GPIndividual;
 
+// TODO this needs to be modified so that all of the information is stored by the store. 
 public class EnsembleDecisionTracker implements IJasimaTracker {
 
 	private static final int SAMPLE_SIZE = 2000;
