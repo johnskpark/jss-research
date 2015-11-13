@@ -9,7 +9,7 @@ public class JasimaDispatchingDecision {
 	private double startTime;
 
 	private PrioRuleTarget[] entries; // TODO how will this be used?
-	private JasimaDecisionMaker[] decisionMakers; // TODO how will this be used?
+	private JasimaPriorityStat[] decisionMakers; // TODO how will this be used?
 
 	public JasimaDispatchingDecision() {
 		// Keep the constructor empty for now.
@@ -29,7 +29,7 @@ public class JasimaDispatchingDecision {
 		return entries;
 	}
 
-	public JasimaDecisionMaker[] getDecisionMakers() {
+	public JasimaPriorityStat[] getDecisionMakers() {
 		return decisionMakers;
 	}
 
@@ -47,7 +47,7 @@ public class JasimaDispatchingDecision {
 		this.entries = entries;
 	}
 
-	public void setDecisionMakers(JasimaDecisionMaker[] decisionMakers) {
+	public void setDecisionMakers(JasimaPriorityStat[] decisionMakers) {
 		this.decisionMakers = decisionMakers;
 	}
 

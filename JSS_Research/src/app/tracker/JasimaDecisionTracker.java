@@ -37,7 +37,7 @@ public class JasimaDecisionTracker implements IWorkStationListener {
 	}
 
 	// TODO Fuck it, just make the damn thing call this when calcPrio is being called.
-	public void addPriority(JasimaDecisionMaker decisionMaker, PrioRuleTarget entry, double priority) {
+	public void addPriority(JasimaPriorityStat decisionMaker, PrioRuleTarget entry, double priority) {
 		// TODO
 	}
 
