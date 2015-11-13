@@ -39,7 +39,7 @@ public class BasicPriorityRule extends AbsGPPriorityRule {
 		double priority = data.getPriority();
 
 		if (tracker != null) {
-			
+			// TODO
 		}
 
 		return priority;

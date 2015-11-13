@@ -6,26 +6,31 @@
 
 
 package ec.app.ant.func;
-import ec.*;
-import ec.app.ant.*;
-import ec.gp.*;
-import ec.util.*;
+import ec.EvolutionState;
+import ec.Problem;
+import ec.app.ant.Ant;
+import ec.gp.ADFStack;
+import ec.gp.GPData;
+import ec.gp.GPIndividual;
+import ec.gp.GPNode;
 
-/* 
+/*
  * Left.java
- * 
+ *
  * Created: Wed Nov  3 18:26:37 1999
  * By: Sean Luke
  */
 
 /**
  * @author Sean Luke
- * @version 1.0 
+ * @version 1.0
  */
 
 public class Left extends GPNode implements EvalPrint
     {
-    public String toString() { return "left"; }
+	private static final long serialVersionUID = 3546058225996949148L;
+
+	public String toString() { return "left"; }
 
     /*    public void checkConstraints(final EvolutionState state,
           final int tree,
@@ -34,7 +39,7 @@ public class Left extends GPNode implements EvalPrint
           {
           super.checkConstraints(state,tree,typicalIndividual,individualBase);
           if (children.length!=0)
-          state.output.error("Incorrect number of children for node " + 
+          state.output.error("Incorrect number of children for node " +
           toStringForError() + " at " +
           individualBase);
           }
@@ -52,7 +57,7 @@ public class Left extends GPNode implements EvalPrint
         switch (p.orientation)
             {
             case Ant.O_UP:
-                p.orientation = Ant.O_LEFT; 
+                p.orientation = Ant.O_LEFT;
                 break;
             case Ant.O_LEFT:
                 p.orientation = Ant.O_DOWN;

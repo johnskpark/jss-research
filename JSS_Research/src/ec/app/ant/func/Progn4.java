@@ -6,25 +6,30 @@
 
 
 package ec.app.ant.func;
-import ec.*;
-import ec.gp.*;
-import ec.util.*;
+import ec.EvolutionState;
+import ec.Problem;
+import ec.gp.ADFStack;
+import ec.gp.GPData;
+import ec.gp.GPIndividual;
+import ec.gp.GPNode;
 
-/* 
+/*
  * Progn4.java
- * 
+ *
  * Created: Wed Nov  3 18:26:37 1999
  * By: Sean Luke
  */
 
 /**
  * @author Sean Luke
- * @version 1.0 
+ * @version 1.0
  */
 
 public class Progn4 extends GPNode implements EvalPrint
     {
-    public String toString() { return "progn4"; }
+	private static final long serialVersionUID = 3660004810994415357L;
+
+	public String toString() { return "progn4"; }
 
     /*
       public void checkConstraints(final EvolutionState state,
@@ -34,7 +39,7 @@ public class Progn4 extends GPNode implements EvalPrint
       {
       super.checkConstraints(state,tree,typicalIndividual,individualBase);
       if (children.length!=4)
-      state.output.error("Incorrect number of children for node " + 
+      state.output.error("Incorrect number of children for node " +
       toStringForError() + " at " +
       individualBase);
       }

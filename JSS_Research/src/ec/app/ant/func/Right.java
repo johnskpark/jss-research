@@ -6,27 +6,32 @@
 
 
 package ec.app.ant.func;
-import ec.*;
-import ec.app.ant.*;
-import ec.gp.*;
-import ec.util.*;
+import ec.EvolutionState;
+import ec.Problem;
+import ec.app.ant.Ant;
+import ec.gp.ADFStack;
+import ec.gp.GPData;
+import ec.gp.GPIndividual;
+import ec.gp.GPNode;
 
-/* 
+/*
  * Right.java
- * 
+ *
  * Created: Wed Nov  3 18:26:37 1999
  * By: Sean Luke
  */
 
 /**
  * @author Sean Luke
- * @version 1.0 
+ * @version 1.0
  */
 
 
 public class Right extends GPNode implements EvalPrint
     {
-    public String toString() { return "right"; }
+	private static final long serialVersionUID = 1199103617869004087L;
+
+	public String toString() { return "right"; }
 
     /*
       public void checkConstraints(final EvolutionState state,
@@ -36,7 +41,7 @@ public class Right extends GPNode implements EvalPrint
       {
       super.checkConstraints(state,tree,typicalIndividual,individualBase);
       if (children.length!=0)
-      state.output.error("Incorrect number of children for node " + 
+      state.output.error("Incorrect number of children for node " +
       toStringForError() + " at " +
       individualBase);
       }
@@ -54,7 +59,7 @@ public class Right extends GPNode implements EvalPrint
         switch (p.orientation)
             {
             case Ant.O_UP:
-                p.orientation = Ant.O_RIGHT; 
+                p.orientation = Ant.O_RIGHT;
                 break;
             case Ant.O_LEFT:
                 p.orientation = Ant.O_UP;

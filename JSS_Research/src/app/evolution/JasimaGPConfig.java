@@ -1,5 +1,6 @@
 package app.evolution;
 
+import app.tracker.JasimaDecisionTracker;
 import ec.EvolutionState;
 import ec.gp.GPIndividual;
 import ec.gp.GPProblem;
@@ -16,7 +17,7 @@ public class JasimaGPConfig {
 	private JasimaGPData data;
 
 	private IJasimaTracker tracker;
-	private IJasimaNewTracker newTracker;
+	private JasimaDecisionTracker newTracker;
 
 	// Getters
 
@@ -52,7 +53,7 @@ public class JasimaGPConfig {
 		return tracker;
 	}
 
-	public IJasimaNewTracker getNewTracker() {
+	public JasimaDecisionTracker getNewTracker() {
 		return newTracker;
 	}
 
@@ -90,7 +91,7 @@ public class JasimaGPConfig {
 		this.tracker = tracker;
 	}
 
-	public void setNewTracker(IJasimaNewTracker newTracker) {
+	public void setNewTracker(JasimaDecisionTracker newTracker) {
 		this.newTracker = newTracker;
 	}
 

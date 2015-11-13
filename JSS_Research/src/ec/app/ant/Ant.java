@@ -6,18 +6,24 @@
 
 
 package ec.app.ant;
-import ec.app.ant.func.*;
-import ec.util.*;
-import ec.*;
-import ec.gp.*;
-import ec.gp.koza.*;
-import java.io.*;
-import java.util.*;
-import ec.simple.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.LineNumberReader;
+import java.util.StringTokenizer;
 
-/* 
+import ec.EvolutionState;
+import ec.Individual;
+import ec.app.ant.func.EvalPrint;
+import ec.gp.GPIndividual;
+import ec.gp.GPProblem;
+import ec.gp.koza.KozaFitness;
+import ec.simple.SimpleProblemForm;
+import ec.util.Parameter;
+
+/*
  * Ant.java
- * 
+ *
  * Created: Mon Nov  1 15:46:19 1999
  * By: Sean Luke
  */
@@ -45,12 +51,14 @@ import ec.simple.*;
  </table>
  *
  * @author Sean Luke
- * @version 1.0 
+ * @version 1.0
  */
 
 public class Ant extends GPProblem implements SimpleProblemForm
     {
-    public static final String P_FILE = "file";
+	private static final long serialVersionUID = -6896246328400700236L;
+
+	public static final String P_FILE = "file";
     public static final String P_MOVES = "moves";
 
     // map point descriptions
@@ -74,7 +82,7 @@ public class Ant extends GPProblem implements SimpleProblemForm
 
     // our map
     public int map[][];
-    
+
     // store the positions of food so we can reset our map
     // don't need to be deep-cloned, they're read-only
     public int foodx[];
@@ -90,7 +98,7 @@ public class Ant extends GPProblem implements SimpleProblemForm
 
     // how many points we've gotten
     public int sum;
-    
+
     // our orientation
     public int orientation;
 
@@ -123,7 +131,7 @@ public class Ant extends GPProblem implements SimpleProblemForm
         maxMoves = state.parameters.getInt(base.push(P_MOVES),null,1);
         if (maxMoves==0)
             state.output.error("The number of moves an ant has to make must be >0");
-        
+
         // load our file
         //File filename = state.parameters.getFile(base.push(P_FILE),null);
         //if (filename==null)
@@ -131,15 +139,15 @@ public class Ant extends GPProblem implements SimpleProblemForm
         InputStream str = state.parameters.getResource(base.push(P_FILE), null);
         if (str == null)
             state.output.fatal("Error loading file or resource", base.push(P_FILE), null);
-        
+
         food = 0;
         LineNumberReader lnr = null;
         try
             {
-            lnr = 
+            lnr =
                 //new LineNumberReader(new FileReader(filename));
                 new LineNumberReader(new InputStreamReader(str));
-            
+
             StringTokenizer st = new StringTokenizer(lnr.readLine()); // ugh
             maxx = Integer.parseInt(st.nextToken());
             maxy = Integer.parseInt(st.nextToken());
@@ -193,18 +201,18 @@ public class Ant extends GPProblem implements SimpleProblemForm
         int tmpf = 0;
         for(int x=0;x<map.length;x++)
             for(int y=0;y<map[0].length;y++)
-                if (map[x][y]==FOOD) 
+                if (map[x][y]==FOOD)
                     { foodx[tmpf] = x; foody[tmpf] = y; tmpf++; }
         }
 
-    public void evaluate(final EvolutionState state, 
-        final Individual ind, 
+    public void evaluate(final EvolutionState state,
+        final Individual ind,
         final int subpopulation,
         final int threadnum)
         {
         if (!ind.evaluated)  // don't bother reevaluating
             {
-            sum = 0;            
+            sum = 0;
             posx = 0;
             posy = 0;
             orientation = O_RIGHT;
@@ -212,7 +220,7 @@ public class Ant extends GPProblem implements SimpleProblemForm
             for(moves=0;moves<maxMoves && sum<food; )
                 ((GPIndividual)ind).trees[0].child.eval(
                     state,threadnum,input,stack,((GPIndividual)ind),this);
-                
+
             // the fitness better be KozaFitness!
             KozaFitness f = ((KozaFitness)ind.fitness);
             f.setStandardizedFitness(state,(food - sum));
@@ -226,9 +234,9 @@ public class Ant extends GPProblem implements SimpleProblemForm
         }
 
     public void describe(
-        final EvolutionState state, 
-        final Individual ind, 
-        final int subpopulation, 
+        final EvolutionState state,
+        final Individual ind,
+        final int subpopulation,
         final int threadnum,
         final int log)
 
@@ -257,13 +265,13 @@ public class Ant extends GPProblem implements SimpleProblemForm
                 {
                 switch(map2[x][y])
                     {
-                    case FOOD: 
+                    case FOOD:
                         state.output.print("#",log);
                         break;
-                    case EMPTY: 
+                    case EMPTY:
                         state.output.print(".",log);
                         break;
-                    case TRAIL: 
+                    case TRAIL:
                         state.output.print("+",log);
                         break;
                     case ATE:

@@ -1,13 +1,17 @@
-package app.dispatchingDecision;
+package app.tracker;
 
 import jasima.shopSim.core.PrioRuleTarget;
 
 import java.util.HashMap;
 import java.util.Map;
 
+// TODO I'm wondering if I even need this at the moment.
+// TODO also, this shouldn't be called the decision maker, it should be called priority something.
 public class JasimaDecisionMaker {
 
 	private Map<JasimaDispatchingDecision, PrioRuleTarget> dispatchingDecisions = new HashMap<JasimaDispatchingDecision, PrioRuleTarget>();
+
+	// TODO other important informations.
 
 	public JasimaDecisionMaker() {
 		// Keep the constructor empty for now.
