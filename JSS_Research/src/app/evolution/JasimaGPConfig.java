@@ -15,6 +15,43 @@ public class JasimaGPConfig {
 	private JasimaGPData data;
 
 	private IJasimaTracker tracker;
+	private IJasimaNewTracker newTracker;
+
+	// Getters
+
+	public EvolutionState getState() {
+		return state;
+	}
+
+	public GPIndividual[] getIndividuals() {
+		return ind;
+	}
+
+	public int[] getSubpopulations() {
+		return subpopulations;
+	}
+
+	public int getThreadnum() {
+		return threadnum;
+	}
+
+	public GPProblem getProblem() {
+		return problem;
+	}
+
+	public JasimaGPData getData() {
+		return data;
+	}
+
+	public IJasimaTracker getTracker() {
+		return tracker;
+	}
+
+	public IJasimaNewTracker getNewTracker() {
+		return newTracker;
+	}
+
+	// Setters
 
 	public void setState(EvolutionState state) {
 		this.state = state;
@@ -44,32 +81,8 @@ public class JasimaGPConfig {
 		this.tracker = tracker;
 	}
 
-	public EvolutionState getState() {
-		return state;
-	}
-
-	public GPIndividual[] getIndividuals() {
-		return ind;
-	}
-
-	public int[] getSubpopulations() {
-		return subpopulations;
-	}
-
-	public int getThreadnum() {
-		return threadnum;
-	}
-
-	public GPProblem getProblem() {
-		return problem;
-	}
-
-	public JasimaGPData getData() {
-		return data;
-	}
-
-	public IJasimaTracker getTracker() {
-		return tracker;
+	public void setNewTracker(IJasimaNewTracker newTracker) {
+		this.newTracker = newTracker;
 	}
 
 }

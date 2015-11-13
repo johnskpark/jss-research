@@ -40,10 +40,9 @@ public class EnsemblePriorityRule extends AbsGPPriorityRule {
 
 	@Override
 	public void setConfiguration(JasimaGPConfig config) {
-		state = config.getState();
+		super.setConfiguration(config);
+
 		individuals = config.getIndividuals();
-		threadnum = config.getThreadnum();
-		data = config.getData();
 		tracker = (EnsembleDecisionTracker) config.getTracker();
 	}
 

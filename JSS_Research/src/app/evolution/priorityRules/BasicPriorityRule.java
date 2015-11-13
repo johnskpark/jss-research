@@ -11,18 +11,17 @@ public class BasicPriorityRule extends AbsGPPriorityRule {
 
 	private static final long serialVersionUID = 5215861545303707980L;
 
-	private EvolutionState state;
+	private EvolutionState state; // TODO this is common between all classes.
 	private GPIndividual individual;
-	private int threadnum;
+	private int threadnum; // TODO this is common between all classes.
 
-	private JasimaGPData data;
+	private JasimaGPData data; // TODO this is common between all classes.
 
 	@Override
 	public void setConfiguration(JasimaGPConfig config) {
-		state = config.getState();
+		super.setConfiguration(config);
+
 		individual = config.getIndividuals()[0];
-		threadnum = config.getThreadnum();
-		data = config.getData();
 	}
 
 	@Override
