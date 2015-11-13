@@ -8,6 +8,7 @@ public class JasimaGPConfig {
 
 	private EvolutionState state;
 	private GPIndividual[] ind;
+	private int[] indIndices;
 	private int[] subpopulations;
 	private int threadnum;
 
@@ -25,6 +26,10 @@ public class JasimaGPConfig {
 
 	public GPIndividual[] getIndividuals() {
 		return ind;
+	}
+
+	public int[] getIndIndices() {
+		return indIndices;
 	}
 
 	public int[] getSubpopulations() {
@@ -59,6 +64,10 @@ public class JasimaGPConfig {
 
 	public void setIndividuals(GPIndividual[] ind) {
 		this.ind = ind;
+	}
+
+	public void setIndIndices(int[] indIndices) {
+		this.indIndices = indIndices;
 	}
 
 	public void setSubpopulations(int[] subpopulations) {

@@ -1,5 +1,7 @@
 package app.evolution;
 
+import jasima.shopSim.core.PrioRuleTarget;
+
 import java.util.List;
 
 import app.dispatchingDecision.JasimaDispatchingDecision;

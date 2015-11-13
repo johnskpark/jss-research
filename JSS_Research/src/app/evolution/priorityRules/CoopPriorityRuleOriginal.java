@@ -10,20 +10,15 @@ import java.util.Map;
 
 import app.evolution.AbsGPPriorityRule;
 import app.evolution.JasimaGPConfig;
-import app.evolution.JasimaGPData;
 import app.evolution.coop.tracker.CoopDecisionTrackerOriginal;
-import ec.EvolutionState;
 import ec.gp.GPIndividual;
 
 public class CoopPriorityRuleOriginal extends AbsGPPriorityRule {
 
 	private static final long serialVersionUID = 1523189578600289098L;
 
-	private EvolutionState state;
 	private GPIndividual[] individuals;
-	private int threadnum;
 
-	private JasimaGPData data;
 	private CoopDecisionTrackerOriginal tracker;
 
 	private final Map<PrioRuleTarget, Pair<Integer, Double>> jobVotes = new HashMap<PrioRuleTarget, Pair<Integer, Double>>();

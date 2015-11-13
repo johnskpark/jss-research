@@ -55,6 +55,7 @@ public class JasimaSimpleProblem extends JasimaGPProblem {
 		JasimaGPConfig config = new JasimaGPConfig();
 		config.setState(state);
 		config.setIndividuals(new GPIndividual[]{(GPIndividual) ind});
+		config.setIndIndices(new int[]{0});
 		config.setSubpopulations(new int[]{subpopulation});
 		config.setThreadnum(threadnum);
 		config.setData((JasimaGPData)input);

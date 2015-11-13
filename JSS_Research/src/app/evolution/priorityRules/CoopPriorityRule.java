@@ -12,9 +12,7 @@ import java.util.Map;
 
 import app.evolution.AbsGPPriorityRule;
 import app.evolution.JasimaGPConfig;
-import app.evolution.JasimaGPData;
 import app.evolution.coop.tracker.CoopDecisionTracker;
-import ec.EvolutionState;
 import ec.gp.GPIndividual;
 
 public class CoopPriorityRule extends AbsGPPriorityRule {
@@ -23,11 +21,8 @@ public class CoopPriorityRule extends AbsGPPriorityRule {
 
 	public static final double ATC_K_VALUE = 3.0;
 
-	private EvolutionState state;
 	private GPIndividual[] individuals;
-	private int threadnum;
 
-	private JasimaGPData data;
 	private CoopDecisionTracker tracker;
 
 	private Map<PrioRuleTarget, EntryVotes> jobVotes = new HashMap<PrioRuleTarget, EntryVotes>();

@@ -11,24 +11,20 @@ import java.util.Map;
 
 import app.evolution.AbsGPPriorityRule;
 import app.evolution.JasimaGPConfig;
-import app.evolution.tracker.EnsembleDecisionTracker;
 import app.priorityRules.ATCPR;
-import ec.gp.GPIndividual;
 
-public class EnsemblePriorityRule extends AbsGPPriorityRule {
+public class NewEnsemblePriorityRule extends AbsGPPriorityRule {
 
-	private static final long serialVersionUID = -2159123752873667029L;
+	private static final long serialVersionUID = 1763515401337543392L;
 
 	public static final double ATC_K_VALUE = 3.0;
 
-	private GPIndividual[] individuals;
-
-	private EnsembleDecisionTracker tracker;
+	private AbsGPPriorityRule[] constituentRules;
 
 	private Map<PrioRuleTarget, EntryVotes> jobVotes = new HashMap<PrioRuleTarget, EntryVotes>();
 	private List<EntryVotes> jobRanking = new ArrayList<EntryVotes>();
 
-	public EnsemblePriorityRule() {
+	public NewEnsemblePriorityRule() {
 		super();
 		setTieBreaker(new ATCPR(ATC_K_VALUE));
 	}
@@ -37,8 +33,14 @@ public class EnsemblePriorityRule extends AbsGPPriorityRule {
 	public void setConfiguration(JasimaGPConfig config) {
 		super.setConfiguration(config);
 
-		individuals = config.getIndividuals();
-		tracker = (EnsembleDecisionTracker) config.getTracker();
+		int ruleNum = config.getIndividuals().length;
+
+		constituentRules = new AbsGPPriorityRule[config.getIndividuals().length];
+
+		for (int i = 0; i < ruleNum; i++) {
+			constituentRules[i] = new BasicPriorityRule(i);
+			constituentRules[i].setConfiguration(config);
+		}
 	}
 
 	@Override
@@ -54,20 +56,17 @@ public class EnsemblePriorityRule extends AbsGPPriorityRule {
 			jobRanking.add(ev);
 		}
 
-		int[] decisions = new int[individuals.length];
+		int[] decisions = new int[constituentRules.length];
 
-		for (int i = 0; i < individuals.length; i++) {
+		for (int i = 0; i < constituentRules.length; i++) {
 			double bestPriority = Double.NEGATIVE_INFINITY;
 			int bestIndex = -1;
 
 			// Find the job selected by the individual rule.
 			for (int j = 0; j < q.size(); j++) {
 				PrioRuleTarget entry = q.get(j);
-				data.setPrioRuleTarget(entry);
 
-				individuals[i].trees[0].child.eval(state, threadnum, data, null, individuals[i], null);
-
-				double priority = data.getPriority();
+				double priority = constituentRules[i].calcPrio(entry);
 				if (priority > bestPriority) {
 					bestPriority = priority;
 					bestIndex = j;
@@ -87,15 +86,7 @@ public class EnsemblePriorityRule extends AbsGPPriorityRule {
 
 		// Add the rankings into the decisions.
 		if (tracker != null) {
-			for (int i = 0; i < individuals.length; i++) {
-				for (int j = 0; j < q.size(); j++) {
-					EntryVotes sc = jobRanking.get(j);
-					if (decisions[i] == sc.index) {
-						tracker.addDecision(individuals[i], q.get(0).getShop().jobsFinished, j);
-						break;
-					}
-				}
-			}
+			// TODO
 		}
 	}
 
