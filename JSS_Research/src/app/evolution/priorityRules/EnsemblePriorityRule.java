@@ -11,8 +11,8 @@ import java.util.Map;
 
 import app.evolution.AbsGPPriorityRule;
 import app.evolution.JasimaGPConfig;
-import app.evolution.tracker.EnsembleDecisionTracker;
 import app.priorityRules.ATCPR;
+import app.tracker.JasimaEvolveDecisionTracker;
 import ec.gp.GPIndividual;
 
 public class EnsemblePriorityRule extends AbsGPPriorityRule {
@@ -23,7 +23,7 @@ public class EnsemblePriorityRule extends AbsGPPriorityRule {
 
 	private GPIndividual[] individuals;
 
-	private EnsembleDecisionTracker tracker;
+	private JasimaEvolveDecisionTracker tracker;
 
 	private Map<PrioRuleTarget, EntryVotes> jobVotes = new HashMap<PrioRuleTarget, EntryVotes>();
 	private List<EntryVotes> jobRanking = new ArrayList<EntryVotes>();
@@ -38,7 +38,9 @@ public class EnsemblePriorityRule extends AbsGPPriorityRule {
 		super.setConfiguration(config);
 
 		individuals = config.getIndividuals();
-		tracker = (EnsembleDecisionTracker) config.getTracker();
+		tracker = (JasimaEvolveDecisionTracker) config.getNewTracker();
+
+		tracker.setTieBreaker(getTieBreaker());
 	}
 
 	@Override
@@ -68,6 +70,12 @@ public class EnsemblePriorityRule extends AbsGPPriorityRule {
 				individuals[i].trees[0].child.eval(state, threadnum, data, null, individuals[i], null);
 
 				double priority = data.getPriority();
+
+				// Add the priority assigned to the entry to the tracker.
+				if (tracker != null) {
+					tracker.addPriority(i, individuals[i], entry, priority);
+				}
+
 				if (priority > bestPriority) {
 					bestPriority = priority;
 					bestIndex = j;
@@ -84,19 +92,6 @@ public class EnsemblePriorityRule extends AbsGPPriorityRule {
 
 		// Sort the list of jobs.
 		Collections.sort(jobRanking);
-
-		// Add the rankings into the decisions.
-		if (tracker != null) {
-			for (int i = 0; i < individuals.length; i++) {
-				for (int j = 0; j < q.size(); j++) {
-					EntryVotes sc = jobRanking.get(j);
-					if (decisions[i] == sc.index) {
-						tracker.addDecision(individuals[i], q.get(0).getShop().jobsFinished, j);
-						break;
-					}
-				}
-			}
-		}
 	}
 
 	@Override

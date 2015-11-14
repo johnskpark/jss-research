@@ -12,12 +12,10 @@ public class JasimaGPData extends GPData {
 	private double priority;
 	private IWorkStationListener workStationListener;
 
+	// Getters
+
 	public PrioRuleTarget getPrioRuleTarget() {
 		return entry;
-	}
-
-	public void setPrioRuleTarget(PrioRuleTarget entry) {
-		this.entry = entry;
 	}
 
 	public double getPriority() {
@@ -26,6 +24,12 @@ public class JasimaGPData extends GPData {
 
 	public IWorkStationListener getWorkStationListener() {
 		return workStationListener;
+	}
+
+	// Setters
+
+	public void setPrioRuleTarget(PrioRuleTarget entry) {
+		this.entry = entry;
 	}
 
 	public void setPriority(double priority) {

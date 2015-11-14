@@ -9,7 +9,7 @@ import java.util.Map;
 // TODO also, this shouldn't be called the decision maker, it should be called priority something.
 public class JasimaPriorityStat {
 
-	private Map<JasimaDispatchingDecision, PrioRuleTarget> dispatchingDecisions = new HashMap<JasimaDispatchingDecision, PrioRuleTarget>();
+	private Map<JasimaEvolveDispatchingDecision, PrioRuleTarget> dispatchingDecisions = new HashMap<JasimaEvolveDispatchingDecision, PrioRuleTarget>();
 
 	// TODO other important informations.
 
@@ -17,7 +17,7 @@ public class JasimaPriorityStat {
 		// Keep the constructor empty for now.
 	}
 
-	public Map<JasimaDispatchingDecision, PrioRuleTarget> getDispatchingDecisions() {
+	public Map<JasimaEvolveDispatchingDecision, PrioRuleTarget> getDispatchingDecisions() {
 		return dispatchingDecisions;
 	}
 
