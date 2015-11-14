@@ -1,10 +1,12 @@
 package app.evolution.priorityRules;
 
+import jasima.shopSim.core.PR;
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +16,7 @@ import app.evolution.JasimaGPConfig;
 import app.priorityRules.ATCPR;
 import app.tracker.JasimaEvolveDecisionTracker;
 import ec.gp.GPIndividual;
+import ec.util.Pair;
 
 public class EnsemblePriorityRule extends AbsGPPriorityRule {
 
@@ -26,7 +29,7 @@ public class EnsemblePriorityRule extends AbsGPPriorityRule {
 	private JasimaEvolveDecisionTracker tracker;
 
 	private Map<PrioRuleTarget, EntryVotes> jobVotes = new HashMap<PrioRuleTarget, EntryVotes>();
-	private List<EntryVotes> jobRanking = new ArrayList<EntryVotes>();
+	private List<EntryVotes> jobRankings = new ArrayList<EntryVotes>();
 
 	public EnsemblePriorityRule() {
 		super();
@@ -50,12 +53,12 @@ public class EnsemblePriorityRule extends AbsGPPriorityRule {
 		super.beforeCalc(q);
 
 		jobVotes.clear();
-		jobRanking.clear();
+		jobRankings.clear();
 
 		for (int i = 0; i < q.size(); i++) {
 			EntryVotes ev = new EntryVotes(i, q.get(i));
 			jobVotes.put(q.get(i), ev);
-			jobRanking.add(ev);
+			jobRankings.add(ev);
 		}
 
 		int[] decisions = new int[individuals.length];
@@ -91,9 +94,6 @@ public class EnsemblePriorityRule extends AbsGPPriorityRule {
 			// Store the decisions.
 			decisions[i] = bestIndex;
 		}
-
-		// Sort the list of jobs.
-		Collections.sort(jobRanking);
 	}
 
 	@Override
@@ -103,8 +103,44 @@ public class EnsemblePriorityRule extends AbsGPPriorityRule {
 
 	@Override
 	public List<PrioRuleTarget> getJobRankings() {
-		// TODO
-		return null;
+		// Sort the list of jobs.
+		Collections.sort(jobRankings);
+
+		List<PrioRuleTarget> entries = new ArrayList<PrioRuleTarget>();
+		for (EntryVotes e : jobRankings) {
+			entries.add(e.entry);
+		}
+
+		return entries;
+	}
+
+	private class JobComparator implements Comparator<Pair<PrioRuleTarget, Integer>> {
+
+		private PR tieBreaker;
+
+		public JobComparator(PR tieBreaker) {
+			this.tieBreaker = tieBreaker;
+		}
+
+		@Override
+		public int compare(Pair<PrioRuleTarget, Integer> o1,
+				Pair<PrioRuleTarget, Integer> o2) {
+			int diff = o2.i2 - o1.i2;
+			if (diff != 0) {
+				return diff;
+			} else {
+				double prio1 = tieBreaker.calcPrio(o1.i1);
+				double prio2 = tieBreaker.calcPrio(o2.i1);
+
+				if (prio1 > prio2) {
+					return -1;
+				} else if (prio1 < prio2) {
+					return 1;
+				} else {
+					return 0;
+				}
+			}
+		}
 	}
 
 	// Stores the votes made on a particular job.
