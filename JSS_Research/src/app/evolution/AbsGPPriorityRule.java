@@ -1,7 +1,11 @@
 package app.evolution;
 
-import app.tracker.JasimaEvolveDecisionTracker;
 import jasima.shopSim.core.PR;
+import jasima.shopSim.core.PrioRuleTarget;
+
+import java.util.List;
+
+import app.tracker.JasimaEvolveDecisionTracker;
 import ec.EvolutionState;
 
 /**

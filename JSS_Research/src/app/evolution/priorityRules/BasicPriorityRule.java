@@ -1,6 +1,9 @@
 package app.evolution.priorityRules;
 
 import jasima.shopSim.core.PrioRuleTarget;
+
+import java.util.List;
+
 import app.evolution.AbsGPPriorityRule;
 import app.evolution.JasimaGPConfig;
 import ec.gp.GPIndividual;
@@ -44,6 +47,12 @@ public class BasicPriorityRule extends AbsGPPriorityRule {
 		}
 
 		return priority;
+	}
+
+	@Override
+	public List<PrioRuleTarget> getJobRankings() {
+		// TODO
+		return null;
 	}
 
 }

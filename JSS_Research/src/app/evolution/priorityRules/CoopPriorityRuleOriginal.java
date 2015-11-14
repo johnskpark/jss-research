@@ -6,6 +6,7 @@ import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import app.evolution.AbsGPPriorityRule;
@@ -54,6 +55,12 @@ public class CoopPriorityRuleOriginal extends AbsGPPriorityRule {
 
 			jobVotes.put(entryPair.a, newPair);
 		}
+	}
+
+	@Override
+	public List<PrioRuleTarget> getJobRankings() {
+		// TODO
+		return null;
 	}
 
 	private Pair<PrioRuleTarget, Double> getBestEntry(PriorityQueue<?> q, double[] priorities) {

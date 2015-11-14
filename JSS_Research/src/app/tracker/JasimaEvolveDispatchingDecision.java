@@ -7,12 +7,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import app.evolution.IJasimaGPPriorityRule;
+import app.simConfig.AbsSimConfig;
 import ec.Individual;
 
 // So the tracker's going to generate one of these for each dispatching decision.
 public class JasimaEvolveDispatchingDecision {
 
-	private double decisionTime;
 	private double startTime;
 
 	private List<PrioRuleTarget> entries = new ArrayList<PrioRuleTarget>();
@@ -26,15 +27,13 @@ public class JasimaEvolveDispatchingDecision {
 		// Keep the constructor empty for now.
 	}
 
-	public void dispatchingDecisionPostprocessing() {
+	public void postprocessing(IJasimaGPPriorityRule priorityRule, AbsSimConfig simConfig) {
+		List<PrioRuleTarget> jobRankings = priorityRule.getJobRankings();
+
 		// TODO
 	}
 
 	// Getters
-
-	public double getDecisionTime() {
-		return decisionTime;
-	}
 
 	public double getStartTime() {
 		return startTime;
@@ -53,10 +52,6 @@ public class JasimaEvolveDispatchingDecision {
 	}
 
 	// Setters
-
-	public void setDecisionTime(double decisionTime) {
-		this.decisionTime = decisionTime;
-	}
 
 	public void setStartTime(double startTime) {
 		this.startTime = startTime;

@@ -1,6 +1,5 @@
 package app.tracker;
 
-import jasima.shopSim.core.PR;
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.WorkStation;
 import jasima.shopSim.core.WorkStation.WorkStationEvent;
@@ -10,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import app.evolution.IJasimaGPPriorityRule;
 import app.listener.IWorkStationListener;
 import app.simConfig.AbsSimConfig;
 import ec.Individual;
@@ -27,7 +27,7 @@ public class JasimaEvolveDecisionTracker implements IWorkStationListener {
 
 	// So what's the hierarchy going to be?
 
-	private PR tieBreaker;
+	private IJasimaGPPriorityRule priorityRule;
 	private AbsSimConfig simConfig;
 
 	private List<JasimaEvolveDispatchingDecision> allDecisions = new ArrayList<JasimaEvolveDispatchingDecision>();
@@ -37,8 +37,8 @@ public class JasimaEvolveDecisionTracker implements IWorkStationListener {
 		// FIXME: Probably fill this one out after I finish an implementation.
 	}
 
-	public void setTieBreaker(PR tieBreaker) {
-		this.tieBreaker = tieBreaker;
+	public void setPriorityRule(IJasimaGPPriorityRule priorityRule) {
+		this.priorityRule = priorityRule;
 	}
 
 	public void setSimConfig(AbsSimConfig simConfig) {
@@ -81,10 +81,10 @@ public class JasimaEvolveDecisionTracker implements IWorkStationListener {
 			PrioRuleTarget entry = notifier.justStarted;
 			currentDecision.setStartedEntry(entry);
 			currentDecision.setStartTime(entry.getShop().simTime());
-			currentDecision.setDecisionTime(0); // TODO
 
 			// Do some post processing on the current decision.
-			currentDecision.dispatchingDecisionPostprocessing(); // FIXME come up with a better game.
+			// FIXME come up with a better name.
+			currentDecision.postprocessing(priorityRule, simConfig);
 
 			// Add the dispatching decision to the list.
 			allDecisions.add(currentDecision);

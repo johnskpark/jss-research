@@ -38,9 +38,11 @@ public class EnsemblePriorityRule extends AbsGPPriorityRule {
 		super.setConfiguration(config);
 
 		individuals = config.getIndividuals();
-		tracker = (JasimaEvolveDecisionTracker) config.getNewTracker();
 
-		tracker.setTieBreaker(getTieBreaker());
+		if (config.getNewTracker() != null) {
+			tracker = (JasimaEvolveDecisionTracker) config.getNewTracker();
+			tracker.setPriorityRule(this);
+		}
 	}
 
 	@Override
@@ -97,6 +99,12 @@ public class EnsemblePriorityRule extends AbsGPPriorityRule {
 	@Override
 	public double calcPrio(PrioRuleTarget entry) {
 		return jobVotes.get(entry).getCount();
+	}
+
+	@Override
+	public List<PrioRuleTarget> getJobRankings() {
+		// TODO
+		return null;
 	}
 
 	// Stores the votes made on a particular job.

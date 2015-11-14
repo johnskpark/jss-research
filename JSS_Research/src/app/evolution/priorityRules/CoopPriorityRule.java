@@ -103,6 +103,12 @@ public class CoopPriorityRule extends AbsGPPriorityRule {
 		return jobVotes.get(entry).getCount();
 	}
 
+	@Override
+	public List<PrioRuleTarget> getJobRankings() {
+		// TODO
+		return null;
+	}
+
 	// Stores the votes made on a particular job.
 	private class EntryVotes implements Comparable<EntryVotes> {
 		final int index;
