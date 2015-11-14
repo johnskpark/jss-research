@@ -17,6 +17,8 @@ public class JasimaEvolveDispatchingDecision {
 	private double startTime;
 
 	private List<PrioRuleTarget> entries = new ArrayList<PrioRuleTarget>();
+	private List<PrioRuleTarget> entryRankings = new ArrayList<PrioRuleTarget>();
+
 	private PrioRuleTarget startedEntry;
 
 	private Map<Individual, Map<PrioRuleTarget, Double>> decisionMakers = new HashMap<Individual, Map<PrioRuleTarget, Double>>();
@@ -28,7 +30,7 @@ public class JasimaEvolveDispatchingDecision {
 	}
 
 	public void postprocessing(IJasimaGPPriorityRule priorityRule, AbsSimConfig simConfig) {
-		List<PrioRuleTarget> jobRankings = priorityRule.getJobRankings();
+		entryRankings = priorityRule.getJobRankings();
 
 		// TODO
 	}
