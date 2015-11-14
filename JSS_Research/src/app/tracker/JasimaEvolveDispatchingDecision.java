@@ -16,12 +16,18 @@ public class JasimaEvolveDispatchingDecision {
 	private double startTime;
 
 	private List<PrioRuleTarget> entries = new ArrayList<PrioRuleTarget>();
+	private PrioRuleTarget startedEntry;
+
 	private Map<Individual, Map<PrioRuleTarget, Double>> decisionMakers = new HashMap<Individual, Map<PrioRuleTarget, Double>>();
 
 	// TODO combine everything together.
 
 	public JasimaEvolveDispatchingDecision() {
 		// Keep the constructor empty for now.
+	}
+
+	public void dispatchingDecisionPostprocessing() {
+		// TODO
 	}
 
 	// Getters
@@ -36,6 +42,10 @@ public class JasimaEvolveDispatchingDecision {
 
 	public List<PrioRuleTarget> getEntries() {
 		return entries;
+	}
+
+	public PrioRuleTarget getStartedEntry() {
+		return startedEntry;
 	}
 
 	public Map<Individual, Map<PrioRuleTarget, Double>> getDecisionMakers() {
@@ -54,6 +64,10 @@ public class JasimaEvolveDispatchingDecision {
 
 	public void setEntries(List<PrioRuleTarget> entries) {
 		this.entries = entries;
+	}
+
+	public void setStartedEntry(PrioRuleTarget startedEntry) {
+		this.startedEntry = startedEntry;
 	}
 
 	public void setDecisionMakers(Map<Individual, Map<PrioRuleTarget, Double>> decisionMakers) {

@@ -13,7 +13,6 @@ import java.util.Map;
 import app.listener.IWorkStationListener;
 import app.simConfig.AbsSimConfig;
 import ec.Individual;
-import ec.util.Pair;
 
 // TODO right, the tracker needs to be able to do the following:
 // - Get the decision made by the sequencing rule on which job was selected to be processed.
@@ -78,7 +77,14 @@ public class JasimaEvolveDecisionTracker implements IWorkStationListener {
 	public void update(WorkStation notifier, WorkStationEvent event) {
 		// Listen to only the job selected notifications.
 		if (event == WorkStation.WS_JOB_SELECTED) {
-			// TODO Add in the start time and such information into the decision.
+			// Add in the start time and such information into the decision.
+			PrioRuleTarget entry = notifier.justStarted;
+			currentDecision.setStartedEntry(entry);
+			currentDecision.setStartTime(entry.getShop().simTime());
+			currentDecision.setDecisionTime(0); // TODO
+
+			// Do some post processing on the current decision.
+			currentDecision.dispatchingDecisionPostprocessing(); // FIXME come up with a better game.
 
 			// Add the dispatching decision to the list.
 			allDecisions.add(currentDecision);
