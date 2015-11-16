@@ -8,6 +8,6 @@ public interface IJasimaGPPriorityRule {
 
 	public void setConfiguration(JasimaGPConfig config);
 
-	public List<PrioRuleTarget> getJobRankings();
+	public List<PrioRuleTarget> getEntryRankings();
 
 }

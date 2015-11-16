@@ -58,7 +58,7 @@ public class CoopPriorityRuleOriginal extends AbsGPPriorityRule {
 	}
 
 	@Override
-	public List<PrioRuleTarget> getJobRankings() {
+	public List<PrioRuleTarget> getEntryRankings() {
 		// TODO
 		return null;
 	}

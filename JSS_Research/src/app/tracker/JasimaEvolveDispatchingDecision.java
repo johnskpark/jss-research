@@ -3,16 +3,11 @@ package app.tracker;
 import jasima.shopSim.core.PrioRuleTarget;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.PriorityQueue;
 
-import app.evolution.IJasimaGPPriorityRule;
-import app.simConfig.AbsSimConfig;
 import ec.Individual;
-import ec.util.Pair;
 
 // So the tracker's going to generate one of these for each dispatching decision.
 public class JasimaEvolveDispatchingDecision {
@@ -24,10 +19,7 @@ public class JasimaEvolveDispatchingDecision {
 
 	private PrioRuleTarget startedEntry;
 
-	// This needs to be
-
-	private Map<Individual, PriorityQueue<Pair<PrioRuleTarget, Double>>> decisionMakers = new HashMap<Individual, PriorityQueue<Pair<PrioRuleTarget, Double>>>();
-	private PriorityComparator priorityComparator = new PriorityComparator();
+	private Map<Individual, JasimaPriorityStat> decisionMakers = new HashMap<Individual, JasimaPriorityStat>();
 
 	public JasimaEvolveDispatchingDecision() {
 		// Keep the constructor empty for now.
@@ -35,15 +27,14 @@ public class JasimaEvolveDispatchingDecision {
 
 	public void addPriority(Individual ind, PrioRuleTarget entry, double priority) {
 		if (!decisionMakers.containsKey(ind)) {
-			decisionMakers.put(ind, new PriorityQueue<Pair<PrioRuleTarget, Double>>(priorityComparator));
+			decisionMakers.put(ind, new JasimaPriorityStat());
 		}
+
+		decisionMakers.get(ind).add(entry, priority);
 	}
 
-	// FIXME come up with a better name.
-	public void postProcessing(IJasimaGPPriorityRule priorityRule, AbsSimConfig simConfig) {
-		entryRankings = priorityRule.getJobRankings();
-
-		// TODO Right, something here.
+	public void addEntryRankings(List<PrioRuleTarget> entryRankings) {
+		this.entryRankings = entryRankings;
 	}
 
 	// Getters
@@ -64,7 +55,7 @@ public class JasimaEvolveDispatchingDecision {
 		return startedEntry;
 	}
 
-	public Map<Individual, PriorityQueue<Pair<PrioRuleTarget, Double>>> getDecisionMakers() {
+	public Map<Individual, JasimaPriorityStat> getDecisionMakers() {
 		return decisionMakers;
 	}
 
@@ -82,22 +73,8 @@ public class JasimaEvolveDispatchingDecision {
 		this.startedEntry = startedEntry;
 	}
 
-	public void setDecisionMakers(Map<Individual, PriorityQueue<Pair<PrioRuleTarget, Double>>> decisionMakers) {
+	public void setDecisionMakers(Map<Individual, JasimaPriorityStat> decisionMakers) {
 		this.decisionMakers = decisionMakers;
-	}
-
-	private class PriorityComparator implements Comparator<Pair<PrioRuleTarget, Double>> {
-
-		public int compare(Pair<PrioRuleTarget, Double> entry1,
-				Pair<PrioRuleTarget, Double> entry2) {
-			if (entry1.i2 > entry2.i2) {
-				return -1;
-			} else if (entry1.i2 < entry2.i2) {
-				return 1;
-			} else {
-				return 0;
-			}
-		}
 	}
 
 }

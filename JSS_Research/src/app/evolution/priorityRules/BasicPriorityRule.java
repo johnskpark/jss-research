@@ -77,7 +77,7 @@ public class BasicPriorityRule extends AbsGPPriorityRule {
 	}
 
 	@Override
-	public List<PrioRuleTarget> getJobRankings() {
+	public List<PrioRuleTarget> getEntryRankings() {
 		// Sort the list of jobs.
 		Collections.sort(jobRankings, comparator);
 

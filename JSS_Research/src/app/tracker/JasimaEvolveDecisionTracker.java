@@ -78,7 +78,7 @@ public class JasimaEvolveDecisionTracker implements IWorkStationListener {
 			currentDecision.setStartTime(entry.getShop().simTime());
 
 			// Do some post processing on the current decision.
-			currentDecision.postProcessing(priorityRule, simConfig);
+			currentDecision.addEntryRankings(priorityRule.getEntryRankings());
 
 			// Add the dispatching decision to the list.
 			allDecisions.add(currentDecision);
