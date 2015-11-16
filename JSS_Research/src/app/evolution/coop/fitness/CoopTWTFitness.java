@@ -1,7 +1,6 @@
 package app.evolution.coop.fitness;
 
 import jasima.core.statistics.SummaryStat;
-import jasima.core.util.Pair;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -12,7 +11,6 @@ import app.evolution.coop.IJasimaCoopFitness;
 import ec.EvolutionState;
 import ec.Fitness;
 import ec.Individual;
-import ec.gp.GPIndividual;
 import ec.gp.koza.KozaFitness;
 
 public class CoopTWTFitness implements IJasimaCoopFitness {

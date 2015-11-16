@@ -18,6 +18,13 @@ import ec.multilevel_new.MLSProblemForm;
 import ec.multilevel_new.MLSSubpopulation;
 import ec.util.Parameter;
 
+/**
+ * TODO javadoc.
+ *
+ * @author parkjohn
+ *
+ */
+// TODO need to add in niching at some point.
 public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProblemForm {
 
 	private static final long serialVersionUID = -5150181943760622786L;
@@ -67,7 +74,6 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 			final int threadnum) {
 		// We don't care if the group's been evaluated previously,
 		// since the simulation changes at each generation.
-
 		List<GPIndividual> indsList = new ArrayList<GPIndividual>();
 		for (Individual ind : subpop.individuals) {
 			if (ind == null) {
@@ -97,7 +103,7 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 
 			groupFitness.accumulateFitness(expIndex, subpop, experiment.getResults());
 			if (hasTracker()) {
-
+				
 				getTracker().clear();
 			}
 			if (hasWorkStationListener()) { getWorkStationListener().clear(); }

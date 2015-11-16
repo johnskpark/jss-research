@@ -17,6 +17,13 @@ import ec.coevolve.GroupedProblemForm;
 import ec.gp.GPIndividual;
 import ec.util.Parameter;
 
+/**
+ * TODO javadoc.
+ *
+ * @author parkjohn
+ *
+ */
+// TODO need to add in niching at some point.
 public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblemForm {
 
 	private static final long serialVersionUID = -1068923215891516182L;

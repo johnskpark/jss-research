@@ -12,7 +12,6 @@ import app.evolution.coop.IJasimaCoopFitness;
 import ec.EvolutionState;
 import ec.Fitness;
 import ec.Individual;
-import ec.gp.GPIndividual;
 import ec.gp.koza.KozaFitness;
 
 public class CoopSOTWTFitness implements IJasimaCoopFitness {
