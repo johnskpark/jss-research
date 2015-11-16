@@ -34,7 +34,7 @@ public class JasimaEvolveDecisionTracker implements IWorkStationListener {
 	private JasimaEvolveDispatchingDecision currentDecision = null;
 
 	public JasimaEvolveDecisionTracker() {
-		// FIXME: Probably fill this one out after I finish an implementation.
+		// Empty constructor.
 	}
 
 	public void setPriorityRule(IJasimaGPPriorityRule priorityRule) {
@@ -45,46 +45,40 @@ public class JasimaEvolveDecisionTracker implements IWorkStationListener {
 		this.simConfig = simConfig;
 	}
 
+	protected void preloadDispatchingDecision() {
+
+		currentDecision = new JasimaEvolveDispatchingDecision();
+	}
+
+	// TODO definitely need javadoc that describes the preloading scenario.
 	public void addPriority(int index, Individual ind, PrioRuleTarget entry, double priority) {
 		if (currentDecision != null) {
 			if (index == 0) {
-				throw new IllegalArgumentException("TODO: Add in a proper error message sometime later down the line.");
+				throw new IllegalArgumentException("The caller attempted to add the first individual after the dispatching decision has been initialised.");
 			}
-
-			currentDecision = new JasimaEvolveDispatchingDecision();
+			preloadDispatchingDecision();
 		} else if (index != 0) {
-			throw new IllegalArgumentException("TODO: Add in a proper error message sometime later down the line.");
+			throw new IllegalArgumentException("The caller attempted to add individuals before the dispatching decision has been initialised.");
 		}
 
-		Map<Individual, Map<PrioRuleTarget, Double>> decisionMakers = currentDecision.getDecisionMakers();
-		if (!decisionMakers.containsKey(ind)) {
-			decisionMakers.put(ind, new HashMap<PrioRuleTarget, Double>());
-		}
-
-		if (decisionMakers.get(ind).containsKey(entry)) {
-			throw new IllegalArgumentException("TODO: Add in a proper error message sometime later down the line.");
-		}
-
-		decisionMakers.get(ind).put(entry, priority);
-
-		List<PrioRuleTarget> entries = currentDecision.getEntries();
-		if (!entries.contains(entry)) {
-			entries.add(entry);
-		}
+		currentDecision.addPriority(ind, entry, priority);
 	}
 
 	@Override
 	public void update(WorkStation notifier, WorkStationEvent event) {
 		// Listen to only the job selected notifications.
 		if (event == WorkStation.WS_JOB_SELECTED) {
+			if (currentDecision == null) {
+				throw new IllegalArgumentException("The dispatching decision has not been initialised yet.");
+			}
+
 			// Add in the start time and such information into the decision.
 			PrioRuleTarget entry = notifier.justStarted;
 			currentDecision.setStartedEntry(entry);
 			currentDecision.setStartTime(entry.getShop().simTime());
 
 			// Do some post processing on the current decision.
-			// FIXME come up with a better name.
-			currentDecision.postprocessing(priorityRule, simConfig);
+			currentDecision.postProcessing(priorityRule, simConfig);
 
 			// Add the dispatching decision to the list.
 			allDecisions.add(currentDecision);
@@ -92,10 +86,12 @@ public class JasimaEvolveDecisionTracker implements IWorkStationListener {
 		}
 	}
 
+	// TODO javadoc.
 	public List<JasimaEvolveDispatchingDecision> getResults() {
 		return allDecisions;
 	}
 
+	@Override
 	public void clear() {
 		allDecisions.clear();
 		currentDecision = null;
