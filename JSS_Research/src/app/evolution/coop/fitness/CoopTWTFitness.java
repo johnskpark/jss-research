@@ -47,12 +47,6 @@ public class CoopTWTFitness implements IJasimaCoopFitness {
 	}
 
 	@Override
-	public void accumulateDiversityFitness(
-			Pair<GPIndividual, Double>[] groupResults) {
-		// Diversity measure does nothing.
-	}
-
-	@Override
 	public void setFitness(EvolutionState state, Individual ind) {
 		setTrialFitness(state, new Individual[]{ind}, new boolean[]{true}, true);
 		setDiversityFitness(state, new Individual[]{ind}, new boolean[]{true});

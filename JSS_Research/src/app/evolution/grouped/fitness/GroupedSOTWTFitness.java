@@ -1,7 +1,6 @@
 package app.evolution.grouped.fitness;
 
 import jasima.core.statistics.SummaryStat;
-import jasima.core.util.Pair;
 
 import java.util.Map;
 
@@ -33,8 +32,7 @@ public class GroupedSOTWTFitness implements IJasimaGroupFitness {
 
 	@Override
 	public void accumulateGroupFitness(final Individual ind,
-			final Map<String, Object> results,
-			final Pair<GPIndividual, Double>[] groupResults) {
+			final Map<String, Object> results) {
 		// Does nothing.
 	}
 

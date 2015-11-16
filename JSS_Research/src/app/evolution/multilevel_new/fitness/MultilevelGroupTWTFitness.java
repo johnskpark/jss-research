@@ -4,7 +4,6 @@ import jasima.core.statistics.SummaryStat;
 
 import java.util.Map;
 
-import app.evolution.IJasimaTracker;
 import app.evolution.multilevel_new.IJasimaMultilevelGroupFitness;
 import ec.EvolutionState;
 import ec.Individual;
@@ -33,8 +32,7 @@ public class MultilevelGroupTWTFitness implements IJasimaMultilevelGroupFitness 
 	@Override
 	public void accumulateFitness(int expIndex,
 			MLSSubpopulation subpop,
-			Map<String, Object> results,
-			IJasimaTracker tracker) {
+			Map<String, Object> results) {
 		// Results of a simulation over a problem instance.
 		SummaryStat stat = (SummaryStat) results.get(WEIGHTED_TARDINESS);
 

@@ -3,7 +3,6 @@ package app.evolution.multilevel_new;
 import java.util.Map;
 
 import app.evolution.IJasimaFitness;
-import app.evolution.IJasimaTracker;
 import ec.EvolutionState;
 import ec.multilevel_new.MLSSubpopulation;
 
@@ -24,8 +23,7 @@ public interface IJasimaMultilevelGroupFitness extends IJasimaFitness {
 	 */
 	public void accumulateFitness(int expIndex,
 			MLSSubpopulation subpop,
-			Map<String, Object> results,
-			IJasimaTracker tracker);
+			Map<String, Object> results);
 
 	/**
 	 * TODO javadoc.

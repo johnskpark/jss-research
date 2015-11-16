@@ -1,10 +1,6 @@
 package app.evolution;
 
 import jasima.shopSim.core.PR;
-import jasima.shopSim.core.PrioRuleTarget;
-
-import java.util.List;
-
 import app.tracker.JasimaEvolveDecisionTracker;
 import ec.EvolutionState;
 
@@ -24,14 +20,17 @@ public abstract class AbsGPPriorityRule extends PR implements IJasimaGPPriorityR
 	protected JasimaGPData data;
 	protected JasimaEvolveDecisionTracker tracker;
 
-
 	@Override
 	public void setConfiguration(JasimaGPConfig config) {
 		state = config.getState();
 		threadnum = config.getThreadnum();
 
 		data = config.getData();
-		tracker = config.getNewTracker();
+
+		if (config.hasTracker()) {
+			tracker = config.getTracker();
+			tracker.setPriorityRule(this);
+		}
 	}
 
 

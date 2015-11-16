@@ -14,8 +14,7 @@ public interface IJasimaGroupFitness extends IJasimaFitness {
 	public void accumulateIndFitness(final Individual ind, final Map<String, Object> results);
 
 	public void accumulateGroupFitness(final Individual ind,
-			final Map<String, Object> results,
-			final Pair<GPIndividual, Double>[] groupResults);
+			final Map<String, Object> results);
 
 	public void setIndFitness(final EvolutionState state, final Individual ind);
 

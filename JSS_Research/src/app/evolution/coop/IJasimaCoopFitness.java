@@ -15,17 +15,15 @@ public interface IJasimaCoopFitness extends IJasimaFitness {
 
 	public void accumulateObjectiveFitness(final Individual[] inds, final Map<String, Object> results);
 
-	public void accumulateDiversityFitness(final Pair<GPIndividual, Double>[] groupResults);
-
 	public void setTrialFitness(final EvolutionState state,
 			final Individual[] inds,
 			final boolean[] updateFitness,
 			final boolean shouldSetContext);
-	
+
 	public void setDiversityFitness(final EvolutionState state,
 			final Individual[] inds,
 			final boolean[] updateFitness);
-	
+
 	public void setObjectiveFitness(final EvolutionState state,
 			final Individual[] inds);
 

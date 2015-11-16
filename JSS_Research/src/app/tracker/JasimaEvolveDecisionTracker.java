@@ -5,9 +5,7 @@ import jasima.shopSim.core.WorkStation;
 import jasima.shopSim.core.WorkStation.WorkStationEvent;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import app.evolution.IJasimaGPPriorityRule;
 import app.listener.IWorkStationListener;

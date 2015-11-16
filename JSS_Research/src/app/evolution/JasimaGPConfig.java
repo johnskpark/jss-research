@@ -16,8 +16,7 @@ public class JasimaGPConfig {
 	private GPProblem problem;
 	private JasimaGPData data;
 
-	private IJasimaTracker tracker;
-	private JasimaEvolveDecisionTracker newTracker;
+	private JasimaEvolveDecisionTracker tracker;
 
 	// Getters
 
@@ -49,12 +48,12 @@ public class JasimaGPConfig {
 		return data;
 	}
 
-	public IJasimaTracker getTracker() {
-		return tracker;
+	public boolean hasTracker() {
+		return tracker != null;
 	}
 
-	public JasimaEvolveDecisionTracker getNewTracker() {
-		return newTracker;
+	public JasimaEvolveDecisionTracker getTracker() {
+		return tracker;
 	}
 
 	// Setters
@@ -87,12 +86,8 @@ public class JasimaGPConfig {
 		this.data = data;
 	}
 
-	public void setTracker(IJasimaTracker tracker) {
-		this.tracker = tracker;
-	}
-
-	public void setNewTracker(JasimaEvolveDecisionTracker newTracker) {
-		this.newTracker = newTracker;
+	public void setTracker(JasimaEvolveDecisionTracker newTracker) {
+		this.tracker = newTracker;
 	}
 
 }

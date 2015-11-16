@@ -34,7 +34,7 @@ public class CoopPriorityRuleOriginal extends AbsGPPriorityRule {
 		super.setConfiguration(config);
 
 		individuals = config.getIndividuals();
-		tracker = (CoopDecisionTrackerOriginal) config.getTracker();
+//		tracker = (CoopDecisionTrackerOriginal) config.getTracker();
 	}
 
 	@Override

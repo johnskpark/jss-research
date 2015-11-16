@@ -51,11 +51,6 @@ public class CoopSOTWTFitness implements IJasimaCoopFitness {
 	}
 
 	@Override
-	public void accumulateDiversityFitness(final Pair<GPIndividual, Double>[] groupResults) {
-		// Does nothing.
-	}
-
-	@Override
 	public void setFitness(final EvolutionState state,
 			final Individual ind) {
 		setTrialFitness(state, new Individual[]{ind}, new boolean[]{true}, true);
@@ -73,28 +68,28 @@ public class CoopSOTWTFitness implements IJasimaCoopFitness {
 			if (updateFitness[i]) {
 				SummaryStat indFitness = fitnessMap.get(inds[i]).b;
 				double trial = indFitness.mean();
-				
+
 				Fitness fitness = inds[i].fitness;
-				
+
 				int len = fitness.trials.size();
 				if (len == 0 || (Double) fitness.trials.get(0) < trial) {
 					if (shouldSetContext) {
 						fitness.setContext(inds, i);
 					}
-					
+
 					fitness.trials.add(trial);
 				}
 			}
 		}
 	}
-	
+
 	@Override
 	public void setDiversityFitness(final EvolutionState state,
 			final Individual[] inds,
 			final boolean[] updateFitness) {
 		// Do nothing.
 	}
-	
+
 	@Override
 	public void setObjectiveFitness(final EvolutionState state,
 			final Individual[] inds) {

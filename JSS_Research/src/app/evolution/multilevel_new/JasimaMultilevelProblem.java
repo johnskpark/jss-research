@@ -95,8 +95,11 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 
 			experiment.runExperiment();
 
-			groupFitness.accumulateFitness(expIndex, subpop, experiment.getResults(), getTracker());
-			if (hasTracker()) { getTracker().clear(); }
+			groupFitness.accumulateFitness(expIndex, subpop, experiment.getResults());
+			if (hasTracker()) {
+
+				getTracker().clear();
+			}
 			if (hasWorkStationListener()) { getWorkStationListener().clear(); }
 		}
 
@@ -113,14 +116,12 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 			final int threadnum) {
 		// We don't care if the individual's been evaluated previously,
 		// since the simulation changes at each generation.
-
 		JasimaGPConfig config = new JasimaGPConfig();
 		config.setState(state);
 		config.setIndividuals(new GPIndividual[]{(GPIndividual) ind});
 		config.setSubpopulations(new int[]{subpopulation});
 		config.setThreadnum(threadnum);
 		config.setData((JasimaGPData) input);
-		if (hasTracker()) { config.setTracker(getTracker()); }
 
 		indRule.setConfiguration(config);
 
@@ -130,7 +131,6 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 			experiment.runExperiment();
 
 			indFitness.accumulateFitness(expIndex, experiment.getResults());
-			if (hasTracker()) { getTracker().clear(); }
 			if (hasWorkStationListener()) { getWorkStationListener().clear(); }
 		}
 

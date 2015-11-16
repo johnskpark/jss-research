@@ -138,7 +138,7 @@ public class JasimaGroupedProblem extends JasimaGPProblem {
 
 					experiment.runExperiment();
 
-					fitness.accumulateGroupFitness(ind, experiment.getResults(), getTracker().getResults());
+					fitness.accumulateGroupFitness(ind, experiment.getResults());
 					getTracker().clear();
 				}
 

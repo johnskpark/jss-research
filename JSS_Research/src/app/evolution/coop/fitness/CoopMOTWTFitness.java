@@ -54,20 +54,6 @@ public class CoopMOTWTFitness implements IJasimaCoopFitness {
 	}
 
 	@Override
-	public void accumulateDiversityFitness(final Pair<GPIndividual, Double>[] groupResults) {
-		Set<Individual> indSet = new HashSet<Individual>();
-		for (int i = 0; i < groupResults.length; i++) {
-			Pair<GPIndividual, Double> result = groupResults[i];
-			if (indSet.contains(result.a)) {
-				continue;
-			}
-
-			fitnessMap.get(result.a).b[1].value(result.b);
-			indSet.add(result.a);
-		}
-	}
-
-	@Override
 	public void setFitness(final EvolutionState state,
 			final Individual ind) {
 		setTrialFitness(state, new Individual[]{ind}, new boolean[]{true}, true);

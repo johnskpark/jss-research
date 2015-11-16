@@ -6,6 +6,7 @@ import jasima.shopSim.models.dynamicShop.DynamicShopExperiment;
 import jasima.shopSim.util.BasicJobStatCollector;
 import app.listener.IWorkStationListener;
 import app.simConfig.AbsSimConfig;
+import app.tracker.JasimaEvolveDecisionTracker;
 import ec.EvolutionState;
 import ec.gp.GPProblem;
 import ec.util.MersenneTwisterFast;
@@ -33,7 +34,7 @@ public abstract class JasimaGPProblem extends GPProblem {
 	private long simSeed;
 	private MersenneTwisterFast rand;
 
-	private IJasimaTracker tracker;
+	private JasimaEvolveDecisionTracker tracker;
 
 	private IWorkStationListener workstationListener;
 
@@ -54,8 +55,9 @@ public abstract class JasimaGPProblem extends GPProblem {
 
 		// Setup the tracker.
 		try {
-			tracker = (IJasimaTracker) state.parameters.getInstanceForParameterEq(base.push(P_TRACKER), null, IJasimaTracker.class);
-			tracker.setProblem(this);
+			tracker = (JasimaEvolveDecisionTracker) state.parameters.getInstanceForParameterEq(base.push(P_TRACKER), null, JasimaEvolveDecisionTracker.class);
+
+			tracker.setSimConfig(simConfig);
 		} catch (ParamClassLoadException ex) {
 			state.output.warning("No tracker provided for JasimaMultilevelProblem.");
 		}
@@ -94,7 +96,7 @@ public abstract class JasimaGPProblem extends GPProblem {
 		return tracker != null;
 	}
 
-	protected IJasimaTracker getTracker() {
+	protected JasimaEvolveDecisionTracker getTracker() {
 		return tracker;
 	}
 

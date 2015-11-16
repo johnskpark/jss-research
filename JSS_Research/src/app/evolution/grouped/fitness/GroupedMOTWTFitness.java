@@ -1,12 +1,9 @@
 package app.evolution.grouped.fitness;
 
 import jasima.core.statistics.SummaryStat;
-import jasima.core.util.Pair;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import app.evolution.grouped.GroupedIndividual;
 import app.evolution.grouped.IJasimaGroupFitness;
@@ -38,21 +35,20 @@ public class GroupedMOTWTFitness implements IJasimaGroupFitness {
 
 	@Override
 	public void accumulateGroupFitness(final Individual ind,
-			final Map<String, Object> results,
-			final Pair<GPIndividual, Double>[] groupResults) {
-		Set<Individual> indSet = new HashSet<Individual>();
-		for (Pair<GPIndividual, Double> result : groupResults) {
-			if (indSet.contains(result.a)) {
-				continue;
-			}
-
-			if (!groupFitness.containsKey(result.a)) {
-				groupFitness.put(result.a, new SummaryStat());
-			}
-
-			groupFitness.get(result.a).value(result.b);
-			indSet.add(result.a);
-		}
+			final Map<String, Object> results) {
+//		Set<Individual> indSet = new HashSet<Individual>();
+//		for (Pair<GPIndividual, Double> result : groupResults) {
+//			if (indSet.contains(result.a)) {
+//				continue;
+//			}
+//
+//			if (!groupFitness.containsKey(result.a)) {
+//				groupFitness.put(result.a, new SummaryStat());
+//			}
+//
+//			groupFitness.get(result.a).value(result.b);
+//			indSet.add(result.a);
+//		}
 	}
 
 	@Override
