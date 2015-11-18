@@ -14,7 +14,7 @@
 # from ../../simple/params, which defines
 # generational, basic evolutionary mechanisms, selection mechanisms...
 
-parent.0 = ../../../ec/multilevel/multilevel.params
+parent.0 = ../../../ec/simple/simple.params
 
 
 #
@@ -22,7 +22,6 @@ parent.0 = ../../../ec/multilevel/multilevel.params
 # Koza-style fitness metrics, just to make everyone happy :-)
 #
 
-pop.subpop.0.fitness = ec.gp.koza.KozaFitness
 pop.subpop.0.species.fitness = ec.gp.koza.KozaFitness
 
 #
@@ -36,7 +35,7 @@ init = ec.gp.GPInitializer
 # using GPIndividuals as the prototypical individual class.
 
 pop.subpop.0.species = ec.gp.GPSpecies
-pop.subpop.0.species.ind = ec.gp.GPIndividual
+pop.subpop.0.species.ind = app.evolution.JasimaGPIndividual
 
 # We retry 100 times for duplicates (this is the lil-gp default)
 # in our subpopulation 0
@@ -74,12 +73,12 @@ pop.subpop.0.species.pipe.source.1.prob = 0.1
 # level of course.
 #
 
-# Reproduction will use MLSTournamentSelection
-breed.reproduce.source.0 = ec.multilevel.select.MLSIndividualTournamentSelection
+# Reproduction will use Tournament Selection
+breed.reproduce.source.0 = ec.select.TournamentSelection
 
 # Crossover will use Tournament Selection, try only 1
 # time, have a max depth of 17, and use KozaNodeSelector
-gp.koza.xover.source.0 = ec.multilevel.select.MLSIndividualTournamentSelection
+gp.koza.xover.source.0 = ec.select.TournamentSelection
 gp.koza.xover.source.1 = same
 gp.koza.xover.ns.0 = ec.gp.koza.KozaNodeSelector
 gp.koza.xover.ns.1 = same
@@ -97,7 +96,7 @@ gp.koza.xover.tries = 1
 # and GROW for building.  Also, Point Mutation uses a GrowBuilder
 # by default, with a default of min-depth=max-depth=5
 # as shown a ways below
-gp.koza.mutate.source.0 = ec.multilevel.select.MLSIndividualTournamentSelection
+gp.koza.mutate.source.0 = ec.select.TournamentSelection
 gp.koza.mutate.ns.0 = ec.gp.koza.KozaNodeSelector
 gp.koza.mutate.build.0 = ec.gp.koza.GrowBuilder
 gp.koza.mutate.maxdepth = 17
