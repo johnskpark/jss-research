@@ -2,6 +2,7 @@ package app.evolution.multilevel_new;
 
 import java.util.Map;
 
+import ec.multilevel_new.MLSGPIndividual;
 import app.evolution.IJasimaFitness;
 
 /**
@@ -10,7 +11,7 @@ import app.evolution.IJasimaFitness;
  * @author parkjohn
  *
  */
-public interface IJasimaMultilevelIndividualFitness extends IJasimaFitness {
+public interface IJasimaMultilevelIndividualFitness extends IJasimaFitness<MLSGPIndividual> {
 
 	/**
 	 * TODO javadoc.

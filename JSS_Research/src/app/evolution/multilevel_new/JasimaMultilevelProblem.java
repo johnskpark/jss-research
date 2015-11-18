@@ -14,6 +14,7 @@ import ec.Individual;
 import ec.Population;
 import ec.Subpopulation;
 import ec.gp.GPIndividual;
+import ec.multilevel_new.MLSGPIndividual;
 import ec.multilevel_new.MLSProblemForm;
 import ec.multilevel_new.MLSSubpopulation;
 import ec.util.Parameter;
@@ -104,23 +105,26 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 		groupRule.setConfiguration(config);
 
 		for (int expIndex = 0; expIndex < getSimConfig().getNumConfigs(); expIndex++) {
-			Experiment experiment = getExperiment(state, groupRule, expIndex);
+			Experiment experiment = getExperiment(state, groupRule, expIndex, getWorkStationListener(), getTracker());
 
 			experiment.runExperiment();
 
 			// Add in the results of the training instance to the fitness of the group.
 			groupFitness.accumulateFitness(expIndex, group, experiment.getResults());
 
-			// Add in the niching algorithm.
-			if (hasTracker()) {
-				niching.adjustFitness(state, getTracker(), group); // TODO should this be here?
-				getTracker().clear();
-			}
 			if (hasWorkStationListener()) { getWorkStationListener().clear(); }
 		}
 
-		groupFitness.setFitness(state, group, updateFitness, shouldSetContext());
+		groupFitness.setFitness(state, group);
 		groupFitness.clear();
+
+		// Add in the niching adjustment to the fitnesses.
+		if (hasTracker()) {
+			if (niching != null) {
+				niching.adjustFitness(state, getTracker(), group);
+			}
+			getTracker().clear();
+		}
 
 		getSimConfig().resetSeed();
 	}
@@ -142,7 +146,7 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 		indRule.setConfiguration(config);
 
 		for (int expIndex = 0; expIndex < getSimConfig().getNumConfigs(); expIndex++) {
-			Experiment experiment = getExperiment(state, indRule, expIndex);
+			Experiment experiment = getExperiment(state, indRule, expIndex, getWorkStationListener(), null);
 
 			experiment.runExperiment();
 
@@ -150,7 +154,7 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 			if (hasWorkStationListener()) { getWorkStationListener().clear(); }
 		}
 
-		indFitness.setFitness(state, ind);
+		indFitness.setFitness(state, (MLSGPIndividual) ind);
 		indFitness.clear();
 
 		getSimConfig().resetSeed();

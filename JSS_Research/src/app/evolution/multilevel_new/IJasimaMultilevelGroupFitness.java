@@ -12,7 +12,7 @@ import ec.multilevel_new.MLSSubpopulation;
  * @author parkjohn
  *
  */
-public interface IJasimaMultilevelGroupFitness extends IJasimaFitness {
+public interface IJasimaMultilevelGroupFitness extends IJasimaFitness<MLSSubpopulation> {
 
 	/**
 	 * TODO javadoc.
@@ -24,17 +24,5 @@ public interface IJasimaMultilevelGroupFitness extends IJasimaFitness {
 	public void accumulateFitness(int expIndex,
 			MLSSubpopulation subpop,
 			Map<String, Object> results);
-
-	/**
-	 * TODO javadoc.
-	 * @param state
-	 * @param subpop
-	 * @param updateFitness
-	 * @param shouldSetContext
-	 */
-	public void setFitness(EvolutionState state,
-			MLSSubpopulation subpop,
-			boolean[] updateFitness,
-			boolean shouldSetContext);
 
 }

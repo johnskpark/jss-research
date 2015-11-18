@@ -5,6 +5,7 @@ import jasima.core.statistics.SummaryStat;
 import java.util.HashMap;
 import java.util.Map;
 
+import app.evolution.JasimaGPIndividual;
 import app.evolution.grouped.GroupedIndividual;
 import app.evolution.grouped.IJasimaGroupFitness;
 import ec.EvolutionState;
@@ -41,7 +42,7 @@ public class TrialTWTFitness implements IJasimaGroupFitness {
 	}
 
 	@Override
-	public void setFitness(EvolutionState state, Individual ind) {
+	public void setFitness(EvolutionState state, JasimaGPIndividual ind) {
 		setIndFitness(state, ind);
 		setGroupFitness(state, ind, new GroupedIndividual(new GPIndividual[]{(GPIndividual) ind}));
 	}

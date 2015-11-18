@@ -5,8 +5,8 @@ import jasima.core.statistics.SummaryStat;
 import java.util.Map;
 
 import app.evolution.pickardt.IJasimaPickardtFitness;
+import app.evolution.pickardt.JasimaVectorIndividual;
 import ec.EvolutionState;
-import ec.Individual;
 import ec.gp.koza.KozaFitness;
 
 public class PickardtTWTFitness implements IJasimaPickardtFitness {
@@ -23,7 +23,7 @@ public class PickardtTWTFitness implements IJasimaPickardtFitness {
 	}
 
 	@Override
-	public void setFitness(EvolutionState state, Individual ind) {
+	public void setFitness(EvolutionState state, JasimaVectorIndividual ind) {
 		((KozaFitness) ind.fitness).setStandardizedFitness(state, overallStat.mean());
 	}
 

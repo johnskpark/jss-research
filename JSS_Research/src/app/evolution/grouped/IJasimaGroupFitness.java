@@ -1,15 +1,13 @@
 package app.evolution.grouped;
 
-import jasima.core.util.Pair;
-
 import java.util.Map;
 
 import app.evolution.IJasimaFitness;
+import app.evolution.JasimaGPIndividual;
 import ec.EvolutionState;
 import ec.Individual;
-import ec.gp.GPIndividual;
 
-public interface IJasimaGroupFitness extends IJasimaFitness {
+public interface IJasimaGroupFitness extends IJasimaFitness<JasimaGPIndividual> {
 
 	public void accumulateIndFitness(final Individual ind, final Map<String, Object> results);
 

@@ -5,7 +5,9 @@ import jasima.shopSim.core.WorkStation;
 import jasima.shopSim.core.WorkStation.WorkStationEvent;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import app.evolution.IJasimaGPPriorityRule;
 import app.listener.IWorkStationListener;
@@ -23,10 +25,15 @@ import ec.Individual;
 // FIXME IWorkStationListener is part of simConfig, I need to move it elsewhere.
 public class JasimaEvolveDecisionTracker implements IWorkStationListener {
 
+	public static final int NOT_SET = -1;
+
 	private IJasimaGPPriorityRule priorityRule;
 	private AbsSimConfig simConfig;
 
-	private List<JasimaEvolveDispatchingDecision> allDecisions = new ArrayList<JasimaEvolveDispatchingDecision>();
+	private Map<Integer, List<JasimaEvolveDispatchingDecision>> experimentDecisionMap = new HashMap<Integer, List<JasimaEvolveDispatchingDecision>>();
+
+	private List<JasimaEvolveDispatchingDecision> currentExperimentDecisions = null;
+	private int currentExperimentIndex = NOT_SET;
 	private JasimaEvolveDispatchingDecision currentDecision = null;
 
 	public JasimaEvolveDecisionTracker() {
@@ -56,6 +63,30 @@ public class JasimaEvolveDecisionTracker implements IWorkStationListener {
 	protected void preloadDispatchingDecision() {
 
 		currentDecision = new JasimaEvolveDispatchingDecision();
+	}
+
+	// TODO this is the weirdest shit I've written, I'll need to make this a little more clear in the future.
+	public void addExperimentIndex(int index) {
+		if (experimentDecisionMap.containsKey(index)) {
+			throw new IllegalStateException("The experiment's index must be unique!");
+		}
+
+		experimentDecisionMap.put(index, new ArrayList<JasimaEvolveDispatchingDecision>());
+
+		currentExperimentDecisions = experimentDecisionMap.get(index);
+		currentExperimentIndex = index;
+	}
+
+	public List<JasimaEvolveDispatchingDecision> getCurrentExperimentDecisions() {
+		return currentExperimentDecisions;
+	}
+
+	public int getCurrentExperimentIndex() {
+		return currentExperimentIndex;
+	}
+
+	public JasimaEvolveDispatchingDecision getCurrentDecision() {
+		return currentDecision;
 	}
 
 	// TODO definitely need javadoc that describes the preloading scenario.
@@ -89,7 +120,7 @@ public class JasimaEvolveDecisionTracker implements IWorkStationListener {
 			currentDecision.addEntryRankings(priorityRule.getEntryRankings());
 
 			// Add the dispatching decision to the list.
-			allDecisions.add(currentDecision);
+			currentExperimentDecisions.add(currentDecision);
 			currentDecision = null;
 		}
 	}
@@ -97,13 +128,23 @@ public class JasimaEvolveDecisionTracker implements IWorkStationListener {
 	/**
 	 * Get the results of all dispatching decisions made for a problem instance.
 	 */
-	public List<JasimaEvolveDispatchingDecision> getResults() {
-		return allDecisions;
+	public Map<Integer, List<JasimaEvolveDispatchingDecision>> getResults() {
+		return experimentDecisionMap;
 	}
 
 	@Override
 	public void clear() {
-		allDecisions.clear();
+		priorityRule = null;
+		simConfig = null;
+
+		experimentDecisionMap.clear();
+
+		clearCurrentExperiment();
+	}
+
+	public void clearCurrentExperiment() {
+		currentExperimentDecisions = null;
+		currentExperimentIndex = NOT_SET;
 		currentDecision = null;
 	}
 

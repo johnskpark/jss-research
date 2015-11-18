@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 import app.evolution.coop.IJasimaCoopFitness;
+import app.evolution.coop.JasimaCoopIndividual;
 import ec.EvolutionState;
 import ec.Fitness;
 import ec.Individual;
@@ -54,7 +55,7 @@ public class CoopMOTWTFitness implements IJasimaCoopFitness {
 
 	@Override
 	public void setFitness(final EvolutionState state,
-			final Individual ind) {
+			final JasimaCoopIndividual ind) {
 		setTrialFitness(state, new Individual[]{ind}, new boolean[]{true}, true);
 		setDiversityFitness(state, new Individual[]{ind}, new boolean[]{true});
 		setObjectiveFitness(state, new Individual[]{ind});

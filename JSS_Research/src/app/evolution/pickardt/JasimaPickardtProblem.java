@@ -155,7 +155,7 @@ public class JasimaPickardtProblem extends Problem implements SimpleProblemForm 
 		if (!ind.evaluated) {
 			checkConstraints(state, ind);
 
-			IntegerVectorIndividual vectorInd = (IntegerVectorIndividual) ind;
+			JasimaVectorIndividual vectorInd = (JasimaVectorIndividual) ind;
 
 			PR[] designatedRules = new PR[vectorInd.genomeLength()];
 			for (int i = 0; i < vectorInd.genomeLength(); i++) {
@@ -170,7 +170,7 @@ public class JasimaPickardtProblem extends Problem implements SimpleProblemForm 
 				fitness.accumulateFitness(i, experiment.getResults());
 			}
 
-			fitness.setFitness(state, ind);
+			fitness.setFitness(state, (JasimaVectorIndividual) ind);
 			fitness.clear();
 
 			ind.evaluated = true;

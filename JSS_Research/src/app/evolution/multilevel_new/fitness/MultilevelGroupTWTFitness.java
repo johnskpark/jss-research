@@ -6,7 +6,6 @@ import java.util.Map;
 
 import app.evolution.multilevel_new.IJasimaMultilevelGroupFitness;
 import ec.EvolutionState;
-import ec.Individual;
 import ec.gp.koza.KozaFitness;
 import ec.multilevel_new.MLSSubpopulation;
 
@@ -42,21 +41,13 @@ public class MultilevelGroupTWTFitness implements IJasimaMultilevelGroupFitness 
 	}
 
 	@Override
-	public void setFitness(EvolutionState state,
-			MLSSubpopulation subpop,
-			boolean[] updateFitness,
-			boolean shouldSetContext) {
+	public void setFitness(EvolutionState state, MLSSubpopulation subpop) {
 		double sizeFactor = Math.sqrt((2.0 + subpop.individuals.length) / (2.0 * subpop.individuals.length));
 		double groupFitness = ensembleStat.mean() * sizeFactor;
 
 		((KozaFitness) subpop.getFitness()).setStandardizedFitness(state, groupFitness);
 
 		subpop.setEvaluated(true);
-	}
-
-	@Override
-	public void setFitness(EvolutionState state, Individual ind) {
-		// FIXME Does nothing at the moment.
 	}
 
 	@Override

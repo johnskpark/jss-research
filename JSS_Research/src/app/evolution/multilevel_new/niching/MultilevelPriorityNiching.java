@@ -7,11 +7,13 @@ import java.util.List;
 import java.util.Map;
 
 import app.evolution.multilevel_new.IJasimaMultilevelNiching;
+import app.simConfig.AbsSimConfig;
 import app.tracker.JasimaEvolveDecisionTracker;
 import app.tracker.JasimaEvolveDispatchingDecision;
 import app.tracker.JasimaPriorityStat;
 import ec.EvolutionState;
 import ec.Individual;
+import ec.gp.koza.KozaFitness;
 import ec.multilevel_new.MLSSubpopulation;
 
 /**
@@ -26,23 +28,37 @@ public class MultilevelPriorityNiching implements IJasimaMultilevelNiching {
 	public void adjustFitness(final EvolutionState state,
 			final JasimaEvolveDecisionTracker tracker,
 			final MLSSubpopulation group) {
-		List<JasimaEvolveDispatchingDecision> decisions = tracker.getResults();
+		Map<Integer, List<JasimaEvolveDispatchingDecision>> experiments = tracker.getResults();
+		AbsSimConfig simConfig = tracker.getSimConfig();
 
 		double[] adjustment = new double[group.individuals.length];
 
-		for (JasimaEvolveDispatchingDecision decision : decisions) {
-			// Get the normalised priorities assigned to the selected job by the individuals.
-			double[] priorities = getNormPrioritiesOfBestEntry(decision, group);
+		for (int i = 0; i < simConfig.getNumConfigs(); i++) {
+			List<JasimaEvolveDispatchingDecision> decisions = experiments.get(i);
 
-			// Find the root mean squared distance between the individuals from the normalised priorities.
-			double[] rmsd = getRootMeanSquaredDistances(priorities);
+			for (JasimaEvolveDispatchingDecision decision : decisions) {
+				// Get the normalised priorities assigned to the selected job by the individuals.
+				double[] priorities = getNormPrioritiesOfBestEntry(decision, group);
 
-			for (int i = 0; i < group.individuals.length; i++) {
-				adjustment[i] += rmsd[i];
+				// Find the root mean squared distance between the individuals from the normalised priorities.
+				double[] rmsd = getRootMeanSquaredDistances(priorities);
+
+				for (int j = 0; j < group.individuals.length; j++) {
+					adjustment[j] += rmsd[j];
+				}
 			}
 		}
 
-		// TODO modify the fitnesses of the individuals.
+		// Adjust the fitnesses of the individuals according to the niching algorithm.
+		for (int i = 0; i < group.individuals.length; i++) {
+			adjustment[i] = adjustment[i] / simConfig.getNumConfigs();
+
+			KozaFitness fitness = (KozaFitness) group.individuals[i].fitness;
+			double standardisedFitness = fitness.standardizedFitness();
+			double adjustedFitness = standardisedFitness * (1 + adjustment[i]);
+
+			fitness.setStandardizedFitness(state, adjustedFitness);
+		}
 	}
 
 	private double[] getNormPrioritiesOfBestEntry(final JasimaEvolveDispatchingDecision decision, final MLSSubpopulation group) {

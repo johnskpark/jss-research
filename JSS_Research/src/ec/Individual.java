@@ -16,7 +16,7 @@ import ec.util.*;
  */
 
 /**
- * An Individual is an item in the EC population stew which is evaluated 
+ * An Individual is an item in the EC population stew which is evaluated
  * and assigned a fitness which determines its likelihood of selection.
  * Individuals are created most commonly by the newIndividual(...) method
  * of the ec.Species class.
@@ -32,7 +32,7 @@ import ec.util.*;
  * <li><b>writeIndividual(...,DataOutput)/readIndividual(...,DataInput)</b>&nbsp;&nbsp;&nbsp;This method
  * transmits or receives an individual in binary.  It is the most efficient approach to sending
  * individuals over networks, etc.  These methods write the evaluated flag and the fitness, then
- * call <b>readGenotype/writeGenotype</b>, which you must implement to write those parts of your 
+ * call <b>readGenotype/writeGenotype</b>, which you must implement to write those parts of your
  * Individual special to your functions-- the default versions of readGenotype/writeGenotype throw errors.
  * You don't need to implement them if you don't plan on using read/writeIndividual.
  *
@@ -43,7 +43,7 @@ import ec.util.*;
  * files for inspection, slight modification, then reading back in later on.  <b>readIndividual</b>reads
  * in the fitness and the evaluation flag, then calls <b>parseGenotype</b> to read in the remaining individual.
  * You are responsible for implementing parseGenotype: the Code class is there to help you.
- * <b>printIndividual</b> writes out the fitness and evaluation flag, then calls <b>genotypeToString</b> 
+ * <b>printIndividual</b> writes out the fitness and evaluation flag, then calls <b>genotypeToString</b>
  * and printlns the resultant string. You are responsible for implementing the genotypeToString method in such
  * a way that parseGenotype can read back in the individual println'd with genotypeToString.  The default form
  * of genotypeToString simply calls <b>toString</b>, which you may override instead if you like.  The default
@@ -52,7 +52,7 @@ import ec.util.*;
  *
  * <li><b>printIndividualForHumans(...,PrintWriter)</b>&nbsp;&nbsp;&nbsp;This
  * approach prints an individual in a fashion intended for human consumption only.
- * <b>printIndividualForHumans</b> writes out the fitness and evaluation flag, then calls <b>genotypeToStringForHumans<b> 
+ * <b>printIndividualForHumans</b> writes out the fitness and evaluation flag, then calls <b>genotypeToStringForHumans<b>
  * and printlns the resultant string. You are responsible for implementing the genotypeToStringForHumans method.
  * The default form of genotypeToStringForHumans simply calls <b>toString</b>, which you may override instead if you like
  * (though note that genotypeToString's default also calls toString).  You should handle one of these methods properly
@@ -79,29 +79,29 @@ public abstract class Individual implements Prototype, Comparable
 
     /** A string appropriate to put in front of whether or not the individual has been printed. */
     public static final String EVALUATED_PREAMBLE = "Evaluated: ";
-    
+
     /** The fitness of the Individual. */
     public Fitness fitness;
 
     /** The species of the Individual.*/
     public Species species;
-    
+
     /** Has the individual been evaluated and its fitness determined yet? */
     public boolean evaluated;
 
     public Object clone()
         {
-        try 
-            { 
+        try
+            {
             Individual myobj = (Individual) (super.clone());
             if (myobj.fitness != null) myobj.fitness = (Fitness)(fitness.clone());
-            return myobj; 
+            return myobj;
             }
-        catch (CloneNotSupportedException e) 
+        catch (CloneNotSupportedException e)
             { throw new InternalError(); } // never happens
         }
 
-   
+
     /** Returns the "size" of the individual.  This is used for things like
         parsimony pressure.  The default form of this method returns 0 --
         if you care about parsimony pressure, you'll need to override the
@@ -121,14 +121,14 @@ public abstract class Individual implements Prototype, Comparable
 
     /** Overridden here because hashCode() is not expected to return the pointer
         to the object.  toString() normally uses hashCode() to print a unique identifier,
-        and that's no longer the case.   You're welcome to override this anyway you 
+        and that's no longer the case.   You're welcome to override this anyway you
         like to make the individual print out in a more lucid fashion. */
     public String toString()
         {
-        return "" + this.getClass().getName() + "@" + 
+        return "" + this.getClass().getName() + "@" +
             System.identityHashCode(this) + "{" + hashCode() + "}";
         }
-        
+
     /** Print to a string the genotype of the Individual in a fashion readable by humans, and not intended
         to be parsed in again.  The fitness and evaluated flag should not be included.  The default form
         simply calls toString(), but you'll probably want to override this to something else. */
@@ -136,7 +136,7 @@ public abstract class Individual implements Prototype, Comparable
         {
         return toString();
         }
-        
+
     /** Print to a string the genotype of the Individual in a fashion intended
         to be parsed in again via parseGenotype(...).
         The fitness and evaluated flag should not be included.  The default form
@@ -146,14 +146,14 @@ public abstract class Individual implements Prototype, Comparable
         {
         return toString();
         }
-              
+
     /** This should be used to set up only those things which you share in common
         with all other individuals in your species; individual-specific items
         which make you <i>you</i> should be filled in by Species.newIndividual(...),
-        and modified by breeders. 
+        and modified by breeders.
         @see Prototype#setup(EvolutionState,Parameter)
     */
-    
+
     public void setup(final EvolutionState state, final Parameter base)
         {
         // does nothing by default.
@@ -172,22 +172,22 @@ public abstract class Individual implements Prototype, Comparable
         fitness.printFitnessForHumans(state,log);
         state.output.println( genotypeToStringForHumans(), log );
         }
-                
+
     /** Should print the individual out in a pleasing way for humans,
         including its
         fitness, using state.output.println(...,verbosity,log)
-        You can get fitness to print itself at the appropriate time by calling 
+        You can get fitness to print itself at the appropriate time by calling
         fitness.printFitnessForHumans(state,log,verbosity);
-                
+
         <p>The default form of this method simply prints out whether or not the
         individual has been evaluated, its fitness, and then calls Individual.genotypeToStringForHumans().
-        Feel free to override this to produce more sophisticated behavior, 
+        Feel free to override this to produce more sophisticated behavior,
         though it is rare to need to -- instead you could just override genotypeToStringForHumans().
         @deprecated Verbosity no longer used.
     */
 
     public final void printIndividualForHumans(final EvolutionState state,
-        final int log, 
+        final int log,
         final int verbosity)
         {
         printIndividualForHumans(state, log);
@@ -208,18 +208,18 @@ public abstract class Individual implements Prototype, Comparable
 
     /** Should print the individual in a way that can be read by computer,
         including its fitness, using state.output.println(...,verbosity,log)
-        You can get fitness to print itself at the appropriate time by calling 
+        You can get fitness to print itself at the appropriate time by calling
         fitness.printFitness(state,log,verbosity);
-                
+
         <p>The default form of this method simply prints out whether or not the
         individual has been evaluated, its fitness, and then calls Individual.genotypeToString().
-        Feel free to override this to produce more sophisticated behavior, 
+        Feel free to override this to produce more sophisticated behavior,
         though it is rare to need to -- instead you could just override genotypeToString().
         @deprecated Verbosity no longer used.
     */
 
     public final void printIndividual(final EvolutionState state,
-        final int log, 
+        final int log,
         final int verbosity)
         {
         printIndividual( state, log);
@@ -227,14 +227,14 @@ public abstract class Individual implements Prototype, Comparable
 
     /** Should print the individual in a way that can be read by computer,
         including its fitness.  You can get fitness to print itself at the
-        appropriate time by calling fitness.printFitness(state,log,writer); 
+        appropriate time by calling fitness.printFitness(state,log,writer);
         Usually you should try to use printIndividual(state,log,verbosity)
-        instead -- use this method only if you can't print through the 
+        instead -- use this method only if you can't print through the
         Output facility for some reason.
 
         <p>The default form of this method simply prints out whether or not the
         individual has been evaluated, its fitness, and then calls Individual.genotypeToString().
-        Feel free to override this to produce more sophisticated behavior, 
+        Feel free to override this to produce more sophisticated behavior,
         though it is rare to need to -- instead you could just override genotypeToString().
     */
 
@@ -250,18 +250,18 @@ public abstract class Individual implements Prototype, Comparable
         information stored in this Individual.  If you are trying to <i>create</i> an Individual
         from information read in from a stream or DataInput,
         see the various newIndividual() methods in Species. The default form of this method
-        simply reads in evaluation information, then fitness information, and then 
+        simply reads in evaluation information, then fitness information, and then
         calls parseGenotype() (which you should implement).  The Species is not changed or
-        attached, so you may need to do that elsewhere.  Feel free to override 
-        this method to produce more sophisticated behavior, 
-        though it is rare to need to -- instead you could just override parseGenotype(). */ 
+        attached, so you may need to do that elsewhere.  Feel free to override
+        this method to produce more sophisticated behavior,
+        though it is rare to need to -- instead you could just override parseGenotype(). */
 
-    public void readIndividual(final EvolutionState state, 
+    public void readIndividual(final EvolutionState state,
         final LineNumberReader reader)
         throws IOException
         {
         evaluated = Code.readBooleanWithPreamble(EVALUATED_PREAMBLE, state, reader);
-        
+
         // Next, what's my fitness?
         fitness.readFitness(state, reader);
 
@@ -279,13 +279,13 @@ public abstract class Individual implements Prototype, Comparable
         {
         state.output.fatal("parseGenotype(EvolutionState, LineNumberReader) not implemented in " + this.getClass());
         }
-        
+
     /** Writes the binary form of an individual out to a DataOutput.  This is not for serialization:
         the object should only write out the data relevant to the object sufficient to rebuild it from a DataInput.
         The Species will be reattached later, and you should not write it.   The default version of this
         method writes the evaluated and fitness information, then calls writeGenotype() to write the genotype
-        information.  Feel free to override this method to produce more sophisticated behavior, 
-        though it is rare to need to -- instead you could just override writeGenotype(). 
+        information.  Feel free to override this method to produce more sophisticated behavior,
+        though it is rare to need to -- instead you could just override writeGenotype().
     */
     public void writeIndividual(final EvolutionState state,
         final DataOutput dataOutput) throws IOException
@@ -294,11 +294,11 @@ public abstract class Individual implements Prototype, Comparable
         fitness.writeFitness(state,dataOutput);
         writeGenotype(state,dataOutput);
         }
-    
-    
+
+
     /** Writes the genotypic information to a DataOutput.  Largely called by writeIndividual(), and
         nothing else.  The default simply throws an error.  Various subclasses of Individual override this as
-        appropriate. For example, if your custom individual's genotype consists of an array of 
+        appropriate. For example, if your custom individual's genotype consists of an array of
         integers, you might do this:
 
         * <pre><tt>
@@ -306,7 +306,7 @@ public abstract class Individual implements Prototype, Comparable
         * for(int x=0;x<integers.length;x++)
         *     dataOutput.writeInt(integers[x]);
         * </tt></pre>
-        */ 
+        */
     public void writeGenotype(final EvolutionState state,
         final DataOutput dataOutput) throws IOException
         {
@@ -314,14 +314,14 @@ public abstract class Individual implements Prototype, Comparable
         }
 
     /** Reads in the genotypic information from a DataInput, erasing the previous genotype
-        of this Individual.  Largely called by readIndividual(), and nothing else.  
+        of this Individual.  Largely called by readIndividual(), and nothing else.
         If you are trying to <i>create</i> an Individual
         from information read in from a stream or DataInput,
         see the various newIndividual() methods in Species.
         The default simply throws an error.  Various subclasses of Individual override this as
-        appropriate.  For example, if your custom individual's genotype consists of an array of 
+        appropriate.  For example, if your custom individual's genotype consists of an array of
         integers, you might do this:
-        
+
         * <pre><tt>
         * integers = new int[dataInput.readInt()];
         * for(int x=0;x<integers.length;x++)
@@ -337,13 +337,13 @@ public abstract class Individual implements Prototype, Comparable
 
     /** Reads the binary form of an individual from a DataInput, erasing the previous
         information stored in this Individual.  This is not for serialization:
-        the object should only read in the data written out via printIndividual(state,dataInput).  
+        the object should only read in the data written out via printIndividual(state,dataInput).
         If you are trying to <i>create</i> an Individual
         from information read in from a stream or DataInput,
         see the various newIndividual() methods in Species. The default form of this method
-        simply reads in evaluation information, then fitness information, and then 
+        simply reads in evaluation information, then fitness information, and then
         calls readGenotype() (which you will need to override -- its default form simply throws an error).
-        The Species is not changed or attached, so you may need to do that elsewhere.  Feel free to override 
+        The Species is not changed or attached, so you may need to do that elsewhere.  Feel free to override
         this method to produce more sophisticated behavior, though it is rare to need to -- instead you could
         just override readGenotype().
     */
@@ -354,7 +354,7 @@ public abstract class Individual implements Prototype, Comparable
         fitness.readFitness(state,dataInput);
         readGenotype(state,dataInput);
         }
-    
+
     /** Returns the metric distance to another individual, if such a thing can be measured.
         Subclassess of Individual should implement this if it exists for their representation.
         The default implementation here, which isn't very helpful, returns 0 if the individuals are equal
@@ -376,13 +376,13 @@ public abstract class Individual implements Prototype, Comparable
         Individual other = (Individual) o;
         return fitness.compareTo(other.fitness);
         }
-                
-                
+
+
     /** Replaces myself with the other Individual, while merging our evaluation results together.  May destroy
         the other Individual in the process.  By default this procedure calls fitness(merge) to merge the old
         fitness (backwards) into the new fitness, then entirely overwrites myself with the other Individual
         (including the merged fitness).
-                
+
         <p>What is the purpose of this method?   When coevolution is done in combination with distributed evaluation,
         an Individual may be sent to multiple remote sites to be tested in different trials prior to having a completed
         fitness assessed.  As those trials complete, we need a way to merge them together.  By default this method
@@ -390,7 +390,7 @@ public abstract class Individual implements Prototype, Comparable
         then copies the other Individual to me.  But if you
         store additional trial results outside fitness---for example, if you keep around the best collaborators from
         coevolution, say---you may need a way to guarantee that this Individual reflects the most up to date information
-        about recent trials arriving via the other Individual.  In this case, override the method and perform merging 
+        about recent trials arriving via the other Individual.  In this case, override the method and perform merging
         by hand.
     */
     public void merge(EvolutionState state, Individual other)
@@ -407,12 +407,12 @@ public abstract class Individual implements Prototype, Comparable
             other.writeIndividual(state, out);
             readIndividual(state, in);
             }
-        catch (IOException e) 
-            { 
+        catch (IOException e)
+            {
             e.printStackTrace();
             state.output.fatal("Caught impossible IOException in Individual.merge(...).");
             }
         }
-        
+
     }
 

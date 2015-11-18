@@ -110,7 +110,7 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 		fitness.loadIndividuals(inds);
 
 		for (int i = 0; i < getSimConfig().getNumConfigs(); i++) {
-			Experiment experiment = getExperiment(state, coopRule, i);
+			Experiment experiment = getExperiment(state, coopRule, i, getWorkStationListener(), getTracker());
 
 			experiment.runExperiment();
 

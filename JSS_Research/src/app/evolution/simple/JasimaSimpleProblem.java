@@ -1,14 +1,15 @@
 package app.evolution.simple;
 
+import jasima.core.experiment.Experiment;
 import app.evolution.AbsGPPriorityRule;
 import app.evolution.JasimaGPConfig;
 import app.evolution.JasimaGPData;
+import app.evolution.JasimaGPIndividual;
 import app.evolution.JasimaGPProblem;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.gp.GPIndividual;
 import ec.util.Parameter;
-import jasima.core.experiment.Experiment;
 
 public class JasimaSimpleProblem extends JasimaGPProblem {
 
@@ -63,7 +64,7 @@ public class JasimaSimpleProblem extends JasimaGPProblem {
 		rule.setConfiguration(config);
 
 		for (int i = 0; i < getSimConfig().getNumConfigs(); i++) {
-			Experiment experiment = getExperiment(state, rule, i);
+			Experiment experiment = getExperiment(state, rule, i, getWorkStationListener(), getTracker());
 
 			experiment.runExperiment();
 
@@ -71,7 +72,7 @@ public class JasimaSimpleProblem extends JasimaGPProblem {
 			if (hasWorkStationListener()) { getWorkStationListener().clear(); }
 		}
 
-		fitness.setFitness(state, ind);
+		fitness.setFitness(state, (JasimaGPIndividual) ind);
 		fitness.clear();
 
 		ind.evaluated = true;

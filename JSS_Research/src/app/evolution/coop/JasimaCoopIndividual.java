@@ -1,9 +1,9 @@
 package app.evolution.coop;
 
-import ec.gp.GPIndividual;
+import app.evolution.JasimaGPIndividual;
 import ec.gp.GPTree;
 
-public class JasimaCoopIndividual extends GPIndividual {
+public class JasimaCoopIndividual extends JasimaGPIndividual {
 
 	private static final long serialVersionUID = 7566878552263864266L;
 

@@ -1,11 +1,17 @@
 package app.evolution;
 
 import ec.EvolutionState;
-import ec.Individual;
 
-public interface IJasimaFitness {
+/**
+ * TODO javadoc.
+ *
+ * @author parkjohn
+ *
+ */
+public interface IJasimaFitness<T extends JasimaReproducible> {
 
-	public void setFitness(final EvolutionState state, final Individual ind);
+	// FIXME Why do I even have this?
+	public void setFitness(final EvolutionState state, final T individual);
 
 	public void clear();
 

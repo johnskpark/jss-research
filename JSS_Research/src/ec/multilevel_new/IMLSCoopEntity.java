@@ -1,7 +1,7 @@
 package ec.multilevel_new;
 
+import app.evolution.JasimaReproducible;
 import ec.EvolutionState;
-import ec.Fitness;
 import ec.Individual;
 
 /**
@@ -10,12 +10,7 @@ import ec.Individual;
  * @author parkjohn
  *
  */
-public interface IMLSCoopEntity {
-
-	/**
-	 * Returns the fitness of the cooperative component.
-	 */
-	public Fitness getFitness();
+public interface IMLSCoopEntity extends JasimaReproducible {
 
 	/**
 	 * Returns the individuals which make up the cooperative component.

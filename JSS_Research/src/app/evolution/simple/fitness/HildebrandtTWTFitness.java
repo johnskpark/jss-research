@@ -11,10 +11,10 @@ import jasima.shopSim.util.BasicJobStatCollector;
 
 import java.util.Map;
 
+import app.evolution.JasimaGPIndividual;
 import app.evolution.JasimaGPProblem;
 import app.evolution.simple.IJasimaSimpleFitness;
 import ec.EvolutionState;
-import ec.Individual;
 import ec.gp.koza.KozaFitness;
 
 public class HildebrandtTWTFitness implements IJasimaSimpleFitness {
@@ -85,7 +85,7 @@ public class HildebrandtTWTFitness implements IJasimaSimpleFitness {
 
 	@Override
 	public void setFitness(final EvolutionState state,
-			final Individual ind) {
+			final JasimaGPIndividual ind) {
 		double fitness = perfIndexStat.sum() * fullSysPenStat.sum();
 		((KozaFitness) ind.fitness).setStandardizedFitness(state, fitness);
 	}

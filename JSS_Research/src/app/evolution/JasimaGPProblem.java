@@ -34,7 +34,7 @@ public abstract class JasimaGPProblem extends GPProblem {
 	private long simSeed;
 	private MersenneTwisterFast rand;
 
-	private JasimaEvolveDecisionTracker tracker;
+	private JasimaEvolveDecisionTracker decisionTracker;
 
 	private IWorkStationListener workstationListener;
 
@@ -55,9 +55,9 @@ public abstract class JasimaGPProblem extends GPProblem {
 
 		// Setup the tracker.
 		try {
-			tracker = (JasimaEvolveDecisionTracker) state.parameters.getInstanceForParameterEq(base.push(P_TRACKER), null, JasimaEvolveDecisionTracker.class);
+			decisionTracker = (JasimaEvolveDecisionTracker) state.parameters.getInstanceForParameterEq(base.push(P_TRACKER), null, JasimaEvolveDecisionTracker.class);
 
-			tracker.setSimConfig(simConfig);
+			decisionTracker.setSimConfig(simConfig);
 		} catch (ParamClassLoadException ex) {
 			state.output.warning("No tracker provided for JasimaMultilevelProblem.");
 		}
@@ -93,11 +93,11 @@ public abstract class JasimaGPProblem extends GPProblem {
 	}
 
 	protected boolean hasTracker() {
-		return tracker != null;
+		return decisionTracker != null;
 	}
 
 	protected JasimaEvolveDecisionTracker getTracker() {
-		return tracker;
+		return decisionTracker;
 	}
 
 	protected boolean hasWorkStationListener() {
@@ -109,7 +109,11 @@ public abstract class JasimaGPProblem extends GPProblem {
 	}
 
 	@SuppressWarnings("unchecked")
-	protected Experiment getExperiment(final EvolutionState state, AbsGPPriorityRule rule, int index) {
+	protected Experiment getExperiment(final EvolutionState state,
+			final AbsGPPriorityRule rule,
+			final int index,
+			final IWorkStationListener listener,
+			final JasimaEvolveDecisionTracker tracker) {
 		DynamicShopExperiment experiment = new DynamicShopExperiment();
 
 		experiment.setInitialSeed(simConfig.getLongValue());
@@ -124,7 +128,14 @@ public abstract class JasimaGPProblem extends GPProblem {
 		statCollector.setIgnoreFirst(simConfig.getNumIgnore());
 
 		experiment.setShopListener(new NotifierListener[]{statCollector});
-		if (workstationListener != null) { experiment.addMachineListener(workstationListener); }
+		if (listener != null) { experiment.addMachineListener(listener); }
+		if (tracker != null) {
+			experiment.addMachineListener(tracker);
+
+			tracker.clearCurrentExperiment();
+			tracker.addExperimentIndex(index);
+		}
+
 		experiment.setStopAfterNumJobs(simConfig.getStopAfterNumJobs());
 		experiment.setSequencingRule(rule);
 		experiment.setScenario(DynamicShopExperiment.Scenario.JOB_SHOP);
@@ -142,7 +153,7 @@ public abstract class JasimaGPProblem extends GPProblem {
 		newObject.simSeed = simSeed;
 		newObject.rand = (MersenneTwisterFast) rand.clone();
 
-		newObject.tracker = tracker;
+		newObject.decisionTracker = decisionTracker;
 
 		newObject.workstationListener = workstationListener;
 		((JasimaGPData) newObject.input).setWorkStationListener(newObject.workstationListener);
