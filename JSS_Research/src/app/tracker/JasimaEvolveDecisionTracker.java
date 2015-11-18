@@ -23,8 +23,6 @@ import ec.Individual;
 // FIXME IWorkStationListener is part of simConfig, I need to move it elsewhere.
 public class JasimaEvolveDecisionTracker implements IWorkStationListener {
 
-	// So what's the hierarchy going to be?
-
 	private IJasimaGPPriorityRule priorityRule;
 	private AbsSimConfig simConfig;
 
@@ -34,6 +32,18 @@ public class JasimaEvolveDecisionTracker implements IWorkStationListener {
 	public JasimaEvolveDecisionTracker() {
 		// Empty constructor.
 	}
+
+	// Getters
+
+	public IJasimaGPPriorityRule getPriorityRule() {
+		return priorityRule;
+	}
+
+	public AbsSimConfig getSimConfig() {
+		return simConfig;
+	}
+
+	// Setters
 
 	public void setPriorityRule(IJasimaGPPriorityRule priorityRule) {
 		this.priorityRule = priorityRule;
@@ -84,7 +94,9 @@ public class JasimaEvolveDecisionTracker implements IWorkStationListener {
 		}
 	}
 
-	// TODO javadoc.
+	/**
+	 * Get the results of all dispatching decisions made for a problem instance.
+	 */
 	public List<JasimaEvolveDispatchingDecision> getResults() {
 		return allDecisions;
 	}

@@ -35,11 +35,15 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 	public static final String P_IND_RULE = "ind-rule";
 	public static final String P_IND_FITNESS = "ind-fitness";
 
+	public static final String P_NICHING = "niching";
+
 	private AbsGPPriorityRule groupRule;
 	private IJasimaMultilevelGroupFitness groupFitness;
 
 	private AbsGPPriorityRule indRule;
 	private IJasimaMultilevelIndividualFitness indFitness;
+
+	private IJasimaMultilevelNiching niching;
 
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
@@ -52,6 +56,9 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 		// Setup the individual solver for evaluating individuals.
 		indRule = (AbsGPPriorityRule) state.parameters.getInstanceForParameterEq(base.push(P_IND_RULE), null, AbsGPPriorityRule.class);
 		indFitness = (IJasimaMultilevelIndividualFitness) state.parameters.getInstanceForParameterEq(base.push(P_IND_FITNESS), null, IJasimaMultilevelIndividualFitness.class);
+
+		// Setup the niching algorithm.
+		niching = (IJasimaMultilevelNiching) state.parameters.getInstanceForParameterEq(base.push(P_NICHING), null, IJasimaMultilevelNiching.class);
 	}
 
 	@Override
@@ -67,7 +74,7 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 
 	@Override
 	public void evaluateGroup(final EvolutionState state,
-			final MLSSubpopulation subpop,
+			final MLSSubpopulation group,
 			final boolean[] updateFitness,
 			final boolean countVictoriesOnly,
 			final int[] subpops,
@@ -75,7 +82,7 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 		// We don't care if the group's been evaluated previously,
 		// since the simulation changes at each generation.
 		List<GPIndividual> indsList = new ArrayList<GPIndividual>();
-		for (Individual ind : subpop.individuals) {
+		for (Individual ind : group.individuals) {
 			if (ind == null) {
 				continue;
 			}
@@ -101,15 +108,18 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 
 			experiment.runExperiment();
 
-			groupFitness.accumulateFitness(expIndex, subpop, experiment.getResults());
+			// Add in the results of the training instance to the fitness of the group.
+			groupFitness.accumulateFitness(expIndex, group, experiment.getResults());
+
+			// Add in the niching algorithm.
 			if (hasTracker()) {
-				
+				niching.adjustFitness(state, getTracker(), group); // TODO should this be here?
 				getTracker().clear();
 			}
 			if (hasWorkStationListener()) { getWorkStationListener().clear(); }
 		}
 
-		groupFitness.setFitness(state, subpop, updateFitness, shouldSetContext());
+		groupFitness.setFitness(state, group, updateFitness, shouldSetContext());
 		groupFitness.clear();
 
 		getSimConfig().resetSeed();

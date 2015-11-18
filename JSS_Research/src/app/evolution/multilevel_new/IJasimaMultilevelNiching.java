@@ -5,8 +5,22 @@ import app.tracker.JasimaEvolveDecisionTracker;
 import ec.EvolutionState;
 import ec.multilevel_new.MLSSubpopulation;
 
+/**
+ * TODO javadoc.
+ *
+ * @author parkjohn
+ *
+ */
 public interface IJasimaMultilevelNiching extends IJasimaNiching {
 
-	public void adjustFitness(final EvolutionState state, final JasimaEvolveDecisionTracker tracker, final MLSSubpopulation group);
+	/**
+	 * TODO javadoc.
+	 * @param state
+	 * @param tracker
+	 * @param group
+	 */
+	public void adjustFitness(final EvolutionState state,
+			final JasimaEvolveDecisionTracker tracker,
+			final MLSSubpopulation group);
 
 }

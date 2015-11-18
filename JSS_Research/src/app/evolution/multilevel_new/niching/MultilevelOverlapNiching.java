@@ -5,20 +5,26 @@ import ec.multilevel_new.MLSSubpopulation;
 import app.evolution.multilevel_new.IJasimaMultilevelNiching;
 import app.tracker.JasimaEvolveDecisionTracker;
 
+/**
+ * TODO javadoc.
+ *
+ * @author parkjohn
+ *
+ */
 public class MultilevelOverlapNiching implements IJasimaMultilevelNiching {
 
 	@Override
-	public void adjustFitness(EvolutionState state,
-			JasimaEvolveDecisionTracker tracker, MLSSubpopulation group) {
+	public void adjustFitness(final EvolutionState state,
+			final JasimaEvolveDecisionTracker tracker,
+			final MLSSubpopulation group) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void adjustFitness(EvolutionState state,
-			JasimaEvolveDecisionTracker tracker) {
-		// TODO Auto-generated method stub
-
+	public void adjustFitness(final EvolutionState state,
+			final JasimaEvolveDecisionTracker tracker) {
+		// FIXME does nothing at the moment.
 	}
 
 	@Override
