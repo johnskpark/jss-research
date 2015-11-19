@@ -4,6 +4,11 @@ import jasima.shopSim.core.PR;
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
 
+/**
+ * TODO javadoc. 
+ * @author John
+ *
+ */
 public class ATCPR extends PR {
 
 	private static final long serialVersionUID = -5200383919674123645L;

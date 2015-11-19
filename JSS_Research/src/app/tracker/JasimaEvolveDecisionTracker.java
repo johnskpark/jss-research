@@ -90,13 +90,13 @@ public class JasimaEvolveDecisionTracker implements IWorkStationListener {
 
 	// TODO definitely need javadoc that describes the preloading scenario.
 	public void addPriority(int index, Individual ind, PrioRuleTarget entry, double priority) {
-		if (currentDecision != null) {
-			if (index == 0) {
-				throw new IllegalArgumentException("The caller attempted to add the first individual after the dispatching decision has been initialised.");
+		if (currentDecision == null) {
+			if (index != 0) {
+				throw new IllegalArgumentException("The caller attempted to add individuals before the dispatching decision has been initialised.");
 			}
 			preloadDispatchingDecision();
-		} else if (index != 0) {
-			throw new IllegalArgumentException("The caller attempted to add individuals before the dispatching decision has been initialised.");
+		} else if (index == 0) {
+			throw new IllegalArgumentException("The caller attempted to add the first individual after the dispatching decision has been initialised.");
 		}
 
 		currentDecision.addPriority(ind, entry, priority);

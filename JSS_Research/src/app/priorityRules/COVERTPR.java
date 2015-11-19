@@ -4,6 +4,11 @@ import jasima.shopSim.core.PR;
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
 
+/**
+ * TODO I really wish I documented where I got this from. 
+ * @author John
+ *
+ */
 public class COVERTPR extends PR {
 
 	private static final long serialVersionUID = 3694129880044402062L;

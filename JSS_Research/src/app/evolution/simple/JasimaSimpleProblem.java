@@ -62,6 +62,7 @@ public class JasimaSimpleProblem extends JasimaGPProblem {
 		config.setSubpopulations(new int[]{subpopulation});
 		config.setThreadnum(threadnum);
 		config.setData((JasimaGPData)input);
+		if (hasTracker()) { config.setTracker(getTracker()); }
 
 		rule.setConfiguration(config);
 
