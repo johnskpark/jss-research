@@ -77,6 +77,10 @@ public class JasimaSimpleProblem extends JasimaGPProblem {
 
 		fitness.setFitness(state, (JasimaGPIndividual) ind);
 		fitness.clear();
+		
+		if (hasTracker()) {
+			getTracker().clear();
+		}
 
 		ind.evaluated = true;
 

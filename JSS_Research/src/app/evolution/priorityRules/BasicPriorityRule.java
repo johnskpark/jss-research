@@ -63,7 +63,7 @@ public class BasicPriorityRule extends AbsGPPriorityRule {
 
 			// Add the priority assigned to the entry to the tracker.
 			if (tracker != null) {
-				tracker.addPriority(0, individual, entry, priority);
+				tracker.addPriority(i, individual, entry, priority);
 			}
 
 			jobPriorities.put(entry, priority);
