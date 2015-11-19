@@ -53,6 +53,8 @@ public class JasimaSimpleProblem extends JasimaGPProblem {
 		// We don't care if the individual's been evaluated previously,
 		// since the simulation changes at each generation.
 
+		long startTime = System.nanoTime();
+
 		JasimaGPConfig config = new JasimaGPConfig();
 		config.setState(state);
 		config.setIndividuals(new GPIndividual[]{(GPIndividual) ind});
@@ -76,6 +78,11 @@ public class JasimaSimpleProblem extends JasimaGPProblem {
 		fitness.clear();
 
 		ind.evaluated = true;
+
+		long endTime = System.nanoTime();
+		long timeDiff = endTime - startTime;
+
+		System.out.printf("%d ns\n", timeDiff);
 	}
 
 	@Override

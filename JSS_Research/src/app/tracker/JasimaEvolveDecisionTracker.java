@@ -61,7 +61,6 @@ public class JasimaEvolveDecisionTracker implements IWorkStationListener {
 	}
 
 	protected void preloadDispatchingDecision() {
-
 		currentDecision = new JasimaEvolveDispatchingDecision();
 	}
 
