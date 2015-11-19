@@ -11,7 +11,7 @@ import ec.multilevel_new.MLSSubpopulation;
  * @author parkjohn
  *
  */
-public interface IJasimaMultilevelNiching extends IJasimaNiching {
+public interface IJasimaMultilevelNiching extends IJasimaNiching<MLSSubpopulation> {
 
 	/**
 	 * TODO javadoc.

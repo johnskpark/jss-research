@@ -1,22 +1,16 @@
 package app.evolution.coop.niching;
 
-import ec.EvolutionState;
-import ec.Individual;
 import app.evolution.coop.IJasimaCoopNiching;
+import app.evolution.coop.JasimaCoopIndividual;
 import app.tracker.JasimaEvolveDecisionTracker;
+import ec.EvolutionState;
 
 public class CoopOverlapNiching implements IJasimaCoopNiching {
 
 	@Override
-	public void adjustFitness(EvolutionState state,
-			JasimaEvolveDecisionTracker tracker, Individual[] inds) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void adjustFitness(EvolutionState state,
-			JasimaEvolveDecisionTracker tracker) {
+	public void adjustFitness(final EvolutionState state,
+			final JasimaEvolveDecisionTracker tracker,
+			final JasimaCoopIndividual ind) {
 		// TODO Auto-generated method stub
 
 	}

@@ -113,12 +113,6 @@ public class MultilevelPriorityNiching implements IJasimaMultilevelNiching {
 	}
 
 	@Override
-	public void adjustFitness(final EvolutionState state,
-			final JasimaEvolveDecisionTracker tracker) {
-		// FIXME does nothing at the moment.
-	}
-
-	@Override
 	public void clear() {
 		// TODO Auto-generated method stub
 
