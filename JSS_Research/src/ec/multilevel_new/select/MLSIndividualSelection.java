@@ -5,7 +5,6 @@ import ec.Individual;
 import ec.SelectionMethod;
 import ec.multilevel_new.MLSCoopPopulation;
 import ec.multilevel_new.MLSEvolutionState;
-import ec.multilevel_new.MLSGPIndividual;
 import ec.multilevel_new.MLSSubpopulation;
 import ec.select.SelectDefaults;
 import ec.util.MersenneTwisterFast;
@@ -144,7 +143,7 @@ public class MLSIndividualSelection extends SelectionMethod {
 	// Select an individual from the lowest level, since there is no group to select from.
 	protected int getUngroupedIndividual(final EvolutionState state, final int thread) {
 		MLSCoopPopulation coopPop = ((MLSEvolutionState) state).getCoopPopulation();
-		MLSGPIndividual[] inds = coopPop.getIndividuals();
+		Individual[] inds = coopPop.getIndividuals();
 
 		int size = getTournamentSizeToUse(state.random[thread]);
 

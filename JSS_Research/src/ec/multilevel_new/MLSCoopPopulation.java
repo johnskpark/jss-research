@@ -9,7 +9,7 @@ public class MLSCoopPopulation {
 
 	private IMLSCoopEntity[] allEntities;
 	private MLSSubpopulation[] groups;
-	private MLSGPIndividual[] individuals;
+	private Individual[] individuals;
 
 	// Lists have to be used here instead of a set. This is due to the fact that
 	// an individual's hashcode depends on its memory address, which is not consistent.
@@ -25,7 +25,7 @@ public class MLSCoopPopulation {
 	public MLSCoopPopulation(int numMetaGroups, int numMetaInds) {
 		allEntities = new IMLSCoopEntity[numMetaGroups + numMetaInds];
 		groups = new MLSSubpopulation[numMetaGroups];
-		individuals = new MLSGPIndividual[numMetaInds];
+		individuals = new Individual[numMetaInds];
 
 		groupedIndividuals = new ArrayList<Individual>();
 		ungroupedIndividuals = new ArrayList<Individual>();
@@ -45,8 +45,12 @@ public class MLSCoopPopulation {
 		}
 	}
 
-	public void addIndividual(MLSGPIndividual ind) {
-		allEntities[numGroups + numIndividuals] = ind;
+	public void addIndividual(Individual ind) {
+		if (!(ind instanceof IMLSCoopEntity)) {
+			throw new IllegalArgumentException("Individual must implement IMLSCoopEntity. Individual's class: " + ind.getClass());
+		}
+
+		allEntities[numGroups + numIndividuals] = (IMLSCoopEntity) ind;
 		individuals[numIndividuals++] = ind;
 
 		// Update the ungrouped individuals list, if the individual is not already grouped.
@@ -75,12 +79,12 @@ public class MLSCoopPopulation {
 		return groups;
 	}
 
-	public MLSGPIndividual[] getIndividuals() {
+	public Individual[] getIndividuals() {
 		return individuals;
 	}
 
-	public MLSGPIndividual[] getUngroupedIndividuals() {
-		MLSGPIndividual[] result = new MLSGPIndividual[ungroupedIndividuals.size()];
+	public Individual[] getUngroupedIndividuals() {
+		Individual[] result = new Individual[ungroupedIndividuals.size()];
 
 		ungroupedIndividuals.toArray(result);
 
@@ -90,7 +94,7 @@ public class MLSCoopPopulation {
 	public void clear() {
 		allEntities = new IMLSCoopEntity[numMetaGroups + numMetaInds];
 		groups = new MLSSubpopulation[numMetaGroups];
-		individuals = new MLSGPIndividual[numMetaInds];
+		individuals = new Individual[numMetaInds];
 	}
 
 }

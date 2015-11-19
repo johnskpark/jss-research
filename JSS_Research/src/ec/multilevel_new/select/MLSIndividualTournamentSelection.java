@@ -6,7 +6,6 @@ import java.util.List;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.Subpopulation;
-import ec.multilevel_new.MLSEvolutionState;
 import ec.select.TournamentSelection;
 import ec.util.Pair;
 

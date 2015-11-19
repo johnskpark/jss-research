@@ -11,7 +11,7 @@ import ec.Fitness;
 public interface JasimaReproducible {
 
 	/**
-	 * Returns the fitness of the BLAH.
+	 * Returns the fitness of the reproducible component.
 	 */
 	public Fitness getFitness();
 

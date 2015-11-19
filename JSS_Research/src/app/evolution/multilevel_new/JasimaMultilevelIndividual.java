@@ -1,11 +1,31 @@
 package app.evolution.multilevel_new;
 
+import app.evolution.JasimaGPIndividual;
+import ec.EvolutionState;
+import ec.Fitness;
+import ec.Individual;
 import ec.gp.GPTree;
-import ec.multilevel_new.MLSGPIndividual;
+import ec.multilevel_new.IMLSCoopEntity;
+import ec.multilevel_new.MLSCoopCombiner;
 
-public class JasimaMultilevelIndividual extends MLSGPIndividual {
+public class JasimaMultilevelIndividual extends JasimaGPIndividual implements IMLSCoopEntity {
 
 	private static final long serialVersionUID = -1819545258972420086L;
+
+	@Override
+	public Fitness getFitness() {
+		return fitness;
+	}
+
+	@Override
+	public Individual[] getIndividuals() {
+		return new Individual[]{this};
+	}
+
+	@Override
+	public IMLSCoopEntity combine(final EvolutionState state, final IMLSCoopEntity other) {
+		return MLSCoopCombiner.COOP_COMBINER.combine(state, this, other);
+	}
 
 	@Override
 	public String genotypeToStringForHumans() {

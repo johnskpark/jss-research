@@ -97,8 +97,8 @@ public class MLSEvolutionState extends EvolutionState {
 
 			// Ensure that the individuals are a type of MLSGPIndividual
 			for (int ind = 0; ind < subpopulation.individuals.length; ind++) {
-				if (!(subpopulation.individuals[ind] instanceof MLSGPIndividual)) {
-					output.fatal("Individual " + ind + " in subpopulation " + subpop + " is not of type MLSGPIndividual.");
+				if (!(subpopulation.individuals[ind] instanceof IMLSCoopEntity)) {
+					output.fatal("Individual " + ind + " in subpopulation " + subpop + " does not implement IMLSCoopEntity.");
 				}
 			}
 		}

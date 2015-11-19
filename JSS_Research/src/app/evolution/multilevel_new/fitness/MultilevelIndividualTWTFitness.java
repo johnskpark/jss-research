@@ -5,9 +5,9 @@ import jasima.core.statistics.SummaryStat;
 import java.util.Map;
 
 import app.evolution.multilevel_new.IJasimaMultilevelIndividualFitness;
+import app.evolution.multilevel_new.JasimaMultilevelIndividual;
 import ec.EvolutionState;
 import ec.gp.koza.KozaFitness;
-import ec.multilevel_new.MLSGPIndividual;
 
 /**
  * Fitness calculator for an individual in JasimaMultilevelProblem.
@@ -36,7 +36,7 @@ public class MultilevelIndividualTWTFitness implements IJasimaMultilevelIndividu
 	}
 
 	@Override
-	public void setFitness(EvolutionState state, MLSGPIndividual ind) {
+	public void setFitness(EvolutionState state, JasimaMultilevelIndividual ind) {
 		// Set the fitness is the mean total weighted
 		// tardiness over the problem instances.
 		double indFitness = overallStat.mean();

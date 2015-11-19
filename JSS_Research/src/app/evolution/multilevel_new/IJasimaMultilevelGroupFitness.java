@@ -3,7 +3,6 @@ package app.evolution.multilevel_new;
 import java.util.Map;
 
 import app.evolution.IJasimaFitness;
-import ec.EvolutionState;
 import ec.multilevel_new.MLSSubpopulation;
 
 /**

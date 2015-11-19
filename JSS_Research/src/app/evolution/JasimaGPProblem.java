@@ -59,7 +59,7 @@ public abstract class JasimaGPProblem extends GPProblem {
 
 			decisionTracker.setSimConfig(simConfig);
 		} catch (ParamClassLoadException ex) {
-			state.output.warning("No tracker provided for JasimaMultilevelProblem.");
+			state.output.warning("No tracker provided for JasimaGPProblem.");
 		}
 
         // Setup the workstation listener.

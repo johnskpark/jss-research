@@ -14,9 +14,9 @@ import ec.Individual;
 import ec.Population;
 import ec.Subpopulation;
 import ec.gp.GPIndividual;
-import ec.multilevel_new.MLSGPIndividual;
 import ec.multilevel_new.MLSProblemForm;
 import ec.multilevel_new.MLSSubpopulation;
+import ec.util.ParamClassLoadException;
 import ec.util.Parameter;
 
 /**
@@ -59,7 +59,11 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 		indFitness = (IJasimaMultilevelIndividualFitness) state.parameters.getInstanceForParameterEq(base.push(P_IND_FITNESS), null, IJasimaMultilevelIndividualFitness.class);
 
 		// Setup the niching algorithm.
-		niching = (IJasimaMultilevelNiching) state.parameters.getInstanceForParameterEq(base.push(P_NICHING), null, IJasimaMultilevelNiching.class);
+		try {
+			niching = (IJasimaMultilevelNiching) state.parameters.getInstanceForParameterEq(base.push(P_NICHING), null, IJasimaMultilevelNiching.class);
+		} catch (ParamClassLoadException ex) {
+			state.output.warning("No niching algorithm provided for JasimaMultilevelProblem.");
+		}
 	}
 
 	@Override
@@ -154,7 +158,7 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 			if (hasWorkStationListener()) { getWorkStationListener().clear(); }
 		}
 
-		indFitness.setFitness(state, (MLSGPIndividual) ind);
+		indFitness.setFitness(state, (JasimaMultilevelIndividual) ind);
 		indFitness.clear();
 
 		getSimConfig().resetSeed();

@@ -245,7 +245,7 @@ public class MLSBreeder extends Breeder {
 		for (int i = 0; i < overallSubpop.individuals.length; i++) {
 			newPop.subpops[0].individuals[i] = overallSubpop.individuals[i];
 
-			coopPopulation.addIndividual((MLSGPIndividual) overallSubpop.individuals[i]);
+			coopPopulation.addIndividual(overallSubpop.individuals[i]);
 		}
 
 		// Copy the groups represented by subsequent subpopulations.
@@ -558,7 +558,7 @@ public class MLSBreeder extends Breeder {
 					parentInds.add(ind);
 				}
 
-				MLSGPIndividual[] allInds = coopPopulation.getIndividuals();
+				Individual[] allInds = coopPopulation.getIndividuals();
 
 				// Find the individuals in the individual pool that are not already part of the group.
 				List<Individual> inds = new ArrayList<Individual>();
