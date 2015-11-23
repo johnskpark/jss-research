@@ -58,7 +58,7 @@ public class BasicPriorityRule extends AbsGPPriorityRule {
 		jobRankings.clear();
 		
 		if (tracker != null) {
-			tracker.initialiseDispatchingDecision();
+			tracker.addDispatchingDecision();
 		}
 
 		for (int i = 0; i < q.size(); i++) {

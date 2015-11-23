@@ -2,14 +2,14 @@ package app.evolution.coop.niching;
 
 import app.evolution.coop.IJasimaCoopNiching;
 import app.evolution.coop.JasimaCoopIndividual;
-import app.tracker.JasimaEvolveDecisionTracker;
+import app.tracker.JasimaEvolveExperimentTracker;
 import ec.EvolutionState;
 
 public class CoopDecisionNiching implements IJasimaCoopNiching {
 
 	@Override
 	public void adjustFitness(final EvolutionState state,
-			final JasimaEvolveDecisionTracker tracker,
+			final JasimaEvolveExperimentTracker tracker,
 			final JasimaCoopIndividual ind) {
 		// TODO Auto-generated method stub
 

@@ -1,20 +1,20 @@
 package app.evolution.multilevel_new.niching;
 
-import jasima.core.util.Pair;
-import jasima.shopSim.core.PrioRuleTarget;
-
 import java.util.List;
 import java.util.Map;
 
 import app.evolution.multilevel_new.IJasimaMultilevelNiching;
 import app.simConfig.AbsSimConfig;
-import app.tracker.JasimaEvolveDecisionTracker;
-import app.tracker.JasimaEvolveDispatchingDecision;
+import app.tracker.JasimaEvolveDecision;
+import app.tracker.JasimaEvolveExperiment;
+import app.tracker.JasimaEvolveExperimentTracker;
 import app.tracker.JasimaPriorityStat;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.gp.koza.KozaFitness;
 import ec.multilevel_new.MLSSubpopulation;
+import jasima.core.util.Pair;
+import jasima.shopSim.core.PrioRuleTarget;
 
 /**
  * TODO javadoc.
@@ -26,27 +26,27 @@ public class MultilevelPriorityNiching implements IJasimaMultilevelNiching {
 
 	@Override
 	public void adjustFitness(final EvolutionState state,
-			final JasimaEvolveDecisionTracker tracker,
+			final JasimaEvolveExperimentTracker tracker,
 			final MLSSubpopulation group) {
-		Map<Integer, List<JasimaEvolveDispatchingDecision>> experiments = tracker.getResults();
+		List<JasimaEvolveExperiment> experiments = tracker.getResults();
 		AbsSimConfig simConfig = tracker.getSimConfig();
 
 		double[] adjustment = new double[group.individuals.length];
 
 		for (int i = 0; i < simConfig.getNumConfigs(); i++) {
-			List<JasimaEvolveDispatchingDecision> decisions = experiments.get(i);
+//			List<JasimaEvolveDecision> decisions = experiments.get(i);
 
-			for (JasimaEvolveDispatchingDecision decision : decisions) {
-				// Get the normalised priorities assigned to the selected job by the individuals.
-				double[] priorities = getNormPrioritiesOfBestEntry(decision, group);
-
-				// Find the root mean squared distance between the individuals from the normalised priorities.
-				double[] rmsd = getRootMeanSquaredDistances(priorities);
-
-				for (int j = 0; j < group.individuals.length; j++) {
-					adjustment[j] += rmsd[j];
-				}
-			}
+//			for (JasimaEvolveDecision decision : decisions) {
+//				// Get the normalised priorities assigned to the selected job by the individuals.
+//				double[] priorities = getNormPrioritiesOfBestEntry(decision, group);
+//
+//				// Find the root mean squared distance between the individuals from the normalised priorities.
+//				double[] rmsd = getRootMeanSquaredDistances(priorities);
+//
+//				for (int j = 0; j < group.individuals.length; j++) {
+//					adjustment[j] += rmsd[j];
+//				}
+//			}
 		}
 
 		// Adjust the fitnesses of the individuals according to the niching algorithm.
@@ -61,7 +61,7 @@ public class MultilevelPriorityNiching implements IJasimaMultilevelNiching {
 		}
 	}
 
-	private double[] getNormPrioritiesOfBestEntry(final JasimaEvolveDispatchingDecision decision, final MLSSubpopulation group) {
+	private double[] getNormPrioritiesOfBestEntry(final JasimaEvolveDecision decision, final MLSSubpopulation group) {
 		List<PrioRuleTarget> entryRankingByGroup = decision.getEntryRankings();
 		PrioRuleTarget bestEntry = entryRankingByGroup.get(0);
 

@@ -6,7 +6,7 @@ import jasima.shopSim.models.dynamicShop.DynamicShopExperiment;
 import jasima.shopSim.util.BasicJobStatCollector;
 import app.listener.IWorkStationListener;
 import app.simConfig.AbsSimConfig;
-import app.tracker.JasimaEvolveDecisionTracker;
+import app.tracker.JasimaEvolveExperimentTracker;
 import ec.EvolutionState;
 import ec.gp.GPProblem;
 import ec.util.MersenneTwisterFast;
@@ -34,7 +34,7 @@ public abstract class JasimaGPProblem extends GPProblem {
 	private long simSeed;
 	private MersenneTwisterFast rand;
 
-	private JasimaEvolveDecisionTracker decisionTracker;
+	private JasimaEvolveExperimentTracker decisionTracker;
 
 	private IWorkStationListener workstationListener;
 
@@ -55,7 +55,7 @@ public abstract class JasimaGPProblem extends GPProblem {
 
 		// Setup the tracker.
 		try {
-			decisionTracker = (JasimaEvolveDecisionTracker) state.parameters.getInstanceForParameterEq(base.push(P_TRACKER), null, JasimaEvolveDecisionTracker.class);
+			decisionTracker = (JasimaEvolveExperimentTracker) state.parameters.getInstanceForParameterEq(base.push(P_TRACKER), null, JasimaEvolveExperimentTracker.class);
 
 			decisionTracker.setSimConfig(simConfig);
 		} catch (ParamClassLoadException ex) {
@@ -96,7 +96,7 @@ public abstract class JasimaGPProblem extends GPProblem {
 		return decisionTracker != null;
 	}
 
-	protected JasimaEvolveDecisionTracker getTracker() {
+	protected JasimaEvolveExperimentTracker getTracker() {
 		return decisionTracker;
 	}
 
@@ -113,7 +113,7 @@ public abstract class JasimaGPProblem extends GPProblem {
 			final AbsGPPriorityRule rule,
 			final int index,
 			final IWorkStationListener listener,
-			final JasimaEvolveDecisionTracker tracker) {
+			final JasimaEvolveExperimentTracker tracker) {
 		DynamicShopExperiment experiment = new DynamicShopExperiment();
 
 		experiment.setInitialSeed(simConfig.getLongValue());
@@ -133,7 +133,7 @@ public abstract class JasimaGPProblem extends GPProblem {
 			experiment.addMachineListener(tracker);
 
 			tracker.clearCurrentExperiment();
-			tracker.addExperimentIndex(index);
+			tracker.setExperimentIndex(index);
 		}
 
 		experiment.setStopAfterNumJobs(simConfig.getStopAfterNumJobs());

@@ -23,20 +23,20 @@ import ec.Individual;
 // Could I have something where the EnsemblePriorityRule is aggregated from BasicPriorityRule?
 
 // FIXME IWorkStationListener is part of simConfig, I need to move it elsewhere.
-public class JasimaEvolveDecisionTracker implements IWorkStationListener {
+public class JasimaEvolveExperimentTracker implements IWorkStationListener {
 
 	public static final int NOT_SET = -1;
 
 	private IJasimaGPPriorityRule priorityRule;
 	private AbsSimConfig simConfig;
 
-	private Map<Integer, List<JasimaEvolveDispatchingDecision>> experimentDecisionMap = new HashMap<Integer, List<JasimaEvolveDispatchingDecision>>();
+	private List<JasimaEvolveExperiment> experimentDecisions;
 
-	private List<JasimaEvolveDispatchingDecision> currentExperimentDecisions = null;
+	private JasimaEvolveExperiment currentExperimentDecisions = null;
 	private int currentExperimentIndex = NOT_SET;
-	private JasimaEvolveDispatchingDecision currentDecision = null;
+	private JasimaEvolveDecision currentDecision = null;
 
-	public JasimaEvolveDecisionTracker() {
+	public JasimaEvolveExperimentTracker() {
 		// Empty constructor.
 	}
 
@@ -49,30 +49,34 @@ public class JasimaEvolveDecisionTracker implements IWorkStationListener {
 	public AbsSimConfig getSimConfig() {
 		return simConfig;
 	}
-
+	
 	// Setters
-
+	
 	public void setPriorityRule(IJasimaGPPriorityRule priorityRule) {
 		this.priorityRule = priorityRule;
 	}
-
+	
 	public void setSimConfig(AbsSimConfig simConfig) {
 		this.simConfig = simConfig;
 	}
+	
+	public void initialise() {
+		experimentDecisions = new ArrayList<JasimaEvolveExperiment>(simConfig.getNumConfigs());
+		
+		for (int i = 0; i < simConfig.getNumConfigs(); i++) {
+			experimentDecisions.add(new JasimaEvolveExperiment(priorityRule.getIndividuals()));
+		}		
+	}
 
-	// TODO this is the weirdest shit I've written, I'll need to make this a little more clear in the future.
-	public void addExperimentIndex(int index) {
-		if (experimentDecisionMap.containsKey(index)) {
-			throw new IllegalStateException("The experiment's index must be unique!");
-		}
-
-		experimentDecisionMap.put(index, new ArrayList<JasimaEvolveDispatchingDecision>());
-
-		currentExperimentDecisions = experimentDecisionMap.get(index);
+	/**
+	 * TODO javadoc.
+	 */
+	public void setExperimentIndex(int index) {
+		currentExperimentDecisions = experimentDecisions.get(index);
 		currentExperimentIndex = index;
 	}
 
-	public List<JasimaEvolveDispatchingDecision> getCurrentExperimentDecisions() {
+	public JasimaEvolveExperiment getCurrentExperimentDecisions() {
 		return currentExperimentDecisions;
 	}
 
@@ -80,19 +84,21 @@ public class JasimaEvolveDecisionTracker implements IWorkStationListener {
 		return currentExperimentIndex;
 	}
 
-	public JasimaEvolveDispatchingDecision getCurrentDecision() {
+	public JasimaEvolveDecision getCurrentDecision() {
 		return currentDecision;
 	}
 
 	/**
 	 * TODO javadoc.
 	 */
-	public void initialiseDispatchingDecision() {
+	public void addDispatchingDecision() {
 		if (currentDecision != null) {
 			throw new IllegalArgumentException("The dispatching decision cannot be initialised more than once.");
 		}
 		
-		currentDecision = new JasimaEvolveDispatchingDecision(priorityRule.getIndividuals());
+		// TODO 
+		currentExperimentDecisions.addDispatchingDecision();
+		currentDecision = new JasimaEvolveDecision(priorityRule.getIndividuals());
 	}
 
 	/**
@@ -104,6 +110,7 @@ public class JasimaEvolveDecisionTracker implements IWorkStationListener {
 		}
 
 		// TODO right, this part needs to be fixed. I think that constructing a hash map every decision is a little too excessive. 
+		currentExperimentDecisions.addPriority(index, ind, entry, priority);
 		currentDecision.addPriority(ind, entry, priority);
 	}
 
@@ -124,7 +131,7 @@ public class JasimaEvolveDecisionTracker implements IWorkStationListener {
 			currentDecision.addEntryRankings(priorityRule.getEntryRankings());
 
 			// Add the dispatching decision to the list.
-			currentExperimentDecisions.add(currentDecision);
+//			currentExperimentDecisions.add(currentDecision);
 			currentDecision = null;
 		}
 	}
@@ -132,8 +139,8 @@ public class JasimaEvolveDecisionTracker implements IWorkStationListener {
 	/**
 	 * Get the results of all dispatching decisions made for a problem instance.
 	 */
-	public Map<Integer, List<JasimaEvolveDispatchingDecision>> getResults() {
-		return experimentDecisionMap;
+	public List<JasimaEvolveExperiment> getResults() {
+		return experimentDecisions;
 	}
 
 	@Override
@@ -141,7 +148,7 @@ public class JasimaEvolveDecisionTracker implements IWorkStationListener {
 		priorityRule = null;
 		simConfig = null;
 
-		experimentDecisionMap.clear();
+		experimentDecisions.clear();
 
 		clearCurrentExperiment();
 	}

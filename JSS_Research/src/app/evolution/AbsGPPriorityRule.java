@@ -1,7 +1,7 @@
 package app.evolution;
 
 import jasima.shopSim.core.PR;
-import app.tracker.JasimaEvolveDecisionTracker;
+import app.tracker.JasimaEvolveExperimentTracker;
 import ec.EvolutionState;
 
 /**
@@ -18,7 +18,7 @@ public abstract class AbsGPPriorityRule extends PR implements IJasimaGPPriorityR
 	protected int threadnum;
 
 	protected JasimaGPData data;
-	protected JasimaEvolveDecisionTracker tracker;
+	protected JasimaEvolveExperimentTracker tracker;
 
 	@Override
 	public void setConfiguration(JasimaGPConfig config) {
@@ -29,7 +29,6 @@ public abstract class AbsGPPriorityRule extends PR implements IJasimaGPPriorityR
 
 		if (config.hasTracker()) {
 			tracker = config.getTracker();
-			tracker.setPriorityRule(this);
 		}
 	}
 

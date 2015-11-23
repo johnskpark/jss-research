@@ -3,7 +3,7 @@ package app.evolution.multilevel_new.niching;
 import ec.EvolutionState;
 import ec.multilevel_new.MLSSubpopulation;
 import app.evolution.multilevel_new.IJasimaMultilevelNiching;
-import app.tracker.JasimaEvolveDecisionTracker;
+import app.tracker.JasimaEvolveExperimentTracker;
 
 /**
  * TODO javadoc.
@@ -17,7 +17,7 @@ public class MultilevelDecisionNiching implements IJasimaMultilevelNiching {
 
 	@Override
 	public void adjustFitness(final EvolutionState state,
-			final JasimaEvolveDecisionTracker tracker,
+			final JasimaEvolveExperimentTracker tracker,
 			final MLSSubpopulation group) {
 		// TODO Auto-generated method stub
 
