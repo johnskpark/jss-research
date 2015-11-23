@@ -70,7 +70,7 @@ eval.problem.fitness = app.evolution.simple.fitness.TWTFitness
 eval.problem.simulator = app.simConfig.huntConfig.FourOpSimConfig
 eval.problem.simulator.seed = 15
 
-# eval.problem.tracker = app.tracker.JasimaEvolveDecisionTracker
+eval.problem.tracker = app.tracker.JasimaEvolveDecisionTracker
 
 eval.problem.workstation = app.listener.hunt.HuntListenerEvolveFactory
 eval.problem.workstation.max-jobs = 5

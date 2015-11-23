@@ -1,13 +1,13 @@
 package app.tracker;
 
-import jasima.shopSim.core.PrioRuleTarget;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import ec.Individual;
+import ec.gp.GPIndividual;
+import jasima.shopSim.core.PrioRuleTarget;
 
 // So the tracker's going to generate one of these for each dispatching decision.
 public class JasimaEvolveDispatchingDecision {
@@ -21,15 +21,13 @@ public class JasimaEvolveDispatchingDecision {
 
 	private Map<Individual, JasimaPriorityStat> decisionMakers = new HashMap<Individual, JasimaPriorityStat>();
 
-	public JasimaEvolveDispatchingDecision() {
-		// Keep the constructor empty for now.
+	public JasimaEvolveDispatchingDecision(GPIndividual[] inds) {
+		for (GPIndividual ind : inds) {
+			decisionMakers.put(ind, new JasimaPriorityStat());
+		}
 	}
 
 	public void addPriority(Individual ind, PrioRuleTarget entry, double priority) {
-		if (!decisionMakers.containsKey(ind)) {
-			decisionMakers.put(ind, new JasimaPriorityStat());
-		}
-
 		decisionMakers.get(ind).add(entry, priority);
 	}
 

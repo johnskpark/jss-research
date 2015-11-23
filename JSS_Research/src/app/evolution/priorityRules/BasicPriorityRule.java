@@ -19,7 +19,7 @@ public class BasicPriorityRule extends AbsGPPriorityRule {
 
 	private static final long serialVersionUID = 5215861545303707980L;
 
-	private GPIndividual individual;
+	private GPIndividual[] individual;
 
 	private int indIndex;
 
@@ -42,28 +42,37 @@ public class BasicPriorityRule extends AbsGPPriorityRule {
 	public void setConfiguration(JasimaGPConfig config) {
 		super.setConfiguration(config);
 
-		individual = config.getIndividuals()[indIndex];
+		individual = config.getIndividuals();
 	}
 
+	@Override
+	public GPIndividual[] getIndividuals() {
+		return individual;
+	}
+	
 	@Override
 	public void beforeCalc(PriorityQueue<?> q) {
 		super.beforeCalc(q);
 
 		jobPriorities.clear();
 		jobRankings.clear();
+		
+		if (tracker != null) {
+			tracker.initialiseDispatchingDecision();
+		}
 
 		for (int i = 0; i < q.size(); i++) {
 			PrioRuleTarget entry = q.get(i);
 
 			data.setPrioRuleTarget(entry);
-
-			individual.trees[0].child.eval(state, threadnum, data, null, individual, null);
+			
+			individual[indIndex].trees[0].child.eval(state, threadnum, data, null, individual[indIndex], null);
 
 			double priority = data.getPriority();
-
+			
 			// Add the priority assigned to the entry to the tracker.
 			if (tracker != null) {
-				tracker.addPriority(i, individual, entry, priority);
+				tracker.addPriority(i, individual[indIndex], entry, priority);
 			}
 
 			jobPriorities.put(entry, priority);

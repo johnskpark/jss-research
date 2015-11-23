@@ -44,6 +44,11 @@ public class EnsemblePriorityRule extends AbsGPPriorityRule {
 			tracker.setPriorityRule(this);
 		}
 	}
+	
+	@Override
+	public GPIndividual[] getIndividuals() {
+		return individuals;
+	}
 
 	@Override
 	public void beforeCalc(PriorityQueue<?> q) {
@@ -59,6 +64,10 @@ public class EnsemblePriorityRule extends AbsGPPriorityRule {
 		}
 
 		int[] decisions = new int[individuals.length];
+		
+		if (tracker != null) {
+			tracker.initialiseDispatchingDecision();
+		}
 
 		for (int i = 0; i < individuals.length; i++) {
 			double bestPriority = Double.NEGATIVE_INFINITY;

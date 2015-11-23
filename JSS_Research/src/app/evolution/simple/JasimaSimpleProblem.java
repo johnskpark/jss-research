@@ -1,6 +1,9 @@
 package app.evolution.simple;
 
-import jasima.core.experiment.Experiment;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintStream;
+
 import app.evolution.AbsGPPriorityRule;
 import app.evolution.JasimaGPConfig;
 import app.evolution.JasimaGPData;
@@ -10,6 +13,7 @@ import ec.EvolutionState;
 import ec.Individual;
 import ec.gp.GPIndividual;
 import ec.util.Parameter;
+import jasima.core.experiment.Experiment;
 
 public class JasimaSimpleProblem extends JasimaGPProblem {
 
@@ -22,7 +26,9 @@ public class JasimaSimpleProblem extends JasimaGPProblem {
 
 	private AbsGPPriorityRule rule;
 	private IJasimaSimpleFitness fitness;
-
+	
+	private PrintStream output;
+	
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
 		super.setup(state, base);
@@ -32,11 +38,13 @@ public class JasimaSimpleProblem extends JasimaGPProblem {
 
 		// Setup the fitness.
 		fitness = (IJasimaSimpleFitness) state.parameters.getInstanceForParameterEq(base.push(P_FITNESS), null, IJasimaSimpleFitness.class);
-		setupFitness(state, base.push(P_FITNESS));
-	}
-
-	private void setupFitness(final EvolutionState state, final Parameter fitnessBase) {
 		fitness.setProblem(this);
+		
+		try {
+			output = new PrintStream(new File("tracker.txt"));
+		} catch (IOException ex) {
+			state.output.fatal("ERROR");
+		}
 	}
 
 	@Override
@@ -54,7 +62,7 @@ public class JasimaSimpleProblem extends JasimaGPProblem {
 		// since the simulation changes at each generation.
 
 		long startTime = System.nanoTime();
-
+		
 		JasimaGPConfig config = new JasimaGPConfig();
 		config.setState(state);
 		config.setIndividuals(new GPIndividual[]{(GPIndividual) ind});
@@ -83,11 +91,11 @@ public class JasimaSimpleProblem extends JasimaGPProblem {
 		}
 
 		ind.evaluated = true;
-
+		
 		long endTime = System.nanoTime();
 		long timeDiff = endTime - startTime;
-
-		System.out.printf("%d ns\n", timeDiff);
+		
+		output.println(timeDiff);
 	}
 
 	@Override

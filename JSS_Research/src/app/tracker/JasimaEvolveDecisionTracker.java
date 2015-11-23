@@ -60,10 +60,6 @@ public class JasimaEvolveDecisionTracker implements IWorkStationListener {
 		this.simConfig = simConfig;
 	}
 
-	protected void preloadDispatchingDecision() {
-		currentDecision = new JasimaEvolveDispatchingDecision();
-	}
-
 	// TODO this is the weirdest shit I've written, I'll need to make this a little more clear in the future.
 	public void addExperimentIndex(int index) {
 		if (experimentDecisionMap.containsKey(index)) {
@@ -88,15 +84,26 @@ public class JasimaEvolveDecisionTracker implements IWorkStationListener {
 		return currentDecision;
 	}
 
-	// TODO definitely need javadoc that describes the preloading scenario.
+	/**
+	 * TODO javadoc.
+	 */
+	public void initialiseDispatchingDecision() {
+		if (currentDecision != null) {
+			throw new IllegalArgumentException("The dispatching decision cannot be initialised more than once.");
+		}
+		
+		currentDecision = new JasimaEvolveDispatchingDecision(priorityRule.getIndividuals());
+	}
+
+	/**
+	 * TODO javadoc.
+	 */
 	public void addPriority(int index, Individual ind, PrioRuleTarget entry, double priority) {
 		if (currentDecision == null) {
-			if (index != 0) {
-				throw new IllegalArgumentException("The caller attempted to add individuals before the dispatching decision has been initialised.");
-			}
-			preloadDispatchingDecision();
+			throw new IllegalArgumentException("The caller attempted to add individuals before the dispatching decision has been initialised.");
 		}
 
+		// TODO right, this part needs to be fixed. I think that constructing a hash map every decision is a little too excessive. 
 		currentDecision.addPriority(ind, entry, priority);
 	}
 
