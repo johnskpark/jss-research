@@ -1,4 +1,4 @@
-package app.listener;
+package app;
 
 public interface IWorkStationListenerFactory {
 

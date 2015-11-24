@@ -34,7 +34,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import app.listener.IWorkStationListener;
+import app.IWorkStationListener;
 import app.node.INode;
 import app.node.NodeData;
 import app.simConfig.AbsSimConfig;

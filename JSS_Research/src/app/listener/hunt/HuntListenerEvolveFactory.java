@@ -1,7 +1,7 @@
 package app.listener.hunt;
 
+import app.IWorkStationListener;
 import app.evolution.IWorkStationListenerEvolveFactory;
-import app.listener.IWorkStationListener;
 import ec.EvolutionState;
 import ec.util.Parameter;
 

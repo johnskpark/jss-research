@@ -4,7 +4,7 @@ import jasima.core.experiment.Experiment;
 import jasima.core.util.observer.NotifierListener;
 import jasima.shopSim.models.dynamicShop.DynamicShopExperiment;
 import jasima.shopSim.util.BasicJobStatCollector;
-import app.listener.IWorkStationListener;
+import app.IWorkStationListener;
 import app.simConfig.AbsSimConfig;
 import app.tracker.JasimaEvolveExperimentTracker;
 import ec.EvolutionState;

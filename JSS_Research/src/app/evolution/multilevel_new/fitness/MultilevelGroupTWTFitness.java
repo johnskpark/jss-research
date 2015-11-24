@@ -37,7 +37,7 @@ public class MultilevelGroupTWTFitness implements IJasimaMultilevelGroupFitness 
 
 		// We want the total weighted tardiness, so take the
 		// sum of the values accumulated by the stats object.
-		ensembleStat.value(stat.sum());
+		ensembleStat.value(stat.mean());
 	}
 
 	@Override

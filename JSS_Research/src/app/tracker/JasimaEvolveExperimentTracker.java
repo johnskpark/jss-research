@@ -8,8 +8,8 @@ import jasima.shopSim.core.WorkStation.WorkStationEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+import app.IWorkStationListener;
 import app.evolution.IJasimaGPPriorityRule;
-import app.listener.IWorkStationListener;
 import app.simConfig.AbsSimConfig;
 import ec.Individual;
 
@@ -102,7 +102,7 @@ public class JasimaEvolveExperimentTracker implements IWorkStationListener {
 		if (event == WorkStation.WS_JOB_SELECTED) {
 			// Add in the start time and such information into the decision.
 			PrioRuleTarget entry = notifier.justStarted;
-			currentExperimentDecisions.addStartedEntry(entry);
+			currentExperimentDecisions.addSelectedEntry(entry);
 			currentExperimentDecisions.addStartTime(entry.getShop().simTime());
 
 			// Do some post processing on the current decision.

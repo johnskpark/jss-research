@@ -83,6 +83,7 @@ eval.problem.simulator = app.simConfig.huntConfig.FourOpSimConfig
 eval.problem.simulator.seed = 15
 
 eval.problem.tracker = app.tracker.JasimaEvolveExperimentTracker
+eval.problem.niching = app.evolution.multilevel_new.niching.MultilevelPriorityNiching
 
 eval.problem.workstation = app.listener.hunt.HuntListenerEvolveFactory
 eval.problem.workstation.max-jobs = 5

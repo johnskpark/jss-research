@@ -1,6 +1,6 @@
 package app.evolution;
 
-import app.listener.IWorkStationListener;
+import app.IWorkStationListener;
 import jasima.shopSim.core.PrioRuleTarget;
 import ec.gp.GPData;
 

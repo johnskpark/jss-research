@@ -1,6 +1,6 @@
 package app.node;
 
-import app.listener.IWorkStationListener;
+import app.IWorkStationListener;
 import jasima.shopSim.core.PrioRuleTarget;
 
 public class NodeData {

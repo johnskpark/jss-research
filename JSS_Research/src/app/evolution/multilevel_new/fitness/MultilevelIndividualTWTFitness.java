@@ -32,7 +32,7 @@ public class MultilevelIndividualTWTFitness implements IJasimaMultilevelIndividu
 
 		// We want the total weighted tardiness, so take the
 		// sum of the values accumulated by the stats object.
-		overallStat.value(stat.sum());
+		overallStat.value(stat.mean());
 	}
 
 	@Override

@@ -23,10 +23,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+import app.IWorkStationListener;
 import app.evolution.IWorkStationListenerEvolveFactory;
 import app.evolution.pickardt.presetRules.PRCR;
 import app.evolution.pickardt.presetRules.PRFCFS;
-import app.listener.IWorkStationListener;
 import app.node.CompositePR;
 import app.node.NodeData;
 import app.simConfig.AbsSimConfig;

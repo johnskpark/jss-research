@@ -9,7 +9,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 
-import app.listener.IWorkStationListener;
+import app.IWorkStationListener;
 
 public class HuntListener implements IWorkStationListener {
 

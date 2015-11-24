@@ -66,8 +66,8 @@ public class JasimaEvolveExperiment {
 		currentDecisionsMap.get(ind).add(entry, priority);
 	}
 
-	public void addStartedEntry(PrioRuleTarget entry) {
-		currentDecision.setStartedEntry(entry);
+	public void addSelectedEntry(PrioRuleTarget entry) {
+		currentDecision.setSelectedEntry(entry);
 	}
 
 	public void addStartTime(double time) {

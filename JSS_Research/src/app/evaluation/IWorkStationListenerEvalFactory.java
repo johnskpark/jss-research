@@ -2,7 +2,7 @@ package app.evaluation;
 
 import org.w3c.dom.Document;
 
-import app.listener.IWorkStationListenerFactory;
+import app.IWorkStationListenerFactory;
 
 public interface IWorkStationListenerEvalFactory extends IWorkStationListenerFactory {
 

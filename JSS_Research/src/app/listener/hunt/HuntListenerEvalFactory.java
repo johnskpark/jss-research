@@ -2,8 +2,8 @@ package app.listener.hunt;
 
 import org.w3c.dom.Document;
 
+import app.IWorkStationListener;
 import app.evaluation.IWorkStationListenerEvalFactory;
-import app.listener.IWorkStationListener;
 
 public class HuntListenerEvalFactory implements IWorkStationListenerEvalFactory {
 

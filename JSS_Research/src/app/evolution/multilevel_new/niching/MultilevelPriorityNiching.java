@@ -39,13 +39,13 @@ public class MultilevelPriorityNiching implements IJasimaMultilevelNiching {
 
 			for (JasimaEvolveDecision decision : decisions) {
 				// Get the normalised priorities assigned to the selected job by the individuals.
-				double[] priorities = getNormPrioritiesOfBestEntry(decision, group);
+				double[] priorities = getNormPrioritiesOfSelectedEntry(decision, group);
 
 				// Find the root mean squared distance between the individuals from the normalised priorities.
 				double[] rmsd = getRootMeanSquaredDistances(priorities);
 
 				for (int j = 0; j < group.individuals.length; j++) {
-					adjustment[j] += rmsd[j];
+					adjustment[j] += rmsd[j] / decisions.size();
 				}
 			}
 		}
@@ -54,18 +54,24 @@ public class MultilevelPriorityNiching implements IJasimaMultilevelNiching {
 		for (int i = 0; i < group.individuals.length; i++) {
 			adjustment[i] = adjustment[i] / simConfig.getNumConfigs();
 
+			if (adjustment[i] > 1.0) {
+				throw new RuntimeException("Error");
+			}
+
 			KozaFitness fitness = (KozaFitness) group.individuals[i].fitness;
 			double standardisedFitness = fitness.standardizedFitness();
 			double adjustedFitness = standardisedFitness * (1 + adjustment[i]);
+
+			System.out.printf("Adjusted fitness: %f\n", adjustedFitness);
 
 			fitness.setStandardizedFitness(state, adjustedFitness);
 		}
 	}
 
-	// TODO
-	private double[] getNormPrioritiesOfBestEntry(final JasimaEvolveDecision decision, final MLSSubpopulation group) {
+	// Get the normalised priorities assigned to the selected entry.
+	private double[] getNormPrioritiesOfSelectedEntry(final JasimaEvolveDecision decision, final MLSSubpopulation group) {
 		List<PrioRuleTarget> entryRankingByGroup = decision.getEntryRankings();
-		PrioRuleTarget bestEntry = entryRankingByGroup.get(0);
+		PrioRuleTarget selectedEntry = entryRankingByGroup.get(0);
 
 		Map<GPIndividual, JasimaPriorityStat> indPriorityMap = decision.getDecisionMakers();
 
@@ -75,23 +81,29 @@ public class MultilevelPriorityNiching implements IJasimaMultilevelNiching {
 			Pair<PrioRuleTarget, Double>[] entries = indPriorityMap.get(group.individuals[i]).getEntries();
 
 			// Get the priority assigned to the selected job by the individuals after normalisation.
-			double bestEntryPriority = -1;
+			double selectedEntryPriority = -1;
 			double sumPriorities = 0.0;
+
+			// Get the maximum priority.
+			double maxEntryPriority = Double.NEGATIVE_INFINITY;
+			for (int j = 0; j < entries.length; j++) {
+				maxEntryPriority = Math.max(maxEntryPriority, entries[j].b);
+			}
 
 			for (int j = 0; j < entries.length; j++) {
 				PrioRuleTarget entry = entries[j].a;
-				double normalisedPriority = Math.exp(entries[j].b);
+				double normalisedPriority = Math.exp(entries[j].b - maxEntryPriority);
 
-				if (bestEntry.equals(entry)) {
-					bestEntryPriority = normalisedPriority;
+				if (selectedEntry.equals(entry)) {
+					selectedEntryPriority = normalisedPriority;
 				}
 
 				sumPriorities += normalisedPriority;
 			}
 
-			bestEntryPriority = bestEntryPriority / sumPriorities;
+			selectedEntryPriority = selectedEntryPriority / sumPriorities;
 
-			indPriorities[i] = bestEntryPriority;
+			indPriorities[i] = selectedEntryPriority;
 		}
 
 		return indPriorities;

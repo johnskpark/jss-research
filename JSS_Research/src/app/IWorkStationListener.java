@@ -1,4 +1,4 @@
-package app.listener;
+package app;
 
 import jasima.core.util.observer.NotifierListener;
 import jasima.shopSim.core.WorkStation;

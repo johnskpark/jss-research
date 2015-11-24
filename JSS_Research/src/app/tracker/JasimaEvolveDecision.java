@@ -66,7 +66,7 @@ public class JasimaEvolveDecision {
 		this.entryRankings = entryRankings;
 	}
 
-	public void setStartedEntry(PrioRuleTarget startedEntry) {
+	public void setSelectedEntry(PrioRuleTarget startedEntry) {
 		this.startedEntry = startedEntry;
 	}
 
