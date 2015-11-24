@@ -27,7 +27,7 @@ public class JasimaEvolveDecision {
 	}
 
 	public void addPriority(Individual ind, PrioRuleTarget entry, double priority) {
-		decisionMakers.get(ind).add(entry, priority);
+		decisionMakers.get(ind).addPriority(entry, priority);
 	}
 
 	// Getters

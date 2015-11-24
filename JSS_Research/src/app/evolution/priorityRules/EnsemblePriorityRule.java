@@ -12,7 +12,6 @@ import java.util.Map;
 import app.evolution.AbsGPPriorityRule;
 import app.evolution.JasimaGPConfig;
 import app.priorityRules.ATCPR;
-import app.tracker.JasimaEvolveExperimentTracker;
 import ec.gp.GPIndividual;
 
 public class EnsemblePriorityRule extends AbsGPPriorityRule {
@@ -51,7 +50,7 @@ public class EnsemblePriorityRule extends AbsGPPriorityRule {
 		jobRankings.clear();
 
 		for (int i = 0; i < q.size(); i++) {
-			EntryVotes ev = new EntryVotes(i, q.get(i));
+			EntryVotes ev = new EntryVotes(q.get(i));
 			jobVotes.put(q.get(i), ev);
 			jobRankings.add(ev);
 		}
@@ -115,12 +114,10 @@ public class EnsemblePriorityRule extends AbsGPPriorityRule {
 
 	// Stores the votes made on a particular job.
 	private class EntryVotes implements Comparable<EntryVotes> {
-		final int index;
 		final PrioRuleTarget entry;
 		private int count = 0;
 
-		public EntryVotes(int i, PrioRuleTarget e) {
-			index = i;
+		public EntryVotes(PrioRuleTarget e) {
 			entry = e;
 		}
 

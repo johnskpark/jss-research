@@ -62,8 +62,6 @@ public class MultilevelPriorityNiching implements IJasimaMultilevelNiching {
 			double standardisedFitness = fitness.standardizedFitness();
 			double adjustedFitness = standardisedFitness * (1 + adjustment[i]);
 
-			System.out.printf("Adjusted fitness: %f\n", adjustedFitness);
-
 			fitness.setStandardizedFitness(state, adjustedFitness);
 		}
 	}
@@ -109,6 +107,7 @@ public class MultilevelPriorityNiching implements IJasimaMultilevelNiching {
 		return indPriorities;
 	}
 
+	// Calculate the root mean squared distances between the priorities.
 	private double[] getRootMeanSquaredDistances(double[] priorities) {
 		double[] rmsd = new double[priorities.length];
 

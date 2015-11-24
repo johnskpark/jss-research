@@ -25,7 +25,7 @@ public class TWTFitness implements IJasimaSimpleFitness {
 	public void accumulateFitness(final int index, final Map<String, Object> results) {
 		SummaryStat stat = (SummaryStat) results.get(WT_MEAN_STR);
 
-		overallStat.value(stat.sum());
+		overallStat.value(stat.mean());
 	}
 
 	@Override

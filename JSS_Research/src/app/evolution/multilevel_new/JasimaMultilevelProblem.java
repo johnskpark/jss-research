@@ -93,13 +93,7 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 		// We don't care if the group's been evaluated previously,
 		// since the simulation changes at each generation.
 		List<GPIndividual> indsList = new ArrayList<GPIndividual>();
-		for (Individual ind : group.individuals) {
-			if (ind == null) {
-				continue;
-			}
-
-			indsList.add((GPIndividual) ind);
-		}
+		for (Individual ind : group.individuals) { indsList.add((GPIndividual) ind); }
 
 		GPIndividual[] gpInds = new GPIndividual[indsList.size()];
 		indsList.toArray(gpInds);

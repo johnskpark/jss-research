@@ -63,7 +63,7 @@ public class JasimaEvolveExperiment {
 	}
 
 	public void addPriority(int index, Individual ind, PrioRuleTarget entry, double priority) {
-		currentDecisionsMap.get(ind).add(entry, priority);
+		currentDecisionsMap.get(ind).addPriority(entry, priority);
 	}
 
 	public void addSelectedEntry(PrioRuleTarget entry) {
