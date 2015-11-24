@@ -1,9 +1,6 @@
 package app.evolution.simple;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintStream;
-
+import jasima.core.experiment.Experiment;
 import app.evolution.AbsGPPriorityRule;
 import app.evolution.JasimaGPConfig;
 import app.evolution.JasimaGPData;
@@ -13,7 +10,6 @@ import ec.EvolutionState;
 import ec.Individual;
 import ec.gp.GPIndividual;
 import ec.util.Parameter;
-import jasima.core.experiment.Experiment;
 
 public class JasimaSimpleProblem extends JasimaGPProblem {
 
@@ -26,9 +22,7 @@ public class JasimaSimpleProblem extends JasimaGPProblem {
 
 	private AbsGPPriorityRule rule;
 	private IJasimaSimpleFitness fitness;
-	
-	private PrintStream output;
-	
+
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
 		super.setup(state, base);
@@ -39,18 +33,21 @@ public class JasimaSimpleProblem extends JasimaGPProblem {
 		// Setup the fitness.
 		fitness = (IJasimaSimpleFitness) state.parameters.getInstanceForParameterEq(base.push(P_FITNESS), null, IJasimaSimpleFitness.class);
 		fitness.setProblem(this);
-		
-		try {
-			output = new PrintStream(new File("tracker.txt"));
-		} catch (IOException ex) {
-			state.output.fatal("ERROR");
-		}
+
+		// Setup the tracker.
+		if (hasTracker()) { getTracker().setPriorityRule(rule); }
 	}
 
 	@Override
 	public void prepareToEvaluate(final EvolutionState state, final int threadnum) {
 		// Reset the seed for the simulator.
 		getSimConfig().setSeed(getRandom().nextLong());
+
+		// Setup the tracker.
+		if (hasTracker()) {
+			getTracker().setPriorityRule(rule);
+			getTracker().setSimConfig(getSimConfig());
+		}
 	}
 
 	@Override
@@ -61,8 +58,6 @@ public class JasimaSimpleProblem extends JasimaGPProblem {
 		// We don't care if the individual's been evaluated previously,
 		// since the simulation changes at each generation.
 
-		long startTime = System.nanoTime();
-		
 		JasimaGPConfig config = new JasimaGPConfig();
 		config.setState(state);
 		config.setIndividuals(new GPIndividual[]{(GPIndividual) ind});
@@ -70,12 +65,11 @@ public class JasimaSimpleProblem extends JasimaGPProblem {
 		config.setSubpopulations(new int[]{subpopulation});
 		config.setThreadnum(threadnum);
 		config.setData((JasimaGPData)input);
-		if (hasTracker()) { 
-			getTracker().initialise();
-			config.setTracker(getTracker()); 
-		}
+		if (hasTracker()) { config.setTracker(getTracker()); }
 
 		rule.setConfiguration(config);
+
+		if (hasTracker()) { getTracker().initialise(); }
 
 		for (int i = 0; i < getSimConfig().getNumConfigs(); i++) {
 			Experiment experiment = getExperiment(state, rule, i, getWorkStationListener(), getTracker());
@@ -88,17 +82,12 @@ public class JasimaSimpleProblem extends JasimaGPProblem {
 
 		fitness.setFitness(state, (JasimaGPIndividual) ind);
 		fitness.clear();
-		
+
 		if (hasTracker()) {
 			getTracker().clear();
 		}
 
 		ind.evaluated = true;
-		
-		long endTime = System.nanoTime();
-		long timeDiff = endTime - startTime;
-		
-		output.println(timeDiff);
 	}
 
 	@Override

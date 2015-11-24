@@ -33,7 +33,6 @@ public class JasimaEvolveExperimentTracker implements IWorkStationListener {
 
 	private JasimaEvolveExperiment currentExperimentDecisions = null;
 	private int currentExperimentIndex = NOT_SET;
-//	private JasimaEvolveDecision currentDecision = null;
 
 	public JasimaEvolveExperimentTracker() {
 		// Empty constructor.
@@ -83,58 +82,31 @@ public class JasimaEvolveExperimentTracker implements IWorkStationListener {
 		return currentExperimentIndex;
 	}
 
-//	public JasimaEvolveDecision getCurrentDecision() {
-//		return currentDecision;
-//	}
-
 	/**
 	 * TODO javadoc.
 	 */
 	public void addDispatchingDecision(PriorityQueue<?> q) {
-//		if (currentDecision != null) {
-//			throw new IllegalArgumentException("The dispatching decision cannot be initialised more than once.");
-//		}
-
-		// TODO
 		currentExperimentDecisions.addDispatchingDecision(q);
-//		currentDecision = new JasimaEvolveDecision(priorityRule.getIndividuals());
 	}
 
 	/**
 	 * TODO javadoc.
 	 */
 	public void addPriority(int index, Individual ind, PrioRuleTarget entry, double priority) {
-//		if (currentDecision == null) {
-//			throw new IllegalArgumentException("The caller attempted to add individuals before the dispatching decision has been initialised.");
-//		}
-
-		// TODO right, this part needs to be fixed. I think that constructing a hash map every decision is a little too excessive.
 		currentExperimentDecisions.addPriority(index, ind, entry, priority);
-//		currentDecision.addPriority(ind, entry, priority);
 	}
 
 	@Override
 	public void update(WorkStation notifier, WorkStationEvent event) {
 		// Listen to only the job selected notifications.
 		if (event == WorkStation.WS_JOB_SELECTED) {
-//			if (currentDecision == null) {
-//				throw new IllegalArgumentException("The dispatching decision has not been initialised yet.");
-//			}
-
 			// Add in the start time and such information into the decision.
 			PrioRuleTarget entry = notifier.justStarted;
-//			currentDecision.setStartedEntry(entry);
-//			currentDecision.setStartTime(entry.getShop().simTime());
 			currentExperimentDecisions.addStartedEntry(entry);
 			currentExperimentDecisions.addStartTime(entry.getShop().simTime());
 
 			// Do some post processing on the current decision.
-//			currentDecision.addEntryRankings(priorityRule.getEntryRankings());
 			currentExperimentDecisions.addEntryRankings(priorityRule.getEntryRankings());
-
-			// Add the dispatching decision to the list.
-//			currentExperimentDecisions.add(currentDecision);
-//			currentDecision = null;
 		}
 	}
 
@@ -147,9 +119,6 @@ public class JasimaEvolveExperimentTracker implements IWorkStationListener {
 
 	@Override
 	public void clear() {
-		priorityRule = null;
-		simConfig = null;
-
 		experimentDecisions.clear();
 
 		clearCurrentExperiment();
@@ -158,7 +127,6 @@ public class JasimaEvolveExperimentTracker implements IWorkStationListener {
 	public void clearCurrentExperiment() {
 		currentExperimentDecisions = null;
 		currentExperimentIndex = NOT_SET;
-//		currentDecision = null;
 	}
 
 }

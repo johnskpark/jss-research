@@ -29,6 +29,7 @@ public abstract class AbsGPPriorityRule extends PR implements IJasimaGPPriorityR
 
 		if (config.hasTracker()) {
 			tracker = config.getTracker();
+			tracker.setPriorityRule(this);
 		}
 	}
 

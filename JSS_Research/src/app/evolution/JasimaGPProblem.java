@@ -34,7 +34,7 @@ public abstract class JasimaGPProblem extends GPProblem {
 	private long simSeed;
 	private MersenneTwisterFast rand;
 
-	private JasimaEvolveExperimentTracker decisionTracker;
+	private JasimaEvolveExperimentTracker experimentTracker;
 
 	private IWorkStationListener workstationListener;
 
@@ -55,10 +55,11 @@ public abstract class JasimaGPProblem extends GPProblem {
 
 		// Setup the tracker.
 		try {
-			decisionTracker = (JasimaEvolveExperimentTracker) state.parameters.getInstanceForParameterEq(base.push(P_TRACKER), null, JasimaEvolveExperimentTracker.class);
-
-			decisionTracker.setSimConfig(simConfig);
+			experimentTracker = (JasimaEvolveExperimentTracker) state.parameters.getInstanceForParameterEq(base.push(P_TRACKER), null, JasimaEvolveExperimentTracker.class);
+			experimentTracker.setSimConfig(simConfig);
 		} catch (ParamClassLoadException ex) {
+			System.err.println(ex.getMessage());
+
 			state.output.warning("No tracker provided for JasimaGPProblem.");
 		}
 
@@ -93,11 +94,11 @@ public abstract class JasimaGPProblem extends GPProblem {
 	}
 
 	protected boolean hasTracker() {
-		return decisionTracker != null;
+		return experimentTracker != null;
 	}
 
 	protected JasimaEvolveExperimentTracker getTracker() {
-		return decisionTracker;
+		return experimentTracker;
 	}
 
 	protected boolean hasWorkStationListener() {
@@ -153,7 +154,7 @@ public abstract class JasimaGPProblem extends GPProblem {
 		newObject.simSeed = simSeed;
 		newObject.rand = (MersenneTwisterFast) rand.clone();
 
-		newObject.decisionTracker = decisionTracker;
+		newObject.experimentTracker = experimentTracker;
 
 		newObject.workstationListener = workstationListener;
 		((JasimaGPData) newObject.input).setWorkStationListener(newObject.workstationListener);

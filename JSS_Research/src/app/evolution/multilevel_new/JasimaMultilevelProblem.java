@@ -75,6 +75,12 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 		for (Subpopulation subpop : pop.subpops) {
 			((MLSSubpopulation) subpop).setEvaluated(false);
 		}
+
+		// Setup the tracker.
+		if (hasTracker()) {
+			getTracker().setPriorityRule(groupRule);
+			getTracker().setSimConfig(getSimConfig());
+		}
 	}
 
 	@Override
@@ -104,13 +110,11 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 		config.setSubpopulations(subpops);
 		config.setThreadnum(threadnum);
 		config.setData((JasimaGPData) input);
-		
-		if (hasTracker()) { 
-			getTracker().initialise();
-			config.setTracker(getTracker()); 
-		}
+		if (hasTracker()) { config.setTracker(getTracker()); }
 
 		groupRule.setConfiguration(config);
+
+		if (hasTracker()) { getTracker().initialise(); }
 
 		for (int expIndex = 0; expIndex < getSimConfig().getNumConfigs(); expIndex++) {
 			Experiment experiment = getExperiment(state, groupRule, expIndex, getWorkStationListener(), getTracker());
@@ -136,7 +140,7 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 
 		getSimConfig().resetSeed();
 	}
-	
+
 	@Override
 	public void evaluateInd(final EvolutionState state,
 			final Individual ind,
