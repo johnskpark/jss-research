@@ -110,6 +110,10 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 
 		if (hasTracker()) { getTracker().initialise(); }
 
+		long startTime, endTime, experimentTime, nichingTime;
+
+		startTime = System.currentTimeMillis();
+
 		for (int expIndex = 0; expIndex < getSimConfig().getNumConfigs(); expIndex++) {
 			Experiment experiment = getExperiment(state, groupRule, expIndex, getWorkStationListener(), getTracker());
 
@@ -123,6 +127,11 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 		groupFitness.setFitness(state, group);
 		groupFitness.clear();
 
+		endTime = System.currentTimeMillis();
+		experimentTime = endTime - startTime;
+
+		startTime = System.currentTimeMillis();
+
 		// Add in the niching adjustment to the fitnesses.
 		if (hasTracker()) {
 			if (niching != null) {
@@ -130,6 +139,11 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 			}
 			getTracker().clear();
 		}
+
+		endTime = System.currentTimeMillis();
+		nichingTime = endTime - startTime;
+
+		System.out.printf("experiment: %d, niching: %d\n", experimentTime, nichingTime);
 
 		getSimConfig().resetSeed();
 	}

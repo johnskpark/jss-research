@@ -12,8 +12,8 @@ pop.default-subpop = 0
 breed.cooperation-prob = 0.5
 breed.crossover-prob = 0.8
 breed.mutation-prob = 0.3
-breed.num-breed = 20
-breed.num-retain = 10
+breed.num-breed = 200
+breed.num-retain = 100
 breed.bias-factor = 0.7
 
 # the next four items are already defined in koza.params, but we
