@@ -23,8 +23,6 @@ public class EnsemblePriorityRule extends AbsGPPriorityRule {
 
 	private GPIndividual[] individuals;
 
-	private JasimaEvolveExperimentTracker tracker;
-
 	private Map<PrioRuleTarget, EntryVotes> jobVotes = new HashMap<PrioRuleTarget, EntryVotes>();
 	private List<EntryVotes> jobRankings = new ArrayList<EntryVotes>();
 

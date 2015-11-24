@@ -58,6 +58,7 @@ public class JasimaSimpleProblem extends JasimaGPProblem {
 		// We don't care if the individual's been evaluated previously,
 		// since the simulation changes at each generation.
 
+		// TODO this could be abstracted out.
 		JasimaGPConfig config = new JasimaGPConfig();
 		config.setState(state);
 		config.setIndividuals(new GPIndividual[]{(GPIndividual) ind});

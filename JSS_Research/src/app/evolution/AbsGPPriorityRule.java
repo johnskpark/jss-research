@@ -33,7 +33,4 @@ public abstract class AbsGPPriorityRule extends PR implements IJasimaGPPriorityR
 		}
 	}
 
-	// So what I've obtained from Mitch:
-	// TODO have a strategy pattern here which calculates priorities and adds them to the tracker.
-
 }

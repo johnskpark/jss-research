@@ -123,7 +123,6 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 
 			// Add in the results of the training instance to the fitness of the group.
 			groupFitness.accumulateFitness(expIndex, group, experiment.getResults());
-
 			if (hasWorkStationListener()) { getWorkStationListener().clear(); }
 		}
 
