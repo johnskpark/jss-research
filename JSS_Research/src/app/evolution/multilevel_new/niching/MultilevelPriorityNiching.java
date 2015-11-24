@@ -54,10 +54,6 @@ public class MultilevelPriorityNiching implements IJasimaMultilevelNiching {
 		for (int i = 0; i < group.individuals.length; i++) {
 			adjustment[i] = adjustment[i] / simConfig.getNumConfigs();
 
-			if (adjustment[i] > 1.0) {
-				throw new RuntimeException("Error");
-			}
-
 			KozaFitness fitness = (KozaFitness) group.individuals[i].fitness;
 			double standardisedFitness = fitness.standardizedFitness();
 			double adjustedFitness = standardisedFitness * (1 + adjustment[i]);
