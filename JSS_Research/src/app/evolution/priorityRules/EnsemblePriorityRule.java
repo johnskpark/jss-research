@@ -39,7 +39,7 @@ public class EnsemblePriorityRule extends AbsGPPriorityRule {
 
 		individuals = config.getIndividuals();
 	}
-	
+
 	@Override
 	public GPIndividual[] getIndividuals() {
 		return individuals;
@@ -59,9 +59,9 @@ public class EnsemblePriorityRule extends AbsGPPriorityRule {
 		}
 
 		int[] decisions = new int[individuals.length];
-		
+
 		if (tracker != null) {
-			tracker.addDispatchingDecision();
+			tracker.addDispatchingDecision(q);
 		}
 
 		for (int i = 0; i < individuals.length; i++) {

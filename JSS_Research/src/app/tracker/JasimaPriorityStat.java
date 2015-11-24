@@ -3,22 +3,22 @@ package app.tracker;
 import jasima.core.util.Pair;
 import jasima.shopSim.core.PrioRuleTarget;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class JasimaPriorityStat {
 
-	private List<Pair<PrioRuleTarget, Double>> entries = new ArrayList<Pair<PrioRuleTarget, Double>>();
+	private Pair<PrioRuleTarget, Double>[] entries;
+	private int index;
 
-	public JasimaPriorityStat() {
-		// Empty constructor.
+	@SuppressWarnings("unchecked")
+	public JasimaPriorityStat(int queueLength) {
+		entries = new Pair[queueLength];
+		index = 0;
 	}
 
 	public void add(PrioRuleTarget entry, double priority) {
-		entries.add(new Pair<PrioRuleTarget, Double>(entry, priority));
+		entries[index++] = new Pair<PrioRuleTarget, Double>(entry, priority);
 	}
 
-	public List<Pair<PrioRuleTarget, Double>> getEntries() {
+	public Pair<PrioRuleTarget, Double>[] getEntries() {
 		return entries;
 	}
 

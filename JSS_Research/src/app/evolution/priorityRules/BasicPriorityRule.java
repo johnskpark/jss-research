@@ -49,27 +49,27 @@ public class BasicPriorityRule extends AbsGPPriorityRule {
 	public GPIndividual[] getIndividuals() {
 		return individual;
 	}
-	
+
 	@Override
 	public void beforeCalc(PriorityQueue<?> q) {
 		super.beforeCalc(q);
 
 		jobPriorities.clear();
 		jobRankings.clear();
-		
+
 		if (tracker != null) {
-			tracker.addDispatchingDecision();
+			tracker.addDispatchingDecision(q);
 		}
 
 		for (int i = 0; i < q.size(); i++) {
 			PrioRuleTarget entry = q.get(i);
 
 			data.setPrioRuleTarget(entry);
-			
+
 			individual[indIndex].trees[0].child.eval(state, threadnum, data, null, individual[indIndex], null);
 
 			double priority = data.getPriority();
-			
+
 			// Add the priority assigned to the entry to the tracker.
 			if (tracker != null) {
 				tracker.addPriority(i, individual[indIndex], entry, priority);

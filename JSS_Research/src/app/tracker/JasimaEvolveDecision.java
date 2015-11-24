@@ -19,20 +19,15 @@ public class JasimaEvolveDecision {
 
 	private PrioRuleTarget startedEntry;
 
-	private Map<Individual, JasimaPriorityStat> decisionMakers = new HashMap<Individual, JasimaPriorityStat>();
+	private Map<GPIndividual, JasimaPriorityStat> decisionMakers = new HashMap<GPIndividual, JasimaPriorityStat>();
 
-	public JasimaEvolveDecision(GPIndividual[] inds) {
-		for (GPIndividual ind : inds) {
-			decisionMakers.put(ind, new JasimaPriorityStat());
-		}
+	public JasimaEvolveDecision(List<PrioRuleTarget> entries, Map<GPIndividual, JasimaPriorityStat> decisionMakers) {
+		this.entries = entries;
+		this.decisionMakers = decisionMakers;
 	}
 
 	public void addPriority(Individual ind, PrioRuleTarget entry, double priority) {
 		decisionMakers.get(ind).add(entry, priority);
-	}
-
-	public void addEntryRankings(List<PrioRuleTarget> entryRankings) {
-		this.entryRankings = entryRankings;
 	}
 
 	// Getters
@@ -53,7 +48,7 @@ public class JasimaEvolveDecision {
 		return startedEntry;
 	}
 
-	public Map<Individual, JasimaPriorityStat> getDecisionMakers() {
+	public Map<GPIndividual, JasimaPriorityStat> getDecisionMakers() {
 		return decisionMakers;
 	}
 
@@ -67,11 +62,15 @@ public class JasimaEvolveDecision {
 		this.entries = entries;
 	}
 
+	public void setEntryRankings(List<PrioRuleTarget> entryRankings) {
+		this.entryRankings = entryRankings;
+	}
+
 	public void setStartedEntry(PrioRuleTarget startedEntry) {
 		this.startedEntry = startedEntry;
 	}
 
-	public void setDecisionMakers(Map<Individual, JasimaPriorityStat> decisionMakers) {
+	public void setDecisionMakers(Map<GPIndividual, JasimaPriorityStat> decisionMakers) {
 		this.decisionMakers = decisionMakers;
 	}
 
