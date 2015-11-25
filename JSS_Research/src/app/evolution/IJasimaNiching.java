@@ -8,6 +8,4 @@ public interface IJasimaNiching<T extends JasimaReproducible> {
 	// FIXME This too.
 	public void adjustFitness(final EvolutionState state, final JasimaEvolveExperimentTracker tracker, final T individual);
 
-	public void clear();
-
 }

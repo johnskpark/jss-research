@@ -15,10 +15,4 @@ public class CoopPriorityNiching implements IJasimaCoopNiching {
 
 	}
 
-	@Override
-	public void clear() {
-		// TODO Auto-generated method stub
-
-	}
-
 }

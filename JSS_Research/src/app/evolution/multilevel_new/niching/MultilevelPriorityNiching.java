@@ -1,8 +1,5 @@
 package app.evolution.multilevel_new.niching;
 
-import jasima.core.util.Pair;
-import jasima.shopSim.core.PrioRuleTarget;
-
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +13,8 @@ import ec.EvolutionState;
 import ec.gp.GPIndividual;
 import ec.gp.koza.KozaFitness;
 import ec.multilevel_new.MLSSubpopulation;
+import jasima.core.util.Pair;
+import jasima.shopSim.core.PrioRuleTarget;
 
 /**
  * TODO javadoc.
@@ -119,12 +118,6 @@ public class MultilevelPriorityNiching implements IJasimaMultilevelNiching {
 		}
 
 		return rmsd;
-	}
-
-	@Override
-	public void clear() {
-		// TODO Auto-generated method stub
-
 	}
 
 }

@@ -23,10 +23,4 @@ public class MultilevelDecisionNiching implements IJasimaMultilevelNiching {
 
 	}
 
-	@Override
-	public void clear() {
-		// TODO Auto-generated method stub
-
-	}
-
 }
