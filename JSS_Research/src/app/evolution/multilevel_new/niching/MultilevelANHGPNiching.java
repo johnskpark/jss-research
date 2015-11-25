@@ -7,10 +7,13 @@ import app.simConfig.AbsSimConfig;
 import app.tracker.JasimaEvolveExperiment;
 import app.tracker.JasimaEvolveExperimentTracker;
 import ec.EvolutionState;
+import ec.gp.koza.KozaFitness;
 import ec.multilevel_new.MLSSubpopulation;
 
 public abstract class MultilevelANHGPNiching implements IJasimaMultilevelNiching {
 
+	public static final double LEARNING_RATE = 0.5;
+	
 	@Override
 	public void adjustFitness(final EvolutionState state, 
 			final JasimaEvolveExperimentTracker tracker,
@@ -18,6 +21,9 @@ public abstract class MultilevelANHGPNiching implements IJasimaMultilevelNiching
 		List<JasimaEvolveExperiment> experiments = tracker.getResults();
 		AbsSimConfig simConfig = tracker.getSimConfig();
 		
+		double[] adjustment = new double[group.individuals.length];
+		
+		// Calculate the adjustment from the individual's density.
 		for (int i = 0; i < simConfig.getNumConfigs(); i++) {
 			// Calculate the distances between the individuals.
 			double[][] distances = getDistances(state, experiments.get(i), simConfig, group);
@@ -27,6 +33,21 @@ public abstract class MultilevelANHGPNiching implements IJasimaMultilevelNiching
 			
 			// Calculate the density of the individuals.
 			double[] density = getDensity(state, sharingValues);
+			
+			for (int j = 0; j < group.individuals.length; j++) {
+				adjustment[j] += density[j];
+			}
+		}
+		
+		// Adjust the fitnesses of the individuals according to the niching algorithm.
+		for (int i = 0; i < group.individuals.length; i++) {
+			adjustment[i] = adjustment[i] / simConfig.getNumConfigs();
+			
+			KozaFitness fitness = (KozaFitness) group.individuals[i].fitness;
+			double standardisedFitness = fitness.standardizedFitness();
+			double adjustedFitness = standardisedFitness / adjustment[i];
+			
+			fitness.setStandardizedFitness(state, adjustedFitness);
 		}
 	}
 	
@@ -82,7 +103,7 @@ public abstract class MultilevelANHGPNiching implements IJasimaMultilevelNiching
 	 * TODO javadoc.
 	 */
 	public double getCloseDegree(final EvolutionState state) {
-		return 1.0;
+		return LEARNING_RATE / state.generation;
 	}
 
 }
