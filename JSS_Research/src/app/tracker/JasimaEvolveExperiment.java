@@ -12,6 +12,7 @@ import ec.Individual;
 import ec.gp.GPIndividual;
 
 // TODO trying to figure out how to do this efficiently.
+// Also, need to record which job that's voted for by the individual.
 public class JasimaEvolveExperiment {
 
 	private GPIndividual[] inds;
