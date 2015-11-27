@@ -45,6 +45,9 @@ public class ANHGPPriorityNiching extends MultilevelANHGPNiching {
 		return distances;
 	}
 
+	/**
+	 * TODO javadoc.
+	 */
 	protected double[] getNormPriorities(final JasimaEvolveDecision decision, final MLSSubpopulation group) {
 		double[] priorities = new double[group.individuals.length];
 

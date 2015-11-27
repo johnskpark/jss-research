@@ -13,6 +13,9 @@ public class JasimaPriorityStat {
 	private Pair<PrioRuleTarget, Double>[] entries;
 	private int index;
 
+	private PrioRuleTarget bestEntry;
+	private double bestPriority;
+
 	/**
 	 * TODO javadoc.
 	 * @param queueLength
@@ -21,6 +24,9 @@ public class JasimaPriorityStat {
 	public JasimaPriorityStat(int queueLength) {
 		entries = new Pair[queueLength];
 		index = 0;
+
+		bestEntry = null;
+		bestPriority = Double.NEGATIVE_INFINITY;
 	}
 
 	/**
@@ -28,10 +34,23 @@ public class JasimaPriorityStat {
 	 */
 	public void addPriority(PrioRuleTarget entry, double priority) {
 		entries[index++] = new Pair<PrioRuleTarget, Double>(entry, priority);
+
+		if (bestPriority < priority) {
+			bestEntry = entry;
+			bestPriority = priority;
+		}
 	}
 
 	public Pair<PrioRuleTarget, Double>[] getEntries() {
 		return entries;
+	}
+
+	public PrioRuleTarget getBestEntry() {
+		return bestEntry;
+	}
+
+	public double getBestPriority() {
+		return bestPriority;
 	}
 
 }
