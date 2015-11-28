@@ -14,7 +14,6 @@ breed.crossover-prob = 0.8
 breed.mutation-prob = 0.3
 breed.num-breed = 200
 breed.num-retain = 100
-breed.bias-factor = 0.7
 
 # the next four items are already defined in koza.params, but we
 # put them here to be clear.
@@ -83,7 +82,7 @@ eval.problem.simulator = app.simConfig.huntConfig.FourOpSimConfig
 eval.problem.simulator.seed = 15
 
 eval.problem.tracker = app.tracker.JasimaEvolveExperimentTracker
-eval.problem.niching = app.evolution.multilevel_new.niching.ANHGPOverlapNiching
+
 
 eval.problem.workstation = app.listener.hunt.HuntListenerEvolveFactory
 eval.problem.workstation.max-jobs = 5
