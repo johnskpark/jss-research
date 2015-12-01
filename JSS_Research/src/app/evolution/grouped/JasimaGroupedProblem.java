@@ -106,6 +106,8 @@ public class JasimaGroupedProblem extends JasimaGPProblem {
 				experiment.runExperiment();
 
 				fitness.accumulateIndFitness(ind, experiment.getResults());
+
+				rule.clearRankings();
 			}
 
 			fitness.setIndFitness(state, ind);
@@ -140,6 +142,8 @@ public class JasimaGroupedProblem extends JasimaGPProblem {
 
 					fitness.accumulateGroupFitness(ind, experiment.getResults());
 					getTracker().clear();
+
+					groupRule.clearRankings();
 				}
 
 				getSimConfig().resetSeed();

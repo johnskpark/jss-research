@@ -103,6 +103,11 @@ public class MLSBreeder extends Breeder {
 			state.output.fatal("Need to set the number of group to breed");
 		}
 
+		// FIXME temporary until I get the functionality working to allow number of groups breed to be greater than number of groups retained.
+		if (numGroupRetain > numGroupBreed) {
+			state.output.fatal("The number of groups to breed must be greater than or equal to the number of groups retained");
+		}
+
 		groupCooperationRate = state.parameters.getDouble(base.push(P_COOPERATION_PROB), null, 0);
 		if (groupCooperationRate < 0.0) {
 			state.output.error("Group cooperation rate must have a probability >= 0.0. Defaulting to 0.0");

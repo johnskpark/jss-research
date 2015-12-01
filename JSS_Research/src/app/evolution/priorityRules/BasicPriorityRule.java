@@ -54,8 +54,7 @@ public class BasicPriorityRule extends AbsGPPriorityRule {
 	public void beforeCalc(PriorityQueue<?> q) {
 		super.beforeCalc(q);
 
-		jobPriorities.clear();
-		jobRankings.clear();
+		clearRankings();
 
 		if (tracker != null) {
 			tracker.addDispatchingDecision(q);
@@ -96,6 +95,12 @@ public class BasicPriorityRule extends AbsGPPriorityRule {
 		}
 
 		return entries;
+	}
+
+	@Override
+	public void clearRankings() {
+		jobPriorities.clear();
+		jobRankings.clear();
 	}
 
 	private class JobComparator implements Comparator<Pair<PrioRuleTarget, Double>> {

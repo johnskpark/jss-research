@@ -21,7 +21,7 @@ import ec.Individual;
 // I'm wondering: Is there a better way to implement the ensemble rules for Jasima?
 // Could I have something where the EnsemblePriorityRule is aggregated from BasicPriorityRule?
 
-// FIXME IWorkStationListener is part of simConfig, I need to move it elsewhere.
+// Is there a way to reduce the memory usage for this?
 public class JasimaEvolveExperimentTracker implements IWorkStationListener {
 
 	public static final int NOT_SET = -1;

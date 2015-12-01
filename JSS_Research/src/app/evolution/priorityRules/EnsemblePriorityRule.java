@@ -46,8 +46,7 @@ public class EnsemblePriorityRule extends AbsGPPriorityRule {
 	public void beforeCalc(PriorityQueue<?> q) {
 		super.beforeCalc(q);
 
-		jobVotes.clear();
-		jobRankings.clear();
+		clearRankings();
 
 		for (int i = 0; i < q.size(); i++) {
 			EntryVotes ev = new EntryVotes(q.get(i));
@@ -110,6 +109,12 @@ public class EnsemblePriorityRule extends AbsGPPriorityRule {
 		}
 
 		return entries;
+	}
+
+	@Override
+	public void clearRankings() {
+		jobVotes.clear();
+		jobRankings.clear();
 	}
 
 	// Stores the votes made on a particular job.

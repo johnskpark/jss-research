@@ -79,6 +79,8 @@ public class JasimaSimpleProblem extends JasimaGPProblem {
 
 			fitness.accumulateFitness(i, experiment.getResults());
 			if (hasWorkStationListener()) { getWorkStationListener().clear(); }
+
+			rule.clearRankings();
 		}
 
 		fitness.setFitness(state, (JasimaGPIndividual) ind);

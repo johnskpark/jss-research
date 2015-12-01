@@ -120,6 +120,8 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 				getTracker().clear();
 			}
 			if (hasWorkStationListener()) { getWorkStationListener().clear(); }
+
+			coopRule.clearRankings();
 		}
 
 		fitness.setTrialFitness(state, inds, updateFitness, shouldSetContext());
