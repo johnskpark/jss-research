@@ -2,13 +2,10 @@ package app.tracker;
 
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
-import jasima.shopSim.core.WorkStation;
-import jasima.shopSim.core.WorkStation.WorkStationEvent;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import app.IWorkStationListener;
 import app.evolution.IJasimaGPPriorityRule;
 import app.simConfig.AbsSimConfig;
 import ec.Individual;
@@ -22,7 +19,7 @@ import ec.Individual;
 // Could I have something where the EnsemblePriorityRule is aggregated from BasicPriorityRule?
 
 // Is there a way to reduce the memory usage for this?
-public class JasimaEvolveExperimentTracker implements IWorkStationListener {
+public class JasimaEvolveExperimentTracker {
 
 	public static final int NOT_SET = -1;
 
@@ -67,47 +64,60 @@ public class JasimaEvolveExperimentTracker implements IWorkStationListener {
 	}
 
 	/**
-	 * TODO javadoc.
+	 * Set the current experiment index.
 	 */
 	public void setExperimentIndex(int index) {
 		currentExperimentDecisions = experimentDecisions.get(index);
 		currentExperimentIndex = index;
 	}
 
+	/**
+	 * Get the current experiment.
+	 */
 	public JasimaEvolveExperiment getCurrentExperiment() {
 		return currentExperimentDecisions;
 	}
 
+	/**
+	 * Get the current experiment's index.
+	 */
 	public int getCurrentExperimentIndex() {
 		return currentExperimentIndex;
 	}
 
 	/**
-	 * TODO javadoc.
+	 * Add the dispatching decision to the current experiment.
 	 */
 	public void addDispatchingDecision(PriorityQueue<?> q) {
 		currentExperimentDecisions.addDispatchingDecision(q);
 	}
 
 	/**
-	 * TODO javadoc.
+	 * Add the priority assigned to an entry for the dispatching decision.
 	 */
 	public void addPriority(int index, Individual ind, PrioRuleTarget entry, double priority) {
 		currentExperimentDecisions.addPriority(index, ind, entry, priority);
 	}
 
-	@Override
-	public void update(WorkStation notifier, WorkStationEvent event) {
-		// Listen to only the job selected notifications.
-		if (event == WorkStation.WS_JOB_SELECTED) {
-			// Add in the start time and such information into the decision.
-			PrioRuleTarget entry = notifier.justStarted;
-			currentExperimentDecisions.addSelectedEntry(entry);
-			currentExperimentDecisions.addStartTime(entry.getShop().simTime());
+	/**
+	 * Set the entry that is selected to be processed.
+	 */
+	public void addSelectedEntry(PrioRuleTarget entry) {
+		currentExperimentDecisions.addSelectedEntry(entry);
+	}
 
-			// Do some post processing on the current decision.
-			currentExperimentDecisions.addEntryRankings(priorityRule.getEntryRankings());
-		}
+	/**
+	 * Set the start time of the entry that is selected to be processed.
+	 */
+	public void addStartTime(double startTime) {
+		currentExperimentDecisions.addStartTime(startTime);
+	}
+
+	/**
+	 * Set the rankings set by the rule for the entries in the dispatching decision.
+	 */
+	public void addEntryRankings(List<PrioRuleTarget> entryRankings) {
+		currentExperimentDecisions.addEntryRankings(entryRankings);
 	}
 
 	/**
@@ -117,7 +127,6 @@ public class JasimaEvolveExperimentTracker implements IWorkStationListener {
 		return experimentDecisions;
 	}
 
-	@Override
 	public void clear() {
 		experimentDecisions.clear();
 

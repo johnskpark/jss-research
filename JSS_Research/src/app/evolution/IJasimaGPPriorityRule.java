@@ -13,6 +13,4 @@ public interface IJasimaGPPriorityRule {
 
 	public List<PrioRuleTarget> getEntryRankings();
 
-	public void clearRankings();
-
 }

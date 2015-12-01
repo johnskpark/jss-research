@@ -116,16 +116,15 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 
 			fitness.accumulateObjectiveFitness(inds, experiment.getResults());
 
-			if (hasTracker()) {
-				getTracker().clear();
-			}
 			if (hasWorkStationListener()) { getWorkStationListener().clear(); }
-
-			coopRule.clearRankings();
 		}
 
 		fitness.setTrialFitness(state, inds, updateFitness, shouldSetContext());
 		fitness.setDiversityFitness(state, inds, updateFitness);
+
+		if (hasTracker()) {
+			getTracker().clear();
+		}
 
 		getSimConfig().resetSeed();
 	}

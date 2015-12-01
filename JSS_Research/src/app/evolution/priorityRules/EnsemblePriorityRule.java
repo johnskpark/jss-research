@@ -46,7 +46,7 @@ public class EnsemblePriorityRule extends AbsGPPriorityRule {
 	public void beforeCalc(PriorityQueue<?> q) {
 		super.beforeCalc(q);
 
-		clearRankings();
+		clear();
 
 		for (int i = 0; i < q.size(); i++) {
 			EntryVotes ev = new EntryVotes(q.get(i));
@@ -112,7 +112,7 @@ public class EnsemblePriorityRule extends AbsGPPriorityRule {
 	}
 
 	@Override
-	public void clearRankings() {
+	public void clear() {
 		jobVotes.clear();
 		jobRankings.clear();
 	}

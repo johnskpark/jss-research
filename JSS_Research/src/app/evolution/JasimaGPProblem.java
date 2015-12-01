@@ -129,10 +129,11 @@ public abstract class JasimaGPProblem extends GPProblem {
 		statCollector.setIgnoreFirst(simConfig.getNumIgnore());
 
 		experiment.setShopListener(new NotifierListener[]{statCollector});
+
+		// Add the workstation listener.
+		experiment.addMachineListener(rule);
 		if (listener != null) { experiment.addMachineListener(listener); }
 		if (tracker != null) {
-			experiment.addMachineListener(tracker);
-
 			tracker.clearCurrentExperiment();
 			tracker.setExperimentIndex(index);
 		}
