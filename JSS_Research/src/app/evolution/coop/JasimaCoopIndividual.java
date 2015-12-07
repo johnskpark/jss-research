@@ -1,11 +1,22 @@
 package app.evolution.coop;
 
 import app.evolution.JasimaGPIndividual;
+import ec.Individual;
 import ec.gp.GPTree;
 
 public class JasimaCoopIndividual extends JasimaGPIndividual {
 
 	private static final long serialVersionUID = 7566878552263864266L;
+
+	private Individual[] collaborators;
+
+	public Individual[] getCollaborators() {
+		return collaborators;
+	}
+
+	public void setCollaborators(Individual[] inds) {
+		collaborators = inds;
+	}
 
 	@Override
 	public String genotypeToStringForHumans() {

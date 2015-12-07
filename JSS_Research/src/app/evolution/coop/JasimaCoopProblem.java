@@ -97,6 +97,10 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 			gpInds[i] = (GPIndividual) inds[i];
 		}
 
+		for (int i = 0; i < inds.length; i++) {
+			((JasimaCoopIndividual) inds[i]).setCollaborators(inds);
+		}
+
 		JasimaGPConfig config = new JasimaGPConfig();
 		config.setState(state);
 		config.setIndividuals(gpInds);

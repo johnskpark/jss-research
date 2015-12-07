@@ -6,6 +6,8 @@ import ec.EvolutionState;
 
 public interface IJasimaCoopNiching extends IJasimaNiching<JasimaCoopIndividual> {
 
-	public void adjustFitness(final EvolutionState state, final JasimaEvolveExperimentTracker tracker, final JasimaCoopIndividual inds);
-
+	public void adjustFitness(final EvolutionState state,
+			final JasimaEvolveExperimentTracker tracker,
+			final boolean[] updateFitness,
+			final JasimaCoopIndividual individual);
 }
