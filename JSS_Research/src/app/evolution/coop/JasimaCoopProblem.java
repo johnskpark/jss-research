@@ -137,6 +137,7 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 
 		fitness.setTrialFitness(state, inds, updateFitness, shouldSetContext());
 		fitness.setDiversityFitness(state, inds, updateFitness);
+		fitness.clear();
 
 		if (hasTracker()) {
 			if (niching != null) {
