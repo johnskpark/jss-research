@@ -185,6 +185,7 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 		newObject.groupFitness = groupFitness;
 		newObject.indRule = indRule;
 		newObject.indFitness = indFitness;
+		newObject.niching = niching;
 
 		return newObject;
 	}

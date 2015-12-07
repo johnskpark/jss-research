@@ -15,6 +15,7 @@ import ec.Initializer;
 import ec.Population;
 import ec.coevolve.GroupedProblemForm;
 import ec.gp.GPIndividual;
+import ec.util.ParamClassLoadException;
 import ec.util.Parameter;
 
 /**
@@ -31,10 +32,14 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 	public static final String P_COOP_RULE = "rule";
 	public static final String P_FITNESS = "fitness";
 
+	public static final String P_NICHING = "niching";
+
 	private AbsGPPriorityRule coopRule;
 	private IJasimaCoopFitness fitness;
 
 	private int numSubpops;
+
+	private IJasimaCoopNiching niching;
 
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
@@ -49,6 +54,11 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 		// Setup the number of subpopulations.
         numSubpops = state.parameters.getInt((new Parameter(Initializer.P_POP)).push(Population.P_SIZE), null, 1);
 
+        try {
+        	niching = (IJasimaCoopNiching) state.parameters.getInstanceForParameterEq(base.push(P_NICHING), null, IJasimaCoopNiching.class);
+        } catch (ParamClassLoadException ex) {
+        	state.output.warning("No niching algorithm provided for JasimaCoopProblem");
+        }
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -113,13 +123,15 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 
 		fitness.loadIndividuals(inds);
 
+		if (hasTracker()) { getTracker().initialise(); }
+
 		for (int i = 0; i < getSimConfig().getNumConfigs(); i++) {
 			Experiment experiment = getExperiment(state, coopRule, i, getWorkStationListener(), getTracker());
 
 			experiment.runExperiment();
 
+			// Add in the results of the training instance to the fitness of the group.
 			fitness.accumulateObjectiveFitness(inds, experiment.getResults());
-
 			if (hasWorkStationListener()) { getWorkStationListener().clear(); }
 		}
 
@@ -127,6 +139,9 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 		fitness.setDiversityFitness(state, inds, updateFitness);
 
 		if (hasTracker()) {
+			if (niching != null) {
+				niching.adjustFitness(state, getTracker(), updateFitness, (JasimaCoopIndividual) inds[0]);
+			}
 			getTracker().clear();
 		}
 
@@ -152,6 +167,7 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 		newObject.coopRule = coopRule;
 		newObject.fitness = fitness;
 		newObject.numSubpops = numSubpops;
+		newObject.niching = niching;
 
 		return newObject;
 	}
