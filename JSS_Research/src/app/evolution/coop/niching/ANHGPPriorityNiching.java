@@ -1,6 +1,5 @@
 package app.evolution.coop.niching;
 
-import jasima.core.util.Pair;
 import jasima.shopSim.core.PrioRuleTarget;
 
 import java.util.List;
@@ -47,7 +46,7 @@ public class ANHGPPriorityNiching extends CoopANHGPNiching {
 		return distances;
 	}
 	protected double[] getNormPriorities(final JasimaEvolveDecision decision, final Individual[] collaborators) {
-		double[] priorities = new double[collaborators.length];
+		double[] normPriorities = new double[collaborators.length];
 
 		List<PrioRuleTarget> entryRankingByGroup = decision.getEntryRankings();
 		PrioRuleTarget selectedEntry = entryRankingByGroup.get(0);
@@ -55,7 +54,9 @@ public class ANHGPPriorityNiching extends CoopANHGPNiching {
 		Map<GPIndividual, JasimaPriorityStat> indPriorityMap = decision.getDecisionMakers();
 
 		for (int i = 0; i < collaborators.length; i++) {
-			Pair<PrioRuleTarget, Double>[] entries = indPriorityMap.get(collaborators[i]).getEntries();
+			JasimaPriorityStat stat = indPriorityMap.get(collaborators[i]);
+			PrioRuleTarget[] entries = stat.getEntries();
+			double[] priorities = stat.getPriorities();
 
 			// Get the priority assigned to the selected job by the individuals after normalisation.
 			double selectedEntryPriority = -1;
@@ -64,12 +65,12 @@ public class ANHGPPriorityNiching extends CoopANHGPNiching {
 			// Get the maximum priority.
 			double maxEntryPriority = Double.NEGATIVE_INFINITY;
 			for (int j = 0; j < entries.length; j++) {
-				maxEntryPriority = Math.max(maxEntryPriority, entries[j].b);
+				maxEntryPriority = Math.max(maxEntryPriority, priorities[j]);
 			}
 
 			for (int j = 0; j < entries.length; j++) {
-				PrioRuleTarget entry = entries[j].a;
-				double normalisedPriority = Math.exp(entries[j].b - maxEntryPriority);
+				PrioRuleTarget entry = entries[j];
+				double normalisedPriority = Math.exp(priorities[j] - maxEntryPriority);
 
 				if (selectedEntry.equals(entry)) {
 					selectedEntryPriority = normalisedPriority;
@@ -80,10 +81,10 @@ public class ANHGPPriorityNiching extends CoopANHGPNiching {
 
 			selectedEntryPriority = selectedEntryPriority / sumPriorities;
 
-			priorities[i] = selectedEntryPriority;
+			normPriorities[i] = selectedEntryPriority;
 		}
 
-		return priorities;
+		return normPriorities;
 	}
 
 }

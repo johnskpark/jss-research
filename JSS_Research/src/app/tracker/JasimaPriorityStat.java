@@ -10,8 +10,8 @@ import jasima.shopSim.core.PrioRuleTarget;
  */
 public class JasimaPriorityStat {
 
-	// TODO make these into two separate lists, I guess?
-	private Pair<PrioRuleTarget, Double>[] entries;
+	private PrioRuleTarget[] entries;
+	private double[] priorities;
 	private int index;
 
 	private PrioRuleTarget bestEntry;
@@ -23,7 +23,8 @@ public class JasimaPriorityStat {
 	 */
 	@SuppressWarnings("unchecked")
 	public JasimaPriorityStat(int queueLength) {
-		entries = new Pair[queueLength];
+		entries = new PrioRuleTarget[queueLength];
+		priorities = new double[queueLength];
 		index = 0;
 
 		bestEntry = null;
@@ -34,7 +35,10 @@ public class JasimaPriorityStat {
 	 * TODO javadoc.
 	 */
 	public void addPriority(PrioRuleTarget entry, double priority) {
-		entries[index++] = new Pair<PrioRuleTarget, Double>(entry, priority);
+		entries[index] = entry;
+		priorities[index] = priority;
+
+		index++;
 
 		if (bestPriority < priority) {
 			bestEntry = entry;
@@ -42,8 +46,12 @@ public class JasimaPriorityStat {
 		}
 	}
 
-	public Pair<PrioRuleTarget, Double>[] getEntries() {
+	public PrioRuleTarget[] getEntries() {
 		return entries;
+	}
+
+	public double[] getPriorities() {
+		return priorities;
 	}
 
 	public PrioRuleTarget getBestEntry() {

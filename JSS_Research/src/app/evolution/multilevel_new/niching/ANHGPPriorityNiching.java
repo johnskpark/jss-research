@@ -1,6 +1,5 @@
 package app.evolution.multilevel_new.niching;
 
-import jasima.core.util.Pair;
 import jasima.shopSim.core.PrioRuleTarget;
 
 import java.util.List;
@@ -49,7 +48,7 @@ public class ANHGPPriorityNiching extends MultilevelANHGPNiching {
 	 * TODO javadoc.
 	 */
 	protected double[] getNormPriorities(final JasimaEvolveDecision decision, final MLSSubpopulation group) {
-		double[] priorities = new double[group.individuals.length];
+		double[] normPriorities = new double[group.individuals.length];
 
 		List<PrioRuleTarget> entryRankingByGroup = decision.getEntryRankings();
 		PrioRuleTarget selectedEntry = entryRankingByGroup.get(0);
@@ -57,7 +56,9 @@ public class ANHGPPriorityNiching extends MultilevelANHGPNiching {
 		Map<GPIndividual, JasimaPriorityStat> indPriorityMap = decision.getDecisionMakers();
 
 		for (int i = 0; i < group.individuals.length; i++) {
-			Pair<PrioRuleTarget, Double>[] entries = indPriorityMap.get(group.individuals[i]).getEntries();
+			JasimaPriorityStat stat = indPriorityMap.get(group.individuals[i]);
+			PrioRuleTarget[] entries = stat.getEntries();
+			double[] priorities = stat.getPriorities();
 
 			// Get the priority assigned to the selected job by the individuals after normalisation.
 			double selectedEntryPriority = -1;
@@ -66,12 +67,12 @@ public class ANHGPPriorityNiching extends MultilevelANHGPNiching {
 			// Get the maximum priority.
 			double maxEntryPriority = Double.NEGATIVE_INFINITY;
 			for (int j = 0; j < entries.length; j++) {
-				maxEntryPriority = Math.max(maxEntryPriority, entries[j].b);
+				maxEntryPriority = Math.max(maxEntryPriority, priorities[j]);
 			}
 
 			for (int j = 0; j < entries.length; j++) {
-				PrioRuleTarget entry = entries[j].a;
-				double normalisedPriority = Math.exp(entries[j].b - maxEntryPriority);
+				PrioRuleTarget entry = entries[j];
+				double normalisedPriority = Math.exp(priorities[j] - maxEntryPriority);
 
 				if (selectedEntry.equals(entry)) {
 					selectedEntryPriority = normalisedPriority;
@@ -82,10 +83,10 @@ public class ANHGPPriorityNiching extends MultilevelANHGPNiching {
 
 			selectedEntryPriority = selectedEntryPriority / sumPriorities;
 
-			priorities[i] = selectedEntryPriority;
+			normPriorities[i] = selectedEntryPriority;
 		}
 
-		return priorities;
+		return normPriorities;
 	}
 
 }
