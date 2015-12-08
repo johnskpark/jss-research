@@ -10,6 +10,7 @@ import jasima.shopSim.core.PrioRuleTarget;
  */
 public class JasimaPriorityStat {
 
+	// TODO make these into two separate lists, I guess?
 	private Pair<PrioRuleTarget, Double>[] entries;
 	private int index;
 
