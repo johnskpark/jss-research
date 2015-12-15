@@ -3,7 +3,6 @@ package app.evolution.coop.niching;
 import jasima.shopSim.core.PrioRuleTarget;
 
 import java.util.List;
-import java.util.Map;
 
 import app.simConfig.AbsSimConfig;
 import app.tracker.JasimaEvolveDecision;
@@ -11,7 +10,6 @@ import app.tracker.JasimaEvolveExperiment;
 import app.tracker.JasimaPriorityStat;
 import ec.EvolutionState;
 import ec.Individual;
-import ec.gp.GPIndividual;
 
 public class ANHGPDecisionNiching extends CoopANHGPNiching {
 
@@ -50,10 +48,10 @@ public class ANHGPDecisionNiching extends CoopANHGPNiching {
 		double[] rankings = new double[collaborators.length];
 
 		List<PrioRuleTarget> entryRankings = decision.getEntryRankings();
-		Map<GPIndividual, JasimaPriorityStat> decisionMakerMap = decision.getDecisionMakers();
+		JasimaPriorityStat[] stats = decision.getStats();
 
 		for (int i = 0; i < collaborators.length; i++) {
-			JasimaPriorityStat stat = decisionMakerMap.get(collaborators[i]);
+			JasimaPriorityStat stat = stats[i];
 
 			rankings[i] = 1.0 * entryRankings.indexOf(stat.getBestEntry());
 		}

@@ -4,9 +4,7 @@ import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import ec.Individual;
 import ec.gp.GPIndividual;
@@ -18,12 +16,11 @@ public class JasimaEvolveExperiment {
 	private GPIndividual[] inds;
 
 	private List<JasimaEvolveDecisionMaker> decisionMakers;
-	private Map<GPIndividual, JasimaEvolveDecisionMaker> decisionMakerMap;
 
 	private List<JasimaEvolveDecision> experimentDecisions;
 
 	private JasimaEvolveDecision currentDecision;
-	private Map<GPIndividual, JasimaPriorityStat> currentDecisionsMap;
+	private JasimaPriorityStat[] currentStats;
 
 	/**
 	 * Initialise the experiment data with the individuals that make up the rule.
@@ -32,16 +29,14 @@ public class JasimaEvolveExperiment {
 		this.inds = inds;
 
 		decisionMakers = new ArrayList<JasimaEvolveDecisionMaker>(inds.length);
-		decisionMakerMap = new HashMap<GPIndividual, JasimaEvolveDecisionMaker>(inds.length);
 
-		for (GPIndividual ind : inds) {
+		for (int i = 0; i < inds.length; i++) {
 			List<JasimaPriorityStat> priorityStats = new ArrayList<JasimaPriorityStat>();
 
 			JasimaEvolveDecisionMaker decisionMaker = new JasimaEvolveDecisionMaker();
 			decisionMaker.setPriorityStats(priorityStats);
 
 			decisionMakers.add(decisionMaker);
-			decisionMakerMap.put(ind, decisionMaker);
 		}
 
 		experimentDecisions = new ArrayList<JasimaEvolveDecision>();
@@ -56,16 +51,16 @@ public class JasimaEvolveExperiment {
 			entries.add(q.get(i));
 		}
 
-		currentDecisionsMap = new HashMap<GPIndividual, JasimaPriorityStat>();
+		currentStats = new JasimaPriorityStat[inds.length];
 
-		for (GPIndividual ind : inds) {
+		for (int i = 0; i < inds.length; i++) {
 			JasimaPriorityStat stat = new JasimaPriorityStat(q.size());
 
-			currentDecisionsMap.put(ind, stat);
-			decisionMakerMap.get(ind).addStat(stat);
+			currentStats[i] = stat;
+			decisionMakers.get(i).addStat(stat);
 		}
 
-		currentDecision = new JasimaEvolveDecision(entries, currentDecisionsMap);
+		currentDecision = new JasimaEvolveDecision(entries, inds, currentStats);
 		experimentDecisions.add(currentDecision);
 	}
 
@@ -73,7 +68,7 @@ public class JasimaEvolveExperiment {
 	 * Add in the priority assigned to an entry by one of the individuals in the experiment.
 	 */
 	public void addPriority(int index, Individual ind, PrioRuleTarget entry, double priority) {
-		currentDecisionsMap.get(ind).addPriority(entry, priority);
+		currentStats[index].addPriority(entry, priority);
 	}
 
 	/**
@@ -99,8 +94,12 @@ public class JasimaEvolveExperiment {
 
 	// Getters
 
-	public Map<GPIndividual, JasimaEvolveDecisionMaker> getDecisionMakers() {
-		return decisionMakerMap;
+	public GPIndividual[] getIndividuals() {
+		return inds;
+	}
+
+	public List<JasimaEvolveDecisionMaker> getDecisionMakers() {
+		return decisionMakers;
 	}
 
 	public List<JasimaEvolveDecision> getDecisions() {

@@ -1,6 +1,5 @@
 package app.tracker;
 
-import jasima.core.util.Pair;
 import jasima.shopSim.core.PrioRuleTarget;
 
 /**
@@ -21,7 +20,6 @@ public class JasimaPriorityStat {
 	 * TODO javadoc.
 	 * @param queueLength
 	 */
-	@SuppressWarnings("unchecked")
 	public JasimaPriorityStat(int queueLength) {
 		entries = new PrioRuleTarget[queueLength];
 		priorities = new double[queueLength];

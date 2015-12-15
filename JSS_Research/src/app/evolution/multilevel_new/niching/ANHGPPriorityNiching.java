@@ -3,14 +3,12 @@ package app.evolution.multilevel_new.niching;
 import jasima.shopSim.core.PrioRuleTarget;
 
 import java.util.List;
-import java.util.Map;
 
 import app.simConfig.AbsSimConfig;
 import app.tracker.JasimaEvolveDecision;
 import app.tracker.JasimaEvolveExperiment;
 import app.tracker.JasimaPriorityStat;
 import ec.EvolutionState;
-import ec.gp.GPIndividual;
 import ec.multilevel_new.MLSSubpopulation;
 
 public class ANHGPPriorityNiching extends MultilevelANHGPNiching {
@@ -53,10 +51,10 @@ public class ANHGPPriorityNiching extends MultilevelANHGPNiching {
 		List<PrioRuleTarget> entryRankingByGroup = decision.getEntryRankings();
 		PrioRuleTarget selectedEntry = entryRankingByGroup.get(0);
 
-		Map<GPIndividual, JasimaPriorityStat> indPriorityMap = decision.getDecisionMakers();
+		JasimaPriorityStat[] stats = decision.getStats();
 
 		for (int i = 0; i < group.individuals.length; i++) {
-			JasimaPriorityStat stat = indPriorityMap.get(group.individuals[i]);
+			JasimaPriorityStat stat = stats[i];
 			PrioRuleTarget[] entries = stat.getEntries();
 			double[] priorities = stat.getPriorities();
 

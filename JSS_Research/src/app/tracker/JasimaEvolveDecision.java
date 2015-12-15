@@ -1,13 +1,11 @@
 package app.tracker;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import ec.Individual;
-import ec.gp.GPIndividual;
 import jasima.shopSim.core.PrioRuleTarget;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import ec.gp.GPIndividual;
 
 // So the tracker's going to generate one of these for each dispatching decision.
 public class JasimaEvolveDecision {
@@ -19,15 +17,18 @@ public class JasimaEvolveDecision {
 
 	private PrioRuleTarget startedEntry;
 
-	private Map<GPIndividual, JasimaPriorityStat> decisionMakers = new HashMap<GPIndividual, JasimaPriorityStat>();
+	private GPIndividual[] inds;
+	private JasimaPriorityStat[] stats;
 
-	public JasimaEvolveDecision(List<PrioRuleTarget> entries, Map<GPIndividual, JasimaPriorityStat> decisionMakers) {
+	public JasimaEvolveDecision(List<PrioRuleTarget> entries, GPIndividual[] inds, JasimaPriorityStat[] decisions) {
 		this.entries = entries;
-		this.decisionMakers = decisionMakers;
+
+		this.inds = inds;
+		this.stats = decisions;
 	}
 
-	public void addPriority(Individual ind, PrioRuleTarget entry, double priority) {
-		decisionMakers.get(ind).addPriority(entry, priority);
+	public void addPriority(int index, PrioRuleTarget entry, double priority) {
+		stats[index].addPriority(entry, priority);
 	}
 
 	// Getters
@@ -48,8 +49,12 @@ public class JasimaEvolveDecision {
 		return startedEntry;
 	}
 
-	public Map<GPIndividual, JasimaPriorityStat> getDecisionMakers() {
-		return decisionMakers;
+	public GPIndividual[] getIndividuals() {
+		return inds;
+	}
+
+	public JasimaPriorityStat[] getStats() {
+		return stats;
 	}
 
 	// Setters
@@ -70,8 +75,12 @@ public class JasimaEvolveDecision {
 		this.startedEntry = startedEntry;
 	}
 
-	public void setDecisionMakers(Map<GPIndividual, JasimaPriorityStat> decisionMakers) {
-		this.decisionMakers = decisionMakers;
+	public void setIndividuals(GPIndividual[] inds) {
+		this.inds = inds;
+	}
+
+	public void setDecisions(JasimaPriorityStat[] decisions) {
+		this.stats = decisions;
 	}
 
 }

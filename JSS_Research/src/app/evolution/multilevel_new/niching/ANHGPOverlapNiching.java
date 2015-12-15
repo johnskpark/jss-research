@@ -1,14 +1,12 @@
 package app.evolution.multilevel_new.niching;
 
 import java.util.List;
-import java.util.Map;
 
 import app.simConfig.AbsSimConfig;
 import app.tracker.JasimaEvolveDecision;
 import app.tracker.JasimaEvolveExperiment;
 import app.tracker.JasimaPriorityStat;
 import ec.EvolutionState;
-import ec.gp.GPIndividual;
 import ec.multilevel_new.MLSSubpopulation;
 
 public class ANHGPOverlapNiching extends MultilevelANHGPNiching {
@@ -40,12 +38,14 @@ public class ANHGPOverlapNiching extends MultilevelANHGPNiching {
 	protected boolean[][] getOverlaps(final JasimaEvolveDecision decision, final MLSSubpopulation group) {
 		boolean[][] overlaps = new boolean[group.individuals.length][group.individuals.length];
 
-		Map<GPIndividual, JasimaPriorityStat> decisionMakers = decision.getDecisionMakers();
+		JasimaPriorityStat[] stats = decision.getStats();
 
 		for (int i = 0; i < group.individuals.length; i++) {
 			for (int j = 0; j < group.individuals.length; j++) {
-				JasimaPriorityStat stat1 = decisionMakers.get(group.individuals[i]);
-				JasimaPriorityStat stat2 = decisionMakers.get(group.individuals[j]);
+				if (i == j) { continue; }
+
+				JasimaPriorityStat stat1 = stats[i];
+				JasimaPriorityStat stat2 = stats[j];
 
 				overlaps[i][j] = stat1.getBestEntry().equals(stat2.getBestEntry());
 			}
