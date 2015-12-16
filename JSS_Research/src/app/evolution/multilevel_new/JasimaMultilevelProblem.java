@@ -63,6 +63,7 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 		// Setup the niching algorithm.
 		try {
 			niching = (IJasimaNiching<MLSSubpopulation>) state.parameters.getInstanceForParameterEq(base.push(P_NICHING), null, IJasimaNiching.class);
+			niching.setup(state, base.push(P_NICHING));
 		} catch (ParamClassLoadException ex) {
 			state.output.warning("No niching algorithm provided for JasimaMultilevelProblem.");
 		}

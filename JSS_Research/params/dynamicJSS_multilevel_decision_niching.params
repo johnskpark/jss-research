@@ -3,7 +3,7 @@
 # See the file "LICENSE" for more information
 # TODO right, need to get the parameter file written up.
 
-parent.0 = koza_mls_new.params
+parent.0 = koza_mls.params
 
 pop.subpop.0.species.ind = app.evolution.multilevel_new.JasimaMultilevelIndividual
 
@@ -82,7 +82,9 @@ eval.problem.simulator = app.simConfig.huntConfig.EightOpSimConfig
 eval.problem.simulator.seed = 15
 
 eval.problem.tracker = app.tracker.JasimaEvolveExperimentTracker
-eval.problem.niching = app.evolution.multilevel_new.niching.ANHGPDecisionNiching
+
+eval.problem.niching = app.evolution.multilevel_new.niching.MultilevelANHGPNiching
+eval.problem.niching.distance = app.tracker.distance.individual.IndividualDecisionDistance
 
 eval.problem.workstation = app.listener.hunt.HuntListenerEvolveFactory
 eval.problem.workstation.max-jobs = 5

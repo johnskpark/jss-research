@@ -56,6 +56,7 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 
         try {
         	niching = (IJasimaCoopNiching) state.parameters.getInstanceForParameterEq(base.push(P_NICHING), null, IJasimaCoopNiching.class);
+			niching.setup(state, base.push(P_NICHING));
         } catch (ParamClassLoadException ex) {
         	state.output.warning("No niching algorithm provided for JasimaCoopProblem");
         }

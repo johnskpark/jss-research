@@ -3,7 +3,7 @@
 # See the file "LICENSE" for more information
 # TODO right, need to get the parameter file written up.
 
-parent.0 = koza_mls_new.params
+parent.0 = koza_mls.params
 
 pop.subpop.0.species.ind = app.evolution.multilevel_new.JasimaMultilevelIndividual
 
@@ -14,6 +14,8 @@ breed.crossover-prob = 0.8
 breed.mutation-prob = 0.3
 breed.num-breed = 200
 breed.num-retain = 100
+
+breed.bias-factor = 0.5
 
 # the next four items are already defined in koza.params, but we
 # put them here to be clear.
@@ -81,8 +83,7 @@ eval.problem.ind-fitness = app.evolution.multilevel_new.fitness.MultilevelIndivi
 eval.problem.simulator = app.simConfig.huntConfig.EightOpSimConfig
 eval.problem.simulator.seed = 15
 
-eval.problem.tracker = app.tracker.JasimaEvolveExperimentTracker
-
+# eval.problem.tracker = app.tracker.JasimaEvolveExperimentTracker
 
 eval.problem.workstation = app.listener.hunt.HuntListenerEvolveFactory
 eval.problem.workstation.max-jobs = 5

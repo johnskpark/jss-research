@@ -58,8 +58,6 @@ public abstract class JasimaGPProblem extends GPProblem {
 			experimentTracker = (JasimaEvolveExperimentTracker) state.parameters.getInstanceForParameterEq(base.push(P_TRACKER), null, JasimaEvolveExperimentTracker.class);
 			experimentTracker.setSimConfig(simConfig);
 		} catch (ParamClassLoadException ex) {
-			System.err.println(ex.getMessage());
-
 			state.output.warning("No tracker provided for JasimaGPProblem.");
 		}
 

@@ -83,7 +83,9 @@ eval.problem.simulator = app.simConfig.huntConfig.EightOpSimConfig
 eval.problem.simulator.seed = 15
 
 eval.problem.tracker = app.tracker.JasimaEvolveExperimentTracker
-eval.problem.niching = app.evolution.multilevel_new.niching.ANHGPOverlapNiching
+
+eval.problem.niching = app.evolution.coop.niching.MultilevelANHGPNiching
+eval.problem.niching.distance = app.tracker.distance.individual.IndividualOverlapDistance
 
 eval.problem.workstation = app.listener.hunt.HuntListenerEvolveFactory
 eval.problem.workstation.max-jobs = 5

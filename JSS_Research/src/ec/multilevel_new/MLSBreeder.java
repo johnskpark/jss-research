@@ -56,6 +56,8 @@ public class MLSBreeder extends Breeder {
 	public static final int CROSSOVER_INDS_PRODUCED = 2;
 	public static final int MUTATION_INDS_PRODUCED = 1;
 
+	private static final double DEFAULT_BIAS = 1.0;
+
 	public static final int BINARY_SEARCH_BOUNDARY = 8;
 
 	/** An array[subpop] of the number of elites to keep for that subpopulation */
@@ -127,7 +129,7 @@ public class MLSBreeder extends Breeder {
 
 		}
 
-		biasFactor = state.parameters.getDouble(base.push(P_BIAS_FACTOR), null, 1.0);
+		biasFactor = state.parameters.getDouble(base.push(P_BIAS_FACTOR), null, DEFAULT_BIAS);
 
 		if (groupCooperationRate + groupCrossoverRate + groupMutationRate == 0.0) {
 			// Assign equal probabilities to crossover and mutation if both probabilities are zero.

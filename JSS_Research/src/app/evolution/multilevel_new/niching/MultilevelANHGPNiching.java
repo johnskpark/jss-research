@@ -6,13 +6,31 @@ import app.evolution.IJasimaNiching;
 import app.simConfig.AbsSimConfig;
 import app.tracker.JasimaEvolveExperiment;
 import app.tracker.JasimaEvolveExperimentTracker;
+import app.tracker.distance.DistanceMeasure;
 import ec.EvolutionState;
 import ec.gp.koza.KozaFitness;
 import ec.multilevel_new.MLSSubpopulation;
+import ec.util.ParamClassLoadException;
+import ec.util.Parameter;
 
-public abstract class MultilevelANHGPNiching implements IJasimaNiching<MLSSubpopulation> {
+public class MultilevelANHGPNiching implements IJasimaNiching<MLSSubpopulation> {
+
+	private static final long serialVersionUID = -8217196096385497137L;
+
+	public static final String P_DISTANCE = "distance";
 
 	public static final double LEARNING_RATE = 0.5;
+
+	private DistanceMeasure measure;
+
+	@Override
+	public void setup(final EvolutionState state, final Parameter base) {
+		try {
+			measure = (DistanceMeasure) state.parameters.getInstanceForParameterEq(base.push(P_DISTANCE), null, DistanceMeasure.class);
+		} catch (ParamClassLoadException ex) {
+			state.output.fatal("The distance measure was not correctly initialised for MultilevelANHGPNiching.");
+		}
+	}
 
 	@Override
 	public void adjustFitness(final EvolutionState state,
@@ -26,7 +44,7 @@ public abstract class MultilevelANHGPNiching implements IJasimaNiching<MLSSubpop
 		// Calculate the adjustment from the individual's density.
 		for (int i = 0; i < simConfig.getNumConfigs(); i++) {
 			// Calculate the distances between the individuals.
-			double[][] distances = getDistances(state, experiments.get(i), simConfig, group);
+			double[][] distances = measure.getDistances(state, experiments.get(i), simConfig, group.individuals);
 
 			// Calculate the sharing function values.
 			double[][] sharingValues = getSharingValues(state, distances);
@@ -50,14 +68,6 @@ public abstract class MultilevelANHGPNiching implements IJasimaNiching<MLSSubpop
 			fitness.setStandardizedFitness(state, adjustedFitness);
 		}
 	}
-
-	/**
-	 * TODO javadoc.
-	 */
-	public abstract double[][] getDistances(final EvolutionState state,
-			final JasimaEvolveExperiment experiment,
-			final AbsSimConfig simConfig,
-			final MLSSubpopulation group);
 
 	/**
 	 * TODO javadoc.
