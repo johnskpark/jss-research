@@ -15,7 +15,7 @@ breed.mutation-prob = 0.3
 breed.num-breed = 200
 breed.num-retain = 100
 
-breed.bias-factor = 0.5
+breed.bias-factor = 1
 
 # the next four items are already defined in koza.params, but we
 # put them here to be clear.
@@ -80,7 +80,7 @@ eval.problem.group-fitness = app.evolution.multilevel_new.fitness.MultilevelGrou
 eval.problem.ind-rule = app.evolution.priorityRules.BasicPriorityRule
 eval.problem.ind-fitness = app.evolution.multilevel_new.fitness.MultilevelIndividualTWTFitness
 
-eval.problem.simulator = app.simConfig.huntConfig.EightOpSimConfig
+eval.problem.simulator = app.simConfig.huntConfig.FourOpSimConfig
 eval.problem.simulator.seed = 15
 
 # eval.problem.tracker = app.tracker.JasimaEvolveExperimentTracker

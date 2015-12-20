@@ -1,0 +1,45 @@
+<!-- Builds the jss_evaluation.jar and jss_evolve.jar files -->
+<project>
+
+	<property name="src.dir" value="../src" />
+	<property name="bin.dir" value="../bin" />
+	<property name="jar.dir" value="../output_jars" />
+	<property name="lib.dir" value="../lib" />
+
+	<path id="classpath">
+		<fileset dir="${lib.dir}" includes="**/*.jar" />
+	</path> 
+
+	<target name="clean">
+		<delete dir="${bin.dir}" />
+		<delete dir="${jar.dir}" />
+    </target>
+
+	<target name="compile">
+	    <mkdir dir="${bin.dir}" />
+	    <javac srcdir="${src.dir}" destdir="${bin.dir}" classpathref="classpath" />
+	</target>
+
+	<target name="jar">
+		<mkdir dir="${jar.dir}" />
+		
+		<!-- Write the jss_evolve.jar jar file -->
+		<jar destfile="${jar.dir}/jss_evolve.jar" basedir="${bin.dir}" >
+			<manifest>
+				<attribute name="Manifest-Version" value="1.0" />
+				<attribute name="Main-Class" value="ec.Evolve" />
+				<attribute name="Class-Path" value="com.thoughtworks.xstream.jar commons-math3-3.3.jar jxl.jar" />
+			</manifest>
+		</jar>
+
+		<!-- Write the jss_evaluation.jar jar file -->
+		<jar destfile="${jar.dir}/jss_evaluation.jar" basedir="${bin.dir}" >
+			<manifest>
+				<attribute name="Manifest-Version" value="1.0" />
+				<attribute name="Main-Class" value="app.evaluation.Evaluate" />
+				<attribute name="Class-Path" value="guava-18.0.jar javassist-3.18.jar reflections-0.9.9-RC1-uberjar.jar slf4j-api-1.7.7.jar" />
+			</manifest>
+		</jar>
+	</target>
+
+</project>
