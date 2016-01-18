@@ -57,11 +57,15 @@ pop.subpop.0.species.pipe = ec.breed.MultiBreedingPipeline
 # Koza's decision here was odd...
 pop.subpop.0.species.pipe.generate-max = false
 # Subsidiary pipelines:
-pop.subpop.0.species.pipe.num-sources = 2
+# TODO the pipeline's parameters are modified to be consistent with the paper.
+# The original values are 0.9, 0.0, 0.1 (crossover, mutation, reproduction)
+pop.subpop.0.species.pipe.num-sources = 3
 pop.subpop.0.species.pipe.source.0 = ec.gp.koza.CrossoverPipeline
-pop.subpop.0.species.pipe.source.0.prob = 0.9
-pop.subpop.0.species.pipe.source.1 = ec.breed.ReproductionPipeline
+pop.subpop.0.species.pipe.source.0.prob = 0.8
+pop.subpop.0.species.pipe.source.1 = ec.gp.koza.MutationPipeline
 pop.subpop.0.species.pipe.source.1.prob = 0.1
+pop.subpop.0.species.pipe.source.2 = ec.breed.ReproductionPipeline
+pop.subpop.0.species.pipe.source.2.prob = 0.1
 
 
 
@@ -198,7 +202,7 @@ gp.tc.0.init = ec.gp.koza.HalfBuilder
 # We set the default for HalfBuilder to be a ramp of 2--6,
 # with a grow probability of 0.5
 gp.koza.half.min-depth = 2
-gp.koza.half.max-depth = 6
+gp.koza.half.max-depth = 8
 gp.koza.half.growp = 0.5
 
 
