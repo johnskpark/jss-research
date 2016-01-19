@@ -12,7 +12,6 @@ import app.tracker.distance.DistanceMeasure;
 import ec.EvolutionState;
 import ec.Individual;
 
-// TODO update this.
 public class IndividualDecisionDistance implements DistanceMeasure {
 
 	@Override
@@ -55,7 +54,7 @@ public class IndividualDecisionDistance implements DistanceMeasure {
 		for (int i = 0; i < inds.length; i++) {
 			JasimaPriorityStat stat = stats[i];
 
-			rankings[i] = 1.0 * entryRankings.indexOf(stat.getBestEntry());
+			rankings[i] = 1.0 * entryRankings.indexOf(stat.getBestEntry()) / entryRankings.size();
 		}
 
 		return rankings;

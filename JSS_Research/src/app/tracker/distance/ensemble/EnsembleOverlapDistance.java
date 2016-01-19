@@ -10,7 +10,7 @@ import app.tracker.distance.DistanceMeasure;
 import ec.EvolutionState;
 import ec.Individual;
 
-// TODO fix this to reflect the new approach.
+// TODO this sets some of the fitnesses to Infinity.
 public class EnsembleOverlapDistance implements DistanceMeasure {
 
 	@Override
@@ -21,6 +21,10 @@ public class EnsembleOverlapDistance implements DistanceMeasure {
 		double[][] distances = new double[inds.length][inds.length];
 
 		List<JasimaEvolveDecision> decisions = experiment.getDecisions();
+
+		if (decisions.size() == 0) {
+			System.out.println("Decision size is zero!");
+		}
 
 		for (JasimaEvolveDecision decision : decisions) {
 			// Get the overlap between the individuals for the particular decision.
@@ -43,6 +47,10 @@ public class EnsembleOverlapDistance implements DistanceMeasure {
 		boolean[][] overlaps = new boolean[inds.length][inds.length];
 
 		JasimaPriorityStat[] stats = decision.getStats();
+
+		if (decision.getSelectedEntry() == null) {
+			throw new RuntimeException("You fucked up.");
+		}
 
 		for (int i = 0; i < inds.length; i++) {
 			for (int j = 0; j < inds.length; j++) {

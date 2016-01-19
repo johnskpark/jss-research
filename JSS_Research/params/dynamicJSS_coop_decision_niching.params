@@ -90,7 +90,7 @@ eval.problem.simulator.seed = 15
 
 eval.problem.tracker = app.tracker.JasimaEvolveExperimentTracker
 
-eval.problem.niching = app.evolution.coop.niching.MultilevelANHGPNiching
+eval.problem.niching = app.evolution.coop.niching.MultilevelBasicNiching
 eval.problem.niching.distance = app.tracker.distance.individual.IndividualDecisionDistance
 
 eval.problem.workstation = app.listener.hunt.HuntListenerEvolveFactory

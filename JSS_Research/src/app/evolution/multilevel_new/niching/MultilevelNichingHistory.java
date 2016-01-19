@@ -8,11 +8,7 @@ import ec.Individual;
 // Auxiliary class to store the adjustment made to an individual in the population.
 public class MultilevelNichingHistory {
 
-	private Map<Individual, Double> adjustmentMap;
-
-	public MultilevelNichingHistory() {
-		adjustmentMap = new HashMap<Individual, Double>();
-	}
+	private Map<Individual, Double> adjustmentMap = new HashMap<Individual, Double>();
 
 	public boolean hasBeenAdjusted(Individual ind) {
 		return adjustmentMap.containsKey(ind);

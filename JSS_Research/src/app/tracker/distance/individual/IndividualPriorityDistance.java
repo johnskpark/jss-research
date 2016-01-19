@@ -84,11 +84,6 @@ public class IndividualPriorityDistance implements DistanceMeasure {
 				}
 			}
 
-			// TODO temporary code.
-			if (selectedEntryPriority < 0.0 || selectedEntryPriority > 1.0) {
-				throw new RuntimeException("YOU FUCKED UP. YOU FUCKED UP.");
-			}
-
 			normPriorities[i] = selectedEntryPriority;
 		}
 

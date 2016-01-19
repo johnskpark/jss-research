@@ -66,7 +66,7 @@ public class MultilevelBasicNiching implements IJasimaNiching<MLSSubpopulation> 
 			KozaFitness fitness = (KozaFitness) ind.fitness;
 
 			// Look at the history and see if the adjustment is better than the current.
-			if (history.hasBeenAdjusted(ind)) {
+			if (!history.hasBeenAdjusted(ind)) {
 				// Add in the adjustment.
 				double standardised = fitness.standardizedFitness();
 				double adjustedFitness = standardised * (1.0 + adjustment[i]);
@@ -75,7 +75,7 @@ public class MultilevelBasicNiching implements IJasimaNiching<MLSSubpopulation> 
 
 				history.addAdjustment(ind, adjustment[i]);
 			} else if (history.isLowerAdjust(ind, adjustment[i])) {
-				// Revert the fitness back to the original.
+				// Revert the fitness back to the original and then readjust the fitness.
 				double oldAdjust = history.getAdjustment(ind);
 				double oldStandardised = fitness.standardizedFitness() / (1.0 + oldAdjust);
 				double adjustedFitness = oldStandardised * (1.0 + adjustment[i]);
@@ -84,11 +84,6 @@ public class MultilevelBasicNiching implements IJasimaNiching<MLSSubpopulation> 
 
 				history.addAdjustment(ind, adjustment[i]);
 			}
-
-//			double standardisedFitness = fitness.standardizedFitness();
-//			double adjustedFitness = standardisedFitness * (1.0 + adjustment[i]);
-//
-//			fitness.setStandardizedFitness(state, adjustedFitness);
 		}
 	}
 
