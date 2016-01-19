@@ -72,9 +72,12 @@ public class IndividualPriorityDistance implements DistanceMeasure {
 				maxPriority = Math.max(maxPriority, priorities[j]);
 			}
 
+			double diff = maxPriority - minPriority;
+
 			for (int j = 0; j < entries.length; j++) {
 				PrioRuleTarget entry = entries[j];
-				double normalisedPriority = (priorities[j] - minPriority) / (maxPriority - minPriority);
+
+				double normalisedPriority = (diff != 0.0) ? (priorities[j] - minPriority) / diff : 0.0;
 
 				if (selectedEntry.equals(entry)) {
 					selectedEntryPriority = normalisedPriority;
