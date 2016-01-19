@@ -71,13 +71,15 @@ public class CoopBasicNiching implements IJasimaCoopNiching {
 
 		// Adjust the fitnesses of the individuals according to the niching algorithm.
 		for (int i = 0; i < collaborators.length; i++) {
-			adjustment[i] = adjustment[i] / simConfig.getNumConfigs();
+			if (updateFitness[i]) {
+				adjustment[i] = adjustment[i] / simConfig.getNumConfigs();
 
-			KozaFitness fitness = (KozaFitness) collaborators[i].fitness;
-			double standardisedFitness = fitness.standardizedFitness();
-			double adjustedFitness = standardisedFitness * (1.0 + adjustment[i]);
+				KozaFitness fitness = (KozaFitness) collaborators[i].fitness;
+				double standardisedFitness = fitness.standardizedFitness();
+				double adjustedFitness = standardisedFitness * (1.0 + adjustment[i]);
 
-			fitness.setStandardizedFitness(state, adjustedFitness);
+				fitness.setStandardizedFitness(state, adjustedFitness);
+			}
 		}
 	}
 
@@ -93,6 +95,10 @@ public class CoopBasicNiching implements IJasimaCoopNiching {
 		}
 
 		return simAdjust;
+	}
+
+	public void clear() {
+		// Does nothing.
 	}
 
 }

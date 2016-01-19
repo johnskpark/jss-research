@@ -8,11 +8,13 @@ import app.tracker.JasimaEvolveExperiment;
 import app.tracker.JasimaEvolveExperimentTracker;
 import app.tracker.distance.DistanceMeasure;
 import ec.EvolutionState;
+import ec.Individual;
 import ec.gp.koza.KozaFitness;
 import ec.multilevel_new.MLSSubpopulation;
 import ec.util.ParamClassLoadException;
 import ec.util.Parameter;
 
+// TODO this needs to take the lowest adjustments made by a group.
 public class MultilevelBasicNiching implements IJasimaNiching<MLSSubpopulation> {
 
 	private static final long serialVersionUID = 6391897489389514486L;
@@ -22,11 +24,13 @@ public class MultilevelBasicNiching implements IJasimaNiching<MLSSubpopulation> 
 	public static final double LEARNING_RATE = 0.5;
 
 	private DistanceMeasure measure;
+	private MultilevelNichingHistory history;
 
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
 		try {
 			measure = (DistanceMeasure) state.parameters.getInstanceForParameterEq(base.push(P_DISTANCE), null, DistanceMeasure.class);
+			history = new MultilevelNichingHistory();
 		} catch (ParamClassLoadException ex) {
 			state.output.fatal("The distance measure was not correctly initialised for MultilevelANHGPNiching.");
 		}
@@ -58,11 +62,33 @@ public class MultilevelBasicNiching implements IJasimaNiching<MLSSubpopulation> 
 		for (int i = 0; i < group.individuals.length; i++) {
 			adjustment[i] = adjustment[i] / simConfig.getNumConfigs();
 
-			KozaFitness fitness = (KozaFitness) group.individuals[i].fitness;
-			double standardisedFitness = fitness.standardizedFitness();
-			double adjustedFitness = standardisedFitness * (1.0 + adjustment[i]);
+			Individual ind = group.individuals[i];
+			KozaFitness fitness = (KozaFitness) ind.fitness;
 
-			fitness.setStandardizedFitness(state, adjustedFitness);
+			// Look at the history and see if the adjustment is better than the current.
+			if (history.hasBeenAdjusted(ind)) {
+				// Add in the adjustment.
+				double standardised = fitness.standardizedFitness();
+				double adjustedFitness = standardised * (1.0 + adjustment[i]);
+
+				fitness.setStandardizedFitness(state, adjustedFitness);
+
+				history.addAdjustment(ind, adjustment[i]);
+			} else if (history.isLowerAdjust(ind, adjustment[i])) {
+				// Revert the fitness back to the original.
+				double oldAdjust = history.getAdjustment(ind);
+				double oldStandardised = fitness.standardizedFitness() / (1.0 + oldAdjust);
+				double adjustedFitness = oldStandardised * (1.0 + adjustment[i]);
+
+				fitness.setStandardizedFitness(state, adjustedFitness);
+
+				history.addAdjustment(ind, adjustment[i]);
+			}
+
+//			double standardisedFitness = fitness.standardizedFitness();
+//			double adjustedFitness = standardisedFitness * (1.0 + adjustment[i]);
+//
+//			fitness.setStandardizedFitness(state, adjustedFitness);
 		}
 	}
 
@@ -78,6 +104,10 @@ public class MultilevelBasicNiching implements IJasimaNiching<MLSSubpopulation> 
 		}
 
 		return simAdjust;
+	}
+
+	public void clear() {
+		history.clear();
 	}
 
 }

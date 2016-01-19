@@ -74,13 +74,12 @@ public class MLSEvaluator extends Evaluator {
 		for (int group = 1; group < state.population.subpops.length; group++) {
 			evaluateGroup(state, (MLSSubpopulation) state.population.subpops[group], group);
 		}
+
+		((MLSProblemForm) p_problem).afterEvaluation(state, state.population);
 	}
 
 	/**
-	 * TODO javadoc.
-	 * @param state
-	 * @param subpop
-	 * @param subpopIndex
+	 * Evaluate the specified group.
 	 */
 	public void evaluateGroup(final EvolutionState state, MLSSubpopulation subpop, int subpopIndex) {
 		MLSProblemForm mlsProblem = (MLSProblemForm) p_problem;
@@ -97,11 +96,7 @@ public class MLSEvaluator extends Evaluator {
 	}
 
 	/**
-	 * TODO javadoc.
-	 * @param state
-	 * @param subpop
-	 * @param subpopIndex
-	 * @param ind
+	 * Evaluate the specified individual.
 	 */
 	public void evaluateIndividual(final EvolutionState state,
 			MLSSubpopulation subpop,

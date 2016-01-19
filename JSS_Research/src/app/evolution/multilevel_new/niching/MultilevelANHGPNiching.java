@@ -116,4 +116,8 @@ public class MultilevelANHGPNiching implements IJasimaNiching<MLSSubpopulation> 
 		return LEARNING_RATE / state.generation;
 	}
 
+	public void clear() {
+		// Does nothing.
+	}
+
 }

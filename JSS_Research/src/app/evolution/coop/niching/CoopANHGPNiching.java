@@ -122,4 +122,9 @@ public class CoopANHGPNiching implements IJasimaCoopNiching {
 	public double getCloseDegree(final EvolutionState state) {
 		return LEARNING_RATE / state.generation;
 	}
+
+	public void clear() {
+		// Does nothing.
+	}
+
 }

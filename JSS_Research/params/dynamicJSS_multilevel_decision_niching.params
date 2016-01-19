@@ -78,7 +78,7 @@ eval.problem.group-fitness = app.evolution.multilevel_new.fitness.MultilevelGrou
 eval.problem.ind-rule = app.evolution.priorityRules.BasicPriorityRule
 eval.problem.ind-fitness = app.evolution.multilevel_new.fitness.MultilevelIndividualTWTFitness
 
-eval.problem.simulator = app.simConfig.huntConfig.EightOpSimConfig
+eval.problem.simulator = app.simConfig.huntConfig.FourOpSimConfig
 eval.problem.simulator.seed = 15
 
 eval.problem.tracker = app.tracker.JasimaEvolveExperimentTracker

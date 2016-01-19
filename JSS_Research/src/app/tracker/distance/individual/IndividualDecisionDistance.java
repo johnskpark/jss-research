@@ -12,6 +12,7 @@ import app.tracker.distance.DistanceMeasure;
 import ec.EvolutionState;
 import ec.Individual;
 
+// TODO update this.
 public class IndividualDecisionDistance implements DistanceMeasure {
 
 	@Override

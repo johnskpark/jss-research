@@ -12,6 +12,7 @@ import app.tracker.distance.DistanceMeasure;
 import ec.EvolutionState;
 import ec.Individual;
 
+// TODO update this.
 public class IndividualPriorityDistance implements DistanceMeasure {
 
 	@Override
@@ -63,26 +64,27 @@ public class IndividualPriorityDistance implements DistanceMeasure {
 
 			// Get the priority assigned to the selected job by the individuals after normalisation.
 			double selectedEntryPriority = -1;
-			double sumPriorities = 0.0;
+			double minPriority = Double.POSITIVE_INFINITY;
+			double maxPriority = Double.NEGATIVE_INFINITY;
 
-			// Get the maximum priority.
-			double maxEntryPriority = Double.NEGATIVE_INFINITY;
 			for (int j = 0; j < entries.length; j++) {
-				maxEntryPriority = Math.max(maxEntryPriority, priorities[j]);
+				minPriority = Math.min(minPriority, priorities[j]);
+				maxPriority = Math.max(maxPriority, priorities[j]);
 			}
 
 			for (int j = 0; j < entries.length; j++) {
 				PrioRuleTarget entry = entries[j];
-				double normalisedPriority = Math.exp(priorities[j] - maxEntryPriority);
+				double normalisedPriority = (priorities[j] - minPriority) / (maxPriority - minPriority);
 
 				if (selectedEntry.equals(entry)) {
 					selectedEntryPriority = normalisedPriority;
 				}
-
-				sumPriorities += normalisedPriority;
 			}
 
-			selectedEntryPriority = selectedEntryPriority / sumPriorities;
+			// TODO temporary code.
+			if (selectedEntryPriority < 0.0 || selectedEntryPriority > 1.0) {
+				throw new RuntimeException("YOU FUCKED UP. YOU FUCKED UP.");
+			}
 
 			normPriorities[i] = selectedEntryPriority;
 		}

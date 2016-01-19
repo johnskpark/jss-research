@@ -87,6 +87,14 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 	}
 
 	@Override
+	public void afterEvaluation(final EvolutionState state, Population pop) {
+		// Clear the niching method.
+		if (niching != null) {
+			niching.clear();
+		}
+	}
+
+	@Override
 	public void evaluateGroup(final EvolutionState state,
 			final MLSSubpopulation group,
 			final boolean[] updateFitness,

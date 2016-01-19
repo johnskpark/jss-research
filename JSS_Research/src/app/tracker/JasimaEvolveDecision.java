@@ -45,7 +45,7 @@ public class JasimaEvolveDecision {
 		return entryRankings;
 	}
 
-	public PrioRuleTarget getStartedEntry() {
+	public PrioRuleTarget getSelectedEntry() {
 		return startedEntry;
 	}
 

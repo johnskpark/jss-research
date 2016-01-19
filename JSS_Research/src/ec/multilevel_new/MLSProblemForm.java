@@ -22,6 +22,13 @@ public interface MLSProblemForm {
 	/**
 	 * TODO javadoc.
 	 * @param state
+	 * @param pop
+	 */
+	public void afterEvaluation(final EvolutionState state, Population pop);
+
+	/**
+	 * TODO javadoc.
+	 * @param state
 	 * @param ind
 	 * @param updateFitness
 	 * @param countVictoriesOnly
