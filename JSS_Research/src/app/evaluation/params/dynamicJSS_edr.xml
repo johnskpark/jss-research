@@ -3,14 +3,14 @@
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mls_overlap_4op.txt</ruleFile>
+			<ruleFile>mls_overlap2_4op.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mls_overlap_8op.txt</ruleFile>
+			<ruleFile>mls_overlap2_8op.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
@@ -20,7 +20,7 @@
 	</datasetConfig>
 
 	<outputConfig>
-	    <outputFile>mls_overlap_output.csv</outputFile>
+	    <outputFile>mls_overlap2_output.csv</outputFile>
 	</outputConfig>
 
 	<fitnessConfig>
