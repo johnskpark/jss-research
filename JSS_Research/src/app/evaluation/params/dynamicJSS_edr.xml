@@ -3,24 +3,24 @@
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mls_overlap2_4op.txt</ruleFile>
+			<ruleFile>mls_overlap2_4op_best.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mls_overlap2_8op.txt</ruleFile>
+			<ruleFile>mls_overlap2_8op_best.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<datasetConfig>
-		<datasetClass>app.simConfig.huntConfig.TestSimConfig</datasetClass>
+		<datasetClass>app.simConfig.huntConfig.TrainSimConfig</datasetClass>
 		<datasetSeed>15</datasetSeed>
 	</datasetConfig>
 
 	<outputConfig>
-	    <outputFile>mls_overlap2_output.csv</outputFile>
+	    <outputFile>mls_overlap2_best_train_output.csv</outputFile>
 	</outputConfig>
 
 	<fitnessConfig>
