@@ -1,6 +1,5 @@
 package app.evolution.multilevel_new;
 
-import java.util.List;
 import java.util.Map;
 
 import app.evolution.IJasimaFitness;
