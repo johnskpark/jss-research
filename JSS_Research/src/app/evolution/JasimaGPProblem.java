@@ -1,10 +1,10 @@
 package app.evolution;
 
-import jasima.core.experiment.Experiment;
-import jasima.core.util.observer.NotifierListener;
-import jasima.shopSim.models.dynamicShop.DynamicShopExperiment;
-import jasima.shopSim.util.BasicJobStatCollector;
+import java.util.ArrayList;
+import java.util.List;
+
 import app.IWorkStationListener;
+import app.priorityRules.HolthausRule;
 import app.simConfig.AbsSimConfig;
 import app.tracker.JasimaEvolveExperimentTracker;
 import ec.EvolutionState;
@@ -12,6 +12,11 @@ import ec.gp.GPProblem;
 import ec.util.MersenneTwisterFast;
 import ec.util.ParamClassLoadException;
 import ec.util.Parameter;
+import jasima.core.statistics.SummaryStat;
+import jasima.core.util.observer.NotifierListener;
+import jasima.shopSim.core.PR;
+import jasima.shopSim.models.dynamicShop.DynamicShopExperiment;
+import jasima.shopSim.util.BasicJobStatCollector;
 
 public abstract class JasimaGPProblem extends GPProblem {
 
@@ -37,6 +42,9 @@ public abstract class JasimaGPProblem extends GPProblem {
 	private JasimaEvolveExperimentTracker experimentTracker;
 
 	private IWorkStationListener workstationListener;
+
+	private PR referenceRule = new HolthausRule();
+	private List<Double> referenceStat = new ArrayList<Double>();
 
 	public void setup(final EvolutionState state, final Parameter base) {
 		super.setup(state, base);
@@ -107,12 +115,48 @@ public abstract class JasimaGPProblem extends GPProblem {
 		return workstationListener;
 	}
 
-	@SuppressWarnings("unchecked")
-	protected Experiment getExperiment(final EvolutionState state,
+	protected PR getReferenceRule() {
+		return referenceRule;
+	}
+
+	protected List<Double> getReferenceStat() {
+		return referenceStat;
+	}
+
+	protected void evaluateReference() {
+		for (int expIndex = 0; expIndex < getSimConfig().getNumConfigs(); expIndex++) {
+			DynamicShopExperiment experiment = getExperiment(referenceRule, expIndex);
+			experiment.runExperiment();
+
+			SummaryStat stat = (SummaryStat) experiment.getResults().get("weightedTardMean");
+			referenceStat.add(stat.sum());
+		}
+	}
+
+	protected void clearReference() {
+		referenceStat.clear();
+	}
+
+	protected DynamicShopExperiment getExperiment(final EvolutionState state,
 			final AbsGPPriorityRule rule,
 			final int index,
 			final IWorkStationListener listener,
 			final JasimaEvolveExperimentTracker tracker) {
+		DynamicShopExperiment experiment = getExperiment(rule, index);
+
+		// Add the workstation listener.
+		experiment.addMachineListener(rule);
+		if (listener != null) { experiment.addMachineListener(listener); }
+		if (tracker != null) {
+			tracker.clearCurrentExperiment();
+			tracker.setExperimentIndex(index);
+		}
+
+		return experiment;
+	}
+
+	@SuppressWarnings("unchecked")
+	protected DynamicShopExperiment getExperiment(final PR rule, final int index) {
 		DynamicShopExperiment experiment = new DynamicShopExperiment();
 
 		experiment.setInitialSeed(simConfig.getLongValue());
@@ -123,22 +167,14 @@ public abstract class JasimaGPProblem extends GPProblem {
 		experiment.setOpProcTime(simConfig.getMinOpProc(index), simConfig.getMaxOpProc(index));
 		experiment.setNumOps(simConfig.getMinNumOps(index), simConfig.getMaxNumOps(index));
 
+		experiment.setStopAfterNumJobs(simConfig.getStopAfterNumJobs());
+		experiment.setSequencingRule(rule);
+		experiment.setScenario(DynamicShopExperiment.Scenario.JOB_SHOP);
+
 		BasicJobStatCollector statCollector = new BasicJobStatCollector();
 		statCollector.setIgnoreFirst(simConfig.getNumIgnore());
 
 		experiment.setShopListener(new NotifierListener[]{statCollector});
-
-		// Add the workstation listener.
-		experiment.addMachineListener(rule);
-		if (listener != null) { experiment.addMachineListener(listener); }
-		if (tracker != null) {
-			tracker.clearCurrentExperiment();
-			tracker.setExperimentIndex(index);
-		}
-
-		experiment.setStopAfterNumJobs(simConfig.getStopAfterNumJobs());
-		experiment.setSequencingRule(rule);
-		experiment.setScenario(DynamicShopExperiment.Scenario.JOB_SHOP);
 
 		return experiment;
 	}

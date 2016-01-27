@@ -1,13 +1,13 @@
 package app.evolution.multilevel_new.fitness;
 
-import jasima.core.statistics.SummaryStat;
-
+import java.util.List;
 import java.util.Map;
 
 import app.evolution.multilevel_new.IJasimaMultilevelIndividualFitness;
 import app.evolution.multilevel_new.JasimaMultilevelIndividual;
 import ec.EvolutionState;
 import ec.gp.koza.KozaFitness;
+import jasima.core.statistics.SummaryStat;
 
 /**
  * Fitness calculator for an individual in JasimaMultilevelProblem.
@@ -26,7 +26,7 @@ public class MultilevelIndividualTWTFitness implements IJasimaMultilevelIndividu
 	private SummaryStat overallStat = new SummaryStat();
 
 	@Override
-	public void accumulateFitness(int expIndex, Map<String, Object> results) {
+	public void accumulateFitness(int expIndex, Map<String, Object> results, double referenceStat) {
 		// Results of a simulation over a problem instance.
 		SummaryStat stat = (SummaryStat) results.get(WEIGHTED_TARDINESS);
 

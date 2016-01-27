@@ -1,7 +1,5 @@
 package app.evolution.multilevel_new;
 
-import jasima.core.experiment.Experiment;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +17,7 @@ import ec.multilevel_new.MLSProblemForm;
 import ec.multilevel_new.MLSSubpopulation;
 import ec.util.ParamClassLoadException;
 import ec.util.Parameter;
+import jasima.core.experiment.Experiment;
 
 /**
  * TODO javadoc.
@@ -84,6 +83,9 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 			getTracker().setPriorityRule(groupRule);
 			getTracker().setSimConfig(getSimConfig());
 		}
+
+		// Apply the benchmark/reference rule to the problem instances.
+		evaluateReference();
 	}
 
 	@Override
@@ -92,6 +94,9 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 		if (niching != null) {
 			niching.clear();
 		}
+
+		// Clear the reference stat.
+		clearReference();
 	}
 
 	@Override
@@ -166,7 +171,9 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 
 			experiment.runExperiment();
 
-			indFitness.accumulateFitness(expIndex, experiment.getResults());
+			indFitness.accumulateFitness(expIndex,
+					experiment.getResults(),
+					getReferenceStat().get(expIndex));
 			if (hasWorkStationListener()) { getWorkStationListener().clear(); }
 		}
 
