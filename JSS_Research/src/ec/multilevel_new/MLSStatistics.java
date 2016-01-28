@@ -6,6 +6,7 @@ import java.io.IOException;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.Statistics;
+import ec.gp.koza.KozaFitness;
 import ec.util.Output;
 import ec.util.Parameter;
 
@@ -96,6 +97,9 @@ public class MLSStatistics extends Statistics {
 	protected void individualStatistics(final EvolutionState state) {
 		Individual bestInd = null;
 
+		double sumFitness = 0.0;
+		double numEvaluated = 0.0;
+
 		// Update the best individual of generation.
 		for (int i = 0; i < state.population.subpops[0].individuals.length; i++) {
 			Individual ind = state.population.subpops[0].individuals[i];
@@ -103,7 +107,15 @@ public class MLSStatistics extends Statistics {
 			if (bestInd == null || ind.fitness.betterThan(bestInd.fitness)) {
 				bestInd = ind;
 			}
+
+			// Fuck it, all everyone uses is KozaFitness anyways.
+			if (ind.evaluated) {
+				sumFitness += ((KozaFitness) ind.fitness).standardizedFitness();
+				numEvaluated++;
+			}
 		}
+
+		double avgFitness = sumFitness / numEvaluated;
 
 		// Update the best individual of the run.
 		if (bestIndOfRun == null || bestInd.fitness.betterThan(bestIndOfRun.fitness)) {
@@ -113,13 +125,18 @@ public class MLSStatistics extends Statistics {
 		// Print the best individual's fitness to stdout.
 		if (doGeneration) {
 			String evaluatedStr = (bestInd.evaluated) ? " " : " (evaluated flag not set): ";
-			state.output.message("Best individual of generation: " + evaluatedStr + bestInd.fitness.fitnessToStringForHumans());
+			state.output.message("Best Individual of Generation: " + evaluatedStr + bestInd.fitness.fitnessToStringForHumans());
 		}
 
 		// Print the best individual and its fitness to output file.
 		if (doGeneration) {
 			state.output.println("Best Individual:", statisticsLog);
 			bestInd.printIndividualForHumans(state, statisticsLog);
+		}
+
+		// Print out the average individual's fitnesses.
+		if (doGeneration) {
+			state.output.message("Average Individual Fitness: " + avgFitness);
 		}
 	}
 
@@ -134,6 +151,9 @@ public class MLSStatistics extends Statistics {
 
 		MLSSubpopulation bestGroup = null;
 		int bestGroupIndex = -1;
+
+		double sumFitness = 0.0;
+		double numEvaluated = 0.0;
 
 		for (int g = 0; g < state.population.subpops.length - 1; g++) {
 			MLSSubpopulation group = (MLSSubpopulation) state.population.subpops[g + 1];
@@ -155,7 +175,15 @@ public class MLSStatistics extends Statistics {
 			if (bestIndsOfGroupsOfRun[g] == null || bestOfGroups[g].fitness.betterThan(bestIndsOfGroupsOfRun[g].fitness)) {
 				bestIndsOfGroupsOfRun[g] = (Individual) bestOfGroups[g].clone();
 			}
+
+			// Fuck it, all everyone uses is KozaFitness anyways.
+			if (group.isEvaluated()) {
+				sumFitness += ((KozaFitness) group.getFitness()).standardizedFitness();
+				numEvaluated++;
+			}
 		}
+
+		double avgFitness = sumFitness / numEvaluated;
 
 		// Update the best group of the run.
 		if (bestGroupOfRun == null || bestGroup.getFitness().betterThan(bestGroupOfRun.getFitness())) {
@@ -189,6 +217,11 @@ public class MLSStatistics extends Statistics {
 
 				state.output.message("Group " + g + " fitness: " + group.getFitness().fitnessToStringForHumans() + ", Size: " + group.individuals.length + ", Individual: " + evaluatedStr + bestOfGroups[g].fitness.fitnessToStringForHumans());
 			}
+		}
+
+		// Print out the average group's fitnesses.
+		if (doGeneration) {
+			state.output.message("Average Group Fitness: " + avgFitness);
 		}
 	}
 
