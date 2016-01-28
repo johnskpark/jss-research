@@ -3,6 +3,7 @@ package app.evolution.multilevel_new;
 import java.util.Map;
 
 import app.evolution.IJasimaFitness;
+import ec.Individual;
 
 /**
  * TODO javadoc.
@@ -17,6 +18,6 @@ public interface IJasimaMultilevelIndividualFitness extends IJasimaFitness<Jasim
 	 * @param expIndex
 	 * @param results
 	 */
-	public void accumulateFitness(int expIndex, Map<String, Object> results, double referenceStat);
+	public void accumulateFitness(Individual ind, int expIndex, Map<String, Object> results, double referenceStat);
 
 }

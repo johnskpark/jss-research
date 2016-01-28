@@ -171,7 +171,8 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 
 			experiment.runExperiment();
 
-			indFitness.accumulateFitness(expIndex,
+			indFitness.accumulateFitness(ind,
+					expIndex,
 					experiment.getResults(),
 					getReferenceStat().get(expIndex));
 			if (hasWorkStationListener()) { getWorkStationListener().clear(); }

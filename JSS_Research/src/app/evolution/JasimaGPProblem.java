@@ -124,12 +124,19 @@ public abstract class JasimaGPProblem extends GPProblem {
 	}
 
 	protected void evaluateReference() {
+		if (referenceStat.size() != 0) {
+			throw new RuntimeException("The reference rule has been previously evaluated. Please clear the statistics for the reference rule beforehand.");
+		}
+
+		referenceStat.add(0.0);
+
 		for (int expIndex = 0; expIndex < getSimConfig().getNumConfigs(); expIndex++) {
 			DynamicShopExperiment experiment = getExperiment(referenceRule, expIndex);
 			experiment.runExperiment();
 
 			SummaryStat stat = (SummaryStat) experiment.getResults().get("weightedTardMean");
 			referenceStat.add(stat.sum());
+			referenceStat.set(0, referenceStat.get(0) + stat.sum());
 		}
 	}
 

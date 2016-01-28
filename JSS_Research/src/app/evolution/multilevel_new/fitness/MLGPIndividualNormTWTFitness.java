@@ -21,7 +21,7 @@ import jasima.core.statistics.SummaryStat;
  * @author parkjohn
  *
  */
-public class MultilevelIndividualTWTFitness implements IJasimaMultilevelIndividualFitness {
+public class MLGPIndividualNormTWTFitness implements IJasimaMultilevelIndividualFitness {
 
 	private static final String WEIGHTED_TARDINESS = "weightedTardMean";
 
@@ -40,15 +40,13 @@ public class MultilevelIndividualTWTFitness implements IJasimaMultilevelIndividu
 		SummaryStat stat = (SummaryStat) results.get(WEIGHTED_TARDINESS);
 
 		double twt = stat.sum();
-
-		// TODO temporary while I try and get something bigger sorted.
-		// System.out.printf("%s,%d,%f,%f\n", ind.toString(), expIndex, twt, referenceStat);
+		double normTWT = 1.0 * twt / referenceStat;
 
 		// We want the total weighted tardiness, so take the
 		// sum of the values accumulated by the stats object.
-		overallStat.add(twt);
+		overallStat.add(normTWT);
 
-		overallStat.set(0, overallStat.get(0) + twt);
+		overallStat.set(0, overallStat.get(0) + normTWT);
 	}
 
 	@Override
