@@ -32,7 +32,9 @@ public class MLGPIndividualNormTWTFitness implements IJasimaMultilevelIndividual
 
 	@Override
 	public void addListener(IJasimaMultilevelFitnessListener listener) {
-		listeners.add(listener);
+		if (!listeners.contains(listener)) {
+			listeners.add(listener);
+		}
 	}
 
 	@Override

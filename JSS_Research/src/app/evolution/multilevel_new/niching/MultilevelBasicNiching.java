@@ -1,8 +1,10 @@
 package app.evolution.multilevel_new.niching;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import app.evolution.IJasimaNiching;
+import app.evolution.multilevel_new.IJasimaMultilevelFitnessListener;
+import app.evolution.multilevel_new.IJasimaMultilevelNiching;
 import app.simConfig.AbsSimConfig;
 import app.tracker.JasimaEvolveExperiment;
 import app.tracker.JasimaEvolveExperimentTracker;
@@ -14,8 +16,7 @@ import ec.multilevel_new.MLSSubpopulation;
 import ec.util.ParamClassLoadException;
 import ec.util.Parameter;
 
-// TODO separate out the part for the adjustments.
-public class MultilevelBasicNiching implements IJasimaNiching<MLSSubpopulation> {
+public class MultilevelBasicNiching implements IJasimaMultilevelNiching {
 
 	private static final long serialVersionUID = 6391897489389514486L;
 
@@ -26,6 +27,8 @@ public class MultilevelBasicNiching implements IJasimaNiching<MLSSubpopulation> 
 	private DistanceMeasure measure;
 	private MultilevelNichingHistory history;
 
+	private List<IJasimaMultilevelFitnessListener> listeners = new ArrayList<IJasimaMultilevelFitnessListener>();
+
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
 		try {
@@ -33,6 +36,13 @@ public class MultilevelBasicNiching implements IJasimaNiching<MLSSubpopulation> 
 			history = new MultilevelNichingHistory();
 		} catch (ParamClassLoadException ex) {
 			state.output.fatal("The distance measure was not correctly initialised for MultilevelANHGPNiching.");
+		}
+	}
+
+	@Override
+	public void addListener(IJasimaMultilevelFitnessListener listener) {
+		if (!listeners.contains(listener)) {
+			listeners.add(listener);
 		}
 	}
 
@@ -66,6 +76,7 @@ public class MultilevelBasicNiching implements IJasimaNiching<MLSSubpopulation> 
 			KozaFitness fitness = (KozaFitness) ind.fitness;
 
 			// Look at the history and see if the adjustment is better than the current.
+			// TODO add this into the statistics.
 			if (!history.hasBeenAdjusted(ind)) {
 				// Add in the adjustment.
 				double standardised = fitness.standardizedFitness();

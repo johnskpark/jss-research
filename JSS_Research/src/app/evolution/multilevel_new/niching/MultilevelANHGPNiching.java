@@ -1,8 +1,10 @@
 package app.evolution.multilevel_new.niching;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import app.evolution.IJasimaNiching;
+import app.evolution.multilevel_new.IJasimaMultilevelFitnessListener;
+import app.evolution.multilevel_new.IJasimaMultilevelNiching;
 import app.simConfig.AbsSimConfig;
 import app.tracker.JasimaEvolveExperiment;
 import app.tracker.JasimaEvolveExperimentTracker;
@@ -13,7 +15,7 @@ import ec.multilevel_new.MLSSubpopulation;
 import ec.util.ParamClassLoadException;
 import ec.util.Parameter;
 
-public class MultilevelANHGPNiching implements IJasimaNiching<MLSSubpopulation> {
+public class MultilevelANHGPNiching implements IJasimaMultilevelNiching {
 
 	private static final long serialVersionUID = -8217196096385497137L;
 
@@ -23,12 +25,21 @@ public class MultilevelANHGPNiching implements IJasimaNiching<MLSSubpopulation> 
 
 	private DistanceMeasure measure;
 
+	private List<IJasimaMultilevelFitnessListener> listeners = new ArrayList<IJasimaMultilevelFitnessListener>();
+
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
 		try {
 			measure = (DistanceMeasure) state.parameters.getInstanceForParameterEq(base.push(P_DISTANCE), null, DistanceMeasure.class);
 		} catch (ParamClassLoadException ex) {
 			state.output.fatal("The distance measure was not correctly initialised for MultilevelANHGPNiching.");
+		}
+	}
+
+	@Override
+	public void addListener(IJasimaMultilevelFitnessListener listener) {
+		if (!listeners.contains(listener)) {
+			listeners.add(listener);
 		}
 	}
 

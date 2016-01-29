@@ -62,6 +62,8 @@ public class JasimaMultilevelNichingStatistics extends MLSStatistics implements 
 
 	protected void instanceStatistics(final EvolutionState state) {
 		// Print out the instance statistics.
+		// TODO
+
 		state.output.print("Individual Fitnesses per Instance (min,avg,max): ", statisticsLog);
 		state.output.println("", statisticsLog);
 

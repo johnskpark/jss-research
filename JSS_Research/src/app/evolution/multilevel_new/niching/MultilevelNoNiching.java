@@ -1,8 +1,10 @@
 package app.evolution.multilevel_new.niching;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import app.evolution.IJasimaNiching;
+import app.evolution.multilevel_new.IJasimaMultilevelFitnessListener;
+import app.evolution.multilevel_new.IJasimaMultilevelNiching;
 import app.simConfig.AbsSimConfig;
 import app.tracker.JasimaEvolveExperiment;
 import app.tracker.JasimaEvolveExperimentTracker;
@@ -14,9 +16,9 @@ import ec.multilevel_new.MLSSubpopulation;
 import ec.util.ParamClassLoadException;
 import ec.util.Parameter;
 
-// TODO this is here to calculate the diversity measure that could be applied to the individuals,
+// This is here to calculate the diversity measure that could be applied to the individuals,
 // but is actually not applied to the individuals.
-public class MultilevelNoNiching implements IJasimaNiching<MLSSubpopulation> {
+public class MultilevelNoNiching implements IJasimaMultilevelNiching {
 
 	private static final long serialVersionUID = 6391897489389514486L;
 
@@ -27,6 +29,8 @@ public class MultilevelNoNiching implements IJasimaNiching<MLSSubpopulation> {
 	private DistanceMeasure measure;
 	private MultilevelNichingHistory history;
 
+	private List<IJasimaMultilevelFitnessListener> listeners = new ArrayList<IJasimaMultilevelFitnessListener>();
+
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
 		try {
@@ -34,6 +38,13 @@ public class MultilevelNoNiching implements IJasimaNiching<MLSSubpopulation> {
 			history = new MultilevelNichingHistory();
 		} catch (ParamClassLoadException ex) {
 			state.output.fatal("The distance measure was not correctly initialised for MultilevelANHGPNiching.");
+		}
+	}
+
+	@Override
+	public void addListener(IJasimaMultilevelFitnessListener listener) {
+		if (!listeners.contains(listener)) {
+			listeners.add(listener);
 		}
 	}
 
@@ -59,7 +70,7 @@ public class MultilevelNoNiching implements IJasimaNiching<MLSSubpopulation> {
 			}
 		}
 
-		// Adjust the fitnesses of the individuals according to the niching algorithm.
+		// Calculate the adjustment, but do not adjust the fitnesses of the individuals.
 		for (int i = 0; i < group.individuals.length; i++) {
 			adjustment[i] = adjustment[i] / simConfig.getNumConfigs();
 
@@ -67,6 +78,7 @@ public class MultilevelNoNiching implements IJasimaNiching<MLSSubpopulation> {
 			KozaFitness fitness = (KozaFitness) ind.fitness;
 
 			// Look at the history and see if the adjustment is better than the current.
+			// TODO add this into the statistics.
 			if (!history.hasBeenAdjusted(ind)) {
 				// Add in the adjustment.
 				double standardised = fitness.standardizedFitness();

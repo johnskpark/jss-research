@@ -32,7 +32,9 @@ public class MultilevelIndividualTWTFitness implements IJasimaMultilevelIndividu
 
 	@Override
 	public void addListener(IJasimaMultilevelFitnessListener listener) {
-		listeners.add(listener);
+		if (!listeners.contains(listener)) {
+			listeners.add(listener);
+		}
 	}
 
 	@Override
