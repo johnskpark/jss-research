@@ -15,8 +15,8 @@ breed.mutation-prob = 0.3
 breed.num-breed = 20
 breed.num-retain = 10
 
-pop.subpop.0.size = 256
-generations = 200
+pop.subpop.0.size = 102
+generations = 501
 
 breed.bias-factor = 1
 
