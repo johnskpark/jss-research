@@ -28,6 +28,11 @@ public class MLGPIndividualNormTWTFitness implements IJasimaMultilevelIndividual
 	private List<Double> overallStat = new ArrayList<Double>();
 
 	@Override
+	public List<Double> getInstanceStats() {
+		return overallStat;
+	}
+
+	@Override
 	public void accumulateFitness(Individual ind,
 			int expIndex,
 			Map<String, Object> results,

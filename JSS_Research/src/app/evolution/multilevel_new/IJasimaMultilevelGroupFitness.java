@@ -1,5 +1,6 @@
 package app.evolution.multilevel_new;
 
+import java.util.List;
 import java.util.Map;
 
 import app.evolution.IJasimaFitness;
@@ -24,4 +25,9 @@ public interface IJasimaMultilevelGroupFitness extends IJasimaFitness<MLSSubpopu
 			MLSSubpopulation subpop,
 			Map<String, Object> results);
 
+	/**
+	 * TODO javadoc.
+	 * @return
+	 */
+	public List<Double> getInstanceStats();
 }

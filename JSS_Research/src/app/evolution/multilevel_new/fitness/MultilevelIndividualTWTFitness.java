@@ -28,6 +28,11 @@ public class MultilevelIndividualTWTFitness implements IJasimaMultilevelIndividu
 	private List<Double> overallStat = new ArrayList<Double>();
 
 	@Override
+	public List<Double> getInstanceStats() {
+		return overallStat;
+	}
+
+	@Override
 	public void accumulateFitness(Individual ind,
 			int expIndex,
 			Map<String, Object> results,
@@ -41,13 +46,9 @@ public class MultilevelIndividualTWTFitness implements IJasimaMultilevelIndividu
 
 		double twt = stat.sum();
 
-		// TODO temporary while I try and get something bigger sorted.
-		// System.out.printf("%s,%d,%f,%f\n", ind.toString(), expIndex, twt, referenceStat);
-
 		// We want the total weighted tardiness, so take the
 		// sum of the values accumulated by the stats object.
 		overallStat.add(twt);
-
 		overallStat.set(0, overallStat.get(0) + twt);
 	}
 

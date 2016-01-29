@@ -25,7 +25,7 @@ import jasima.core.experiment.Experiment;
  * @author parkjohn
  *
  */
-// TODO need to add in niching at some point.
+// TODO need to record the diversity measures.
 public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProblemForm {
 
 	private static final long serialVersionUID = -5150181943760622786L;
@@ -97,6 +97,18 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 
 		// Clear the reference stat.
 		clearReference();
+	}
+
+	public IJasimaMultilevelGroupFitness getGroupFitness() {
+		return groupFitness;
+	}
+
+	public IJasimaMultilevelIndividualFitness getIndividualFitness() {
+		return indFitness;
+	}
+
+	public IJasimaNiching<MLSSubpopulation> getNiching() {
+		return niching;
 	}
 
 	@Override

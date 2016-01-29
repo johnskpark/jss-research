@@ -1,13 +1,14 @@
 package app.evolution.multilevel_new.fitness;
 
-import jasima.core.statistics.SummaryStat;
-
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import app.evolution.multilevel_new.IJasimaMultilevelGroupFitness;
 import ec.EvolutionState;
 import ec.gp.koza.KozaFitness;
 import ec.multilevel_new.MLSSubpopulation;
+import jasima.core.statistics.SummaryStat;
 
 /**
  * Fitness calculator for a group of individuals in JasimaMultilevelProblem.
@@ -20,30 +21,40 @@ import ec.multilevel_new.MLSSubpopulation;
  * @author parkjohn
  *
  */
-
-// TODO this gives terrible results, try to figure out why this is the case.
 public class MultilevelGroupTWTFitness implements IJasimaMultilevelGroupFitness {
 
 	private static final String WEIGHTED_TARDINESS = "weightedTardMean";
 
-	private SummaryStat ensembleStat = new SummaryStat();
+	private List<Double> ensembleStat = new ArrayList<Double>();
+
+	@Override
+	public List<Double> getInstanceStats() {
+		return ensembleStat;
+	}
 
 	@Override
 	public void accumulateFitness(int expIndex,
 			MLSSubpopulation subpop,
 			Map<String, Object> results) {
+		if (ensembleStat.size() == 0) {
+			ensembleStat.add(0.0);
+		}
+
 		// Results of a simulation over a problem instance.
 		SummaryStat stat = (SummaryStat) results.get(WEIGHTED_TARDINESS);
 
+		double twt = stat.sum();
+
 		// We want the total weighted tardiness, so take the
 		// sum of the values accumulated by the stats object.
-		ensembleStat.value(stat.sum());
+		ensembleStat.add(twt);
+		ensembleStat.set(0, ensembleStat.get(0) + twt);
 	}
 
 	@Override
 	public void setFitness(EvolutionState state, MLSSubpopulation subpop) {
 		double sizeFactor = Math.sqrt((2.0 + subpop.individuals.length) / (2.0 * subpop.individuals.length));
-		double groupFitness = ensembleStat.mean() * sizeFactor;
+		double groupFitness = ensembleStat.get(0) / (ensembleStat.size() - 1.0) * sizeFactor;
 
 		((KozaFitness) subpop.getFitness()).setStandardizedFitness(state, groupFitness);
 

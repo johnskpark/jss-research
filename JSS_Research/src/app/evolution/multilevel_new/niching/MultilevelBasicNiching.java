@@ -14,7 +14,7 @@ import ec.multilevel_new.MLSSubpopulation;
 import ec.util.ParamClassLoadException;
 import ec.util.Parameter;
 
-// TODO this part needs to be normalised properly.
+// TODO separate out the part for the adjustments.
 public class MultilevelBasicNiching implements IJasimaNiching<MLSSubpopulation> {
 
 	private static final long serialVersionUID = 6391897489389514486L;
