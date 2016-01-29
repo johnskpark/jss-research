@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import app.evolution.multilevel_new.IJasimaMultilevelFitnessListener;
 import app.evolution.multilevel_new.IJasimaMultilevelIndividualFitness;
 import app.evolution.multilevel_new.JasimaMultilevelIndividual;
 import ec.EvolutionState;
@@ -26,6 +27,13 @@ public class MultilevelIndividualTWTFitness implements IJasimaMultilevelIndividu
 	private static final String WEIGHTED_TARDINESS = "weightedTardMean";
 
 	private List<Double> overallStat = new ArrayList<Double>();
+
+	private List<IJasimaMultilevelFitnessListener> listeners = new ArrayList<IJasimaMultilevelFitnessListener>();
+
+	@Override
+	public void addListener(IJasimaMultilevelFitnessListener listener) {
+		listeners.add(listener);
+	}
 
 	@Override
 	public List<Double> getInstanceStats() {
@@ -50,6 +58,10 @@ public class MultilevelIndividualTWTFitness implements IJasimaMultilevelIndividu
 		// sum of the values accumulated by the stats object.
 		overallStat.add(twt);
 		overallStat.set(0, overallStat.get(0) + twt);
+
+		for (IJasimaMultilevelFitnessListener listener : listeners) {
+			listener.addFitness(ind, expIndex, twt);
+		}
 	}
 
 	@Override

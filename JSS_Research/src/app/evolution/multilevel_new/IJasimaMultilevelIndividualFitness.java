@@ -26,6 +26,12 @@ public interface IJasimaMultilevelIndividualFitness extends IJasimaFitness<Jasim
 
 	/**
 	 * TODO javadoc.
+	 * @param listener
+	 */
+	public void addListener(IJasimaMultilevelFitnessListener listener);
+
+	/**
+	 * TODO javadoc.
 	 */
 	public List<Double> getInstanceStats();
 }

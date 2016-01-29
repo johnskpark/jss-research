@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import app.evolution.multilevel_new.IJasimaMultilevelFitnessListener;
 import app.evolution.multilevel_new.IJasimaMultilevelGroupFitness;
 import ec.EvolutionState;
 import ec.gp.koza.KozaFitness;
@@ -27,6 +28,13 @@ public class MultilevelGroupTWTFitness implements IJasimaMultilevelGroupFitness 
 
 	private List<Double> ensembleStat = new ArrayList<Double>();
 
+	private List<IJasimaMultilevelFitnessListener> listeners = new ArrayList<IJasimaMultilevelFitnessListener>();
+
+	@Override
+	public void addListener(IJasimaMultilevelFitnessListener listener) {
+		listeners.add(listener);
+	}
+
 	@Override
 	public List<Double> getInstanceStats() {
 		return ensembleStat;
@@ -49,6 +57,10 @@ public class MultilevelGroupTWTFitness implements IJasimaMultilevelGroupFitness 
 		// sum of the values accumulated by the stats object.
 		ensembleStat.add(twt);
 		ensembleStat.set(0, ensembleStat.get(0) + twt);
+
+		for (IJasimaMultilevelFitnessListener listener : listeners) {
+			listener.addFitness(subpop, expIndex, twt);
+		}
 	}
 
 	@Override

@@ -86,6 +86,9 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 
 		// Apply the benchmark/reference rule to the problem instances.
 		evaluateReference();
+
+		// TODO the statistics needs to listen on the individuals.
+
 	}
 
 	@Override

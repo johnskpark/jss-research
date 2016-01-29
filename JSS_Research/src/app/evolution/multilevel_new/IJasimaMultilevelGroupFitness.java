@@ -27,6 +27,12 @@ public interface IJasimaMultilevelGroupFitness extends IJasimaFitness<MLSSubpopu
 
 	/**
 	 * TODO javadoc.
+	 * @param listener
+	 */
+	public void addListener(IJasimaMultilevelFitnessListener listener);
+
+	/**
+	 * TODO javadoc.
 	 * @return
 	 */
 	public List<Double> getInstanceStats();
