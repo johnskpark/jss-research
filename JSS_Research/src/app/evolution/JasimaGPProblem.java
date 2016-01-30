@@ -94,6 +94,14 @@ public abstract class JasimaGPProblem extends GPProblem {
 	protected long getSimSeed() {
 		return simSeed;
 	}
+	
+	protected void rotateSimSeed() {
+		simConfig.setSeed(rand.nextLong());
+	}
+	
+	protected void resetSimSeed() {
+		simConfig.resetSeed();
+	}
 
 	protected MersenneTwisterFast getRandom() {
 		return rand;
@@ -138,6 +146,8 @@ public abstract class JasimaGPProblem extends GPProblem {
 			referenceStat.add(stat.sum());
 			referenceStat.set(0, referenceStat.get(0) + stat.sum());
 		}
+		
+		resetSimSeed();
 	}
 
 	protected void clearReference() {

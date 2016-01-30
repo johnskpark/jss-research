@@ -1,13 +1,10 @@
 package app.evolution.multilevel_new;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import ec.EvolutionState;
 import ec.Individual;
-import ec.Subpopulation;
 import ec.multilevel_new.MLSStatistics;
 import ec.util.Parameter;
 import jasima.core.statistics.SummaryStat;
@@ -24,7 +21,7 @@ public class JasimaMultilevelNichingStatistics extends MLSStatistics implements 
 	 
 	private List<Double> instanceDistanceSum = new ArrayList<Double>();
 	private List<Integer> instanceDistanceCount = new ArrayList<Integer>();
-	private Map<Individual, Double[]> individualDistanceMap = new HashMap<Individual, Double[]>();
+//	private Map<Individual, Double[]> individualDistanceMap = new HashMap<Individual, Double[]>();
 
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
@@ -53,26 +50,32 @@ public class JasimaMultilevelNichingStatistics extends MLSStatistics implements 
 	
 	private void addDiversityForIndividuals(int index, Individual[] inds, double[] distances) {
 		for (int i = 0; i < inds.length; i++) {
-			Double[] instDist = individualDistanceMap.get(inds[i]);
+//			Double[] instDist = individualDistanceMap.get(inds[i]);
 			
 			// Adjust if the distance is smaller.
-			if (Double.isNaN(instDist[index])) {
-				double newInstDist = distances[i];
-				
-				instanceDistanceSum.set(index, newInstDist);
-				instanceDistanceCount.set(index, instanceDistanceCount.get(index) + 1);
-				instDist[index] = distances[i];
-
-				individualDistanceMap.put(inds[i], instDist);
-			} else if (instDist[index] > distances[i]) {
-				double oldInstDist = instanceDistanceSum.get(index);
-				double newInstDist = oldInstDist - instDist[index] + distances[i];
-				
-				instanceDistanceSum.set(index, newInstDist);
-				instDist[index] = distances[i];
-
-				individualDistanceMap.put(inds[i], instDist);
-			}
+//			if (Double.isNaN(instDist[index])) {
+//				double newInstDist = distances[i];
+//				
+//				instanceDistanceSum.set(index, newInstDist);
+//				instanceDistanceCount.set(index, instanceDistanceCount.get(index) + 1);
+//				instDist[index] = distances[i];
+//
+//				individualDistanceMap.put(inds[i], instDist);
+//			} else if (instDist[index] > distances[i]) {
+//				double oldInstDist = instanceDistanceSum.get(index);
+//				double newInstDist = oldInstDist - instDist[index] + distances[i];
+//				
+//				instanceDistanceSum.set(index, newInstDist);
+//				instDist[index] = distances[i];
+//
+//				individualDistanceMap.put(inds[i], instDist);
+//			}
+			
+			double oldInstDist = instanceDistanceSum.get(index);
+			double newInstDist = oldInstDist + distances[i];
+			
+			instanceDistanceSum.set(index, newInstDist);
+			instanceDistanceCount.set(index, instanceDistanceCount.get(index) + 1);
 		}
 	}
 
@@ -93,18 +96,18 @@ public class JasimaMultilevelNichingStatistics extends MLSStatistics implements 
 			instanceDistanceCount.add(0);
 		}
 		
-		Subpopulation subpop = state.population.subpops[0];
+//		Subpopulation subpop = state.population.subpops[0];
 		
 		// Fill in the distances.
-		for (int i = 0; i < subpop.individuals.length; i++) {
-			Double[] instDist = new Double[numConfigs];
-			
-			for (int j = 0; j < numConfigs; j++) {
-				instDist[j] = Double.NaN;
-			}
-			
-			individualDistanceMap.put(subpop.individuals[i], instDist);
-		}
+//		for (int i = 0; i < subpop.individuals.length; i++) {
+//			Double[] instDist = new Double[numConfigs];
+//			
+//			for (int j = 0; j < numConfigs; j++) {
+//				instDist[j] = Double.NaN;
+//			}
+//			
+//			individualDistanceMap.put(subpop.individuals[i], instDist);
+//		}
 
 		// Have the statistics listen on the fitnesses.
 		problem.getIndividualFitness().addListener((JasimaMultilevelNichingStatistics) state.statistics);
@@ -126,7 +129,7 @@ public class JasimaMultilevelNichingStatistics extends MLSStatistics implements 
 		
 		instanceDistanceSum.clear();
 		instanceDistanceCount.clear();
-		individualDistanceMap.clear();
+//		individualDistanceMap.clear();
 		
 		// Remove the listeners from the 
 		JasimaMultilevelProblem problem = (JasimaMultilevelProblem) state.evaluator.p_problem;
@@ -143,7 +146,7 @@ public class JasimaMultilevelNichingStatistics extends MLSStatistics implements 
 		fitnessStatistics(state, "Individual", individualFitnesses);
 		fitnessStatistics(state, "Ensemble", ensembleFitnesses);
 
-		state.output.print("Average Diversity per Instance: ", statisticsLog);
+		state.output.print("Average Distance per Instance: ", statisticsLog);
 		for (int i = 0; i < instanceDistanceSum.size(); i++) {
 			double avg = instanceDistanceSum.get(i) / instanceDistanceCount.get(i);
 			
