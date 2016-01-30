@@ -11,4 +11,9 @@ public interface IJasimaMultilevelNiching extends IJasimaNiching<MLSSubpopulatio
 	 */
 	public void addListener(IJasimaMultilevelFitnessListener listener);
 
+	/**
+	 * TODO javadoc.
+	 */
+	public void clearListeners();
+
 }

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import app.evolution.AbsGPPriorityRule;
-import app.evolution.IJasimaNiching;
 import app.evolution.JasimaGPConfig;
 import app.evolution.JasimaGPData;
 import app.evolution.JasimaGPProblem;
@@ -44,9 +43,8 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 	private AbsGPPriorityRule indRule;
 	private IJasimaMultilevelIndividualFitness indFitness;
 
-	private IJasimaNiching<MLSSubpopulation> niching;
+	private IJasimaMultilevelNiching niching;
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
 		super.setup(state, base);
@@ -61,7 +59,7 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 
 		// Setup the niching algorithm.
 		try {
-			niching = (IJasimaNiching<MLSSubpopulation>) state.parameters.getInstanceForParameterEq(base.push(P_NICHING), null, IJasimaNiching.class);
+			niching = (IJasimaMultilevelNiching) state.parameters.getInstanceForParameterEq(base.push(P_NICHING), null, IJasimaMultilevelNiching.class);
 			niching.setup(state, base.push(P_NICHING));
 		} catch (ParamClassLoadException ex) {
 			state.output.warning("No niching algorithm provided for JasimaMultilevelProblem.");
@@ -86,9 +84,6 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 
 		// Apply the benchmark/reference rule to the problem instances.
 		evaluateReference();
-
-		// TODO the statistics needs to listen on the individuals.
-
 	}
 
 	@Override
@@ -110,7 +105,7 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 		return indFitness;
 	}
 
-	public IJasimaNiching<MLSSubpopulation> getNiching() {
+	public IJasimaMultilevelNiching getNiching() {
 		return niching;
 	}
 

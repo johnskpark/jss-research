@@ -39,6 +39,11 @@ public class MultilevelGroupTWTFitness implements IJasimaMultilevelGroupFitness 
 	}
 
 	@Override
+	public void clearListeners() {
+		listeners.clear();
+	}
+
+	@Override
 	public List<Double> getInstanceStats() {
 		return ensembleStat;
 	}

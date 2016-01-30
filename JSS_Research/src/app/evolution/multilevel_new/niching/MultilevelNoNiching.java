@@ -11,8 +11,6 @@ import app.tracker.JasimaEvolveExperiment;
 import app.tracker.JasimaEvolveExperimentTracker;
 import app.tracker.distance.DistanceMeasure;
 import ec.EvolutionState;
-import ec.Individual;
-import ec.gp.koza.KozaFitness;
 import ec.multilevel_new.MLSSubpopulation;
 import ec.util.ParamClassLoadException;
 import ec.util.Parameter;
@@ -50,6 +48,11 @@ public class MultilevelNoNiching implements IJasimaMultilevelNiching {
 	}
 
 	@Override
+	public void clearListeners() {
+		listeners.clear();
+	}
+
+	@Override
 	public void adjustFitness(final EvolutionState state,
 			final JasimaEvolveExperimentTracker tracker,
 			final MLSSubpopulation group) {
@@ -75,35 +78,8 @@ public class MultilevelNoNiching implements IJasimaMultilevelNiching {
 				listener.addDiversity(JasimaMultilevelNichingStatistics.INDIVIDUAL_FITNESS, i, group.individuals, simAdjust);
 			}
 		}
-
-		// Calculate the adjustment, but do not adjust the fitnesses of the individuals.
-		for (int i = 0; i < group.individuals.length; i++) {
-			adjustment[i] = adjustment[i] / simConfig.getNumConfigs();
-
-			Individual ind = group.individuals[i];
-			KozaFitness fitness = (KozaFitness) ind.fitness;
-
-			// Look at the history and see if the adjustment is better than the current.
-			// TODO add this into the statistics.
-			if (!history.hasBeenAdjusted(ind)) {
-				// Add in the adjustment.
-				double standardised = fitness.standardizedFitness();
-				double adjustedFitness = standardised * (1.0 + adjustment[i]);
-
-				fitness.setStandardizedFitness(state, adjustedFitness);
-
-				history.addAdjustment(ind, adjustment[i]);
-			} else if (history.isLowerAdjust(ind, adjustment[i])) {
-				// Revert the fitness back to the original and then readjust the fitness.
-				double oldAdjust = history.getAdjustment(ind);
-				double oldStandardised = fitness.standardizedFitness() / (1.0 + oldAdjust);
-				double adjustedFitness = oldStandardised * (1.0 + adjustment[i]);
-
-				fitness.setStandardizedFitness(state, adjustedFitness);
-
-				history.addAdjustment(ind, adjustment[i]);
-			}
-		}
+		
+		// Do not adjust the fitnesses of the individuals.
 	}
 
 	protected double[] getAdjustments(final EvolutionState state, double[][] distances) {

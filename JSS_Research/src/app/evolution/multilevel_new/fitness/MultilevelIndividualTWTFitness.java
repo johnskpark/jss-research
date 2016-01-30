@@ -37,6 +37,11 @@ public class MultilevelIndividualTWTFitness implements IJasimaMultilevelIndividu
 			listeners.add(listener);
 		}
 	}
+	
+	@Override
+	public void clearListeners() {
+		listeners.clear();
+	}
 
 	@Override
 	public List<Double> getInstanceStats() {

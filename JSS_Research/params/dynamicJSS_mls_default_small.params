@@ -74,6 +74,8 @@ gp.fs.0.func.17.nc = nc0
 gp.fs.0.func.18 = app.evolution.node.hunt.ScoreNumberWaitingNextMachine
 gp.fs.0.func.18.nc = nc0
 
+stat = app.evolution.multilevel_new.JasimaMultilevelNichingStatistics
+
 eval.problem = app.evolution.multilevel_new.JasimaMultilevelProblem
 eval.problem.data = app.evolution.JasimaGPData
 
@@ -86,7 +88,10 @@ eval.problem.ind-fitness = app.evolution.multilevel_new.fitness.MultilevelIndivi
 eval.problem.simulator = app.simConfig.huntConfig.FourOpSimConfig
 eval.problem.simulator.seed = 15
 
-# eval.problem.tracker = app.tracker.JasimaEvolveExperimentTracker
+eval.problem.tracker = app.tracker.JasimaEvolveExperimentTracker
+
+eval.problem.niching = app.evolution.multilevel_new.niching.MultilevelNoNiching
+eval.problem.niching.distance = app.tracker.distance.individual.IndividualPriorityDistance
 
 eval.problem.workstation = app.listener.hunt.HuntListenerEvolveFactory
 eval.problem.workstation.max-jobs = 5

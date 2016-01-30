@@ -5,6 +5,7 @@ import java.util.List;
 
 import app.evolution.multilevel_new.IJasimaMultilevelFitnessListener;
 import app.evolution.multilevel_new.IJasimaMultilevelNiching;
+import app.evolution.multilevel_new.JasimaMultilevelNichingStatistics;
 import app.simConfig.AbsSimConfig;
 import app.tracker.JasimaEvolveExperiment;
 import app.tracker.JasimaEvolveExperimentTracker;
@@ -47,6 +48,11 @@ public class MultilevelBasicNiching implements IJasimaMultilevelNiching {
 	}
 
 	@Override
+	public void clearListeners() {
+		listeners.clear();
+	}
+
+	@Override
 	public void adjustFitness(final EvolutionState state,
 			final JasimaEvolveExperimentTracker tracker,
 			final MLSSubpopulation group) {
@@ -66,6 +72,11 @@ public class MultilevelBasicNiching implements IJasimaMultilevelNiching {
 			for (int j = 0; j < group.individuals.length; j++) {
 				adjustment[j] += simAdjust[j];
 			}
+
+			// Add in the distances to the statistics.
+			for (IJasimaMultilevelFitnessListener listener : listeners) {
+				listener.addDiversity(JasimaMultilevelNichingStatistics.INDIVIDUAL_FITNESS, i, group.individuals, simAdjust);
+			}
 		}
 
 		// Adjust the fitnesses of the individuals according to the niching algorithm.
@@ -76,7 +87,6 @@ public class MultilevelBasicNiching implements IJasimaMultilevelNiching {
 			KozaFitness fitness = (KozaFitness) ind.fitness;
 
 			// Look at the history and see if the adjustment is better than the current.
-			// TODO add this into the statistics.
 			if (!history.hasBeenAdjusted(ind)) {
 				// Add in the adjustment.
 				double standardised = fitness.standardizedFitness();

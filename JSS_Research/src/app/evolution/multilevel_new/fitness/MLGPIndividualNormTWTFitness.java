@@ -39,6 +39,11 @@ public class MLGPIndividualNormTWTFitness implements IJasimaMultilevelIndividual
 	}
 
 	@Override
+	public void clearListeners() {
+		listeners.clear();
+	}
+
+	@Override
 	public List<Double> getInstanceStats() {
 		return overallStat;
 	}

@@ -105,6 +105,13 @@ public class JasimaMultilevelNichingStatistics extends MLSStatistics implements 
 			
 			individualDistanceMap.put(subpop.individuals[i], instDist);
 		}
+
+		// Have the statistics listen on the fitnesses.
+		problem.getIndividualFitness().addListener((JasimaMultilevelNichingStatistics) state.statistics);
+		problem.getGroupFitness().addListener((JasimaMultilevelNichingStatistics) state.statistics);
+		if (problem.getNiching() != null) {
+			problem.getNiching().addListener((JasimaMultilevelNichingStatistics) state.statistics);
+		}
 	}
 
 	@Override
@@ -120,6 +127,15 @@ public class JasimaMultilevelNichingStatistics extends MLSStatistics implements 
 		instanceDistanceSum.clear();
 		instanceDistanceCount.clear();
 		individualDistanceMap.clear();
+		
+		// Remove the listeners from the 
+		JasimaMultilevelProblem problem = (JasimaMultilevelProblem) state.evaluator.p_problem;
+		
+		problem.getIndividualFitness().clearListeners();
+		problem.getGroupFitness().clearListeners();
+		if (problem.getNiching() != null) {
+			problem.getNiching().clearListeners();
+		}
 	}
 
 	protected void instanceStatistics(final EvolutionState state) {

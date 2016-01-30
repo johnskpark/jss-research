@@ -29,6 +29,11 @@ public interface IJasimaMultilevelIndividualFitness extends IJasimaFitness<Jasim
 	 * @param listener
 	 */
 	public void addListener(IJasimaMultilevelFitnessListener listener);
+	
+	/**
+	 * TODO javadoc.
+	 */
+	public void clearListeners();
 
 	/**
 	 * TODO javadoc.

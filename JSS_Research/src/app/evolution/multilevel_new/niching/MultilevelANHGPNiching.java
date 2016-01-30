@@ -44,6 +44,11 @@ public class MultilevelANHGPNiching implements IJasimaMultilevelNiching {
 	}
 
 	@Override
+	public void clearListeners() {
+		listeners.clear();
+	}
+
+	@Override
 	public void adjustFitness(final EvolutionState state,
 			final JasimaEvolveExperimentTracker tracker,
 			final MLSSubpopulation group) {

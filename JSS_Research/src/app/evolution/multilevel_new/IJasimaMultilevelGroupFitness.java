@@ -33,6 +33,11 @@ public interface IJasimaMultilevelGroupFitness extends IJasimaFitness<MLSSubpopu
 
 	/**
 	 * TODO javadoc.
+	 */
+	public void clearListeners();
+
+	/**
+	 * TODO javadoc.
 	 * @return
 	 */
 	public List<Double> getInstanceStats();
