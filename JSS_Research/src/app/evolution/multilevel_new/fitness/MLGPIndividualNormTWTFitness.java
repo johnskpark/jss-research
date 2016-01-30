@@ -7,6 +7,7 @@ import java.util.Map;
 import app.evolution.multilevel_new.IJasimaMultilevelFitnessListener;
 import app.evolution.multilevel_new.IJasimaMultilevelIndividualFitness;
 import app.evolution.multilevel_new.JasimaMultilevelIndividual;
+import app.evolution.multilevel_new.JasimaMultilevelNichingStatistics;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.gp.koza.KozaFitness;
@@ -63,7 +64,7 @@ public class MLGPIndividualNormTWTFitness implements IJasimaMultilevelIndividual
 		overallStat.set(0, overallStat.get(0) + normTWT);
 
 		for (IJasimaMultilevelFitnessListener listener : listeners) {
-			listener.addFitness(ind, expIndex, twt);
+			listener.addFitness(JasimaMultilevelNichingStatistics.INDIVIDUAL_FITNESS, expIndex, twt);
 		}
 	}
 

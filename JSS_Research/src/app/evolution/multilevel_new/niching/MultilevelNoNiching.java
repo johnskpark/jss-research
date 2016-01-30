@@ -5,6 +5,7 @@ import java.util.List;
 
 import app.evolution.multilevel_new.IJasimaMultilevelFitnessListener;
 import app.evolution.multilevel_new.IJasimaMultilevelNiching;
+import app.evolution.multilevel_new.JasimaMultilevelNichingStatistics;
 import app.simConfig.AbsSimConfig;
 import app.tracker.JasimaEvolveExperiment;
 import app.tracker.JasimaEvolveExperimentTracker;
@@ -67,6 +68,11 @@ public class MultilevelNoNiching implements IJasimaMultilevelNiching {
 
 			for (int j = 0; j < group.individuals.length; j++) {
 				adjustment[j] += simAdjust[j];
+			}
+			
+			// Add in the distances to the statistics.
+			for (IJasimaMultilevelFitnessListener listener : listeners) {
+				listener.addDiversity(JasimaMultilevelNichingStatistics.INDIVIDUAL_FITNESS, i, group.individuals, simAdjust);
 			}
 		}
 
