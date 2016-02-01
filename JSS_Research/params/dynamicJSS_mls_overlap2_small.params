@@ -1,0 +1,16 @@
+# Copyright 2006 by Sean Luke and George Mason University
+# Licensed under the Academic Free License version 3.0
+# See the file "LICENSE" for more information
+# TODO right, need to get the parameter file written up.
+
+parent.0 = dynamicJSS_mls_default_small.params
+
+stat = app.evolution.multilevel_new.JasimaMultilevelNichingStatistics
+
+eval.problem.tracker = app.tracker.JasimaEvolveExperimentTracker
+
+eval.problem.niching = app.evolution.multilevel_new.niching.MultilevelBasicNiching
+eval.problem.niching.distance = app.tracker.distance.ensemble.EnsembleOverlapDistance
+
+eval.problem.rotate-seed = false
+

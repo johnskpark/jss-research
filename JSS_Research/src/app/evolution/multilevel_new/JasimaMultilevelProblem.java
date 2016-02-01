@@ -36,8 +36,6 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 	public static final String P_IND_FITNESS = "ind-fitness";
 
 	public static final String P_NICHING = "niching";
-	
-	public static final String P_ROTATE_SEED = "rotate-seed";
 
 	private AbsGPPriorityRule groupRule;
 	private IJasimaMultilevelGroupFitness groupFitness;
@@ -46,8 +44,6 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 	private IJasimaMultilevelIndividualFitness indFitness;
 
 	private IJasimaMultilevelNiching niching;
-	
-	private boolean rotateSeed;
 
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
@@ -68,17 +64,12 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 		} catch (ParamClassLoadException ex) {
 			state.output.warning("No niching algorithm provided for JasimaMultilevelProblem.");
 		}
-		
-		rotateSeed = state.parameters.getBoolean(base.push(P_ROTATE_SEED), null, true);
-		rotateSimSeed();
 	}
 
 	@Override
 	public void beforeEvaluation(final EvolutionState state, Population pop) {
 		// Reset the seed for the simulator.
-		if (rotateSeed) {
-			rotateSimSeed();
-		}
+		rotateSimSeed();
 
 		// Set the subpopulation to not being evaluated.
 		for (Subpopulation subpop : pop.subpops) {
@@ -166,6 +157,8 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 			getTracker().clear();
 		}
 
+		group.setEvaluated(true);
+
 		resetSimSeed();
 	}
 
@@ -199,6 +192,8 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 
 		indFitness.setFitness(state, (JasimaMultilevelIndividual) ind);
 		indFitness.clear();
+
+		ind.evaluated = true;
 
 		resetSimSeed();
 	}

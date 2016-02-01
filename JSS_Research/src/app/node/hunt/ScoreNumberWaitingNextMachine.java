@@ -38,4 +38,9 @@ public class ScoreNumberWaitingNextMachine implements INode {
 		return o != null && o.getClass() == this.getClass();
 	}
 
+	@Override
+	public String toString() {
+		return NODE_DEFINITION.toString();
+	}
+
 }

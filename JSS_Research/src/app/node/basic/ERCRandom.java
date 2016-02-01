@@ -34,4 +34,9 @@ public class ERCRandom implements INode {
 		return this.value == ((ERCRandom) o).value;
 	}
 
+	@Override
+	public String toString() {
+		return value + "";
+	}
+
 }

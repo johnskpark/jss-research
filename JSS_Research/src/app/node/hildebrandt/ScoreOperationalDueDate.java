@@ -23,4 +23,9 @@ public class ScoreOperationalDueDate implements INode {
 		return data.getEntry().getCurrentOperationDueDate();
 	}
 
+	@Override
+	public String toString() {
+		return NODE_DEFINITION.toString();
+	}
+
 }

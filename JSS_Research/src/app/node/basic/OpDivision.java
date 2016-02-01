@@ -29,7 +29,7 @@ public class OpDivision implements INode {
 		double rightEval = rightChild.evaluate(data);
 
 		if (rightEval == 0) {
-			return leftEval;
+			return 1.0;
 		} else {
 			return leftEval / rightEval;
 		}
@@ -43,6 +43,11 @@ public class OpDivision implements INode {
 		OpDivision other = (OpDivision) o;
 		return this.leftChild.equals(other.leftChild) &&
 				this.rightChild.equals(other.rightChild);
+	}
+
+	@Override
+	public String toString() {
+		return "(" + NODE_DEFINITION + " " + leftChild.toString() + " " + rightChild.toString() + ")";
 	}
 
 }

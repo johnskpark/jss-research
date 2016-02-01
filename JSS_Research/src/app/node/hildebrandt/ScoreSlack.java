@@ -26,4 +26,9 @@ public class ScoreSlack implements INode {
 		return Math.max(entry.getDueDate() - entry.getShop().simTime() - entry.remainingProcTime(), 0);
 	}
 
+	@Override
+	public String toString() {
+		return NODE_DEFINITION.toString();
+	}
+
 }

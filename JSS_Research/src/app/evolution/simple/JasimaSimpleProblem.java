@@ -41,7 +41,7 @@ public class JasimaSimpleProblem extends JasimaGPProblem {
 	@Override
 	public void prepareToEvaluate(final EvolutionState state, final int threadnum) {
 		// Reset the seed for the simulator.
-		getSimConfig().setSeed(getRandom().nextLong());
+		rotateSimSeed();
 
 		// Setup the tracker.
 		if (hasTracker()) {
@@ -57,8 +57,6 @@ public class JasimaSimpleProblem extends JasimaGPProblem {
 			final int threadnum) {
 		// We don't care if the individual's been evaluated previously,
 		// since the simulation changes at each generation.
-
-		// TODO this could be abstracted out.
 		JasimaGPConfig config = new JasimaGPConfig();
 		config.setState(state);
 		config.setIndividuals(new GPIndividual[]{(GPIndividual) ind});
@@ -89,6 +87,8 @@ public class JasimaSimpleProblem extends JasimaGPProblem {
 		}
 
 		ind.evaluated = true;
+
+		resetSimSeed();
 	}
 
 	@Override

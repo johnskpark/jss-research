@@ -41,4 +41,9 @@ public class OpMinimum implements INode {
 				this.rightChild.equals(other.rightChild);
 	}
 
+	@Override
+	public String toString() {
+		return "(" + NODE_DEFINITION + " " + leftChild.toString() + " " + rightChild.toString() + ")";
+	}
+
 }

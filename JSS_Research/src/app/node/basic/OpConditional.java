@@ -45,4 +45,9 @@ public class OpConditional implements INode {
 				this.alternative.equals(other.alternative);
 	}
 
+	@Override
+	public String toString() {
+		return "(" + NODE_DEFINITION + " " + conditional.toString() + " " + consequent.toString() + " " + alternative.toString() + ")";
+	}
+
 }

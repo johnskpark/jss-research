@@ -33,4 +33,9 @@ public class ScoreWorkInNextQueue implements INode {
 		return nextMachine.workContent(false);
 	}
 
+	@Override
+	public String toString() {
+		return NODE_DEFINITION.toString();
+	}
+
 }

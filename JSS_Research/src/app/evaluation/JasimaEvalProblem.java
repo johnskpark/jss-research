@@ -1,10 +1,5 @@
 package app.evaluation;
 
-import jasima.core.experiment.Experiment;
-import jasima.core.util.observer.NotifierListener;
-import jasima.shopSim.models.dynamicShop.DynamicShopExperiment;
-import jasima.shopSim.util.BasicJobStatCollector;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -38,7 +33,11 @@ import app.IWorkStationListener;
 import app.node.INode;
 import app.node.NodeData;
 import app.simConfig.AbsSimConfig;
+import app.simConfig.ExperimentGenerator;
 import app.util.RuleParser;
+import jasima.core.experiment.Experiment;
+import jasima.core.statistics.SummaryStat;
+import jasima.shopSim.models.dynamicShop.DynamicShopExperiment;
 
 public class JasimaEvalProblem {
 
@@ -189,6 +188,9 @@ public class JasimaEvalProblem {
 			AbsEvalPriorityRule solver = solverClass.newInstance();
 			solver.setConfiguration(config);
 
+			// TODO
+			System.out.printf("Loaded solver: %s\n", solver.toString());
+
 			solvers.add(solver);
 		}
 
@@ -226,7 +228,7 @@ public class JasimaEvalProblem {
 
 		NodeList datasetSeedNodeList = datasetBase.getElementsByTagName(XML_DATASET_SEED);
 		if (datasetSeedNodeList.getLength() != 0) {
-			seed = Integer.parseInt(datasetSeedNodeList.item(0).getTextContent());
+			seed = Long.parseLong(datasetSeedNodeList.item(0).getTextContent());
 		}
 
 		NodeList datasetFileNodeList = datasetBase.getElementsByTagName(XML_DATASET_FILE);
@@ -301,14 +303,22 @@ public class JasimaEvalProblem {
 				output.printf("%s,%d", ruleFilename, solver.getSeed());
 				simConfig.setSeed(seed);
 
+				SummaryStat stat = new SummaryStat();
+
 				for (int i = 0; i < simConfig.getNumConfigs(); i++) {
 					Experiment experiment = getExperiment(solver, i);
 					experiment.runExperiment();
 
-					output.printf(",%f", fitness.getRelevantResult(experiment.getResults()));
+					double result = fitness.getRelevantResult(experiment.getResults());
+
+					output.printf(",%f", result);
+					stat.value(result);
 
 					workstationListener.clear();
 				}
+
+				// TODO
+				System.out.printf("%f\n", stat.mean());
 
 				output.println();
 			}
@@ -317,26 +327,12 @@ public class JasimaEvalProblem {
 		output.close();
 	}
 
-	@SuppressWarnings("unchecked")
 	private Experiment getExperiment(AbsEvalPriorityRule rule, int index) {
-		DynamicShopExperiment experiment = new DynamicShopExperiment();
+		DynamicShopExperiment experiment = ExperimentGenerator.getExperiment(simConfig, rule, index);
 
-		experiment.setInitialSeed(simConfig.getLongValue());
-		experiment.setNumMachines(simConfig.getNumMachines(index));
-		experiment.setUtilLevel(simConfig.getUtilLevel(index));
-		experiment.setDueDateFactor(simConfig.getDueDateFactor(index));
-		experiment.setWeights(simConfig.getWeight(index));
-		experiment.setOpProcTime(simConfig.getMinOpProc(index), simConfig.getMaxOpProc(index));
-		experiment.setNumOps(simConfig.getMinNumOps(index), simConfig.getMaxNumOps(index));
-
-		BasicJobStatCollector statCollector = new BasicJobStatCollector();
-		statCollector.setIgnoreFirst(simConfig.getNumIgnore());
-
-		experiment.setShopListener(new NotifierListener[]{statCollector});
-		if (workstationListener != null) { experiment.addMachineListener(workstationListener); }
-		experiment.setStopAfterNumJobs(simConfig.getStopAfterNumJobs());
-		experiment.setSequencingRule(rule);
-		experiment.setScenario(DynamicShopExperiment.Scenario.JOB_SHOP);
+		if (workstationListener != null) {
+			experiment.addMachineListener(workstationListener);
+		}
 
 		return experiment;
 	}

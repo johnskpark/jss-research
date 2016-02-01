@@ -1,10 +1,24 @@
 # Copyright 2006 by Sean Luke and George Mason University
 # Licensed under the Academic Free License version 3.0
 # See the file "LICENSE" for more information
+# TODO right, need to get the parameter file written up.
 
-parent.0 = koza.params
+parent.0 = koza_mls.params
 
-pop.subpop.0.species.ind = app.evolution.JasimaGPIndividual
+pop.subpop.0.species.ind = app.evolution.multilevel_new.JasimaMultilevelIndividual
+
+pop.default-subpop = 0
+
+breed.cooperation-prob = 0.5
+breed.crossover-prob = 0.8
+breed.mutation-prob = 0.3
+breed.num-breed = 20
+breed.num-retain = 10
+
+pop.subpop.0.size = 102
+generations = 5
+
+breed.bias-factor = 1
 
 # the next four items are already defined in koza.params, but we
 # put them here to be clear.
@@ -60,17 +74,23 @@ gp.fs.0.func.17.nc = nc0
 gp.fs.0.func.18 = app.evolution.node.hunt.ScoreNumberWaitingNextMachine
 gp.fs.0.func.18.nc = nc0
 
-#stat = app.evolution.simple.statistics.JasimaMultiRuleStatistics
-#stat.size = 10
+stat = app.evolution.multilevel_new.JasimaMultilevelNichingStatistics
 
-eval.problem = app.evolution.simple.JasimaSimpleProblem
+eval.problem = app.evolution.multilevel_new.JasimaMultilevelProblem
 eval.problem.data = app.evolution.JasimaGPData
 
-eval.problem.rule = app.evolution.priorityRules.BasicPriorityRule
-eval.problem.fitness = app.evolution.simple.fitness.TWTFitness
+eval.problem.group-rule = app.evolution.priorityRules.EnsemblePriorityRule
+eval.problem.group-fitness = app.evolution.multilevel_new.fitness.MLGPGroupTWTFitness
+
+eval.problem.ind-rule = app.evolution.priorityRules.BasicPriorityRule
+eval.problem.ind-fitness = app.evolution.multilevel_new.fitness.MultilevelIndividualTWTFitness
 
 eval.problem.simulator = app.simConfig.huntConfig.FourOpSimConfig
 eval.problem.simulator.seed = 15
+
+# eval.problem.tracker = app.tracker.JasimaEvolveExperimentTracker
+
+eval.problem.rotate-seed = false
 
 eval.problem.workstation = app.listener.hunt.HuntListenerEvolveFactory
 eval.problem.workstation.max-jobs = 5

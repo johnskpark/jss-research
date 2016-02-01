@@ -33,4 +33,9 @@ public class BasicPriorityRule extends AbsEvalPriorityRule {
 		return rule.evaluate(data);
 	}
 
+	@Override
+	public String getName() {
+		return getClass().getSimpleName() + "[ " + rule.toString() + " ]";
+	}
+
 }

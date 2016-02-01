@@ -26,4 +26,9 @@ public class ScoreTimeTillDue implements INode {
 		return Math.max(entry.getDueDate() - entry.getShop().simTime(), 0);
 	}
 
+	@Override
+	public String toString() {
+		return NODE_DEFINITION.toString();
+	}
+
 }

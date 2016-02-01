@@ -26,4 +26,9 @@ public class ScoreTimeInQueue implements INode {
 		return Math.max(entry.getShop().simTime() - entry.getArriveTime(), 0);
 	}
 
+	@Override
+	public String toString() {
+		return NODE_DEFINITION.toString();
+	}
+
 }

@@ -84,4 +84,17 @@ public class EnsemblePriorityRule extends AbsEvalPriorityRule {
 		return jobVotes.get(entry);
 	}
 
+	@Override
+	public String getName() {
+		StringBuilder builder = new StringBuilder();
+		builder.append(getClass().getSimpleName() + "[ " + rules.get(0).toString());
+
+		for (int i = 1; i < ruleNum; i++) {
+			builder.append("," + rules.get(i).toString());
+		}
+
+		builder.append(" ]");
+		return builder.toString();
+	}
+
 }

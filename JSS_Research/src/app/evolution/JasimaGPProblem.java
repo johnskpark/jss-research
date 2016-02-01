@@ -6,6 +6,7 @@ import java.util.List;
 import app.IWorkStationListener;
 import app.priorityRules.HolthausRule;
 import app.simConfig.AbsSimConfig;
+import app.simConfig.ExperimentGenerator;
 import app.tracker.JasimaEvolveExperimentTracker;
 import ec.EvolutionState;
 import ec.gp.GPProblem;
@@ -13,10 +14,8 @@ import ec.util.MersenneTwisterFast;
 import ec.util.ParamClassLoadException;
 import ec.util.Parameter;
 import jasima.core.statistics.SummaryStat;
-import jasima.core.util.observer.NotifierListener;
 import jasima.shopSim.core.PR;
 import jasima.shopSim.models.dynamicShop.DynamicShopExperiment;
-import jasima.shopSim.util.BasicJobStatCollector;
 
 public abstract class JasimaGPProblem extends GPProblem {
 
@@ -30,6 +29,8 @@ public abstract class JasimaGPProblem extends GPProblem {
 	public static final String P_TRACKER = "tracker";
 
 	public static final String P_WORKSTATION = "workstation";
+
+	public static final String P_ROTATE_SEED = "rotate-seed";
 
 	public static final long DEFAULT_SEED = 15;
 
@@ -46,6 +47,8 @@ public abstract class JasimaGPProblem extends GPProblem {
 	private PR referenceRule = new HolthausRule();
 	private List<Double> referenceStat = new ArrayList<Double>();
 
+	private boolean rotateSeed;
+
 	public void setup(final EvolutionState state, final Parameter base) {
 		super.setup(state, base);
 
@@ -60,6 +63,10 @@ public abstract class JasimaGPProblem extends GPProblem {
 		simConfig = (AbsSimConfig) state.parameters.getInstanceForParameterEq(base.push(P_SIMULATOR), null, AbsSimConfig.class);
 		simSeed = state.parameters.getLongWithDefault(base.push(P_SIMULATOR).push(P_SEED), null, DEFAULT_SEED);
 		rand = new MersenneTwisterFast(simSeed);
+
+		simConfig.setSeed(simSeed);
+
+		rotateSeed = state.parameters.getBoolean(base.push(P_ROTATE_SEED), null, true);
 
 		// Setup the tracker.
 		try {
@@ -94,11 +101,13 @@ public abstract class JasimaGPProblem extends GPProblem {
 	protected long getSimSeed() {
 		return simSeed;
 	}
-	
+
 	protected void rotateSimSeed() {
-		simConfig.setSeed(rand.nextLong());
+		if (rotateSeed) {
+			simConfig.setSeed(rand.nextLong());
+		}
 	}
-	
+
 	protected void resetSimSeed() {
 		simConfig.resetSeed();
 	}
@@ -139,14 +148,17 @@ public abstract class JasimaGPProblem extends GPProblem {
 		referenceStat.add(0.0);
 
 		for (int expIndex = 0; expIndex < getSimConfig().getNumConfigs(); expIndex++) {
-			DynamicShopExperiment experiment = getExperiment(referenceRule, expIndex);
+			DynamicShopExperiment experiment = ExperimentGenerator.getExperiment(simConfig,
+					referenceRule,
+					expIndex);
+
 			experiment.runExperiment();
 
 			SummaryStat stat = (SummaryStat) experiment.getResults().get("weightedTardMean");
 			referenceStat.add(stat.sum());
 			referenceStat.set(0, referenceStat.get(0) + stat.sum());
 		}
-		
+
 		resetSimSeed();
 	}
 
@@ -159,7 +171,9 @@ public abstract class JasimaGPProblem extends GPProblem {
 			final int index,
 			final IWorkStationListener listener,
 			final JasimaEvolveExperimentTracker tracker) {
-		DynamicShopExperiment experiment = getExperiment(rule, index);
+		DynamicShopExperiment experiment = ExperimentGenerator.getExperiment(simConfig,
+				rule,
+				index);
 
 		// Add the workstation listener.
 		experiment.addMachineListener(rule);
@@ -168,30 +182,6 @@ public abstract class JasimaGPProblem extends GPProblem {
 			tracker.clearCurrentExperiment();
 			tracker.setExperimentIndex(index);
 		}
-
-		return experiment;
-	}
-
-	@SuppressWarnings("unchecked")
-	protected DynamicShopExperiment getExperiment(final PR rule, final int index) {
-		DynamicShopExperiment experiment = new DynamicShopExperiment();
-
-		experiment.setInitialSeed(simConfig.getLongValue());
-		experiment.setNumMachines(simConfig.getNumMachines(index));
-		experiment.setUtilLevel(simConfig.getUtilLevel(index));
-		experiment.setDueDateFactor(simConfig.getDueDateFactor(index));
-		experiment.setWeights(simConfig.getWeight(index));
-		experiment.setOpProcTime(simConfig.getMinOpProc(index), simConfig.getMaxOpProc(index));
-		experiment.setNumOps(simConfig.getMinNumOps(index), simConfig.getMaxNumOps(index));
-
-		experiment.setStopAfterNumJobs(simConfig.getStopAfterNumJobs());
-		experiment.setSequencingRule(rule);
-		experiment.setScenario(DynamicShopExperiment.Scenario.JOB_SHOP);
-
-		BasicJobStatCollector statCollector = new BasicJobStatCollector();
-		statCollector.setIgnoreFirst(simConfig.getNumIgnore());
-
-		experiment.setShopListener(new NotifierListener[]{statCollector});
 
 		return experiment;
 	}

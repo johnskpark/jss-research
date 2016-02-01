@@ -31,4 +31,9 @@ public class ScoreNextProcessingTime implements INode {
 		return entry.getOps()[nextTask].procTime;
 	}
 
+	@Override
+	public String toString() {
+		return NODE_DEFINITION.toString();
+	}
+
 }

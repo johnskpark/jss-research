@@ -26,4 +26,9 @@ public class ScoreTimeInSystem implements INode {
 		return Math.max(entry.getShop().simTime() - entry.getRelDate(), 0);
 	}
 
+	@Override
+	public String toString() {
+		return NODE_DEFINITION.toString();
+	}
+
 }
