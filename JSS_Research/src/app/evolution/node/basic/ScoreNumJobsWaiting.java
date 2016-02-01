@@ -1,14 +1,13 @@
 package app.evolution.node.basic;
 
 import app.evolution.JasimaGPData;
-import app.evolution.node.GPSingleLinePrintNode;
+import app.evolution.node.SingleLineGPNode;
 import app.node.NodeDefinition;
 import ec.EvolutionState;
 import ec.Problem;
 import ec.gp.ADFStack;
 import ec.gp.GPData;
 import ec.gp.GPIndividual;
-import ec.util.Parameter;
 
 /**
  * Terminal node which returns the value of the number of jobs waiting at the machine
@@ -17,24 +16,19 @@ import ec.util.Parameter;
  * @author parkjohn
  *
  */
-public class ScoreNumJobsWaiting extends GPSingleLinePrintNode {
+public class ScoreNumJobsWaiting extends SingleLineGPNode {
 
 	private static final long serialVersionUID = -2790466031950356470L;
+	private static final NodeDefinition NODE_DEFINITION = NodeDefinition.SCORE_NUM_JOBS_WAITING;
 
 	@Override
 	public String toString() {
-		return NodeDefinition.SCORE_NUM_JOBS_WAITING.toString();
+		return NODE_DEFINITION.toString();
 	}
 
 	@Override
-	public void checkConstraints(final EvolutionState state,
-			final int tree,
-			final GPIndividual typicalIndividual,
-			final Parameter individualBase) {
-		super.checkConstraints(state, tree, typicalIndividual, individualBase);
-		if (children.length != NodeDefinition.SCORE_NUM_JOBS_WAITING.numChildren()) {
-			state.output.error("Incorrect number of children for node " + toStringForError() + " at " + individualBase);
-		}
+	public int expectedChildren() {
+		return NODE_DEFINITION.numChildren();
 	}
 
 	@Override

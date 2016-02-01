@@ -1,34 +1,28 @@
 package app.evolution.node.hildebrandt;
 
-import jasima.shopSim.core.PrioRuleTarget;
 import app.evolution.JasimaGPData;
+import app.evolution.node.SingleLineGPNode;
 import app.node.NodeDefinition;
 import ec.EvolutionState;
 import ec.Problem;
 import ec.gp.ADFStack;
 import ec.gp.GPData;
 import ec.gp.GPIndividual;
-import ec.gp.GPNode;
-import ec.util.Parameter;
+import jasima.shopSim.core.PrioRuleTarget;
 
-public class ScoreTimeInQueue extends GPNode {
+public class ScoreTimeInQueue extends SingleLineGPNode {
 
 	private static final long serialVersionUID = 3254592684439750411L;
+	private static final NodeDefinition NODE_DEFINITION = NodeDefinition.SCORE_TIME_IN_QUEUE;
 
 	@Override
 	public String toString() {
-		return NodeDefinition.SCORE_TIME_IN_QUEUE.toString();
+		return NODE_DEFINITION.toString();
 	}
 
 	@Override
-	public void checkConstraints(final EvolutionState state,
-			final int tree,
-			final GPIndividual typicalIndividual,
-			final Parameter individualBase) {
-		super.checkConstraints(state, tree, typicalIndividual, individualBase);
-		if (children.length != NodeDefinition.SCORE_TIME_IN_QUEUE.numChildren()) {
-			state.output.error("Incorrect number of children for node " + toStringForError() + " at " + individualBase);
-		}
+	public int expectedChildren() {
+		return NODE_DEFINITION.numChildren();
 	}
 
 	@Override

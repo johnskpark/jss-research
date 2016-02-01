@@ -5,10 +5,10 @@ import java.io.DataOutput;
 import java.io.IOException;
 
 import app.evolution.JasimaGPData;
+import app.evolution.node.SingleLineERC;
 import ec.EvolutionState;
 import ec.Problem;
 import ec.gp.ADFStack;
-import ec.gp.ERC;
 import ec.gp.GPData;
 import ec.gp.GPIndividual;
 import ec.gp.GPNode;
@@ -21,7 +21,7 @@ import ec.util.Parameter;
  * @author parkjohn
  *
  */
-public class ERCDiscreteUniform extends ERC {
+public class ERCDiscreteUniform extends SingleLineERC {
 
 	private static final long serialVersionUID = 3518496461314357556L;
 

@@ -10,7 +10,7 @@ import ec.gp.GPNode;
  * @author parkjohn
  *
  */
-public abstract class GPSingleLinePrintNode extends GPNode {
+public abstract class SingleLineGPNode extends GPNode {
 
 	private static final long serialVersionUID = -9209286914050846080L;
 

@@ -1,14 +1,13 @@
 package app.evolution.node.basic;
 
 import app.evolution.JasimaGPData;
-import app.evolution.node.GPSingleLinePrintNode;
+import app.evolution.node.SingleLineGPNode;
 import app.node.NodeDefinition;
 import ec.EvolutionState;
 import ec.Problem;
 import ec.gp.ADFStack;
 import ec.gp.GPData;
 import ec.gp.GPIndividual;
-import ec.util.Parameter;
 
 /**
  * Terminal node which returns a sufficiently large value for an arithmetic
@@ -17,26 +16,21 @@ import ec.util.Parameter;
  * @author parkjohn
  *
  */
-public class ScoreLargeValue extends GPSingleLinePrintNode {
+public class ScoreLargeValue extends SingleLineGPNode {
 
 	private static final long serialVersionUID = -5825676453528932050L;
 
 	private static final double LARGE_VALUE = 100000000.0;
+	private static final NodeDefinition NODE_DEFINITION = NodeDefinition.SCORE_LARGE_VALUE;
 
 	@Override
 	public String toString() {
-		return NodeDefinition.SCORE_LARGE_VALUE.toString();
+		return NODE_DEFINITION.toString();
 	}
 
 	@Override
-	public void checkConstraints(final EvolutionState state,
-			final int tree,
-			final GPIndividual typicalIndividual,
-			final Parameter individualBase) {
-		super.checkConstraints(state, tree, typicalIndividual, individualBase);
-		if (children.length != NodeDefinition.SCORE_LARGE_VALUE.numChildren()) {
-			state.output.error("Incorrect number of children for node " + toStringForError() + " at " + individualBase);
-		}
+	public int expectedChildren() {
+		return NODE_DEFINITION.numChildren();
 	}
 
 	@Override

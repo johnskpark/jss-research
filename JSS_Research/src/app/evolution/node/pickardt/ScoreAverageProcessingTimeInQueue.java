@@ -1,35 +1,29 @@
 package app.evolution.node.pickardt;
 
-import jasima.shopSim.core.PrioRuleTarget;
-import jasima.shopSim.core.PriorityQueue;
 import app.evolution.JasimaGPData;
-import app.evolution.node.GPSingleLinePrintNode;
+import app.evolution.node.SingleLineGPNode;
 import app.node.NodeDefinition;
 import ec.EvolutionState;
 import ec.Problem;
 import ec.gp.ADFStack;
 import ec.gp.GPData;
 import ec.gp.GPIndividual;
-import ec.util.Parameter;
+import jasima.shopSim.core.PrioRuleTarget;
+import jasima.shopSim.core.PriorityQueue;
 
-public class ScoreAverageProcessingTimeInQueue extends GPSingleLinePrintNode {
+public class ScoreAverageProcessingTimeInQueue extends SingleLineGPNode {
 
 	private static final long serialVersionUID = 5789849512075356407L;
+	private static final NodeDefinition NODE_DEFINITION = NodeDefinition.SCORE_AVERAGE_PROCESSING_TIME_IN_QUEUE;
 
 	@Override
 	public String toString() {
-		return NodeDefinition.SCORE_NEXT_PROCESSING_TIME.toString();
+		return NODE_DEFINITION.toString();
 	}
 
 	@Override
-	public void checkConstraints(final EvolutionState state,
-			final int tree,
-			final GPIndividual typicalIndividual,
-			final Parameter individualBase) {
-		super.checkConstraints(state, tree, typicalIndividual, individualBase);
-		if (children.length != NodeDefinition.SCORE_AVERAGE_PROCESSING_TIME_IN_QUEUE.numChildren()) {
-			state.output.error("Incorrect number of children for node " + toStringForError() + " at " + individualBase);
-		}
+	public int expectedChildren() {
+		return NODE_DEFINITION.numChildren();
 	}
 
 	@Override
