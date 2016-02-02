@@ -3,6 +3,7 @@ package app.evolution.multilevel_new;
 import java.util.ArrayList;
 import java.util.List;
 
+import app.util.ArrayFormatter;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.multilevel_new.MLSStatistics;
@@ -13,19 +14,42 @@ public class JasimaMultilevelNichingStatistics extends MLSStatistics implements 
 
 	private static final long serialVersionUID = 1831159170439048338L;
 
+	public static final String P_ARRAY_FORMAT = "format";
+
+	public static final String V_BRACKET = "bracket";
+	public static final String V_SQUARE = "square-bracket";
+	public static final String V_CURLY = "curly-bracket";
+	public static final String V_R = "R";
+
 	public static final int INDIVIDUAL_FITNESS = 0;
 	public static final int ENSEMBLE_FITNESS = 1;
-	
+
 	private List<SummaryStat> individualFitnesses = new ArrayList<SummaryStat>();
 	private List<SummaryStat> ensembleFitnesses = new ArrayList<SummaryStat>();
-	 
+
 	private List<Double> instanceDistanceSum = new ArrayList<Double>();
 	private List<Integer> instanceDistanceCount = new ArrayList<Integer>();
-//	private Map<Individual, Double[]> individualDistanceMap = new HashMap<Individual, Double[]>();
+
+	private ArrayFormatter arrayFormat;
 
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
 		super.setup(state, base);
+
+		// Determine the format for the arrays.
+		String format = state.parameters.getStringWithDefault(base.push(P_ARRAY_FORMAT), null, V_BRACKET);
+		if (format.equals(V_BRACKET)) {
+			arrayFormat = new ArrayFormatter("(", ")");
+		} else if (format.equals(V_SQUARE)) {
+			arrayFormat = new ArrayFormatter("[", "]");
+		} else if (format.equals(V_CURLY)) {
+			arrayFormat = new ArrayFormatter("{", "}");
+		} else if (format.equals(V_R)) {
+			arrayFormat = new ArrayFormatter("c(", ")");
+		} else {
+			state.output.warning("JasimaMultilevelNichingStatistics: Unrecognised array format: " + format + ", defaulting to bracket format.");
+			arrayFormat = new ArrayFormatter("(", ")");
+		}
 	}
 
 	@Override
@@ -35,9 +59,9 @@ public class JasimaMultilevelNichingStatistics extends MLSStatistics implements 
 			individualFitnesses.get(index).value(value);
 		} else if (type == ENSEMBLE_FITNESS) {
 			ensembleFitnesses.get(index).value(value);
-		} 
+		}
 	}
-	
+
 	@Override
 	public void addDiversity(int type, int index, Individual[] inds, double[] distances) {
 		// Add in the instance diversity
@@ -47,33 +71,12 @@ public class JasimaMultilevelNichingStatistics extends MLSStatistics implements 
 			addDiversityForIndividuals(index, inds, distances);
 		}
 	}
-	
+
 	private void addDiversityForIndividuals(int index, Individual[] inds, double[] distances) {
 		for (int i = 0; i < inds.length; i++) {
-//			Double[] instDist = individualDistanceMap.get(inds[i]);
-			
-			// Adjust if the distance is smaller.
-//			if (Double.isNaN(instDist[index])) {
-//				double newInstDist = distances[i];
-//				
-//				instanceDistanceSum.set(index, newInstDist);
-//				instanceDistanceCount.set(index, instanceDistanceCount.get(index) + 1);
-//				instDist[index] = distances[i];
-//
-//				individualDistanceMap.put(inds[i], instDist);
-//			} else if (instDist[index] > distances[i]) {
-//				double oldInstDist = instanceDistanceSum.get(index);
-//				double newInstDist = oldInstDist - instDist[index] + distances[i];
-//				
-//				instanceDistanceSum.set(index, newInstDist);
-//				instDist[index] = distances[i];
-//
-//				individualDistanceMap.put(inds[i], instDist);
-//			}
-			
 			double oldInstDist = instanceDistanceSum.get(index);
 			double newInstDist = oldInstDist + distances[i];
-			
+
 			instanceDistanceSum.set(index, newInstDist);
 			instanceDistanceCount.set(index, instanceDistanceCount.get(index) + 1);
 		}
@@ -86,28 +89,15 @@ public class JasimaMultilevelNichingStatistics extends MLSStatistics implements 
 		JasimaMultilevelProblem problem = (JasimaMultilevelProblem) state.evaluator.p_problem;
 
 		int numConfigs = problem.getSimConfig().getNumConfigs();
-		
+
 		// Fill in the fitnesses.
 		for (int i = 0; i < numConfigs; i++) {
 			individualFitnesses.add(new SummaryStat());
 			ensembleFitnesses.add(new SummaryStat());
-			
+
 			instanceDistanceSum.add(0.0);
 			instanceDistanceCount.add(0);
 		}
-		
-//		Subpopulation subpop = state.population.subpops[0];
-		
-		// Fill in the distances.
-//		for (int i = 0; i < subpop.individuals.length; i++) {
-//			Double[] instDist = new Double[numConfigs];
-//			
-//			for (int j = 0; j < numConfigs; j++) {
-//				instDist[j] = Double.NaN;
-//			}
-//			
-//			individualDistanceMap.put(subpop.individuals[i], instDist);
-//		}
 
 		// Have the statistics listen on the fitnesses.
 		problem.getIndividualFitness().addListener((JasimaMultilevelNichingStatistics) state.statistics);
@@ -126,14 +116,14 @@ public class JasimaMultilevelNichingStatistics extends MLSStatistics implements 
 
 		individualFitnesses.clear();
 		ensembleFitnesses.clear();
-		
+
 		instanceDistanceSum.clear();
 		instanceDistanceCount.clear();
-//		individualDistanceMap.clear();
-		
-		// Remove the listeners from the 
+
+		// Remove the statistics from the listeners.
+		// FIXME this should belong outside of the post evaluation statistics.
 		JasimaMultilevelProblem problem = (JasimaMultilevelProblem) state.evaluator.p_problem;
-		
+
 		problem.getIndividualFitness().clearListeners();
 		problem.getGroupFitness().clearListeners();
 		if (problem.getNiching() != null) {
@@ -149,28 +139,65 @@ public class JasimaMultilevelNichingStatistics extends MLSStatistics implements 
 		state.output.print("Average Distance per Instance: ", statisticsLog);
 		for (int i = 0; i < instanceDistanceSum.size(); i++) {
 			double avg = instanceDistanceSum.get(i) / instanceDistanceCount.get(i);
-			
+
 			if (i == 0) {
 				state.output.print("" + avg, statisticsLog);
 			} else {
-				state.output.print(", " + avg, statisticsLog);
+				state.output.print("," + avg, statisticsLog);
 			}
 		}
 		state.output.println("", statisticsLog);
 	}
-	
+
 	protected void fitnessStatistics(final EvolutionState state, String fitnessType, List<SummaryStat> fitnessStats) {
 		state.output.print(fitnessType + " Fitnesses per Instance (min,avg,max): ", statisticsLog);
-		
+
 		for (int i = 0; i < fitnessStats.size(); i++) {
 			SummaryStat stat = fitnessStats.get(i);
-			
+
 			if (i != 0) {
-				state.output.print(", ", statisticsLog);
+				state.output.print(",", statisticsLog);
 			}
-			state.output.print(stat.min() + ", " + stat.mean() + ", " + stat.max(), statisticsLog);
+			state.output.print(arrayFormat.formatData(stat.min(), stat.mean(), stat.max()), statisticsLog);
 		}
 		state.output.println("", statisticsLog);
 	}
+
+//	public void finalStatistics(final EvolutionState state) {
+//		// Instead of printing out the best individual over all generations,
+//		// print out the best individuals and groups from the last generation.
+//
+//		// Print out the best individual.
+//		if (doFinal) {
+//			state.output.println("\nBest Individual of Run: " , statisticsLog);
+//			bestIndLastGen.printIndividualForHumans(state, statisticsLog);
+//		}
+//
+//		// Print out the best individuals of each group.
+//		if (doFinal) {
+//			state.output.println("\nBest Individuals in each Groups of Run: ", statisticsLog);
+//		}
+//
+//		for (int g = 0; g < state.population.subpops.length - 1; g++) {
+//			if (doFinal) {
+//				state.output.println("Group " + g + ": ", statisticsLog);
+//				bestIndsOfGroupsLastGen[g].printIndividualForHumans(state, statisticsLog);
+//			}
+//
+//			if (doMessage && !silentPrint) {
+//				state.output.message("Group " + g + " best fitness of run: " + bestIndsOfGroupsLastGen[g].fitness.fitnessToStringForHumans());
+//			}
+//		}
+//
+//		// Print out the individuals making up the best group.
+//		if (doFinal) {
+//			state.output.println("\nBest Group of Run: " + bestGroupIndexLastGen + ", Fitness: " + bestGroupLastGen.getFitness().fitnessToStringForHumans(), statisticsLog);
+//
+//			for (int i = 0; i < bestGroupLastGen.individuals.length; i++) {
+//				state.output.println("Individual " + i, statisticsLog);
+//				bestGroupLastGen.individuals[i].printIndividualForHumans(state, statisticsLog);
+//			}
+//		}
+//	}
 
 }
