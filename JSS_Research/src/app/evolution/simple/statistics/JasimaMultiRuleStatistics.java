@@ -3,16 +3,16 @@ package app.evolution.simple.statistics;
 import java.util.HashSet;
 import java.util.Set;
 
+import app.evolution.simple.JasimaSimpleStatistics;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.gp.koza.KozaFitness;
 import ec.simple.SimpleProblemForm;
-import ec.simple.SimpleStatistics;
 import ec.util.Parameter;
 import ec.util.QuickSort;
 import ec.util.SortComparator;
 
-public class JasimaMultiRuleStatistics extends SimpleStatistics {
+public class JasimaMultiRuleStatistics extends JasimaSimpleStatistics {
 
 	private static final long serialVersionUID = -5301164875797180565L;
 

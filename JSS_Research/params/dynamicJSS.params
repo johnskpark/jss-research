@@ -18,6 +18,8 @@ gp.fs.0.name = f0
 
 # We have five functions in the function set.  They are:
 
+# breed.elite.0 = 1
+
 gp.fs.0.size = 19
 gp.fs.0.func.0 = app.evolution.node.basic.ERCRandomUniform
 gp.fs.0.func.0.nc = nc0
@@ -61,9 +63,6 @@ gp.fs.0.func.18 = app.evolution.node.hunt.ScoreNumberWaitingNextMachine
 gp.fs.0.func.18.nc = nc0
 
 stat = app.evolution.simple.JasimaSimpleStatistics
-
-#stat = app.evolution.simple.statistics.JasimaMultiRuleStatistics
-#stat.size = 10
 
 eval.problem = app.evolution.simple.JasimaSimpleProblem
 eval.problem.data = app.evolution.JasimaGPData

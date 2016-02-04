@@ -3,7 +3,7 @@
 # See the file "LICENSE" for more information
 # TODO right, need to get the parameter file written up.
 
-parent.0 = koza_mls_new.params
+parent.0 = koza_mls.params
 
 pop.subpop.0.species.ind = app.evolution.multilevel_new.JasimaMultilevelIndividual
 

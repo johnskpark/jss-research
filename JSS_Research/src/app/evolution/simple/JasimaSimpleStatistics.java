@@ -46,6 +46,14 @@ public class JasimaSimpleStatistics extends SimpleStatistics {
 	}
 
 	@Override
+	public void preEvaluationStatistics(final EvolutionState state) {
+		super.preEvaluationStatistics(state);
+
+		bestIndOfGen = null;
+		worstIndOfGen = null;
+	}
+
+	@Override
 	public void postEvaluationStatistics(final EvolutionState state) {
 		super.postEvaluationStatistics(state);
 
