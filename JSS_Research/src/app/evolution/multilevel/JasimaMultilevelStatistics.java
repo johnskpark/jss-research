@@ -146,24 +146,20 @@ public class JasimaMultilevelStatistics extends MLSStatistics implements IJasima
 	protected void individualStatistics(final EvolutionState state) {
 		super.individualStatistics(state);
 
-		double sumFitness = 0.0;
-		double numEvaluated = 0.0;
-
-		double bestFitness = ((KozaFitness) getBestIndividualOfGen().fitness).standardizedFitness();
-		double worstFitness = ((KozaFitness) getWorstIndividualOfGen().fitness).standardizedFitness();
-		double avgFitness = 0.0;
+		SummaryStat stat = new SummaryStat();
 
 		for (int i = 0; i < state.population.subpops[0].individuals.length; i++) {
 			Individual ind = state.population.subpops[0].individuals[i];
 
 			// Jasima problems use KozaFitness.
 			if (ind.evaluated) {
-				sumFitness += ((KozaFitness) ind.fitness).standardizedFitness();
-				numEvaluated++;
+				stat.value(((KozaFitness) ind.fitness).standardizedFitness());
 			}
 		}
 
-		avgFitness = sumFitness / numEvaluated;
+		double bestFitness = ((KozaFitness) getBestIndividualOfGen().fitness).standardizedFitness();
+		double worstFitness = ((KozaFitness) getWorstIndividualOfGen().fitness).standardizedFitness();
+		double avgFitness = stat.mean();
 
 		// Print out a summary of the individual's fitnesses.
 		if (doGeneration()) {

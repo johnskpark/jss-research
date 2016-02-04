@@ -60,6 +60,8 @@ gp.fs.0.func.17.nc = nc0
 gp.fs.0.func.18 = app.evolution.node.hunt.ScoreNumberWaitingNextMachine
 gp.fs.0.func.18.nc = nc0
 
+stat = app.evolution.simple.JasimaSimpleStatistics
+
 #stat = app.evolution.simple.statistics.JasimaMultiRuleStatistics
 #stat.size = 10
 
