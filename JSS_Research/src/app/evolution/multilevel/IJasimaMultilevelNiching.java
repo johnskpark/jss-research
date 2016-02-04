@@ -1,4 +1,4 @@
-package app.evolution.multilevel_new;
+package app.evolution.multilevel;
 
 import app.evolution.IJasimaNiching;
 import ec.multilevel_new.MLSSubpopulation;

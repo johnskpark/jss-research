@@ -1,13 +1,13 @@
-package app.evolution.multilevel_new.fitness;
+package app.evolution.multilevel.fitness;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import app.evolution.multilevel_new.IJasimaMultilevelFitnessListener;
-import app.evolution.multilevel_new.IJasimaMultilevelIndividualFitness;
-import app.evolution.multilevel_new.JasimaMultilevelIndividual;
-import app.evolution.multilevel_new.JasimaMultilevelNichingStatistics;
+import app.evolution.multilevel.IJasimaMultilevelFitnessListener;
+import app.evolution.multilevel.IJasimaMultilevelIndividualFitness;
+import app.evolution.multilevel.JasimaMultilevelIndividual;
+import app.evolution.multilevel.JasimaMultilevelStatistics;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.gp.koza.KozaFitness;
@@ -69,7 +69,7 @@ public class MLGPIndividualNormTWTFitness implements IJasimaMultilevelIndividual
 		overallStat.set(0, overallStat.get(0) + normTWT);
 
 		for (IJasimaMultilevelFitnessListener listener : listeners) {
-			listener.addFitness(JasimaMultilevelNichingStatistics.INDIVIDUAL_FITNESS, expIndex, twt);
+			listener.addFitness(JasimaMultilevelStatistics.INDIVIDUAL_FITNESS, expIndex, twt);
 		}
 	}
 

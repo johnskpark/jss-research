@@ -1,4 +1,4 @@
-package app.evolution.multilevel_new;
+package app.evolution.multilevel;
 
 import app.evolution.JasimaGPIndividual;
 import ec.EvolutionState;

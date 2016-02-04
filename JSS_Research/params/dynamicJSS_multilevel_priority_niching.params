@@ -7,5 +7,5 @@ parent.0 = dynamicJSS_multilevel.params
 
 eval.problem.tracker = app.tracker.JasimaEvolveExperimentTracker
 
-eval.problem.niching = app.evolution.multilevel_new.niching.MultilevelBasicNiching
+eval.problem.niching = app.evolution.multilevel.niching.MultilevelBasicNiching
 eval.problem.niching.distance = app.tracker.distance.individual.IndividualPriorityDistance

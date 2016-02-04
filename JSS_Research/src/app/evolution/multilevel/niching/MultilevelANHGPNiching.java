@@ -1,10 +1,10 @@
-package app.evolution.multilevel_new.niching;
+package app.evolution.multilevel.niching;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import app.evolution.multilevel_new.IJasimaMultilevelFitnessListener;
-import app.evolution.multilevel_new.IJasimaMultilevelNiching;
+import app.evolution.multilevel.IJasimaMultilevelFitnessListener;
+import app.evolution.multilevel.IJasimaMultilevelNiching;
 import app.simConfig.AbsSimConfig;
 import app.tracker.JasimaEvolveExperiment;
 import app.tracker.JasimaEvolveExperimentTracker;

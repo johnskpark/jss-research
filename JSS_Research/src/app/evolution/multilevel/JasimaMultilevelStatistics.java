@@ -1,4 +1,4 @@
-package app.evolution.multilevel_new;
+package app.evolution.multilevel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,11 +6,13 @@ import java.util.List;
 import app.util.ArrayFormatter;
 import ec.EvolutionState;
 import ec.Individual;
+import ec.gp.koza.KozaFitness;
 import ec.multilevel_new.MLSStatistics;
+import ec.multilevel_new.MLSSubpopulation;
 import ec.util.Parameter;
 import jasima.core.statistics.SummaryStat;
 
-public class JasimaMultilevelNichingStatistics extends MLSStatistics implements IJasimaMultilevelFitnessListener {
+public class JasimaMultilevelStatistics extends MLSStatistics implements IJasimaMultilevelFitnessListener {
 
 	private static final long serialVersionUID = 1831159170439048338L;
 
@@ -23,6 +25,14 @@ public class JasimaMultilevelNichingStatistics extends MLSStatistics implements 
 
 	public static final int INDIVIDUAL_FITNESS = 0;
 	public static final int ENSEMBLE_FITNESS = 1;
+
+	private Individual bestIndLastGen = null;
+
+	private Individual[] bestIndsOfGroupsLastGen = null;
+
+	private MLSSubpopulation bestGroupLastGen = null;
+
+	private int bestGroupIndexLastGen = -1;
 
 	private List<SummaryStat> individualFitnesses = new ArrayList<SummaryStat>();
 	private List<SummaryStat> ensembleFitnesses = new ArrayList<SummaryStat>();
@@ -86,6 +96,8 @@ public class JasimaMultilevelNichingStatistics extends MLSStatistics implements 
 	public void preEvaluationStatistics(final EvolutionState state) {
 		super.preEvaluationStatistics(state);
 
+		bestIndsOfGroupsLastGen = new Individual[state.population.subpops.length];
+
 		JasimaMultilevelProblem problem = (JasimaMultilevelProblem) state.evaluator.p_problem;
 
 		int numConfigs = problem.getSimConfig().getNumConfigs();
@@ -100,10 +112,10 @@ public class JasimaMultilevelNichingStatistics extends MLSStatistics implements 
 		}
 
 		// Have the statistics listen on the fitnesses.
-		problem.getIndividualFitness().addListener((JasimaMultilevelNichingStatistics) state.statistics);
-		problem.getGroupFitness().addListener((JasimaMultilevelNichingStatistics) state.statistics);
+		problem.getIndividualFitness().addListener((JasimaMultilevelStatistics) state.statistics);
+		problem.getGroupFitness().addListener((JasimaMultilevelStatistics) state.statistics);
 		if (problem.getNiching() != null) {
-			problem.getNiching().addListener((JasimaMultilevelNichingStatistics) state.statistics);
+			problem.getNiching().addListener((JasimaMultilevelStatistics) state.statistics);
 		}
 	}
 
@@ -128,6 +140,62 @@ public class JasimaMultilevelNichingStatistics extends MLSStatistics implements 
 		problem.getGroupFitness().clearListeners();
 		if (problem.getNiching() != null) {
 			problem.getNiching().clearListeners();
+		}
+	}
+
+	protected void individualStatistics(final EvolutionState state) {
+		super.individualStatistics(state);
+
+		double sumFitness = 0.0;
+		double numEvaluated = 0.0;
+
+		double bestFitness = ((KozaFitness) getBestIndividualOfGen().fitness).standardizedFitness();
+		double worstFitness = ((KozaFitness) getWorstIndividualOfGen().fitness).standardizedFitness();
+		double avgFitness = 0.0;
+
+		for (int i = 0; i < state.population.subpops[0].individuals.length; i++) {
+			Individual ind = state.population.subpops[0].individuals[i];
+
+			// Jasima problems use KozaFitness.
+			if (ind.evaluated) {
+				sumFitness += ((KozaFitness) ind.fitness).standardizedFitness();
+				numEvaluated++;
+			}
+		}
+
+		avgFitness = sumFitness / numEvaluated;
+
+		// Print out a summary of the individual's fitnesses.
+		if (doGeneration()) {
+			state.output.println("Best/Avg/Worst Individual Fitness: " + arrayFormat.formatData(bestFitness, worstFitness, avgFitness), statisticsLog);
+		}
+	}
+
+	protected void groupStatistics(final EvolutionState state) {
+		super.groupStatistics(state);
+
+		double sumFitness = 0.0;
+		double numEvaluated = 0.0;
+
+		double bestFitness = ((KozaFitness) getBestGroupOfGen().getFitness()).standardizedFitness();
+		double worstFitness = ((KozaFitness) getWorstGroupOfGen().getFitness()).standardizedFitness();
+		double avgFitness = 0.0;
+
+		for (int g = 0; g < state.population.subpops.length - 1; g++) {
+			MLSSubpopulation group = (MLSSubpopulation) state.population.subpops[g + 1];
+
+			// Jasima problems use KozaFitness.
+			if (group.isEvaluated()) {
+				sumFitness += ((KozaFitness) group.getFitness()).standardizedFitness();
+				numEvaluated++;
+			}
+		}
+
+		avgFitness = sumFitness / numEvaluated;
+
+		// Print out a summary of the group's fitnesses.
+		if (doGeneration()) {
+			state.output.println("Best/Avg/Worst Group Fitness: " + arrayFormat.formatData(bestFitness, worstFitness, avgFitness), statisticsLog);
 		}
 	}
 
@@ -163,41 +231,45 @@ public class JasimaMultilevelNichingStatistics extends MLSStatistics implements 
 		state.output.println("", statisticsLog);
 	}
 
-//	public void finalStatistics(final EvolutionState state) {
-//		// Instead of printing out the best individual over all generations,
-//		// print out the best individuals and groups from the last generation.
-//
-//		// Print out the best individual.
-//		if (doFinal) {
-//			state.output.println("\nBest Individual of Run: " , statisticsLog);
-//			bestIndLastGen.printIndividualForHumans(state, statisticsLog);
-//		}
-//
-//		// Print out the best individuals of each group.
-//		if (doFinal) {
-//			state.output.println("\nBest Individuals in each Groups of Run: ", statisticsLog);
-//		}
-//
-//		for (int g = 0; g < state.population.subpops.length - 1; g++) {
-//			if (doFinal) {
-//				state.output.println("Group " + g + ": ", statisticsLog);
-//				bestIndsOfGroupsLastGen[g].printIndividualForHumans(state, statisticsLog);
-//			}
-//
-//			if (doMessage && !silentPrint) {
-//				state.output.message("Group " + g + " best fitness of run: " + bestIndsOfGroupsLastGen[g].fitness.fitnessToStringForHumans());
-//			}
-//		}
-//
-//		// Print out the individuals making up the best group.
-//		if (doFinal) {
-//			state.output.println("\nBest Group of Run: " + bestGroupIndexLastGen + ", Fitness: " + bestGroupLastGen.getFitness().fitnessToStringForHumans(), statisticsLog);
-//
-//			for (int i = 0; i < bestGroupLastGen.individuals.length; i++) {
-//				state.output.println("Individual " + i, statisticsLog);
-//				bestGroupLastGen.individuals[i].printIndividualForHumans(state, statisticsLog);
-//			}
-//		}
-//	}
+	// Instead of printing out the best individual over all generations,
+	// print out the best individuals and groups from the last generation.
+
+	@Override
+	protected void finalIndividualStatistics(final EvolutionState state, final int result) {
+		// Print out the best individual.
+		if (doFinal()) {
+			state.output.println("\nBest Individual of Run: " , statisticsLog);
+			bestIndLastGen.printIndividualForHumans(state, statisticsLog);
+		}
+	}
+
+	@Override
+	protected void finalGroupStatistics(final EvolutionState state, final int result) {
+		// Print out the best individuals of each group.
+		if (doFinal()) {
+			state.output.println("\nBest Individuals in each Groups of Run: ", statisticsLog);
+		}
+
+		for (int g = 0; g < state.population.subpops.length - 1; g++) {
+			if (doFinal()) {
+				state.output.println("Group " + g + ": ", statisticsLog);
+				bestIndsOfGroupsLastGen[g].printIndividualForHumans(state, statisticsLog);
+			}
+
+			if (doMessage() && !silentPrint) {
+				state.output.message("Group " + g + " best fitness of run: " + bestIndsOfGroupsLastGen[g].fitness.fitnessToStringForHumans());
+			}
+		}
+
+		// Print out the individuals making up the best group.
+		if (doFinal()) {
+			state.output.println("\nBest Group of Run: " + bestGroupIndexLastGen + ", Fitness: " + bestGroupLastGen.getFitness().fitnessToStringForHumans(), statisticsLog);
+
+			for (int i = 0; i < bestGroupLastGen.individuals.length; i++) {
+				state.output.println("Individual " + i, statisticsLog);
+				bestGroupLastGen.individuals[i].printIndividualForHumans(state, statisticsLog);
+			}
+		}
+	}
 
 }

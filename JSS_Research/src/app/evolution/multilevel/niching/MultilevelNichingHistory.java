@@ -1,4 +1,4 @@
-package app.evolution.multilevel_new.niching;
+package app.evolution.multilevel.niching;
 
 import java.util.HashMap;
 import java.util.Map;

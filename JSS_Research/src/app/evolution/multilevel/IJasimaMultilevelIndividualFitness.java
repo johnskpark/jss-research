@@ -1,10 +1,10 @@
-package app.evolution.multilevel_new;
+package app.evolution.multilevel;
 
 import java.util.List;
 import java.util.Map;
 
 import app.evolution.IJasimaFitness;
-import ec.multilevel_new.MLSSubpopulation;
+import ec.Individual;
 
 /**
  * TODO javadoc.
@@ -12,25 +12,24 @@ import ec.multilevel_new.MLSSubpopulation;
  * @author parkjohn
  *
  */
-public interface IJasimaMultilevelGroupFitness extends IJasimaFitness<MLSSubpopulation> {
+public interface IJasimaMultilevelIndividualFitness extends IJasimaFitness<JasimaMultilevelIndividual> {
 
 	/**
 	 * TODO javadoc.
 	 * @param expIndex
-	 * @param gpInds
 	 * @param results
-	 * @param tracker
 	 */
-	public void accumulateFitness(int expIndex,
-			MLSSubpopulation subpop,
-			Map<String, Object> results);
+	public void accumulateFitness(Individual ind,
+			int expIndex,
+			Map<String, Object> results,
+			double referenceStat);
 
 	/**
 	 * TODO javadoc.
 	 * @param listener
 	 */
 	public void addListener(IJasimaMultilevelFitnessListener listener);
-
+	
 	/**
 	 * TODO javadoc.
 	 */
@@ -38,7 +37,6 @@ public interface IJasimaMultilevelGroupFitness extends IJasimaFitness<MLSSubpopu
 
 	/**
 	 * TODO javadoc.
-	 * @return
 	 */
 	public List<Double> getInstanceStats();
 }

@@ -1,12 +1,12 @@
-package app.evolution.multilevel_new.fitness;
+package app.evolution.multilevel.fitness;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import app.evolution.multilevel_new.IJasimaMultilevelFitnessListener;
-import app.evolution.multilevel_new.IJasimaMultilevelGroupFitness;
-import app.evolution.multilevel_new.JasimaMultilevelNichingStatistics;
+import app.evolution.multilevel.IJasimaMultilevelFitnessListener;
+import app.evolution.multilevel.IJasimaMultilevelGroupFitness;
+import app.evolution.multilevel.JasimaMultilevelStatistics;
 import ec.EvolutionState;
 import ec.gp.koza.KozaFitness;
 import ec.multilevel_new.MLSSubpopulation;
@@ -67,7 +67,7 @@ public class MLGPGroupTWTFitness implements IJasimaMultilevelGroupFitness {
 		ensembleStat.set(0, ensembleStat.get(0) + twt);
 
 		for (IJasimaMultilevelFitnessListener listener : listeners) {
-			listener.addFitness(JasimaMultilevelNichingStatistics.ENSEMBLE_FITNESS, expIndex, twt);
+			listener.addFitness(JasimaMultilevelStatistics.ENSEMBLE_FITNESS, expIndex, twt);
 		}
 	}
 

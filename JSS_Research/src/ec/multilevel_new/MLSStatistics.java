@@ -6,7 +6,6 @@ import java.io.IOException;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.Statistics;
-import ec.gp.koza.KozaFitness;
 import ec.util.Output;
 import ec.util.Parameter;
 
@@ -16,9 +15,6 @@ import ec.util.Parameter;
  * @author parkjohn
  *
  */
-
-// TODO currently its printing out that the best individual is W / PR
-// (which is clearly not the case), so need to fix this.
 public class MLSStatistics extends Statistics {
 
 	private static final long serialVersionUID = 2693112218608601218L;
@@ -35,16 +31,19 @@ public class MLSStatistics extends Statistics {
 
 	protected int statisticsLog = 0; // stdout
 
-	private Individual bestIndOfRun = null;
-	private Individual bestIndLastGen = null;
+	private Individual bestIndOfGen = null;
+	private Individual worstIndOfGen = null;
 
+	private Individual[] bestIndsFromGroupsOfGen = null;
+	private Individual[] worstIndsFromGroupsOfGen = null;
+
+	private MLSSubpopulation bestGroupOfGen = null;
+	private MLSSubpopulation worstGroupOfGen = null;
+
+	private Individual bestIndOfRun = null;
 	private Individual[] bestIndsOfGroupsOfRun = null;
-	private Individual[] bestIndsOfGroupsLastGen = null;
 
 	private MLSSubpopulation bestGroupOfRun = null;
-	private MLSSubpopulation bestGroupLastGen = null;
-
-	private int bestGroupIndexLastGen = -1;
 	private int bestGroupIndexOfRun = -1;
 
 	private boolean compress;
@@ -77,6 +76,42 @@ public class MLSStatistics extends Statistics {
 		}
 	}
 
+	// Getters associated with the printing.
+
+	public boolean isCompressed() {
+		return compress;
+	}
+
+	public boolean doFinal() {
+		return doFinal;
+	}
+
+	public boolean doGeneration() {
+		return doGeneration;
+	}
+
+	public boolean doMessage() {
+		return doMessage;
+	}
+
+	// Getters associated with the best and worst individual and group statistics.
+
+	protected Individual getBestIndividualOfGen() {
+		return bestIndOfGen;
+	}
+
+	protected Individual getWorstIndividualOfGen() {
+		return worstIndOfGen;
+	}
+
+	protected MLSSubpopulation getBestGroupOfGen() {
+		return bestGroupOfGen;
+	}
+
+	protected MLSSubpopulation getWorstGroupOfGen() {
+		return worstGroupOfGen;
+	}
+
 	@Override
 	public void preEvaluationStatistics(final EvolutionState state) {
 		super.preEvaluationStatistics(state);
@@ -84,7 +119,16 @@ public class MLSStatistics extends Statistics {
 		// Set up the bestOfRun array. This cannot be carried out in setup,
 		// as the number of subpopulation may not have been determined yet.
 		bestIndsOfGroupsOfRun = new Individual[state.population.subpops.length];
-		bestIndsOfGroupsLastGen = new Individual[state.population.subpops.length];
+
+		bestIndsFromGroupsOfGen = new Individual[state.population.subpops.length];
+		worstIndsFromGroupsOfGen = new Individual[state.population.subpops.length];
+
+		// Reset the best and worst individuals and groups of current generation.
+		bestIndOfGen = null;
+		worstIndOfGen = null;
+
+		bestGroupOfGen = null;
+		worstGroupOfGen = null;
 	}
 
 	@Override
@@ -96,163 +140,104 @@ public class MLSStatistics extends Statistics {
 			state.output.println("\nGeneration: " + state.generation, statisticsLog);
 		}
 
-		// Carry out the statistics for the separate components.
+		// Carry out the statistics for the individuals.
 		individualStatistics(state);
-		groupStatistics(state);
 
+		// Carry out the statistics for the groups.
+		if (hasGroups(state)) {
+			groupStatistics(state);
+		} else {
+			state.output.message("No groups in generation " + state.generation);
+		}
 	}
 
 	protected void individualStatistics(final EvolutionState state) {
-		Individual bestInd = null;
-		Individual worstInd = null;
-
-		double sumFitness = 0.0;
-		double numEvaluated = 0.0;
-
-		double bestFitness = 0.0;
-		double worstFitness = 0.0;
-		double avgFitness = 0.0;
-
 		// Update the best individual of generation.
 		for (int i = 0; i < state.population.subpops[0].individuals.length; i++) {
 			Individual ind = state.population.subpops[0].individuals[i];
 
-			if (bestInd == null || ind.fitness.betterThan(bestInd.fitness)) {
-				bestInd = ind;
-
-				bestFitness = ((KozaFitness) bestInd.fitness).standardizedFitness();
+			if (bestIndOfGen == null || ind.fitness.betterThan(bestIndOfGen.fitness)) {
+				bestIndOfGen = ind;
 			}
 
-			if (worstInd == null || worstInd.fitness.betterThan(ind.fitness)) {
-				worstInd = ind;
-
-				worstFitness = ((KozaFitness) worstInd.fitness).standardizedFitness();
-			}
-
-			// Fuck it, all everyone uses is KozaFitness anyways.
-			if (ind.evaluated) {
-				sumFitness += ((KozaFitness) ind.fitness).standardizedFitness();
-				numEvaluated++;
+			if (worstIndOfGen == null || worstIndOfGen.fitness.betterThan(ind.fitness)) {
+				worstIndOfGen = ind;
 			}
 		}
-
-		avgFitness = sumFitness / numEvaluated;
 
 		// Update the best individual of the run.
-		if (bestIndOfRun == null || bestInd.fitness.betterThan(bestIndOfRun.fitness)) {
-			bestIndOfRun = (Individual) bestInd.clone();
+		if (bestIndOfRun == null || bestIndOfGen.fitness.betterThan(bestIndOfRun.fitness)) {
+			bestIndOfRun = (Individual) bestIndOfGen.clone();
 		}
-
-		// Update the best individual of last gen.
-		bestIndLastGen = (Individual) bestInd.clone();
 
 		// Print the best individual's fitness to stdout.
 		if (doGeneration) {
-			String evaluatedStr = (bestInd.evaluated) ? " " : " (evaluated flag not set): ";
-			state.output.message("Best individual of generation: " + evaluatedStr + bestInd.fitness.fitnessToStringForHumans());
+			String evaluatedStr = (bestIndOfGen.evaluated) ? " " : " (evaluated flag not set): ";
+			state.output.message("Best individual of generation: " + evaluatedStr + bestIndOfGen.fitness.fitnessToStringForHumans());
 		}
 
 		// Print the best individual and its fitness to output file.
 		if (doGeneration) {
 			state.output.println("Best Individual: ", statisticsLog);
-			bestInd.printIndividualForHumans(state, statisticsLog);
-		}
-
-		// Print out the average individual's fitnesses.
-		if (doGeneration) {
-			state.output.println("Best Individual Fitness: " + bestFitness, statisticsLog);
-			state.output.println("Worst Individual Fitness: " + worstFitness, statisticsLog);
-			state.output.println("Average Individual Fitness: " + avgFitness, statisticsLog);
+			bestIndOfGen.printIndividualForHumans(state, statisticsLog);
 		}
 	}
 
+	protected boolean hasGroups(final EvolutionState state) {
+		return state.population.subpops.length > 1;
+	}
+
 	protected void groupStatistics(final EvolutionState state) {
-		// Immediately return if there is no groups.
-		if (state.population.subpops.length == 1) {
-			state.output.message("No groups in generation " + state.generation);
-			return;
-		}
-
-		Individual[] bestOfGroups = new Individual[state.population.subpops.length - 1];
-
-		MLSSubpopulation bestGroup = null;
-		MLSSubpopulation worstGroup = null;
 		int bestGroupIndex = -1;
-
-		double sumFitness = 0.0;
-		double numEvaluated = 0.0;
-
-		double bestFitness = 0.0;
-		double worstFitness = 0.0;
-		double avgFitness = 0.0;
 
 		for (int g = 0; g < state.population.subpops.length - 1; g++) {
 			MLSSubpopulation group = (MLSSubpopulation) state.population.subpops[g + 1];
 
-			// Update the best indivdual of group of generation.
 			for (int i = 0; i < group.individuals.length; i++) {
-				if (bestOfGroups[g] == null || group.individuals[i].fitness.betterThan(bestOfGroups[g].fitness)) {
-					bestOfGroups[g] = group.individuals[i];
+				// Update the best indivdual of group of generation.
+				if (bestIndsFromGroupsOfGen[g] == null || group.individuals[i].fitness.betterThan(bestIndsFromGroupsOfGen[g].fitness)) {
+					bestIndsFromGroupsOfGen[g] = group.individuals[i];
+				}
+
+				// Update the worst individuals of groups of generation.
+				if (worstIndsFromGroupsOfGen[g] == null || worstIndsFromGroupsOfGen[g].fitness.betterThan(group.getFitness())) {
+					worstIndsFromGroupsOfGen[g] = group.individuals[i];
 				}
 			}
 
 			// Update the best group of generation.
-			if (bestGroup == null || group.getFitness().betterThan(bestGroup.getFitness())) {
-				bestGroup = group;
+			if (bestGroupOfGen == null || group.getFitness().betterThan(bestGroupOfGen.getFitness())) {
+				bestGroupOfGen = group;
 				bestGroupIndex = g;
-
-				bestFitness = ((KozaFitness) bestGroup.getFitness()).standardizedFitness();
 			}
 
 			// Update the worst group of generation.
-			if (worstGroup == null || worstGroup.getFitness().betterThan(group.getFitness())) {
-				worstGroup = group;
-
-				worstFitness = ((KozaFitness) worstGroup.getFitness()).standardizedFitness();
+			if (worstGroupOfGen == null || worstGroupOfGen.getFitness().betterThan(group.getFitness())) {
+				worstGroupOfGen = group;
 			}
 
 			// Update the best individuals of groups of the run.
-			if (bestIndsOfGroupsOfRun[g] == null || bestOfGroups[g].fitness.betterThan(bestIndsOfGroupsOfRun[g].fitness)) {
-				bestIndsOfGroupsOfRun[g] = (Individual) bestOfGroups[g].clone();
-			}
-
-			// Update the best individuals of groups last gen.
-			bestIndsOfGroupsLastGen[g] = (Individual) bestOfGroups[g].clone();
-
-			// Fuck it, all everyone uses is KozaFitness anyways.
-			if (group.isEvaluated()) {
-				sumFitness += ((KozaFitness) group.getFitness()).standardizedFitness();
-				numEvaluated++;
+			if (bestIndsOfGroupsOfRun[g] == null || bestIndsFromGroupsOfGen[g].fitness.betterThan(bestIndsOfGroupsOfRun[g].fitness)) {
+				bestIndsOfGroupsOfRun[g] = (Individual) bestIndsFromGroupsOfGen[g].clone();
 			}
 		}
 
-		avgFitness = sumFitness / numEvaluated;
-
 		// Update the best group of the run.
-		if (bestGroupOfRun == null || bestGroup.getFitness().betterThan(bestGroupOfRun.getFitness())) {
-			bestGroupOfRun = (MLSSubpopulation) bestGroup.emptyClone();
+		if (bestGroupOfRun == null || bestGroupOfGen.getFitness().betterThan(bestGroupOfRun.getFitness())) {
+			bestGroupOfRun = (MLSSubpopulation) bestGroupOfGen.emptyClone();
 
-			for (int i = 0; i < bestGroup.individuals.length; i++) {
-				bestGroupOfRun.individuals[i] = (Individual) bestGroup.individuals[i].clone();
+			for (int i = 0; i < bestGroupOfGen.individuals.length; i++) {
+				bestGroupOfRun.individuals[i] = (Individual) bestGroupOfGen.individuals[i].clone();
 			}
 
 			bestGroupIndexOfRun = bestGroupIndex;
 		}
 
-		// Update the best group last gen.
-		bestGroupLastGen = (MLSSubpopulation) bestGroup.emptyClone();
-
-		for (int i = 0; i < bestGroup.individuals.length; i++) {
-			bestGroupLastGen.individuals[i] = (Individual) bestGroup.individuals[i].clone();
-		}
-
-		bestGroupIndexLastGen = bestGroupIndex;
-
 		// Print the best fitness of a group.
 		if (doGeneration) {
-			String evaluatedStr = (bestGroup.isEvaluated()) ? " " : " (evaluated flag not set): ";
+			String evaluatedStr = (bestGroupOfGen.isEvaluated()) ? " " : " (evaluated flag not set): ";
 
-			state.output.message("Best group of generation: " + bestGroupIndex + evaluatedStr + bestGroup.getFitness().fitnessToStringForHumans());
+			state.output.message("Best group of generation: " + bestGroupIndex + evaluatedStr + bestGroupOfGen.getFitness().fitnessToStringForHumans());
 		}
 
 		// Print the best fitness of an individual per group.
@@ -261,21 +246,14 @@ public class MLSStatistics extends Statistics {
 
 			if (doGeneration) {
 				state.output.println("Group " + g + " Fitness: " + group.getFitness().fitnessToStringForHumans() + ", Size: " + group.individuals.length, statisticsLog);
-				bestOfGroups[g].printIndividualForHumans(state, statisticsLog);
+				bestIndsFromGroupsOfGen[g].printIndividualForHumans(state, statisticsLog);
 			}
 
 			if (doMessage && !silentPrint) {
-				String evaluatedStr = (bestOfGroups[g].evaluated) ? "" : "(evaluated flag not set): ";
+				String evaluatedStr = (bestIndsFromGroupsOfGen[g].evaluated) ? "" : "(evaluated flag not set): ";
 
-				state.output.message("Group " + g + " fitness: " + group.getFitness().fitnessToStringForHumans() + ", Size: " + group.individuals.length + ", Individual: " + evaluatedStr + bestOfGroups[g].fitness.fitnessToStringForHumans());
+				state.output.message("Group " + g + " fitness: " + group.getFitness().fitnessToStringForHumans() + ", Size: " + group.individuals.length + ", Individual: " + evaluatedStr + bestIndsFromGroupsOfGen[g].fitness.fitnessToStringForHumans());
 			}
-		}
-
-		// Print out the best and average group's fitnesses.
-		if (doGeneration) {
-			state.output.println("Best Group Fitness: " + bestFitness, statisticsLog);
-			state.output.println("Worst Group Fitness: " + worstFitness, statisticsLog);
-			state.output.println("Average Group Fitness: " + avgFitness, statisticsLog);
 		}
 	}
 
@@ -283,12 +261,22 @@ public class MLSStatistics extends Statistics {
 	public void finalStatistics(final EvolutionState state, final int result) {
 		super.finalStatistics(state, result);
 
+		finalIndividualStatistics(state, result);
+		finalGroupStatistics(state, result);
+	}
+
+	protected void finalIndividualStatistics(final EvolutionState state, final int result) {
+
+		super.finalStatistics(state, result);
+
 		// Print out the best individual.
 		if (doFinal) {
 			state.output.println("\nBest Individual of Run: " , statisticsLog);
 			bestIndOfRun.printIndividualForHumans(state, statisticsLog);
 		}
+	}
 
+	protected void finalGroupStatistics(final EvolutionState state, final int result) {
 		// Print out the best individuals of each group.
 		if (doFinal) {
 			state.output.println("\nBest Individuals in each Groups of Run: ", statisticsLog);

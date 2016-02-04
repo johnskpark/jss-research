@@ -5,7 +5,7 @@
 
 parent.0 = koza_mls.params
 
-pop.subpop.0.species.ind = app.evolution.multilevel_new.JasimaMultilevelIndividual
+pop.subpop.0.species.ind = app.evolution.multilevel.JasimaMultilevelIndividual
 
 pop.default-subpop = 0
 
@@ -71,14 +71,14 @@ gp.fs.0.func.17.nc = nc0
 gp.fs.0.func.18 = app.evolution.node.hunt.ScoreNumberWaitingNextMachine
 gp.fs.0.func.18.nc = nc0
 
-eval.problem = app.evolution.multilevel_new.JasimaMultilevelProblem
+eval.problem = app.evolution.multilevel.JasimaMultilevelProblem
 eval.problem.data = app.evolution.JasimaGPData
 
 eval.problem.group-rule = app.evolution.priorityRules.EnsemblePriorityRule
-eval.problem.group-fitness = app.evolution.multilevel_new.fitness.MultilevelGroupTWTFitness
+eval.problem.group-fitness = app.evolution.multilevel.fitness.MultilevelGroupTWTFitness
 
 eval.problem.ind-rule = app.evolution.priorityRules.BasicPriorityRule
-eval.problem.ind-fitness = app.evolution.multilevel_new.fitness.MultilevelIndividualTWTFitness
+eval.problem.ind-fitness = app.evolution.multilevel.fitness.MultilevelIndividualTWTFitness
 
 eval.problem.simulator = app.simConfig.huntConfig.FourOpSimConfig
 eval.problem.simulator.seed = 15
