@@ -5,7 +5,7 @@
 
 parent.0 = dynamicJSS_mls_default_small.params
 
-stat = app.evolution.multilevel.JasimaMultilevelNichingStatistics
+stat = app.evolution.multilevel.JasimaMultilevelStatistics
 
 eval.problem.tracker = app.tracker.JasimaEvolveExperimentTracker
 

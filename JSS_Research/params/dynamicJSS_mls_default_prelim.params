@@ -74,7 +74,7 @@ gp.fs.0.func.17.nc = nc0
 gp.fs.0.func.18 = app.evolution.node.hunt.ScoreNumberWaitingNextMachine
 gp.fs.0.func.18.nc = nc0
 
-stat = app.evolution.multilevel.JasimaMultilevelNichingStatistics
+stat = app.evolution.multilevel.JasimaMultilevelStatistics
 
 eval.problem = app.evolution.multilevel.JasimaMultilevelProblem
 eval.problem.data = app.evolution.JasimaGPData

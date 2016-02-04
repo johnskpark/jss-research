@@ -218,7 +218,7 @@ public class JasimaMultilevelStatistics extends MLSStatistics implements IJasima
 	}
 
 	protected void fitnessStatistics(final EvolutionState state, String fitnessType, List<SummaryStat> fitnessStats) {
-		state.output.print(fitnessType + " Fitnesses per Instance (min,avg,max): ", statisticsLog);
+		state.output.print("Best/Average/Worst " + fitnessType + " Fitnesses per Instance: ", statisticsLog);
 
 		for (int i = 0; i < fitnessStats.size(); i++) {
 			SummaryStat stat = fitnessStats.get(i);
