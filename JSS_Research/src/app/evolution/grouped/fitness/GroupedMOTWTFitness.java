@@ -7,13 +7,13 @@ import java.util.Map;
 
 import app.evolution.JasimaGPIndividual;
 import app.evolution.grouped.GroupedIndividual;
-import app.evolution.grouped.IJasimaGroupFitness;
+import app.evolution.grouped.JasimaGroupFitness;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.gp.GPIndividual;
 import ec.multiobjective.MultiObjectiveFitness;
 
-public class GroupedMOTWTFitness implements IJasimaGroupFitness {
+public class GroupedMOTWTFitness implements JasimaGroupFitness {
 
 	private static final String WT_MEAN_STR = "weightedTardMean";
 

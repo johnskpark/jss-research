@@ -35,7 +35,7 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 	public static final String P_NICHING = "niching";
 
 	private AbsGPPriorityRule coopRule;
-	private IJasimaCoopFitness fitness;
+	private JasimaCoopFitness fitness;
 
 	private int numSubpops;
 
@@ -49,7 +49,7 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 		coopRule = (AbsGPPriorityRule) state.parameters.getInstanceForParameterEq(base.push(P_COOP_RULE), null, AbsGPPriorityRule.class);
 
 		// Setup the fitness.
-		fitness = (IJasimaCoopFitness) state.parameters.getInstanceForParameterEq(base.push(P_FITNESS), null, IJasimaCoopFitness.class);
+		fitness = (JasimaCoopFitness) state.parameters.getInstanceForParameterEq(base.push(P_FITNESS), null, JasimaCoopFitness.class);
 
 		// Setup the number of subpopulations.
         numSubpops = state.parameters.getInt((new Parameter(Initializer.P_POP)).push(Population.P_SIZE), null, 1);
@@ -87,13 +87,13 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 			final boolean[] assessFitness,
 			final boolean countVictoriesOnly) {
 		// The fitness would have been cleared by then.
-		for (int i = 0; i < pop.subpops.length; i++ ) {
-			if (assessFitness[i]) {
-				fitness.setObjectiveFitness(state, pop.subpops[i].individuals);
-			}
-		}
+//		for (int i = 0; i < pop.subpops.length; i++ ) {
+//			if (assessFitness[i]) {
+//				fitness.setObjectiveFitness(state, pop.subpops[i].individuals);
+//			}
+//		}
 
-		fitness.clear();
+//		fitness.clear();
 	}
 
 	@Override
@@ -126,18 +126,23 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 
 		if (hasTracker()) { getTracker().initialise(); }
 
-		for (int i = 0; i < getSimConfig().getNumConfigs(); i++) {
-			Experiment experiment = getExperiment(state, coopRule, i, getWorkStationListener(), getTracker());
+		for (int expIndex = 0; expIndex < getSimConfig().getNumConfigs(); expIndex++) {
+			Experiment experiment = getExperiment(state, coopRule, expIndex, getWorkStationListener(), getTracker());
 
 			experiment.runExperiment();
 
 			// Add in the results of the training instance to the fitness of the group.
-			fitness.accumulateObjectiveFitness(inds, experiment.getResults());
+			for (int j = 0; j < inds.length; j++) {
+				fitness.accumulateFitness(expIndex, (JasimaCoopIndividual) inds[j], experiment.getResults());
+			}
+			
 			if (hasWorkStationListener()) { getWorkStationListener().clear(); }
 		}
 
-		fitness.setTrialFitness(state, inds, updateFitness, shouldSetContext());
-		fitness.setDiversityFitness(state, inds, updateFitness);
+		fitness.setUpdateConfiguration(inds, updateFitness, shouldSetContext); // TODO where the fuck is this should set context coming from?
+		for (int i = 0; i < inds.length; i++) {
+			fitness.setFitness(state, (JasimaCoopIndividual) inds[i]);
+		}
 		fitness.clear();
 
 		if (hasTracker()) {

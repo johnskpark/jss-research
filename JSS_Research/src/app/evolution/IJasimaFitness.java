@@ -1,17 +1,16 @@
 package app.evolution;
 
+import java.util.Map;
+
 import ec.EvolutionState;
 
-/**
- * TODO javadoc.
- *
- * @author parkjohn
- *
- */
 public interface IJasimaFitness<T extends JasimaReproducible> {
 
-	// FIXME Why do I even have this?
-	public void setFitness(final EvolutionState state, final T individual);
+	public void setProblem(JasimaGPProblem problem);
+	
+	public void accumulateFitness(final int index, final T reproducible, final Map<String, Object> results);
+
+	public void setFitness(final EvolutionState state, final T reproducible);
 
 	public void clear();
 

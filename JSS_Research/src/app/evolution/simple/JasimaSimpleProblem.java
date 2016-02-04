@@ -1,7 +1,7 @@
 package app.evolution.simple;
 
-import jasima.core.experiment.Experiment;
 import app.evolution.AbsGPPriorityRule;
+import app.evolution.IJasimaFitness;
 import app.evolution.JasimaGPConfig;
 import app.evolution.JasimaGPData;
 import app.evolution.JasimaGPIndividual;
@@ -10,6 +10,7 @@ import ec.EvolutionState;
 import ec.Individual;
 import ec.gp.GPIndividual;
 import ec.util.Parameter;
+import jasima.core.experiment.Experiment;
 
 public class JasimaSimpleProblem extends JasimaGPProblem {
 
@@ -21,8 +22,9 @@ public class JasimaSimpleProblem extends JasimaGPProblem {
 	public static final int NUM_INDS_IN_EVAL = 1;
 
 	private AbsGPPriorityRule rule;
-	private IJasimaSimpleFitness fitness;
+	private IJasimaFitness<JasimaGPIndividual> fitness;
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
 		super.setup(state, base);
@@ -31,7 +33,7 @@ public class JasimaSimpleProblem extends JasimaGPProblem {
 		rule = (AbsGPPriorityRule) state.parameters.getInstanceForParameterEq(base.push(P_RULE), null, AbsGPPriorityRule.class);
 
 		// Setup the fitness.
-		fitness = (IJasimaSimpleFitness) state.parameters.getInstanceForParameterEq(base.push(P_FITNESS), null, IJasimaSimpleFitness.class);
+		fitness = (IJasimaFitness<JasimaGPIndividual>) state.parameters.getInstanceForParameterEq(base.push(P_FITNESS), null, IJasimaFitness.class);
 		fitness.setProblem(this);
 
 		// Setup the tracker.
@@ -75,7 +77,7 @@ public class JasimaSimpleProblem extends JasimaGPProblem {
 
 			experiment.runExperiment();
 
-			fitness.accumulateFitness(i, experiment.getResults());
+			fitness.accumulateFitness(i, (JasimaGPIndividual) ind, experiment.getResults());
 			if (hasWorkStationListener()) { getWorkStationListener().clear(); }
 		}
 

@@ -7,14 +7,14 @@ import java.util.Map;
 
 import app.evolution.JasimaGPIndividual;
 import app.evolution.grouped.GroupedIndividual;
-import app.evolution.grouped.IJasimaGroupFitness;
+import app.evolution.grouped.JasimaGroupFitness;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.gp.GPIndividual;
 import ec.multiobjective.MultiObjectiveFitness;
 
 // TODO need to fix.
-public class TrialMOTWTFitness implements IJasimaGroupFitness {
+public class TrialMOTWTFitness implements JasimaGroupFitness {
 
 	private static final String WT_MEAN_STR = "weightedTardMean";
 

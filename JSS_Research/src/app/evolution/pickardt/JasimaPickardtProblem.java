@@ -1,5 +1,25 @@
 package app.evolution.pickardt;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+
+import app.IWorkStationListener;
+import app.evolution.IWorkStationListenerEvolveFactory;
+import app.evolution.IJasimaFitness;
+import app.evolution.pickardt.presetRules.PRCR;
+import app.evolution.pickardt.presetRules.PRFCFS;
+import app.node.CompositePR;
+import app.node.NodeData;
+import app.simConfig.AbsSimConfig;
+import app.util.RuleParser;
+import ec.EvolutionState;
+import ec.Individual;
+import ec.Problem;
+import ec.simple.SimpleProblemForm;
+import ec.util.ParamClassLoadException;
+import ec.util.Parameter;
+import ec.vector.IntegerVectorIndividual;
 import jasima.core.experiment.Experiment;
 import jasima.core.util.observer.NotifierListener;
 import jasima.shopSim.core.PR;
@@ -18,26 +38,6 @@ import jasima.shopSim.prioRules.weighted.WMDD;
 import jasima.shopSim.prioRules.weighted.WMOD;
 import jasima.shopSim.prioRules.weighted.WSPT;
 import jasima.shopSim.util.BasicJobStatCollector;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-
-import app.IWorkStationListener;
-import app.evolution.IWorkStationListenerEvolveFactory;
-import app.evolution.pickardt.presetRules.PRCR;
-import app.evolution.pickardt.presetRules.PRFCFS;
-import app.node.CompositePR;
-import app.node.NodeData;
-import app.simConfig.AbsSimConfig;
-import app.util.RuleParser;
-import ec.EvolutionState;
-import ec.Individual;
-import ec.Problem;
-import ec.simple.SimpleProblemForm;
-import ec.util.ParamClassLoadException;
-import ec.util.Parameter;
-import ec.vector.IntegerVectorIndividual;
 
 public class JasimaPickardtProblem extends Problem implements SimpleProblemForm {
 
@@ -85,7 +85,7 @@ public class JasimaPickardtProblem extends Problem implements SimpleProblemForm 
 
 	private static final int NUM_RULES = 22;
 
-	private IJasimaPickardtFitness fitness;
+	private IJasimaFitness<JasimaVectorIndividual> fitness;
 
 	private AbsSimConfig simConfig;
 	private long simSeed;
@@ -93,6 +93,7 @@ public class JasimaPickardtProblem extends Problem implements SimpleProblemForm 
 	private IWorkStationListener workstationListener;
 	private NodeData nodeData = new NodeData();
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
 		super.setup(state, base);
@@ -129,7 +130,7 @@ public class JasimaPickardtProblem extends Problem implements SimpleProblemForm 
 		setupSimulator(state, base.push(P_SIMULATOR));
 
 		// Setup the fitness.
-		fitness = (IJasimaPickardtFitness) state.parameters.getInstanceForParameterEq(base.push(P_FITNESS), null, IJasimaPickardtFitness.class);
+		fitness = (IJasimaFitness<JasimaVectorIndividual>) state.parameters.getInstanceForParameterEq(base.push(P_FITNESS), null, IJasimaFitness.class);
 		setupFitness(state, base.push(P_FITNESS));
 	}
 
@@ -167,7 +168,7 @@ public class JasimaPickardtProblem extends Problem implements SimpleProblemForm 
 
 				experiment.runExperiment();
 
-				fitness.accumulateFitness(i, experiment.getResults());
+				fitness.accumulateFitness(i, vectorInd, experiment.getResults());
 			}
 
 			fitness.setFitness(state, (JasimaVectorIndividual) ind);

@@ -38,10 +38,10 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 	public static final String P_NICHING = "niching";
 
 	private AbsGPPriorityRule groupRule;
-	private IJasimaMultilevelGroupFitness groupFitness;
+	private JasimaMultilevelGroupFitness groupFitness;
 
 	private AbsGPPriorityRule indRule;
-	private IJasimaMultilevelIndividualFitness indFitness;
+	private JasimaMultilevelIndividualFitness indFitness;
 
 	private IJasimaMultilevelNiching niching;
 
@@ -51,11 +51,11 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 
 		// Setup the individual solver for evaluating groups.
 		groupRule = (AbsGPPriorityRule) state.parameters.getInstanceForParameterEq(base.push(P_GROUP_RULE), null, AbsGPPriorityRule.class);
-		groupFitness = (IJasimaMultilevelGroupFitness) state.parameters.getInstanceForParameterEq(base.push(P_GROUP_FITNESS), null, IJasimaMultilevelGroupFitness.class);
+		groupFitness = (JasimaMultilevelGroupFitness) state.parameters.getInstanceForParameterEq(base.push(P_GROUP_FITNESS), null, JasimaMultilevelGroupFitness.class);
 
 		// Setup the individual solver for evaluating individuals.
 		indRule = (AbsGPPriorityRule) state.parameters.getInstanceForParameterEq(base.push(P_IND_RULE), null, AbsGPPriorityRule.class);
-		indFitness = (IJasimaMultilevelIndividualFitness) state.parameters.getInstanceForParameterEq(base.push(P_IND_FITNESS), null, IJasimaMultilevelIndividualFitness.class);
+		indFitness = (JasimaMultilevelIndividualFitness) state.parameters.getInstanceForParameterEq(base.push(P_IND_FITNESS), null, JasimaMultilevelIndividualFitness.class);
 
 		// Setup the niching algorithm.
 		try {
@@ -97,11 +97,11 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 		clearReference();
 	}
 
-	public IJasimaMultilevelGroupFitness getGroupFitness() {
+	public JasimaMultilevelGroupFitness getGroupFitness() {
 		return groupFitness;
 	}
 
-	public IJasimaMultilevelIndividualFitness getIndividualFitness() {
+	public JasimaMultilevelIndividualFitness getIndividualFitness() {
 		return indFitness;
 	}
 
@@ -183,10 +183,7 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 
 			experiment.runExperiment();
 
-			indFitness.accumulateFitness(ind,
-					expIndex,
-					experiment.getResults(),
-					0); // getReferenceStat().get(expIndex));
+			indFitness.accumulateFitness(expIndex, (JasimaMultilevelIndividual) ind, experiment.getResults()); // getReferenceStat().get(expIndex));
 			if (hasWorkStationListener()) { getWorkStationListener().clear(); }
 		}
 

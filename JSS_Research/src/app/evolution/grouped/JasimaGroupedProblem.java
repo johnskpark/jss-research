@@ -1,14 +1,15 @@
 package app.evolution.grouped;
 
-import jasima.core.experiment.Experiment;
 import app.evolution.AbsGPPriorityRule;
 import app.evolution.JasimaGPConfig;
 import app.evolution.JasimaGPData;
+import app.evolution.JasimaGPIndividual;
 import app.evolution.JasimaGPProblem;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.gp.GPIndividual;
 import ec.util.Parameter;
+import jasima.core.experiment.Experiment;
 
 public class JasimaGroupedProblem extends JasimaGPProblem {
 
@@ -23,7 +24,7 @@ public class JasimaGroupedProblem extends JasimaGPProblem {
 	private AbsGPPriorityRule rule;
 	private AbsGPPriorityRule groupRule;
 
-	private IJasimaGroupFitness fitness;
+	private JasimaGroupFitness fitness;
 	private IJasimaGrouping grouping;
 
 	@Override
@@ -40,7 +41,7 @@ public class JasimaGroupedProblem extends JasimaGPProblem {
 		}
 
 		// Setup the fitness.
-		fitness = (IJasimaGroupFitness) state.parameters.getInstanceForParameterEq(base.push(P_FITNESS), null, IJasimaGroupFitness.class);
+		fitness = (JasimaGroupFitness) state.parameters.getInstanceForParameterEq(base.push(P_FITNESS), null, JasimaGroupFitness.class);
 
 		// Setup the grouping.
 		grouping = (IJasimaGrouping) state.parameters.getInstanceForParameterEq(base.push(P_GROUPING), null, IJasimaGrouping.class);
@@ -105,7 +106,7 @@ public class JasimaGroupedProblem extends JasimaGPProblem {
 
 				experiment.runExperiment();
 
-				fitness.accumulateIndFitness(ind, experiment.getResults());
+				fitness.accumulateIndFitness(i, (JasimaGPIndividual) ind, experiment.getResults());
 
 				rule.clear();
 			}
@@ -140,7 +141,7 @@ public class JasimaGroupedProblem extends JasimaGPProblem {
 
 					experiment.runExperiment();
 
-					fitness.accumulateGroupFitness(ind, experiment.getResults());
+					fitness.accumulateGroupFitness(i, (JasimaGPIndividual) ind, experiment.getResults());
 					getTracker().clear();
 
 					groupRule.clear();
