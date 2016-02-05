@@ -77,10 +77,10 @@ eval.problem = app.evolution.multilevel.JasimaMultilevelProblem
 eval.problem.data = app.evolution.JasimaGPData
 
 eval.problem.group-rule = app.evolution.priorityRules.EnsemblePriorityRule
-eval.problem.group-fitness = app.evolution.multilevel.fitness.MultilevelGroupTWTFitness
+eval.problem.group-fitness = app.evolution.multilevel.fitness.GroupTWTFitness
 
 eval.problem.ind-rule = app.evolution.priorityRules.BasicPriorityRule
-eval.problem.ind-fitness = app.evolution.multilevel.fitness.MultilevelIndividualTWTFitness
+eval.problem.ind-fitness = app.evolution.multilevel.fitness.IndividualTWTFitness
 
 eval.problem.simulator = app.simConfig.huntConfig.FourOpSimConfig
 eval.problem.simulator.seed = 15

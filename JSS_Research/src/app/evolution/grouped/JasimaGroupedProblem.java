@@ -111,7 +111,7 @@ public class JasimaGroupedProblem extends JasimaGPProblem {
 				rule.clear();
 			}
 
-			fitness.setIndFitness(state, ind);
+			fitness.setIndFitness(state, (JasimaGPIndividual) ind);
 			fitness.clearIndFitness();
 
 			getSimConfig().resetSeed();
@@ -120,7 +120,7 @@ public class JasimaGroupedProblem extends JasimaGPProblem {
 
 	protected void evaluateGroup(final EvolutionState state,
 			final Individual ind,
-			final GroupedIndividual[] group,
+			final JasimaGroupedIndividual[] group,
 			final int subpopulation,
 			final int threadnum) {
 		// Evaluate the groups one by one.
@@ -154,7 +154,7 @@ public class JasimaGroupedProblem extends JasimaGPProblem {
 		// Set the fitnesses of the groups.
 		for (int i = 0; i < group.length; i++) {
 			if (!group[i].isEvaluated()) {
-				fitness.setGroupFitness(state, ind, group[i]);
+				fitness.setGroupFitness(state, (JasimaGPIndividual) ind, group[i]);
 			}
 		}
 

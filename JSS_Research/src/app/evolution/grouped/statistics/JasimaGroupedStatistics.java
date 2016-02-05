@@ -1,6 +1,6 @@
 package app.evolution.grouped.statistics;
 
-import app.evolution.grouped.GroupedIndividual;
+import app.evolution.grouped.JasimaGroupedIndividual;
 import app.evolution.grouped.IJasimaGrouping;
 import app.evolution.grouped.JasimaGroupedProblem;
 import ec.EvolutionState;
@@ -23,7 +23,7 @@ public class JasimaGroupedStatistics extends SimpleStatistics {
 		// Print out the best ensemble over the specific generation that was evaluated.
 		state.output.println("Ensemble:", statisticslog);
 
-		GroupedIndividual group = individualGrouping.getBestGroupForGeneration();
+		JasimaGroupedIndividual group = individualGrouping.getBestGroupForGeneration();
 		GPIndividual[] inds = group.getInds();
 		for (int i = 0; i < inds.length; i++) {
 			inds[i].printIndividualForHumans(state, statisticslog);
@@ -42,7 +42,7 @@ public class JasimaGroupedStatistics extends SimpleStatistics {
 		// Print out the best ensemble over all generation that was evaluated.
 		state.output.println("Ensemble:", statisticslog);
 
-		GroupedIndividual group = individualGrouping.getBestGroupForGeneration();
+		JasimaGroupedIndividual group = individualGrouping.getBestGroupForGeneration();
 		GPIndividual[] inds = group.getInds();
 		for (int i = 0; i < inds.length; i++) {
 			inds[i].printIndividualForHumans(state, statisticslog);

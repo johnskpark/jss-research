@@ -139,9 +139,11 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 			if (hasWorkStationListener()) { getWorkStationListener().clear(); }
 		}
 
-		fitness.setUpdateConfiguration(inds, updateFitness, shouldSetContext); // TODO where the fuck is this should set context coming from?
+		fitness.setUpdateConfiguration(inds, updateFitness, shouldSetContext()); 
 		for (int i = 0; i < inds.length; i++) {
 			fitness.setFitness(state, (JasimaCoopIndividual) inds[i]);
+			
+			inds[i].evaluated = true;
 		}
 		fitness.clear();
 

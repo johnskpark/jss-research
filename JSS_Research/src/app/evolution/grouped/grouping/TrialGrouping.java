@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import app.evolution.grouped.GroupedIndividual;
+import app.evolution.grouped.JasimaGroupedIndividual;
 import app.evolution.grouped.IJasimaGrouping;
 import ec.EvolutionState;
 import ec.Individual;
@@ -19,7 +19,7 @@ public class TrialGrouping implements IJasimaGrouping {
 
 	private static final long serialVersionUID = -6134155663644563813L;
 
-	private Map<GPIndividual, GroupedIndividual[]> indGroupMap = new HashMap<GPIndividual, GroupedIndividual[]>();
+	private Map<GPIndividual, JasimaGroupedIndividual[]> indGroupMap = new HashMap<GPIndividual, JasimaGroupedIndividual[]>();
 
 	public static final String P_GROUP_SIZE = "group_size";
 	public static final String P_NUM_TRIALS = "num_trials";
@@ -30,10 +30,10 @@ public class TrialGrouping implements IJasimaGrouping {
 	private int groupSize = DEFAULT_GROUP_SIZE;
 	private int numTrials = DEFAULT_NUM_TRIALS;
 
-	private GroupedIndividual bestEnsemble = null;
+	private JasimaGroupedIndividual bestEnsemble = null;
 	private KozaFitness bestEnsembleFitness = new KozaFitness();
 
-	private GroupedIndividual bestEnsembleOfGeneration = null;
+	private JasimaGroupedIndividual bestEnsembleOfGeneration = null;
 	private KozaFitness bestEnsembleOfGenerationFitness = new KozaFitness();
 
 	@Override
@@ -63,10 +63,10 @@ public class TrialGrouping implements IJasimaGrouping {
 		}
 	}
 
-	private GroupedIndividual[] getGrouping(EvolutionState state,
+	private JasimaGroupedIndividual[] getGrouping(EvolutionState state,
 			Subpopulation population,
 			GPIndividual ind) {
-		GroupedIndividual[] grouping = new GroupedIndividual[numTrials];
+		JasimaGroupedIndividual[] grouping = new JasimaGroupedIndividual[numTrials];
 
 		Set<Individual> indSet = new HashSet<Individual>();
 		indSet.add(ind);
@@ -77,7 +77,7 @@ public class TrialGrouping implements IJasimaGrouping {
 				inds[j] = getIndWithoutReplacement(state, population, ind, indSet);
 			}
 
-			grouping[i] = new GroupedIndividual(inds);
+			grouping[i] = new JasimaGroupedIndividual(inds);
 		}
 
 		return grouping;
@@ -120,12 +120,12 @@ public class TrialGrouping implements IJasimaGrouping {
 	}
 
 	@Override
-	public GroupedIndividual[] getGroups(Individual ind) {
+	public JasimaGroupedIndividual[] getGroups(Individual ind) {
 		return indGroupMap.get(ind);
 	}
 
 	@Override
-	public GroupedIndividual getBestGroup() {
+	public JasimaGroupedIndividual getBestGroup() {
 		return bestEnsemble;
 	}
 
@@ -135,7 +135,7 @@ public class TrialGrouping implements IJasimaGrouping {
 	}
 
 	@Override
-	public GroupedIndividual getBestGroupForGeneration() {
+	public JasimaGroupedIndividual getBestGroupForGeneration() {
 		return bestEnsembleOfGeneration;
 	}
 
@@ -145,7 +145,7 @@ public class TrialGrouping implements IJasimaGrouping {
 	}
 
 	@Override
-	public void updateFitness(EvolutionState state, GroupedIndividual indGroup,
+	public void updateFitness(EvolutionState state, JasimaGroupedIndividual indGroup,
 			double fitness) {
 		// Update the best group of generation.
 		if (bestEnsembleOfGenerationFitness.standardizedFitness() > fitness) {

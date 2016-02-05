@@ -1,18 +1,16 @@
 package app.evolution.grouped.fitness;
 
-import jasima.core.statistics.SummaryStat;
-
 import java.util.Map;
 
 import app.evolution.JasimaGPIndividual;
-import app.evolution.grouped.GroupedIndividual;
 import app.evolution.grouped.JasimaGroupFitness;
+import app.evolution.grouped.JasimaGroupedIndividual;
 import ec.EvolutionState;
 import ec.Individual;
-import ec.gp.GPIndividual;
 import ec.gp.koza.KozaFitness;
+import jasima.core.statistics.SummaryStat;
 
-public class GroupedSOTWTFitness implements JasimaGroupFitness {
+public class GroupedTWTFitness extends JasimaGroupFitness {
 
 	private static final String WT_MEAN_STR = "weightedTardMean";
 
@@ -20,7 +18,7 @@ public class GroupedSOTWTFitness implements JasimaGroupFitness {
 	private SummaryStat indFitness = new SummaryStat();
 
 	@Override
-	public void accumulateIndFitness(final Individual ind, final Map<String, Object> results) {
+	public void accumulateIndFitness(int expIndex, JasimaGPIndividual ind, Map<String, Object> results) {
 		if (this.ind != null && !this.ind.equals(ind)) {
 			throw new RuntimeException("accumulateIndFitness");
 		}
@@ -32,13 +30,12 @@ public class GroupedSOTWTFitness implements JasimaGroupFitness {
 	}
 
 	@Override
-	public void accumulateGroupFitness(final Individual ind,
-			final Map<String, Object> results) {
+	public void accumulateGroupFitness(int expIndex, JasimaGPIndividual ind, Map<String, Object> results) {
 		// Does nothing.
 	}
 
 	@Override
-	public void setIndFitness(final EvolutionState state, final Individual ind) {
+	public void setIndFitness(EvolutionState state, JasimaGPIndividual ind) {
 		if (this.ind == null || !this.ind.equals(ind)) {
 			throw new RuntimeException("setIndFitness");
 		}
@@ -48,17 +45,8 @@ public class GroupedSOTWTFitness implements JasimaGroupFitness {
 	}
 
 	@Override
-	public void setGroupFitness(final EvolutionState state,
-			final Individual ind,
-			final GroupedIndividual group) {
+	public void setGroupFitness(EvolutionState state, JasimaGPIndividual ind, JasimaGroupedIndividual group) {
 		// Does nothing.
-	}
-
-	@Override
-	public void setFitness(final EvolutionState state,
-			final JasimaGPIndividual ind) {
-		setIndFitness(state, ind);
-		setGroupFitness(state, ind, new GroupedIndividual(new GPIndividual[]{(GPIndividual) ind}));
 	}
 
 	@Override
@@ -70,12 +58,6 @@ public class GroupedSOTWTFitness implements JasimaGroupFitness {
 	@Override
 	public void clearGroupFitness() {
 		// Does nothing.
-	}
-
-	@Override
-	public void clear() {
-		clearIndFitness();
-		clearGroupFitness();
 	}
 
 }

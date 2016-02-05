@@ -17,18 +17,18 @@ public interface IJasimaGrouping extends Setup {
 
 	public boolean isGroupEvaluated();
 
-	public GroupedIndividual[] getGroups(final Individual ind);
+	public JasimaGroupedIndividual[] getGroups(final Individual ind);
 
-	public GroupedIndividual getBestGroup();
+	public JasimaGroupedIndividual getBestGroup();
 
 	public KozaFitness getBestGroupFitness();
 
-	public GroupedIndividual getBestGroupForGeneration();
+	public JasimaGroupedIndividual getBestGroupForGeneration();
 
 	public KozaFitness getBestGroupForGenerationFitness();
 
 	public void updateFitness(final EvolutionState state,
-			final GroupedIndividual indGroup,
+			final JasimaGroupedIndividual indGroup,
 			final double fitness);
 
 	public void clearForGeneration(final EvolutionState state);

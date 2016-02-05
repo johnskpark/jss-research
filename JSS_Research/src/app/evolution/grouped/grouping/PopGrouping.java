@@ -1,6 +1,6 @@
 package app.evolution.grouped.grouping;
 
-import app.evolution.grouped.GroupedIndividual;
+import app.evolution.grouped.JasimaGroupedIndividual;
 import app.evolution.grouped.IJasimaGrouping;
 import ec.EvolutionState;
 import ec.Individual;
@@ -16,12 +16,12 @@ public class PopGrouping implements IJasimaGrouping {
 	public static final int NUM_TRIALS = 1;
 
 	private Subpopulation population;
-	private GroupedIndividual[] ensemble = new GroupedIndividual[1];
+	private JasimaGroupedIndividual[] ensemble = new JasimaGroupedIndividual[1];
 
-	private GroupedIndividual bestEnsemble = null;
+	private JasimaGroupedIndividual bestEnsemble = null;
 	private KozaFitness bestEnsembleFitness = new KozaFitness();
 
-	private GroupedIndividual bestEnsembleOfGeneration = null;
+	private JasimaGroupedIndividual bestEnsembleOfGeneration = null;
 	private KozaFitness bestEnsembleOfGenerationFitness = new KozaFitness();
 
 	@Override
@@ -39,7 +39,7 @@ public class PopGrouping implements IJasimaGrouping {
 			indArray[i] = (GPIndividual) population.individuals[i];
 		}
 
-		ensemble[0] = new GroupedIndividual(indArray);
+		ensemble[0] = new JasimaGroupedIndividual(indArray);
 	}
 
 	@Override
@@ -63,12 +63,12 @@ public class PopGrouping implements IJasimaGrouping {
 	}
 
 	@Override
-	public GroupedIndividual[] getGroups(Individual ind) {
+	public JasimaGroupedIndividual[] getGroups(Individual ind) {
 		return ensemble;
 	}
 
 	@Override
-	public GroupedIndividual getBestGroup() {
+	public JasimaGroupedIndividual getBestGroup() {
 		return bestEnsemble;
 	}
 
@@ -78,7 +78,7 @@ public class PopGrouping implements IJasimaGrouping {
 	}
 
 	@Override
-	public GroupedIndividual getBestGroupForGeneration() {
+	public JasimaGroupedIndividual getBestGroupForGeneration() {
 		return bestEnsembleOfGeneration;
 	}
 
@@ -88,7 +88,7 @@ public class PopGrouping implements IJasimaGrouping {
 	}
 
 	@Override
-	public void updateFitness(EvolutionState state, GroupedIndividual indGroup,
+	public void updateFitness(EvolutionState state, JasimaGroupedIndividual indGroup,
 			double fitness) {
 		// Update the best group of generation.
 		if (bestEnsembleOfGenerationFitness.standardizedFitness() > fitness) {

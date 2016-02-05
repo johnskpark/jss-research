@@ -2,13 +2,13 @@ package app.evolution.grouped;
 
 import ec.gp.GPIndividual;
 
-public class GroupedIndividual {
+public class JasimaGroupedIndividual {
 
 	private GPIndividual[] inds;
 
 	private boolean evaluated = false;
 
-	public GroupedIndividual(GPIndividual[] inds) {
+	public JasimaGroupedIndividual(GPIndividual[] inds) {
 		this.inds = inds;
 	}
 

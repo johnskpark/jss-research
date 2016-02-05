@@ -82,7 +82,7 @@ eval.problem = app.evolution.coop.JasimaCoopProblem
 eval.problem.data = app.evolution.JasimaGPData
 
 eval.problem.rule = app.evolution.priorityRules.EnsemblePriorityRule
-eval.problem.fitness = app.evolution.coop.fitness.CoopTWTFitness
+eval.problem.fitness = app.evolution.coop.fitness.TWTFitness
 # eval.problem.tracker = app.evolution.coop.tracker.CoopDecisionTrackerOriginal
 
 eval.problem.simulator = app.simConfig.huntConfig.FourOpSimConfig
