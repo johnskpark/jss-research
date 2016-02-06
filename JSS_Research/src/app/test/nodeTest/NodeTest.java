@@ -29,6 +29,7 @@ import ec.gp.ADFStack;
 import ec.gp.GPData;
 import ec.gp.GPIndividual;
 import ec.gp.GPNode;
+import jasima.core.util.Pair;
 
 public class NodeTest {
 
@@ -130,13 +131,168 @@ public class NodeTest {
 	private INode[] fakeINodes;
 	private GPNode[] fakeGPNodes;
 
+	private static final String BASIC_TERMINAL = "basic";
+	private static final String HILDEBRANDT_TERMINAL = "hildebrandt";
+	private static final String HUNT_TERMINAL = "hunt";
+
 	@Test
 	public void basicTerminals_EqualOutput() {
-		// TODO
+		try {
+			List<Class<? extends INode>> evalTerminals = getEvalTerminalNodes(BASIC_TERMINAL);
+			List<Class<? extends SingleLineGPNode>> evolTerminals = getEvolTerminalNodes(BASIC_TERMINAL);
+
+			int evalSize = evalTerminals.size();
+			int evolSize = evolTerminals.size();
+
+			// Ensure that the sizes match.
+			Assert.assertEquals(String.format("Sizes do not match: eval: %d, evol: %d", evalSize, evolSize), evalSize, evolSize);
+
+			// Initialise their constructors.
+			for (int i = 0; i < evolSize; i++) {
+				Class<? extends INode> evalNodeClass = evalTerminals.get(i);
+				Class<? extends SingleLineGPNode> evolNodeClass = evolTerminals.get(i);
+
+				// Initialise the evaluation node.
+				NodeDefinition nodeDef = evalNodeClass.getAnnotation(NodeAnnotation.class).node();
+
+				// Ensure that the number of childrens on the evaluation node is greater than zero.
+				Assert.assertTrue(String.format("Eval node %s number of children: %d", evalNodeClass.getSimpleName(), nodeDef.numChildren()), nodeDef.numChildren() == 0);
+
+				INode evalNode = evalNodeClass.newInstance();
+
+				// Initialise the evolution node.
+				GPNode evolNode = evolNodeClass.newInstance();
+
+				// Ensure that the number of childrens on the evolution node is greater than zero.
+				Assert.assertTrue(String.format("Evol node %s number of children: %d", evolNodeClass.getSimpleName(), evolNode.expectedChildren()), evolNode.expectedChildren() == 0);
+
+				// TODO Now need to pass in the jobs and machines as inputs into the nodes.
+			}
+
+		} catch (Exception ex) {
+			System.err.println(ex.getMessage());
+			ex.printStackTrace();
+
+			Assert.fail();
+		}
 	}
 
 	@Test
-	public void basicNonTerminals_EqualOutput() {
+	public void hildebrandtTerminals_EqualOutput() {
+		try {
+			List<Class<? extends INode>> evalTerminals = getEvalTerminalNodes(HILDEBRANDT_TERMINAL);
+			List<Class<? extends SingleLineGPNode>> evolTerminals = getEvolTerminalNodes(HILDEBRANDT_TERMINAL);
+
+			int evalSize = evalTerminals.size();
+			int evolSize = evolTerminals.size();
+
+			// Ensure that the sizes match.
+			Assert.assertEquals(String.format("Sizes do not match: eval: %d, evol: %d", evalSize, evolSize), evalSize, evolSize);
+
+			// Initialise their constructors.
+			for (int i = 0; i < evolSize; i++) {
+				Class<? extends INode> evalNodeClass = evalTerminals.get(i);
+				Class<? extends SingleLineGPNode> evolNodeClass = evolTerminals.get(i);
+
+				// Initialise the evaluation node.
+				NodeDefinition nodeDef = evalNodeClass.getAnnotation(NodeAnnotation.class).node();
+
+				// Ensure that the number of childrens on the evaluation node is greater than zero.
+				Assert.assertTrue(String.format("Eval node %s number of children: %d", evalNodeClass.getSimpleName(), nodeDef.numChildren()), nodeDef.numChildren() == 0);
+
+				INode evalNode = evalNodeClass.newInstance();
+
+				// Initialise the evolution node.
+				GPNode evolNode = evolNodeClass.newInstance();
+
+				// Ensure that the number of childrens on the evolution node is greater than zero.
+				Assert.assertTrue(String.format("Evol node %s number of children: %d", evolNodeClass.getSimpleName(), evolNode.expectedChildren()), evolNode.expectedChildren() == 0);
+
+				// TODO
+			}
+
+		} catch (Exception ex) {
+			System.err.println(ex.getMessage());
+			ex.printStackTrace();
+
+			Assert.fail();
+		}
+	}
+
+	@Test
+	public void huntTerminals_EqualOutput() {
+		try {
+			List<Class<? extends INode>> evalTerminals = getEvalTerminalNodes(HUNT_TERMINAL);
+			List<Class<? extends SingleLineGPNode>> evolTerminals = getEvolTerminalNodes(HUNT_TERMINAL);
+
+			int evalSize = evalTerminals.size();
+			int evolSize = evolTerminals.size();
+
+			// Ensure that the sizes match.
+			Assert.assertEquals(String.format("Sizes do not match: eval: %d, evol: %d", evalSize, evolSize), evalSize, evolSize);
+
+			// Initialise their constructors.
+			for (int i = 0; i < evolSize; i++) {
+				Class<? extends INode> evalNodeClass = evalTerminals.get(i);
+				Class<? extends SingleLineGPNode> evolNodeClass = evolTerminals.get(i);
+
+				// Initialise the evaluation node.
+				NodeDefinition nodeDef = evalNodeClass.getAnnotation(NodeAnnotation.class).node();
+
+				// Ensure that the number of childrens on the evaluation node is greater than zero.
+				Assert.assertTrue(String.format("Eval node %s number of children: %d", evalNodeClass.getSimpleName(), nodeDef.numChildren()), nodeDef.numChildren() == 0);
+
+				INode evalNode = evalNodeClass.newInstance();
+
+				// Initialise the evolution node.
+				GPNode evolNode = evolNodeClass.newInstance();
+
+				// Ensure that the number of childrens on the evolution node is greater than zero.
+				Assert.assertTrue(String.format("Evol node %s number of children: %d", evolNodeClass.getSimpleName(), evolNode.expectedChildren()), evolNode.expectedChildren() == 0);
+
+				// TODO
+			}
+
+		} catch (Exception ex) {
+			System.err.println(ex.getMessage());
+			ex.printStackTrace();
+
+			Assert.fail();
+		}
+	}
+
+	// Get the terminal nodes from a directory.
+
+	private List<Class<? extends INode>> getEvalTerminalNodes(String parentName) throws Exception {
+		Set<Class<? extends INode>> evalNodes = reflections.getSubTypesOf(INode.class);
+
+		List<Class<? extends INode>> evalTerminals = evalNodes.stream()
+				.filter(node -> terminalFilter(node, parentName)).collect(Collectors.toList());
+
+		return evalTerminals;
+	}
+
+	private List<Class<? extends SingleLineGPNode>> getEvolTerminalNodes(String parentName) throws Exception {
+		Set<Class<? extends SingleLineGPNode>> evolNodes = reflections.getSubTypesOf(SingleLineGPNode.class);
+
+		List<Class<? extends SingleLineGPNode>> evolTerminals = evolNodes.stream()
+				.filter(node -> terminalFilter(node, parentName)).collect(Collectors.toList());
+
+		return evolTerminals;
+	}
+
+	private boolean terminalFilter(Class<?> node, String parentName) {
+		if (!node.getSimpleName().startsWith(TERMINAL_PREFIX)) {
+			return false;
+		}
+
+		String[] split = node.getName().split("\\.");
+
+		return parentName.equals(split[split.length - 2]);
+	}
+
+	@Test
+	public void nonTerminals_EqualOutput() {
 		try {
 			Set<Class<? extends INode>> evalNodes = reflections.getSubTypesOf(INode.class);
 			Set<Class<? extends SingleLineGPNode>> evolNodes = reflections.getSubTypesOf(SingleLineGPNode.class);
@@ -149,7 +305,7 @@ public class NodeTest {
 			int evalSize = evalNonTerminals.size();
 			int evolSize = evolNonTerminals.size();
 
-			// Assertion.
+			// Ensure that the sizes match.
 			Assert.assertEquals(String.format("Sizes do not match: eval: %d, evol: %d", evalSize, evolSize), evalSize, evolSize);
 
 			Collections.sort(evalNonTerminals, new Comparator<Class<?>>() {
@@ -186,6 +342,9 @@ public class NodeTest {
 				// Initialise the evaluation node.
 				NodeDefinition nodeDef = evalNodeClass.getAnnotation(NodeAnnotation.class).node();
 
+				// Ensure that the number of childrens on the evaluation node is greater than zero.
+				Assert.assertTrue(String.format("Eval node %s number of children: %d", evalNodeClass.getSimpleName(), nodeDef.numChildren()), nodeDef.numChildren() > 0);
+
 				Class<?>[] constParams = new Class<?>[nodeDef.numChildren()];
 				Arrays.fill(constParams, INode.class);
 				Constructor<? extends INode> constructor = evalNodeClass.getConstructor(constParams);
@@ -195,6 +354,10 @@ public class NodeTest {
 
 				// Initialise the evolution node.
 				GPNode evolNode = evolNodeClass.newInstance();
+
+				// Ensure that the number of childrens on the evolution node is greater than zero.
+				Assert.assertTrue(String.format("Evol node %s number of children: %d", evolNodeClass.getSimpleName(), evolNode.expectedChildren()), evolNode.expectedChildren() > 0);
+
 				evolNode.children = Arrays.copyOf(fakeGPNodes, evolNode.expectedChildren());
 
 				// Get the evaluation value.
@@ -204,6 +367,7 @@ public class NodeTest {
 				evolNode.eval(null, 0, gpData, null, null, null);
 				double evolValue = gpData.getPriority();
 
+				// Ensure that the evaluation and the evolution outputs match.
 				Assert.assertEquals(String.format("The outputs do not match! Eval node: %s, Evol node: %s", evalNode.toString(), evolNode.toString()), evalValue, evolValue, RANGE_OF_ERROR);
 			}
 
@@ -213,26 +377,6 @@ public class NodeTest {
 
 			Assert.fail();
 		}
-	}
-
-	@Test
-	public void hildebrandtTerminals_EqualOutput() {
-		// TODO
-	}
-
-	@Test
-	public void hildebrandtNonTerminals_EqualOutput() {
-		// TODO
-	}
-
-	@Test
-	public void huntTerminals_EqualOutput() {
-		// TODO
-	}
-
-	@Test
-	public void huntNonTerminals_EqualOutput() {
-		// TODO
 	}
 
 	// Fake INodes.
