@@ -11,6 +11,8 @@ public class NodeData {
 	public NodeData() {
 	}
 
+	// Getters
+
 	public PrioRuleTarget getEntry() {
 		return entry;
 	}
@@ -18,6 +20,8 @@ public class NodeData {
 	public IWorkStationListener getWorkStationListener() {
 		return listener;
 	}
+
+	// Setters
 
 	public void setEntry(PrioRuleTarget entry) {
 		this.entry = entry;

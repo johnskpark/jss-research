@@ -14,6 +14,7 @@ import app.evolution.JasimaGPConfig;
 import app.priorityRules.ATCPR;
 import ec.gp.GPIndividual;
 
+// TODO this needs to be unit tested.
 public class EnsemblePriorityRule extends AbsGPPriorityRule {
 
 	private static final long serialVersionUID = -2159123752873667029L;
@@ -46,6 +47,7 @@ public class EnsemblePriorityRule extends AbsGPPriorityRule {
 	public void beforeCalc(PriorityQueue<?> q) {
 		super.beforeCalc(q);
 
+		// Clear and repopulate the job votes.
 		clear();
 
 		for (int i = 0; i < q.size(); i++) {
@@ -54,12 +56,14 @@ public class EnsemblePriorityRule extends AbsGPPriorityRule {
 			jobRankings.add(ev);
 		}
 
+		// Initialise the decisions vector.
 		int[] decisions = new int[individuals.length];
 
 		if (tracker != null) {
 			tracker.addDispatchingDecision(q);
 		}
 
+		// Go through the individuals and vote on the decisions.
 		for (int i = 0; i < individuals.length; i++) {
 			double bestPriority = Double.NEGATIVE_INFINITY;
 			int bestIndex = -1;
@@ -119,7 +123,7 @@ public class EnsemblePriorityRule extends AbsGPPriorityRule {
 
 	// Stores the votes made on a particular job.
 	private class EntryVotes implements Comparable<EntryVotes> {
-		final PrioRuleTarget entry;
+		private PrioRuleTarget entry;
 		private int count = 0;
 
 		public EntryVotes(PrioRuleTarget e) {
@@ -128,6 +132,10 @@ public class EnsemblePriorityRule extends AbsGPPriorityRule {
 
 		public void increment() {
 			count++;
+		}
+
+		public PrioRuleTarget getEntry() {
+			return entry;
 		}
 
 		public int getCount() {

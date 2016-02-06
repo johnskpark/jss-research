@@ -40,15 +40,15 @@ public class GroupSizeAdjustedTWTFitness extends JasimaMultilevelGroupFitness {
 
 	@Override
 	protected double getFitness(int expIndex, MLSSubpopulation subpop, Map<String, Object> results) {
-		double twt = WeightedTardinessStat.getTotalWeightedTardiness(results); 
+		double twt = WeightedTardinessStat.getTotalWeightedTardiness(results);
 
 		for (IJasimaMultilevelFitnessListener listener : listeners) {
-			listener.addFitness(JasimaMultilevelStatistics.INDIVIDUAL_FITNESS, expIndex, twt);
-		}		
-		
+			listener.addFitness(JasimaMultilevelStatistics.ENSEMBLE_FITNESS, expIndex, twt);
+		}
+
 		return twt;
 	}
-	
+
 	@Override
 	protected double getFinalFitness(final EvolutionState state, final MLSSubpopulation subpop) {
 		double avgFitness = super.getFinalFitness(state, subpop);
@@ -56,7 +56,7 @@ public class GroupSizeAdjustedTWTFitness extends JasimaMultilevelGroupFitness {
 		int size = subpop.individuals.length;
 		double sizeFactor = Math.sqrt((2.0 * size) / (2.0 + size));
 		double sizeAdjustedFitness = avgFitness * sizeFactor;
-		
+
 		return sizeAdjustedFitness;
 	}
 

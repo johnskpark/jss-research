@@ -26,14 +26,6 @@ public class JasimaMultilevelStatistics extends MLSStatistics implements IJasima
 	public static final int INDIVIDUAL_FITNESS = 0;
 	public static final int ENSEMBLE_FITNESS = 1;
 
-	private Individual bestIndLastGen = null;
-
-	private Individual[] bestIndsOfGroupsLastGen = null;
-
-	private MLSSubpopulation bestGroupLastGen = null;
-
-	private int bestGroupIndexLastGen = -1;
-
 	private List<SummaryStat> individualFitnesses = new ArrayList<SummaryStat>();
 	private List<SummaryStat> ensembleFitnesses = new ArrayList<SummaryStat>();
 
@@ -95,8 +87,6 @@ public class JasimaMultilevelStatistics extends MLSStatistics implements IJasima
 	@Override
 	public void preEvaluationStatistics(final EvolutionState state) {
 		super.preEvaluationStatistics(state);
-
-		bestIndsOfGroupsLastGen = new Individual[state.population.subpops.length];
 
 		JasimaMultilevelProblem problem = (JasimaMultilevelProblem) state.evaluator.p_problem;
 
@@ -235,7 +225,7 @@ public class JasimaMultilevelStatistics extends MLSStatistics implements IJasima
 		// Print out the best individual.
 		if (doFinal()) {
 			state.output.println("\nBest Individual of Run: " , statisticsLog);
-			bestIndLastGen.printIndividualForHumans(state, statisticsLog);
+			getBestIndividualOfGen().printIndividualForHumans(state, statisticsLog);
 		}
 	}
 
@@ -247,23 +237,28 @@ public class JasimaMultilevelStatistics extends MLSStatistics implements IJasima
 		}
 
 		for (int g = 0; g < state.population.subpops.length - 1; g++) {
+			MLSSubpopulation group = (MLSSubpopulation) state.population.subpops[g + 1];
+			Individual ind = getBestIndsFromGroupsOfGen()[g];
+
 			if (doFinal()) {
 				state.output.println("Group " + g + ": ", statisticsLog);
-				bestIndsOfGroupsLastGen[g].printIndividualForHumans(state, statisticsLog);
+				ind.printIndividualForHumans(state, statisticsLog);
 			}
 
 			if (doMessage() && !silentPrint) {
-				state.output.message("Group " + g + " best fitness of run: " + bestIndsOfGroupsLastGen[g].fitness.fitnessToStringForHumans());
+				state.output.message("Group " + g + " best fitness of run: " + group.getFitness().fitnessToStringForHumans());
 			}
 		}
 
 		// Print out the individuals making up the best group.
 		if (doFinal()) {
-			state.output.println("\nBest Group of Run: " + bestGroupIndexLastGen + ", Fitness: " + bestGroupLastGen.getFitness().fitnessToStringForHumans(), statisticsLog);
+			MLSSubpopulation bestGroupOfGen = getBestGroupOfGen();
 
-			for (int i = 0; i < bestGroupLastGen.individuals.length; i++) {
+			state.output.println("\nBest Group of Run: " + getBestGroupIndexOfGen() + ", Fitness: " + bestGroupOfGen.getFitness().fitnessToStringForHumans(), statisticsLog);
+
+			for (int i = 0; i < bestGroupOfGen.individuals.length; i++) {
 				state.output.println("Individual " + i, statisticsLog);
-				bestGroupLastGen.individuals[i].printIndividualForHumans(state, statisticsLog);
+				bestGroupOfGen.individuals[i].printIndividualForHumans(state, statisticsLog);
 			}
 		}
 	}

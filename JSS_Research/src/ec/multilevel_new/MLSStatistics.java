@@ -31,6 +31,8 @@ public class MLSStatistics extends Statistics {
 
 	protected int statisticsLog = 0; // stdout
 
+	// Statistics for the current generation.
+
 	private Individual bestIndOfGen = null;
 	private Individual worstIndOfGen = null;
 
@@ -38,10 +40,15 @@ public class MLSStatistics extends Statistics {
 	private Individual[] worstIndsFromGroupsOfGen = null;
 
 	private MLSSubpopulation bestGroupOfGen = null;
+	private int bestGroupIndexOfGen = -1;
+
 	private MLSSubpopulation worstGroupOfGen = null;
+	private int worstGroupIndexOfGen = -1;
+
+	// Statistics for the entire run.
 
 	private Individual bestIndOfRun = null;
-	private Individual[] bestIndsOfGroupsOfRun = null;
+	private Individual[] bestIndsFromGroupsOfRun = null;
 
 	private MLSSubpopulation bestGroupOfRun = null;
 	private int bestGroupIndexOfRun = -1;
@@ -94,7 +101,7 @@ public class MLSStatistics extends Statistics {
 		return doMessage;
 	}
 
-	// Getters associated with the best and worst individual and group statistics.
+	// Getters associated with the best and worst individual and group statistics for the current generation.
 
 	protected Individual getBestIndividualOfGen() {
 		return bestIndOfGen;
@@ -104,12 +111,46 @@ public class MLSStatistics extends Statistics {
 		return worstIndOfGen;
 	}
 
+	protected Individual[] getBestIndsFromGroupsOfGen() {
+		return bestIndsFromGroupsOfGen;
+	}
+
+	protected Individual[] getWorstIndsFromGroupsOfGen() {
+		return worstIndsFromGroupsOfGen;
+	}
+
 	protected MLSSubpopulation getBestGroupOfGen() {
 		return bestGroupOfGen;
 	}
 
+	protected int getBestGroupIndexOfGen() {
+		return bestGroupIndexOfGen;
+	}
+
 	protected MLSSubpopulation getWorstGroupOfGen() {
 		return worstGroupOfGen;
+	}
+
+	protected int getWorstGroupIndexofGen() {
+		return worstGroupIndexOfGen;
+	}
+
+	// Getters associated with the best individual and group statistics for the entire run.
+
+	protected Individual getBestIndividualOfRun() {
+		return bestIndOfRun;
+	}
+
+	protected Individual[] getBestIndsFromGroupsOfRun() {
+		return bestIndsFromGroupsOfRun;
+	}
+
+	protected MLSSubpopulation getBestGroupOfRun() {
+		return bestGroupOfRun;
+	}
+
+	protected int getBestGroupIndexOfRun() {
+		return bestGroupIndexOfRun;
 	}
 
 	@Override
@@ -118,7 +159,7 @@ public class MLSStatistics extends Statistics {
 
 		// Set up the bestOfRun array. This cannot be carried out in setup,
 		// as the number of subpopulation may not have been determined yet.
-		bestIndsOfGroupsOfRun = new Individual[state.population.subpops.length];
+		bestIndsFromGroupsOfRun = new Individual[state.population.subpops.length];
 
 		bestIndsFromGroupsOfGen = new Individual[state.population.subpops.length];
 		worstIndsFromGroupsOfGen = new Individual[state.population.subpops.length];
@@ -129,6 +170,9 @@ public class MLSStatistics extends Statistics {
 
 		bestGroupOfGen = null;
 		worstGroupOfGen = null;
+
+		bestGroupIndexOfGen = -1;
+		worstGroupIndexOfGen = -1;
 	}
 
 	@Override
@@ -188,8 +232,6 @@ public class MLSStatistics extends Statistics {
 	}
 
 	protected void groupStatistics(final EvolutionState state) {
-		int bestGroupIndex = -1;
-
 		for (int g = 0; g < state.population.subpops.length - 1; g++) {
 			MLSSubpopulation group = (MLSSubpopulation) state.population.subpops[g + 1];
 
@@ -208,17 +250,18 @@ public class MLSStatistics extends Statistics {
 			// Update the best group of generation.
 			if (bestGroupOfGen == null || group.getFitness().betterThan(bestGroupOfGen.getFitness())) {
 				bestGroupOfGen = group;
-				bestGroupIndex = g;
+				bestGroupIndexOfGen = g;
 			}
 
 			// Update the worst group of generation.
 			if (worstGroupOfGen == null || worstGroupOfGen.getFitness().betterThan(group.getFitness())) {
 				worstGroupOfGen = group;
+				worstGroupIndexOfGen = g;
 			}
 
 			// Update the best individuals of groups of the run.
-			if (bestIndsOfGroupsOfRun[g] == null || bestIndsFromGroupsOfGen[g].fitness.betterThan(bestIndsOfGroupsOfRun[g].fitness)) {
-				bestIndsOfGroupsOfRun[g] = (Individual) bestIndsFromGroupsOfGen[g].clone();
+			if (bestIndsFromGroupsOfRun[g] == null || bestIndsFromGroupsOfGen[g].fitness.betterThan(bestIndsFromGroupsOfRun[g].fitness)) {
+				bestIndsFromGroupsOfRun[g] = (Individual) bestIndsFromGroupsOfGen[g].clone();
 			}
 		}
 
@@ -230,14 +273,14 @@ public class MLSStatistics extends Statistics {
 				bestGroupOfRun.individuals[i] = (Individual) bestGroupOfGen.individuals[i].clone();
 			}
 
-			bestGroupIndexOfRun = bestGroupIndex;
+			bestGroupIndexOfRun = bestGroupIndexOfGen;
 		}
 
 		// Print the best fitness of a group.
 		if (doGeneration) {
 			String evaluatedStr = (bestGroupOfGen.isEvaluated()) ? " " : " (evaluated flag not set): ";
 
-			state.output.message("Best group of generation: " + bestGroupIndex + evaluatedStr + bestGroupOfGen.getFitness().fitnessToStringForHumans());
+			state.output.message("Best group of generation: " + bestGroupIndexOfGen + evaluatedStr + bestGroupOfGen.getFitness().fitnessToStringForHumans());
 		}
 
 		// Print the best fitness of an individual per group.
@@ -283,13 +326,16 @@ public class MLSStatistics extends Statistics {
 		}
 
 		for (int g = 0; g < state.population.subpops.length - 1; g++) {
+			MLSSubpopulation group = (MLSSubpopulation) state.population.subpops[g + 1];
+			Individual ind = getBestIndsFromGroupsOfGen()[g];
+
 			if (doFinal) {
 				state.output.println("Group " + g + ": ", statisticsLog);
-				bestIndsOfGroupsOfRun[g].printIndividualForHumans(state, statisticsLog);
+				ind.printIndividualForHumans(state, statisticsLog);
 			}
 
 			if (doMessage && !silentPrint) {
-				state.output.message("Group " + g + " best fitness of run: " + bestIndsOfGroupsOfRun[g].fitness.fitnessToStringForHumans());
+				state.output.message("Group " + g + " best fitness of run: " + group.getFitness().fitnessToStringForHumans());
 			}
 		}
 

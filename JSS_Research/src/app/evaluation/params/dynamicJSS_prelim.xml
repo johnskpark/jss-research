@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <evaluationConfig>
 	<solverConfig>
-		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>simple_prelim_4op.txt</ruleFile>
+			<ruleFile>mls_prelim_4op.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
@@ -13,7 +13,7 @@
 	</datasetConfig>
 
 	<outputConfig>
-	    <outputFile>simple_prelim_train_output.csv</outputFile>
+	    <outputFile>mls_prelim_train_output.csv</outputFile>
 	</outputConfig>
 
 	<fitnessConfig>
