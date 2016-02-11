@@ -24,7 +24,7 @@ public abstract class AbsSimConfig {
 	}
 
 	public void resetSeed() {
-		rand = new Random(seed);
+		setSeed(seed);
 	}
 
 	public abstract int getNumMachines(int index);
