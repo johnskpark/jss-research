@@ -188,9 +188,6 @@ public class JasimaEvalProblem {
 			AbsEvalPriorityRule solver = solverClass.newInstance();
 			solver.setConfiguration(config);
 
-			// TODO
-			System.out.printf("Loaded solver: %s\n", solver.toString());
-
 			solvers.add(solver);
 		}
 
@@ -316,9 +313,6 @@ public class JasimaEvalProblem {
 
 					workstationListener.clear();
 				}
-
-				// TODO
-				System.out.printf("%f\n", stat.mean());
 
 				output.println();
 			}

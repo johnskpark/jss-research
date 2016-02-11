@@ -28,6 +28,8 @@ import ec.util.ThreadPool;
  * @author parkjohn
  *
  */
+
+// TODO The best group is not being retained... What the fuck.
 public class MLSBreeder extends Breeder {
 
 	private static final long serialVersionUID = -6914152113435773281L;
@@ -236,8 +238,6 @@ public class MLSBreeder extends Breeder {
 		loadPopulation(state, newPop);
 		breedGroups(state, newPop);
 		breedIndividuals(state, newPop);
-
-
 
 		return newPop;
 	}

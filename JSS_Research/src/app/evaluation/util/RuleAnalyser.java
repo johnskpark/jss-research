@@ -8,18 +8,20 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
+// This outputs the number of component rules that the input rule file has.
+// Probably need to rename this at some point and how it outputs the files.
 public class RuleAnalyser {
 
 	public RuleAnalyser() {
-		// TODO 
+		// TODO
 	}
-	
+
 	public void readDirectory(String dirName) throws IOException {
 		File dir = new File(dirName);
 
 		if (dir.isDirectory()) {
 			File[] files = dir.listFiles();
-			
+
 			for (File f : files) {
 				if (f.getName().endsWith("4op.txt") || f.getName().endsWith("8op.txt")) {
 					readRuleFile(f);
@@ -27,7 +29,7 @@ public class RuleAnalyser {
 			}
 		}
 	}
-	
+
 	public void readRuleFile(File file) throws IOException {
 		FileReader fileReader = new FileReader(file);
 		BufferedReader reader = new BufferedReader(fileReader);
@@ -36,7 +38,7 @@ public class RuleAnalyser {
 		PrintStream output = new PrintStream(new File(outputName));
 
 		output.println("seed,numRules,,numNodes1,...,numNodes_numRules");
-		
+
 		int maxNumRules = Integer.MIN_VALUE;
 		List<String> seedList = new ArrayList<String>();
 		List<Integer> numRulesList = new ArrayList<Integer>();
@@ -49,7 +51,7 @@ public class RuleAnalyser {
 
 			String seed = split[0];
 			int numRules = split.length - 1;
-			
+
 			Integer[] numNodes = new Integer[numRules];
 			for (int i = 1; i < split.length; i++) {
 				String strippedRule = split[i].replaceAll("[()]", "");
@@ -66,23 +68,23 @@ public class RuleAnalyser {
 
 		for (int i = 0; i < count; i++) {
 			output.printf("%s,%d,", seedList.get(i), numRulesList.get(i));
-			
+
 			Integer[] numNodes = numNodesList.get(i);
 			for (int j = 0; j < maxNumRules; j++) {
 				output.printf(",%d", (j < numNodes.length) ? numNodes[j] : 0);
 			}
-			
+
 			output.println();
 		}
-		
+
 		reader.close();
 		output.close();
 	}
-	
+
 	public static void main(String[] args) {
 		RuleAnalyser analyser = new RuleAnalyser();
 		String directory = args[0];
-		
+
 		try {
 			analyser.readDirectory(directory);
 		} catch (IOException ex) {
@@ -90,5 +92,5 @@ public class RuleAnalyser {
 			ex.printStackTrace();
 		}
 	}
-	
+
 }
