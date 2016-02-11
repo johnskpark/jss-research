@@ -103,6 +103,19 @@ public class EnsemblePriorityRule extends AbsGPPriorityRule {
 	}
 
 	@Override
+	public String getName() {
+		StringBuilder builder = new StringBuilder();
+		builder.append(getClass().getSimpleName() + "[ " + individuals[0].genotypeToString());
+
+		for (int i = 1; i < individuals.length; i++) {
+			builder.append("," + individuals[i].genotypeToString());
+		}
+
+		builder.append(" ]");
+		return builder.toString();
+	}
+
+	@Override
 	public List<PrioRuleTarget> getEntryRankings() {
 		// Sort the list of jobs.
 		Collections.sort(jobRankings);

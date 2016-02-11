@@ -67,6 +67,8 @@ public abstract class JasimaGPProblem extends GPProblem {
 		simConfig.setSeed(simSeed);
 
 		rotateSeed = state.parameters.getBoolean(base.push(P_ROTATE_SEED), null, true);
+		
+		state.output.message("JasimaGPProblem rotate seed: " + rotateSeed);
 
 		// Setup the tracker.
 		try {
