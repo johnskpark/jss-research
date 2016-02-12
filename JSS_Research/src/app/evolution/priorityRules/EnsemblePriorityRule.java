@@ -116,6 +116,26 @@ public class EnsemblePriorityRule extends AbsGPPriorityRule {
 	}
 
 	@Override
+	public boolean equals(Object o) {
+		if (o == null || this.getClass() != o.getClass()) {
+			return false;
+		}
+
+		EnsemblePriorityRule other = (EnsemblePriorityRule) o;
+
+		if (this.individuals.length != other.individuals.length) {
+			return false;
+		}
+
+		for (int i = 0; i < this.individuals.length; i++) {
+			if (!this.individuals[i].equals(other.individuals[i])) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	@Override
 	public List<PrioRuleTarget> getEntryRankings() {
 		// Sort the list of jobs.
 		Collections.sort(jobRankings);

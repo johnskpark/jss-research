@@ -256,35 +256,11 @@ public class MLSBreeder extends Breeder {
 			coopPopulation.addIndividual(overallSubpop.individuals[i]);
 		}
 
-		// TODO temporary.
-		MLSSubpopulation bestGroupFromSubpop = null;
-		MLSSubpopulation bestGroupFromCoop = null;
-		
 		// Copy the groups represented by subsequent subpopulations.
 		for (int i = 1; i < state.population.subpops.length; i++) {
 			newPop.subpops[i] = state.population.subpops[i];
 
 			coopPopulation.addGroup((MLSSubpopulation) state.population.subpops[i]);
-			
-			// TODO temporary.
-			MLSSubpopulation subpop = (MLSSubpopulation) state.population.subpops[i];
-			if (bestGroupFromSubpop == null || subpop.getFitness().betterThan(bestGroupFromSubpop.getFitness())) {
-				bestGroupFromSubpop = subpop;
-			}
-		}
-		
-		// TODO temporary.
-		for (int i = 0; i < coopPopulation.getNumGroups(); i++) {
-			MLSSubpopulation subpop = coopPopulation.getGroups()[i];
-			if (bestGroupFromCoop == null || subpop.getFitness().betterThan(bestGroupFromCoop.getFitness())) {
-				bestGroupFromCoop = subpop;
-			}
-		}
-		
-		// TODO temporary.
-		if (state.generation == 15 || state.generation == 16) {
-			System.out.println("Loading - from subpop: " + bestGroupFromSubpop.getFitness().fitnessToStringForHumans());
-			System.out.println("Loading - from coop: " + bestGroupFromCoop.getFitness().fitnessToStringForHumans());
 		}
 
 		// Load the population of cooperative entities into the state.
@@ -794,43 +770,13 @@ public class MLSBreeder extends Breeder {
 		for (int i = 0; i < coopPopulation.getNumIndividuals(); i++) {
 			allInds.add(new Pair<Individual, Integer>(coopPopulation.getIndividuals()[i], i));
 		}
-		
-		// TODO compare the best individual in the all groups section against the best group found so far by the statistics file.
-		MLSSubpopulation bestGroupFromCoop = null;
-		for (int i = 0; i < coopPopulation.getNumGroups(); i++) {
-			MLSSubpopulation subpop = coopPopulation.getGroups()[i];
-			if (bestGroupFromCoop == null || subpop.getFitness().betterThan(bestGroupFromCoop.getFitness())) {
-				bestGroupFromCoop = subpop;
-			}
-		}
-		if (state.generation == 15 || state.generation == 16) {
-			System.out.println("Elites - from coop: " + bestGroupFromCoop.getFitness().fitnessToStringForHumans());
-		}
 
 		Collections.sort(allGroups, groupComparator);
 		Collections.sort(allInds, individualComparator);
 
-		// TODO temporary.
-		MLSSubpopulation bestGroupFromSubpop = null;
-		
 		// Load the best groups and individuals back into the population.
 		for (int i = 1; i < newPop.subpops.length; i++) {
 			newPop.subpops[i] = allGroups.get(i - 1).i1;
-			
-			// TODO temporary.
-			MLSSubpopulation subpop = (MLSSubpopulation) newPop.subpops[i];
-			if (bestGroupFromSubpop == null || subpop.getFitness().betterThan(bestGroupFromSubpop.getFitness())) {
-				bestGroupFromSubpop = subpop;
-			}
-		}
-		
-		// TODO temporary.
-		if (state.generation == 15 || state.generation == 16) {
-			System.out.println("Elites - from subpop: " + bestGroupFromSubpop.getFitness().fitnessToStringForHumans());
-//			for (int i = 0; i < bestGroupFromSubpop.individuals.length; i++) {
-//				System.out.print(bestGroupFromSubpop.individuals[i].genotypeToString() + ",");
-//			}
-//			System.out.println();
 		}
 
 		for (int i = 0; i < newPop.subpops[0].individuals.length; i++) {

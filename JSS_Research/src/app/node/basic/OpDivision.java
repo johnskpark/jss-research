@@ -9,6 +9,7 @@ import app.node.NodeDefinition;
 public class OpDivision implements INode {
 
 	private static final NodeDefinition NODE_DEFINITION = NodeDefinition.OP_DIVISION;
+	private static final double MINIMUM_THRESHOLD_FROM_ZERO = 0.000001;
 
 	private INode leftChild;
 	private INode rightChild;
@@ -28,7 +29,7 @@ public class OpDivision implements INode {
 		double leftEval = leftChild.evaluate(data);
 		double rightEval = rightChild.evaluate(data);
 
-		if (rightEval == 0) {
+		if (Math.abs(rightEval) < MINIMUM_THRESHOLD_FROM_ZERO) {
 			return 1.0;
 		} else {
 			return leftEval / rightEval;

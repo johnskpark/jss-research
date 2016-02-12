@@ -90,5 +90,7 @@ eval.problem.simulator.seed = 15
 eval.problem.workstation = app.listener.hunt.HuntListenerEvolveFactory
 eval.problem.workstation.max-jobs = 5
 
+eval.problem.reference-rule = app.priorityRules.HolthausRule
+
 # seed.0=26556
 seed.0=17

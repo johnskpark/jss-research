@@ -83,7 +83,9 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 		}
 
 		// Apply the benchmark/reference rule to the problem instances.
-		// evaluateReference();
+		if (hasReferenceRule()) {
+			evaluateReference();
+		}
 	}
 
 	@Override
@@ -116,8 +118,6 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 			final boolean countVictoriesOnly,
 			final int[] subpops,
 			final int threadnum) {
-		// TODO the issue is in here somewhere...
-		
 		// We don't care if the group's been evaluated previously,
 		// since the simulation changes at each generation.
 		List<GPIndividual> indsList = new ArrayList<GPIndividual>();
@@ -125,10 +125,6 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 
 		GPIndividual[] gpInds = new GPIndividual[indsList.size()];
 		indsList.toArray(gpInds);
-		
-		if (state.generation == 16) {
-			System.out.println("List size: " + indsList.size());
-		}
 
 		JasimaGPConfig config = new JasimaGPConfig();
 		config.setState(state);
@@ -144,10 +140,6 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 
 		for (int expIndex = 0; expIndex < getSimConfig().getNumConfigs(); expIndex++) {
 			Experiment experiment = getExperiment(state, groupRule, expIndex, getWorkStationListener(), getTracker());
-			
-			if (state.generation == 15 || state.generation == 16) {
-				System.out.println("Initial seed of the experiment: " + experiment.getInitialSeed() + ", index: " + expIndex);
-			}
 
 			experiment.runExperiment();
 
@@ -155,6 +147,8 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 			groupFitness.accumulateFitness(expIndex, group, experiment.getResults());
 			if (hasWorkStationListener()) { getWorkStationListener().clear(); }
 		}
+
+		resetSimSeed();
 
 		groupFitness.setFitness(state, group);
 		groupFitness.clear();
@@ -168,8 +162,6 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 		}
 
 		group.setEvaluated(true);
-
-		resetSimSeed();
 	}
 
 	@Override

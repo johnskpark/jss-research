@@ -103,53 +103,53 @@ public class MLSStatistics extends Statistics {
 
 	// Getters associated with the best and worst individual and group statistics for the current generation.
 
-	protected Individual getBestIndividualOfGen() {
+	public Individual getBestIndividualOfGen() {
 		return bestIndOfGen;
 	}
 
-	protected Individual getWorstIndividualOfGen() {
+	public Individual getWorstIndividualOfGen() {
 		return worstIndOfGen;
 	}
 
-	protected Individual[] getBestIndsFromGroupsOfGen() {
+	public Individual[] getBestIndsFromGroupsOfGen() {
 		return bestIndsFromGroupsOfGen;
 	}
 
-	protected Individual[] getWorstIndsFromGroupsOfGen() {
+	public Individual[] getWorstIndsFromGroupsOfGen() {
 		return worstIndsFromGroupsOfGen;
 	}
 
-	protected MLSSubpopulation getBestGroupOfGen() {
+	public MLSSubpopulation getBestGroupOfGen() {
 		return bestGroupOfGen;
 	}
 
-	protected int getBestGroupIndexOfGen() {
+	public int getBestGroupIndexOfGen() {
 		return bestGroupIndexOfGen;
 	}
 
-	protected MLSSubpopulation getWorstGroupOfGen() {
+	public MLSSubpopulation getWorstGroupOfGen() {
 		return worstGroupOfGen;
 	}
 
-	protected int getWorstGroupIndexofGen() {
+	public int getWorstGroupIndexofGen() {
 		return worstGroupIndexOfGen;
 	}
 
 	// Getters associated with the best individual and group statistics for the entire run.
 
-	protected Individual getBestIndividualOfRun() {
+	public Individual getBestIndividualOfRun() {
 		return bestIndOfRun;
 	}
 
-	protected Individual[] getBestIndsFromGroupsOfRun() {
+	public Individual[] getBestIndsFromGroupsOfRun() {
 		return bestIndsFromGroupsOfRun;
 	}
 
-	protected MLSSubpopulation getBestGroupOfRun() {
+	public MLSSubpopulation getBestGroupOfRun() {
 		return bestGroupOfRun;
 	}
 
-	protected int getBestGroupIndexOfRun() {
+	public int getBestGroupIndexOfRun() {
 		return bestGroupIndexOfRun;
 	}
 
@@ -165,14 +165,15 @@ public class MLSStatistics extends Statistics {
 		worstIndsFromGroupsOfGen = new Individual[state.population.subpops.length];
 
 		// Reset the best and worst individuals and groups of current generation.
-		bestIndOfGen = null;
-		worstIndOfGen = null;
-
-		bestGroupOfGen = null;
-		worstGroupOfGen = null;
-
-		bestGroupIndexOfGen = -1;
-		worstGroupIndexOfGen = -1;
+		// TODO not sure if I need this part.
+//		bestIndOfGen = null;
+//		worstIndOfGen = null;
+//
+//		bestGroupOfGen = null;
+//		worstGroupOfGen = null;
+//
+//		bestGroupIndexOfGen = -1;
+//		worstGroupIndexOfGen = -1;
 	}
 
 	@Override

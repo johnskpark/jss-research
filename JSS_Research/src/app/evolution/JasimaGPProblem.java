@@ -30,6 +30,8 @@ public abstract class JasimaGPProblem extends GPProblem {
 
 	public static final String P_WORKSTATION = "workstation";
 
+	public static final String P_REFERENCE_RULE = "reference-rule";
+
 	public static final String P_ROTATE_SEED = "rotate-seed";
 
 	public static final long DEFAULT_SEED = 15;
@@ -45,7 +47,7 @@ public abstract class JasimaGPProblem extends GPProblem {
 	private IWorkStationListener workstationListener;
 
 	private PR referenceRule = new HolthausRule();
-	private List<Double> referenceStat = new ArrayList<Double>();
+	private List<Double> referenceInstStats = new ArrayList<Double>();
 
 	private boolean rotateSeed;
 
@@ -67,7 +69,7 @@ public abstract class JasimaGPProblem extends GPProblem {
 		simConfig.setSeed(simSeed);
 
 		rotateSeed = state.parameters.getBoolean(base.push(P_ROTATE_SEED), null, true);
-		
+
 		state.output.message("JasimaGPProblem rotate seed: " + rotateSeed);
 
 		// Setup the tracker.
@@ -88,7 +90,14 @@ public abstract class JasimaGPProblem extends GPProblem {
     		// Feed in the shop simulation listener to input.
             ((JasimaGPData) input).setWorkStationListener(workstationListener);
         } catch (ParamClassLoadException ex) {
-        	state.output.warning("No workstation listener provided for JasimaMultilevelProblem.");
+        	state.output.warning("No workstation listener provided for JasimaGPProblem.");
+        }
+
+        // Setup the reference rule.
+        try {
+        	referenceRule = (PR) state.parameters.getInstanceForParameterEq(base.push(P_REFERENCE_RULE), null, PR.class);
+        } catch (ParamClassLoadException ex) {
+        	state.output.warning("No reference rule provided for JasimaGPProblem.");
         }
 	}
 
@@ -134,20 +143,29 @@ public abstract class JasimaGPProblem extends GPProblem {
 		return workstationListener;
 	}
 
+	protected boolean hasReferenceRule() {
+		return referenceRule != null;
+	}
+
 	protected PR getReferenceRule() {
 		return referenceRule;
 	}
 
 	protected List<Double> getReferenceStat() {
-		return referenceStat;
+		if (referenceRule == null) {
+			throw new RuntimeException("getReferenceStat(): Reference rule is not initialised.");
+		}
+
+		return referenceInstStats;
 	}
 
 	protected void evaluateReference() {
-		if (referenceStat.size() != 0) {
+		if (!hasReferenceRule()) {
+			throw new RuntimeException("evaluateReference(): Reference rule is not initialised.");
+		}
+		if (referenceInstStats.size() != 0) {
 			throw new RuntimeException("The reference rule has been previously evaluated. Please clear the statistics for the reference rule beforehand.");
 		}
-
-		referenceStat.add(0.0);
 
 		for (int expIndex = 0; expIndex < getSimConfig().getNumConfigs(); expIndex++) {
 			DynamicShopExperiment experiment = ExperimentGenerator.getExperiment(simConfig,
@@ -157,15 +175,14 @@ public abstract class JasimaGPProblem extends GPProblem {
 			experiment.runExperiment();
 
 			SummaryStat stat = (SummaryStat) experiment.getResults().get("weightedTardMean");
-			referenceStat.add(stat.sum());
-			referenceStat.set(0, referenceStat.get(0) + stat.sum());
+			referenceInstStats.add(stat.sum());
 		}
 
 		resetSimSeed();
 	}
 
 	protected void clearReference() {
-		referenceStat.clear();
+		referenceInstStats.clear();
 	}
 
 	protected DynamicShopExperiment getExperiment(final EvolutionState state,

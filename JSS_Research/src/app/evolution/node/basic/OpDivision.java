@@ -24,6 +24,7 @@ public class OpDivision extends SingleLineGPNode {
 
 	private static final long serialVersionUID = 2589591919537774922L;
 	private static final NodeDefinition NODE_DEFINITION = NodeDefinition.OP_DIVISION;
+	private static final double MINIMUM_THRESHOLD_FROM_ZERO = 0.000001;
 
 	@Override
 	public String toString() {
@@ -50,7 +51,7 @@ public class OpDivision extends SingleLineGPNode {
 		children[1].eval(state, thread, input, stack, individual, problem);
 		double priority2 = data.getPriority();
 
-		if (priority2 == 0) {
+		if (Math.abs(priority2) < MINIMUM_THRESHOLD_FROM_ZERO) {
 			data.setPriority(1.0);
 		} else {
 			data.setPriority(priority1 / priority2);
