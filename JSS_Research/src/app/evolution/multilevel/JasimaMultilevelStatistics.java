@@ -153,7 +153,7 @@ public class JasimaMultilevelStatistics extends MLSStatistics implements IJasima
 
 		// Print out a summary of the individual's fitnesses.
 		if (doGeneration()) {
-			state.output.println("Best/Avg/Worst Individual Fitness: " + arrayFormat.formatData(bestFitness, worstFitness, avgFitness), statisticsLog);
+			state.output.println("Best/Avg/Worst Individual Fitness: " + arrayFormat.formatData(bestFitness, avgFitness, worstFitness), statisticsLog);
 		}
 	}
 
@@ -181,7 +181,7 @@ public class JasimaMultilevelStatistics extends MLSStatistics implements IJasima
 
 		// Print out a summary of the group's fitnesses.
 		if (doGeneration()) {
-			state.output.println("Best/Avg/Worst Group Fitness: " + arrayFormat.formatData(bestFitness, worstFitness, avgFitness), statisticsLog);
+			state.output.println("Best/Avg/Worst Group Fitness: " + arrayFormat.formatData(bestFitness, avgFitness, worstFitness), statisticsLog);
 		}
 	}
 

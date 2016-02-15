@@ -163,23 +163,22 @@ public class MLSStatistics extends Statistics {
 
 		bestIndsFromGroupsOfGen = new Individual[state.population.subpops.length];
 		worstIndsFromGroupsOfGen = new Individual[state.population.subpops.length];
-
-		// Reset the best and worst individuals and groups of current generation.
-		// TODO not sure if I need this part.
-//		bestIndOfGen = null;
-//		worstIndOfGen = null;
-//
-//		bestGroupOfGen = null;
-//		worstGroupOfGen = null;
-//
-//		bestGroupIndexOfGen = -1;
-//		worstGroupIndexOfGen = -1;
 	}
 
 	@Override
 	public void postEvaluationStatistics(final EvolutionState state) {
 		super.postEvaluationStatistics(state);
 
+		// Reset the best and worst individuals and groups of current generation.
+		bestIndOfGen = null;
+		worstIndOfGen = null;
+
+		bestGroupOfGen = null;
+		worstGroupOfGen = null;
+
+		bestGroupIndexOfGen = -1;
+		worstGroupIndexOfGen = -1;
+		
 		// Print the current generation.
 		if (doGeneration) {
 			state.output.println("\nGeneration: " + state.generation, statisticsLog);

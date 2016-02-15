@@ -92,6 +92,9 @@ public class HuntListener implements IWorkStationListener {
 	public void clear() {
 		completedJobs.clear();
 		startedJobs.clear();
+		
+		sumWaitTimes = 0.0;
+		numCompleted = 0;
 	}
 
 	private class OperationStartStat {
