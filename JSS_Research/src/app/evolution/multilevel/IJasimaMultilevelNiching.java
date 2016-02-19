@@ -1,7 +1,7 @@
 package app.evolution.multilevel;
 
 import app.evolution.IJasimaNiching;
-import ec.multilevel_new.MLSSubpopulation;
+import ec.multilevel.MLSSubpopulation;
 
 public interface IJasimaMultilevelNiching extends IJasimaNiching<MLSSubpopulation> {
 

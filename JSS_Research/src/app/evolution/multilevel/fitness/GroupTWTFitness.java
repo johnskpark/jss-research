@@ -8,7 +8,7 @@ import app.evolution.multilevel.IJasimaMultilevelFitnessListener;
 import app.evolution.multilevel.JasimaMultilevelGroupFitness;
 import app.evolution.multilevel.JasimaMultilevelStatistics;
 import app.stat.WeightedTardinessStat;
-import ec.multilevel_new.MLSSubpopulation;
+import ec.multilevel.MLSSubpopulation;
 
 /**
  * Fitness calculator for a group of individuals in JasimaMultilevelProblem.

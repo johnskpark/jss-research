@@ -7,8 +7,8 @@ import app.util.ArrayFormatter;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.gp.koza.KozaFitness;
-import ec.multilevel_new.MLSStatistics;
-import ec.multilevel_new.MLSSubpopulation;
+import ec.multilevel.MLSStatistics;
+import ec.multilevel.MLSSubpopulation;
 import ec.util.Parameter;
 import jasima.core.statistics.SummaryStat;
 

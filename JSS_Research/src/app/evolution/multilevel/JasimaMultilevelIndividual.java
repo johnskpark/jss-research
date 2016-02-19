@@ -5,8 +5,8 @@ import ec.EvolutionState;
 import ec.Fitness;
 import ec.Individual;
 import ec.gp.GPTree;
-import ec.multilevel_new.IMLSCoopEntity;
-import ec.multilevel_new.MLSCoopCombiner;
+import ec.multilevel.IMLSCoopEntity;
+import ec.multilevel.MLSCoopCombiner;
 
 public class JasimaMultilevelIndividual extends JasimaGPIndividual implements IMLSCoopEntity {
 

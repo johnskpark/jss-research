@@ -1,4 +1,4 @@
-package ec.multilevel_new;
+package ec.multilevel;
 
 import ec.EvolutionState;
 import ec.util.Parameter;

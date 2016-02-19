@@ -13,7 +13,7 @@ import app.tracker.distance.DistanceMeasure;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.gp.koza.KozaFitness;
-import ec.multilevel_new.MLSSubpopulation;
+import ec.multilevel.MLSSubpopulation;
 import ec.util.ParamClassLoadException;
 import ec.util.Parameter;
 

@@ -1,7 +1,7 @@
 package app.evolution.multilevel;
 
 import app.evolution.AbsJasimaFitness;
-import ec.multilevel_new.MLSSubpopulation;
+import ec.multilevel.MLSSubpopulation;
 
 /**
  * TODO javadoc.

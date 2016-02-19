@@ -1,7 +1,7 @@
-package ec.multilevel_new.breed;
+package ec.multilevel.breed;
 
 import ec.EvolutionState;
-import ec.multilevel_new.MLSGroupBreedingPipeline;
+import ec.multilevel.MLSGroupBreedingPipeline;
 import ec.util.Parameter;
 
 public class GroupCrossoverPipeline extends MLSGroupBreedingPipeline {

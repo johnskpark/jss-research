@@ -1,10 +1,10 @@
-package ec.multilevel_new.breed;
+package ec.multilevel.breed;
 
 import ec.EvolutionState;
-import ec.multilevel_new.MLSGroupBreedingPipeline;
+import ec.multilevel.MLSGroupBreedingPipeline;
 import ec.util.Parameter;
 
-public class GroupCooperationPipeline extends MLSGroupBreedingPipeline {
+public class GroupMutationPipeline extends MLSGroupBreedingPipeline {
 
 	@Override
 	public Parameter defaultBase() {

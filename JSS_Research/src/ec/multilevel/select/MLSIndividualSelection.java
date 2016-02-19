@@ -1,11 +1,11 @@
-package ec.multilevel_new.select;
+package ec.multilevel.select;
 
 import ec.EvolutionState;
 import ec.Individual;
 import ec.SelectionMethod;
-import ec.multilevel_new.MLSCoopPopulation;
-import ec.multilevel_new.MLSEvolutionState;
-import ec.multilevel_new.MLSSubpopulation;
+import ec.multilevel.MLSCoopPopulation;
+import ec.multilevel.MLSEvolutionState;
+import ec.multilevel.MLSSubpopulation;
 import ec.select.SelectDefaults;
 import ec.util.MersenneTwisterFast;
 import ec.util.Parameter;

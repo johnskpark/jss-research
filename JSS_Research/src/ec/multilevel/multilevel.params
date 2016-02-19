@@ -16,7 +16,7 @@ parent.0 = ../ec.params
 # ==============================
 
 # Use the multilevel selection state for evolution
-state = ec.multilevel_new.MLSEvolutionState
+state = ec.multilevel.MLSEvolutionState
 
 
 
@@ -33,7 +33,7 @@ finish = ec.simple.SimpleFinisher
 exch = ec.simple.SimpleExchanger
 
 # We're using standard breeding -- no cross-population breeding
-breed =	ec.multilevel_new.MLSBreeder
+breed =	ec.multilevel.MLSBreeder
 breed.cooperation-prob = 0.45
 breed.crossover-prob = 0.45
 breed.mutation-prob = 0.1
@@ -41,10 +41,10 @@ breed.num-breed = 20
 breed.num-retain = 10
 
 # We're using standard evaluation -- no coevolution
-eval = ec.multilevel_new.MLSEvaluator
+eval = ec.multilevel.MLSEvaluator
 
 # We're using multilevel selection statistics
-stat = ec.multilevel_new.MLSStatistics
+stat = ec.multilevel.MLSStatistics
 
 # run for 51 generations, quit prematurely if I find something ideal
 generations = 51
@@ -63,7 +63,7 @@ pop = ec.Population
 
 # No multiple populations
 pop.subpops = 1
-pop.subpop.0 = ec.multilevel_new.MLSSubpopulation
+pop.subpop.0 = ec.multilevel.MLSSubpopulation
 
 
 # ec.Subpopulation

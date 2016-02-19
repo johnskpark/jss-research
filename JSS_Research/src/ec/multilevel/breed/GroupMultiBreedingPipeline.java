@@ -1,10 +1,10 @@
-package ec.multilevel_new.breed;
+package ec.multilevel.breed;
 
 import ec.EvolutionState;
-import ec.multilevel_new.MLSDefaults;
-import ec.multilevel_new.MLSGroupBreedingPipeline;
-import ec.multilevel_new.MLSGroupBreedingSource;
-import ec.multilevel_new.MLSGroupSelection;
+import ec.multilevel.MLSDefaults;
+import ec.multilevel.MLSGroupBreedingPipeline;
+import ec.multilevel.MLSGroupBreedingSource;
+import ec.multilevel.MLSGroupSelection;
 import ec.util.Parameter;
 
 public class GroupMultiBreedingPipeline extends MLSGroupBreedingPipeline {
