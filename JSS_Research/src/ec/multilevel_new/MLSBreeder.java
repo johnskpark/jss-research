@@ -14,6 +14,7 @@ import ec.Individual;
 import ec.Initializer;
 import ec.Population;
 import ec.Subpopulation;
+import ec.gp.koza.KozaFitness;
 import ec.util.MersenneTwisterFast;
 import ec.util.Pair;
 import ec.util.Parameter;
@@ -28,9 +29,7 @@ import ec.util.ThreadPool;
  * @author parkjohn
  *
  */
-
-// TODO The best group is not being retained... What the fuck.
-// So everything's fine up to the load Elite part, but the next generation shit just fucks up completely.
+// TODO The part where the individual's are being breed may be screwed up.
 public class MLSBreeder extends Breeder {
 
 	private static final long serialVersionUID = -6914152113435773281L;
@@ -44,7 +43,8 @@ public class MLSBreeder extends Breeder {
 	public static final String P_NUM_GROUP_BREED = "num-breed";
 	public static final String P_NUM_GROUP_RETAIN = "num-retain";
 
-	public static final String P_COOPERATION_PROB = "cooperation-prob"; // FIXME remove these parameters when I make breeding more generic.
+	// FIXME remove these parameters when I make breeding more generic.
+	public static final String P_COOPERATION_PROB = "cooperation-prob";
 	public static final String P_CROSSOVER_PROB = "crossover-prob";
 	public static final String P_MUTATION_PROB = "mutation-prob";
 
@@ -696,6 +696,7 @@ public class MLSBreeder extends Breeder {
 			final int numInds,
 			final int from,
 			final int threadnum) {
+		// TODO there's probably a bug here with the code when generating the individual.
 		BreedingPipeline bp = null;
 		if (clonePipelineAndPopulation) {
 			bp = (BreedingPipeline) state.population.subpops[0].species.pipe_prototype.clone();
@@ -711,16 +712,33 @@ public class MLSBreeder extends Breeder {
 		int index = from;
 		int upperBound = from + numInds;
 		while (index < upperBound) {
-			index += bp.produce(1,
+			// Get the number of individuals bred.
+			int numBreed = bp.produce(1,
 					upperBound-index,
 					index,
 					0,
 					coopPopulation.getIndividuals(),
 					state,
 					threadnum);
-			if (index > upperBound) {
+
+			// TODO print out the index of the newly generated individuals if they outperform the best individual found so far.
+			Individual bestInd = ((MLSStatistics) state.statistics).getBestIndividualOfGen();
+
+			Individual[] inds = coopPopulation.getIndividuals();
+			for (int i = index; i < index + numBreed; i++) {
+				if (inds[i].fitness.betterThan(bestInd.fitness)) {
+					KozaFitness fit1 = (KozaFitness) inds[i].fitness;
+					KozaFitness fit2 = (KozaFitness) bestInd.fitness;
+					System.out.printf("Newly generated ind %d fitness (%f) is better than best ind's fitness (%f) found so far.\n", fit1.standardizedFitness(), fit2.standardizedFitness());
+				}
+			}
+
+			if (index + numBreed > upperBound) {
 				state.output.fatal("A breeding pipeline overwrote the space of pipeline in subpopulation 0.  You need to check your breeding pipeline code (in produce() ).");
 			}
+
+			// Increment the index.
+			index += numBreed;
 		}
 
 		bp.finishProducing(state, 0, threadnum);
