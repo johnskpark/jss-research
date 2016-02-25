@@ -32,11 +32,10 @@ import org.xml.sax.SAXException;
 import app.IWorkStationListener;
 import app.node.INode;
 import app.node.NodeData;
-import app.simConfig.AbsSimConfig;
+import app.simConfig.DynamicSimConfig;
 import app.simConfig.ExperimentGenerator;
 import app.util.RuleParser;
 import jasima.core.experiment.Experiment;
-import jasima.core.statistics.SummaryStat;
 import jasima.shopSim.models.dynamicShop.DynamicShopExperiment;
 
 public class JasimaEvalProblem {
@@ -68,7 +67,7 @@ public class JasimaEvalProblem {
 
 	private Map<String, List<AbsEvalPriorityRule>> solversMap = new HashMap<String, List<AbsEvalPriorityRule>>();
 
-	private AbsSimConfig simConfig;
+	private DynamicSimConfig simConfig;
 	private long seed = DEFAULT_SEED;
 
 	private IJasimaEvalFitness fitness;
@@ -221,7 +220,7 @@ public class JasimaEvalProblem {
 				.item(0)
 				.getTextContent());
 
-		simConfig = (AbsSimConfig) datasetClass.newInstance();
+		simConfig = (DynamicSimConfig) datasetClass.newInstance();
 
 		NodeList datasetSeedNodeList = datasetBase.getElementsByTagName(XML_DATASET_SEED);
 		if (datasetSeedNodeList.getLength() != 0) {
@@ -300,8 +299,6 @@ public class JasimaEvalProblem {
 				output.printf("%s,%d", ruleFilename, solver.getSeed());
 				simConfig.setSeed(seed);
 
-				SummaryStat stat = new SummaryStat();
-
 				for (int i = 0; i < simConfig.getNumConfigs(); i++) {
 					Experiment experiment = getExperiment(solver, i);
 					experiment.runExperiment();
@@ -309,7 +306,6 @@ public class JasimaEvalProblem {
 					double result = fitness.getRelevantResult(experiment.getResults());
 
 					output.printf(",%f", result);
-					stat.value(result);
 
 					workstationListener.clear();
 				}

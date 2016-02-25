@@ -4,7 +4,7 @@ import jasima.core.random.continuous.DblStream;
 
 import java.util.Random;
 
-public abstract class AbsSimConfig {
+public abstract class DynamicSimConfig {
 
 	private long seed;
 

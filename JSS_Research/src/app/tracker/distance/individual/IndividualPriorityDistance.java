@@ -4,7 +4,7 @@ import jasima.shopSim.core.PrioRuleTarget;
 
 import java.util.List;
 
-import app.simConfig.AbsSimConfig;
+import app.simConfig.DynamicSimConfig;
 import app.tracker.JasimaEvolveDecision;
 import app.tracker.JasimaEvolveExperiment;
 import app.tracker.JasimaPriorityStat;
@@ -18,7 +18,7 @@ public class IndividualPriorityDistance implements DistanceMeasure {
 	@Override
 	public double[][] getDistances(final EvolutionState state,
 			final JasimaEvolveExperiment experiment,
-			final AbsSimConfig simConfig,
+			final DynamicSimConfig simConfig,
 			final Individual[] inds) {
 		double[][] distances = new double[inds.length][inds.length];
 

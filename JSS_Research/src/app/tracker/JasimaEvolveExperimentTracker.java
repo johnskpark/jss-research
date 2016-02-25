@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import app.evolution.IJasimaGPPriorityRule;
-import app.simConfig.AbsSimConfig;
+import app.simConfig.DynamicSimConfig;
 import ec.Individual;
 
 // TODO right, the tracker needs to be able to do the following:
@@ -24,7 +24,7 @@ public class JasimaEvolveExperimentTracker {
 	public static final int NOT_SET = -1;
 
 	private IJasimaGPPriorityRule priorityRule;
-	private AbsSimConfig simConfig;
+	private DynamicSimConfig simConfig;
 
 	private List<JasimaEvolveExperiment> experimentDecisions;
 
@@ -41,7 +41,7 @@ public class JasimaEvolveExperimentTracker {
 		return priorityRule;
 	}
 
-	public AbsSimConfig getSimConfig() {
+	public DynamicSimConfig getSimConfig() {
 		return simConfig;
 	}
 
@@ -51,7 +51,7 @@ public class JasimaEvolveExperimentTracker {
 		this.priorityRule = priorityRule;
 	}
 
-	public void setSimConfig(AbsSimConfig simConfig) {
+	public void setSimConfig(DynamicSimConfig simConfig) {
 		this.simConfig = simConfig;
 	}
 

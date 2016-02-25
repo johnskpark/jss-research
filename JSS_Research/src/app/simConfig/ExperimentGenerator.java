@@ -8,7 +8,7 @@ import jasima.shopSim.util.BasicJobStatCollector;
 public class ExperimentGenerator {
 
 	@SuppressWarnings("unchecked")
-	public static final DynamicShopExperiment getExperiment(final AbsSimConfig simConfig, final PR rule, final int index) {
+	public static final DynamicShopExperiment getExperiment(final DynamicSimConfig simConfig, final PR rule, final int index) {
 		DynamicShopExperiment experiment = new DynamicShopExperiment();
 
 		experiment.setInitialSeed(simConfig.getLongValue());

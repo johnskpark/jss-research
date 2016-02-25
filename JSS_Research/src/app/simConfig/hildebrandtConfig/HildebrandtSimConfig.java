@@ -1,9 +1,9 @@
 package app.simConfig.hildebrandtConfig;
 
 import jasima.core.random.continuous.DblStream;
-import app.simConfig.AbsSimConfig;
+import app.simConfig.DynamicSimConfig;
 
-public class HildebrandtSimConfig extends AbsSimConfig {
+public class HildebrandtSimConfig extends DynamicSimConfig {
 
 	@Override
 	public int getNumMachines(int index) {

@@ -11,7 +11,7 @@ import app.evolution.pickardt.presetRules.PRCR;
 import app.evolution.pickardt.presetRules.PRFCFS;
 import app.node.CompositePR;
 import app.node.NodeData;
-import app.simConfig.AbsSimConfig;
+import app.simConfig.DynamicSimConfig;
 import app.util.RuleParser;
 import ec.EvolutionState;
 import ec.Individual;
@@ -87,7 +87,7 @@ public class JasimaPickardtProblem extends Problem implements SimpleProblemForm 
 
 	private IJasimaFitness<JasimaVectorIndividual> fitness;
 
-	private AbsSimConfig simConfig;
+	private DynamicSimConfig simConfig;
 	private long simSeed;
 
 	private IWorkStationListener workstationListener;
@@ -126,7 +126,7 @@ public class JasimaPickardtProblem extends Problem implements SimpleProblemForm 
 		}
 
 		// Setup the simulator configurations.
-		simConfig = (AbsSimConfig) state.parameters.getInstanceForParameterEq(base.push(P_SIMULATOR), null, AbsSimConfig.class);
+		simConfig = (DynamicSimConfig) state.parameters.getInstanceForParameterEq(base.push(P_SIMULATOR), null, DynamicSimConfig.class);
 		setupSimulator(state, base.push(P_SIMULATOR));
 
 		// Setup the fitness.

@@ -5,7 +5,7 @@ import java.util.List;
 
 import app.IWorkStationListener;
 import app.priorityRules.HolthausRule;
-import app.simConfig.AbsSimConfig;
+import app.simConfig.DynamicSimConfig;
 import app.simConfig.ExperimentGenerator;
 import app.tracker.JasimaEvolveExperimentTracker;
 import ec.EvolutionState;
@@ -38,7 +38,7 @@ public abstract class JasimaGPProblem extends GPProblem {
 
 	private boolean shouldSetContext;
 
-	private AbsSimConfig simConfig;
+	private DynamicSimConfig simConfig;
 	private long simSeed;
 	private MersenneTwisterFast rand;
 
@@ -62,7 +62,7 @@ public abstract class JasimaGPProblem extends GPProblem {
 		input.setup(state, base.push(P_DATA));
 
 		// Setup the simulator configurations.
-		simConfig = (AbsSimConfig) state.parameters.getInstanceForParameterEq(base.push(P_SIMULATOR), null, AbsSimConfig.class);
+		simConfig = (DynamicSimConfig) state.parameters.getInstanceForParameterEq(base.push(P_SIMULATOR), null, DynamicSimConfig.class);
 		simSeed = state.parameters.getLongWithDefault(base.push(P_SIMULATOR).push(P_SEED), null, DEFAULT_SEED);
 		rand = new MersenneTwisterFast(simSeed);
 
@@ -105,7 +105,7 @@ public abstract class JasimaGPProblem extends GPProblem {
 		return shouldSetContext;
 	}
 
-	public AbsSimConfig getSimConfig() {
+	public DynamicSimConfig getSimConfig() {
 		return simConfig;
 	}
 

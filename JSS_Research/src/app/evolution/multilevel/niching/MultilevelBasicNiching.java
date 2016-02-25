@@ -6,7 +6,7 @@ import java.util.List;
 import app.evolution.multilevel.IJasimaMultilevelFitnessListener;
 import app.evolution.multilevel.IJasimaMultilevelNiching;
 import app.evolution.multilevel.JasimaMultilevelStatistics;
-import app.simConfig.AbsSimConfig;
+import app.simConfig.DynamicSimConfig;
 import app.tracker.JasimaEvolveExperiment;
 import app.tracker.JasimaEvolveExperimentTracker;
 import app.tracker.distance.DistanceMeasure;
@@ -57,7 +57,7 @@ public class MultilevelBasicNiching implements IJasimaMultilevelNiching {
 			final JasimaEvolveExperimentTracker tracker,
 			final MLSSubpopulation group) {
 		List<JasimaEvolveExperiment> experiments = tracker.getResults();
-		AbsSimConfig simConfig = tracker.getSimConfig();
+		DynamicSimConfig simConfig = tracker.getSimConfig();
 
 		double[] adjustment = new double[group.individuals.length];
 

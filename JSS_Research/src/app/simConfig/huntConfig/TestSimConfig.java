@@ -1,9 +1,9 @@
 package app.simConfig.huntConfig;
 
 import jasima.core.random.continuous.DblStream;
-import app.simConfig.AbsSimConfig;
+import app.simConfig.DynamicSimConfig;
 
-public class TestSimConfig extends AbsSimConfig {
+public class TestSimConfig extends DynamicSimConfig {
 
 	private static final int[] MIN_OP_PROC = new int[]{1, 1, 1, 1};
 	private static final int[] MAX_OP_PROC = new int[]{49, 99, 49, 99};

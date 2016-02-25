@@ -7,7 +7,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import app.simConfig.AbsSimConfig;
+import app.simConfig.DynamicSimConfig;
 import app.simConfig.ExperimentGenerator;
 import app.simConfig.huntConfig.EightOpSimConfig;
 import app.simConfig.huntConfig.FourOpSimConfig;
@@ -25,7 +25,7 @@ public class SimTest {
 
 	private static final int REPEAT = 500;
 
-	private AbsSimConfig simConfig;
+	private DynamicSimConfig simConfig;
 	private PR rule;
 
 	private List<Double> dueDates;

@@ -1,16 +1,16 @@
 package app.simConfig.huntConfig;
 
 import jasima.core.random.continuous.DblStream;
-import app.simConfig.AbsSimConfig;
+import app.simConfig.DynamicSimConfig;
 
 // TODO This is broken.
-public class TrainSimConfig extends AbsSimConfig {
+public class TrainSimConfig extends DynamicSimConfig {
 
 	private static final int NUM_IGNORE = 500;
 	private static final int STOP_AFTER_NUM_JOBS = 2500;
 
-	private AbsSimConfig fourOp = new FourOpSimConfig();
-	private AbsSimConfig eightOp = new EightOpSimConfig();
+	private DynamicSimConfig fourOp = new FourOpSimConfig();
+	private DynamicSimConfig eightOp = new EightOpSimConfig();
 
 	@Override
 	public void setSeed(long s) {
