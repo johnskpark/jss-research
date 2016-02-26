@@ -14,7 +14,6 @@ import ec.Individual;
 import ec.Initializer;
 import ec.Population;
 import ec.Subpopulation;
-import ec.gp.koza.KozaFitness;
 import ec.util.MersenneTwisterFast;
 import ec.util.Pair;
 import ec.util.Parameter;
@@ -707,9 +706,6 @@ public class MLSBreeder extends Breeder {
 			state.output.fatal("The Breeding Pipeline of subpopulation 0 does not produce individuals of the expected species " + newPop.subpops[0].species.getClass().getName() + " or fitness " + newPop.subpops[0].species.f_prototype );
 		}
 
-		MLSEvaluator evaluator = (MLSEvaluator) state.evaluator;
-		MLSSubpopulation subpop = (MLSSubpopulation) state.population.subpops[0];
-
 		int index = from;
 		int upperBound = from + numInds;
 		while (index < upperBound) {
@@ -725,7 +721,10 @@ public class MLSBreeder extends Breeder {
 			// Evaluate the newly generated individuals.
 			Individual[] inds = coopPopulation.getIndividuals();
 			for (int i = index; i < index + numBreed; i++) {
-				evaluator.evaluateIndividual(state, subpop, 0, inds[i]);
+				((MLSEvaluator) state.evaluator).evaluateIndividual(state,
+						(MLSSubpopulation) state.population.subpops[0],
+						0,
+						inds[i]);
 			}
 
 			if (index + numBreed > upperBound) {
