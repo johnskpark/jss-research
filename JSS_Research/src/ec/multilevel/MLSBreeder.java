@@ -30,6 +30,8 @@ import ec.util.ThreadPool;
  *
  */
 // TODO The part where the individual's are being breed may be screwed up.
+// TODO Also, if I'm using meta population, I should try to minimise the use of
+// coopPopulation as much as possible, even potentially remove it from the code.
 public class MLSBreeder extends Breeder {
 
 	private static final long serialVersionUID = -6914152113435773281L;
@@ -332,11 +334,19 @@ public class MLSBreeder extends Breeder {
 		int index = from;
 		int upperBound = from + numGroup;
 		while (index < upperBound) {
-			index += produceSubpop(1, upperBound - index, index, newPop, state, threadnum);
+			int numBreed = produceSubpop(1, upperBound - index, index, newPop, state, threadnum);
 
-			if (index > upperBound) {
+			MLSSubpopulation[] groups = coopPopulation.getGroups();
+			for (int i = index; i < index + numBreed; i++) {
+				((MLSEvaluator) state.evaluator).evaluateGroup(state, groups[i-1], i);
+			}
+
+			if (index + numBreed > upperBound) {
 				state.output.fatal("A breeding pipeline overwrote the space of another pipeline in the population.  You need to check your breeding pipeline code (in produce() ).");
 			}
+
+			// Increment the index.
+			index += numBreed;
 		}
 	}
 
@@ -351,11 +361,9 @@ public class MLSBreeder extends Breeder {
 		double value = state.random[threadnum].nextDouble();
 		int total = 0;
 
-		MLSCoopPopulation coopPop = ((MLSEvolutionState) state).getCoopPopulation();
-
-		if (value < groupCooperationRate || coopPop.getNumGroups() == 0) {
+		if (value < groupCooperationRate || coopPopulation.getNumGroups() == 0) {
 			total = produceSubpopCooperation(min, max, index, newPop, state, threadnum);
-		} else if (value < groupCooperationRate + groupMutationRate || coopPop.getNumGroups() == 1) {
+		} else if (value < groupCooperationRate + groupMutationRate || coopPopulation.getNumGroups() == 1) {
 			total = produceSubpopMutation(min, max, index, newPop, state, threadnum);
 		} else if (value < groupCooperationRate + groupMutationRate + groupCrossoverRate) { // Should always happen for the current code.
 			total = produceSubpopCrossover(min, max, index, newPop, state, threadnum);
@@ -394,9 +402,6 @@ public class MLSBreeder extends Breeder {
 			if (child.individuals.length == 0) {
 				state.output.fatal("Error happening in cooperation");
 			}
-
-			// Evaluate the newly generated group.
-			((MLSEvaluator) state.evaluator).evaluateGroup(state, child, index + 1);
 
 			// Add the group to the meta population and the list of entities.
 			newPop.subpops[index] = child;
@@ -501,9 +506,6 @@ public class MLSBreeder extends Breeder {
 					state.output.fatal("Error happening in crossover");
 				}
 
-				// Evaluate the child group.
-				((MLSEvaluator) state.evaluator).evaluateGroup(state, child, index + c);
-
 				// Add the group to the meta population and the list of entities.
 				newPop.subpops[index + c] = child;
 
@@ -599,9 +601,6 @@ public class MLSBreeder extends Breeder {
 				state.output.fatal("Error happening in mutation");
 			}
 
-			// Evaluate the child subpopulation.
-			((MLSEvaluator) state.evaluator).evaluateGroup(state, child, index);
-
 			// Add the group to the meta population and the list of entities.
 			newPop.subpops[index] = child;
 
@@ -696,7 +695,6 @@ public class MLSBreeder extends Breeder {
 			final int numInds,
 			final int from,
 			final int threadnum) {
-		// TODO there's probably a bug here with the code when generating the individual.
 		BreedingPipeline bp = null;
 		if (clonePipelineAndPopulation) {
 			bp = (BreedingPipeline) state.population.subpops[0].species.pipe_prototype.clone();
@@ -708,6 +706,9 @@ public class MLSBreeder extends Breeder {
 		if (!bp.produces(state, newPop, 0, threadnum)) {
 			state.output.fatal("The Breeding Pipeline of subpopulation 0 does not produce individuals of the expected species " + newPop.subpops[0].species.getClass().getName() + " or fitness " + newPop.subpops[0].species.f_prototype );
 		}
+
+		MLSEvaluator evaluator = (MLSEvaluator) state.evaluator;
+		MLSSubpopulation subpop = (MLSSubpopulation) state.population.subpops[0];
 
 		int index = from;
 		int upperBound = from + numInds;
@@ -721,16 +722,10 @@ public class MLSBreeder extends Breeder {
 					state,
 					threadnum);
 
-			// TODO print out the index of the newly generated individuals if they outperform the best individual found so far.
-			Individual bestInd = ((MLSStatistics) state.statistics).getBestIndividualOfGen();
-
+			// Evaluate the newly generated individuals.
 			Individual[] inds = coopPopulation.getIndividuals();
 			for (int i = index; i < index + numBreed; i++) {
-				if (inds[i].fitness.betterThan(bestInd.fitness)) {
-					KozaFitness fit1 = (KozaFitness) inds[i].fitness;
-					KozaFitness fit2 = (KozaFitness) bestInd.fitness;
-					System.out.printf("Newly generated ind %d fitness (%f) is better than best ind's fitness (%f) found so far.\n", fit1.standardizedFitness(), fit2.standardizedFitness());
-				}
+				evaluator.evaluateIndividual(state, subpop, 0, inds[i]);
 			}
 
 			if (index + numBreed > upperBound) {
