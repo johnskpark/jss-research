@@ -122,7 +122,6 @@ public class MLSIndividualSelection extends SelectionMethod {
 		Individual[] unremovedInds = coopPop.getUnremovedIndividuals(group);
 
 		if (unremovedInds.length == 0) {
-			state.output.warning("The group " + groupIndex + " consists of individuals removed from the population. No individual selected.");
 			return NOT_SELECTED;
 		}
 
