@@ -10,6 +10,7 @@ import java.util.Set;
 import ec.Breeder;
 import ec.BreedingPipeline;
 import ec.EvolutionState;
+import ec.Fitness;
 import ec.Individual;
 import ec.Initializer;
 import ec.Population;
@@ -706,6 +707,8 @@ public class MLSBreeder extends Breeder {
 			state.output.fatal("The Breeding Pipeline of subpopulation 0 does not produce individuals of the expected species " + newPop.subpops[0].species.getClass().getName() + " or fitness " + newPop.subpops[0].species.f_prototype );
 		}
 
+		MLSSubpopulation subpop = (MLSSubpopulation) newPop.subpops[0];
+
 		int index = from;
 		int upperBound = from + numInds;
 		while (index < upperBound) {
@@ -714,17 +717,16 @@ public class MLSBreeder extends Breeder {
 					upperBound-index,
 					index,
 					0,
-					coopPopulation.getIndividuals(),
+					subpop.individuals,
 					state,
 					threadnum);
 
 			// Evaluate the newly generated individuals.
-			Individual[] inds = coopPopulation.getIndividuals();
+			Individual[] inds = subpop.individuals;
 			for (int i = index; i < index + numBreed; i++) {
-				((MLSEvaluator) state.evaluator).evaluateIndividual(state,
-						(MLSSubpopulation) state.population.subpops[0],
-						0,
-						inds[i]);
+				((MLSEvaluator) state.evaluator).evaluateIndividual(state, subpop, 0, inds[i]);
+
+				coopPopulation.addIndividual(inds[i]);
 			}
 
 			if (index + numBreed > upperBound) {
@@ -920,9 +922,12 @@ public class MLSBreeder extends Breeder {
 	// Compares the fitnesses of the subpopulations.
 	private class GroupComparator implements Comparator<Pair<Subpopulation, Integer>> {
 		public int compare(Pair<Subpopulation, Integer> s1, Pair<Subpopulation, Integer> s2) {
-			if (((MLSSubpopulation) s1.i1).getFitness().betterThan(((MLSSubpopulation) s2.i1).getFitness())) {
+			Fitness fit1 = ((MLSSubpopulation) s1.i1).getFitness();
+			Fitness fit2 = ((MLSSubpopulation) s2.i1).getFitness();
+
+			if (fit1.betterThan(fit2)) {
 				return -1;
-			} else if (((MLSSubpopulation) s2.i1).getFitness().betterThan(((MLSSubpopulation) s1.i1).getFitness())) {
+			} else if (fit2.betterThan(fit1)) {
 				return 1;
 			} else {
 				return 0;
@@ -933,9 +938,12 @@ public class MLSBreeder extends Breeder {
 	// Compares the fitnesses of the individuals.
 	private class IndividualComparator implements Comparator<Pair<Individual, Integer>> {
 		public int compare(Pair<Individual, Integer> d1, Pair<Individual, Integer> d2) {
-			if (d1.i1.fitness.betterThan(d2.i1.fitness)) {
+			Fitness fit1 = d1.i1.fitness;
+			Fitness fit2 = d2.i1.fitness;
+
+			if (fit1.betterThan(fit2)) {
 				return -1;
-			} else if (d1.i1.fitness.betterThan(d2.i1.fitness)) {
+			} else if (fit2.betterThan(fit1)) {
 				return 1;
 			} else {
 				return 0;

@@ -104,7 +104,6 @@ public class MLSIndividualSelection extends SelectionMethod {
 		int groupIndex = getGroup(state, thread);
 
 		return getGroupedIndividual(state, thread, groupIndex);
-
 	}
 
 	// Select an individual from the specified group.

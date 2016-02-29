@@ -6,6 +6,7 @@ import java.io.IOException;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.Statistics;
+import ec.gp.koza.KozaFitness;
 import ec.util.Output;
 import ec.util.Parameter;
 
@@ -178,7 +179,7 @@ public class MLSStatistics extends Statistics {
 
 		bestGroupIndexOfGen = -1;
 		worstGroupIndexOfGen = -1;
-		
+
 		// Print the current generation.
 		if (doGeneration) {
 			state.output.println("\nGeneration: " + state.generation, statisticsLog);
