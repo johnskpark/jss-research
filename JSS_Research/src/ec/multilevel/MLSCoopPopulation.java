@@ -4,39 +4,35 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ec.Individual;
+import ec.Subpopulation;
 
 public class MLSCoopPopulation {
 
-	private IMLSCoopEntity[] allEntities;
-	private MLSSubpopulation[] groups;
-	private Individual[] individuals;
+	// TODO convert all of this into lists.
+	private List<IMLSCoopEntity> allEntities;
+	private List<MLSSubpopulation> groups;
+	private List<Individual> individuals;
 
 	// Lists have to be used here instead of a set. This is due to the fact that
 	// an individual's hashcode depends on its memory address, which is not consistent.
+
+	// Determines whether the individual is part of a group in the population or not.
 	private List<Individual> groupedIndividuals;
 	private List<Individual> ungroupedIndividuals;
-
-	private int numGroups;
-	private int numIndividuals;
 
 	private int numMetaGroups;
 	private int numMetaInds;
 
 	public MLSCoopPopulation(int numMetaGroups, int numMetaInds) {
-		allEntities = new IMLSCoopEntity[numMetaGroups + numMetaInds];
-		groups = new MLSSubpopulation[numMetaGroups];
-		individuals = new Individual[numMetaInds];
-
-		groupedIndividuals = new ArrayList<Individual>();
-		ungroupedIndividuals = new ArrayList<Individual>();
-
 		this.numMetaGroups = numMetaGroups;
 		this.numMetaInds = numMetaInds;
+
+		clear();
 	}
 
 	public void addGroup(MLSSubpopulation group) {
-		allEntities[numGroups + numIndividuals] = group;
-		groups[numGroups++] = group;
+		allEntities.add(group);
+		groups.add(group);
 
 		// Update the grouped and ungrouped individuals list.
 		for (Individual ind : group.individuals) {
@@ -50,8 +46,8 @@ public class MLSCoopPopulation {
 			throw new IllegalArgumentException("Individual must implement IMLSCoopEntity. Individual's class: " + ind.getClass());
 		}
 
-		allEntities[numGroups + numIndividuals] = (IMLSCoopEntity) ind;
-		individuals[numIndividuals++] = ind;
+		allEntities.add((IMLSCoopEntity) ind);
+		individuals.add(ind);
 
 		// Update the ungrouped individuals list, if the individual is not already grouped.
 		if (!groupedIndividuals.contains(ind)) {
@@ -60,27 +56,27 @@ public class MLSCoopPopulation {
 	}
 
 	public int getNumEntities() {
-		return numGroups + numIndividuals;
+		return groups.size() + individuals.size();
 	}
 
 	public int getNumGroups() {
-		return numGroups;
+		return groups.size();
 	}
 
 	public int getNumIndividuals() {
-		return numIndividuals;
+		return individuals.size();
 	}
 
-	public IMLSCoopEntity[] getAllEntities() {
-		return allEntities;
+	public IMLSCoopEntity getEntity(int index) {
+		return allEntities.get(index);
 	}
 
-	public MLSSubpopulation[] getGroups() {
-		return groups;
+	public MLSSubpopulation getGroup(int index) {
+		return groups.get(index);
 	}
 
-	public Individual[] getIndividuals() {
-		return individuals;
+	public Individual getIndividual(int index) {
+		return individuals.get(index);
 	}
 
 	public Individual[] getUngroupedIndividuals() {
@@ -91,10 +87,27 @@ public class MLSCoopPopulation {
 		return result;
 	}
 
+	public Individual[] getUnremovedIndividuals(Subpopulation subpop) {
+		List<Individual> unremovedIndividuals = new ArrayList<Individual>();
+		for (Individual ind : subpop.individuals) {
+			if (individuals.contains(ind)) {
+				unremovedIndividuals.add(ind);
+			}
+		}
+
+		Individual[] result = new Individual[unremovedIndividuals.size()];
+		unremovedIndividuals.toArray(result);
+
+		return result;
+	}
+
 	public void clear() {
-		allEntities = new IMLSCoopEntity[numMetaGroups + numMetaInds];
-		groups = new MLSSubpopulation[numMetaGroups];
-		individuals = new Individual[numMetaInds];
+		allEntities = new ArrayList<IMLSCoopEntity>(numMetaGroups + numMetaInds);
+		groups = new ArrayList<MLSSubpopulation>(numMetaGroups);
+		individuals = new ArrayList<Individual>(numMetaInds);
+
+		groupedIndividuals = new ArrayList<Individual>();
+		ungroupedIndividuals = new ArrayList<Individual>();
 	}
 
 }

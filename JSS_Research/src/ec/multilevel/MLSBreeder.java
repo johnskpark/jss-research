@@ -336,9 +336,8 @@ public class MLSBreeder extends Breeder {
 		while (index < upperBound) {
 			int numBreed = produceSubpop(1, upperBound - index, index, newPop, state, threadnum);
 
-			MLSSubpopulation[] groups = coopPopulation.getGroups();
 			for (int i = index; i < index + numBreed; i++) {
-				((MLSEvaluator) state.evaluator).evaluateGroup(state, groups[i-1], i);
+				((MLSEvaluator) state.evaluator).evaluateGroup(state, coopPopulation.getGroup(i-1), i);
 			}
 
 			if (index + numBreed > upperBound) {
@@ -392,8 +391,8 @@ public class MLSBreeder extends Breeder {
 		while (index < n + start) {
 			int[] parentIndices = getCooperativeParentsRouletteWheel(state, threadnum);
 			IMLSCoopEntity[] parents = new IMLSCoopEntity[] {
-					coopPopulation.getAllEntities()[parentIndices[0]],
-					coopPopulation.getAllEntities()[parentIndices[1]]
+					coopPopulation.getEntity(parentIndices[0]),
+					coopPopulation.getEntity(parentIndices[1])
 			};
 
 			// Generate a child from the two cooperative entities selected.
@@ -419,7 +418,7 @@ public class MLSBreeder extends Breeder {
 
 		double[] copy = new double[length];
 		for (int i = 0; i < length; i++) {
-			copy[i] = coopPopulation.getAllEntities()[i].getFitness().fitness();
+			copy[i] = coopPopulation.getEntity(i).getFitness().fitness();
 		}
 
 		int parentIndex1 = rouletteSelect(copy, biasFactor, length, state.random[threadnum]);
@@ -447,8 +446,8 @@ public class MLSBreeder extends Breeder {
 			// Select two random groups from 0 to (start-1) to crossover based on their fitness.
 			int[] parentIndices = getCrossoverParentsRouletteWheel(state, threadnum);
 			Subpopulation[] parents = new Subpopulation[] {
-					coopPopulation.getGroups()[parentIndices[0]],
-					coopPopulation.getGroups()[parentIndices[1]]
+					coopPopulation.getGroup(parentIndices[0]),
+					coopPopulation.getGroup(parentIndices[1])
 			};
 
 			// Find the common individuals between the two groups.
@@ -523,7 +522,7 @@ public class MLSBreeder extends Breeder {
 
 		double[] copy = new double[length];
 		for (int i = 0; i < length; i++) {
-			copy[i] = coopPopulation.getGroups()[i].getFitness().fitness();
+			copy[i] = coopPopulation.getGroup(i).getFitness().fitness();
 		}
 
 		int parentIndex1 = rouletteSelect(copy, biasFactor, length, state.random[threadnum]);
@@ -532,6 +531,7 @@ public class MLSBreeder extends Breeder {
 		return new int[]{parentIndex1, parentIndex2};
 	}
 
+	// TODO I remember that the mutation operator needed to be fixed or something.
 	private int produceSubpopMutation(final int min,
 			final int max,
 			final int start,
@@ -550,7 +550,7 @@ public class MLSBreeder extends Breeder {
 		while (index < n + start) {
 			// Select a random subpopulation from 0 to (start-1) to mutate based on their fitness.
 			int parentIndex = getMutationParentRouletteWheel(state, threadnum);
-			Subpopulation parent = coopPopulation.getGroups()[parentIndex];
+			Subpopulation parent = coopPopulation.getGroup(parentIndex);
 
 			MLSSubpopulation child = (MLSSubpopulation) parent.emptyClone();
 
@@ -568,13 +568,13 @@ public class MLSBreeder extends Breeder {
 					parentInds.add(ind);
 				}
 
-				Individual[] allInds = coopPopulation.getIndividuals();
-
 				// Find the individuals in the individual pool that are not already part of the group.
 				List<Individual> inds = new ArrayList<Individual>();
-				for (int i = 0; i < allInds.length; i++) {
-					if (allInds[i] != null && !parentInds.contains(allInds[i])) {
-						inds.add(allInds[i]);
+				for (int i = 0; i < coopPopulation.getNumIndividuals(); i++) {
+					Individual ind = coopPopulation.getIndividual(i);
+
+					if (ind != null && !parentInds.contains(ind)) {
+						inds.add(ind);
 					}
 				}
 
@@ -617,7 +617,7 @@ public class MLSBreeder extends Breeder {
 
 		double[] copy = new double[length];
 		for (int i = 0; i < length; i++) {
-			copy[i] = coopPopulation.getGroups()[i].getFitness().fitness();
+			copy[i] = coopPopulation.getGroup(i).getFitness().fitness();
 		}
 
 		return rouletteSelect(copy, biasFactor, length, state.random[threadnum]);
@@ -776,13 +776,13 @@ public class MLSBreeder extends Breeder {
 		// Load the list of groups into an array to be sorted.
 		List<Pair<Subpopulation, Integer>> allGroups = new ArrayList<Pair<Subpopulation, Integer>>(coopPopulation.getNumGroups());
 		for (int i = 0; i < coopPopulation.getNumGroups(); i++) {
-			allGroups.add(new Pair<Subpopulation, Integer>(coopPopulation.getGroups()[i], i));
+			allGroups.add(new Pair<Subpopulation, Integer>(coopPopulation.getGroup(i), i));
 		}
 
 		// Load the list of individuals into an array to be sorted.
 		List<Pair<Individual, Integer>> allInds = new ArrayList<Pair<Individual, Integer>>(coopPopulation.getNumIndividuals());
 		for (int i = 0; i < coopPopulation.getNumIndividuals(); i++) {
-			allInds.add(new Pair<Individual, Integer>(coopPopulation.getIndividuals()[i], i));
+			allInds.add(new Pair<Individual, Integer>(coopPopulation.getIndividual(i), i));
 		}
 
 		Collections.sort(allGroups, groupComparator);

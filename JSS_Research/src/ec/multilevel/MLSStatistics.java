@@ -6,7 +6,6 @@ import java.io.IOException;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.Statistics;
-import ec.gp.koza.KozaFitness;
 import ec.util.Output;
 import ec.util.Parameter;
 
