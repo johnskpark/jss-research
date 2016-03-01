@@ -1,14 +1,15 @@
 package ec.multilevel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import ec.Individual;
 import ec.Subpopulation;
 
 public class MLSCoopPopulation {
 
-	// TODO convert all of this into lists.
 	private List<IMLSCoopEntity> allEntities;
 	private List<MLSSubpopulation> groups;
 	private List<Individual> individuals;
@@ -20,6 +21,9 @@ public class MLSCoopPopulation {
 	private List<Individual> groupedIndividuals;
 	private List<Individual> ungroupedIndividuals;
 
+	private List<MLSSubpopulation> validGroups;
+	private Map<Individual, List<MLSSubpopulation>> removedIndividuals; 
+	
 	private int numMetaGroups;
 	private int numMetaInds;
 
@@ -34,10 +38,20 @@ public class MLSCoopPopulation {
 		allEntities.add(group);
 		groups.add(group);
 
-		// Update the grouped and ungrouped individuals list.
 		for (Individual ind : group.individuals) {
+			// Update the grouped and ungrouped individuals list.
 			groupedIndividuals.add(ind);
 			ungroupedIndividuals.remove(ind);
+			
+			// Update the valid groups list.
+			if (individuals.contains(ind)) {
+				addValidGroup(group);
+			} else {
+				if (!removedIndividuals.containsKey(ind)) {
+					removedIndividuals.put(ind, new ArrayList<MLSSubpopulation>());
+				}
+				removedIndividuals.get(ind).add(group);
+			}
 		}
 	}
 
@@ -52,6 +66,21 @@ public class MLSCoopPopulation {
 		// Update the ungrouped individuals list, if the individual is not already grouped.
 		if (!groupedIndividuals.contains(ind)) {
 			ungroupedIndividuals.add(ind);
+		}
+		
+		// Update the valid groups list.
+		if (removedIndividuals.containsKey(ind)) {
+			List<MLSSubpopulation> groups = removedIndividuals.get(ind);
+			for (MLSSubpopulation group : groups) {
+				addValidGroup(group);
+			}
+			removedIndividuals.remove(ind);
+		}
+	}
+	
+	protected void addValidGroup(MLSSubpopulation group) {
+		if (!validGroups.contains(group)) {
+			validGroups.add(group);
 		}
 	}
 
@@ -74,6 +103,10 @@ public class MLSCoopPopulation {
 	public MLSSubpopulation getGroup(int index) {
 		return groups.get(index);
 	}
+	
+	public MLSSubpopulation getValidGroup(int index) {
+		return validGroups.get(index);
+	}
 
 	public Individual getIndividual(int index) {
 		return individuals.get(index);
@@ -81,7 +114,6 @@ public class MLSCoopPopulation {
 
 	public Individual[] getUngroupedIndividuals() {
 		Individual[] result = new Individual[ungroupedIndividuals.size()];
-
 		ungroupedIndividuals.toArray(result);
 
 		return result;
@@ -90,7 +122,7 @@ public class MLSCoopPopulation {
 	public Individual[] getUnremovedIndividuals(Subpopulation subpop) {
 		List<Individual> unremovedIndividuals = new ArrayList<Individual>();
 		for (Individual ind : subpop.individuals) {
-			if (individuals.contains(ind)) {
+			if (!removedIndividuals.containsKey(ind)) {
 				unremovedIndividuals.add(ind);
 			}
 		}
@@ -98,6 +130,31 @@ public class MLSCoopPopulation {
 		Individual[] result = new Individual[unremovedIndividuals.size()];
 		unremovedIndividuals.toArray(result);
 
+		return result;
+	}
+	
+	public MLSSubpopulation[] getValidGroups() {
+		MLSSubpopulation[] result = new MLSSubpopulation[validGroups.size()];
+		validGroups.toArray(result);
+		
+		// TODO temporary. Yep, crashing here. 
+		for (MLSSubpopulation group : validGroups) {
+			boolean invalid = true;
+			for (int i = 0; i < group.individuals.length; i++) {
+				if (individuals.contains(group.individuals[i])) {
+					if (removedIndividuals.containsKey(group.individuals[i])) {
+						throw new RuntimeException("You fucked up.");
+					}
+					
+					invalid = false;
+					break;
+				}
+			}
+			if (invalid) {
+				throw new RuntimeException("You fucked up 2.");
+			}
+		}
+		
 		return result;
 	}
 
@@ -108,6 +165,9 @@ public class MLSCoopPopulation {
 
 		groupedIndividuals = new ArrayList<Individual>();
 		ungroupedIndividuals = new ArrayList<Individual>();
+		
+		validGroups = new ArrayList<MLSSubpopulation>();
+		removedIndividuals = new HashMap<Individual, List<MLSSubpopulation>>();
 	}
 
 }

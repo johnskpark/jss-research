@@ -18,6 +18,7 @@ import ec.Subpopulation;
 import ec.util.MersenneTwisterFast;
 import ec.util.Pair;
 import ec.util.Parameter;
+import ec.util.RandomChoice;
 import ec.util.ThreadPool;
 
 // In multilevel selection, the subpopulations represent the groups,
@@ -62,8 +63,6 @@ public class MLSBreeder extends Breeder {
 	public static final int MUTATION_INDS_PRODUCED = 1;
 
 	private static final double DEFAULT_BIAS = 1.0;
-
-	public static final int BINARY_SEARCH_BOUNDARY = 8;
 
 	/** An array[subpop] of the number of elites to keep for that subpopulation */
 	private boolean sequentialBreeding;
@@ -818,52 +817,9 @@ public class MLSBreeder extends Breeder {
 		for (int i = 0; i < length; i++) {
 			buffer[i] /= buffer[length-1];
 		}
-
-		if (length < BINARY_SEARCH_BOUNDARY) {
-			// Carry out a linear search.
-			for (int i = 0; i < length-1; i++) {
-				if (buffer[i] > prob) {
-					return exemptZeroes(fitnesses, i);
-				}
-			}
-			return exemptZeroes(fitnesses, length-1);
-		} else {
-			// Carry out the binary search.
-			int top = length - 1;
-			int bottom = 0;
-			int cur;
-
-			while (top != bottom) {
-                cur = (top + bottom) / 2; // integer division
-
-                if (buffer[cur] > prob) {
-                    if (cur == 0 || buffer[cur-1] <= prob) {
-                        return exemptZeroes(fitnesses, cur);
-                    } else { // step down
-                        top = cur;
-                    }
-                } else if (cur == buffer.length-1) { // oops
-                    return exemptZeroes(fitnesses, cur);
-                } else if (bottom == cur) { // step up
-                    bottom++;  // (8 + 9)/2 = 8
-                } else {
-                    bottom = cur;  // (8 + 10) / 2 = 9
-                }
-			}
-			return exemptZeroes(fitnesses, bottom);
-		}
+		
+		return RandomChoice.pickFromDistribution(buffer, prob);
 	}
-
-	private static final int exemptZeroes(double[] fitnesses, int index) {
-	    if (fitnesses[index] == 0.0) { // I need to scan forward because I'm in a left-trail
-	        // scan forward
-	        while (index < fitnesses.length-1 && fitnesses[index] == 0.0) { index++; }
-	    } else {
-	        // scan backwards
-	        while (index > 0 && fitnesses[index] == fitnesses[index-1]) { index--; }
-	    }
-	    return index;
-    }
 
 	protected static final int tournamentSelect(double[] fitnesses, int length, double val, MersenneTwisterFast rand) {
 		int best = rand.nextInt(length);

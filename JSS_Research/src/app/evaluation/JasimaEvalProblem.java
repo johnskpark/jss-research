@@ -292,25 +292,35 @@ public class JasimaEvalProblem {
 	public void evaluate() throws Exception {
 		PrintStream output = new PrintStream(new File(outputCsv));
 
+		// Print out the headers.
+		output.print("RuleFile,RuleSeed,TestSet,InstanceNum");
+		
+		// FIXME Add in the functionality to evaluate with multiple fitnesses.
+		output.printf(",%s", fitness.getHeaderName());
+		
+		output.println();
+		
 		for (String ruleFilename : solversMap.keySet()) {
 			List<AbsEvalPriorityRule> solvers = solversMap.get(ruleFilename);
 
 			for (AbsEvalPriorityRule solver : solvers) {
-				output.printf("%s,%d", ruleFilename, solver.getSeed());
 				simConfig.setSeed(seed);
 
 				for (int i = 0; i < simConfig.getNumConfigs(); i++) {
+					output.printf("%s,%d,%s,%d", ruleFilename, solver.getSeed(), simConfig.getClass().getSimpleName(), i);
+					
 					Experiment experiment = getExperiment(solver, i);
 					experiment.runExperiment();
 
 					double result = fitness.getRelevantResult(experiment.getResults());
 
+					// FIXME Add in the functionality to evaluate with multiple fitnesses.
 					output.printf(",%f", result);
+					
+					output.println();
 
 					workstationListener.clear();
 				}
-
-				output.println();
 			}
 		}
 

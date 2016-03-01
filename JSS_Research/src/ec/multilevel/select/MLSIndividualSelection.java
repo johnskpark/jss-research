@@ -98,57 +98,86 @@ public class MLSIndividualSelection extends SelectionMethod {
 
 	// Select an individual from any group in the population.
 	protected int getGroupedIndividual(final EvolutionState state, final int thread) {
-		int groupIndex = getGroup(state, thread);
+		int groupIndex = getValidGroup(state, thread);
 
 		// There is a very small possibility that the group consists of indivduals which
 		// have been removed from the population. In such case, the method will return
 		// NOT_SELECTED as there are no valid individuals to select from.
 		// If NOT_SELECTED is indeed returned, then re-roll and hope that you don't get
 		// same group again.
-		int index;
-		while ((index = getGroupedIndividual(state, thread, groupIndex)) == NOT_SELECTED) {
-			groupIndex = getGroup(state, thread);
+		// TODO old code for when you need to cycle between the groups.
+//		int index;
+//		while ((index = getGroupedIndividual(state, thread, groupIndex)) == NOT_SELECTED) {
+//			groupIndex = getGroup(state, thread);
+//		}
+//
+//		return index;
+		
+		int index = getGroupedIndividual(state, thread, groupIndex);
+		if (index == NOT_SELECTED) {
+			state.output.fatal("The individual selected from the group " + groupIndex + " does not belong to the population.");
 		}
-
+		
 		return index;
 	}
 
 	// Select an individual from the specified group.
 	protected int getGroupedIndividual(final EvolutionState state, final int thread, final int groupIndex) {
 		MLSCoopPopulation coopPop = ((MLSEvolutionState) state).getCoopPopulation();
-		MLSSubpopulation group = coopPop.getGroup(groupIndex);
+		MLSSubpopulation group = coopPop.getValidGroup(groupIndex);
 
 		// Randomly select an individual from the group.
 		Individual[] unremovedInds = coopPop.getUnremovedIndividuals(group);
 
 		if (unremovedInds.length == 0) {
-			return NOT_SELECTED;
+			state.output.fatal("Group " + groupIndex + " only contains individuals removed from the population. No individuals selected.");
 		}
 
-		Individual ind = unremovedInds[state.random[thread].nextInt(unremovedInds.length)];
+		int indIndex = state.random[thread].nextInt(unremovedInds.length);
+		Individual ind = unremovedInds[indIndex];
 
 		for (int index = 0; index < coopPop.getNumIndividuals(); index++) {
-			if (coopPop.getIndividual(index) == ind) {
+			if (ind.equals(coopPop.getIndividual(index))) {
 				return index;
 			}
 		}
 
-		state.output.fatal("The individual does not exist in the population of cooperative entities.");
+		state.output.fatal("The individual does not exist in the population of cooperative entities. Group index: " + groupIndex + ", Individual index in group: " + indIndex);
 
 		return NOT_SELECTED; // Never reaches this point.
 	}
 
-	// Select a group to select from.
+	// Select a group to select an individual from.
 	protected int getGroup(final EvolutionState state, final int thread) {
 		MLSCoopPopulation coopPop = ((MLSEvolutionState) state).getCoopPopulation();
 
 		double[] stackedGroupFitnesses = new double[coopPop.getNumGroups()];
-		for (int i = 0; i < coopPop.getNumGroups(); i++) {
-			stackedGroupFitnesses[i] = coopPop.getGroup(i).getFitness().fitness();
+		stackedGroupFitnesses[0] = coopPop.getGroup(0).getFitness().fitness();
+		for (int i = 1; i < coopPop.getNumGroups(); i++) {
+			stackedGroupFitnesses[i] = stackedGroupFitnesses[i-1] + coopPop.getGroup(i).getFitness().fitness();
 		}
 
 		// Randomly choose a group proportionate to its fitness.
 		return fitnessProportionate(stackedGroupFitnesses, coopPop.getNumGroups(), state.random[thread]);
+	}
+	
+	// Select a group to select an individual from.
+	protected int getValidGroup(final EvolutionState state, final int thread) {
+		MLSCoopPopulation coopPop = ((MLSEvolutionState) state).getCoopPopulation();
+		MLSSubpopulation[] groups = coopPop.getValidGroups();
+		
+		if (groups.length == 0) {
+			state.output.fatal("There are no groups containing at least one individual from the population. There is something going wrong here.");
+		}
+		
+		double[] stackedGroupFitnesses = new double[groups.length];
+		stackedGroupFitnesses[0] = groups[0].getFitness().fitness();
+		for (int i = 1; i < groups.length; i++) {
+			stackedGroupFitnesses[i] = stackedGroupFitnesses[i-1] + groups[i].getFitness().fitness();
+		}
+
+		// Randomly choose a group proportionate to its fitness.
+		return fitnessProportionate(stackedGroupFitnesses, groups.length, state.random[thread]);
 	}
 
 	// Select an individual from the lowest level, since there is no group to select from.
