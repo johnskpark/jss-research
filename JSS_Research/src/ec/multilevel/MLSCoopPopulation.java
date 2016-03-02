@@ -1,5 +1,6 @@
 package ec.multilevel;
 
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,19 +23,51 @@ public class MLSCoopPopulation {
 	private List<Individual> ungroupedIndividuals;
 
 	private List<MLSSubpopulation> validGroups;
-	private Map<Individual, List<MLSSubpopulation>> removedIndividuals; 
-	
+	private Map<Individual, List<MLSSubpopulation>> removedIndividuals;
+
 	private int numMetaGroups;
 	private int numMetaInds;
+
+	// TODO temporary.
+	public PrintStream tempLogging;
 
 	public MLSCoopPopulation(int numMetaGroups, int numMetaInds) {
 		this.numMetaGroups = numMetaGroups;
 		this.numMetaInds = numMetaInds;
 
-		clear();
+		allEntities = new ArrayList<IMLSCoopEntity>(numMetaGroups + numMetaInds);
+		groups = new ArrayList<MLSSubpopulation>(numMetaGroups);
+		individuals = new ArrayList<Individual>(numMetaInds);
+
+		groupedIndividuals = new ArrayList<Individual>();
+		ungroupedIndividuals = new ArrayList<Individual>();
+
+		validGroups = new ArrayList<MLSSubpopulation>();
+		removedIndividuals = new HashMap<Individual, List<MLSSubpopulation>>();
+	}
+
+	// TODO temporary.
+	public MLSCoopPopulation(PrintStream tempLogging, int numMetaGroups, int numMetaInds) {
+		this.tempLogging = tempLogging;
+
+		this.numMetaGroups = numMetaGroups;
+		this.numMetaInds = numMetaInds;
+
+		allEntities = new ArrayList<IMLSCoopEntity>(numMetaGroups + numMetaInds);
+		groups = new ArrayList<MLSSubpopulation>(numMetaGroups);
+		individuals = new ArrayList<Individual>(numMetaInds);
+
+		groupedIndividuals = new ArrayList<Individual>();
+		ungroupedIndividuals = new ArrayList<Individual>();
+
+		validGroups = new ArrayList<MLSSubpopulation>();
+		removedIndividuals = new HashMap<Individual, List<MLSSubpopulation>>();
 	}
 
 	public void addGroup(MLSSubpopulation group) {
+		// TODO temporary.
+		long startTime = System.nanoTime();
+
 		allEntities.add(group);
 		groups.add(group);
 
@@ -42,7 +75,7 @@ public class MLSCoopPopulation {
 			// Update the grouped and ungrouped individuals list.
 			groupedIndividuals.add(ind);
 			ungroupedIndividuals.remove(ind);
-			
+
 			// Update the valid groups list.
 			if (individuals.contains(ind)) {
 				addValidGroup(group);
@@ -53,9 +86,17 @@ public class MLSCoopPopulation {
 				removedIndividuals.get(ind).add(group);
 			}
 		}
+
+		// TODO temporary.
+		long endTime = System.nanoTime();
+		long timeDiff = endTime - startTime;
+		tempLogging.println("Adding group time: " + timeDiff);
 	}
 
 	public void addIndividual(Individual ind) {
+		// TODO temporary.
+		long startTime = System.nanoTime();
+
 		if (!(ind instanceof IMLSCoopEntity)) {
 			throw new IllegalArgumentException("Individual must implement IMLSCoopEntity. Individual's class: " + ind.getClass());
 		}
@@ -67,7 +108,7 @@ public class MLSCoopPopulation {
 		if (!groupedIndividuals.contains(ind)) {
 			ungroupedIndividuals.add(ind);
 		}
-		
+
 		// Update the valid groups list.
 		if (removedIndividuals.containsKey(ind)) {
 			List<MLSSubpopulation> groups = removedIndividuals.get(ind);
@@ -76,12 +117,25 @@ public class MLSCoopPopulation {
 			}
 			removedIndividuals.remove(ind);
 		}
+
+		// TODO temporary.
+		long endTime = System.nanoTime();
+		long timeDiff = endTime - startTime;
+		tempLogging.println("Adding group time: " + timeDiff);
 	}
-	
+
 	protected void addValidGroup(MLSSubpopulation group) {
 		if (!validGroups.contains(group)) {
 			validGroups.add(group);
 		}
+	}
+
+	public int getMaxGroupNum() {
+		return numMetaGroups;
+	}
+
+	public int getMaxIndividualNum() {
+		return numMetaInds;
 	}
 
 	public int getNumEntities() {
@@ -103,7 +157,7 @@ public class MLSCoopPopulation {
 	public MLSSubpopulation getGroup(int index) {
 		return groups.get(index);
 	}
-	
+
 	public MLSSubpopulation getValidGroup(int index) {
 		return validGroups.get(index);
 	}
@@ -132,42 +186,24 @@ public class MLSCoopPopulation {
 
 		return result;
 	}
-	
+
 	public MLSSubpopulation[] getValidGroups() {
 		MLSSubpopulation[] result = new MLSSubpopulation[validGroups.size()];
 		validGroups.toArray(result);
-		
-		// TODO temporary. Yep, crashing here. 
-		for (MLSSubpopulation group : validGroups) {
-			boolean invalid = true;
-			for (int i = 0; i < group.individuals.length; i++) {
-				if (individuals.contains(group.individuals[i])) {
-					if (removedIndividuals.containsKey(group.individuals[i])) {
-						throw new RuntimeException("You fucked up.");
-					}
-					
-					invalid = false;
-					break;
-				}
-			}
-			if (invalid) {
-				throw new RuntimeException("You fucked up 2.");
-			}
-		}
-		
+
 		return result;
 	}
 
 	public void clear() {
-		allEntities = new ArrayList<IMLSCoopEntity>(numMetaGroups + numMetaInds);
-		groups = new ArrayList<MLSSubpopulation>(numMetaGroups);
-		individuals = new ArrayList<Individual>(numMetaInds);
+		allEntities.clear();
+		groups.clear();
+		individuals.clear();
 
-		groupedIndividuals = new ArrayList<Individual>();
-		ungroupedIndividuals = new ArrayList<Individual>();
-		
-		validGroups = new ArrayList<MLSSubpopulation>();
-		removedIndividuals = new HashMap<Individual, List<MLSSubpopulation>>();
+		groupedIndividuals.clear();
+		ungroupedIndividuals.clear();
+
+		validGroups.clear();
+		removedIndividuals.clear();
 	}
 
 }

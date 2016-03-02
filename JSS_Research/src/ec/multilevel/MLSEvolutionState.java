@@ -1,5 +1,9 @@
 package ec.multilevel;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintStream;
+
 import ec.EvolutionState;
 import ec.Population;
 import ec.Subpopulation;
@@ -26,7 +30,10 @@ public class MLSEvolutionState extends EvolutionState {
 	 */
 	private Population metaPopulation;
 
-	private MLSCoopPopulation coopPopulation;;
+	private MLSCoopPopulation coopPopulation;
+
+	// TODO temporary.
+	public PrintStream tempLogging;
 
 	public void setup(final EvolutionState state, final Parameter base) {
 		super.setup(state, base);
@@ -39,6 +46,13 @@ public class MLSEvolutionState extends EvolutionState {
 
 		if (!(state.breeder instanceof MLSBreeder)) {
 			output.fatal("Breeder is not an instance of MultilevelSelectionBreeder");
+		}
+
+		// TODO temporary.
+		try {
+			tempLogging = new PrintStream(new File("temp.stat"));
+		} catch (IOException ex) {
+			state.output.fatal("Something messed up.");
 		}
 	}
 
@@ -138,10 +152,18 @@ public class MLSEvolutionState extends EvolutionState {
 			output.message("Generation " + generation);
 		}
 
+		// TODO temporary.
+		long evalStartTime = System.nanoTime();
+
 		// Evaluate the newly generated population.
 		statistics.preEvaluationStatistics(this);
 		evaluator.evaluatePopulation(this);
 		statistics.postEvaluationStatistics(this);
+
+		// TODO temporary.
+		long evalEndTime = System.nanoTime();
+		long evalTimeDiff = evalEndTime - evalStartTime;
+		tempLogging.println("Evaluation time: " + evalTimeDiff);
 
 		// SHOULD WE QUIT?
 		if (evaluator.runComplete(this) && quitOnRunComplete) {
@@ -180,15 +202,31 @@ public class MLSEvolutionState extends EvolutionState {
 		// BREEDING
 		statistics.preBreedingStatistics(this);
 
+		// TODO temporary.
+		long breedMetaStartTime = System.nanoTime();
+
 		initialiseMetaPopulation(mlsBreeder.getNumGroupBreed());
 		metaPopulation = mlsBreeder.breedMetaPopulation(this, metaPopulation);
+
+		// TODO temporary.
+		long breedMetaEndTime = System.nanoTime();
+		long breedMetaTimeDiff = breedMetaEndTime - breedMetaStartTime;
+		tempLogging.println("breedMetauation time: " + breedMetaTimeDiff);
 
 		// POST-BREEDING EXCHANGING
 		statistics.postBreedingStatistics(this);
 
+		// TODO temporary.
+		long breedFinalStartTime = System.nanoTime();
+
 		// SELECTION
 		initialiseFinalPopulation(mlsBreeder.getNumGroupRetain());
 		population = mlsBreeder.breedFinalPopulation(this, metaPopulation);
+
+		// TODO temporary.
+		long breedFinalEndTime = System.nanoTime();
+		long breedFinalTimeDiff = breedFinalEndTime - breedFinalStartTime;
+		tempLogging.println("breedFinaluation time: " + breedFinalTimeDiff);
 
 		// INCREMENT GENERATION AND CHECKPOINT
 		generation++;

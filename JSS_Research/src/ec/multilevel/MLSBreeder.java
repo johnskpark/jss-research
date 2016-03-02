@@ -234,7 +234,8 @@ public class MLSBreeder extends Breeder {
 
 		newPop.subpops[0].individuals = new Individual[numMetaInds];
 
-		coopPopulation = new MLSCoopPopulation(numMetaGroups, numMetaInds);
+//		coopPopulation = new MLSCoopPopulation(numMetaGroups, numMetaInds);
+		coopPopulation = new MLSCoopPopulation(((MLSEvolutionState) state).tempLogging, numMetaGroups, numMetaInds);
 
 		// Load the individuals into the meta population
 		loadPopulation(state, newPop);
@@ -333,6 +334,9 @@ public class MLSBreeder extends Breeder {
 		int index = from;
 		int upperBound = from + numGroup;
 		while (index < upperBound) {
+			// TODO temporary.
+			long startTime = System.nanoTime();
+
 			int numBreed = produceSubpop(1, upperBound - index, index, newPop, state, threadnum);
 
 			for (int i = index; i < index + numBreed; i++) {
@@ -345,6 +349,11 @@ public class MLSBreeder extends Breeder {
 
 			// Increment the index.
 			index += numBreed;
+
+			// TODO temporary.
+			long endTime = System.nanoTime();
+			long timeDiff = endTime - startTime;
+			((MLSEvolutionState) state).tempLogging.println("Subpop breeding time: " + timeDiff);
 		}
 	}
 
@@ -711,6 +720,9 @@ public class MLSBreeder extends Breeder {
 		int index = from;
 		int upperBound = from + numInds;
 		while (index < upperBound) {
+			// TODO temporary.
+			long startTime = System.nanoTime();
+
 			// Get the number of individuals bred.
 			int numBreed = bp.produce(1,
 					upperBound-index,
@@ -734,6 +746,11 @@ public class MLSBreeder extends Breeder {
 
 			// Increment the index.
 			index += numBreed;
+
+			// TODO temporary.
+			long endTime = System.nanoTime();
+			long timeDiff = endTime - startTime;
+			((MLSEvolutionState) state).tempLogging.println("Individual breeding time: " + timeDiff);
 		}
 
 		bp.finishProducing(state, 0, threadnum);
@@ -817,7 +834,7 @@ public class MLSBreeder extends Breeder {
 		for (int i = 0; i < length; i++) {
 			buffer[i] /= buffer[length-1];
 		}
-		
+
 		return RandomChoice.pickFromDistribution(buffer, prob);
 	}
 

@@ -105,19 +105,11 @@ public class MLSIndividualSelection extends SelectionMethod {
 		// NOT_SELECTED as there are no valid individuals to select from.
 		// If NOT_SELECTED is indeed returned, then re-roll and hope that you don't get
 		// same group again.
-		// TODO old code for when you need to cycle between the groups.
-//		int index;
-//		while ((index = getGroupedIndividual(state, thread, groupIndex)) == NOT_SELECTED) {
-//			groupIndex = getGroup(state, thread);
-//		}
-//
-//		return index;
-		
 		int index = getGroupedIndividual(state, thread, groupIndex);
 		if (index == NOT_SELECTED) {
 			state.output.fatal("The individual selected from the group " + groupIndex + " does not belong to the population.");
 		}
-		
+
 		return index;
 	}
 
@@ -160,16 +152,16 @@ public class MLSIndividualSelection extends SelectionMethod {
 		// Randomly choose a group proportionate to its fitness.
 		return fitnessProportionate(stackedGroupFitnesses, coopPop.getNumGroups(), state.random[thread]);
 	}
-	
+
 	// Select a group to select an individual from.
 	protected int getValidGroup(final EvolutionState state, final int thread) {
 		MLSCoopPopulation coopPop = ((MLSEvolutionState) state).getCoopPopulation();
 		MLSSubpopulation[] groups = coopPop.getValidGroups();
-		
+
 		if (groups.length == 0) {
 			state.output.fatal("There are no groups containing at least one individual from the population. There is something going wrong here.");
 		}
-		
+
 		double[] stackedGroupFitnesses = new double[groups.length];
 		stackedGroupFitnesses[0] = groups[0].getFitness().fitness();
 		for (int i = 1; i < groups.length; i++) {
