@@ -1,6 +1,5 @@
 package ec.multilevel;
 
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,9 +27,6 @@ public class MLSCoopPopulation {
 	private int numMetaGroups;
 	private int numMetaInds;
 
-	// TODO temporary.
-	public PrintStream tempLogging;
-
 	public MLSCoopPopulation(int numMetaGroups, int numMetaInds) {
 		this.numMetaGroups = numMetaGroups;
 		this.numMetaInds = numMetaInds;
@@ -46,28 +42,7 @@ public class MLSCoopPopulation {
 		removedIndividuals = new HashMap<Individual, List<MLSSubpopulation>>();
 	}
 
-	// TODO temporary.
-	public MLSCoopPopulation(PrintStream tempLogging, int numMetaGroups, int numMetaInds) {
-		this.tempLogging = tempLogging;
-
-		this.numMetaGroups = numMetaGroups;
-		this.numMetaInds = numMetaInds;
-
-		allEntities = new ArrayList<IMLSCoopEntity>(numMetaGroups + numMetaInds);
-		groups = new ArrayList<MLSSubpopulation>(numMetaGroups);
-		individuals = new ArrayList<Individual>(numMetaInds);
-
-		groupedIndividuals = new ArrayList<Individual>();
-		ungroupedIndividuals = new ArrayList<Individual>();
-
-		validGroups = new ArrayList<MLSSubpopulation>();
-		removedIndividuals = new HashMap<Individual, List<MLSSubpopulation>>();
-	}
-
 	public void addGroup(MLSSubpopulation group) {
-		// TODO temporary.
-		long startTime = System.nanoTime();
-
 		allEntities.add(group);
 		groups.add(group);
 
@@ -86,17 +61,9 @@ public class MLSCoopPopulation {
 				removedIndividuals.get(ind).add(group);
 			}
 		}
-
-		// TODO temporary.
-		long endTime = System.nanoTime();
-		long timeDiff = endTime - startTime;
-		tempLogging.println("Adding group time: " + timeDiff);
 	}
 
 	public void addIndividual(Individual ind) {
-		// TODO temporary.
-		long startTime = System.nanoTime();
-
 		if (!(ind instanceof IMLSCoopEntity)) {
 			throw new IllegalArgumentException("Individual must implement IMLSCoopEntity. Individual's class: " + ind.getClass());
 		}
@@ -117,11 +84,6 @@ public class MLSCoopPopulation {
 			}
 			removedIndividuals.remove(ind);
 		}
-
-		// TODO temporary.
-		long endTime = System.nanoTime();
-		long timeDiff = endTime - startTime;
-		tempLogging.println("Adding group time: " + timeDiff);
 	}
 
 	protected void addValidGroup(MLSSubpopulation group) {
