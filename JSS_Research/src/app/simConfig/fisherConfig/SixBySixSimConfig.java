@@ -1,15 +1,21 @@
 package app.simConfig.fisherConfig;
 
 import app.simConfig.StaticSimConfig;
-import jasima.core.experiment.Experiment;
-import jasima.shopSim.models.staticShop.StaticShopExperiment;
 
 public class SixBySixSimConfig extends StaticSimConfig {
 
-	public Experiment getExperiment() {
-		StaticShopExperiment e = new StaticShopExperiment();
-		e.setInstFileName("js06x06.txt");
-		return e;
+	private static final int NUM_CONFIGS = 1;
+
+	private static final String directory = "dataset/";
+
+	@Override
+	public String getInstFileName(int index) {
+		return directory + "js06x06.txt";
+	}
+
+	@Override
+	public int getNumConfigs() {
+		return NUM_CONFIGS;
 	}
 
 }

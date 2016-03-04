@@ -13,9 +13,10 @@ import ec.gp.GPProblem;
 import ec.util.MersenneTwisterFast;
 import ec.util.ParamClassLoadException;
 import ec.util.Parameter;
+import jasima.core.experiment.Experiment;
 import jasima.core.statistics.SummaryStat;
+import jasima.shopSim.core.JobShopExperiment;
 import jasima.shopSim.core.PR;
-import jasima.shopSim.models.dynamicShop.DynamicShopExperiment;
 
 public abstract class JasimaGPProblem extends GPProblem {
 
@@ -168,7 +169,7 @@ public abstract class JasimaGPProblem extends GPProblem {
 		}
 
 		for (int expIndex = 0; expIndex < getSimConfig().getNumConfigs(); expIndex++) {
-			DynamicShopExperiment experiment = ExperimentGenerator.getExperiment(simConfig,
+			Experiment experiment = ExperimentGenerator.getExperiment(simConfig,
 					referenceRule,
 					expIndex);
 
@@ -185,12 +186,12 @@ public abstract class JasimaGPProblem extends GPProblem {
 		referenceInstStats.clear();
 	}
 
-	protected DynamicShopExperiment getExperiment(final EvolutionState state,
+	protected Experiment getExperiment(final EvolutionState state,
 			final AbsGPPriorityRule rule,
 			final int index,
 			final IWorkStationListener listener,
 			final JasimaEvolveExperimentTracker tracker) {
-		DynamicShopExperiment experiment = ExperimentGenerator.getExperiment(simConfig,
+		JobShopExperiment experiment = ExperimentGenerator.getExperiment(simConfig,
 				rule,
 				index);
 

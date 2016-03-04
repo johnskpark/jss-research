@@ -4,7 +4,7 @@ import jasima.core.random.continuous.DblStream;
 
 import java.util.Random;
 
-public abstract class DynamicSimConfig {
+public abstract class DynamicSimConfig implements SimConfig {
 
 	private long seed;
 
@@ -46,8 +46,5 @@ public abstract class DynamicSimConfig {
 	public abstract int getNumIgnore();
 
 	public abstract int getStopAfterNumJobs();
-
-	public abstract int getNumConfigs();
-
 
 }

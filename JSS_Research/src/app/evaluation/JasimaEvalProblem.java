@@ -36,7 +36,7 @@ import app.simConfig.DynamicSimConfig;
 import app.simConfig.ExperimentGenerator;
 import app.util.RuleParser;
 import jasima.core.experiment.Experiment;
-import jasima.shopSim.models.dynamicShop.DynamicShopExperiment;
+import jasima.shopSim.core.JobShopExperiment;
 
 public class JasimaEvalProblem {
 
@@ -294,12 +294,12 @@ public class JasimaEvalProblem {
 
 		// Print out the headers.
 		output.print("RuleFile,RuleSeed,TestSet,InstanceNum");
-		
+
 		// FIXME Add in the functionality to evaluate with multiple fitnesses.
 		output.printf(",%s", fitness.getHeaderName());
-		
+
 		output.println();
-		
+
 		for (String ruleFilename : solversMap.keySet()) {
 			List<AbsEvalPriorityRule> solvers = solversMap.get(ruleFilename);
 
@@ -308,7 +308,7 @@ public class JasimaEvalProblem {
 
 				for (int i = 0; i < simConfig.getNumConfigs(); i++) {
 					output.printf("%s,%d,%s,%d", ruleFilename, solver.getSeed(), simConfig.getClass().getSimpleName(), i);
-					
+
 					Experiment experiment = getExperiment(solver, i);
 					experiment.runExperiment();
 
@@ -316,7 +316,7 @@ public class JasimaEvalProblem {
 
 					// FIXME Add in the functionality to evaluate with multiple fitnesses.
 					output.printf(",%f", result);
-					
+
 					output.println();
 
 					workstationListener.clear();
@@ -328,7 +328,7 @@ public class JasimaEvalProblem {
 	}
 
 	private Experiment getExperiment(AbsEvalPriorityRule rule, int index) {
-		DynamicShopExperiment experiment = ExperimentGenerator.getExperiment(simConfig, rule, index);
+		JobShopExperiment experiment = ExperimentGenerator.getExperiment(simConfig, rule, index);
 
 		if (workstationListener != null) {
 			experiment.addMachineListener(workstationListener);
