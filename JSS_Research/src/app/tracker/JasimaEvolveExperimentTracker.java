@@ -1,14 +1,13 @@
 package app.tracker;
 
-import jasima.shopSim.core.PrioRuleTarget;
-import jasima.shopSim.core.PriorityQueue;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import app.evolution.IJasimaGPPriorityRule;
-import app.simConfig.DynamicSimConfig;
+import app.simConfig.SimConfig;
 import ec.Individual;
+import jasima.shopSim.core.PrioRuleTarget;
+import jasima.shopSim.core.PriorityQueue;
 
 // TODO right, the tracker needs to be able to do the following:
 // - Get the decision made by the sequencing rule on which job was selected to be processed.
@@ -24,7 +23,7 @@ public class JasimaEvolveExperimentTracker {
 	public static final int NOT_SET = -1;
 
 	private IJasimaGPPriorityRule priorityRule;
-	private DynamicSimConfig simConfig;
+	private SimConfig simConfig;
 
 	private List<JasimaEvolveExperiment> experimentDecisions;
 
@@ -41,7 +40,7 @@ public class JasimaEvolveExperimentTracker {
 		return priorityRule;
 	}
 
-	public DynamicSimConfig getSimConfig() {
+	public SimConfig getSimConfig() {
 		return simConfig;
 	}
 
@@ -51,7 +50,7 @@ public class JasimaEvolveExperimentTracker {
 		this.priorityRule = priorityRule;
 	}
 
-	public void setSimConfig(DynamicSimConfig simConfig) {
+	public void setSimConfig(SimConfig simConfig) {
 		this.simConfig = simConfig;
 	}
 

@@ -5,12 +5,11 @@ import java.util.List;
 
 import app.IWorkStationListener;
 import app.priorityRules.HolthausRule;
-import app.simConfig.DynamicSimConfig;
 import app.simConfig.ExperimentGenerator;
+import app.simConfig.SimConfig;
 import app.tracker.JasimaEvolveExperimentTracker;
 import ec.EvolutionState;
 import ec.gp.GPProblem;
-import ec.util.MersenneTwisterFast;
 import ec.util.ParamClassLoadException;
 import ec.util.Parameter;
 import jasima.core.experiment.Experiment;
@@ -25,7 +24,6 @@ public abstract class JasimaGPProblem extends GPProblem {
 	public static final String P_SHOULD_SET_CONTEXT = "set-context";
 
 	public static final String P_SIMULATOR = "simulator";
-	public static final String P_SEED = "seed";
 
 	public static final String P_TRACKER = "tracker";
 
@@ -33,15 +31,10 @@ public abstract class JasimaGPProblem extends GPProblem {
 
 	public static final String P_REFERENCE_RULE = "reference-rule";
 
-	public static final String P_ROTATE_SEED = "rotate-seed";
-
-	public static final long DEFAULT_SEED = 15;
-
 	private boolean shouldSetContext;
 
-	private DynamicSimConfig simConfig;
-	private long simSeed;
-	private MersenneTwisterFast rand;
+	private ISimConfigEvolveFactory simConfigFactory;
+	private SimConfig simConfig;
 
 	private JasimaEvolveExperimentTracker experimentTracker;
 
@@ -63,13 +56,9 @@ public abstract class JasimaGPProblem extends GPProblem {
 		input.setup(state, base.push(P_DATA));
 
 		// Setup the simulator configurations.
-		simConfig = (DynamicSimConfig) state.parameters.getInstanceForParameterEq(base.push(P_SIMULATOR), null, DynamicSimConfig.class);
-		simSeed = state.parameters.getLongWithDefault(base.push(P_SIMULATOR).push(P_SEED), null, DEFAULT_SEED);
-		rand = new MersenneTwisterFast(simSeed);
-
-		simConfig.setSeed(simSeed);
-
-		rotateSeed = state.parameters.getBoolean(base.push(P_ROTATE_SEED), null, true);
+		simConfigFactory = (ISimConfigEvolveFactory) state.parameters.getInstanceForParameterEq(base.push(P_SIMULATOR), null, ISimConfigEvolveFactory.class);
+		simConfigFactory.setup(state, base.push(P_SIMULATOR));
+		simConfig = simConfigFactory.generateSimConfig();
 
 		state.output.message("JasimaGPProblem rotate seed: " + rotateSeed);
 
@@ -106,26 +95,16 @@ public abstract class JasimaGPProblem extends GPProblem {
 		return shouldSetContext;
 	}
 
-	public DynamicSimConfig getSimConfig() {
+	public SimConfig getSimConfig() {
 		return simConfig;
 	}
 
-	protected long getSimSeed() {
-		return simSeed;
-	}
-
 	protected void rotateSimSeed() {
-		if (rotateSeed) {
-			simConfig.setSeed(rand.nextLong());
-		}
+		simConfig = simConfigFactory.generateSimConfig();
 	}
 
 	protected void resetSimSeed() {
-		simConfig.resetSeed();
-	}
-
-	protected MersenneTwisterFast getRandom() {
-		return rand;
+		simConfig.reset();
 	}
 
 	protected boolean hasTracker() {
@@ -212,9 +191,8 @@ public abstract class JasimaGPProblem extends GPProblem {
 		newObject.shouldSetContext = shouldSetContext;
 		newObject.input = (JasimaGPData) input.clone();
 
+		newObject.simConfigFactory = simConfigFactory;
 		newObject.simConfig = simConfig;
-		newObject.simSeed = simSeed;
-		newObject.rand = (MersenneTwisterFast) rand.clone();
 
 		newObject.experimentTracker = experimentTracker;
 

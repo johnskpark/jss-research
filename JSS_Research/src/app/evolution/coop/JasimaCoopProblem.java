@@ -68,8 +68,7 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 			final Population pop,
 			final boolean[] prepareForFitnessAssessment,
 			final boolean countVictoriesOnly) {
-		// Reset the seed for the simulator.
-		getSimConfig().setSeed(getRandom().nextLong());
+		rotateSimSeed();
 
 		for (int i = 0; i < pop.subpops.length; i++) {
 			if (prepareForFitnessAssessment[i]) {
@@ -135,14 +134,14 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 			for (int j = 0; j < inds.length; j++) {
 				fitness.accumulateFitness(expIndex, (JasimaCoopIndividual) inds[j], experiment.getResults());
 			}
-			
+
 			if (hasWorkStationListener()) { getWorkStationListener().clear(); }
 		}
 
-		fitness.setUpdateConfiguration(inds, updateFitness, shouldSetContext()); 
+		fitness.setUpdateConfiguration(inds, updateFitness, shouldSetContext());
 		for (int i = 0; i < inds.length; i++) {
 			fitness.setFitness(state, (JasimaCoopIndividual) inds[i]);
-			
+
 			inds[i].evaluated = true;
 		}
 		fitness.clear();
@@ -154,7 +153,7 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 			getTracker().clear();
 		}
 
-		getSimConfig().resetSeed();
+		resetSimSeed();
 	}
 
 	@Override

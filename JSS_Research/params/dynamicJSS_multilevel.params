@@ -87,7 +87,7 @@ eval.problem.simulator.seed = 15
 
 # eval.problem.tracker = app.tracker.JasimaEvolveExperimentTracker
 
-eval.problem.workstation = app.listener.hunt.HuntListenerEvolveFactory
+eval.problem.workstation = app.listener.hunt.EvolveFactory
 eval.problem.workstation.max-jobs = 5
 
 eval.problem.reference-rule = app.priorityRules.HolthausRule

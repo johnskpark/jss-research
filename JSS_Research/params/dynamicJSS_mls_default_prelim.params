@@ -92,7 +92,7 @@ eval.problem.simulator.seed = 15
 
 eval.problem.rotate-seed = false
 
-eval.problem.workstation = app.listener.hunt.HuntListenerEvolveFactory
+eval.problem.workstation = app.listener.hunt.EvolveFactory
 eval.problem.workstation.max-jobs = 5
 
 # seed.0=26556

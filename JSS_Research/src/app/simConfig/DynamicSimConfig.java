@@ -23,7 +23,7 @@ public abstract class DynamicSimConfig implements SimConfig {
 		return rand.nextLong();
 	}
 
-	public void resetSeed() {
+	public void reset() {
 		setSeed(seed);
 	}
 

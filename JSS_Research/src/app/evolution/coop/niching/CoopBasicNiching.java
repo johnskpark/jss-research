@@ -5,7 +5,7 @@ import java.util.List;
 
 import app.evolution.coop.IJasimaCoopNiching;
 import app.evolution.coop.JasimaCoopIndividual;
-import app.simConfig.DynamicSimConfig;
+import app.simConfig.SimConfig;
 import app.tracker.JasimaEvolveExperiment;
 import app.tracker.JasimaEvolveExperimentTracker;
 import app.tracker.distance.DistanceMeasure;
@@ -50,7 +50,7 @@ public class CoopBasicNiching implements IJasimaCoopNiching {
 			final boolean[] updateFitness,
 			final JasimaCoopIndividual individual) {
 		List<JasimaEvolveExperiment> experiments = tracker.getResults();
-		DynamicSimConfig simConfig = tracker.getSimConfig();
+		SimConfig simConfig = tracker.getSimConfig();
 
 		Individual[] collaborators = individual.getCollaborators();
 

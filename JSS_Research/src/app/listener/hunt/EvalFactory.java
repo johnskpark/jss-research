@@ -5,11 +5,12 @@ import org.w3c.dom.Document;
 import app.IWorkStationListener;
 import app.evaluation.IWorkStationListenerEvalFactory;
 
-public class HuntListenerEvalFactory implements IWorkStationListenerEvalFactory {
+public class EvalFactory implements IWorkStationListenerEvalFactory {
 
 	// FIXME remove this later down the line.
 	public static final int DEFAULT_MAX_SIZE = 5;
 
+	private HuntListener listener = null;
 	private int maxSize = DEFAULT_MAX_SIZE;
 
 	@Override
@@ -20,7 +21,10 @@ public class HuntListenerEvalFactory implements IWorkStationListenerEvalFactory 
 
 	@Override
 	public IWorkStationListener generateWorkStationListener() {
-		return new HuntListener(maxSize);
+		if (listener == null) {
+			listener = new HuntListener(maxSize);
+		}
+		return listener;
 	}
 
 }

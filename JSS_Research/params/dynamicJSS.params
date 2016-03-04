@@ -70,10 +70,12 @@ eval.problem.data = app.evolution.JasimaGPData
 eval.problem.rule = app.evolution.priorityRules.BasicPriorityRule
 eval.problem.fitness = app.evolution.simple.fitness.TWTFitness
 
-eval.problem.simulator = app.simConfig.huntConfig.FourOpSimConfig
-eval.problem.simulator.seed = 15
+#eval.problem.simulator = app.simConfig.huntConfig.FourOpSimConfig
+#eval.problem.simulator.seed = 15
 
-eval.problem.workstation = app.listener.hunt.HuntListenerEvolveFactory
+eval.problem.simulator = app.simConfig.fisherConfig.SixBySixSimConfig
+
+eval.problem.workstation = app.listener.hunt.EvolveFactory
 eval.problem.workstation.max-jobs = 5
 
 # seed.0=26556

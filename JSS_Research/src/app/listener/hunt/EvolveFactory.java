@@ -5,12 +5,13 @@ import app.evolution.IWorkStationListenerEvolveFactory;
 import ec.EvolutionState;
 import ec.util.Parameter;
 
-public class HuntListenerEvolveFactory implements IWorkStationListenerEvolveFactory {
+public class EvolveFactory implements IWorkStationListenerEvolveFactory {
 
 	private static final long serialVersionUID = -8366845139333729953L;
 
 	public static final String P_MAX_JOBS = "max-jobs";
 
+	private HuntListener listener = null;
 	private int maxSize;
 
 	@Override
@@ -24,7 +25,10 @@ public class HuntListenerEvolveFactory implements IWorkStationListenerEvolveFact
 
 	@Override
 	public IWorkStationListener generateWorkStationListener() {
-		return new HuntListener(maxSize);
+		if (listener == null) {
+			listener = new HuntListener(maxSize);
+		}
+		return listener;
 	}
 
 }

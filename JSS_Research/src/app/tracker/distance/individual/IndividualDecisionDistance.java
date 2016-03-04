@@ -1,23 +1,22 @@
 package app.tracker.distance.individual;
 
-import jasima.shopSim.core.PrioRuleTarget;
-
 import java.util.List;
 
-import app.simConfig.DynamicSimConfig;
+import app.simConfig.SimConfig;
 import app.tracker.JasimaEvolveDecision;
 import app.tracker.JasimaEvolveExperiment;
 import app.tracker.JasimaPriorityStat;
 import app.tracker.distance.DistanceMeasure;
 import ec.EvolutionState;
 import ec.Individual;
+import jasima.shopSim.core.PrioRuleTarget;
 
 public class IndividualDecisionDistance implements DistanceMeasure {
 
 	@Override
 	public double[][] getDistances(final EvolutionState state,
 			final JasimaEvolveExperiment experiment,
-			final DynamicSimConfig simConfig,
+			final SimConfig simConfig,
 			final Individual[] inds) {
 		double[][] distances = new double[inds.length][inds.length];
 

@@ -57,7 +57,7 @@ public class JasimaGroupedProblem extends JasimaGPProblem {
 		super.prepareToEvaluate(state, threadnum);
 
 		// Reset the seed for the simulator.
-		getSimConfig().setSeed(getRandom().nextLong());
+		rotateSimSeed();
 
 		// Set the new grouping scheme.
 		grouping.clearForGeneration(state);
@@ -114,7 +114,7 @@ public class JasimaGroupedProblem extends JasimaGPProblem {
 			fitness.setIndFitness(state, (JasimaGPIndividual) ind);
 			fitness.clearIndFitness();
 
-			getSimConfig().resetSeed();
+			resetSimSeed();
 		}
 	}
 
@@ -147,7 +147,7 @@ public class JasimaGroupedProblem extends JasimaGPProblem {
 					groupRule.clear();
 				}
 
-				getSimConfig().resetSeed();
+				resetSimSeed();
 			}
 		}
 

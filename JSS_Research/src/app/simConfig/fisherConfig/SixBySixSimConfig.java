@@ -18,4 +18,9 @@ public class SixBySixSimConfig extends StaticSimConfig {
 		return NUM_CONFIGS;
 	}
 
+	@Override
+	public void reset() {
+		// Does nothing.
+	}
+
 }

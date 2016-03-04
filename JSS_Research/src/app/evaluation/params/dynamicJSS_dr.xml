@@ -28,6 +28,6 @@
 	</fitnessConfig>
 
 	<listenerConfig>
-	    <listenerClass>app.listener.hunt.HuntListenerEvalFactory</listenerClass>
+	    <listenerClass>app.listener.hunt.EvalFactory</listenerClass>
 	</listenerConfig>
 </evaluationConfig>

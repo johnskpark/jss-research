@@ -44,6 +44,27 @@ public class SimTest {
 	}
 
 	@Test
+	public void factoryTest_HuntTrain4op() {
+		// TODO
+	}
+
+	@Test
+	public void factoryTest_HuntTrain8op() {
+		// TODO
+	}
+
+	@Test
+	public void factoryTest_HuntTrain() {
+		// TODO
+	}
+
+	@Test
+	public void factoryTest_HuntTest() {
+		// TODO
+	}
+
+
+	@Test
 	public void consistencyTest_HuntTrain4op() {
 		simConfig = new FourOpSimConfig();
 		simConfig.setSeed(17);
@@ -113,7 +134,7 @@ public class SimTest {
 			perfValues.add(stat.sum());
 		}
 
-		simConfig.resetSeed();
+		simConfig.reset();
 	}
 
 	private void repeatRuns(int index) {
@@ -135,7 +156,7 @@ public class SimTest {
 			Assert.assertEquals("The output values are not consistent with the initial run for index " + index, perfValues.get(expIndex), stat.sum(), RANGE_OF_ERROR);
 		}
 
-		simConfig.resetSeed();
+		simConfig.reset();
 	}
 
 }

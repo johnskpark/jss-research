@@ -1,14 +1,14 @@
 package app.evolution.grouped.tracker;
 
-import jasima.core.util.Pair;
-
 import java.util.HashMap;
 import java.util.Map;
 
 import app.evolution.IJasimaTracker;
 import app.evolution.JasimaGPProblem;
+import app.simConfig.DynamicSimConfig;
 import app.util.BasicStatistics;
 import ec.gp.GPIndividual;
+import jasima.core.util.Pair;
 
 public class GroupedDecisionTracker implements IJasimaTracker {
 
@@ -19,7 +19,7 @@ public class GroupedDecisionTracker implements IJasimaTracker {
 	private JasimaGPProblem problem;
 
 	public int getNumIgnore() {
-		return problem.getSimConfig().getNumIgnore();
+		return ((DynamicSimConfig) problem.getSimConfig()).getNumIgnore();
 	}
 
 	public void addDecision(GPIndividual ind, int jobFinished, int decision) {
@@ -42,8 +42,10 @@ public class GroupedDecisionTracker implements IJasimaTracker {
 	}
 
 	private boolean shouldSample(int jobFinished) {
-		return (jobFinished >= problem.getSimConfig().getNumIgnore()) &&
-				(jobFinished < problem.getSimConfig().getNumIgnore() + SAMPLE_SIZE);
+		DynamicSimConfig simConfig = (DynamicSimConfig) problem.getSimConfig();
+
+		return (jobFinished >= simConfig.getNumIgnore()) &&
+				(jobFinished < simConfig.getNumIgnore() + SAMPLE_SIZE);
 	}
 
 	@Override

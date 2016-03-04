@@ -5,7 +5,7 @@ import java.util.List;
 
 import app.evolution.multilevel.IJasimaMultilevelFitnessListener;
 import app.evolution.multilevel.IJasimaMultilevelNiching;
-import app.simConfig.DynamicSimConfig;
+import app.simConfig.SimConfig;
 import app.tracker.JasimaEvolveExperiment;
 import app.tracker.JasimaEvolveExperimentTracker;
 import app.tracker.distance.DistanceMeasure;
@@ -53,7 +53,7 @@ public class MultilevelANHGPNiching implements IJasimaMultilevelNiching {
 			final JasimaEvolveExperimentTracker tracker,
 			final MLSSubpopulation group) {
 		List<JasimaEvolveExperiment> experiments = tracker.getResults();
-		DynamicSimConfig simConfig = tracker.getSimConfig();
+		SimConfig simConfig = tracker.getSimConfig();
 
 		double[] adjustment = new double[group.individuals.length];
 
