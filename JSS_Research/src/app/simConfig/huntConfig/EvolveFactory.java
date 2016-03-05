@@ -15,11 +15,6 @@ public class EvolveFactory implements ISimConfigEvolveFactory {
 	public static final String P_SEED = "seed";
 	public static final String P_ROTATE_SEED = "rotate-seed";
 
-	public static final String V_TRAIN_FOUR_OP = "4op";
-	public static final String V_TRAIN_EIGHT_OP = "8op";
-	public static final String V_TRAIN = "train";
-	public static final String V_TEST = "test";
-
 	public static final long DEFAULT_SEED = 15;
 
 	private long initialSeed;
@@ -33,15 +28,8 @@ public class EvolveFactory implements ISimConfigEvolveFactory {
 	public void setup(EvolutionState state, Parameter base) {
 		String instances = state.parameters.getStringWithDefault(base.push(P_INSTANCES), null, null);
 		if (instances != null) {
-			if (instances.equals(V_TRAIN_FOUR_OP)) {
-				simConfig = new FourOpSimConfig();
-			} else if (instances.equals(V_TRAIN_EIGHT_OP)) {
-				simConfig = new EightOpSimConfig();
-			} else if (instances.equals(V_TRAIN)) {
-				simConfig = new TrainSimConfig();
-			} else if (instances.equals(V_TEST)) {
-				simConfig = new TestSimConfig();
-			} else {
+			simConfig = HuntSimConfigGenerator.getSimConfig(instances);
+			if (simConfig == null) {
 				state.output.fatal("Unrecognised instances for the simulator. " + instances);
 			}
 		} else {

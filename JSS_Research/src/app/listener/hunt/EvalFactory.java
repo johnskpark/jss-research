@@ -1,6 +1,8 @@
 package app.listener.hunt;
 
-import org.w3c.dom.Document;
+import java.io.IOException;
+
+import org.w3c.dom.Element;
 
 import app.IWorkStationListener;
 import app.evaluation.IWorkStationListenerEvalFactory;
@@ -14,7 +16,7 @@ public class EvalFactory implements IWorkStationListenerEvalFactory {
 	private int maxSize = DEFAULT_MAX_SIZE;
 
 	@Override
-	public void loadConfig(Document doc) {
+	public void loadConfig(Element doc) throws IOException {
 		// FIXME Does nothing for now, but allow it to
 		// load the max size later down the line.
 	}

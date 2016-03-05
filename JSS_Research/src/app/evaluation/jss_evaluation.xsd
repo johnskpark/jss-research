@@ -20,7 +20,8 @@
 <xs:complexType name="datasetType">
 	<xs:sequence>
 		<xs:element name="datasetClass" type="xs:string" maxOccurs="1" minOccurs="1"/>
-		<xs:element name="datasetSeed" type="xs:integer" maxOccurs="1" minOccurs="0" />
+		<xs:element name="datasetInstance" type="xs:string" maxOccurs="1" minOccurs="1"/>
+		<xs:element name="datasetSeed" type="xs:integer" maxOccurs="1" minOccurs="0"/>
 		<xs:element name="datasetFile" type="xs:string" maxOccurs="1" minOccurs="0"/>
 	</xs:sequence>
 </xs:complexType>
@@ -43,6 +44,7 @@
 <xs:complexType name="listenerType">
 	<xs:sequence>
 		<xs:element name="listenerClass" type="xs:string" maxOccurs="1" minOccurs="1" />
+		<xs:element name="listenerSize" type="xs:integer" maxOccurs="1" minOccurs="1" />
 	</xs:sequence>
 </xs:complexType>
 

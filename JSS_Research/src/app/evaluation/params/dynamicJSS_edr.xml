@@ -29,5 +29,6 @@
 
 	<listenerConfig>
 	    <listenerClass>app.listener.hunt.EvalFactory</listenerClass>
+	    <listenerSize>5</listenerSize>
 	</listenerConfig>
 </evaluationConfig>

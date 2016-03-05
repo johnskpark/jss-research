@@ -43,26 +43,6 @@ public class SimTest {
 		perfValues = new ArrayList<Double>();
 	}
 
-	@Test
-	public void factoryTest_HuntTrain4op() {
-		// TODO
-	}
-
-	@Test
-	public void factoryTest_HuntTrain8op() {
-		// TODO
-	}
-
-	@Test
-	public void factoryTest_HuntTrain() {
-		// TODO
-	}
-
-	@Test
-	public void factoryTest_HuntTest() {
-		// TODO
-	}
-
 
 	@Test
 	public void consistencyTest_HuntTrain4op() {

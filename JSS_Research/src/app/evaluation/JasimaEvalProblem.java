@@ -3,7 +3,6 @@ package app.evaluation;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
@@ -32,8 +31,8 @@ import org.xml.sax.SAXException;
 import app.IWorkStationListener;
 import app.node.INode;
 import app.node.NodeData;
-import app.simConfig.DynamicSimConfig;
 import app.simConfig.ExperimentGenerator;
+import app.simConfig.SimConfig;
 import app.util.RuleParser;
 import jasima.core.experiment.Experiment;
 import jasima.shopSim.core.JobShopExperiment;
@@ -51,8 +50,6 @@ public class JasimaEvalProblem {
 
 	public static final String XML_DATASET_BASE = "datasetConfig";
 	public static final String XML_DATASET_CLASS = "datasetClass";
-	public static final String XML_DATASET_SEED = "datasetSeed";
-	public static final String XML_DATASET_FILE = "datasetFile";
 
 	public static final String XML_FITNESS_BASE = "fitnessConfig";
 	public static final String XML_FITNESS_CLASS = "fitnessClass";
@@ -63,12 +60,10 @@ public class JasimaEvalProblem {
 	public static final String XML_OUTPUT_BASE = "outputConfig";
 	public static final String XML_OUTPUT_FILE = "outputFile";
 
-	private static final int DEFAULT_SEED = 15;
-
 	private Map<String, List<AbsEvalPriorityRule>> solversMap = new HashMap<String, List<AbsEvalPriorityRule>>();
 
-	private DynamicSimConfig simConfig;
-	private long seed = DEFAULT_SEED;
+	private ISimConfigEvalFactory simConfigFactory;
+	private SimConfig simConfig;
 
 	private IJasimaEvalFitness fitness;
 
@@ -220,23 +215,10 @@ public class JasimaEvalProblem {
 				.item(0)
 				.getTextContent());
 
-		simConfig = (DynamicSimConfig) datasetClass.newInstance();
+		simConfigFactory = (ISimConfigEvalFactory) datasetClass.newInstance();
+		simConfigFactory.loadConfig(datasetBase);
 
-		NodeList datasetSeedNodeList = datasetBase.getElementsByTagName(XML_DATASET_SEED);
-		if (datasetSeedNodeList.getLength() != 0) {
-			seed = Long.parseLong(datasetSeedNodeList.item(0).getTextContent());
-		}
-
-		NodeList datasetFileNodeList = datasetBase.getElementsByTagName(XML_DATASET_FILE);
-		if (datasetFileNodeList.getLength() != 0) {
-			String filename = datasetFileNodeList.item(0).getTextContent();
-
-			loadDatasetFile(filename);
-		}
-	}
-
-	private void loadDatasetFile(String filename) throws IOException {
-		// FIXME add in the functionality to add in files.
+		simConfig = simConfigFactory.generateSimConfig();
 	}
 
 	// Load in the performance measure from the XML configuration.
@@ -304,8 +286,6 @@ public class JasimaEvalProblem {
 			List<AbsEvalPriorityRule> solvers = solversMap.get(ruleFilename);
 
 			for (AbsEvalPriorityRule solver : solvers) {
-				simConfig.setSeed(seed);
-
 				for (int i = 0; i < simConfig.getNumConfigs(); i++) {
 					output.printf("%s,%d,%s,%d", ruleFilename, solver.getSeed(), simConfig.getClass().getSimpleName(), i);
 
@@ -321,6 +301,8 @@ public class JasimaEvalProblem {
 
 					workstationListener.clear();
 				}
+
+				simConfig.reset();
 			}
 		}
 
