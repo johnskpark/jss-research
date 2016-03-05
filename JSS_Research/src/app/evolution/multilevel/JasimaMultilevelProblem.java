@@ -52,10 +52,12 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 		// Setup the individual solver for evaluating groups.
 		groupRule = (AbsGPPriorityRule) state.parameters.getInstanceForParameterEq(base.push(P_GROUP_RULE), null, AbsGPPriorityRule.class);
 		groupFitness = (JasimaMultilevelGroupFitness) state.parameters.getInstanceForParameterEq(base.push(P_GROUP_FITNESS), null, JasimaMultilevelGroupFitness.class);
+		groupFitness.setProblem(this);
 
 		// Setup the individual solver for evaluating individuals.
 		indRule = (AbsGPPriorityRule) state.parameters.getInstanceForParameterEq(base.push(P_IND_RULE), null, AbsGPPriorityRule.class);
 		indFitness = (JasimaMultilevelIndividualFitness) state.parameters.getInstanceForParameterEq(base.push(P_IND_FITNESS), null, JasimaMultilevelIndividualFitness.class);
+		indFitness.setProblem(this);
 
 		// Setup the niching algorithm.
 		try {

@@ -50,6 +50,7 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 
 		// Setup the fitness.
 		fitness = (JasimaCoopFitness) state.parameters.getInstanceForParameterEq(base.push(P_FITNESS), null, JasimaCoopFitness.class);
+		fitness.setProblem(this);
 
 		// Setup the number of subpopulations.
         numSubpops = state.parameters.getInt((new Parameter(Initializer.P_POP)).push(Population.P_SIZE), null, 1);
