@@ -48,10 +48,14 @@ public class ExperimentGenerator {
 		return experiment;
 	}
 
+	@SuppressWarnings("unchecked")
 	private static StaticShopExperiment getStaticShopExperiment(final StaticSimConfig simConfig, final PR rule, final int index) {
 		StaticShopExperiment experiment = new StaticShopExperiment();
 
 		experiment.setInstFileName(simConfig.getInstFileName(index));
+
+		BasicJobStatCollector statCollector = new BasicJobStatCollector();
+		experiment.setShopListener(new NotifierListener[]{statCollector});
 
 		return experiment;
 	}

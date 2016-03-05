@@ -6,7 +6,7 @@ public class SixBySixSimConfig extends StaticSimConfig {
 
 	private static final int NUM_CONFIGS = 1;
 
-	private static final String directory = "dataset/";
+	private static final String directory = "dataset/FisherBenchmarksJobShop/";
 
 	@Override
 	public String getInstFileName(int index) {

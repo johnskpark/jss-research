@@ -141,7 +141,7 @@ public abstract class JasimaGPProblem extends GPProblem {
 
 	protected void evaluateReference() {
 		if (!hasReferenceRule()) {
-			throw new RuntimeException("evaluateReference(): Reference rule is not initialised.");
+			throw new RuntimeException("Cannot evaluate reference rule. Reference rule is not initialised.");
 		}
 		if (referenceInstStats.size() != 0) {
 			throw new RuntimeException("The reference rule has been previously evaluated. Please clear the statistics for the reference rule beforehand.");
