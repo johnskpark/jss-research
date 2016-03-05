@@ -14,10 +14,10 @@ public class NormTWTFitness extends AbsJasimaFitness<JasimaGPIndividual> {
 	protected double getFitness(int expIndex, JasimaGPIndividual ind, Map<String, Object> results) {
 		JasimaGPProblem problem = getProblem();
 
-		List<Double> stat = problem.getReferenceStat();
+		List<Double> referenceStat = problem.getReferenceStat();
 
 		double twt = WeightedTardinessStat.getTotalWeightedTardiness(results);
-		double normTWT = stat.get(expIndex) / twt;
+		double normTWT = referenceStat.get(expIndex) / twt;
 
 		return normTWT;
 	}

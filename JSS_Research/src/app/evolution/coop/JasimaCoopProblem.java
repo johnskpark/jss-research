@@ -78,6 +78,12 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 				}
 			}
 		}
+
+		// If there is a reference rule, evaluate it.
+		if (hasReferenceRule()) {
+			clearReference();
+			evaluateReference();
+		}
 	}
 
 	@Override

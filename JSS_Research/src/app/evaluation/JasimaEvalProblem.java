@@ -277,7 +277,7 @@ public class JasimaEvalProblem {
 		// Print out the headers.
 		output.print("RuleFile,RuleSeed,TestSet,InstanceNum");
 
-		// FIXME Add in the functionality to evaluate with multiple fitnesses.
+		// FIXME Add in the functionality to evaluate with multiple fitnesses, such as get the number of nodes.
 		output.printf(",%s", fitness.getHeaderName());
 
 		output.println();
