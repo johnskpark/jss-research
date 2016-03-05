@@ -26,13 +26,14 @@ public abstract class JasimaCoopFitness implements IJasimaFitness<JasimaCoopIndi
 		for (Individual ind : inds) {
 			if (!individualFitnesses.containsKey(ind)) {
 				individualFitnesses.put(ind, getFitness(inds));
+				individualFitnesses.get(ind).setProblem(getProblem());
 			}
 		}
 	}
 	
 	protected abstract IJasimaFitness<JasimaCoopIndividual> getFitness(final Individual[] inds);
 
-	protected JasimaGPProblem getProblem() {
+	public JasimaGPProblem getProblem() {
 		return problem;
 	}
 	
@@ -44,7 +45,6 @@ public abstract class JasimaCoopFitness implements IJasimaFitness<JasimaCoopIndi
 		return shouldSetContext;
 	}
 	
-	@Override
 	public void setProblem(JasimaGPProblem problem) {
 		this.problem = problem;
 	}

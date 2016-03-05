@@ -86,6 +86,7 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 
 		// Apply the benchmark/reference rule to the problem instances.
 		if (hasReferenceRule()) {
+			clearReference();
 			evaluateReference();
 		}
 	}
@@ -96,9 +97,6 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 		if (niching != null) {
 			niching.clear();
 		}
-
-		// Clear the reference stat.
-		clearReference();
 	}
 
 	public JasimaMultilevelGroupFitness getGroupFitness() {
