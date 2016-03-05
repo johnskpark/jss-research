@@ -3,22 +3,26 @@ package app.listener.hunt;
 import java.io.IOException;
 
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 import app.IWorkStationListener;
 import app.evaluation.IWorkStationListenerEvalFactory;
 
 public class EvalFactory implements IWorkStationListenerEvalFactory {
 
-	// FIXME remove this later down the line.
-	public static final int DEFAULT_MAX_SIZE = 5;
+	public static final String XML_MAX_SIZE = "listenerSize";
 
 	private HuntListener listener = null;
-	private int maxSize = DEFAULT_MAX_SIZE;
+	private int maxSize;
 
 	@Override
 	public void loadConfig(Element doc) throws IOException {
-		// FIXME Does nothing for now, but allow it to
-		// load the max size later down the line.
+		NodeList listenerNodeList = doc.getElementsByTagName(XML_MAX_SIZE);
+		if (listenerNodeList.getLength() != 0) {
+			maxSize = Integer.parseInt(listenerNodeList.item(0).getTextContent());
+		} else {
+			throw new IOException("No maximum size specified for the listener.");
+		}
 	}
 
 	@Override

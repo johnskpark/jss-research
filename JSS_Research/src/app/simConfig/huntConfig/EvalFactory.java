@@ -28,6 +28,8 @@ public class EvalFactory implements ISimConfigEvalFactory {
 			if (simConfig == null) {
 				new IOException("Unrecognised instances for the simulator. " + instances);
 			}
+		} else {
+			throw new IOException("No instances specified for the simulator.");
 		}
 
 		NodeList datasetSeedNodeList = doc.getElementsByTagName(XML_DATASET_SEED);

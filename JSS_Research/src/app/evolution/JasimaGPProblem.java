@@ -84,6 +84,8 @@ public abstract class JasimaGPProblem extends GPProblem {
         // Setup the reference rule.
         try {
         	referenceRule = (PR) state.parameters.getInstanceForParameterEq(base.push(P_REFERENCE_RULE), null, PR.class);
+
+        	state.output.message("Reference rule provided: " + referenceRule.getClass().getSimpleName());
         } catch (ParamClassLoadException ex) {
         	state.output.warning("No reference rule provided for JasimaGPProblem.");
         }
@@ -121,17 +123,17 @@ public abstract class JasimaGPProblem extends GPProblem {
 		return workstationListener;
 	}
 
-	protected boolean hasReferenceRule() {
+	public boolean hasReferenceRule() {
 		return referenceRule != null;
 	}
 
-	protected PR getReferenceRule() {
+	public PR getReferenceRule() {
 		return referenceRule;
 	}
 
-	protected List<Double> getReferenceStat() {
+	public List<Double> getReferenceStat() {
 		if (referenceRule == null) {
-			throw new RuntimeException("getReferenceStat(): Reference rule is not initialised.");
+			throw new RuntimeException("Reference rule is not initialised.");
 		}
 
 		return referenceInstStats;
@@ -152,6 +154,7 @@ public abstract class JasimaGPProblem extends GPProblem {
 
 			experiment.runExperiment();
 
+			// FIXME hard coded nonsense.
 			SummaryStat stat = (SummaryStat) experiment.getResults().get("weightedTardMean");
 			referenceInstStats.add(stat.sum());
 		}

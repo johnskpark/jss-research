@@ -50,6 +50,12 @@ public class JasimaSimpleProblem extends JasimaGPProblem {
 			getTracker().setPriorityRule(rule);
 			getTracker().setSimConfig(getSimConfig());
 		}
+
+		// Evaluate the reference rule, if there is one.
+		if (hasReferenceRule()) {
+			clearReference();
+			evaluateReference();
+		}
 	}
 
 	@Override
