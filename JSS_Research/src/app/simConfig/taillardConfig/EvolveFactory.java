@@ -18,6 +18,11 @@ public class EvolveFactory implements ISimConfigEvolveFactory {
 	}
 
 	@Override
+	public boolean rotatesSeed() {
+		return false;
+	}
+
+	@Override
 	public SimConfig generateSimConfig() {
 		if (simConfig == null) {
 			simConfig = new TaillardSimConfig();

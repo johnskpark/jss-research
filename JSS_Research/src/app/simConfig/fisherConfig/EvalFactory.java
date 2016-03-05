@@ -18,6 +18,11 @@ public class EvalFactory implements ISimConfigEvalFactory {
 	}
 
 	@Override
+	public boolean rotatesSeed() {
+		return false;
+	}
+
+	@Override
 	public SimConfig generateSimConfig() {
 		if (simConfig == null) {
 			simConfig = new SixBySixSimConfig();

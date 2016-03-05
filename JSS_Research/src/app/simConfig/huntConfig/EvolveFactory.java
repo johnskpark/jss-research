@@ -43,6 +43,11 @@ public class EvolveFactory implements ISimConfigEvolveFactory {
 	}
 
 	@Override
+	public boolean rotatesSeed() {
+		return rotateSeed;
+	}
+
+	@Override
 	public SimConfig generateSimConfig() {
 		if (!initialSeedSet) {
 			simConfig.setSeed(initialSeed);

@@ -43,8 +43,6 @@ public abstract class JasimaGPProblem extends GPProblem {
 	private PR referenceRule = new HolthausRule();
 	private List<Double> referenceInstStats = new ArrayList<Double>();
 
-	private boolean rotateSeed;
-
 	public void setup(final EvolutionState state, final Parameter base) {
 		super.setup(state, base);
 
@@ -60,7 +58,7 @@ public abstract class JasimaGPProblem extends GPProblem {
 		simConfigFactory.setup(state, base.push(P_SIMULATOR));
 		simConfig = simConfigFactory.generateSimConfig();
 
-		state.output.message("JasimaGPProblem rotate seed: " + rotateSeed);
+		state.output.message("JasimaGPProblem rotate seed: " + simConfigFactory.rotatesSeed());
 
 		// Setup the tracker.
 		try {

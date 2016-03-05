@@ -16,6 +16,11 @@ public class EvolveFactory implements ISimConfigEvolveFactory {
 	}
 
 	@Override
+	public boolean rotatesSeed() {
+		return false;
+	}
+
+	@Override
 	public SimConfig generateSimConfig() {
 		// TODO Auto-generated method stub
 		return null;

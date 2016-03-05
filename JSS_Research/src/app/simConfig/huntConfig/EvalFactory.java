@@ -39,6 +39,11 @@ public class EvalFactory implements ISimConfigEvalFactory {
 	}
 
 	@Override
+	public boolean rotatesSeed() {
+		return false;
+	}
+
+	@Override
 	public SimConfig generateSimConfig() {
 		if (!initialSeedSet) {
 			simConfig.setSeed(initialSeed);
