@@ -123,7 +123,6 @@ public class JasimaMultilevelStatistics extends MLSStatistics implements IJasima
 		instanceDistanceCount.clear();
 
 		// Remove the statistics from the listeners.
-		// FIXME this should belong outside of the post evaluation statistics.
 		JasimaMultilevelProblem problem = (JasimaMultilevelProblem) state.evaluator.p_problem;
 
 		problem.getIndividualFitness().clearListeners();
