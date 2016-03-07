@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import app.evolution.JasimaGPProblem;
 import app.evolution.multilevel.IJasimaMultilevelFitnessListener;
 import app.evolution.multilevel.JasimaMultilevelIndividual;
 import app.evolution.multilevel.JasimaMultilevelIndividualFitness;
@@ -41,12 +40,9 @@ public class IndividualNormTWTFitness extends JasimaMultilevelIndividualFitness 
 
 	@Override
 	protected double getFitness(int expIndex, JasimaMultilevelIndividual ind, Map<String, Object> results) {
-		JasimaGPProblem problem = getProblem();
+		List<Double> referenceStat = getProblem().getReferenceStat();
 
-		List<Double> referenceStat = problem.getReferenceStat();
-
-		double twt = WeightedTardinessStat.getTotalWeightedTardiness(results);
-		double normTWT = referenceStat.get(expIndex) / twt;
+		double normTWT = WeightedTardinessStat.getNormTotalWeightedTardiness(results, referenceStat.get(expIndex));
 
 		for (IJasimaMultilevelFitnessListener listener : listeners) {
 			listener.addFitness(JasimaMultilevelStatistics.INDIVIDUAL_FITNESS, expIndex, normTWT);

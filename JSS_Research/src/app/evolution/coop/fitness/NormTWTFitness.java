@@ -5,7 +5,6 @@ import java.util.Map;
 
 import app.evolution.AbsJasimaFitness;
 import app.evolution.IJasimaFitness;
-import app.evolution.JasimaGPProblem;
 import app.evolution.coop.JasimaCoopFitness;
 import app.evolution.coop.JasimaCoopIndividual;
 import app.stat.WeightedTardinessStat;
@@ -22,14 +21,9 @@ public class NormTWTFitness extends JasimaCoopFitness {
 
 		@Override
 		protected double getFitness(int expIndex, JasimaCoopIndividual ind, Map<String, Object> results) {
-			JasimaGPProblem problem = getProblem();
+			List<Double> referenceStat = getProblem().getReferenceStat();
 
-			List<Double> referenceStat = problem.getReferenceStat();
-
-			double twt = WeightedTardinessStat.getTotalWeightedTardiness(results);
-			double normTWT = referenceStat.get(expIndex) / twt;
-
-			return normTWT;
+			return WeightedTardinessStat.getNormTotalWeightedTardiness(results, referenceStat.get(expIndex));
 		}
 	}
 

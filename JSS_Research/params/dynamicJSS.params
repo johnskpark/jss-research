@@ -72,11 +72,11 @@ eval.problem.reference-rule = app.priorityRules.HolthausRule
 eval.problem.rule = app.evolution.priorityRules.BasicPriorityRule
 eval.problem.fitness = app.evolution.simple.fitness.NormTWTFitness
 
-# eval.problem.simulator = app.simConfig.huntConfig.EvolveFactory
-# eval.problem.simulator.instances = 4op
-# eval.problem.simulator.seed = 15
+eval.problem.simulator = app.simConfig.huntConfig.EvolveFactory
+eval.problem.simulator.instances = 4op
+eval.problem.simulator.seed = 15
 
-eval.problem.simulator = app.simConfig.taillardConfig.EvolveFactory
+# eval.problem.simulator = app.simConfig.taillardConfig.EvolveFactory
 
 eval.problem.workstation = app.listener.hunt.EvolveFactory
 eval.problem.workstation.max-jobs = 5
