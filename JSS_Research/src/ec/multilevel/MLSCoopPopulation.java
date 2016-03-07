@@ -1,12 +1,11 @@
 package ec.multilevel;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import ec.Individual;
 import ec.Subpopulation;
+import ec.util.Pair;
 
 public class MLSCoopPopulation {
 
@@ -22,7 +21,7 @@ public class MLSCoopPopulation {
 	private List<Individual> ungroupedIndividuals;
 
 	private List<MLSSubpopulation> validGroups;
-	private Map<Individual, List<MLSSubpopulation>> removedIndividuals;
+	private List<Pair<Individual, List<MLSSubpopulation>>> removedIndividuals;
 
 	private int numMetaGroups;
 	private int numMetaInds;
@@ -39,7 +38,7 @@ public class MLSCoopPopulation {
 		ungroupedIndividuals = new ArrayList<Individual>();
 
 		validGroups = new ArrayList<MLSSubpopulation>();
-		removedIndividuals = new HashMap<Individual, List<MLSSubpopulation>>();
+		removedIndividuals = new ArrayList<Pair<Individual, List<MLSSubpopulation>>>();
 	}
 
 	public void addGroup(MLSSubpopulation group) {
@@ -55,10 +54,16 @@ public class MLSCoopPopulation {
 			if (individuals.contains(ind)) {
 				addValidGroup(group);
 			} else {
-				if (!removedIndividuals.containsKey(ind)) {
-					removedIndividuals.put(ind, new ArrayList<MLSSubpopulation>());
+				Pair<Individual, List<MLSSubpopulation>> removedInd = getGroupsWithRemoved(ind);
+				if (removedInd == null) {
+					Pair<Individual, List<MLSSubpopulation>> newRemovedInd =
+							new Pair<Individual, List<MLSSubpopulation>>(ind, new ArrayList<MLSSubpopulation>());
+					newRemovedInd.i2.add(group);
+
+					removedIndividuals.add(newRemovedInd);
+				} else if (!removedInd.i2.contains(group)) {
+						removedInd.i2.add(group);
 				}
-				removedIndividuals.get(ind).add(group);
 			}
 		}
 	}
@@ -77,12 +82,13 @@ public class MLSCoopPopulation {
 		}
 
 		// Update the valid groups list.
-		if (removedIndividuals.containsKey(ind)) {
-			List<MLSSubpopulation> groups = removedIndividuals.get(ind);
+		Pair<Individual, List<MLSSubpopulation>> removedInd = getGroupsWithRemoved(ind);
+		if (removedInd != null) {
+			List<MLSSubpopulation> groups = removedInd.i2;
 			for (MLSSubpopulation group : groups) {
 				addValidGroup(group);
 			}
-			removedIndividuals.remove(ind);
+			removedIndividuals.remove(removedInd);
 		}
 	}
 
@@ -138,7 +144,7 @@ public class MLSCoopPopulation {
 	public Individual[] getUnremovedIndividuals(Subpopulation subpop) {
 		List<Individual> unremovedIndividuals = new ArrayList<Individual>();
 		for (Individual ind : subpop.individuals) {
-			if (!removedIndividuals.containsKey(ind)) {
+			if (getGroupsWithRemoved(ind) == null) {
 				unremovedIndividuals.add(ind);
 			}
 		}
@@ -147,6 +153,15 @@ public class MLSCoopPopulation {
 		unremovedIndividuals.toArray(result);
 
 		return result;
+	}
+
+	private Pair<Individual, List<MLSSubpopulation>> getGroupsWithRemoved(Individual ind) {
+		for (Pair<Individual, List<MLSSubpopulation>> removedInd : removedIndividuals) {
+			if (removedInd.i1.equals(ind)) {
+				return removedInd;
+			}
+		}
+		return null;
 	}
 
 	public MLSSubpopulation[] getValidGroups() {

@@ -25,8 +25,10 @@ public class EvalFactory implements ISimConfigEvalFactory {
 			String instances = datasetInstNodeList.item(0).getTextContent();
 
 			simConfig = HuntSimConfigGenerator.getSimConfig(instances);
-			if (simConfig == null) {
-				new IOException("Unrecognised instances for the simulator. " + instances);
+			if (simConfig != null) {
+				System.out.println("Configuration loaded for simulator: " + simConfig.getClass().getSimpleName());
+			} else {
+				throw new IOException("Unrecognised configuration for the simulator. " + instances);
 			}
 		} else {
 			throw new IOException("No instances specified for the simulator.");

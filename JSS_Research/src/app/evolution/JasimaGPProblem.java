@@ -154,7 +154,7 @@ public abstract class JasimaGPProblem extends GPProblem {
 
 			experiment.runExperiment();
 
-			// FIXME hard coded nonsense.
+			// FIXME This part is hard coded, so fix this part in some future date.
 			SummaryStat stat = (SummaryStat) experiment.getResults().get("weightedTardMean");
 			referenceInstStats.add(stat.sum());
 		}

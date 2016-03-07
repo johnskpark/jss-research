@@ -29,8 +29,10 @@ public class EvolveFactory implements ISimConfigEvolveFactory {
 		String instances = state.parameters.getStringWithDefault(base.push(P_INSTANCES), null, null);
 		if (instances != null) {
 			simConfig = HuntSimConfigGenerator.getSimConfig(instances);
-			if (simConfig == null) {
-				state.output.fatal("Unrecognised instances for the simulator. " + instances);
+			if (simConfig != null) {
+				state.output.message("Configuration loaded for simulator: " + simConfig.getClass().getSimpleName());
+			} else {
+				state.output.fatal("Unrecognised configuration for the simulator. " + instances);
 			}
 		} else {
 			state.output.fatal("No instances specified for the simulator.");

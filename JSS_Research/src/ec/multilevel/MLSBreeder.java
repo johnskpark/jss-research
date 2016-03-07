@@ -3,9 +3,7 @@ package ec.multilevel;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import ec.Breeder;
 import ec.BreedingPipeline;
@@ -449,10 +447,10 @@ public class MLSBreeder extends Breeder {
 			};
 
 			// Find the common individuals between the two groups.
-			Set<Individual> commonInds = new HashSet<Individual>();
+			List<Individual> commonInds = new ArrayList<Individual>();
 			for (int i = 0; i < parents[0].individuals.length; i++) {
 				for (int j = 0; j < parents[1].individuals.length; j++) {
-					if (parents[0].individuals[i] == parents[1].individuals[j]) {
+					if (parents[0].individuals[i].equals(parents[1].individuals[j])) {
 						commonInds.add(parents[0].individuals[i]);
 					}
 				}
@@ -560,7 +558,7 @@ public class MLSBreeder extends Breeder {
 					child.individuals[ind] = parent.individuals[ind];
 				}
 
-				Set<Individual> parentInds = new HashSet<Individual>(parent.individuals.length);
+				List<Individual> parentInds = new ArrayList<Individual>(parent.individuals.length);
 				for (Individual ind : parent.individuals) {
 					parentInds.add(ind);
 				}

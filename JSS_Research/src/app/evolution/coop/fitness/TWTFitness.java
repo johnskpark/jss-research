@@ -12,7 +12,7 @@ import ec.Individual;
 public class TWTFitness extends JasimaCoopFitness {
 
 	@Override
-	protected IJasimaFitness<JasimaCoopIndividual> getFitness(final Individual[] inds) {
+	protected IJasimaFitness<JasimaCoopIndividual> generateFitness(final Individual[] inds) {
 		return new IndividualTWTFitness();
 	}
 

@@ -148,8 +148,6 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 			if (hasWorkStationListener()) { getWorkStationListener().clear(); }
 		}
 
-		resetSimSeed();
-
 		groupFitness.setFitness(state, group);
 		groupFitness.clear();
 
@@ -162,6 +160,8 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 		}
 
 		group.setEvaluated(true);
+
+		resetSimSeed();
 	}
 
 	@Override

@@ -139,7 +139,7 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 
 			// Add in the results of the training instance to the fitness of the group.
 			for (int j = 0; j < inds.length; j++) {
-				fitness.accumulateFitness(expIndex, (JasimaCoopIndividual) inds[j], experiment.getResults());
+				fitness.accumulateFitness(expIndex, (JasimaCoopIndividual) inds[j], experiment.getResults(), j);
 			}
 
 			if (hasWorkStationListener()) { getWorkStationListener().clear(); }
@@ -147,7 +147,7 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 
 		fitness.setUpdateConfiguration(inds, updateFitness, shouldSetContext());
 		for (int i = 0; i < inds.length; i++) {
-			fitness.setFitness(state, (JasimaCoopIndividual) inds[i]);
+			fitness.setFitness(state, (JasimaCoopIndividual) inds[i], i);
 
 			inds[i].evaluated = true;
 		}
