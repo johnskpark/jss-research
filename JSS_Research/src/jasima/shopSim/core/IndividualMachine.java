@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,8 +15,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: IndividualMachine.java 153 2014-04-17 11:51:50Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.shopSim.core;
 
@@ -29,9 +27,9 @@ import java.util.List;
  * This class represents a single machine, which is part of a
  * {@link WorkStation}.
  * 
- * @author Torsten Hildebrandt <hil@biba.uni-bremen.de>
+ * @author Torsten Hildebrandt
  * @version 
- *          "$Id: IndividualMachine.java 153 2014-04-17 11:51:50Z THildebrandt@gmail.com $"
+ *          "$Id$"
  */
 public class IndividualMachine {
 
@@ -46,6 +44,8 @@ public class IndividualMachine {
 	public double relDate;
 	public int initialSetup;
 	public String name = null;
+
+	@SuppressWarnings("unchecked")
 	public List<? extends DowntimeSource> downsources = Collections.EMPTY_LIST;
 
 	public MachineState state;
@@ -87,7 +87,7 @@ public class IndividualMachine {
 		procStarted = -1.0d;
 
 		workStation.activated(this);
-		
+
 		downReason = null;
 	}
 
@@ -95,6 +95,9 @@ public class IndividualMachine {
 	 * Machine going down for a certain amount of time. If this machine is
 	 * already down or currently processing, this operation is finished before
 	 * the new downtime can become active.
+	 * 
+	 * @param downReason
+	 *            The {@link DowntimeSource} causing the shutdown.
 	 */
 	public void takeDown(final DowntimeSource downReason) {
 		final JobShop shop = workStation.shop();
@@ -120,7 +123,7 @@ public class IndividualMachine {
 			procStarted = shop.simTime();
 			procFinished = shop.simTime();
 			state = MachineState.DOWN;
-			this.downReason = downReason; 
+			this.downReason = downReason;
 			curJob = null;
 
 			workStation.takenDown(this);

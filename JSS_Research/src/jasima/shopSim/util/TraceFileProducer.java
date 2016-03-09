@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,8 +15,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: TraceFileProducer.java 187 2014-10-27 16:34:43Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.shopSim.util;
 
@@ -40,11 +38,13 @@ import java.util.Date;
  * Creating this file is rather slow, so this class is mainly useful for
  * debugging purposes.
  * 
- * @author Torsten Hildebrandt <hil@biba.uni-bremen.de>, 2012-08-24
+ * @author Torsten Hildebrandt, 2012-08-24
  * @version 
- *          "$Id: TraceFileProducer.java 187 2014-10-27 16:34:43Z THildebrandt@gmail.com $"
+ *          "$Id$"
  */
 public class TraceFileProducer extends ShopListenerBase {
+
+	private static final long serialVersionUID = -4595308395912967961L;
 
 	// parameters
 

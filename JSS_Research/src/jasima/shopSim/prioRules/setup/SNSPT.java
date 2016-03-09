@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,8 +15,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: SNSPT.java 73 2013-01-08 17:16:19Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.shopSim.prioRules.setup;
 
@@ -29,9 +27,11 @@ import jasima.shopSim.core.PriorityQueue;
  * see Pickardt and Branke (2012).
  * 
  * @author Christoph Pickardt, 2011-11-15
- * @version $Id: SNSPT.java 73 2013-01-08 17:16:19Z THildebrandt@gmail.com $
+ * @version "$Id$"
  */
 public class SNSPT extends PR {
+
+	private static final long serialVersionUID = 3765192665858565459L;
 
 	protected double[][] setupMatrix;
 

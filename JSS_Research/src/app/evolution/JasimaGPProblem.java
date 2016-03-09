@@ -153,9 +153,9 @@ public abstract class JasimaGPProblem extends GPProblem {
 					expIndex);
 
 			experiment.runExperiment();
-
+			
 			// FIXME This part is hard coded, so fix this part in some future date.
-			SummaryStat stat = (SummaryStat) experiment.getResults().get("weightedTardMean");
+			SummaryStat stat = (SummaryStat) experiment.getResults().get("tardiness");
 			referenceInstStats.add(stat.sum());
 		}
 

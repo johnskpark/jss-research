@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,8 +15,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: OCBAExperiment.java 74 2013-01-08 17:31:49Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.core.experiment;
 
@@ -31,6 +29,7 @@ import java.util.Map;
 import org.apache.commons.math3.distribution.NormalDistribution;
 
 /**
+ * <p>
  * Purpose of this class is to find the best configuration/parameterization of a
  * base experiment (subject to random effects) using the Optimal Computing
  * Budget Allocation (OCBA) method. In contrast to simply running a
@@ -39,25 +38,30 @@ import org.apache.commons.math3.distribution.NormalDistribution;
  * budget of base experiment runs in order to maximize the probability of
  * actually selecting the best configuration (Probability of Correct Selection,
  * PCS).
- * <p />
+ * </p>
+ * <p>
  * Implements the OCBA method as described in Chen2000: Chen, C. H., J. Lin, E.
  * Yücesan, and S. E. Chick,
  * "Simulation Budget Allocation for Further Enhancing the Efficiency of Ordinal Optimization,"
  * Journal of Discrete Event Dynamic Systems: Theory and Applications, Vol. 10,
  * pp. 251-270, July 2000.
- * <p />
+ * </p>
+ * <p>
  * First minReplicationsPerConfiguration replications (default: 5) are performed
  * for each configuration. Later on runs are allocated dynamically using OCBA.
- * The total budget is given by: getNumReplications() (default: 10)*<number of
- * configurations>
- * <p />
+ * The total budget is given by: getNumReplications() (default: 10)*&lt;number
+ * of configurations&gt;
+ * </p>
+ * <p>
  * To use this class at least the name of the objective value (
  * {@link #setObjective(String)}) and whether this objective is to be maximized
  * or minimized (setMaximize()) have to be set.
- * <p />
+ * </p>
+ * <p>
  * Each iteration of the allocation algorithm allocates more than a single run
  * in order to benefit from parallelization.
- * <p />
+ * </p>
+ * <p>
  * A usage example is given below. It selects the best of two dispatching rules
  * of a dynamic job shop scenario.
  * 
@@ -100,7 +104,8 @@ import org.apache.commons.math3.distribution.NormalDistribution;
  * </pre>
  * 
  * </blockquote>
- * <p />
+ * 
+ * <p>
  * This class implements a basic ranking and selection method. In future
  * versions it would be very helpful to improve its algorithm to better deal
  * with very similar performances of good configurations (such as indifference
@@ -111,10 +116,11 @@ import org.apache.commons.math3.distribution.NormalDistribution;
  * replications, but should provide reasonably good results to be useful.
  * Probably it's also a good starting point for experts in the field to
  * implement (and contribute?) improved algorithms.
+ * </p>
  * 
- * @author Torsten Hildebrandt <hil@biba.uni-bremen.de>
+ * @author Torsten Hildebrandt
  * @version 
- *          "$Id: OCBAExperiment.java 74 2013-01-08 17:31:49Z THildebrandt@gmail.com $"
+ *          "$Id$"
  * 
  * @see MultipleReplicationExperiment
  * @see FullFactorialExperiment
@@ -385,26 +391,30 @@ public class OCBAExperiment extends FullFactorialExperiment {
 	 * determines how many additional runs each design should have for the next
 	 * iteration of simulation.
 	 * 
-	 * @param s_mean
-	 *            [i]: sample mean of design i, i=0,1,..,ND-1
-	 * 
-	 * @param s_var
-	 *            [i]: sample variance of design i, i=0,1,..,ND-1
-	 * 
-	 * @param n
-	 *            [i]: number of simulation replication of design i,
-	 *            i=0,1,..,ND-1
 	 * 
 	 * @param add_budget
-	 *            : the additional simulation budget
-	 * 
-	 * @param type
-	 *            : type of optimization problem. type=1, MIN problem; type=2,
-	 *            MAX problem
+	 *            The total number of additional replications that can be
+	 *            performed.
 	 * 
 	 * @return additional number of simulation replication assigned to design i,
 	 *         i=0,1,..,ND-1
 	 */
+	// * @param s_mean
+	// * [i]: sample mean of design i, i=0,1,..,ND-1
+	// *
+	// * @param s_var
+	// * [i]: sample variance of design i, i=0,1,..,ND-1
+	// *
+	// * @param n
+	// * [i]: number of simulation replication of design i,
+	// * i=0,1,..,ND-1
+	// *
+	// * @param add_budget
+	// * : the additional simulation budget
+	// *
+	// * @param type
+	// * : type of optimization problem. type=1, MIN problem; type=2,
+	// * MAX problem
 	protected int[] ocba(int add_budget) {
 		final int nd = stats.length;
 
@@ -519,13 +529,16 @@ public class OCBAExperiment extends FullFactorialExperiment {
 
 	/**
 	 * Sets the minimum number of replications performed for each configuration.
-	 * This has to be >=3.
+	 * This has to be &gt;=3.
+	 * 
+	 * @param minReps
+	 *            The minimum number of replications per configuration.
 	 */
-	public void setMinReplicationsPerConfiguration(int v) {
-		if (v < 3)
+	public void setMinReplicationsPerConfiguration(int minReps) {
+		if (minReps < 3)
 			throw new IllegalArgumentException(
 					"Minimum number of replications has to be >=3.");
-		this.minReplicationsPerConfiguration = v;
+		this.minReplicationsPerConfiguration = minReps;
 	}
 
 	public int getMinReplicationsPerConfiguration() {
@@ -534,8 +547,10 @@ public class OCBAExperiment extends FullFactorialExperiment {
 
 	/**
 	 * Sets the name of the objective which defines "best". This has to be the
-	 * name of a result produced by the base experiment (
-	 * {@link #getBaseExperiment()}).
+	 * name of a result produced by the base experiment.
+	 * 
+	 * @param objective
+	 *            Result name to use as the objective function.
 	 */
 	public void setObjective(String objective) {
 		this.objective = objective;
@@ -600,6 +615,7 @@ public class OCBAExperiment extends FullFactorialExperiment {
 	 * Sets whether a minimization or maximization experiment should be solved.
 	 * 
 	 * @param problemType
+	 *            Whether minimization or maximization are required.
 	 */
 	public void setProblemType(ProblemType problemType) {
 		this.problemType = problemType;

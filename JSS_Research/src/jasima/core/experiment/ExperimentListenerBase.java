@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,8 +15,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: ExperimentListenerBase.java 74 2013-01-08 17:31:49Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.core.experiment;
 
@@ -32,11 +30,11 @@ import java.util.Map;
  * This class can be used as a base class for experiment listeners. It delegates
  * all events of {@link Experiment} to separate methods.
  * 
- * @author Torsten Hildebrandt <hil@biba.uni-bremen.de>
+ * @author Torsten Hildebrandt
  * @version 
- *          "$Id: ExperimentListenerBase.java 74 2013-01-08 17:31:49Z THildebrandt@gmail.com $"
+ *          "$Id$"
  */
-public class ExperimentListenerBase implements
+public abstract class ExperimentListenerBase implements
 		NotifierListener<Experiment, ExperimentEvent>, Cloneable, Serializable {
 
 	private static final long serialVersionUID = -3880665781275114403L;

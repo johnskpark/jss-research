@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,8 +15,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: ShopConfigurator.java 151 2014-04-14 10:27:39Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.shopSim.util;
 
@@ -62,7 +60,7 @@ public class ShopConfigurator {
 		shop.setName(shopDef.getName());
 		shop.setSimulationLength(shopDef.getSimulationLength());
 		shop.setEnableLookAhead(shopDef.isEnableLookAhead());
-		shop.setMaxJobsFinished(shopDef.getMaxJobsFinished());
+		shop.setStopAfterNumJobs(shopDef.getStopAfterNumJobs());
 		shop.setMaxJobsInSystem(shopDef.getMaxJobsInSystem());
 
 		// create all machines
@@ -164,7 +162,7 @@ public class ShopConfigurator {
 		} catch (CloneNotSupportedException e) {
 			throw new RuntimeException(e);
 		}
-		
+
 		return ds;
 	}
 

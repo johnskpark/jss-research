@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,8 +15,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: RandomFactory.java 181 2014-10-23 15:45:13Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.core.random;
 
@@ -30,11 +28,13 @@ import java.util.HashMap;
 import java.util.Random;
 
 /**
+ * <p>
  * This class provides functionality to create (independent) random number
  * streams. These streams are dependent on a base seed ({@link #setSeed(long)})
  * and a stream name (provided as a parameter to {@link #createInstance(String)}
  * ).
- * <p />
+ * </p>
+ * <p>
  * Behaviour of this class can be modified in two ways using system properties.
  * <ol>
  * <li>A property {@link #RANDOM_FACTORY_PROP_KEY} can be used to change the
@@ -44,9 +44,9 @@ import java.util.Random;
  * {@link #RANDOM_CLASS_PROP_KEY}.
  * </ol>
  * 
- * @author Torsten Hildebrandt <hil@biba.uni-bremen.de>
+ * @author Torsten Hildebrandt
  * @version 
- *          "$Id: RandomFactory.java 181 2014-10-23 15:45:13Z THildebrandt@gmail.com $"
+ *          "$Id$"
  */
 public class RandomFactory implements Serializable {
 	private static final long serialVersionUID = 4828925858942593527L;

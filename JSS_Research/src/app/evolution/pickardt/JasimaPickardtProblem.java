@@ -207,7 +207,7 @@ public class JasimaPickardtProblem extends Problem implements SimpleProblemForm 
 		experiment.setUtilLevel(simConfig.getUtilLevel(index));
 		experiment.setDueDateFactor(simConfig.getDueDateFactor(index));
 		experiment.setWeights(simConfig.getWeight(index));
-		experiment.setOpProcTime(simConfig.getMinOpProc(index), simConfig.getMaxOpProc(index));
+		experiment.setProcTimes(simConfig.getProcTime(index));
 		experiment.setNumOps(simConfig.getMinNumOps(index), simConfig.getMaxNumOps(index));
 
 		experiment.setShopListener(new NotifierListener[]{new BasicJobStatCollector()});

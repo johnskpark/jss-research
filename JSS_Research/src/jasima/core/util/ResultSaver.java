@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,8 +15,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: ResultSaver.java 74 2013-01-08 17:31:49Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.core.util;
 
@@ -36,10 +34,14 @@ import java.util.Map;
 /**
  * This class uses Java's serialization mechanism to save experiment results in
  * a binary file.
+ * <p>
  * 
- * @author Torsten Hildebrandt <hil@biba.uni-bremen.de>
+ * This file can later is later converted to a final output format, so usually a
+ * subclass of {@code ResultSaver} is used, e.g., {@link ExcelSaver}.
+ * 
+ * @author Torsten Hildebrandt
  * @version 
- *          "$Id: ResultSaver.java 74 2013-01-08 17:31:49Z THildebrandt@gmail.com $"
+ *          "$Id$"
  */
 public class ResultSaver extends AbstractResultSaver {
 
@@ -250,6 +252,8 @@ public class ResultSaver extends AbstractResultSaver {
 	 * Whether to save parameters and results of sub-experiments.
 	 * 
 	 * @param saveSubExperiments
+	 *            Whether or not to store results of sub-experiments.
+	 * 
 	 * @see MultipleReplicationExperiment
 	 * @see FullFactorialExperiment
 	 */

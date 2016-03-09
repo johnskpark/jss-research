@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,8 +15,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: IFTMinusUIT.java 111 2013-05-16 12:39:01Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.shopSim.prioRules.upDownStream;
 
@@ -32,15 +30,18 @@ import java.util.List;
 /**
  * This class implements a rule developed by Branke and Pickardt (2011) for job
  * shop problems, which attempts to measure the usable idle time on other work
- * centres in the prioritization of jobs.
- * <p />
+ * centers in the prioritization of jobs.
+ * <p>
  * The lookahead needs to be enabled in the simulation for this rule to work
  * properly.
  * 
  * @author Christoph Pickardt, 2011-11-15
- * @version "$Id: IFTMinusUIT.java 73 2013-01-08 17:16:19Z THildebrandt@gmail.com$"
+ * @version 
+ *          "$Id: IFTMinusUIT.java 73 2013-01-08 17:16:19Z THildebrandt@gmail.com$"
  */
 public class IFTMinusUIT extends PR {
+
+	private static final long serialVersionUID = -8999022613610310632L;
 
 	@Override
 	public double calcPrio(PrioRuleTarget j) {

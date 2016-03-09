@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,8 +15,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: Route.java 145 2014-02-28 16:37:25Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.shopSim.core;
 
@@ -32,7 +30,7 @@ import java.util.Set;
 /**
  * Simple container for Operations.
  * 
- * @version "$Id: Route.java 145 2014-02-28 16:37:25Z THildebrandt@gmail.com $"
+ * @version "$Id$"
  */
 public class Route implements ValueStore {
 
@@ -86,7 +84,7 @@ public class Route implements ValueStore {
 	 *            The key name.
 	 * @param value
 	 *            value to assign to {@code key}.
-	 * @see #valueStoreGet(String)
+	 * @see #valueStoreGet(Object)
 	 */
 	@Override
 	public void valueStorePut(Object key, Object value) {

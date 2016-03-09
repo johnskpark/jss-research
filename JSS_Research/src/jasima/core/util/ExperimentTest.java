@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,13 +15,10 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: ExperimentTest.java 164 2014-06-25 13:24:09Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.core.util;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.number.IsCloseTo.closeTo;
 import static org.junit.matchers.JUnitMatchers.hasItem;
 import jasima.core.experiment.Experiment;
 import jasima.core.statistics.SummaryStat;
@@ -30,6 +27,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.math3.util.Precision;
 import org.junit.Rule;
 import org.junit.rules.ErrorCollector;
 
@@ -39,24 +37,31 @@ import org.junit.rules.ErrorCollector;
  * from {@code ExperimentTest} and calling {@link #checkResults(Map, Map)} many
  * results of an experiment can be validated with a single method call.
  * 
- * @author Torsten Hildebrandt <hil@biba.uni-bremen.de>, 2012-08-08
+ * @author Torsten Hildebrandt, 2012-08-08
  * @version 
- *          "$Id: ExperimentTest.java 164 2014-06-25 13:24:09Z THildebrandt@gmail.com $"
+ *          "$Id$"
  */
 public class ExperimentTest {
 
 	@Rule
 	public ErrorCollector errorCollector = new ErrorCollector();
 
-	public static final double EPS = 1e-6d;
+	/**
+	 * precision in terms of ULPs (Units in the last place), so FP comparisons
+	 * work for large and small numbers; 
+	 * @see <a href="https://randomascii.wordpress.com/2012/02/25/comparing-floating-point-numbers-2012-edition/"></a>
+	 */
+	protected int maxUlps = 10;
 
 	/**
 	 * Checks whether key sets of actual and expected results are the same.
 	 * 
 	 * @param resActual
+	 *            The map of results actually obtained.
 	 * @param resExpected
+	 *            The map of expected results.
 	 */
-	public void checkKeySets(Map<String, Object> resActual,
+	protected void checkKeySets(Map<String, Object> resActual,
 			Map<String, Object> resExpected) {
 		Set<String> keysAct = new HashSet<String>(resActual.keySet());
 		Set<String> keysExp = new HashSet<String>(resExpected.keySet());
@@ -83,9 +88,11 @@ public class ExperimentTest {
 	 * ignored.
 	 * 
 	 * @param resActual
+	 *            The map of results actually obtained.
 	 * @param resExpected
+	 *            The map of expected results.
 	 */
-	public void checkResults(Map<String, Object> resActual,
+	protected void checkResults(Map<String, Object> resActual,
 			Map<String, Object> resExpected) {
 		for (String name : resExpected.keySet()) {
 			if (Experiment.RUNTIME.equals(name)
@@ -104,27 +111,35 @@ public class ExperimentTest {
 				checkValueStat(name, (SummaryStat) expected,
 						(SummaryStat) actual);
 			} else if (expected instanceof Double) {
-				Double exp = (Double) expected;
-				Double act = (Double) actual;
-				checkDouble(name, act, exp);
-			} else if (expected instanceof Float) {
-				Float exp = (Float) expected;
-				Float act = (Float) actual;
-				Double e = exp == null ? null : exp.doubleValue();
-				Double a = act == null ? null : act.doubleValue();
-				errorCollector.checkThat(name, a, closeTo(e, EPS));
+				Number exp = (Number) expected;
+				Number act = (Number) actual;
+				checkDouble(name, act.doubleValue(), exp.doubleValue());
+			} else if (expected instanceof Double) {
+				Number exp = (Number) expected;
+				Number act = (Number) actual;
+				checkDouble(name, act.doubleValue(), exp.doubleValue());
 			} else
 				errorCollector.checkThat(name, actual, is(expected));
 		}
 	}
 
-	private void checkDouble(String name, double act, double exp) {
-		if (Double.compare(exp, act) != 0) {
-			errorCollector.checkThat(name, act, closeTo(exp, EPS));
+	protected void checkFloat(String name, float act, float exp) {
+		if (act != exp) {
+			boolean cmp = Precision.equals(act, exp, maxUlps);
+			errorCollector.checkThat(
+					name + ";  act: " + act + ";  exp: " + exp, cmp, is(true));
 		}
 	}
 
-	public void checkValueStat(String name, SummaryStat exp, SummaryStat act) {
+	protected void checkDouble(String name, double act, double exp) {
+		if (Double.compare(exp, act) != 0) {
+			boolean cmp = Precision.equals(act, exp, maxUlps);
+			errorCollector.checkThat(
+					name + ";  act: " + act + ";  exp: " + exp, cmp, is(true));
+		}
+	}
+
+	protected void checkValueStat(String name, SummaryStat exp, SummaryStat act) {
 		errorCollector.checkThat(name + " (numObs)", act.numObs(),
 				is(exp.numObs()));
 		checkDouble(name + " (weightSum)", act.weightSum(), exp.weightSum());

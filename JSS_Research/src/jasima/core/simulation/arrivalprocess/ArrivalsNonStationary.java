@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,8 +15,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: ArrivalsNonStationary.java 74 2013-01-08 17:31:49Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.core.simulation.arrivalprocess;
 
@@ -31,13 +29,13 @@ import org.apache.commons.math3.analysis.UnivariateFunction;
  * (inter-)arrivals do not follow a single distribution. To do so, a DblStream
  * with mean of 1 (e.g., an exponential distribution with rate 1) and the
  * inverse cumulative expectation function have to be provided.
- * <p />
+ * <p>
  * For details see, e.g., Law: "Simulation Modelling and Analysis", how to
  * create non-stationary (Poisson) processes.
  * 
- * @author Torsten Hildebrandt <hil@biba.uni-bremen.de>, 2012-08-07
+ * @author Torsten Hildebrandt, 2012-08-07
  * @version 
- *          "$Id: ArrivalsNonStationary.java 74 2013-01-08 17:31:49Z THildebrandt@gmail.com $"
+ *          "$Id$"
  */
 public class ArrivalsNonStationary extends ArrivalProcess {
 
@@ -67,6 +65,7 @@ public class ArrivalsNonStationary extends ArrivalProcess {
 		super.init();
 
 		unitMeanDblStream.setRndGen(rndGen);
+		unitMeanDblStream.init();
 	}
 
 	@Override

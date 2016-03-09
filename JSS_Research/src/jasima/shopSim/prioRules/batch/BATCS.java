@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,8 +15,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: BATCS.java 73 2013-01-08 17:16:19Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.shopSim.prioRules.batch;
 
@@ -31,14 +29,16 @@ import jasima.shopSim.prioRules.setup.ATCS;
  * motivated by a paper by Mehta and Uzsoy (1998). The main difference lies
  * within the calculation of the slack of a batch, where the Variant1 takes into
  * account all jobs in the batch instead of only the most urgent one.
- * <p />
+ * <p>
  * BATCS is supposed to be applied together with BestOfFamilyBatching to choose
  * among batches of different families.
  * 
  * @author Christoph Pickardt, 2011-11-14
- * @version $Id: BATCS.java 73 2013-01-08 17:16:19Z THildebrandt@gmail.com $
+ * @version "$Id$"
  */
 public class BATCS extends ATCS {
+
+	private static final long serialVersionUID = -1515862598920923584L;
 
 	public BATCS(double k1, double k2) {
 		super(k1, k2);
@@ -79,6 +79,8 @@ public class BATCS extends ATCS {
 	}
 
 	public static class Variant1 extends ATCS {
+
+		private static final long serialVersionUID = 4173814503454519153L;
 
 		public Variant1(double k1, double k2) {
 			super(k1, k2);

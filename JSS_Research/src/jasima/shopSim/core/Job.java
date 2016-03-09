@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,8 +15,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: Job.java 172 2014-08-28 08:54:21Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.shopSim.core;
 
@@ -33,8 +31,8 @@ import java.util.Set;
 /**
  * Main work unit in a shop.
  * 
- * @author Torsten Hildebrandt <hil@biba.uni-bremen.de>
- * @version "$Id: Job.java 172 2014-08-28 08:54:21Z THildebrandt@gmail.com $"
+ * @author Torsten Hildebrandt
+ * @version "$Id$"
  */
 // TODO: PrioRuleTarget should be an interface
 public class Job extends PrioRuleTarget implements Cloneable,
@@ -208,7 +206,11 @@ public class Job extends PrioRuleTarget implements Cloneable,
 		}
 	}
 
-	/** returns a clone of this Job switched to the next operation. */
+	/**
+	 * Returns a clone of this Job switched to the next operation.
+	 * 
+	 * @return The future clone of this job.
+	 */
 	public Job getMyFuture() {
 		if (future == null) {
 			future = silentClone();
@@ -309,6 +311,9 @@ public class Job extends PrioRuleTarget implements Cloneable,
 	/**
 	 * Sets the completion time of the current operation. This is called by a
 	 * machine whenever processing starts.
+	 * 
+	 * @param finishTime
+	 *            The finish time of the current {@link Operation}.
 	 */
 	public void setFinishTime(double finishTime) {
 		this.finishTime = finishTime;
@@ -323,8 +328,11 @@ public class Job extends PrioRuleTarget implements Cloneable,
 	}
 
 	/**
-	 * Sets the start time of the current operation. This is called by a machine
-	 * whenever processing starts.
+	 * Sets the start time of the current operation. This is used internally and
+	 * called by a machine whenever processing starts.
+	 * 
+	 * @param startTime
+	 *            The start time of the current operation.
 	 */
 	public void setStartTime(double startTime) {
 		this.startTime = startTime;
@@ -372,6 +380,13 @@ public class Job extends PrioRuleTarget implements Cloneable,
 	/**
 	 * Computes operational due dates based on the total work content method, /*
 	 * i.e., proportional to an operation's processing time.
+	 * 
+	 * @param j
+	 *            The job for which to compute operation due dates.
+	 * @param ff
+	 *            The due date factor to use.
+	 * @return An array containing operation due dates for each operation of
+	 *         {@code j}.
 	 */
 	public static double[] computeDueDatesTWC(Job j, double ff) {
 		Operation[] ops = j.ops;
@@ -442,7 +457,7 @@ public class Job extends PrioRuleTarget implements Cloneable,
 	 *            The key name.
 	 * @param value
 	 *            value to assign to {@code key}.
-	 * @see #valueStoreGet(String)
+	 * @see #valueStoreGet(Object)
 	 */
 	@Override
 	public void valueStorePut(Object key, Object value) {

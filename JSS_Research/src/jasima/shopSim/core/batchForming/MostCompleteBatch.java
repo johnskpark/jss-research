@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,8 +15,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: MostCompleteBatch.java 111 2013-05-16 12:39:01Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.shopSim.core.batchForming;
 
@@ -27,7 +25,6 @@ import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
 import jasima.shopSim.core.WorkStation;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -39,12 +36,13 @@ import java.util.Map;
  * @author Christoph Pickardt, 2010-09-07
  * @author Torsten Hildebrandt, 2010-09-29
  * @version 
- *          "$Id: MostCompleteBatch.java 111 2013-05-16 12:39:01Z THildebrandt@gmail.com $"
+ *          "$Id$"
  */
 public class MostCompleteBatch extends BatchForming {
 
-	private double maxWaitRelative;
+	private static final long serialVersionUID = -8735429872125881522L;
 
+	private double maxWaitRelative;
 	private double maxWait;
 
 	public MostCompleteBatch(double maxWaitRelative) {
@@ -216,28 +214,28 @@ public class MostCompleteBatch extends BatchForming {
 		}
 	}
 
-	private void handleTiesByFamilySize(Map<String, List<Job>> map) {
-		ArrayList<Batch> bs = possibleBatches
-				.getAllElements(new ArrayList<Batch>(possibleBatches.size()));
-		possibleBatches.clear();
-
-		int bestFamSize = 0;
-
-		for (int i = 0, n = bs.size(); i < n; i++) {
-			Batch b = bs.get(i);
-			String bf = b.job(0).getCurrentOperation().batchFamily;
-
-			int famSize = map.get(bf).size();
-
-			if (famSize > bestFamSize) {
-				bestFamSize = famSize;
-				possibleBatches.clear();
-				possibleBatches.add(b);
-			} else if (famSize == bestFamSize) {
-				possibleBatches.add(b);
-			}
-		}
-	}
+	// private void handleTiesByFamilySize(Map<String, List<Job>> map) {
+	// ArrayList<Batch> bs = possibleBatches
+	// .getAllElements(new ArrayList<Batch>(possibleBatches.size()));
+	// possibleBatches.clear();
+	//
+	// int bestFamSize = 0;
+	//
+	// for (int i = 0, n = bs.size(); i < n; i++) {
+	// Batch b = bs.get(i);
+	// String bf = b.job(0).getCurrentOperation().batchFamily;
+	//
+	// int famSize = map.get(bf).size();
+	//
+	// if (famSize > bestFamSize) {
+	// bestFamSize = famSize;
+	// possibleBatches.clear();
+	// possibleBatches.add(b);
+	// } else if (famSize == bestFamSize) {
+	// possibleBatches.add(b);
+	// }
+	// }
+	// }
 
 	private void handleTiesByBasePrio(int numJobs) {
 		Batch best = possibleBatches.get(0);

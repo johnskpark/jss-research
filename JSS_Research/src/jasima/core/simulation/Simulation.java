@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,13 +15,12 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: Simulation.java 182 2014-10-23 17:08:25Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.core.simulation;
 
 import jasima.core.random.RandomFactory;
 import jasima.core.simulation.Simulation.SimEvent;
+import jasima.core.util.TypeUtil;
 import jasima.core.util.Util;
 import jasima.core.util.ValueStore;
 import jasima.core.util.observer.Notifier;
@@ -34,18 +33,21 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ * <p>
  * Base class for a discrete event simulation. This class doesn't do much, but
  * only maintains an event queue and manages simulation time.
- * <p />
+ * </p>
+ * <p>
  * The typical life cycle of a simulation would be to create it, and
  * subsequently set any parameters. Afterwards {@link #init()} has to be called
  * before the actual simulation can be performed in {@link #run()}. After
  * completing a simulation the {@link #done()}-method should be called to
  * perform clean-up, collecting simulation results, etc.
+ * </p>
  * 
- * @author Torsten Hildebrandt <hil@biba.uni-bremen.de>, 2012-02-08
+ * @author Torsten Hildebrandt, 2012-02-08
  * @version 
- *          "$Id: Simulation.java 182 2014-10-23 17:08:25Z THildebrandt@gmail.com $"
+ *          "$Id$"
  */
 public class Simulation implements Notifier<Simulation, SimEvent>, ValueStore {
 
@@ -102,7 +104,8 @@ public class Simulation implements Notifier<Simulation, SimEvent>, ValueStore {
 		public String getMessage() {
 			// lazy creation of message only when needed
 			if (message == null) {
-				message = String.format(messageFormatString, params);
+				message = String.format(Util.DEF_LOCALE, messageFormatString,
+						params);
 				messageFormatString = null;
 				params = null;
 			}
@@ -213,7 +216,8 @@ public class Simulation implements Notifier<Simulation, SimEvent>, ValueStore {
 
 	/**
 	 * Override this method to perform initializations after {@link #init()},
-	 * but before running the simulation.
+	 * but before running the simulation. This method is usually used to
+	 * schedule initial events.
 	 */
 	protected void beforeRun() {
 		// schedule simulation end
@@ -414,18 +418,18 @@ public class Simulation implements Notifier<Simulation, SimEvent>, ValueStore {
 	 * Adds a listener to this simulation. This method only differs from
 	 * {@link #addNotifierListener(NotifierListener)} in its ability to
 	 * (optionally) clone the listener (using
-	 * {@link Util#cloneIfPossible(Object)}) before installing it.
+	 * {@link TypeUtil#cloneIfPossible(Object)}) before installing it.
 	 * 
 	 * @param l
 	 *            The shop listener to add.
 	 * @param cloneIfPossbile
 	 *            whether to try to clone a new instance for each machine using
-	 *            {@link Util#cloneIfPossible(Object)}.
+	 *            {@link TypeUtil#cloneIfPossible(Object)}.
 	 */
 	public NotifierListener<Simulation, SimEvent> installSimulationListener(
 			NotifierListener<Simulation, SimEvent> l, boolean cloneIfPossbile) {
 		if (cloneIfPossbile)
-			l = Util.cloneIfPossible(l);
+			l = TypeUtil.cloneIfPossible(l);
 		addNotifierListener(l);
 		return l;
 	}
@@ -460,7 +464,7 @@ public class Simulation implements Notifier<Simulation, SimEvent>, ValueStore {
 	 *            The key name.
 	 * @param value
 	 *            value to assign to {@code key}.
-	 * @see #valueStoreGet(String)
+	 * @see #valueStoreGet(Object)
 	 */
 	@Override
 	public void valueStorePut(Object key, Object value) {

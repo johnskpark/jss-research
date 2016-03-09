@@ -29,9 +29,7 @@ public abstract class DynamicSimConfig implements SimConfig {
 
 	public abstract int getNumMachines(int index);
 
-	public abstract int getMinOpProc(int index);
-
-	public abstract int getMaxOpProc(int index);
+	public abstract DblStream getProcTime(int index);
 
 	public abstract double getUtilLevel(int index);
 

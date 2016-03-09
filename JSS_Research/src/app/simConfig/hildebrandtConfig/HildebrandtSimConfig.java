@@ -12,15 +12,9 @@ public class HildebrandtSimConfig extends DynamicSimConfig {
 	}
 
 	@Override
-	public int getMinOpProc(int index) {
+	public DblStream getProcTime(int index) {
 		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int getMaxOpProc(int index) {
-		// TODO Auto-generated method stub
-		return 0;
+		return null;
 	}
 
 	@Override

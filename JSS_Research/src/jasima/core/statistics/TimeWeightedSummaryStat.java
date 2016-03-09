@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,25 +15,28 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: TimeWeightedSummaryStat.java 159 2014-06-20 12:56:56Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.core.statistics;
+
+import jasima.core.util.Util;
 
 /**
  * A {@link SummaryStat} which weights values according to the time. As result
  * statistics the values returned by {@link #mean()}, {@link #min()}, and
  * {@link #max()} have defined values.
  * 
- * @author Torsten Hildebrandt <hil@biba.uni-bremen.de>
+ * @author Torsten Hildebrandt
  * @version 
- *          "$Id: TimeWeightedSummaryStat.java 159 2014-06-20 12:56:56Z THildebrandt@gmail.com $"
+ *          "$Id$"
  */
 public class TimeWeightedSummaryStat extends SummaryStat {
 
 	private static final long serialVersionUID = -2192851354158356984L;
 
 	private double lastTime = 0.0d;
+
+	private final double initialTime;
+	private final double initialValue;
 
 	/**
 	 * Constructs a new instance with {@code lastTime} and {@code lastValue}
@@ -46,9 +49,25 @@ public class TimeWeightedSummaryStat extends SummaryStat {
 	/**
 	 * Constructs a new instance initializing {@code lastTime} with the given
 	 * parameter {@code initialTime}.
+	 * 
+	 * @param initialValue
+	 *            Initial value of the underlying state variable at time
+	 *            {@code initialTime}.
+	 * @param initialTime
+	 *            The first point in time to consider.
 	 */
-	public TimeWeightedSummaryStat(double initialTime, double initialValue) {
+	public TimeWeightedSummaryStat(double initialValue, double initialTime) {
 		super();
+		this.initialTime = initialTime;
+		this.initialValue = initialValue;
+
+		clear();
+	}
+
+	@Override
+	public void clear() {
+		super.clear();
+
 		lastTime = initialTime;
 		lastValue = initialValue;
 	}
@@ -57,31 +76,49 @@ public class TimeWeightedSummaryStat extends SummaryStat {
 	 * Adds a new {@code value}, weighted by the difference between {@code time}
 	 * and {@link #lastTime()}. {@code time} is then saved for the next
 	 * invocation of this method.
+	 * 
+	 * @param value
+	 *            Value of some state variable from the point in time given as
+	 *            the second parameter.
+	 * @param time
+	 *            The point in time from which the current value is
+	 *            {@code value}
+	 * @return {@code this} to allow easy chaining of calls.
 	 */
 	@Override
-	public void value(double value, double time) {
+	public TimeWeightedSummaryStat value(double value, double time) {
 		if (time < lastTime())
-			throw new IllegalArgumentException(String.format(
-					"negative time span (lastTime=%f,time=%f).", lastTime(),
+			throw new IllegalArgumentException(String.format(Util.DEF_LOCALE,
+					"negative time span (lastTime=%f, time=%f).", lastTime(),
 					time));
 		super.value(lastValue, time - lastTime());
 		lastTime = time;
 		lastValue = value;
+
+		return this;
 	}
 
 	/**
 	 * Don't use this method as it doesn't make sense for a
 	 * {@code TimeWeightedSummaryStat}. Raises an
 	 * {@link UnsupportedOperationException} when called.
+	 * 
+	 * @param v
+	 *            ignored
+	 * @return TimeWeightedSummaryStat ignored
 	 */
 	@Override
-	public void value(double v) {
+	public TimeWeightedSummaryStat value(double v) {
 		throw new UnsupportedOperationException(
 				"Use method TimeWeightedSummaryStat.value(double,double) instead.");
 	}
 
 	/**
 	 * Returns the current value of the attribute {@code lastTime}.
+	 * 
+	 * @return The last point in time for which {@link #value(double, double)}
+	 *         was called.
+	 * @see #lastValue()
 	 */
 	public double lastTime() {
 		return lastTime;

@@ -1,12 +1,18 @@
 package app.simConfig.huntConfig;
 
-import jasima.core.random.continuous.DblStream;
 import app.simConfig.DynamicSimConfig;
+import app.simConfig.huntConfig.DDFStream.DDFDefinition;
+import app.simConfig.huntConfig.ProcTimeStream.ProcTimeRange;
+import jasima.core.random.continuous.DblStream;
 
 public class TestSimConfig extends DynamicSimConfig {
 
-	private static final int[] MIN_OP_PROC = new int[]{1, 1, 1, 1};
-	private static final int[] MAX_OP_PROC = new int[]{49, 99, 49, 99};
+	private static final ProcTimeRange[] PROC_TIME = new ProcTimeRange[]{
+			ProcTimeRange.LOW_PROC_TIME, 
+			ProcTimeRange.HIGH_PROC_TIME,
+			ProcTimeRange.LOW_PROC_TIME, 
+			ProcTimeRange.HIGH_PROC_TIME
+	};
 	private static final double[] UTIL_LEVEL = new double[]{0.90, 0.90, 0.97, 0.97};
 	private static final int[] MIN_NUM_OPS = new int[]{4, 6, 8, 10, 2};
 	private static final int[] MAX_NUM_OPS = new int[]{4, 6, 8, 10, 10};
@@ -26,13 +32,8 @@ public class TestSimConfig extends DynamicSimConfig {
 	}
 
 	@Override
-	public int getMinOpProc(int index) {
-		return MIN_OP_PROC[index % NUM_SIM_PROP];
-	}
-
-	@Override
-	public int getMaxOpProc(int index) {
-		return MAX_OP_PROC[index % NUM_SIM_PROP];
+	public DblStream getProcTime(int index) {
+		return new ProcTimeStream(PROC_TIME[index % NUM_SIM_PROP], getLongValue());
 	}
 
 	@Override
@@ -42,7 +43,7 @@ public class TestSimConfig extends DynamicSimConfig {
 
 	@Override
 	public DblStream getDueDateFactor(int index) {
-		return new TestDDFStream(getLongValue());
+		return new DDFStream(DDFDefinition.TEST, getLongValue());
 	}
 
 	@Override

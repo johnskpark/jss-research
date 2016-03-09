@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,22 +15,25 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: Bremen2.java 73 2013-01-08 17:16:19Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.shopSim.prioRules.gp;
 
-import jasima.shopSim.core.PR;
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
 import jasima.shopSim.prioRules.upDownStream.PTPlusWINQPlusNPT;
 
 /**
+ * A rule from "Towards Improved Dispatching Rules for Complex Shop Floor
+ * Scenarios—a Genetic Programming Approach", Hildebrandt, Heger, Scholz-Reiter,
+ * GECCO 2010, doi:10.1145/1830483.1830530
  * 
- * @author Torsten Hildebrandt <hil@biba.uni-bremen.de>
- * @version $Id: Bremen2.java 73 2013-01-08 17:16:19Z THildebrandt@gmail.com $
+ * @author Torsten Hildebrandt
+ * @version 
+ *          "$Id$"
  */
-public class Bremen2 extends PR {
+public class GECCO2010_genSeed_10reps extends GPRuleBase {
+
+	private static final long serialVersionUID = 6678188476757733096L;
 
 	@Override
 	public double calcPrio(PrioRuleTarget j) {
@@ -39,9 +42,14 @@ public class Bremen2 extends PR {
 
 		double p = j.getCurrentOperation().procTime;
 		double winq = jasima.shopSim.prioRules.upDownStream.WINQ.winq(j);
+		double tiq = j.getShop().simTime() - j.getArriveTime();
 		double npt = PTPlusWINQPlusNPT.npt(j);
+		double tis = j.getShop().simTime() - j.getRelDate();
+		double ol = j.numOpsLeft();
 
-		return -p * (p + winq) * (p + npt);
+		return -p
+				* ((npt - npt / p) * winq + (max(p, ol - tiq)
+						* (max(p - npt, p / (tis + p)) + 1) + 1));
 	}
 
 }

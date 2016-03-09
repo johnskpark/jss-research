@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,8 +15,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: ArrivalsStationary.java 73 2013-01-08 17:16:19Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.core.simulation.arrivalprocess;
 
@@ -32,9 +30,9 @@ import java.util.Random;
  * 
  * @see DblStream
  * 
- * @author Torsten Hildebrandt <hil@biba.uni-bremen.de>, 2012-08-07
+ * @author Torsten Hildebrandt, 2012-08-07
  * @version 
- *          "$Id: ArrivalsStationary.java 73 2013-01-08 17:16:19Z THildebrandt@gmail.com $"
+ *          "$Id$"
  */
 public class ArrivalsStationary extends ArrivalProcess {
 
@@ -49,6 +47,14 @@ public class ArrivalsStationary extends ArrivalProcess {
 	public ArrivalsStationary(DblStream interArrivalTimes) {
 		super();
 		setInterArrivalTimes(interArrivalTimes);
+	}
+
+	@Override
+	public void init() {
+		super.init();
+
+		if (interArrivalTimes != null)
+			interArrivalTimes.init();
 	}
 
 	@Override

@@ -32,20 +32,18 @@ public class ExperimentGenerator {
 		long value = simConfig.getLongValue();
 
 		// TODO temporary.
-		System.out.printf("%d,%d,%f,%d,%d,%d,%d\n", value,
-				simConfig.getNumMachines(index),
-				simConfig.getUtilLevel(index),
-				simConfig.getMinOpProc(index),
-				simConfig.getMaxOpProc(index),
-				simConfig.getMinNumOps(index),
-				simConfig.getMaxNumOps(index));
+//		System.out.printf("%d,%d,%f,%d,%d\n", value,
+//				simConfig.getNumMachines(index),
+//				simConfig.getUtilLevel(index),
+//				simConfig.getMinNumOps(index),
+//				simConfig.getMaxNumOps(index));
 
 		experiment.setInitialSeed(value);
 		experiment.setNumMachines(simConfig.getNumMachines(index));
 		experiment.setUtilLevel(simConfig.getUtilLevel(index));
 		experiment.setDueDateFactor(simConfig.getDueDateFactor(index));
 		experiment.setWeights(simConfig.getWeight(index));
-		experiment.setOpProcTime(simConfig.getMinOpProc(index), simConfig.getMaxOpProc(index));
+		experiment.setProcTimes(simConfig.getProcTime(index));
 		experiment.setNumOps(simConfig.getMinNumOps(index), simConfig.getMaxNumOps(index));
 
 		experiment.setStopAfterNumJobs(simConfig.getStopAfterNumJobs());

@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,8 +15,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: BatchForming.java 74 2013-01-08 17:31:49Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.shopSim.core.batchForming;
 
@@ -43,9 +41,12 @@ import java.util.Map;
  * 
  * @author Christoph Pickardt, 2010-05-27
  * @author Torsten Hildebrandt, 2010-03-18
- * @version "$Id: BatchForming.java 74 2013-01-08 17:31:49Z THildebrandt@gmail.com $"
+ * @version 
+ *          "$Id$"
  */
 public abstract class BatchForming implements Cloneable, Serializable {
+
+	private static final long serialVersionUID = 6670837045346111285L;
 
 	public static int indexOf(Job j, Job[] js, int numElems) {
 		for (int i = 0, n = numElems; i < n; i++) {

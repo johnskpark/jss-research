@@ -6,7 +6,7 @@ import jasima.core.statistics.SummaryStat;
 
 public class WeightedTardinessStat {
 
-	private static final String WT_MEAN_STR = "weightedTardMean";
+	private static final String WT_MEAN_STR = "tardiness";
 
 	public static double getTotalWeightedTardiness(final Map<String, Object> results) {
 		SummaryStat stat = (SummaryStat) results.get(WT_MEAN_STR);

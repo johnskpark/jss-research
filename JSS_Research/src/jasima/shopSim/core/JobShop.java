@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,13 +15,11 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: JobShop.java 181 2014-10-23 15:45:13Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.shopSim.core;
 
 import jasima.core.simulation.Simulation;
-import jasima.core.util.Util;
+import jasima.core.util.TypeUtil;
 import jasima.core.util.observer.NotifierListener;
 import jasima.shopSim.core.WorkStation.WorkStationEvent;
 
@@ -33,9 +31,9 @@ import java.util.Map;
  * Implements a shop simulation. Despite its name the scenario not necessarily
  * has to be a job shop.
  * 
- * @author Torsten Hildebrandt <hil@biba.uni-bremen.de>
+ * @author Torsten Hildebrandt
  * @version 
- *          "$Id: JobShop.java 181 2014-10-23 15:45:13Z THildebrandt@gmail.com $"
+ *          "$Id$"
  */
 public class JobShop extends Simulation {
 
@@ -49,7 +47,7 @@ public class JobShop extends Simulation {
 
 	// parameters
 	private int maxJobsInSystem = 0;
-	private int maxJobsFinished = 0;
+	private int stopAfterNumJobs = 0;
 	private boolean enableLookAhead = false;
 
 	public JobSource[] sources = {};
@@ -58,8 +56,6 @@ public class JobShop extends Simulation {
 
 	public int jobsFinished;
 	public int jobsStarted;
-
-	private boolean strangePriorities;
 
 	// fields used during event notification
 	public Job lastJobReleased;
@@ -93,22 +89,12 @@ public class JobShop extends Simulation {
 
 		for (WorkStation m : machines)
 			m.done();
-
-		strangePriorities = false;
-		for (WorkStation m : machines) {
-			if (m.queue.strangePrioValuesFound) {
-				strangePriorities = true;
-				break;
-			}
-		}
 	}
 
 	public void jobFinished(Job j) {
 		jobsFinished++;
 
-		if (getMaxJobsFinished() > 0 && jobsFinished >= getMaxJobsFinished()) {
-			// System.out.println("" + getMaxJobsFinished()
-			// + " jobs finished, aborting sim (job starvation?).");
+		if (getStopAfterNumJobs() > 0 && jobsFinished >= getStopAfterNumJobs()) {
 			end(); // abort simulation
 		}
 
@@ -147,8 +133,6 @@ public class JobShop extends Simulation {
 		res.put("numJobsStarted", jobsStarted);
 		res.put("numWIP", jobsStarted - jobsFinished);
 
-		res.put("strangePriorities", strangePriorities ? 1 : 0);
-
 		for (WorkStation m : machines) {
 			m.produceResults(res);
 		}
@@ -161,7 +145,7 @@ public class JobShop extends Simulation {
 	 *            The machine listener to add.
 	 * @param cloneIfPossible
 	 *            whether to try to clone a new instance for each machine using
-	 *            {@link Util#cloneIfPossible(Object)}.
+	 *            {@link TypeUtil#cloneIfPossible(Object)}.
 	 */
 	public void installMachineListener(
 			NotifierListener<WorkStation, WorkStationEvent> listener,
@@ -169,7 +153,7 @@ public class JobShop extends Simulation {
 		for (WorkStation m : machines) {
 			NotifierListener<WorkStation, WorkStationEvent> ml = listener;
 			if (cloneIfPossible)
-				ml = Util.cloneIfPossible(listener);
+				ml = TypeUtil.cloneIfPossible(listener);
 			m.addNotifierListener(ml);
 		}
 	}
@@ -184,7 +168,8 @@ public class JobShop extends Simulation {
 	}
 
 	/**
-	 * Enable the lookahead mechanism of this shop.
+	 * Enable the lookahead mechanism of this shop. If enabled dispatching rules
+	 * can select jobs arriving from in the near future.
 	 * 
 	 * @param enableLookAhead
 	 *            Whether to enable or disable lookahead.
@@ -204,21 +189,24 @@ public class JobShop extends Simulation {
 	}
 
 	/**
-	 * Returns the maximum number of jobs in the system.
+	 * Returns the maximum number of jobs in the system, before the simulation
+	 * is terminated.
+	 * 
+	 * @return The maximum number of jobs in the system.
 	 */
 	public int getMaxJobsInSystem() {
 		return maxJobsInSystem;
 	}
 
 	/**
-	 * End simulation if a certain number of jobs was completed (0 (default): no
-	 * limit).
+	 * End simulation if a certain number of jobs was completed (%lt;=0
+	 * (default): no limit).
 	 * 
-	 * @param maxJobsFinished
+	 * @param stopAfterNumJobs
 	 *            The number of jobs to finish.
 	 */
-	public void setMaxJobsFinished(int maxJobsFinished) {
-		this.maxJobsFinished = maxJobsFinished;
+	public void setStopAfterNumJobs(int stopAfterNumJobs) {
+		this.stopAfterNumJobs = stopAfterNumJobs;
 	}
 
 	/**
@@ -226,12 +214,15 @@ public class JobShop extends Simulation {
 	 * 
 	 * @return The number of jobs to complete before terminating the simulation.
 	 */
-	public int getMaxJobsFinished() {
-		return maxJobsFinished;
+	public int getStopAfterNumJobs() {
+		return stopAfterNumJobs;
 	}
 
 	/**
-	 * Gets the list of job sources in this shop.
+	 * Gets the list of job sources in this shop. Do not modify the returned
+	 * array, before manually creating a clone of it.
+	 * 
+	 * @return The array of job sources.
 	 */
 	public JobSource[] getSources() {
 		return sources;
@@ -239,9 +230,12 @@ public class JobShop extends Simulation {
 
 	/**
 	 * Sets all job sources in this shop.
+	 * 
+	 * @param sources
+	 *            An array with all job sources.
 	 */
 	public void setSources(JobSource[] sources) {
-		this.sources = sources;
+		this.sources = sources.clone();
 
 		int i = 0;
 		for (JobSource js : sources) {
@@ -276,7 +270,10 @@ public class JobShop extends Simulation {
 	}
 
 	/**
-	 * Gets the list of workstations in this shop.
+	 * Gets the list of workstations in this shop. This returns method returns
+	 * the internal array, so do not modify it externally.
+	 * 
+	 * @return An array of all workstations of this shop.
 	 */
 	public WorkStation[] getMachines() {
 		return machines;
@@ -284,9 +281,12 @@ public class JobShop extends Simulation {
 
 	/**
 	 * Sets the workstations of this shop.
+	 * 
+	 * @param machines
+	 *            An array containing all workstations for this shop.
 	 */
 	public void setMachines(WorkStation[] machines) {
-		this.machines = machines;
+		this.machines = machines.clone();
 		int i = 0;
 		for (WorkStation w : machines) {
 			w.shop = this;
@@ -298,6 +298,8 @@ public class JobShop extends Simulation {
 	 * Adds a single machine to this shop.
 	 * 
 	 * @see #getMachines()
+	 * @param machine
+	 *            The workstation to add.
 	 */
 	public void addMachine(WorkStation machine) {
 		ArrayList<WorkStation> list = new ArrayList<WorkStation>(
@@ -311,7 +313,10 @@ public class JobShop extends Simulation {
 	}
 
 	/**
-	 * Remove a machine from this shop.
+	 * Removes a machine from this shop.
+	 * 
+	 * @param machine
+	 *            The workstation to remove.
 	 */
 	public void removeMachine(WorkStation machine) {
 		ArrayList<WorkStation> list = new ArrayList<WorkStation>(
@@ -328,8 +333,13 @@ public class JobShop extends Simulation {
 	}
 
 	/**
-	 * Returns a workstation with the given name, or <code>null</code> if no
-	 * such workstation exists.
+	 * Returns a workstation with the given name, or {@code null} if no such
+	 * workstation exists.
+	 * 
+	 * @param name
+	 *            The workstation's name.
+	 * @return The workstation with the given name, if it exists. {@code null}
+	 *         otherwise.
 	 */
 	public WorkStation getWorkstationByName(String name) {
 		WorkStation res = null;
@@ -346,7 +356,9 @@ public class JobShop extends Simulation {
 	}
 
 	/**
-	 * Returns the routes added to this job shop.
+	 * Returns the routes added to this job shop. Do not modify externally.
+	 * 
+	 * @return An array of all routes in this shop.
 	 */
 	public Route[] getRoutes() {
 		return routes;
@@ -354,9 +366,12 @@ public class JobShop extends Simulation {
 
 	/**
 	 * Sets the routes available for this job shop.
+	 * 
+	 * @param routes
+	 *            The route list.
 	 */
 	public void setRoutes(Route[] routes) {
-		this.routes = routes;
+		this.routes = routes.clone();
 	}
 
 	public void addRoute(Route r) {

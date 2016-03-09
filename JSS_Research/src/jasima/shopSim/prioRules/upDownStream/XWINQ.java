@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,8 +15,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: XWINQ.java 73 2013-01-08 17:16:19Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.shopSim.prioRules.upDownStream;
 
@@ -30,14 +28,16 @@ import jasima.shopSim.core.WorkStation;
  * work centre which a job visits for its next operation defines the priority of
  * a job. For its last operation, the work content in the next queue of a job is
  * zero.
- * <p />
+ * <p>
  * The lookahead needs to be enabled in the simulation for this rule to work
  * properly.
  * 
  * @author Torsten Hildebrandt
- * @version $Id: XWINQ.java 73 2013-01-08 17:16:19Z THildebrandt@gmail.com $
+ * @version "$Id$"
  */
 public class XWINQ extends PR {
+
+	private static final long serialVersionUID = -83039692160872143L;
 
 	@Override
 	public double calcPrio(PrioRuleTarget job) {

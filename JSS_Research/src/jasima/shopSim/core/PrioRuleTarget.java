@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,8 +15,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: PrioRuleTarget.java 123 2013-07-08 09:27:56Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.shopSim.core;
 
@@ -25,9 +23,9 @@ import java.util.HashMap;
 /**
  * Common abstract base class for {@link Job}s and {@link Batch}es.
  * 
- * @author Torsten Hildebrandt <hil@biba.uni-bremen.de>
+ * @author Torsten Hildebrandt
  * @version 
- *          "$Id: PrioRuleTarget.java 123 2013-07-08 09:27:56Z THildebrandt@gmail.com $"
+ *          "$Id$"
  */
 public abstract class PrioRuleTarget {
 
@@ -47,7 +45,7 @@ public abstract class PrioRuleTarget {
 	 *            The key name.
 	 * @param value
 	 *            value to assign to {@code key}.
-	 * @see #valueStoreGet(String)
+	 * @see #valueStoreGet(Object)
 	 */
 	public void valueStorePut(Object key, Object value) {
 		if (valueStore == null)

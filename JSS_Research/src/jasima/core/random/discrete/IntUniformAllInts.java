@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,10 +15,10 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: IntUniformAllInts.java 74 2013-01-08 17:31:49Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.core.random.discrete;
+
+import jasima.core.util.Pair;
 
 import java.util.Random;
 
@@ -27,8 +27,9 @@ import java.util.Random;
  * values. This class just delegates to the underlying method
  * {@link java.util.Random#nextInt()}.
  * 
- * @author Torsten Hildebrandt <hil@biba.uni-bremen.de>
- * @version "$Id: IntUniformAllInts.java 74 2013-01-08 17:31:49Z THildebrandt@gmail.com $"
+ * @author Torsten Hildebrandt
+ * @version 
+ *          "$Id$"
  */
 public class IntUniformAllInts extends IntStream {
 
@@ -53,23 +54,24 @@ public class IntUniformAllInts extends IntStream {
 	}
 
 	@Override
-	public int max() {
-		return Integer.MAX_VALUE;
-	}
-
-	@Override
-	public int min() {
-		return Integer.MIN_VALUE;
-	}
-
-	@Override
 	public int nextInt() {
 		return rndGen.nextInt();
 	}
 
 	@Override
+	public double getNumericalMean() {
+		return (((long) Integer.MAX_VALUE) + Integer.MIN_VALUE) / 2.0;
+	}
+
+	@Override
 	public String toString() {
 		return "IntUniformAllInts";
+	}
+
+	@Override
+	public Pair<Double, Double> getValueRange() {
+		return new Pair<>((double) Integer.MIN_VALUE,
+				(double) Integer.MAX_VALUE);
 	}
 
 }

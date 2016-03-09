@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,10 +15,10 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: IntUniformRange.java 74 2013-01-08 17:31:49Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.core.random.discrete;
+
+import jasima.core.util.Pair;
 
 import java.util.Random;
 
@@ -26,12 +26,13 @@ import java.util.Random;
  * Generates uniformly distributed integers in the interval [min,max] (including
  * both min and max).
  * 
- * @author Torsten Hildebrandt <hil@biba.uni-bremen.de>
- * @version "$Id: IntUniformRange.java 74 2013-01-08 17:31:49Z THildebrandt@gmail.com $"
+ * @author Torsten Hildebrandt
+ * @version 
+ *          "$Id$"
  */
 public class IntUniformRange extends IntStream {
 
-	private static final long serialVersionUID = -7338352768070870971L;
+	private static final long serialVersionUID = -7138352768070870971L;
 
 	private int min, max, range;
 
@@ -55,36 +56,69 @@ public class IntUniformRange extends IntStream {
 	}
 
 	@Override
-	public int min() {
-		return min;
+	public void init() {
+		super.init();
+		setRange(min, max); // force value checks
 	}
 
 	@Override
-	public int max() {
-		return max;
+	public Pair<Double, Double> getValueRange() {
+		return new Pair<>((double) getMin(), (double) getMax());
 	}
 
 	public void setRange(int min, int max) {
 		if (min > max)
 			throw new IllegalArgumentException("min<max " + min + " " + max);
 		long r = max - min;
-		if (r > Integer.MAX_VALUE - 1)
+		if (r > Integer.MAX_VALUE - 1 || r < 0)
 			throw new IllegalArgumentException(
 					"range has to fit in an integer. " + min + " " + max);
 
-		this.min = min;
-		this.max = max;
+		this.setMin(min);
+		this.setMax(max);
 		range = (int) r;
 	}
 
 	@Override
 	public int nextInt() {
-		return min + rndGen.nextInt(range + 1);
+		return getMin() + rndGen.nextInt(range + 1);
+	}
+
+	@Override
+	public double getNumericalMean() {
+		return (((long) getMin()) + getMax()) / 2.0;
 	}
 
 	@Override
 	public String toString() {
-		return "IntUniformRange(min=" + min + ";max=" + max + ")";
+		return "IntUniformRange(min=" + getMin() + ";max=" + getMax() + ")";
 	}
 
+	public int getMin() {
+		return min;
+	}
+
+	/**
+	 * Sets the minimum value returned by this number stream.
+	 * 
+	 * @param min
+	 *            The minimum to use.
+	 */
+	public void setMin(int min) {
+		this.min = min;
+	}
+
+	public int getMax() {
+		return max;
+	}
+
+	/**
+	 * Sets the maximum value returned by this number stream.
+	 * 
+	 * @param max
+	 *            The maximum to use.
+	 */
+	public void setMax(int max) {
+		this.max = max;
+	}
 }

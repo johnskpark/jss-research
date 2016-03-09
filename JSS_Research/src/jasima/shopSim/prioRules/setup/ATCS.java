@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,8 +15,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: ATCS.java 73 2013-01-08 17:16:19Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.shopSim.prioRules.setup;
 
@@ -25,24 +23,32 @@ import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
 
 /**
+ * <p>
  * This class implements the Apparent Tardiness Costs with Setups rule,
  * developed by Lee and Pinedo (1997). This implementation uses an operation due
  * date computed by ODD instead of the global slack.
- * <p />
+ * </p>
+ * <p>
  * The class directly inherits from MaxWaitThresholdRule and the threshold value
  * is also used to calculate queue terminals that only consider jobs which
  * arrive before that the threshold value.
  * 
  * @author Christoph Pickardt, 2011-11-15
  * @author Torsten Hildebrandt
- * @version $Id: ATCS.java 73 2013-01-08 17:16:19Z THildebrandt@gmail.com $
+ * @version "$Id$"
  */
 public class ATCS extends PR {
+
+	private static final long serialVersionUID = -331130943946735200L;
 
 	private double k1;
 	private double k2;
 
 	protected double[][] setupMatrix;
+
+	public ATCS() {
+		this(1.0, 1.0);
+	}
 
 	public ATCS(double k1, double k2) {
 		super();

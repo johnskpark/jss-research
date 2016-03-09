@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,8 +15,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: Event.java 73 2013-01-08 17:16:19Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.core.simulation;
 
@@ -27,8 +25,8 @@ import jasima.core.simulation.Simulation.EventQueue;
  * {@link EventQueue} according to their time, priority and event number (to
  * enforce FIFO order of concurrent events with the same priority).
  * 
- * @author Torsten Hildebrandt <hil@biba.uni-bremen.de>
- * @version $Id: Event.java 73 2013-01-08 17:16:19Z THildebrandt@gmail.com $
+ * @author Torsten Hildebrandt
+ * @version $Id$
  */
 public abstract class Event implements Comparable<Event> {
 

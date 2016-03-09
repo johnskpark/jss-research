@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,18 +15,19 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: DblUniformRange.java 74 2013-01-08 17:31:49Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.core.random.continuous;
+
+import jasima.core.util.Pair;
 
 import java.util.Random;
 
 /**
  * Returns a uniformly distributed real number in the range [min, max).
  * 
- * @author Torsten Hildebrandt <hil@biba.uni-bremen.de>
- * @version "$Id: DblUniformRange.java 74 2013-01-08 17:31:49Z THildebrandt@gmail.com $"
+ * @author Torsten Hildebrandt
+ * @version 
+ *          "$Id$"
  */
 public class DblUniformRange extends DblStream {
 
@@ -53,20 +54,18 @@ public class DblUniformRange extends DblStream {
 		setName(name);
 	}
 
-	public double min() {
-		return min;
-	}
-
-	public double max() {
-		return max;
-	}
-
 	public void setRange(double min, double max) {
-		if (min >= max)
-			throw new IllegalArgumentException("min>=max " + min + " " + max);
+		checkValues(min, max);
 
 		this.min = min;
 		this.max = max;
+	}
+
+	@Override
+	public void init() {
+		checkValues(min, max);
+
+		super.init();
 		range = max - min;
 	}
 
@@ -76,8 +75,51 @@ public class DblUniformRange extends DblStream {
 	}
 
 	@Override
+	public double getNumericalMean() {
+		return (getMin() + getMax()) / 2.0;
+	}
+
+	@Override
 	public String toString() {
 		return "DblUniformRange(min=" + min + ";max=" + max + ")";
+	}
+
+	@Override
+	public Pair<Double, Double> getValueRange() {
+		return new Pair<>(getMin(), getMax());
+	}
+
+	private void checkValues(double min, double max) {
+		if (min > max)
+			throw new IllegalArgumentException("min>max " + min + " " + max);
+	}
+
+	public double getMin() {
+		return min;
+	}
+
+	/**
+	 * Sets the minimum value returned by this number stream.
+	 * 
+	 * @param min
+	 *            The minimum to use.
+	 */
+	public void setMin(double min) {
+		this.min = min;
+	}
+
+	public double getMax() {
+		return max;
+	}
+
+	/**
+	 * Sets the maximum value returned by this number stream.
+	 * 
+	 * @param max
+	 *            The maximum to use.
+	 */
+	public void setMax(double max) {
+		this.max = max;
 	}
 
 }

@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,10 +15,10 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: DblDistribution.java 74 2013-01-08 17:31:49Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.core.random.continuous;
+
+import jasima.core.util.Pair;
 
 import java.util.Random;
 
@@ -26,11 +26,14 @@ import org.apache.commons.math3.distribution.RealDistribution;
 
 /**
  * Returns an arbitrarily distributed random number stream. Its distribution is
- * determined by an arbitrary {@link RealDistribution}.
+ * determined by an arbitrary {@link RealDistribution} object from the Apache
+ * Commons Math library. This class is usually not used directly but through its
+ * various sub-classes implementing particular distributions and exposing their
+ * parameters as Java Bean properties.
  * 
- * @author Torsten Hildebrandt <hil@biba.uni-bremen.de>
+ * @author Torsten Hildebrandt
  * @version 
- *          "$Id: DblDistribution.java 74 2013-01-08 17:31:49Z THildebrandt@gmail.com $"
+ *          "$Id$"
  */
 public class DblDistribution extends DblStream {
 
@@ -69,13 +72,30 @@ public class DblDistribution extends DblStream {
 	/**
 	 * Sets the continuous distribution to use.
 	 */
-	public void setDistribution(RealDistribution distribution) {
+	protected void setDistribution(RealDistribution distribution) {
 		this.distribution = distribution;
 	}
 
 	@Override
 	public double nextDbl() {
 		return distribution.inverseCumulativeProbability(rndGen.nextDouble());
+	}
+
+	@Override
+	public double getNumericalMean() {
+		if (distribution == null) {
+			return Double.NaN;
+		} else {
+			return distribution.getNumericalMean();
+		}
+	}
+
+	@Override
+	public Pair<Double, Double> getValueRange() {
+		if (distribution == null)
+			return null;
+		return new Pair<Double, Double>(distribution.getSupportLowerBound(),
+				distribution.getSupportUpperBound());
 	}
 
 	@Override

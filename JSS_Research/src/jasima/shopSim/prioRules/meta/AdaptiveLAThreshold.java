@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,8 +15,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: AdaptiveLAThreshold.java 74 2013-01-08 17:31:49Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.shopSim.prioRules.meta;
 
@@ -32,13 +30,16 @@ import jasima.shopSim.core.PriorityQueue;
  * waiting time actually is even a little smaller than 1: if a job arrives in
  * say 10 time units, but to process the shortest job in queue also takes 10
  * time units, it could be finished exactly when the lookahead job arrives.
- * <p />
+ * <p>
  * This class does not take setup times into account.
  * 
  * @author Torsten Hildebrandt
- * @version "$Id: AdaptiveLAThreshold.java 74 2013-01-08 17:31:49Z THildebrandt@gmail.com $"
+ * @version 
+ *          "$Id$"
  */
 public class AdaptiveLAThreshold extends LookaheadThreshold {
+
+	private static final long serialVersionUID = -9044425584894392686L;
 
 	private double maxWaitRelative;
 

@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,8 +15,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: TieBreakerFASFS.java 74 2013-01-08 17:31:49Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.shopSim.prioRules.basic;
 
@@ -34,9 +32,12 @@ import jasima.shopSim.core.PrioRuleTarget;
  * 
  * @author Torsten Hildebrandt
  * @see FASFS
- * @version "$Id: TieBreakerFASFS.java 74 2013-01-08 17:31:49Z THildebrandt@gmail.com $"
+ * @version 
+ *          "$Id$"
  */
 public class TieBreakerFASFS extends PR {
+
+	private static final long serialVersionUID = 2648534592090568569L;
 
 	@Override
 	public double calcPrio(PrioRuleTarget j) {

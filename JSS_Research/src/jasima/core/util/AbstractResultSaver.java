@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,8 +15,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: AbstractResultSaver.java 183 2014-10-23 17:09:29Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.core.util;
 
@@ -31,7 +29,7 @@ import java.util.Date;
  * 
  * @author Torsten Hildebrandt
  * @version 
- *          "$Id: AbstractResultSaver.java 183 2014-10-23 17:09:29Z THildebrandt@gmail.com $"
+ *          "$Id$"
  */
 public abstract class AbstractResultSaver extends ExperimentListenerBase {
 

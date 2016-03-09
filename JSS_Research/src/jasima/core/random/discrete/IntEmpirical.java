@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,11 +15,10 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: IntEmpirical.java 74 2013-01-08 17:31:49Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.core.random.discrete;
 
+import jasima.core.util.Pair;
 import jasima.core.util.Util;
 
 import java.util.Arrays;
@@ -30,12 +29,13 @@ import java.util.Random;
  * determined by the probabilities passed to {@link #setProbabilities(double[])}
  * , and can be arbitrary positive numbers as long as they sum up to 1.0.
  * 
- * @author Torsten Hildebrandt <hil@biba.uni-bremen.de>
- * @version "$Id: IntEmpirical.java 74 2013-01-08 17:31:49Z THildebrandt@gmail.com $"
+ * @author Torsten Hildebrandt
+ * @version 
+ *          "$Id$"
  */
 public class IntEmpirical extends IntStream {
 
-	private static final long serialVersionUID = -8591371451592742035L;
+	private static final long serialVersionUID = -8591371451392742035L;
 
 	public IntEmpirical() {
 		this(null, null, null, null);
@@ -74,6 +74,7 @@ public class IntEmpirical extends IntStream {
 
 	private double[] probs = null;
 	private int[] vals = null;
+	private Double mean = null;
 
 	public double[] getProbabilities() {
 		return probs;
@@ -93,8 +94,13 @@ public class IntEmpirical extends IntStream {
 
 		this.probs = probs;
 		this.vals = values;
+		this.mean = null;
 	}
 
+	/**
+	 * Sets only probabilities. In this case {@link #nextInt()} will produce
+	 * integers in the range {@code [0, probs.length-1]}.
+	 */
 	public void setProbabilities(double[] probs) {
 		setProbabilities(probs, null);
 	}
@@ -114,13 +120,20 @@ public class IntEmpirical extends IntStream {
 	}
 
 	@Override
-	public int max() {
-		return vals != null ? Util.max(vals) : probs.length - 1;
-	}
+	public double getNumericalMean() {
+		if (mean == null) {
+			if (probs == null || probs.length == 0) {
+				mean = Double.NaN;
+			} else {
+				mean = 0.0;
+				for (int i = 0; i < probs.length; i++) {
+					int value = vals == null ? i : vals[i];
+					mean += probs[i] * value;
+				}
+			}
+		}
 
-	@Override
-	public int min() {
-		return vals != null ? Util.min(vals) : 0;
+		return mean;
 	}
 
 	@Override
@@ -133,6 +146,43 @@ public class IntEmpirical extends IntStream {
 			c.vals = vals.clone();
 
 		return c;
+	}
+
+	@Override
+	public String toString() {
+		String params = "";
+
+		StringBuilder sb = new StringBuilder();
+
+		int n = probs != null ? probs.length : 0;
+		int m = vals != null ? vals.length : 0;
+		for (int i = 0; i < Math.max(n, m); i++) {
+			String v = vals != null && i < vals.length ? Integer
+					.toString(vals[i]) : "?";
+			String p = probs != null && i < probs.length ? Double
+					.toString(probs[i]) : "?";
+
+			sb.append('<').append(v).append(',').append(p).append(">;");
+		}
+		if (sb.length() > 0)
+			params = sb.substring(0, sb.length() - 1);
+
+		return String.format(Util.DEF_LOCALE, "%s(%s)", this.getClass()
+				.getSimpleName(), params);
+	}
+
+	@Override
+	public Pair<Double, Double> getValueRange() {
+		int min;
+		int max;
+		if (vals != null) {
+			min = Util.min(vals);
+			max = Util.max(vals);
+		} else {
+			min = 0;
+			max = probs.length;
+		}
+		return new Pair<>((double) min, (double) max);
 	}
 
 }

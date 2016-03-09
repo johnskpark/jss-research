@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,8 +15,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: MachineStatCollector.java 111 2013-05-16 12:39:01Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.shopSim.util;
 
@@ -34,9 +32,9 @@ import java.util.Map;
  * Produces basic statistics for each workstation it is installed on (like
  * utilization, average queue length, average setup time per operation).
  * 
- * @author Torsten Hildebrandt <hil@biba.uni-bremen.de>
+ * @author Torsten Hildebrandt
  * @version 
- *          "$Id: MachineStatCollector.java 111 2013-05-16 12:39:01Z THildebrandt@gmail.com $"
+ *          "$Id$"
  */
 public class MachineStatCollector extends WorkStationListenerBase {
 
@@ -60,19 +58,14 @@ public class MachineStatCollector extends WorkStationListenerBase {
 
 	@Override
 	protected void init(WorkStation m) {
-		aveMachinesBusy = new TimeWeightedSummaryStat();
-		aveMachinesBusy.value(m.numBusy(), m.shop().simTime());
+		aveMachinesBusy = new TimeWeightedSummaryStat(m.numBusy(), m.shop()
+				.simTime());
 		aniq = new TimeWeightedSummaryStat();
 		stationDelay = new SummaryStat();
 		capacityUtilized = new SummaryStat();
 		aveBatchSize = new SummaryStat();
 		setupTime = new SummaryStat();
 		procTime = new SummaryStat();
-		aniq.clear();
-		stationDelay.clear();
-		capacityUtilized.clear();
-		aveBatchSize.clear();
-		setupTime.clear();
 	}
 
 	@Override

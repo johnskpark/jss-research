@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,17 +15,11 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: Util.java 185 2014-10-24 12:21:43Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.core.util;
 
 import jasima.core.statistics.SummaryStat;
 
-import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -35,24 +29,83 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.reflect.Array;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Random;
 import java.util.StringTokenizer;
 
 /**
  * Some static utility methods that don't really fit anywhere else.
- *
+ * 
  * @author Torsten Hildebrandt
- * @version "$Id: Util.java 185 2014-10-24 12:21:43Z THildebrandt@gmail.com $"
+ * @version "$Id$"
  */
 public class Util {
 
 	/**
+	 * The current jasima version.
+	 */
+	public static final String VERSION = getVersion();
+
+	/**
+	 * Default VERSION used when no version information is available from
+	 * package (e.g., during a run from within Eclipse).
+	 */
+	public static final String DEFAULT_VERSION = "1.2.1-DEVELOP";
+
+	/**
+	 * Descriptive String showing name, current version and project URL.
+	 */
+	public static final String ID_STRING = "JASIMA, v" + VERSION
+			+ "; http://jasima.googlecode.com/";
+
+	/**
+	 * The default locale used, e.g., to format strings.
+	 */
+	public static Locale DEF_LOCALE = Locale.US;
+
+	/**
+	 * Class search path containing all packaged in jasima-main.
+	 */
+	public static final String[] DEF_CLASS_SEARCH_PATH = {
+			"jasima.core.experiment", //
+			"jasima.core.expExecution", //
+			"jasima.core.random", //
+			"jasima.core.random.continuous", //
+			"jasima.core.random.discrete", //
+			"jasima.core.simulation", //
+			"jasima.core.simulation.arrivalprocess", //
+			"jasima.core.statistics", //
+			"jasima.core.util", //
+			"jasima.core.util.observer", //
+			"jasima.core.util.run", //
+			"jasima.shopSim.core", //
+			"jasima.shopSim.core.batchForming", //
+			"jasima.shopSim.models.dynamicShop", //
+			"jasima.shopSim.models.mimac", //
+			"jasima.shopSim.models.staticShop", //
+			"jasima.shopSim.prioRules.basic", //
+			"jasima.shopSim.prioRules.batch", //
+			"jasima.shopSim.prioRules.gp", //
+			"jasima.shopSim.prioRules.meta", //
+			"jasima.shopSim.prioRules.setup", //
+			"jasima.shopSim.prioRules.upDownStream", //
+			"jasima.shopSim.prioRules.weighted", //
+			"jasima.shopSim.util", //
+			"jasima.shopSim.util.modelDef", //
+			"jasima.shopSim.util.modelDef.streams", //
+	};
+
+	/**
 	 * Converts an exception's stack trace to a single line string.
+	 * 
+	 * @param t
+	 *            The {@link Throwable} to convert to a String.
+	 * @return A String representation of {@code t}.
 	 */
 	public static String exceptionToString(Throwable t) {
 		// convert exception to string
@@ -60,19 +113,20 @@ public class Util {
 		PrintWriter pw = new PrintWriter(sw);
 		t.printStackTrace(pw);
 		String s = sw.toString();
-		return s.replace(System.getProperty("line.separator") + '\t', " \\\\ ")
-				.trim();
+		return s.replace(System.lineSeparator() + '\t', " \\\\ ").trim();
 	}
 
 	/**
 	 * Returns a new array with a certain number of new objects of a certain
 	 * type.
-	 *
+	 * 
 	 * @param numElements
 	 *            Number of elements in the result array.
 	 * @param componentType
 	 *            Class of the array elements.
 	 * @return The new array with all elements initialized with new objects.
+	 * @param <T>
+	 *            The component type.
 	 */
 	public static <T> T[] initializedArray(int numElements,
 			Class<T> componentType) {
@@ -92,6 +146,16 @@ public class Util {
 	 * Generic method to remove the first occurrence of an element from an
 	 * array. A new array without the given element is returned (or the old
 	 * array if element was not found).
+	 * 
+	 * @param a
+	 *            The array to work with.
+	 * @param elementToRemove
+	 *            The element to remove from {@code a}.
+	 * @return The array {@code a} with the first occurrence of
+	 *         {@code elementToRemove} removed. If no such element cound be
+	 *         found, {@code a} is returned unchanged.
+	 * @param <T>
+	 *            Type of the array components.
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T[] removeFromArray(T[] a, T elementToRemove) {
@@ -105,305 +169,32 @@ public class Util {
 	}
 
 	/**
-	 * Generic method to add an element to an array. A new array containing the
-	 * given element is returned.
+	 * Generic method to add an element to an array. A new array additionally
+	 * containing the given elements is returned.
 	 */
-	@SuppressWarnings("unchecked")
-	public static <T> T[] addToArray(T[] a, T newElement, Class<T> compType) {
-		if (a == null || a.length == 0) {
-			T[] res = (T[]) Array.newInstance(compType, 1);
-			res[0] = newElement;
-			return res;
-		} else {
-			ArrayList<T> l = new ArrayList<T>(Arrays.asList(a));
-			l.add(newElement);
-			return l.toArray((T[]) Array.newInstance(compType, l.size()));
+	@SafeVarargs
+	public static <T> T[] addToArray(T[] a, Class<T> compType, T... newElement) {
+		if (newElement == null || newElement.length == 0)
+			throw new IllegalArgumentException();
+
+		int newLength = newElement.length + (a == null ? 0 : a.length);
+		ArrayList<T> l = new ArrayList<T>(newLength);
+		if (a != null) {
+			l.addAll(Arrays.asList(a));
 		}
+		for (T t : newElement) {
+			l.add(t);
+		}
+
+		@SuppressWarnings("unchecked")
+		T[] resArray = (T[]) Array.newInstance(compType, l.size());
+
+		return l.toArray(resArray);
 	}
 
 	/**
-	 * Attempts trivial type conversion. This methods supports all cating
-	 * conversions (JLS 5.5) and always returns null when the input object is
-	 * null. If the target type is {@link String}, the result is the return
-	 * value of the input object's {@link Object#toString()} method. Any object
-	 * can be converted to {@link Integer}, {@link Double} and {@link Boolean},
-	 * but those conversions can throw exceptions.
-	 *
-	 * @param o
-	 *            the object to be converted
-	 * @param klass
-	 *            the target type
-	 * @return the converted object
-	 * @throws IllegalArgumentException
-	 *             if the conversion is not supported
-	 * @throws NumberFormatException
-	 *             if the input object is not assignable to {@link Number} and
-	 *             the return value of its {@link Object#toString()} method
-	 *             can't be converted to the numeric target type
-	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static <E> E convert(Object o, Class<E> klass)
-			throws IllegalArgumentException {
-
-		// http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6456930
-		// klass.cast will not unbox and can't accept primitive values
-
-		if (o == null)
-			return null;
-
-		if (klass.isAssignableFrom(o.getClass())) {
-			return (E) o;
-		}
-
-		if (klass == String.class) {
-			return (E) o.toString();
-		}
-
-		if (klass == int.class || klass == Integer.class) {
-			if (o instanceof Number)
-				return (E) (Integer) ((Number) o).intValue();
-			return (E) Integer.valueOf(o.toString());
-		}
-
-		if (klass == double.class || klass == Double.class) {
-			if (o instanceof Number)
-				return (E) (Double) ((Number) o).doubleValue();
-			return (E) Double.valueOf(o.toString());
-		}
-
-		if (klass == boolean.class || klass == Boolean.class) {
-			String str = o.toString();
-			if (str.equalsIgnoreCase("true") || str.equalsIgnoreCase("yes")
-					|| str.equalsIgnoreCase("1"))
-				return (E) Boolean.TRUE;
-			if (str.equalsIgnoreCase("false") || str.equalsIgnoreCase("no")
-					|| str.equalsIgnoreCase("0"))
-				return (E) Boolean.FALSE;
-			throw new IllegalArgumentException(String.format(
-					"Can't convert %s to bool.", o));
-		}
-
-		if (klass.isEnum()) {
-			return (E) Enum.valueOf((Class<Enum>) klass.asSubclass(Enum.class), o.toString());
-		}
-
-		throw new IllegalArgumentException(String.format(
-				"Can't convert from %s to %s.",
-				o.getClass().getCanonicalName(), klass.getCanonicalName()));
-	}
-
-	/**
-	 * Sets a property named with propPath to a certain value using reflection.
-	 *
-	 * Example: setProperty( obj, "a.b.c", 5 ); is equivalent to a direct call
-	 * obj.getA().getB().setC(5)
-	 */
-	public static void setProperty(Object o, String propPath, Object value) {
-		try {
-			String[] segments = propPath.split("\\.");
-			// call getters until we finally arrive where we can call the
-			// setter-method
-			for (int i = 0; i < segments.length; i++) {
-				BeanInfo bi = Introspector.getBeanInfo(o.getClass());
-				PropertyDescriptor[] pds = bi.getPropertyDescriptors();
-
-				PropertyDescriptor match = null;
-				for (PropertyDescriptor pd : pds) {
-					if (pd.getName().equals(segments[i])) {
-						match = pd;
-						break; // for
-					}
-				}
-				if (match == null)
-					throw new IllegalArgumentException("segment '"
-							+ segments[i] + "' not found of property path '"
-							+ propPath + "'.");
-				Method m;
-				if (i == segments.length - 1) {
-					// call setter
-					m = match.getWriteMethod();
-					if (m == null)
-						throw new RuntimeException("Property '" + segments[i]
-								+ "' is not writable.");
-					o = m.invoke(o, convert(value, match.getPropertyType()));
-				} else {
-					// call getter and continue
-					m = match.getReadMethod();
-					o = m.invoke(o);
-				}
-			}
-		} catch (Exception e1) {
-			throw new RuntimeException("Can't set property '" + propPath
-					+ "' to value '" + value + "'. " + e1.getMessage(), e1);
-		}
-	}
-
-	/**
-	 * Determines the type of a property named with propPath using reflection.
-	 *
-	 * This method interprets propPath the same way as
-	 * {@link #getProperty(Object, String)} does.
-	 */
-	public static Class<?> getPropertyType(Object o, String propPath) {
-		try {
-			String[] segments = propPath.split("\\.");
-			// call getters until we finally arrive where we can call the
-			// setter-method
-			for (int i = 0; i < segments.length; i++) {
-				BeanInfo bi = Introspector.getBeanInfo(o.getClass());
-				PropertyDescriptor[] pds = bi.getPropertyDescriptors();
-
-				PropertyDescriptor match = null;
-				for (PropertyDescriptor pd : pds) {
-					if (pd.getName().equals(segments[i])) {
-						match = pd;
-						break; // for
-					}
-				}
-				if (match == null)
-					throw new IllegalArgumentException("segment '"
-							+ segments[i] + "' not found of property path '"
-							+ propPath + "'.");
-				if (i == segments.length - 1) {
-					// return property type
-					return match.getPropertyType();
-				} else {
-					// call getter and continue
-					o = match.getReadMethod().invoke(o);
-				}
-			}
-			throw new AssertionError();
-		} catch (Exception e1) {
-			throw new RuntimeException("Can't determine type of property "
-					+ propPath, e1);
-		}
-	}
-
-	/**
-	 * Gets a property named with propPath using reflection.
-	 *
-	 * Example: getProperty( obj, "a.b.c" ); is equivalent to a direct call
-	 * obj.getA().getB().getC()
-	 */
-	public static Object getProperty(Object o, String propPath) {
-		try {
-			String[] segments = propPath.split("\\.");
-			// call getters until we finally arrive where we can call the
-			// final get-method
-			for (int i = 0; i < segments.length; i++) {
-				BeanInfo bi = Introspector.getBeanInfo(o.getClass());
-				PropertyDescriptor[] pds = bi.getPropertyDescriptors();
-
-				PropertyDescriptor match = null;
-				for (PropertyDescriptor pd : pds) {
-					if (pd.getName().equals(segments[i])) {
-						match = pd;
-						break; // for
-					}
-				}
-				if (match == null)
-					throw new IllegalArgumentException("segment '"
-							+ segments[i] + "' not found of property path '"
-							+ propPath + "'.");
-
-				// call getter and continue
-				Method m = match.getReadMethod();
-				o = m.invoke(o);
-			}
-
-			return o;
-		} catch (Exception e1) {
-			throw new RuntimeException(
-					"Can't get property '" + propPath + "'.", e1);
-		}
-	}
-
-	/**
-	 * Finds (bean) properties of <code>o</code> which have both getter and
-	 * setter methods.
-	 */
-	public static PropertyDescriptor[] findWritableProperties(Object o) {
-		try {
-			BeanInfo bi = Introspector.getBeanInfo(o.getClass());
-
-			PropertyDescriptor[] pds = bi.getPropertyDescriptors();
-
-			ArrayList<PropertyDescriptor> list = new ArrayList<PropertyDescriptor>();
-
-			for (PropertyDescriptor pd : pds) {
-				if (pd.getWriteMethod() != null && pd.getReadMethod() != null)
-					list.add(pd);
-			}
-
-			return list.toArray(new PropertyDescriptor[list.size()]);
-		} catch (IntrospectionException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	/**
-	 * This method returns a clone of an object, if this object is cloneable.
-	 * The clone is created by calling <code>clone()</code> using Java
-	 * reflection, therefore <code>clone()</code> not necessarily has to be
-	 * public.
-	 *
-	 * @param o
-	 *            The object to be cloned.
-	 * @return A clone of o was cloneable, or otherwise the original object.
-	 */
-	@SuppressWarnings("unchecked")
-	public static <T> T cloneIfPossible(T o) {
-		// array?
-		Class<?> o2 = o.getClass().getComponentType();
-		if (o2 == null)
-			o2 = o.getClass();
-
-		if (Cloneable.class.isAssignableFrom(o2)) {
-			// o or an array's components are clonable
-			try {
-				Method cloneMethod = o.getClass().getMethod("clone",
-						new Class[] {});
-				return (T) cloneMethod.invoke(o, new Object[] {});
-			} catch (NoSuchMethodException ignore) {
-				// clonable, but no public clone-method, return o as is
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-		}
-
-		return o;
-	}
-
-	/**
-	 * Produces a deep clone of {@code array}, i.e., for each element of
-	 * {@code array} creating a clone is attempted using
-	 * {@link #cloneIfPossible(Object)}.
-	 *
-	 * @param array
-	 *            The array to be cloned.
-	 * @return A clone of {@code array} with each element also cloned.
-	 */
-	public static <T> T[] deepCloneArrayIfPossible(T[] array) {
-		if (array == null)
-			return null;
-
-		T[] clone = array.clone();
-		for (int i = 0; i < clone.length; i++) {
-			clone[i] = cloneIfPossible(array[i]);
-		}
-
-		return clone;
-	}
-
-	/**
-	 * Two double values are considered equal if the absolute value of their
-	 * differences is smaller than this constant.
-	 */
-	public static final double EPSILON = 1e-10;
-
-	/*
 	 * @return the next non-empty line (everything after '#' is a comment and
-	 * ignored unless it is escaped with a preceding back slash)
+	 *         ignored unless it is escaped with a preceding back slash)
 	 */
 	public static String nextNonEmptyLine(BufferedReader r) throws IOException {
 		String s = r.readLine();
@@ -450,7 +241,7 @@ public class Util {
 	}
 
 	/**
-	 *
+	 * 
 	 * @return An array containing all entries of "ss" not starting with
 	 *         "prefix".
 	 */
@@ -464,8 +255,8 @@ public class Util {
 	}
 
 	/**
-	 * Examples: "5" -> {5}; "23,5..10,3" -> {23,5,6,7,8,9,10,3}; "1,2,3" ->
-	 * {1,2,3}
+	 * Examples: "5" -&gt; {5}; "23,5..10,3" -%gt; {23,5,6,7,8,9,10,3}; "1,2,3"
+	 * -%gt; {1,2,3}
 	 */
 	public static int[] parseIntList(String list) {
 		ArrayList<Integer> res = new ArrayList<Integer>();
@@ -489,7 +280,7 @@ public class Util {
 
 	/**
 	 * Converts a list of comma-separated double values (with dot as decimal
-	 * separator) to a double-array. Example: parseDblList("1.23,4.56") ->
+	 * separator) to a double-array. Example: parseDblList("1.23,4.56") -&gt;
 	 * {1.23,4.56}
 	 */
 	public static double[] parseDblList(String s) {
@@ -690,10 +481,53 @@ public class Util {
 	}
 
 	/**
+	 * Randomly permute the given double array.
+	 * 
+	 * @param arr
+	 *            The array to shuffle.
+	 * @param rnd
+	 *            The randomness source to use.
+	 */
+	public static void shuffle(double[] arr, Random rnd) {
+		// Shuffle array
+		for (int i = arr.length - 1; i > 0; i--) {
+			int j = rnd.nextInt(i + 1);
+
+			double tmp = arr[i];
+			arr[i] = arr[j];
+			arr[j] = tmp;
+		}
+	}
+
+	/**
+	 * Randomly permute the given int array.
+	 * 
+	 * @param arr
+	 *            The array to shuffle.
+	 * @param rnd
+	 *            The randomness source to use.
+	 */
+	public static void shuffle(int[] arr, Random rnd) {
+		// Shuffle array
+		for (int i = arr.length - 1; i > 0; i--) {
+			int j = rnd.nextInt(i + 1);
+
+			int tmp = arr[i];
+			arr[i] = arr[j];
+			arr[j] = tmp;
+		}
+	}
+
+	/**
 	 * Rounds the given double value to a certain number of decimal places.
 	 * {@code decimals} can be positive or negative.
-	 *
+	 * 
 	 * @see #round(double[], int)
+	 * @param val
+	 *            The value to round.
+	 * @param decimals
+	 *            The number of decimals to round to.
+	 * @return The rounded values.
 	 */
 	public static double round(final double val, final int decimals) {
 		if (decimals >= 0) {
@@ -719,10 +553,15 @@ public class Util {
 	 * Rounds all values in the double array {@code vs} to a certain number of
 	 * decimal places. This method does not create a copy of {@code vs}, but
 	 * modifies its contents.
-	 *
+	 * 
 	 * @return the parameter {@code vs} to allow easy chaining of method calls.
-	 *
+	 * 
 	 * @see #round(double, int)
+	 * @param vs
+	 *            An array of doubles to round.
+	 * @param decimals
+	 *            The number of decimals to round the values.
+	 * @return An array with rounded values.
 	 */
 	public static double[] round(final double[] vs, final int decimals) {
 		for (int i = 0; i < vs.length; i++) {
@@ -732,18 +571,17 @@ public class Util {
 	}
 
 	/**
-	 * @return True, if the absolute value of their differences of two double
-	 *         values is smaller than the constant EPSILON (default: 10^-10).
-	 */
-	public static boolean equals(final double v1, final double v2) {
-		return Math.abs(v1 - v2) < EPSILON;
-	}
-
-	/**
 	 * Converts an array (either Object[] or of a primitive type) to a String
 	 * containing it's elements in square brackets.
+	 * 
+	 * @param arbitraryArray
+	 *            The array to convert to a String.
+	 * @return A String representation of the array {@code arbitraryArray}.
+	 * @throws IllegalArgumentException
+	 *             If {@code arbitraryArray} if not an array.
 	 */
-	public static String arrayToString(Object arbitraryArray) {
+	public static String arrayToString(Object arbitraryArray)
+			throws IllegalArgumentException {
 		Class<?> compType = arbitraryArray.getClass().getComponentType();
 		if (compType == null)
 			throw new IllegalArgumentException();
@@ -763,6 +601,8 @@ public class Util {
 				return Arrays.toString((double[]) arbitraryArray);
 			else if (compType == Float.TYPE)
 				return Arrays.toString((float[]) arbitraryArray);
+			else if (compType == Character.TYPE)
+				return Arrays.toString((char[]) arbitraryArray);
 			else
 				throw new AssertionError();
 		} else
@@ -772,7 +612,7 @@ public class Util {
 	/**
 	 * Convenience method to put mean, max and variance of a ValueStat object in
 	 * a result map.
-	 *
+	 * 
 	 * @param vs
 	 *            the statistic
 	 * @param prefix
@@ -787,6 +627,53 @@ public class Util {
 			res.put(prefix + "Max", vs.max());
 		if (vs.numObs() >= 2)
 			res.put(prefix + "Variance", vs.variance());
+	}
+
+	/**
+	 * Utility method to get the current package's version.
+	 * 
+	 * @return The current jasima version as a String.
+	 */
+	private static String getVersion() {
+		String v = null;
+		if (Util.class.getPackage() != null)
+			v = Util.class.getPackage().getImplementationVersion();
+		return v == null ? DEFAULT_VERSION : v;
+	}
+
+	/**
+	 * Returns a string that characterizes the current Java environment by using
+	 * various system properties.
+	 * 
+	 * @return The execution environment.
+	 */
+	public static String getJavaEnvString() {
+		String javaVersion = System.getProperty("java.version");
+		String javaVendor = System.getProperty("java.vendor");
+		String javaVmName = System.getProperty("java.vm.name");
+		// String javaRuntimeName = System.getProperty("java.runtime.name");
+
+		return String.format(DEF_LOCALE, "java: v%s, %s (%s)", javaVersion,
+				javaVmName, javaVendor);
+	}
+
+	/**
+	 * Returns a string that characterizes the host operating system by using
+	 * various system properties.
+	 * 
+	 * @return The OS environment.
+	 */
+	public static String getOSEnvString() {
+		String osName = System.getProperty("os.name");
+		String osArch = System.getProperty("os.arch");
+		String osVersion = System.getProperty("os.version");
+
+		return String.format(DEF_LOCALE, "OS: %s (%s, v%s)", osName, osArch,
+				osVersion);
+	}
+
+	// prevent instantiation
+	private Util() {
 	}
 
 }

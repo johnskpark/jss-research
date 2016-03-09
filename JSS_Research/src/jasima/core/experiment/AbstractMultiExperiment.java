@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,18 +15,17 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: AbstractMultiExperiment.java 184 2014-10-24 12:18:52Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.core.experiment;
 
 import jasima.core.expExecution.ExperimentExecutor;
 import jasima.core.expExecution.ExperimentFuture;
 import jasima.core.statistics.SummaryStat;
+import jasima.core.util.Pair;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -35,13 +34,13 @@ import java.util.Random;
 /**
  * Parent class of an experiment which runs a number of child experiments.
  * 
- * @author Torsten Hildebrandt <hil@biba.uni-bremen.de>
+ * @author Torsten Hildebrandt
  * @version 
- *          "$Id: AbstractMultiExperiment.java 184 2014-10-24 12:18:52Z THildebrandt@gmail.com $"
+ *          "$Id$"
  */
 public abstract class AbstractMultiExperiment extends Experiment {
 
-	private static final long serialVersionUID = 4018379771127550074L;
+	private static final long serialVersionUID = 2285355204835181022L;
 
 	public static final String NUM_TASKS_EXECUTED = "numTasks";
 
@@ -67,16 +66,16 @@ public abstract class AbstractMultiExperiment extends Experiment {
 	private boolean commonRandomNumbers = true;
 	private int skipSeedCount = 0;
 	private boolean abortUponBaseExperimentAbort = false;
-	protected HashSet<String> keepResults = new HashSet<String>();
+	private String[] keepResults = new String[0];
 	private boolean produceAveragedResults = true;
 
 	// fields used during run
 
 	protected UniqueNamesCheckingHashMap detailedResultsNumeric;
 	protected UniqueNamesCheckingHashMap detailedResultsOther;
-	private Random seedStream;
+	protected Random seedStream;
 	protected List<Experiment> experiments;
-	private int numTasksExecuted;
+	protected int numTasksExecuted;
 
 	@Override
 	public void init() {
@@ -117,7 +116,7 @@ public abstract class AbstractMultiExperiment extends Experiment {
 				// as they are stored in tasks
 				int n = 0;
 				Collection<ExperimentFuture> allFutures = ExperimentExecutor
-						.getExecutor().runAllExperiments(experiments);
+						.getExecutor().runAllExperiments(experiments, this);
 				Iterator<ExperimentFuture> it = allFutures.iterator();
 				while (it.hasNext()) {
 					ExperimentFuture f = it.next();
@@ -144,7 +143,7 @@ public abstract class AbstractMultiExperiment extends Experiment {
 					experiments.set(i, null);
 
 					if (aborted == 0) {
-						ExperimentFuture future = ex.runExperiment(e);
+						ExperimentFuture future = ex.runExperiment(e, this);
 						getAndStoreResults(e, future);
 					} else {
 						break; // for i
@@ -249,6 +248,11 @@ public abstract class AbstractMultiExperiment extends Experiment {
 
 	/**
 	 * Handles arbitrary values "val" by storing them in an object array.
+	 * 
+	 * @param key
+	 *            Name of the value to store.
+	 * @param val
+	 *            The value to store. Can be null.
 	 */
 	protected void handleOtherValue(String key, Object val) {
 		if (key.endsWith(EXCEPTION) || key.endsWith(EXCEPTION_MESSAGE)) {
@@ -268,32 +272,54 @@ public abstract class AbstractMultiExperiment extends Experiment {
 	 * Handles a numeric value "val" by averaging it over all runs performed. If
 	 * "val" is of type SummaryStat, averaging is performed with its
 	 * mean()-value.
+	 * 
+	 * @param key
+	 *            The name if the value.
+	 * @param val
+	 *            The numeric value to store. Either a {@link Number}, or a
+	 *            {@link SummaryStat}
 	 */
 	protected void handleNumericValue(String key, Object val) {
-		// ensure there is an entry "key" also in "results"
-		if (key.endsWith(RUNTIME) || key.endsWith(NUM_TASKS_EXECUTED)
-				|| key.endsWith(EXP_ABORTED)) {
-			key = "baseExperiment." + key;
-		}
+		Double v;
+		boolean wasSummaryStat;
 
-		SummaryStat repValues = (SummaryStat) detailedResultsNumeric.get(key);
-		if (repValues == null) {
-			repValues = new SummaryStat();
-			detailedResultsNumeric.put(key, repValues);
-		}
-
-		// store run result, may it be a complex statistic or scalar value
+		// store run result, which can be a complex statistic or scalar value
 		if (val instanceof SummaryStat) {
 			SummaryStat vs = (SummaryStat) val;
+			wasSummaryStat = true;
 			if (vs.numObs() > 0)
-				repValues.value(vs.mean());
+				v = vs.mean();
+			else
+				v = null;
 		} else if (val instanceof Number) {
 			Number n = (Number) val;
-			repValues.value(n.doubleValue());
+			v = n.doubleValue();
+			wasSummaryStat = false;
 		} else
 			// should never occur
 			throw new AssertionError("Illegal experiment result type: "
 					+ val.getClass().getName());
+
+		// get/create entry in "detailedResultsNumeric"
+		@SuppressWarnings("unchecked")
+		Pair<Boolean, SummaryStat> data = (Pair<Boolean, SummaryStat>) detailedResultsNumeric
+				.get(key);
+		if (data == null) {
+			data = new Pair<Boolean, SummaryStat>(wasSummaryStat,
+					new SummaryStat());
+			detailedResultsNumeric.put(key, data);
+		}
+		SummaryStat repValues = data.b;
+
+		// store value
+		if (v != null) {
+			repValues.value(v.doubleValue());
+		}
+	}
+
+	protected boolean isSpecialKey(String key) {
+		return key.endsWith(RUNTIME) || key.endsWith(NUM_TASKS_EXECUTED)
+				|| key.endsWith(EXP_ABORTED);
 	}
 
 	@Override
@@ -301,24 +327,27 @@ public abstract class AbstractMultiExperiment extends Experiment {
 		super.produceResults();
 
 		for (String key : detailedResultsNumeric.keySet()) {
-			Object val = detailedResultsNumeric.get(key);
+			@SuppressWarnings("unchecked")
+			Pair<Boolean, SummaryStat> data = (Pair<Boolean, SummaryStat>) detailedResultsNumeric
+					.get(key);
+			SummaryStat val = data.b;
 
-			if (key.endsWith(NUM_TASKS_EXECUTED))
+			if (isSpecialKey(key)) {
 				key = "baseExperiment." + key;
+			} else {
+				// was base result already a SummaryStat?
+				if (data.a == true) {
+					key = key + ".mean";
+				}
+			}
 
-			// careful: SummaryStat is not immutable, so is it better to create
-			// a
-			// clone?
-			assert val instanceof SummaryStat;
-
+			// careful: SummaryStat is not immutable, so it might be better to
+			// create a clone?
 			resultMap.put(key, val);
 		}
 
 		for (String key : detailedResultsOther.keySet()) {
 			Object val = detailedResultsOther.get(key);
-
-			if (key.endsWith(NUM_TASKS_EXECUTED))
-				key = "baseExperiment." + key;
 
 			while (resultMap.containsKey(key))
 				key += "@Other";
@@ -333,28 +362,66 @@ public abstract class AbstractMultiExperiment extends Experiment {
 		resultMap.put(NUM_TASKS_EXECUTED, getNumTasksExecuted());
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public AbstractMultiExperiment clone() throws CloneNotSupportedException {
 		AbstractMultiExperiment mre = (AbstractMultiExperiment) super.clone();
 
-		mre.keepResults = (HashSet<String>) keepResults.clone();
+		if (keepResults != null)
+			mre.keepResults = keepResults.clone();
 
 		return mre;
 	}
 
 	public void addKeepResultName(String name) {
-		keepResults.add(name);
+		// temporarily convert to list
+		ArrayList<String> list = new ArrayList<String>(
+				Arrays.asList(keepResults));
+		list.add(name);
+		// convert back to array
+		keepResults = list.toArray(new String[list.size()]);
 	}
 
-	public void removeKeepResultName(String name) {
-		keepResults.remove(name);
+	public boolean removeKeepResultName(String name) {
+		// temporarily convert to list
+		ArrayList<String> list = new ArrayList<String>(
+				Arrays.asList(keepResults));
+		boolean res = list.remove(name);
+		// convert back to array
+		keepResults = list.toArray(new String[list.size()]);
+
+		return res;
 	}
 
 	public boolean isKeepTaskResults() {
-		return keepResults.size() > 0;
+		return keepResults.length > 0;
 	}
 
+	public String[] getKeepResults() {
+		return keepResults;
+	}
+
+	/**
+	 * Sets the names of all results where detailed results of all
+	 * sub-experiment executions should be preserved.
+	 * 
+	 * @param keepResults
+	 *            The names of all results for which detailed run results from
+	 *            sub-experiments should be stored.
+	 */
+	public void setKeepResults(String[] keepResults) {
+		this.keepResults = keepResults;
+	}
+
+	/**
+	 * If this attribute is set to {@code true}, sub-experiments will be
+	 * executed concurrently in parallel. Setting this property to {@code false}
+	 * (therefore using only a single CPU core) is sometimes useful for
+	 * debugging purposes or when fine-grained control over parallelization of
+	 * nested (multi-)experiments is required.
+	 * 
+	 * @param allowParallelExecution
+	 *            Whether or not to allow parallel execution of sub-experiments.
+	 */
 	public void setAllowParallelExecution(boolean allowParallelExecution) {
 		this.allowParallelExecution = allowParallelExecution;
 	}
@@ -363,7 +430,19 @@ public abstract class AbstractMultiExperiment extends Experiment {
 		return allowParallelExecution;
 	}
 
-	public void setCommonRandomNumbers(boolean commonRandomNumbers) {
+	/**
+	 * Whether to use the variance reduction technique of common random numbers.
+	 * If set to true, all sub-experiments are executed using the same random
+	 * seed, so random influences will be the same for all sub-experiments. If
+	 * set to {@code false}, all sub-experiments will be assigned a different
+	 * {@code initialSeed}, depending only on this experiment's
+	 * {@code initialSeed}.
+	 * 
+	 * @param commonRandomNumbers
+	 *            Whether or not all sub-experiments are assigned the same
+	 *            {@code initialSeed}.
+	 */
+	protected void setCommonRandomNumbers(boolean commonRandomNumbers) {
 		this.commonRandomNumbers = commonRandomNumbers;
 	}
 
@@ -371,23 +450,31 @@ public abstract class AbstractMultiExperiment extends Experiment {
 		return commonRandomNumbers;
 	}
 
-	@Override
-	public boolean isLeafExperiment() {
-		return false;
-	}
-
+	/**
+	 * Before starting, throw away this many seed values. This setting can be
+	 * useful to resume interrupted sub-experiments.
+	 * 
+	 * @param skipSeedCount
+	 *            The number of seeds to skip.
+	 */
 	public void setSkipSeedCount(int skipSeedCount) {
 		this.skipSeedCount = skipSeedCount;
 	}
 
-	/*
-	 * Before starting throw away this many seed values -- useful to resume
-	 * interrupted operastions.
-	 */
 	public int getSkipSeedCount() {
 		return skipSeedCount;
 	}
 
+	/**
+	 * If set to {@code true}, this experiment aborts immediately (indicating an
+	 * abort in its results) after the first sub-experiment aborting. If this is
+	 * set to {@code false}, execution of sub-experiments continues, ignoring
+	 * aborting experiments.
+	 * 
+	 * @param abortUponBaseExperimentAbort
+	 *            Whether or not to abort execution of sub-experiments upon the
+	 *            first execution error.
+	 */
 	public void setAbortUponBaseExperimentAbort(
 			boolean abortUponBaseExperimentAbort) {
 		this.abortUponBaseExperimentAbort = abortUponBaseExperimentAbort;
@@ -401,6 +488,13 @@ public abstract class AbstractMultiExperiment extends Experiment {
 		return produceAveragedResults;
 	}
 
+	/**
+	 * Whether or not to produce averaged results across all sub-experiments as
+	 * a result of this experiment.
+	 * 
+	 * @param produceAveragedResults
+	 *            Whether or not to produce averaged results.
+	 */
 	public void setProduceAveragedResults(boolean produceAveragedResults) {
 		this.produceAveragedResults = produceAveragedResults;
 	}

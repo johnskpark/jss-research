@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,8 +15,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: GPRuleBase.java 74 2013-01-08 17:31:49Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.shopSim.prioRules.gp;
 
@@ -24,10 +22,15 @@ import jasima.shopSim.core.PR;
 import jasima.shopSim.core.PrioRuleTarget;
 
 /**
+ * Abstract base class that can be used for rules generated with Genetic
+ * Programming. In addition to standard {@code PR} it only defines static
+ * methods for some commonly used arithmetic functions.
  * 
- * @author Torsten Hildebrandt <hil@biba.uni-bremen.de>
- * @version "$Id: GPRuleBase.java 74 2013-01-08 17:31:49Z THildebrandt@gmail.com $"
+ * @author Torsten Hildebrandt
+ * @version 
+ *          "$Id$"
  */
+@SuppressWarnings("serial")
 public abstract class GPRuleBase extends PR {
 
 	@Override
@@ -53,6 +56,13 @@ public abstract class GPRuleBase extends PR {
 		return v1 / v2;
 	}
 
+	public static final double divProtected(final double v1, final double v2) {
+		if (v2 == 0.0)
+			return 1.0;
+		else
+			return v1 / v2;
+	}
+
 	public static final double sub(final double v1, final double v2) {
 		return v1 - v2;
 	}
@@ -68,4 +78,9 @@ public abstract class GPRuleBase extends PR {
 	public static final double neg(final double v1) {
 		return -v1;
 	}
+
+	public static final double abs(double v1) {
+		return Math.abs(v1);
+	}
+
 }

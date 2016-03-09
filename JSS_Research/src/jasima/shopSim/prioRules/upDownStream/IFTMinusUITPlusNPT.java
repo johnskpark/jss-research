@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,8 +15,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: IFTMinusUITPlusNPT.java 74 2013-01-08 17:31:49Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.shopSim.prioRules.upDownStream;
 
@@ -25,14 +23,17 @@ import jasima.shopSim.core.PrioRuleTarget;
 /**
  * This class implements an extension of the IFTMinusUIT rule, developed by
  * Branke and Pickardt (2011).
- * <p />
+ * <p>
  * The lookahead needs to be enabled in the simulation for this rule to work
  * properly.
  * 
  * @author Christoph Pickardt, 2011-11-15
- * @version "$Id: IFTMinusUITPlusNPT.java 74 2013-01-08 17:31:49Z THildebrandt@gmail.com $"
+ * @version 
+ *          "$Id$"
  */
 public class IFTMinusUITPlusNPT extends IFTMinusUIT {
+
+	private static final long serialVersionUID = -1423420723665183647L;
 
 	@Override
 	public double calcPrio(PrioRuleTarget j) {

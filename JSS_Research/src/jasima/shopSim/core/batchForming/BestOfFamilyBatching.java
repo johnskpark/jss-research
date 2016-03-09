@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,8 +15,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: BestOfFamilyBatching.java 111 2013-05-16 12:39:01Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.shopSim.core.batchForming;
 
@@ -30,18 +28,23 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * <p>
  * This class creates a single batch per family according to the used sequencing
  * rule. Later a machine's sequencingRule (optionally batchSequencingRule) is
  * used to choose one of them to process.
- * <p />
+ * </p>
+ * <p>
  * If there are more than maxBatchSize jobs for a family, jobs are sequenced
  * using the sequencingRule first and the best maxBatchSize jobs of the family
  * are used to form the batch.
  * 
  * @author Torsten Hildebrandt, 2010-10-25
- * @version "$Id: BestOfFamilyBatching.java 111 2013-05-16 12:39:01Z THildebrandt@gmail.com $"
+ * @version 
+ *          "$Id$"
  */
 public class BestOfFamilyBatching extends BatchForming {
+
+	private static final long serialVersionUID = 4249713710542519941L;
 
 	@Override
 	public void formBatches() {

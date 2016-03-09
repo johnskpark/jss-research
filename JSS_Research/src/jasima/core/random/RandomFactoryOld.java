@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,8 +15,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: RandomFactoryOld.java 181 2014-10-23 15:45:13Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.core.random;
 
@@ -27,9 +25,10 @@ import java.util.Random;
 /**
  * Use {@link RandomFactory} instead.
  * 
- * @author Torsten Hildebrandt <hil@biba.uni-bremen.de>
+ * @author Torsten Hildebrandt
  * @version 
- *          "$Id: RandomFactoryOld.java 181 2014-10-23 15:45:13Z THildebrandt@gmail.com $"
+ *          "$Id$"
+ * @deprecated Use {@link RandomFactory} instead.
  */
 @Deprecated
 public class RandomFactoryOld extends RandomFactory {

@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,8 +15,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: ShopListenerBase.java 170 2014-08-26 14:35:02Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.shopSim.util;
 
@@ -34,10 +32,12 @@ import java.util.Map;
  * This class can be used as a base class for classes collecting results based
  * on job releases/job completions.
  * 
- * @author Torsten Hildebrandt <hil@biba.uni-bremen.de>, 2012-08-21
+ * @author Torsten Hildebrandt, 2012-08-21
+ * 
  * @see BasicJobStatCollector
+ * @see ExtendedJobStatCollector
  * @version 
- *          "$Id: ShopListenerBase.java 170 2014-08-26 14:35:02Z THildebrandt@gmail.com $"
+ *          "$Id$"
  */
 public abstract class ShopListenerBase implements
 		NotifierListener<Simulation, SimEvent>, Serializable, Cloneable {
@@ -130,6 +130,11 @@ public abstract class ShopListenerBase implements
 
 	public void setIgnoreFirst(int ignoreFirst) {
 		this.ignoreFirst = ignoreFirst;
+	}
+
+	@Override
+	public String toString() {
+		return getClass().getSimpleName();
 	}
 
 }

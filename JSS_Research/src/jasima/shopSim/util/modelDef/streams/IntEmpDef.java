@@ -1,3 +1,21 @@
+/*******************************************************************************
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
+ *
+ * This file is part of jasima, v1.2.
+ *
+ * jasima is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * jasima is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
+ *******************************************************************************/
 package jasima.shopSim.util.modelDef.streams;
 
 import jasima.core.random.continuous.DblStream;
@@ -9,7 +27,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
-public class IntEmpDef extends StreamDef {
+public class IntEmpDef extends IntStreamDef {
+
+	private static final long serialVersionUID = 6302098802706171687L;
 
 	public static final String PARAM_PROBS = "probs";
 	public static final String PARAM_VALUES = "values";
@@ -35,7 +55,7 @@ public class IntEmpDef extends StreamDef {
 					l.add(new Pair<Integer, Double>(v1, p1));
 				}
 			} catch (NumberFormatException nfe) {
-				errors.add(String.format("invalid number: %s",
+				errors.add(String.format(Util.DEF_LOCALE, "invalid number: %s",
 						nfe.getLocalizedMessage()));
 				return null;
 			}
@@ -48,7 +68,7 @@ public class IntEmpDef extends StreamDef {
 				probs[i] = p.b;
 			}
 			if (Math.abs(Util.sum(probs) - 1.0) > 1e-6) {
-				errors.add(String.format(
+				errors.add(String.format(Util.DEF_LOCALE,
 						"probabilities have to sum to 1.0, current sum is %f.",
 						Util.sum(probs)));
 				return null;
@@ -60,10 +80,31 @@ public class IntEmpDef extends StreamDef {
 			return res;
 		}
 
+		@Override
+		public DblStreamDef streamToStreamDef(DblStream stream) {
+			if (stream instanceof IntEmpirical) {
+				IntEmpirical s = (IntEmpirical) stream;
+				IntEmpDef def = new IntEmpDef();
+
+				double[] probs = s.getProbabilities();
+				if (probs != null)
+					probs = probs.clone();
+				def.setProbs(probs);
+
+				int[] values = s.getValues();
+				if (values != null)
+					values = values.clone();
+				def.setValues(values);
+
+				return def;
+			} else
+				return null;
+		}
+
 	};
 
-	private double[] probs = null;
-	private int[] values = null;
+	private double[] probs = { 0.7, 0.3 };
+	private int[] values = { 1, 2 };
 
 	public IntEmpDef() {
 		super();
@@ -74,14 +115,34 @@ public class IntEmpDef extends StreamDef {
 		String params = "";
 
 		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < probs.length; i++) {
-			sb.append('<').append(values[i]).append(',').append(probs[i])
-					.append(">,");
+
+		int n = probs != null ? probs.length : 0;
+		int m = values != null ? values.length : 0;
+		for (int i = 0; i < Math.max(n, m); i++) {
+			String v = values != null && i < values.length ? Integer
+					.toString(values[i]) : "?";
+			String p = probs != null && i < probs.length ? Double
+					.toString(probs[i]) : "?";
+
+			sb.append('<').append(v).append(',').append(p).append(">;");
 		}
 		if (sb.length() > 0)
 			params = sb.substring(0, sb.length() - 1);
 
-		return String.format("%s(%s)", FACTORY.getTypeString(), params);
+		return String.format(Util.DEF_LOCALE, "%s(%s)",
+				FACTORY.getTypeString(), params);
+	}
+
+	@Override
+	public IntEmpDef clone() throws CloneNotSupportedException {
+		IntEmpDef c = (IntEmpDef) super.clone();
+
+		if (values != null)
+			c.values = values.clone();
+		if (probs != null)
+			c.probs = probs.clone();
+
+		return c;
 	}
 
 	@Override
@@ -103,6 +164,10 @@ public class IntEmpDef extends StreamDef {
 
 	public void setValues(int[] values) {
 		firePropertyChange(PARAM_VALUES, this.values, this.values = values);
+	}
+
+	static {
+		registerStreamFactory(IntEmpDef.FACTORY);
 	}
 
 }

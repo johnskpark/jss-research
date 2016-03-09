@@ -1,3 +1,21 @@
+/*******************************************************************************
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
+ *
+ * This file is part of jasima, v1.2.
+ *
+ * jasima is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * jasima is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
+ *******************************************************************************/
 package jasima.shopSim.util;
 
 import static jasima.shopSim.core.Job.JOB_ARRIVED_IN_QUEUE;
@@ -16,10 +34,11 @@ import jasima.shopSim.core.WorkStation;
  * This class can be used as a base class for classes collecting results based
  * on job releases/job completions.
  * 
- * @author Torsten Hildebrandt <hil@biba.uni-bremen.de>, 2013-06-28
- * @version "$Id: JobListenerBase.java 170 2014-08-26 14:35:02Z THildebrandt@gmail.com $"
+ * @author Torsten Hildebrandt, 2013-06-28
+ * @version 
+ *          "$Id$"
  */
-public class JobListenerBase implements Cloneable,
+public abstract class JobListenerBase implements Cloneable,
 		NotifierListener<Job, JobEvent> {
 
 	public JobListenerBase() {
@@ -73,6 +92,11 @@ public class JobListenerBase implements Cloneable,
 	@Override
 	public JobListenerBase clone() throws CloneNotSupportedException {
 		return (JobListenerBase) super.clone();
+	}
+
+	@Override
+	public String toString() {
+		return getClass().getSimpleName();
 	}
 
 }

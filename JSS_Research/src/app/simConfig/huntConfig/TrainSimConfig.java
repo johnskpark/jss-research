@@ -29,20 +29,11 @@ public class TrainSimConfig extends DynamicSimConfig {
 	}
 
 	@Override
-	public int getMinOpProc(int index) {
+	public DblStream getProcTime(int index) {
 		if (index < fourOp.getNumConfigs()) {
-			return fourOp.getMinOpProc(index);
+			return fourOp.getProcTime(index);
 		} else {
-			return eightOp.getMinOpProc(index-fourOp.getNumConfigs());
-		}
-	}
-
-	@Override
-	public int getMaxOpProc(int index) {
-		if (index < fourOp.getNumConfigs()) {
-			return fourOp.getMaxOpProc(index);
-		} else {
-			return eightOp.getMaxOpProc(index-fourOp.getNumConfigs());
+			return eightOp.getProcTime(index-fourOp.getNumConfigs());
 		}
 	}
 

@@ -2,11 +2,11 @@ package app.simConfig.huntConfig;
 
 import jasima.core.random.continuous.DblStream;
 import app.simConfig.DynamicSimConfig;
+import app.simConfig.huntConfig.DDFStream.DDFDefinition;
+import app.simConfig.huntConfig.ProcTimeStream.ProcTimeRange;
 
 public class EightOpSimConfig extends DynamicSimConfig {
 
-	private static final int MIN_OP_PROC = 1;
-	private static final int MAX_OP_PROC = 49;
 	private static final double[] UTIL_LEVEL = new double[]{0.85, 0.95};
 	private static final int NUM_OPS = 8;
 
@@ -23,13 +23,8 @@ public class EightOpSimConfig extends DynamicSimConfig {
 	}
 
 	@Override
-	public int getMinOpProc(int index) {
-		return MIN_OP_PROC;
-	}
-
-	@Override
-	public int getMaxOpProc(int index) {
-		return MAX_OP_PROC;
+	public DblStream getProcTime(int index) {
+		return new ProcTimeStream(ProcTimeRange.LOW_PROC_TIME, getLongValue());
 	}
 
 	@Override
@@ -39,7 +34,7 @@ public class EightOpSimConfig extends DynamicSimConfig {
 
 	@Override
 	public DblStream getDueDateFactor(int index) {
-		return new TrainDDFStream(getLongValue());
+		return new DDFStream(DDFDefinition.TRAIN, getLongValue());
 	}
 
 	@Override

@@ -1,3 +1,21 @@
+/*******************************************************************************
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
+ *
+ * This file is part of jasima, v1.2.
+ *
+ * jasima is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * jasima is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
+ *******************************************************************************/
 package jasima.shopSim.util.modelDef;
 
 import jasima.shopSim.core.JobShop;
@@ -8,14 +26,17 @@ import jasima.shopSim.util.ShopConfigurator;
  * {@link JobShop}.
  * 
  * @author Torsten Hildebrandt
- * @version "$Id: ShopDef.java 151 2014-04-14 10:27:39Z THildebrandt@gmail.com $"
+ * @version 
+ *          "$Id$"
  */
 public class ShopDef extends PropertySupport {
+
+	private static final long serialVersionUID = -8471081132120093539L;
 
 	private String name = null;
 	private double simulationLength = 0.0d;
 	private int maxJobsInSystem = 0;
-	private int maxJobsFinished = 0;
+	private int stopAfterNumJobs = 0;
 	private boolean enableLookAhead = false;
 	private WorkstationDef[] workstations = {};
 	private SourceDef[] jobSources = {};
@@ -39,13 +60,13 @@ public class ShopDef extends PropertySupport {
 				this.maxJobsInSystem = maxJobsInSystem);
 	}
 
-	public int getMaxJobsFinished() {
-		return maxJobsFinished;
+	public int getStopAfterNumJobs() {
+		return stopAfterNumJobs;
 	}
 
-	public void setMaxJobsFinished(int maxJobsFinished) {
-		firePropertyChange("maxJobsFinished", this.maxJobsFinished,
-				this.maxJobsFinished = maxJobsFinished);
+	public void setStopAfterNumJobs(int stopAfterNumJobs) {
+		firePropertyChange("stopAfterNumJobs", this.stopAfterNumJobs,
+				this.stopAfterNumJobs = stopAfterNumJobs);
 	}
 
 	public boolean isEnableLookAhead() {

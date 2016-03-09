@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,11 +15,10 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: IntConst.java 73 2013-01-08 17:16:19Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.core.random.discrete;
 
+import jasima.core.util.Pair;
 import jasima.core.util.Util;
 
 import java.util.Arrays;
@@ -30,32 +29,26 @@ import java.util.Arrays;
  * are returned once. The sequence returned is not random at all, i.e. this
  * class does not use the inherited rndGen.
  * 
- * @author Torsten Hildebrandt <hil@biba.uni-bremen.de>
- * @version $Id: IntConst.java 73 2013-01-08 17:16:19Z THildebrandt@gmail.com $
+ * @author Torsten Hildebrandt
+ * @version 
+ *          "$Id$"
  */
 public class IntConst extends IntStream {
 
-	private static final long serialVersionUID = -3297743869223820992L;
+	private static final long serialVersionUID = -3297743869123820992L;
 
 	private int[] values;
+	private Double mean;
 
 	private int next;
 
-	private int min, max;
+	public IntConst() {
+		this(null);
+	}
 
 	public IntConst(int... vs) {
 		super();
 		setValues(vs);
-	}
-
-	@Override
-	public int min() {
-		return min;
-	}
-
-	@Override
-	public int max() {
-		return max;
 	}
 
 	@Override
@@ -72,8 +65,20 @@ public class IntConst extends IntStream {
 
 	public void setValues(int... vs) {
 		this.values = vs;
-		min = Util.min(vs);
-		max = Util.max(vs);
+		this.mean = null;
+	}
+
+	@Override
+	public double getNumericalMean() {
+		// lazy initialization of "mean" upon first call
+		if (mean == null) {
+			if (values == null || values.length == 0)
+				mean = Double.NaN;
+			else
+				mean = ((double) Util.sum(values)) / values.length;
+		}
+
+		return mean;
 	}
 
 	@Override
@@ -86,9 +91,27 @@ public class IntConst extends IntStream {
 		IntConst c = (IntConst) super.clone();
 
 		if (values != null)
-			c.values = Arrays.copyOf(values, values.length);
+			c.values = values.clone();
 
 		return c;
+	}
+
+	@Override
+	public Pair<Double, Double> getValueRange() {
+		if (values == null || values.length == 0)
+			return new Pair<>(Double.NaN, Double.NaN);
+
+		int min = Integer.MAX_VALUE;
+		int max = Integer.MIN_VALUE;
+
+		for (int d : values) {
+			if (d < min)
+				min = d;
+			if (d > max)
+				max = d;
+		}
+
+		return new Pair<>((double) min, (double) max);
 	}
 
 }

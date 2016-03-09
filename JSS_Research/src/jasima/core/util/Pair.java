@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,8 +15,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: Pair.java 168 2014-08-26 09:17:32Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.core.util;
 
@@ -34,7 +32,7 @@ import java.io.Serializable;
  * @param <B>
  *            Type of the second element.
  * @author Torsten Hildebrandt
- * @version "$Id: Pair.java 168 2014-08-26 09:17:32Z THildebrandt@gmail.com $"
+ * @version "$Id$"
  */
 public class Pair<A, B> implements Cloneable, Serializable {
 

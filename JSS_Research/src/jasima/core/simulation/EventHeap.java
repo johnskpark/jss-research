@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,8 +15,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: EventHeap.java 74 2013-01-08 17:31:49Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.core.simulation;
 
@@ -28,9 +26,9 @@ import java.io.Serializable;
  * An implementation of {@link jasima.core.simulation.Simulation.EventQueue}
  * using an array-based heap.
  * 
- * @author Torsten Hildebrandt <hil@biba.uni-bremen.de>, 2012-08-30
+ * @author Torsten Hildebrandt, 2012-08-30
  * @version 
- *          "$Id: EventHeap.java 74 2013-01-08 17:31:49Z THildebrandt@gmail.com $"
+ *          "$Id$"
  */
 public final class EventHeap implements EventQueue, Serializable {
 	private static final long serialVersionUID = -7578258752027946114L;

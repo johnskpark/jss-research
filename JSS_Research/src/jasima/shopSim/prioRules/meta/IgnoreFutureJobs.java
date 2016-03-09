@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,8 +15,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: IgnoreFutureJobs.java 74 2013-01-08 17:31:49Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.shopSim.prioRules.meta;
 
@@ -33,9 +31,12 @@ import jasima.shopSim.core.PR;
  * the non-future jobs.
  * 
  * @author Torsten Hildebrandt, 2010-02-16
- * @version "$Id: IgnoreFutureJobs.java 74 2013-01-08 17:31:49Z THildebrandt@gmail.com $"
+ * @version 
+ *          "$Id$"
  */
 public class IgnoreFutureJobs extends FixedLAThreshold {
+
+	private static final long serialVersionUID = -2444578540937649208L;
 
 	public IgnoreFutureJobs(PR baseRule) {
 		super(baseRule, 0.0);

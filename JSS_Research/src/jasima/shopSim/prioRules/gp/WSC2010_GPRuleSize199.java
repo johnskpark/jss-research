@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,8 +15,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: WSC2010_GPRuleSize199.java 74 2013-01-08 17:31:49Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.shopSim.prioRules.gp;
 
@@ -29,15 +27,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * A rule from
+ * "Generating dispatching rules for semiconductor manufacturing to minimize weighted tardiness"
+ * , WinterSim 2010, doi:10.1109/WSC.2010.5678946.
  * 
- * @author Torsten Hildebrandt <hil@biba.uni-bremen.de>
- * @version "$Id: WSC2010_GPRuleSize199.java 74 2013-01-08 17:31:49Z THildebrandt@gmail.com $"
+ * @author Torsten Hildebrandt
+ * @version 
+ *          "$Id$"
  */
 public class WSC2010_GPRuleSize199 extends GPRuleBase {
 
+	private static final long serialVersionUID = -8457782199185178603L;
+
 	private Map<String, Integer> famSizes;
 	private double sAvg;
-	private double pAvg;
 
 	@Override
 	public void beforeCalc(PriorityQueue<?> q) {
@@ -45,24 +48,18 @@ public class WSC2010_GPRuleSize199 extends GPRuleBase {
 
 		calcNumCompatible();
 		sAvg = calcSetupAvg();
-		pAvg = calcProcAvg();
 	}
 
-	public int numCompatible(PrioRuleTarget j) {
+	private int numCompatible(PrioRuleTarget j) {
 		String bf = j.getCurrentOperation().batchFamily;
 		return famSizes.get(bf).intValue();
 	}
 
-	public double setupAvg() {
+	private double setupAvg() {
 		return sAvg;
 	}
 
-	public double procAvg(PrioRuleTarget j) {
-		// return pAvg;
-		return j.currProcTime();
-	}
-
-	public void calcNumCompatible() {
+	private void calcNumCompatible() {
 		famSizes = new HashMap<String, Integer>();
 
 		PriorityQueue<Job> q = getOwner().queue;
@@ -77,7 +74,7 @@ public class WSC2010_GPRuleSize199 extends GPRuleBase {
 		}
 	}
 
-	public double calcSetupAvg() {
+	private double calcSetupAvg() {
 		final PriorityQueue<Job> q = getOwner().queue;
 		assert q.size() > 0;
 		final double[][] setupMatrix = getOwner().getSetupMatrix();
@@ -98,23 +95,7 @@ public class WSC2010_GPRuleSize199 extends GPRuleBase {
 		return setupAvg / numNonFutures;
 	}
 
-	public double calcProcAvg() {
-		final PriorityQueue<Job> q = getOwner().queue;
-		assert q.size() > 0;
-
-		int numNonFutures = 0;
-		double procAvg = 0.0d;
-		for (int i = 0, n = q.size(); i < n; i++) {
-			Job job = q.get(i);
-			if (!job.isFuture()) {
-				procAvg += job.currProcTime();
-				numNonFutures++;
-			}
-		}
-		return procAvg / numNonFutures;
-	}
-
-	public double setupTime(PrioRuleTarget j) {
+	private double setupTime(PrioRuleTarget j) {
 		assert j.getCurrMachine() == getOwner();
 		final double[][] setupMatrix = j.getCurrMachine().getSetupMatrix();
 		final int machineSetup = j.getCurrMachine().currMachine.setupState;

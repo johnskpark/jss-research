@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,19 +15,18 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: ArrivalProcess.java 74 2013-01-08 17:31:49Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.core.simulation.arrivalprocess;
 
 import jasima.core.random.continuous.DblStream;
+import jasima.core.util.Pair;
 
 /**
- * Base class for arrival processes.
+ * Base class for arrival processes, i.e., calculating absolute arrival times.
  * 
- * @author Torsten Hildebrandt <hil@biba.uni-bremen.de>, 2012-08-07
+ * @author Torsten Hildebrandt, 2012-08-07
  * @version 
- *          "$Id: ArrivalProcess.java 74 2013-01-08 17:31:49Z THildebrandt@gmail.com $"
+ *          "$Id$"
  */
 public abstract class ArrivalProcess extends DblStream {
 
@@ -46,6 +45,20 @@ public abstract class ArrivalProcess extends DblStream {
 	}
 
 	public abstract double nextDbl();
+
+	/**
+	 * A mean value for an arrival process is usually undefined, therefore this
+	 * method throws an {@link UnsupportedOperationException}.
+	 */
+	@Override
+	public double getNumericalMean() {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public Pair<Double, Double> getValueRange() {
+		return new Pair<>(getInitialState(), Double.POSITIVE_INFINITY);
+	}
 
 	public double getInitialState() {
 		return initialState;

@@ -1,11 +1,33 @@
+/*******************************************************************************
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
+ *
+ * This file is part of jasima, v1.2.
+ *
+ * jasima is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * jasima is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
+ *******************************************************************************/
 package jasima.core.random.continuous;
 
+import jasima.core.util.Pair;
+
 /**
- * Returns a random real number following a triangular distribution as defined
- * by the three parameters min, mode, and max.
+ * Returns a random real number following a <a
+ * href="http://en.wikipedia.org/wiki/Triangular_distribution">triangular
+ * distribution</a> as defined by the three parameters min, mode, and max.
  * 
- * @author Torsten Hildebrandt <hil@biba.uni-bremen.de>
- * @version "$Id: DblTriangular.java 152 2014-04-15 14:49:51Z THildebrandt@gmail.com $"
+ * @author Torsten Hildebrandt
+ * @version 
+ *          "$Id$"
  */
 public class DblTriangular extends DblStream {
 
@@ -49,9 +71,19 @@ public class DblTriangular extends DblStream {
 	}
 
 	@Override
+	public double getNumericalMean() {
+		return (getMin() + getMode() + getMax()) / 3.0;
+	}
+
+	@Override
 	public String toString() {
 		return "DblTriangular(min=" + min + ";mode=" + mode + ";max=" + max
 				+ ")";
+	}
+
+	@Override
+	public Pair<Double, Double> getValueRange() {
+		return new Pair<>(getMin(), getMax());
 	}
 
 	public double getMin() {

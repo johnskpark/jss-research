@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,8 +15,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: JobSource.java 145 2014-02-28 16:37:25Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.shopSim.core;
 
@@ -30,9 +28,9 @@ import java.util.Set;
 /**
  * A job source is an abstract base class for classes producing {@link Job}s.
  * 
- * @author Torsten Hildebrandt <hil@biba.uni-bremen.de>
+ * @author Torsten Hildebrandt
  * @version 
- *          "$Id: JobSource.java 145 2014-02-28 16:37:25Z THildebrandt@gmail.com $"
+ *          "$Id$"
  */
 public abstract class JobSource implements ValueStore {
 
@@ -96,6 +94,8 @@ public abstract class JobSource implements ValueStore {
 	/**
 	 * Factory method used in {@link #createNextJob()} to create a new job
 	 * instance.
+	 * 
+	 * @return The new {@link Job} instance.
 	 */
 	protected Job newJobInstance() {
 		return new Job(getShop());
@@ -118,7 +118,7 @@ public abstract class JobSource implements ValueStore {
 	 *            The key name.
 	 * @param value
 	 *            value to assign to {@code key}.
-	 * @see #valueStoreGet(String)
+	 * @see #valueStoreGet(Object)
 	 */
 	@Override
 	public void valueStorePut(Object key, Object value) {

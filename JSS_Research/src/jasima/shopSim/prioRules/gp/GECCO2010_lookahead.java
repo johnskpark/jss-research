@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,8 +15,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: Warwick1.java 73 2013-01-08 17:16:19Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.shopSim.prioRules.gp;
 
@@ -24,34 +22,35 @@ import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.prioRules.upDownStream.PTPlusWINQPlusNPT;
 
 /**
+ * A rule from "Towards Improved Dispatching Rules for Complex Shop Floor
+ * Scenarios—a Genetic Programming Approach", Hildebrandt, Heger, Scholz-Reiter,
+ * GECCO 2010, doi:10.1145/1830483.1830530
  * 
- * @author Torsten Hildebrandt <hil@biba.uni-bremen.de>
- * @version $Id: Warwick1.java 73 2013-01-08 17:16:19Z THildebrandt@gmail.com $
+ * @author Torsten Hildebrandt
+ * @version 
+ *          "$Id$"
  */
-public class Warwick1 extends GPRuleBase {
+public class GECCO2010_lookahead extends GPRuleBase {
+
+	private static final long serialVersionUID = 8165075973248667950L;
 
 	@Override
 	public double calcPrio(PrioRuleTarget j) {
 		double p = j.getCurrentOperation().procTime;
-		double winq = jasima.shopSim.prioRules.upDownStream.WINQ.winq(j);
 		double winq2 = jasima.shopSim.prioRules.upDownStream.XWINQ.xwinq(j);
 		double tiq = j.getShop().simTime() - j.getArriveTime();
 		double npt = PTPlusWINQPlusNPT.npt(j);
-		double rpt = j.remainingProcTime();
+		double ol = j.numOpsLeft();
 
-		return div(
-				div(ifte(
-						div(tiq, p),
-						div(tiq,
-								add(max(mul(p, p), add(1, div(tiq, p))),
-										mul(winq2, npt))), div(tiq, p)),
-						max(tiq,
-								div(ifte(
-										add(max(mul(winq2, npt), sub(winq, rpt)),
-												winq),
-										div(max(add(1, winq), max(0, tiq)),
-												add(mul(p, p), winq)),
-										div(tiq, p)), add(1, 1)))), p);
+		return p
+				* (ifte(tiq
+						* (p / ((tiq + npt - 1) * (winq2 + npt)) + winq2)
+						/ ifte(ifte(ol * p / (tiq * winq2), 1 / p, 2 * npt - ol
+								/ ((p + npt) * tiq)), 1 / p, 1), 1 / p, tiq - 1)
+						/ (winq2 + (p * p)
+								/ ((1 - 2 * npt) / (2 * p + npt) + 2 * npt)) + 1 / (p * (p + npt))
+
+				);
 	}
 
 }

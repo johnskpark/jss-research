@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,10 +15,10 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: DblUniformZeroOne.java 74 2013-01-08 17:31:49Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.core.random.continuous;
+
+import jasima.core.util.Pair;
 
 import java.util.Random;
 
@@ -26,8 +26,9 @@ import java.util.Random;
  * Generates uniformly distributed doubles in the range [0,1.0). This class just
  * delegates to the underlying method {@link java.util.Random#nextDouble()}.
  * 
- * @author Torsten Hildebrandt <hil@biba.uni-bremen.de>
- * @version "$Id: DblUniformZeroOne.java 74 2013-01-08 17:31:49Z THildebrandt@gmail.com $"
+ * @author Torsten Hildebrandt
+ * @version 
+ *          "$Id$"
  */
 public class DblUniformZeroOne extends DblStream {
 
@@ -54,6 +55,16 @@ public class DblUniformZeroOne extends DblStream {
 	@Override
 	public double nextDbl() {
 		return rndGen.nextDouble();
+	}
+
+	@Override
+	public double getNumericalMean() {
+		return 0.5;
+	}
+
+	@Override
+	public Pair<Double, Double> getValueRange() {
+		return new Pair<>(0.0, 1.0);
 	}
 
 	@Override

@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,10 +15,10 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: QuantileEstimator.java 74 2013-01-08 17:31:49Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.core.statistics;
+
+import jasima.core.util.Util;
 
 import java.util.Arrays;
 import java.util.Formatter;
@@ -26,10 +26,12 @@ import java.util.Iterator;
 import java.util.Locale;
 
 /**
+ * <p>
  * Implements the extended P2-Algorithm. To calculate histograms, median values
  * or arbitrary quantiles. This class also collects all statistical values
  * collected by {@link SummaryStat}.
- * <p />
+ * </p>
+ * <p>
  * The method used is based on the following papers:
  * <ul>
  * <li>Raj Jain, Imrich Chlamtac: The P2 Algorithm for Dynamic Calculation of
@@ -38,8 +40,9 @@ import java.util.Locale;
  * Simulations Councils (1987)
  * </ul>
  * 
- * @author Robin Kreis <r.kreis@uni-bremen.de>, 2012-09-07
- * @version "$Id: QuantileEstimator.java 74 2013-01-08 17:31:49Z THildebrandt@gmail.com $"
+ * @author Robin Kreis, 2012-09-07
+ * @version 
+ *          "$Id$"
  */
 public class QuantileEstimator extends SummaryStat implements
 		Iterable<QuantileEstimator.Bar> {
@@ -150,9 +153,8 @@ public class QuantileEstimator extends SummaryStat implements
 	}
 
 	@Override
-	public void combine(SummaryStat other) {
-		throw new RuntimeException(
-				"QuantileEstimator.combine not implemented yet");
+	public SummaryStat combine(SummaryStat other) {
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -186,7 +188,7 @@ public class QuantileEstimator extends SummaryStat implements
 	}
 
 	@Override
-	public void value(double v, double weight) {
+	public QuantileEstimator value(double v, double weight) {
 		super.value(v, weight);
 		int obsIdx = numObs() - 1; // first observation: 0
 
@@ -232,6 +234,8 @@ public class QuantileEstimator extends SummaryStat implements
 				}
 			}
 		}
+
+		return this;
 	}
 
 	protected double quadPred(int d, int i) {
@@ -365,7 +369,7 @@ public class QuantileEstimator extends SummaryStat implements
 	@Override
 	public String toString() {
 		if (p2_q.length > 10) {
-			return String.format(
+			return String.format(Util.DEF_LOCALE,
 					"[10%%<%f, median: %f, 90%%<%f; %d more markers]",
 					quantile(0.1), quantile(0.5), quantile(0.9),
 					p2_q.length - 3);

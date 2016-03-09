@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,8 +15,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: JobShopExperiment.java 181 2014-10-23 15:45:13Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.shopSim.core;
 
@@ -25,7 +23,7 @@ import jasima.core.random.RandomFactory;
 import jasima.core.simulation.Simulation;
 import jasima.core.simulation.Simulation.SimEvent;
 import jasima.core.simulation.Simulation.SimPrintEvent;
-import jasima.core.util.Util;
+import jasima.core.util.TypeUtil;
 import jasima.core.util.observer.NotifierListener;
 import jasima.shopSim.core.WorkStation.WorkStationEvent;
 import jasima.shopSim.core.batchForming.BatchForming;
@@ -43,17 +41,17 @@ import java.util.HashMap;
  * 
  * @author Torsten Hildebrandt, 2010-03-12
  * @version 
- *          "$Id: JobShopExperiment.java 181 2014-10-23 15:45:13Z THildebrandt@gmail.com $"
+ *          "$Id$"
  */
 public abstract class JobShopExperiment extends Experiment {
 
 	private static final long serialVersionUID = 2660935009898060395L;
 
 	// experiment parameters
-	private double simulationLength = Double.NaN;
-	private int maxJobsInSystem = -1;
-	private int maxJobsFinished = -1;
-	private Boolean enableLookAhead = null;
+	private double simulationLength = 0.0d;
+	private int maxJobsInSystem = 0;
+	private int stopAfterNumJobs = 0;
+	private boolean enableLookAhead = false;
 
 	private PR sequencingRule;
 	private PR batchSequencingRule;
@@ -80,14 +78,10 @@ public abstract class JobShopExperiment extends Experiment {
 	}
 
 	protected void configureShop() {
-		if (getMaxJobsInSystem() >= 0)
-			shop.setMaxJobsInSystem(getMaxJobsInSystem());
-		if (getMaxJobsFinished() >= 0)
-			shop.setMaxJobsFinished(getMaxJobsFinished());
-		if (!Double.isNaN(getSimulationLength()))
-			shop.setSimulationLength(getSimulationLength());
-		if (enableLookAhead != null)
-			shop.setEnableLookAhead(isEnableLookAhead());
+		shop.setMaxJobsInSystem(getMaxJobsInSystem());
+		shop.setStopAfterNumJobs(getStopAfterNumJobs());
+		shop.setSimulationLength(getSimulationLength());
+		shop.setEnableLookAhead(isEnableLookAhead());
 	}
 
 	protected void postConfigShop() {
@@ -119,17 +113,14 @@ public abstract class JobShopExperiment extends Experiment {
 
 		// install shop listener
 		if (shopListener != null)
-			for (NotifierListener<?, ?> l : shopListener) {
-				l = shop.installSimulationListener(
-						(NotifierListener<Simulation, SimEvent>) l, true);
+			for (NotifierListener<Simulation, SimEvent> l : shopListener) {
+				l = shop.installSimulationListener(l, true);
 			}
 
 		// install generic machine listener
 		if (machineListener != null)
-			for (NotifierListener<?, ?> l : machineListener) {
-				shop.installMachineListener(
-						(NotifierListener<WorkStation, WorkStationEvent>) l,
-						true);
+			for (NotifierListener<WorkStation, WorkStationEvent> l : machineListener) {
+				shop.installMachineListener(l, true);
 			}
 
 		// install specific machine listener
@@ -144,14 +135,15 @@ public abstract class JobShopExperiment extends Experiment {
 				NotifierListener<WorkStation, WorkStationEvent>[] mls = machListenerSpecific
 						.get(machName);
 				for (NotifierListener<WorkStation, WorkStationEvent> ml : mls) {
-					ml = Util.cloneIfPossible(ml);
+					ml = TypeUtil.cloneIfPossible(ml);
 					ws.addNotifierListener(ml);
 				}
 			}
 		}
 
 		// forward simulation print events to experiment print events
-		shop.addNotifierListener(new ShopListenerBase() {
+		@SuppressWarnings("serial")
+		final ShopListenerBase eventForwarder = new ShopListenerBase() {
 
 			@Override
 			protected void print(Simulation sim, SimPrintEvent event) {
@@ -163,7 +155,8 @@ public abstract class JobShopExperiment extends Experiment {
 				JobShopExperiment.this.print(cat, "sim_message\t%f\t%s",
 						sim.simTime(), event);
 			}
-		});
+		};
+		shop.addNotifierListener(eventForwarder);
 	}
 
 	@Override
@@ -200,7 +193,11 @@ public abstract class JobShopExperiment extends Experiment {
 		shop.setRndStreamFactory(randomFactory);
 	}
 
-	/** Factory method to create/initialize a shop object. */
+	/**
+	 * Factory method to create/initialize a shop object.
+	 * 
+	 * @return The new {@link JobShop} instance.
+	 */
 	protected JobShop doCreateShop() {
 		return new JobShop();
 	}
@@ -249,19 +246,21 @@ public abstract class JobShopExperiment extends Experiment {
 		if (batchForming != null)
 			clone.batchForming = batchForming.clone();
 
-		clone.sequencingRules = Util.deepCloneArrayIfPossible(sequencingRules);
-		clone.batchSequencingRules = Util
+		clone.sequencingRules = TypeUtil
+				.deepCloneArrayIfPossible(sequencingRules);
+		clone.batchSequencingRules = TypeUtil
 				.deepCloneArrayIfPossible(batchSequencingRules);
-		clone.batchFormingRules = Util
+		clone.batchFormingRules = TypeUtil
 				.deepCloneArrayIfPossible(batchFormingRules);
-		clone.shopListener = Util.deepCloneArrayIfPossible(shopListener);
-		clone.machineListener = Util.deepCloneArrayIfPossible(machineListener);
+		clone.shopListener = TypeUtil.deepCloneArrayIfPossible(shopListener);
+		clone.machineListener = TypeUtil
+				.deepCloneArrayIfPossible(machineListener);
 
 		if (machListenerSpecific != null) {
 			clone.machListenerSpecific = new HashMap<String, NotifierListener<WorkStation, WorkStationEvent>[]>();
 			for (String name : machListenerSpecific.keySet()) {
-				clone.machListenerSpecific.put(name,
-						Util.cloneIfPossible(machListenerSpecific.get(name)));
+				clone.machListenerSpecific.put(name, TypeUtil
+						.cloneIfPossible(machListenerSpecific.get(name)));
 			}
 		}
 
@@ -274,6 +273,12 @@ public abstract class JobShopExperiment extends Experiment {
 	//
 	//
 
+	/**
+	 * Sets the maximum simulation time. A value of 0.0 means no such limit.
+	 * 
+	 * @param simulationLength
+	 *            Stop simulation at this point in time.
+	 * */
 	public void setSimulationLength(double simulationLength) {
 		this.simulationLength = simulationLength;
 	}
@@ -282,6 +287,13 @@ public abstract class JobShopExperiment extends Experiment {
 		return simulationLength;
 	}
 
+	/**
+	 * End simulation if WIP (work in process) reaches this value (&lt;=0: no
+	 * limit; default is -1).
+	 * 
+	 * @param maxJobsInSystem
+	 *            The maximum number of concurrent jobs allowed in the system.
+	 */
 	public void setMaxJobsInSystem(int maxJobsInSystem) {
 		this.maxJobsInSystem = maxJobsInSystem;
 	}
@@ -290,26 +302,50 @@ public abstract class JobShopExperiment extends Experiment {
 		return maxJobsInSystem;
 	}
 
-	public void setEnableLookAhead(Boolean enableLookAhead) {
+	/**
+	 * Enable/disable the lookahead mechanism of this shop. If enabled,
+	 * dispatching rules can select jobs arriving in the near future (i.e., jobs
+	 * already processed on an immediate predecessor machine).
+	 * 
+	 * @param enableLookAhead
+	 *            Whether or not to enable one-stop look ahead.
+	 */
+	public void setEnableLookAhead(boolean enableLookAhead) {
 		this.enableLookAhead = enableLookAhead;
 	}
 
-	public Boolean isEnableLookAhead() {
+	public boolean isEnableLookAhead() {
 		return enableLookAhead;
 	}
 
-	public void setMaxJobsFinished(int maxJobsFinished) {
-		this.maxJobsFinished = maxJobsFinished;
+	/**
+	 * End simulation if a certain number of jobs was completed (&lt;=0
+	 * (default): no limit).
+	 * 
+	 * @param stopAfterNumJobs
+	 *            Set the number of jobs to complete before terminating the
+	 *            simulation.
+	 */
+	public void setStopAfterNumJobs(int stopAfterNumJobs) {
+		this.stopAfterNumJobs = stopAfterNumJobs;
 	}
 
-	public int getMaxJobsFinished() {
-		return maxJobsFinished;
+	public int getStopAfterNumJobs() {
+		return stopAfterNumJobs;
 	}
 
 	public PR getSequencingRule() {
 		return sequencingRule;
 	}
 
+	/**
+	 * Sets a certain dispatching rule to be used for sequencing jobs on all
+	 * machines.
+	 * 
+	 * @see #setSequencingRules(PR[])
+	 * @param sequencingRule
+	 *            The sequencing rule to use on all work stations.
+	 */
 	public void setSequencingRule(PR sequencingRule) {
 		this.sequencingRule = sequencingRule;
 	}
@@ -318,6 +354,14 @@ public abstract class JobShopExperiment extends Experiment {
 		return batchSequencingRule;
 	}
 
+	/**
+	 * Sets a certain dispatching rule to be used for sequencing batches on all
+	 * batch machines.
+	 * 
+	 * @see #setBatchSequencingRules(PR[])
+	 * @param batchSequencingRule
+	 *            The batch sequencing rule to use on all work stations.
+	 */
 	public void setBatchSequencingRule(PR batchSequencingRule) {
 		this.batchSequencingRule = batchSequencingRule;
 	}
@@ -326,10 +370,27 @@ public abstract class JobShopExperiment extends Experiment {
 		return batchForming;
 	}
 
+	/**
+	 * Sets a batch forming mechanism to be used on all machines.
+	 * 
+	 * @see #setBatchFormingRules(BatchForming[])
+	 * @param batchForming
+	 *            The batch forming rule to use on all machines
+	 */
 	public void setBatchForming(BatchForming batchForming) {
 		this.batchForming = batchForming;
 	}
 
+	/**
+	 * Sets a sequencing rule for specific machines. To use it
+	 * {@code sequencingRules} has to contain an entry for each machine
+	 * (workstation) in the model.
+	 * 
+	 * @see #setSequencingRule(PR)
+	 * @param sequencingRules
+	 *            An array of sequencing rule, containing one {@link PR} per
+	 *            work station.
+	 */
 	public void setSequencingRules(PR[] sequencingRules) {
 		this.sequencingRules = sequencingRules;
 	}
@@ -338,6 +399,15 @@ public abstract class JobShopExperiment extends Experiment {
 		return sequencingRules;
 	}
 
+	/**
+	 * Sets a batch sequencing rule for specific machines. To use it
+	 * {@code batchSequencingRules} has to contain an entry for each machine
+	 * (workstation) in the model.
+	 * 
+	 * @see #setBatchSequencingRule(PR)
+	 * @param batchSequencingRules
+	 *            An array of batch sequencing rules, one for each workstation.
+	 */
 	public void setBatchSequencingRules(PR[] batchSequencingRules) {
 		this.batchSequencingRules = batchSequencingRules;
 	}
@@ -346,6 +416,15 @@ public abstract class JobShopExperiment extends Experiment {
 		return batchSequencingRules;
 	}
 
+	/**
+	 * Sets a batch forming mechanism for specific machines. To use it
+	 * {@code batchFormingRules} has to contain an entry for each machine
+	 * (workstation) in the model.
+	 * 
+	 * @see #setBatchForming(BatchForming)
+	 * @param batchFormingRules
+	 *            An array of batch forming rules, one for each workstation.
+	 */
 	public void setBatchFormingRules(BatchForming[] batchFormingRules) {
 		this.batchFormingRules = batchFormingRules;
 	}
@@ -381,14 +460,18 @@ public abstract class JobShopExperiment extends Experiment {
 	 *            The listener to install during experiment execution.
 	 */
 	public void addShopListener(NotifierListener<Simulation, SimEvent> l) {
-		if (this.shopListener == null) {
-			this.shopListener = new NotifierListener[] { l };
+		if (shopListener == null) {
+			@SuppressWarnings("unchecked")
+			final NotifierListener<Simulation, SimEvent>[] resArray = new NotifierListener[] { l };
+			shopListener = resArray;
 		} else {
 			ArrayList<NotifierListener<Simulation, SimEvent>> list = new ArrayList<NotifierListener<Simulation, SimEvent>>(
-					Arrays.asList(this.shopListener));
+					Arrays.asList(shopListener));
 			list.add(l);
-
-			shopListener = list.toArray(new NotifierListener[list.size()]);
+			@SuppressWarnings("unchecked")
+			final NotifierListener<Simulation, SimEvent>[] resArray = new NotifierListener[list
+					.size()];
+			shopListener = list.toArray(resArray);
 		}
 	}
 
@@ -423,13 +506,17 @@ public abstract class JobShopExperiment extends Experiment {
 	public void addMachineListener(
 			NotifierListener<WorkStation, WorkStationEvent> l) {
 		if (this.machineListener == null) {
-			this.machineListener = new NotifierListener[] { l };
+			@SuppressWarnings("unchecked")
+			final NotifierListener<WorkStation, WorkStationEvent>[] resArray = new NotifierListener[] { l };
+			this.machineListener = resArray;
 		} else {
 			ArrayList<NotifierListener<WorkStation, WorkStationEvent>> list = new ArrayList<NotifierListener<WorkStation, WorkStationEvent>>(
 					Arrays.asList(this.machineListener));
 			list.add(l);
-
-			machineListener = list.toArray(new NotifierListener[list.size()]);
+			@SuppressWarnings("unchecked")
+			final NotifierListener<WorkStation, WorkStationEvent>[] resArray = new NotifierListener[list
+					.size()];
+			machineListener = list.toArray(resArray);
 		}
 	}
 
@@ -450,14 +537,16 @@ public abstract class JobShopExperiment extends Experiment {
 		// create new array using an intermediary list
 		NotifierListener<WorkStation, WorkStationEvent>[] listeners = machListenerSpecific
 				.get(name);
-		if (listeners == null)
-			listeners = new NotifierListener[0];
-		ArrayList<NotifierListener<WorkStation, WorkStationEvent>> list = new ArrayList<NotifierListener<WorkStation, WorkStationEvent>>(
-				Arrays.asList(listeners));
+		ArrayList<NotifierListener<WorkStation, WorkStationEvent>> list = new ArrayList<NotifierListener<WorkStation, WorkStationEvent>>();
+		if (listeners != null) {
+			list.addAll(Arrays.asList(listeners));
+		}
 		list.add(l);
 
-		machListenerSpecific.put(name,
-				list.toArray(new NotifierListener[list.size()]));
+		@SuppressWarnings("unchecked")
+		final NotifierListener<WorkStation, WorkStationEvent>[] resArray = new NotifierListener[list
+				.size()];
+		machListenerSpecific.put(name, list.toArray(resArray));
 	}
 
 	/**
@@ -472,7 +561,9 @@ public abstract class JobShopExperiment extends Experiment {
 	public NotifierListener<WorkStation, WorkStationEvent>[] getMachineListenerSpecific(
 			String name) {
 		if (machListenerSpecific == null) {
-			return new NotifierListener[0];
+			@SuppressWarnings("unchecked")
+			final NotifierListener<WorkStation, WorkStationEvent>[] resArray = new NotifierListener[0];
+			return resArray;
 		} else {
 			return machListenerSpecific.get(name);
 		}

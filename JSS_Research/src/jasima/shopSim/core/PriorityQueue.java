@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,8 +15,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: PriorityQueue.java 111 2013-05-16 12:39:01Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.shopSim.core;
 
@@ -37,7 +35,7 @@ import java.util.Comparator;
  * @param <T>
  *            The element type contained in this PriorityQueue.
  * @version 
- *          "$Id: PriorityQueue.java 111 2013-05-16 12:39:01Z THildebrandt@gmail.com $"
+ *          "$Id$"
  */
 public class PriorityQueue<T extends PrioRuleTarget> implements Serializable {
 
@@ -46,12 +44,12 @@ public class PriorityQueue<T extends PrioRuleTarget> implements Serializable {
 	public static final double MAX_PRIO = Double.MAX_VALUE;
 	public static final double MIN_PRIO = -MAX_PRIO;
 
-	private final class ComparatorImpl<T extends PrioRuleTarget> implements
-			Comparator<ListEntry<T>>, Serializable {
+	private final class ComparatorImpl<O extends PrioRuleTarget> implements
+			Comparator<ListEntry<O>>, Serializable {
 		private static final long serialVersionUID = -6907667564606558578L;
 
 		@Override
-		public int compare(ListEntry<T> i1, ListEntry<T> i2) {
+		public int compare(ListEntry<O> i1, ListEntry<O> i2) {
 			// i1 and i2 are the same
 			if (i1 == i2)
 				return 0;
@@ -86,8 +84,6 @@ public class PriorityQueue<T extends PrioRuleTarget> implements Serializable {
 
 	private final Comparator<ListEntry<T>> comparator;
 
-	public boolean strangePrioValuesFound = false;
-
 	protected ListEntry<T>[] nodes_; // the tree nodes, packed into an array
 	protected int count_ = 0; // number of used slots
 
@@ -115,7 +111,9 @@ public class PriorityQueue<T extends PrioRuleTarget> implements Serializable {
 		super();
 		this.workStation = workStation;
 
-		nodes_ = new ListEntry[11];
+		@SuppressWarnings("unchecked")
+		final ListEntry<T>[] array = new ListEntry[11];
+		nodes_ = array;
 
 		comparator = new ComparatorImpl<T>();
 	}
@@ -321,6 +319,7 @@ public class PriorityQueue<T extends PrioRuleTarget> implements Serializable {
 	}
 
 	protected void setCapacity(int newCap) {
+		@SuppressWarnings("unchecked")
 		ListEntry<T>[] newnodes = new ListEntry[newCap];
 		System.arraycopy(nodes_, 0, newnodes, 0, count_);
 		nodes_ = newnodes;
@@ -362,11 +361,7 @@ public class PriorityQueue<T extends PrioRuleTarget> implements Serializable {
 		assert vs.length == rules.length;
 
 		for (int j = 0; j < vs.length; j++) {
-			double d = vs[j] = rules[j].calcPrio(le.elem);
-
-			if (!strangePrioValuesFound)
-				strangePrioValuesFound = Double.isInfinite(d)
-						|| Double.isNaN(d);
+			vs[j] = rules[j].calcPrio(le.elem);
 		}
 	}
 
@@ -380,12 +375,14 @@ public class PriorityQueue<T extends PrioRuleTarget> implements Serializable {
 	}
 
 	/**
+	 * <p>
 	 * Returns priorities of the entries returned by the last call of
 	 * peekLargest or removeLargest. Be careful: do not change the values
 	 * contained in the returned array. The result array is only valid
 	 * immediately after calling peekLargest/removeLargest (array is reused and
 	 * can be overridden by subsequent calls to add()).
-	 * <p/>
+	 * </p>
+	 * <p>
 	 * This method returns null if null (keep machine idle) was returned by
 	 * {@link #peekLargest()} or {@link #removeLargest()}.
 	 */

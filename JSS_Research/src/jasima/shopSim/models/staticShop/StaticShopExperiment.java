@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,8 +15,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: StaticShopExperiment.java 151 2014-04-14 10:27:39Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.shopSim.models.staticShop;
 
@@ -42,7 +40,7 @@ import java.net.URL;
  * job data has to be described in this file.
  * 
  * @version 
- *          "$Id: StaticShopExperiment.java 151 2014-04-14 10:27:39Z THildebrandt@gmail.com $"
+ *          "$Id$"
  */
 public class StaticShopExperiment extends JobShopExperiment {
 

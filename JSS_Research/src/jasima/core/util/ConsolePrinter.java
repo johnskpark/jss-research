@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,8 +15,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: ConsolePrinter.java 186 2014-10-24 12:56:33Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.core.util;
 
@@ -38,15 +36,16 @@ import java.util.Map;
 /**
  * Prints experiment messages to the console.
  * 
- * @author Torsten Hildebrandt <hil@biba.uni-bremen.de>
+ * @author Torsten Hildebrandt
  * @version 
- *          "$Id: ConsolePrinter.java 186 2014-10-24 12:56:33Z THildebrandt@gmail.com $"
+ *          "$Id$"
  */
 public class ConsolePrinter extends ExperimentListenerBase {
 
-	private static final long serialVersionUID = 6722626849679009735L;
+	private static final long serialVersionUID = 6722626849679009737L;
 
 	private ExpMsgCategory logLevel = ExpMsgCategory.INFO;
+	private Locale locale = Util.DEF_LOCALE;
 	private String logFormat = "%1$tT.%1$tL\t%4$s\t%2$s\t%3$s";
 	private PrintWriter out = null;
 	private boolean printStdEvents = true;
@@ -78,8 +77,9 @@ public class ConsolePrinter extends ExperimentListenerBase {
 			if (name == null)
 				name = "exp@" + Integer.toHexString(e.hashCode());
 
-			String msg = String.format(Locale.UK, getLogFormat(), new Date(),
-					event.category.toString(), event.getMessage(), name);
+			String msg = String.format(getLocale(), getLogFormat(), new Date(),
+					event.category.toString(), event.getMessage(getLocale()),
+					name);
 			if (getOut() == null)
 				System.out.println(msg);
 			else
@@ -89,8 +89,9 @@ public class ConsolePrinter extends ExperimentListenerBase {
 
 	@Override
 	protected void starting(final Experiment e) {
-		if (isPrintStdEvents())
+		if (isPrintStdEvents()) {
 			e.print("starting...");
+		}
 	}
 
 	@Override
@@ -131,7 +132,8 @@ public class ConsolePrinter extends ExperimentListenerBase {
 
 			Double runTime = (Double) runResults.get(Experiment.RUNTIME);
 			Integer aborted = (Integer) runResults.get(Experiment.EXP_ABORTED);
-			String errorMsg = (String) runResults.get(Experiment.EXCEPTION_MESSAGE);
+			String errorMsg = (String) runResults
+					.get(Experiment.EXCEPTION_MESSAGE);
 
 			String abortStr = "";
 			if (aborted != null && aborted.doubleValue() != 0.0) {
@@ -198,9 +200,29 @@ public class ConsolePrinter extends ExperimentListenerBase {
 	/**
 	 * PrintStdEvents determines, if print events for standard events (like
 	 * experiment starting) should be produced. Defaults to {@code true}.
+	 * 
+	 * @param printStdEvents
+	 *            Whether or not to print standard events.
 	 */
 	public void setPrintStdEvents(boolean printStdEvents) {
 		this.printStdEvents = printStdEvents;
+	}
+
+	public Locale getLocale() {
+		return locale;
+	}
+
+	/**
+	 * Sets the {@link Locale} that is used when formatting messages. The
+	 * default is {@code Locale.US}.
+	 * 
+	 * @param locale
+	 *            The locale to use.
+	 * 
+	 * @see Util#DEF_LOCALE
+	 */
+	public void setLocale(Locale locale) {
+		this.locale = locale;
 	}
 
 	// static utility methods below
@@ -208,6 +230,11 @@ public class ConsolePrinter extends ExperimentListenerBase {
 	/**
 	 * Static method to prints the results <code>res</code> of an experiment
 	 * <code>e</code> to {@link System#out}.
+	 * 
+	 * @param e
+	 *            The experiment that was executed.
+	 * @param res
+	 *            The list of results.
 	 */
 	public static void printResults(Experiment e, Map<String, Object> res) {
 		PrintWriter pw = new PrintWriter(System.out, true);
@@ -221,14 +248,20 @@ public class ConsolePrinter extends ExperimentListenerBase {
 	/**
 	 * Static method to print the results <code>res</code> of an experiment
 	 * <code>e</code> to a {@link PrintWriter}.
+	 * 
+	 * @param out
+	 *            The {@link PrintWriter} to use for printing.
+	 * @param e
+	 *            The experiment that was executed.
+	 * @param res
+	 *            The list of results.
 	 */
 	public static void printResults(PrintWriter out, Experiment e,
 			Map<String, Object> res) {
 		out.println();
-		out.println(getDescription(e, "; "));
+		out.println(getDescription(e));
 
 		ArrayList<String> valStatNames = new ArrayList<String>();
-
 		ArrayList<String> otherNames = new ArrayList<String>();
 
 		for (String k : res.keySet()) {
@@ -263,8 +296,8 @@ public class ConsolePrinter extends ExperimentListenerBase {
 
 			for (String k : valStatNames) {
 				SummaryStat vs = (SummaryStat) res.get(k);
-				out.printf(Locale.ENGLISH,
-						"%s\t%.4f\t%.4f\t%.4f\t%.4f\t%d\t%.4f\n", k, vs.mean(),
+				out.printf(Util.DEF_LOCALE,
+						"%s\t%.4f\t%.4f\t%.4f\t%.4f\t%d\t%.4f%n", k, vs.mean(),
 						vs.min(), vs.max(), vs.stdDev(), vs.numObs(), vs.sum());
 			}
 		}
@@ -280,15 +313,15 @@ public class ConsolePrinter extends ExperimentListenerBase {
 					if (v.getClass().isArray())
 						v = Util.arrayToString(v);
 					else if (v instanceof Experiment)
-						v = getDescription(((Experiment) v), "; ");
+						v = getDescription(((Experiment) v));
 				}
 				out.println(k + "\t" + v);
 			}
 		}
 
 		out.println();
-		out.println("  time needed:        " + res.get(Experiment.RUNTIME)
-				+ "s");
+		out.printf(Util.DEF_LOCALE, "time needed:\t%fs%n",
+				res.get(Experiment.RUNTIME));
 
 		out.flush();
 	}
@@ -296,29 +329,18 @@ public class ConsolePrinter extends ExperimentListenerBase {
 	/**
 	 * Returns a textual representation of an experiment's properties and their
 	 * current values.
+	 * 
+	 * @param e
+	 *            The experiment to describe.
 	 */
-	public static String getDescription(Experiment e, String delim) {
-		StringBuffer res = new StringBuffer(e.getClass().getSimpleName() + ": ");
-		Map<String, Object> props = e.getPropsWithValues();
-		for (String s : props.keySet()) {
-			Object v = props.get(s);
-
-			String valString;
-			if (v != null && (v.getClass().isArray()))
-				valString = Util.arrayToString(v);
-			else if (v != null && (v instanceof Experiment))
-				valString = "{{" + getDescription(((Experiment) v), delim)
-						+ "}}";
-			else
-				valString = String.valueOf(v);
-
-			res.append(s).append('=').append(valString).append(delim);
-		}
-
-		if (res.length() > 0)
-			return res.substring(0, res.length() - delim.length());
+	public static String getDescription(Experiment e) {
+		String s;
+		if (e.getName() != null)
+			s = String.format(Util.DEF_LOCALE, "Results of %s '%s'", e
+					.getClass().getSimpleName(), e.getName());
 		else
-			return "";
+			s = String.format(Util.DEF_LOCALE, "Results of %s", e.getClass()
+					.getSimpleName());
+		return s;
 	}
-
 }

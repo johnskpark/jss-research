@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,8 +15,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: RND.java 111 2013-05-16 12:39:01Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.shopSim.prioRules.basic;
 
@@ -31,7 +29,7 @@ import java.util.Random;
  * being selected.
  * 
  * @author Torsten Hildebrandt, 2012-03-08
- * @version $Id: RND.java 111 2013-05-16 12:39:01Z THildebrandt@gmail.com $
+ * @version $Id$
  */
 public class RND extends PR {
 
@@ -52,8 +50,11 @@ public class RND extends PR {
 		super.beforeCalc(q);
 
 		if (rnd == null) {
-			rnd = getOwner().shop().getRndStreamFactory().createInstance(
-					getOwner().toString() + "." + RND.class.getName());
+			rnd = getOwner()
+					.shop()
+					.getRndStreamFactory()
+					.createInstance(
+							getOwner().toString() + "." + RND.class.getName());
 
 			// modify seed
 			long seed = rnd.nextLong();

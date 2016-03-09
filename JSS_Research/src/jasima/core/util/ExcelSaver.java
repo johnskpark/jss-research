@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,12 +15,11 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: ExcelSaver.java 74 2013-01-08 17:31:49Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.core.util;
 
 import jasima.core.experiment.Experiment;
+import jasima.core.experiment.Experiment.ExpMsgCategory;
 import jasima.core.statistics.SummaryStat;
 
 import java.io.BufferedInputStream;
@@ -51,21 +50,25 @@ import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
 
 /**
+ * <p>
  * Saves results of an experiment in a handy excel file. The data is stored in a
  * file named like "runResults_2009-08-27_164340.xls". The timestamp in this
  * name is the time the method saveAsExcel() was first called.
- * <p />
+ * </p>
+ * <p>
  * This class stores final results of an experiment as well as results of any
  * sub-experiments.
- * <p />
+ * </p>
+ * <p>
  * This class supports more than 256 columns per sheet (Excel-Limit) by
  * splitting data on multiple sheets.
- * <p />
+ * </p>
+ * <p>
  * Data can be transposed when stored, i.e., rows and columns swapped.
  * 
  * @author Torsten Hildebrandt, 2009-08-27
  * @version 
- *          "$Id: ExcelSaver.java 74 2013-01-08 17:31:49Z THildebrandt@gmail.com $"
+ *          "$Id$"
  */
 public class ExcelSaver extends ResultSaver {
 
@@ -78,14 +81,23 @@ public class ExcelSaver extends ResultSaver {
 	private static final String SHEET_NAME_MAX = "sub-exp. max";
 	private static final String SHEET_NAME_SD = "sub-exp. stdDev";
 	private static final String SHEET_NAME_COUNT = "sub-exp. count";
-	private static final String SHEET_NAME_SUM = "sub-exp. sum";
+	// private static final String SHEET_NAME_SUM = "sub-exp. sum";
 
 	private static final String[] SUB_RES_SHEETS = { SHEET_NAME_MEAN,
-			SHEET_NAME_MIN, SHEET_NAME_MAX, SHEET_NAME_SD, SHEET_NAME_COUNT,
-			SHEET_NAME_SUM };
+			SHEET_NAME_MIN, SHEET_NAME_MAX, SHEET_NAME_SD, SHEET_NAME_COUNT /*
+																			 * ,
+																			 * SHEET_NAME_SUM
+																			 */};
 
 	private static final long serialVersionUID = 342144249972918192L;
 
+	/**
+	 * This main method can be used to manually convert a {@code .jasResBin}
+	 * file to Excel format.
+	 * 
+	 * @param args
+	 *            The list of command line arguments.
+	 */
 	public static void main(String[] args) {
 		if (args.length == 0) {
 			System.err.println("usage: " + ExcelSaver.class.getName()
@@ -149,8 +161,8 @@ public class ExcelSaver extends ResultSaver {
 
 	private boolean keepDataFile = false;
 	private boolean transpose = false;
-	private int maxParamValues = 20;
-	private int maxStringLength = 500;
+	private int maxParamValues = 100;
+	private int maxStringLength = 16000;
 
 	private WritableWorkbook workbook;
 
@@ -184,6 +196,9 @@ public class ExcelSaver extends ResultSaver {
 		File tmp = new File(getActualResultBaseName() + SER_EXTENSION);
 		File out = new File(getActualResultBaseName() + XLS_EXTENSION);
 
+		e.print(ExpMsgCategory.INFO, "writing results to Excel file '%s'...",
+				out.getName());
+
 		try {
 			convertFile(tmp, out);
 		} catch (IOException ex) {
@@ -192,6 +207,8 @@ public class ExcelSaver extends ResultSaver {
 
 		if (!isKeepDataFile())
 			tmp.delete();
+
+		e.print(ExpMsgCategory.INFO, "done.");
 	}
 
 	@Override
@@ -222,7 +239,7 @@ public class ExcelSaver extends ResultSaver {
 
 			boolean isSubExp = true;
 			try {
-				int row = 2;
+				int row = 1;
 				while (true) {
 					CellData cd = (CellData) is.readObject();
 					if (cd.colIdx == -3) {
@@ -436,21 +453,28 @@ public class ExcelSaver extends ResultSaver {
 		}
 
 		boolean params = true;
-		addCellEachSheet(0, 0, "parameters (only shown on sheet '"
-				+ SHEET_NAME_MEAN + "')");
+		addHeaderCell(SHEET_NAME_MEAN, 0, 0, "parameters:");
 		for (ColumnData cd : sortedColumns) {
 			if (cd.sortedIndex == -1)
 				continue;
 
 			if (!cd.isParamColumn && params) {
-				addCellEachSheet(0, cd.sortedIndex, "results start here");
+				addCellEachSheet(0, cd.sortedIndex + 1, "results:");
 				params = false;
 			}
 
+			// increase sortedIndex so we have additional columns for
+			// "parameters:" and "results:"
+			if (!params) {
+				cd.sortedIndex += 2;
+			} else {
+				cd.sortedIndex++;
+			}
+
 			if (!cd.isParamColumn)
-				addCellEachSheet(1, cd.sortedIndex, cd.name);
+				addCellEachSheet(0, cd.sortedIndex, cd.name);
 			else
-				addHeaderCell(SHEET_NAME_MEAN, 1, cd.sortedIndex, cd.name);
+				addHeaderCell(SHEET_NAME_MEAN, 0, cd.sortedIndex, cd.name);
 		}
 	}
 
@@ -465,7 +489,7 @@ public class ExcelSaver extends ResultSaver {
 					addCell(SHEET_NAME_MAX, row, col.sortedIndex, s.max());
 					addCell(SHEET_NAME_SD, row, col.sortedIndex, s.stdDev());
 					addCell(SHEET_NAME_COUNT, row, col.sortedIndex, s.numObs());
-					addCell(SHEET_NAME_SUM, row, col.sortedIndex, s.sum());
+					// addCell(SHEET_NAME_SUM, row, col.sortedIndex, s.sum());
 				} else
 					addCell(SHEET_NAME_MEAN, row, col.sortedIndex, cd.value);
 			}
@@ -621,6 +645,10 @@ public class ExcelSaver extends ResultSaver {
 	 * If set, the (binary) result file produced by the parent class
 	 * {@link ResultSaver} is not deleted after successfully creating an Excel
 	 * file from it (default: false, i.e., the file is deleted).
+	 * 
+	 * @param keepDataFile
+	 *            Whether or not to keep the raw binary file created before
+	 *            conversion to Excel format.
 	 */
 	public void setKeepDataFile(boolean keepDataFile) {
 		this.keepDataFile = keepDataFile;
@@ -633,6 +661,10 @@ public class ExcelSaver extends ResultSaver {
 	/**
 	 * Sets the maximum number of parameters values shown on sheet
 	 * "sub-exp. overview". Set this to 0 for no limit (default is: 20).
+	 * 
+	 * @param maxParamValues
+	 *            Sets the maximum number of parameters values shown on overview
+	 *            sheet.
 	 */
 	public void setMaxParamValues(int maxParamValues) {
 		if (maxParamValues < 0)
@@ -648,6 +680,9 @@ public class ExcelSaver extends ResultSaver {
 	/**
 	 * Sets the maximum length of a String (to save space and increase
 	 * readability). Set this to 0 for no limit (default is: 500).
+	 * 
+	 * @param maxStringLength
+	 *            The maximum length of a cell value.
 	 */
 	public void setMaxStringLength(int maxStringLength) {
 		if (maxStringLength < 0)

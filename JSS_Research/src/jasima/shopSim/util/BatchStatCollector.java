@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,8 +15,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: BatchStatCollector.java 169 2014-08-26 09:20:46Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.shopSim.util;
 
@@ -32,8 +30,9 @@ import java.util.Map;
  * Collects batch statistics (flowtime and tardiness). A batch consists of a
  * certain number of jobs stated in succession.
  * 
- * @author Torsten Hildebrandt <hil@biba.uni-bremen.de>, 2012-08-21
- * @version "$Id: BatchStatCollector.java 169 2014-08-26 09:20:46Z THildebrandt@gmail.com $"
+ * @author Torsten Hildebrandt, 2012-08-21
+ * @version 
+ *          "$Id$"
  */
 public class BatchStatCollector extends ShopListenerBase {
 

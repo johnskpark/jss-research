@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,8 +15,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: WorkStationListenerBase.java 153 2014-04-17 11:51:50Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.shopSim.util;
 
@@ -32,13 +30,13 @@ import java.util.Map;
 /**
  * Possible base class for workstation listeners. Delegates all events to
  * seperate methods. Additional events can be processed by overriding
- * {@link #handleOther(WorkStation, WorkStationEvent)}.
+ * {@link #handleOther(WorkStation, WorkStation.WorkStationEvent)}.
  * 
- * @author Torsten Hildebrandt <hil@biba.uni-bremen.de>
+ * @author Torsten Hildebrandt
  * @version 
- *          "$Id: WorkStationListenerBase.java 153 2014-04-17 11:51:50Z THildebrandt@gmail.com $"
+ *          "$Id$"
  */
-public class WorkStationListenerBase implements
+public abstract class WorkStationListenerBase implements
 		NotifierListener<WorkStation, WorkStationEvent>, Cloneable {
 
 	@Override
@@ -92,6 +90,11 @@ public class WorkStationListenerBase implements
 	}
 
 	protected void deactivated(WorkStation m, IndividualMachine justDeactivated) {
+	}
+
+	@Override
+	public String toString() {
+		return getClass().getSimpleName();
 	}
 
 	@Override

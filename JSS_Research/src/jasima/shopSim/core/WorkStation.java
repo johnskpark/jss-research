@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,8 +15,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: WorkStation.java 172 2014-08-28 08:54:21Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.shopSim.core;
 
@@ -47,9 +45,9 @@ import java.util.Set;
  * Class to represent a workstation. A workstation is a collection of identical
  * {@link IndividualMachine}s sharing a common queue.
  * 
- * @author Torsten Hildebrandt <hil@biba.uni-bremen.de>
+ * @author Torsten Hildebrandt
  * @version 
- *          "$Id: WorkStation.java 172 2014-08-28 08:54:21Z THildebrandt@gmail.com $"
+ *          "$Id$"
  */
 public class WorkStation implements Notifier<WorkStation, WorkStationEvent>,
 		ValueStore {
@@ -788,7 +786,7 @@ public class WorkStation implements Notifier<WorkStation, WorkStationEvent>,
 	 *            The key name.
 	 * @param value
 	 *            value to assign to {@code key}.
-	 * @see #valueStoreGet(String)
+	 * @see #valueStoreGet(Object)
 	 */
 	@Override
 	public void valueStorePut(Object key, Object value) {

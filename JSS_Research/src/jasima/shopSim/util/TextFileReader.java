@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,8 +15,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: TextFileReader.java 151 2014-04-14 10:27:39Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.shopSim.util;
 
@@ -34,7 +32,7 @@ import jasima.shopSim.util.modelDef.ShopDef;
 import jasima.shopSim.util.modelDef.SourceDef;
 import jasima.shopSim.util.modelDef.StaticSourceDef;
 import jasima.shopSim.util.modelDef.WorkstationDef;
-import jasima.shopSim.util.modelDef.streams.StreamDef;
+import jasima.shopSim.util.modelDef.streams.DblStreamDef;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -52,7 +50,7 @@ import java.util.Map;
  * 
  * @author Torsten Hildebrandt
  * @version 
- *          "$Id: TextFileReader.java 151 2014-04-14 10:27:39Z THildebrandt@gmail.com $"
+ *          "$Id$"
  */
 public class TextFileReader {
 
@@ -244,8 +242,8 @@ public class TextFileReader {
 
 		StaticSourceDef sd = new StaticSourceDef();
 		sd.setJobSpecs(jobs);
-		SourceDef[] as = Util.addToArray(data.getJobSources(), sd,
-				SourceDef.class);
+		SourceDef[] as = Util.addToArray(data.getJobSources(), SourceDef.class,
+				sd);
 		data.setJobSources(as);
 
 		return Util.nextNonEmptyLine(r);
@@ -258,9 +256,9 @@ public class TextFileReader {
 			return s;
 
 		RouteDef route = null;
-		StreamDef iats = null;
-		StreamDef dueDates = null;
-		StreamDef weights = null;
+		DblStreamDef iats = null;
+		DblStreamDef dueDates = null;
+		DblStreamDef weights = null;
 		// int numJobs = -1;
 
 		ArrayList<String> errors = new ArrayList<String>();
@@ -278,7 +276,7 @@ public class TextFileReader {
 		if (!"arrivals".equalsIgnoreCase(s))
 			throw new RuntimeException("parse error '" + s + "'");
 		s = Util.nextNonEmptyLine(r);
-		iats = StreamDef.parseDblStream(s, errors);
+		iats = DblStreamDef.parseDblStream(s, errors);
 		if (errors.size() > 0)
 			throw new RuntimeException("parse error '" + s + "', "
 					+ Arrays.toString(errors.toArray()));
@@ -287,7 +285,7 @@ public class TextFileReader {
 		if (!"due_dates".equalsIgnoreCase(s))
 			throw new RuntimeException("parse error '" + s + "'");
 		s = Util.nextNonEmptyLine(r);
-		dueDates = StreamDef.parseDblStream(s, errors);
+		dueDates = DblStreamDef.parseDblStream(s, errors);
 		if (errors.size() > 0)
 			throw new RuntimeException("parse error '" + s + "', "
 					+ Arrays.toString(errors.toArray()));
@@ -296,7 +294,7 @@ public class TextFileReader {
 		if (!"weights".equalsIgnoreCase(s))
 			throw new RuntimeException("parse error '" + s + "'");
 		s = Util.nextNonEmptyLine(r);
-		weights = StreamDef.parseDblStream(s, errors);
+		weights = DblStreamDef.parseDblStream(s, errors);
 		if (errors.size() > 0)
 			throw new RuntimeException("parse error '" + s + "', "
 					+ Arrays.toString(errors.toArray()));
@@ -320,8 +318,8 @@ public class TextFileReader {
 		if (numJobs >= 0)
 			sd.setNumJobs(numJobs);
 
-		SourceDef[] as = Util.addToArray(data.getJobSources(), sd,
-				SourceDef.class);
+		SourceDef[] as = Util.addToArray(data.getJobSources(), SourceDef.class,
+				sd);
 		data.setJobSources(as);
 
 		return s;

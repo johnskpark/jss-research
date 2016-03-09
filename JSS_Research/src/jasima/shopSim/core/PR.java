@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,8 +15,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: PR.java 73 2013-01-08 17:16:19Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.shopSim.core;
 
@@ -26,10 +24,11 @@ import java.io.Serializable;
 
 /**
  * Abstract base class for a priority rule to be used to sequence items in a
- * PriorityQueue.
+ * {@code PriorityQueue}.
  * 
  * @author Torsten Hildebrandt
- * @version $Id: PR.java 73 2013-01-08 17:16:19Z THildebrandt@gmail.com $
+ * @version "$Id$"
+ * @see PriorityQueue
  */
 public abstract class PR implements Cloneable, Serializable {
 
@@ -55,12 +54,12 @@ public abstract class PR implements Cloneable, Serializable {
 
 	/**
 	 * This method is called by a queue before evaluating it's elements. Use it
-	 * to do some initialization prior to calcPrio(). This method is only called
-	 * if this is not a static rule.
+	 * to do some initialization prior to calcPrio().
 	 * 
 	 * @param q
+	 *            The current queue.
 	 */
-	public void beforeCalc(PriorityQueue<?> q) {
+	public void beforeCalc(PriorityQueue<? extends PrioRuleTarget> q) {
 	}
 
 	/**
@@ -129,20 +128,6 @@ public abstract class PR implements Cloneable, Serializable {
 	}
 
 	/**
-	 * Calls {@link #setTieBreaker(PR)} and returns the main rule (
-	 * <code>this</code>) to allow easier chaining of multiple rules.
-	 * 
-	 * @param tieBreaker
-	 *            The tie-breaker to use.
-	 * @return The main rule, i.e., <code>this</code>.
-	 */
-	public PR tieBreaker(PR tieBreaker) {
-		tieBreaker(tieBreaker);
-
-		return this;
-	}
-
-	/**
 	 * Sets the tie breaker rule to use.
 	 * 
 	 * @param tieBreaker
@@ -169,6 +154,7 @@ public abstract class PR implements Cloneable, Serializable {
 	 * @param tieBreaker
 	 *            The tie-breaker to use.
 	 * @return The main rule, i.e., <code>this</code>.
+	 * @see #setTieBreaker(PR)
 	 */
 	public PR setFinalTieBreaker(PR tieBreaker) {
 		PR pr = this;
@@ -186,9 +172,9 @@ public abstract class PR implements Cloneable, Serializable {
 	/**
 	 * If this rule is used as a tie-breaker for another rule, PrimaryRule
 	 * points to the rule this rule is the tieBreaker for, i.e.
-	 * <code>this.getPrimaryRule().getTieBreaker()==this</code>.
+	 * <code>this.primaryRule().getTieBreaker()==this</code>.
 	 */
-	public PR getPrimaryRule() {
+	public PR primaryRule() {
 		return primaryRule;
 	}
 
@@ -196,11 +182,11 @@ public abstract class PR implements Cloneable, Serializable {
 		if (!lookaheadRuleValid) {
 			// find highest LookaheadThreshold
 			firstLookaheadRule = null;
-			PR own = getPrimaryRule();
+			PR own = primaryRule();
 			while (own != null) {
 				if (own instanceof LookaheadThreshold)
 					firstLookaheadRule = (LookaheadThreshold) own;
-				own = own.getPrimaryRule();
+				own = own.primaryRule();
 			}
 			lookaheadRuleValid = true;
 		}

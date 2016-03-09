@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,8 +15,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: MimacExperiment.java 151 2014-04-14 10:27:39Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.shopSim.models.mimac;
 
@@ -38,9 +36,9 @@ import org.apache.commons.math3.distribution.ExponentialDistribution;
 /**
  * Implements simulations of the MIMAC Scenarios.
  * 
- * @author Torsten Hildebrandt <hil@biba.uni-bremen.de>, 2010-03-12
+ * @author Torsten Hildebrandt, 2010-03-12
  * @version 
- *          "$Id: MimacExperiment.java 151 2014-04-14 10:27:39Z THildebrandt@gmail.com $"
+ *          "$Id$"
  */
 public class MimacExperiment extends JobShopExperiment {
 
@@ -67,7 +65,7 @@ public class MimacExperiment extends JobShopExperiment {
 
 		public synchronized ShopDef getShopDef() {
 			ShopDef def = this.def;
-			
+
 			if (def == null) {
 				TextFileReader reader = createNewReader();
 				def = reader.getShopDef();

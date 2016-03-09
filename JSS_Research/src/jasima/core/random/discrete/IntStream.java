@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,8 +15,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: IntStream.java 73 2013-01-08 17:16:19Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.core.random.discrete;
 
@@ -28,8 +26,9 @@ import jasima.core.random.continuous.DblStream;
  * in the interval [min(),max()], i.e. including both min() and max(). This is
  * an abstract base class.
  * 
- * @author Torsten Hildebrandt <hil@biba.uni-bremen.de>
- * @version $Id: IntStream.java 73 2013-01-08 17:16:19Z THildebrandt@gmail.com $
+ * @author Torsten Hildebrandt
+ * @version 
+ *          "$Id$"
  */
 public abstract class IntStream extends DblStream {
 
@@ -39,14 +38,10 @@ public abstract class IntStream extends DblStream {
 		super();
 	}
 
-	public abstract int min();
-
-	public abstract int max();
-
 	public abstract int nextInt();
 
 	@Override
-	public double nextDbl() {
+	public final double nextDbl() {
 		return nextInt();
 	}
 

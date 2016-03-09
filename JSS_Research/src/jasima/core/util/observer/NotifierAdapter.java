@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,12 +15,10 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: NotifierAdapter.java 172 2014-08-28 08:54:21Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.core.util.observer;
 
-import jasima.core.util.Util;
+import jasima.core.util.TypeUtil;
 
 import java.io.Serializable;
 import java.util.ArrayDeque;
@@ -32,9 +30,9 @@ import java.util.Iterator;
  * Implementation of a {@link Notifier} functionality. A NotifierAdapter handles
  * notifier functionality for some real Notifier.
  * 
- * @author Torsten Hildebrandt <hil@biba.uni-bremen.de>
+ * @author Torsten Hildebrandt
  * @version 
- *          "$Id: NotifierAdapter.java 172 2014-08-28 08:54:21Z THildebrandt@gmail.com $"
+ *          "$Id$"
  */
 public class NotifierAdapter<N extends Notifier<N, E>, E> implements
 		Notifier<N, E>, Serializable, Cloneable {
@@ -114,10 +112,10 @@ public class NotifierAdapter<N extends Notifier<N, E>, E> implements
 	/**
 	 * Provides a deep clone of this {@code NotifierAdapter}, trying to clone
 	 * each Listener contained using the method
-	 * {@link Util#cloneIfPossible(Object)}. Make sure to set the clone's
+	 * {@link TypeUtil#cloneIfPossible(Object)}. Make sure to set the clone's
 	 * notifier to the correct object.
 	 * 
-	 * @see Util#cloneIfPossible(Object)
+	 * @see TypeUtil#cloneIfPossible(Object)
 	 */
 	@Override
 	public NotifierAdapter<N, E> clone() throws CloneNotSupportedException {
@@ -130,7 +128,7 @@ public class NotifierAdapter<N extends Notifier<N, E>, E> implements
 
 		c.listeners = new ArrayList<NotifierListener<N, E>>(listeners.size());
 		for (int i = 0, n = listeners.size(); i < n; i++) {
-			NotifierListener<N, E> clone = Util.cloneIfPossible(listeners
+			NotifierListener<N, E> clone = TypeUtil.cloneIfPossible(listeners
 					.get(i));
 			c.listeners.add(clone);
 		}

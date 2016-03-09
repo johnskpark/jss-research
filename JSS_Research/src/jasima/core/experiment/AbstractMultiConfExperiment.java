@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Torsten Hildebrandt and jasima contributors
+ * Copyright (c) 2010-2015 Torsten Hildebrandt and jasima contributors
  *
- * This file is part of jasima, v1.0.
+ * This file is part of jasima, v1.2.
  *
  * jasima is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,11 +15,10 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with jasima.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Id: AbstractMultiConfExperiment.java 136 2013-10-22 11:14:30Z THildebrandt@gmail.com $
  *******************************************************************************/
 package jasima.core.experiment;
 
+import jasima.core.util.TypeUtil;
 import jasima.core.util.Util;
 
 import java.io.Serializable;
@@ -31,10 +30,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 /**
+ * <p>
  * Base class for experiments that execute variations of a
  * {@code baseExperiment} by changing its properties.
+ * </p>
  * <p>
- * 
  * The order in which properties are applied is determined by the length of the
  * property name to guarantee that sub-properties are set after the object
  * containing them. This also applies when {@link ComplexFactorSetter} is used.
@@ -43,11 +43,12 @@ import java.util.Map.Entry;
  * {@link #KEY_EXPERIMENT}, which is regarded has having a length of -2.
  * {@link #KEY_EXPERIMENT} can be present in any number of configurations. If it
  * is present in all configurations, baseExperiment need not be set.
+ * </p>
  * 
- * @author Robin Kreis <r.kreis@uni-bremen.de>
+ * @author Robin Kreis
  * @author Torsten Hildebrandt
  * @version 
- *          "$Id: AbstractMultiConfExperiment.java 136 2013-10-22 11:14:30Z THildebrandt@gmail.com $"
+ *          "$Id$"
  */
 public abstract class AbstractMultiConfExperiment extends
 		AbstractMultiExperiment {
@@ -87,7 +88,6 @@ public abstract class AbstractMultiConfExperiment extends
 	}
 
 	// parameters
-
 	private Experiment baseExperiment = null;
 	private ConfigurationValidator configurationValidator = null;
 
@@ -108,33 +108,44 @@ public abstract class AbstractMultiConfExperiment extends
 	protected abstract void createExperiments();
 
 	protected void handleConfig(Map<String, Object> conf) {
-		if (isValidConfiguration(conf)) {
-			numConfs++;
-			try {
-				experiments.add(createExperimentForConf(conf));
-			} catch (final Exception e) {
-				print(ExpMsgCategory.ERROR, e.getMessage());
-				experiments.add(new Experiment() {
+		if (!isValidConfiguration(conf))
+			return;
 
-					private static final long serialVersionUID = 4259612422796656502L;
+		numConfs++;
+		try {
+			Experiment exp = createExperimentForConf(conf);
+			experiments.add(exp);
+		} catch (final Exception e) {
+			String msg = e.getMessage();
+			print(ExpMsgCategory.ERROR, msg == null ? e.toString() : msg);
+			print(ExpMsgCategory.DEBUG, "%s", new Object() {
+				@Override
+				public String toString() {
+					// lazy conversion to String only when message is
+					// actually printed
+					return Util.exceptionToString(e);
+				}
+			});
 
-					@Override
-					protected void produceResults() {
-						aborted++;
-						super.produceResults();
+			experiments.add(new Experiment() {
 
-						resultMap.put(Experiment.EXCEPTION_MESSAGE,
-								e.getMessage());
-						resultMap.put(Experiment.EXCEPTION,
-								Util.exceptionToString(e));
-					}
+				private static final long serialVersionUID = 4259612422796656502L;
 
-					@Override
-					protected void performRun() {
-						// do nothing
-					}
-				});
-			}
+				@Override
+				protected void produceResults() {
+					aborted++;
+					super.produceResults();
+
+					resultMap.put(Experiment.EXCEPTION_MESSAGE, e.getMessage());
+					resultMap.put(Experiment.EXCEPTION,
+							Util.exceptionToString(e));
+				}
+
+				@Override
+				protected void performRun() {
+					// do nothing
+				}
+			});
 		}
 	}
 
@@ -170,8 +181,8 @@ public abstract class AbstractMultiConfExperiment extends
 					&& p.getValue() instanceof ComplexFactorSetter) {
 				((ComplexFactorSetter) p.getValue()).configureExperiment(e);
 			} else {
-				Util.setProperty(e, p.getKey(),
-						Util.cloneIfPossible(p.getValue()));
+				TypeUtil.setPropertyValue(e, p.getKey(),
+						TypeUtil.cloneIfPossible(p.getValue()));
 			}
 		}
 
@@ -203,7 +214,14 @@ public abstract class AbstractMultiConfExperiment extends
 	}
 
 	/**
-	 * Sets the base experiment that is executed multiple times.
+	 * Sets the base experiment that is executed multiple times in various
+	 * configurations. Before experiment execution, a copy (clone) of
+	 * {@code baseExperiment} is created and run. Therefore the specific
+	 * experiment instance passed as the {@code baseExperiment} is never
+	 * actually executed.
+	 * 
+	 * @param baseExperiment
+	 *            The base experiment to use.
 	 */
 	public void setBaseExperiment(Experiment baseExperiment) {
 		this.baseExperiment = baseExperiment;
@@ -213,6 +231,13 @@ public abstract class AbstractMultiConfExperiment extends
 		return configurationValidator;
 	}
 
+	/**
+	 * Sets a {@link ConfigurationValidator}, which is used to veto certain
+	 * impossible factor combinations.
+	 * 
+	 * @param configurationValidator
+	 *            Sets the validator.
+	 */
 	public void setConfigurationValidator(
 			ConfigurationValidator configurationValidator) {
 		this.configurationValidator = configurationValidator;
