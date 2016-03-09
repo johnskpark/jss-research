@@ -67,7 +67,7 @@ stat = app.evolution.simple.JasimaSimpleStatistics
 eval.problem = app.evolution.simple.JasimaSimpleProblem
 eval.problem.data = app.evolution.JasimaGPData
 
-eval.problem.reference-rule = app.priorityRules.HolthausRule
+eval.problem.reference-rule = app.priorityRules.ATCPRNew
 
 eval.problem.rule = app.evolution.priorityRules.BasicPriorityRule
 eval.problem.fitness = app.evolution.simple.fitness.NormTWTFitness

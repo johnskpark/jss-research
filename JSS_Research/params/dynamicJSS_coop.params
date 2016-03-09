@@ -81,7 +81,7 @@ gp.fs.0.func.18.nc = nc0
 eval.problem = app.evolution.coop.JasimaCoopProblem
 eval.problem.data = app.evolution.JasimaGPData
 
-eval.problem.reference-rule = app.priorityRules.HolthausRule
+eval.problem.reference-rule = app.priorityRules.ATCPRNew
 
 eval.problem.rule = app.evolution.priorityRules.EnsemblePriorityRule
 eval.problem.fitness = app.evolution.coop.fitness.NormTWTFitness

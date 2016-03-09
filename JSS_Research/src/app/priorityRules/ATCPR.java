@@ -5,7 +5,7 @@ import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
 
 /**
- * TODO javadoc. 
+ * TODO javadoc.
  * @author John
  *
  */
@@ -48,10 +48,9 @@ public class ATCPR extends PR {
 
 		double remainingWaitTime = ff * (entry.remainingProcTime() - entry.currProcTime());
 
-		double prod = -Math.max((slack - remainingWaitTime) /
-				(k * averageProcTime), 0.0);
+		double prod = -Math.max((slack - remainingWaitTime) / (k * averageProcTime), 0.0);
 
-		return Math.log(entry.getWeight() / entry.currProcTime()) + prod;
+		return Math.log(entry.getWeight() / entry.currProcTime()) - prod;
 	}
 
 }
