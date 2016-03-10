@@ -22,8 +22,6 @@ import app.stat.WeightedTardinessStat;
  */
 public class IndividualNormTWTFitness extends JasimaMultilevelIndividualFitness {
 
-	// FIXME not yet implemented.
-
 	private List<IJasimaMultilevelFitnessListener> listeners = new ArrayList<IJasimaMultilevelFitnessListener>();
 
 	@Override

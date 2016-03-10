@@ -24,7 +24,7 @@ public class ATCPRNew extends ATC {
 
 
 	public double calcPrio(PrioRuleTarget entry) {
-		return calcPrio(entry);
+		return super.calcPrio(entry);
 	}
 
 }
