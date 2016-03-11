@@ -38,4 +38,17 @@ public class BasicPriorityRule extends AbsEvalPriorityRule {
 		return getClass().getSimpleName() + "[ " + rule.toString() + " ]";
 	}
 
+	@Override
+	public int getNumRules() {
+		return RULE_NUM;
+	}
+
+	@Override
+	public int getRuleSize(int index) {
+		if (index != 0) {
+			throw new ArrayIndexOutOfBoundsException(index);
+		}
+		return rule.getSize();
+	}
+
 }

@@ -22,4 +22,17 @@ public class EvalATC extends AbsEvalPriorityRule {
 		return pr.calcPrio(entry);
 	}
 
+	@Override
+	public int getNumRules() {
+		return 1;
+	}
+
+	@Override
+	public int getRuleSize(int index) {
+		if (index != 0) {
+			throw new ArrayIndexOutOfBoundsException(index);
+		}
+		return SIZE_NOT_SET;
+	}
+
 }

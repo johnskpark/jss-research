@@ -23,6 +23,7 @@ public class SimTest {
 
 	private static final double RANGE_OF_ERROR = 0.001;
 
+	private static final String TARDINESS = "tardiness";
 	private static final int REPEAT = 500;
 
 	private DynamicSimConfig simConfig;
@@ -108,7 +109,7 @@ public class SimTest {
 			Experiment experiment = ExperimentGenerator.getExperiment(simConfig, rule, expIndex);
 			experiment.runExperiment();
 
-			SummaryStat stat = (SummaryStat) experiment.getResults().get("weightedTardMean");
+			SummaryStat stat = (SummaryStat) experiment.getResults().get(TARDINESS);
 
 			seeds.add(experiment.getInitialSeed());
 			perfValues.add(stat.sum());
@@ -130,7 +131,7 @@ public class SimTest {
 			Experiment experiment = ExperimentGenerator.getExperiment(simConfig, rule, expIndex);
 			experiment.runExperiment();
 
-			SummaryStat stat = (SummaryStat) experiment.getResults().get("weightedTardMean");
+			SummaryStat stat = (SummaryStat) experiment.getResults().get(TARDINESS);
 
 			Assert.assertEquals("The seeds are not consistent with the initial run for index " + index, seeds.get(expIndex), new Long(experiment.getInitialSeed()));
 			Assert.assertEquals("The output values are not consistent with the initial run for index " + index, perfValues.get(expIndex), stat.sum(), RANGE_OF_ERROR);

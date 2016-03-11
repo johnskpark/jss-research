@@ -5,7 +5,7 @@ import java.util.Map;
 public interface IJasimaEvalFitness {
 
 	public String getHeaderName();
-	
-	public double getRelevantResult(final Map<String, Object> results);
+
+	public String getRelevantResult(final AbsEvalPriorityRule solver, final Map<String, Object> results);
 
 }

@@ -1,12 +1,14 @@
 package app.node;
 
+import java.util.Map;
+
 import app.IWorkStationListener;
 import jasima.shopSim.core.PrioRuleTarget;
 
 public class NodeData {
 
 	private PrioRuleTarget entry;
-	private IWorkStationListener listener;
+	private Map<String, IWorkStationListener> listener;
 
 	public NodeData() {
 	}
@@ -17,7 +19,7 @@ public class NodeData {
 		return entry;
 	}
 
-	public IWorkStationListener getWorkStationListener() {
+	public Map<String, IWorkStationListener> getWorkStationListener() {
 		return listener;
 	}
 
@@ -27,7 +29,7 @@ public class NodeData {
 		this.entry = entry;
 	}
 
-	public void setWorkStationListener(IWorkStationListener listener) {
+	public void setWorkStationListeners(Map<String, IWorkStationListener> listener) {
 		this.listener = listener;
 	}
 }

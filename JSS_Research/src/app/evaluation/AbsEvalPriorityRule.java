@@ -7,8 +7,9 @@ public abstract class AbsEvalPriorityRule extends PR implements IJasimaEvalPrior
 
 	private static final long serialVersionUID = -4755178527963577302L;
 
-	private long seed;
+	public static final int SIZE_NOT_SET = -1;
 
+	private long seed;
 	private NodeData nodeData;
 
 	// Getters
@@ -30,5 +31,9 @@ public abstract class AbsEvalPriorityRule extends PR implements IJasimaEvalPrior
 	public void setNodeData(NodeData data) {
 		this.nodeData = data;
 	}
+
+	public abstract int getNumRules();
+
+	public abstract int getRuleSize(int index);
 
 }

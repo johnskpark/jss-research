@@ -24,6 +24,11 @@ public class OpMaximum implements INode {
 	}
 
 	@Override
+	public int getSize() {
+		return leftChild.getSize() + rightChild.getSize() + 1;
+	}
+
+	@Override
 	public double evaluate(NodeData data) {
 		double leftEval = leftChild.evaluate(data);
 		double rightEval = rightChild.evaluate(data);

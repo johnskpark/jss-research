@@ -21,6 +21,11 @@ public class ScoreLargeValue implements INode {
 	}
 
 	@Override
+	public int getSize() {
+		return NODE_DEFINITION.numChildren() + 1;
+	}
+
+	@Override
 	public double evaluate(NodeData data) {
 		return LARGE_VALUE;
 	}

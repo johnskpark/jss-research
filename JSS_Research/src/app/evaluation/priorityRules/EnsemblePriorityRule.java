@@ -97,6 +97,16 @@ public class EnsemblePriorityRule extends AbsEvalPriorityRule {
 		return builder.toString();
 	}
 
+	@Override
+	public int getNumRules() {
+		return rules.size();
+	}
+
+	@Override
+	public int getRuleSize(int index) {
+		return rules.get(index).getSize();
+	}
+
 	public void clear() {
 		jobVotes.clear();
 		jobRankings.clear();

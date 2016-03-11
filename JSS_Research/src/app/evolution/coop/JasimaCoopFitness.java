@@ -7,6 +7,7 @@ import app.evolution.JasimaGPProblem;
 import ec.EvolutionState;
 import ec.Individual;
 
+// TODO I need to set the context again...
 public abstract class JasimaCoopFitness implements IJasimaFitness<JasimaCoopIndividual> {
 
 	private static final boolean DEFAULT_SHOULD_SET_CONTEXT = false;

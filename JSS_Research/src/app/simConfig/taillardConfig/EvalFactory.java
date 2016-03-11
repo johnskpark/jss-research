@@ -14,7 +14,11 @@ public class EvalFactory implements ISimConfigEvalFactory {
 
 	@Override
 	public void loadConfig(Element doc) throws IOException {
+		System.out.println("SimConfig: loading Taillard dataset.");
+
 		// No setup required.
+
+		System.out.println("SimConfig: Taillard dataset loading complete.");
 	}
 
 	@Override

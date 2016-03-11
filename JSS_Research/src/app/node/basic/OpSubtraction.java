@@ -24,6 +24,11 @@ public class OpSubtraction implements INode {
 	}
 
 	@Override
+	public int getSize() {
+		return leftChild.getSize() + rightChild.getSize() + 1;
+	}
+
+	@Override
 	public double evaluate(NodeData data) {
 		return leftChild.evaluate(data) - rightChild.evaluate(data);
 	}

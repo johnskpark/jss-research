@@ -61,15 +61,13 @@ public class JasimaEvalProblem {
 	public static final String XML_OUTPUT_FILE = "outputFile";
 
 	private Map<String, List<AbsEvalPriorityRule>> solversMap = new HashMap<String, List<AbsEvalPriorityRule>>();
-
-	private ISimConfigEvalFactory simConfigFactory;
-	private SimConfig simConfig;
-
-	private IJasimaEvalFitness fitness;
-
 	private RuleParser parser = new RuleParser();
 
-	private IWorkStationListener workstationListener;
+	private SimConfig simConfig;
+
+	private List<IJasimaEvalFitness> fitnesses = new ArrayList<IJasimaEvalFitness>();
+	private List<IWorkStationListener> listeners = new ArrayList<IWorkStationListener>();
+	private Map<String, IWorkStationListener> listenerMap = new HashMap<String, IWorkStationListener>();
 
 	private String outputCsv = null;
 
@@ -108,16 +106,20 @@ public class JasimaEvalProblem {
 
 		doc.getDocumentElement().normalize();
 
-		loadListener(doc);
+		loadListeners(doc);
 		loadSolvers(doc);
 		loadDataset(doc);
-		loadFitness(doc);
+		loadFitnesses(doc);
 		loadOutput(doc);
 	}
 
 	// Load in the solvers from the XML configuration.
 	private void loadSolvers(Document doc) throws Exception {
+		System.out.println("Solver: loading solvers.");
+
 		NodeList nList = doc.getElementsByTagName(XML_SOLVER_BASE);
+
+		System.out.println("Solver: " + nList.getLength() + " solvers detected.");
 
 		for (int i = 0; i < nList.getLength(); i++) {
 			Element solverBase = (Element) nList.item(i);
@@ -134,6 +136,8 @@ public class JasimaEvalProblem {
 			Class<? extends AbsEvalPriorityRule> solverClass =
 					(Class<? extends AbsEvalPriorityRule>) retrievedClass;
 
+			System.out.println("Solver: loading solver: " + solverClass.getSimpleName());
+
 			// Load any additional files.
 			NodeList ruleFileNodeList = solverBase.getElementsByTagName(XML_SOLVER_FILE);
 
@@ -142,15 +146,19 @@ public class JasimaEvalProblem {
 
 				String ruleFilename = ruleBase.getElementsByTagName(XML_RULE_FILE).item(0).getTextContent();
 
+				System.out.println("Solver: detected rule file. Reading from rule file: " + ruleFilename);
+
 				List<AbsEvalPriorityRule> solvers = loadRuleFile(solverClass, ruleFilename);
 				solversMap.put(ruleFilename, solvers);
 			} else {
-				List<AbsEvalPriorityRule> solvers = loadStaticSolvers(solverClass);
+				System.out.println("Solver: no rule file detected. Loading a static solver.");
 
+				List<AbsEvalPriorityRule> solvers = loadStaticSolvers(solverClass);
 				solversMap.put(solverClassStr, solvers);
 			}
 		}
 
+		System.out.println("Solver: loading complete.");
 	}
 
 	// Load in the rule from the specified file.
@@ -170,7 +178,7 @@ public class JasimaEvalProblem {
 			config.setSeed(Integer.parseInt(split[0]));
 
 			NodeData data = new NodeData();
-			data.setWorkStationListener(workstationListener);
+			data.setWorkStationListeners(listenerMap);
 			config.setNodeData(data);
 
 			List<INode> roots = new ArrayList<INode>();
@@ -205,6 +213,8 @@ public class JasimaEvalProblem {
 
 	// Load in the dataset from the XML configuration.
 	private void loadDataset(Document doc) throws Exception {
+		System.out.println("SimConfig: loading simulator.");
+
 		NodeList nList = doc.getElementsByTagName(XML_DATASET_BASE);
 
 		Node datasetNode = nList.item(0);
@@ -215,48 +225,70 @@ public class JasimaEvalProblem {
 				.item(0)
 				.getTextContent());
 
-		simConfigFactory = (ISimConfigEvalFactory) datasetClass.newInstance();
-		simConfigFactory.loadConfig(datasetBase);
+		ISimConfigEvalFactory factory;
+		factory = (ISimConfigEvalFactory) datasetClass.newInstance();
+		factory.loadConfig(datasetBase);
 
-		simConfig = simConfigFactory.generateSimConfig();
+		simConfig = factory.generateSimConfig();
+
+		System.out.println("SimConfig: loading complete.");
 	}
 
 	// Load in the performance measure from the XML configuration.
-	private void loadFitness(Document doc) throws Exception {
+	private void loadFitnesses(Document doc) throws Exception {
+		System.out.println("Fitness: loading fitnesses.");
+
 		NodeList nList = doc.getElementsByTagName(XML_FITNESS_BASE);
 
-		Node fitnessNode = nList.item(0);
-		Element fitnessBase = (Element) fitnessNode;
+		for (int i = 0; i < nList.getLength(); i++) {
+			Element fitnessBase = (Element) nList.item(i);
 
-		Class<?> fitnessClass = Class.forName(fitnessBase
-				.getElementsByTagName(XML_FITNESS_CLASS)
-				.item(0)
-				.getTextContent());
+			Class<?> fitnessClass = Class.forName(fitnessBase
+					.getElementsByTagName(XML_FITNESS_CLASS)
+					.item(0)
+					.getTextContent());
 
-		fitness = (IJasimaEvalFitness) fitnessClass.newInstance();
+			System.out.println("Fitness: loading fitness: " + fitnessClass.getSimpleName());
+
+			fitnesses.add((IJasimaEvalFitness) fitnessClass.newInstance());
+		}
+
+		System.out.println("Fitness: loading complete.");
 	}
 
 	// Load in the workstation listener from the XML configuration (Optional).
-	private void loadListener(Document doc) throws Exception {
+	private void loadListeners(Document doc) throws Exception {
+		System.out.println("Listener: loading listeners.");
+
 		NodeList nList = doc.getElementsByTagName(XML_LISTENER_BASE);
 
-		if (nList.getLength() != 0) {
-			Node listenerNode = nList.item(0);
-			Element listenerBase = (Element) listenerNode;
+		System.out.println("Listener: " + nList.getLength() + " listeners detected.");
+
+		for (int i = 0; i < nList.getLength(); i++) {
+			Element listenerBase = (Element) nList.item(i);
 
 			Class<?> listenerClass = Class.forName(listenerBase
 					.getElementsByTagName(XML_LISTENER_CLASS)
 					.item(0)
 					.getTextContent());
 
-			IWorkStationListenerEvalFactory factory = (IWorkStationListenerEvalFactory) listenerClass.newInstance();
+			IWorkStationListenerEvalFactory factory;
+			factory = (IWorkStationListenerEvalFactory) listenerClass.newInstance();
+			factory.loadConfig(listenerBase);
 
-			workstationListener = factory.generateWorkStationListener();
+			IWorkStationListener listener = factory.generateWorkStationListener();
+
+			listeners.add(listener);
+			listenerMap.put(listener.getClass().getSimpleName(), listener);
 		}
+
+		System.out.println("Listener: loading complete.");
 	}
 
 	// Load in the output file name from the XML configuration.
 	private void loadOutput(Document doc) throws Exception {
+		System.out.println("Output: loading output.");
+
 		NodeList nList = doc.getElementsByTagName(XML_OUTPUT_BASE);
 
 		Node outputNode = nList.item(0);
@@ -266,6 +298,10 @@ public class JasimaEvalProblem {
 				.getElementsByTagName(XML_OUTPUT_FILE)
 				.item(0)
 				.getTextContent();
+
+		System.out.println("Output: the output file: " + outputCsv);
+
+		System.out.println("Ouptut: loading complete.");
 	}
 
 	/**
@@ -277,8 +313,9 @@ public class JasimaEvalProblem {
 		// Print out the headers.
 		output.print("RuleFile,RuleSeed,TestSet,InstanceNum");
 
-		// FIXME Add in the functionality to evaluate with multiple fitnesses, such as get the number of nodes.
-		output.printf(",%s", fitness.getHeaderName());
+		for (IJasimaEvalFitness fitness : fitnesses) {
+			output.printf(",%s", fitness.getHeaderName());
+		}
 
 		output.println();
 
@@ -292,14 +329,16 @@ public class JasimaEvalProblem {
 					Experiment experiment = getExperiment(solver, i);
 					experiment.runExperiment();
 
-					double result = fitness.getRelevantResult(experiment.getResults());
-
-					// FIXME Add in the functionality to evaluate with multiple fitnesses.
-					output.printf(",%f", result);
+					for (IJasimaEvalFitness fitness : fitnesses) {
+						String result = fitness.getRelevantResult(solver, experiment.getResults());
+						output.printf(",%s", result);
+					}
 
 					output.println();
 
-					workstationListener.clear();
+					for (IWorkStationListener listener : listeners) {
+						listener.clear();
+					}
 				}
 
 				simConfig.reset();
@@ -312,8 +351,8 @@ public class JasimaEvalProblem {
 	private Experiment getExperiment(AbsEvalPriorityRule rule, int index) {
 		JobShopExperiment experiment = ExperimentGenerator.getExperiment(simConfig, rule, index);
 
-		if (workstationListener != null) {
-			experiment.addMachineListener(workstationListener);
+		for (IWorkStationListener listener : listeners) {
+			experiment.addMachineListener(listener);
 		}
 
 		return experiment;

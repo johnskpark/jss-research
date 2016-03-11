@@ -17,12 +17,17 @@ public class EvalFactory implements IWorkStationListenerEvalFactory {
 
 	@Override
 	public void loadConfig(Element doc) throws IOException {
+		System.out.println("Listener: loading Hunt et al.'s listener.");
+
 		NodeList listenerNodeList = doc.getElementsByTagName(XML_MAX_SIZE);
 		if (listenerNodeList.getLength() != 0) {
 			maxSize = Integer.parseInt(listenerNodeList.item(0).getTextContent());
+			System.out.println("Listener: maximum query size set for listener: " + maxSize);
 		} else {
-			throw new IOException("No maximum size specified for the listener.");
+			throw new IOException("Listner: no maximum query size specified for the listener.");
 		}
+
+		System.out.println("Listener: Hunt et al. listener loading complete.");
 	}
 
 	@Override

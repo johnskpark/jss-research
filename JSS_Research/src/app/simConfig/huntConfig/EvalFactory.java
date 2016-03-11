@@ -20,26 +20,31 @@ public class EvalFactory implements ISimConfigEvalFactory {
 
 	@Override
 	public void loadConfig(Element doc) throws IOException {
+		System.out.println("SimConfig: loading Hunt et al. simulator.");
+
 		NodeList datasetInstNodeList = doc.getElementsByTagName(XML_DATASET_INSTANCES);
 		if (datasetInstNodeList.getLength() != 0) {
 			String instances = datasetInstNodeList.item(0).getTextContent();
 
 			simConfig = HuntSimConfigGenerator.getSimConfig(instances);
 			if (simConfig != null) {
-				System.out.println("Configuration loaded for simulator: " + simConfig.getClass().getSimpleName());
+				System.out.println("SimConfig: configuration loaded for simulator: " + simConfig.getClass().getSimpleName());
 			} else {
-				throw new IOException("Unrecognised configuration for the simulator. " + instances);
+				throw new IOException("SimConfig: unrecognised configuration for the simulator. " + instances);
 			}
 		} else {
-			throw new IOException("No instances specified for the simulator.");
+			throw new IOException("SimConfig: no instances specified for the simulator.");
 		}
 
 		NodeList datasetSeedNodeList = doc.getElementsByTagName(XML_DATASET_SEED);
 		if (datasetSeedNodeList.getLength() != 0) {
 			initialSeed = Long.parseLong(datasetSeedNodeList.item(0).getTextContent());
+			System.out.println("SimConfig: initial seed set for simulator: " + initialSeed);
 		} else {
-			throw new IOException("Initial seed for the dataset must be provided.");
+			throw new IOException("SimConfig: initial seed for the dataset must be provided.");
 		}
+
+		System.out.println("SimConfig: Hunt et al. simulator loading complete.");
 	}
 
 	@Override

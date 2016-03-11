@@ -21,8 +21,13 @@ public class ScoreAverageWaitTimeAllMachines implements INode {
 	}
 
 	@Override
+	public int getSize() {
+		return NODE_DEFINITION.numChildren() + 1;
+	}
+
+	@Override
 	public double evaluate(NodeData data) {
-		HuntListener listener = (HuntListener) data.getWorkStationListener();
+		HuntListener listener = (HuntListener) data.getWorkStationListener().get(HuntListener.class.getSimpleName());
 
 		return listener.getAverageWaitTimesAllMachines();
 	}

@@ -26,6 +26,11 @@ public class OpConditional implements INode {
 	}
 
 	@Override
+	public int getSize() {
+		return conditional.getSize() + consequent.getSize() + alternative.getSize() + 1;
+	}
+
+	@Override
 	public double evaluate(NodeData data) {
 		if (conditional.evaluate(data) >= 0) {
 			return consequent.evaluate(data);

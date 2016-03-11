@@ -27,9 +27,14 @@ public class ScoreAverageWaitTimeNextMachine implements INode {
 	}
 
 	@Override
+	public int getSize() {
+		return NODE_DEFINITION.numChildren() + 1;
+	}
+
+	@Override
 	public double evaluate(NodeData data) {
 		PrioRuleTarget entry = data.getEntry();
-		HuntListener listener = (HuntListener) data.getWorkStationListener();
+		HuntListener listener = (HuntListener) data.getWorkStationListener().get(HuntListener.class.getSimpleName());
 
 		double averageWaitTime = 0.0;
 

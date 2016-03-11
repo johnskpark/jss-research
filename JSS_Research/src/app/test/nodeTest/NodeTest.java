@@ -61,7 +61,9 @@ public class NodeTest {
 			Set<Class<? extends INode>> evalNodes = reflections.getSubTypesOf(INode.class);
 
 			for (Class<? extends INode> evalNode : evalNodes) {
-				Assert.assertTrue(evalNode.isAnnotationPresent(NodeAnnotation.class));
+				if (!evalNode.equals(FakeINode.class)) {
+					Assert.assertTrue(evalNode.getSimpleName(), evalNode.isAnnotationPresent(NodeAnnotation.class));
+				}
 			}
 		} catch (Exception ex) {
 			Assert.fail();
@@ -74,7 +76,7 @@ public class NodeTest {
 			Set<Class<? extends INode>> evalNodes = reflections.getSubTypesOf(INode.class);
 
 			for (Class<? extends INode> evalNode : evalNodes) {
-				if (evalNode != ERCRandom.class) {
+				if (!evalNode.equals(ERCRandom.class) && !evalNode.equals(FakeINode.class)) {
 					NodeDefinition nodeDef = evalNode.getAnnotation(NodeAnnotation.class).node();
 
 					Class<?>[] constParams = new Class<?>[nodeDef.numChildren()];
@@ -84,7 +86,7 @@ public class NodeTest {
 				}
 			}
 		} catch (Exception ex) {
-			Assert.fail();
+			Assert.fail(ex.getMessage());
 		}
 	}
 
@@ -387,6 +389,10 @@ public class NodeTest {
 		}
 
 		public int getChildrenNum() {
+			return 1;
+		}
+
+		public int getSize() {
 			return 1;
 		}
 
