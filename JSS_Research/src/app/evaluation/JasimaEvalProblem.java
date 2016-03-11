@@ -308,6 +308,8 @@ public class JasimaEvalProblem {
 	 * Evaluate the rule over the dataset using the given performance measure.
 	 */
 	public void evaluate() throws Exception {
+		System.out.println("Evaluating rules.");
+
 		PrintStream output = new PrintStream(new File(outputCsv));
 
 		// Print out the headers.
@@ -321,6 +323,8 @@ public class JasimaEvalProblem {
 
 		for (String ruleFilename : solversMap.keySet()) {
 			List<AbsEvalPriorityRule> solvers = solversMap.get(ruleFilename);
+
+			System.out.println("Evaluation: evaluating " + ruleFilename + ". Number of rules: " + solvers.size() + ", Number of instances: " + simConfig.getNumConfigs());
 
 			for (AbsEvalPriorityRule solver : solvers) {
 				for (int i = 0; i < simConfig.getNumConfigs(); i++) {
@@ -343,9 +347,13 @@ public class JasimaEvalProblem {
 
 				simConfig.reset();
 			}
+
+			System.out.println("Evaluation: " + ruleFilename + " evaluation complete.");
 		}
 
 		output.close();
+
+		System.out.println("Evaluation complete.");
 	}
 
 	private Experiment getExperiment(AbsEvalPriorityRule rule, int index) {

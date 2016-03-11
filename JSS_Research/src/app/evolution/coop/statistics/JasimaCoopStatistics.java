@@ -4,6 +4,8 @@ import ec.EvolutionState;
 import ec.simple.SimpleStatistics;
 import ec.util.Parameter;
 
+// TODO this will now need to get the outputs of the individual rules and the grouped rules,
+// similar to the format that I used for Multilevel
 public class JasimaCoopStatistics extends SimpleStatistics {
 
 	private static final long serialVersionUID = 8464431576658975312L;

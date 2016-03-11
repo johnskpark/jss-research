@@ -5,8 +5,10 @@ import jasima.core.experiment.Experiment;
 import java.util.ArrayList;
 
 import app.evolution.AbsGPPriorityRule;
+import app.evolution.IJasimaFitness;
 import app.evolution.JasimaGPConfig;
 import app.evolution.JasimaGPData;
+import app.evolution.JasimaGPIndividual;
 import app.evolution.JasimaGPProblem;
 import ec.EvolutionState;
 import ec.Fitness;
@@ -24,15 +26,20 @@ import ec.util.Parameter;
  * @author parkjohn
  *
  */
-// TODO need to add in niching at some point.
 public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblemForm {
 
 	private static final long serialVersionUID = -1068923215891516182L;
+
+	public static final String P_IND_RULE = "ind-rule";
+	public static final String P_IND_FITNESS = "ind-fitness";
 
 	public static final String P_COOP_RULE = "rule";
 	public static final String P_FITNESS = "fitness";
 
 	public static final String P_NICHING = "niching";
+
+	private AbsGPPriorityRule indRule;
+	private IJasimaFitness<JasimaGPIndividual> indFitness;
 
 	private AbsGPPriorityRule coopRule;
 	private JasimaCoopFitness fitness;
@@ -41,9 +48,14 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 
 	private IJasimaCoopNiching niching;
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
 		super.setup(state, base);
+
+		// Setup the solver for individual rules.
+		indRule = (AbsGPPriorityRule) state.parameters.getInstanceForParameterEq(base.push(P_IND_RULE), null, AbsGPPriorityRule.class);
+		indFitness = (IJasimaFitness<JasimaGPIndividual>) state.parameters.getInstanceForParameter(base.push(P_IND_FITNESS), null, IJasimaFitness.class);
 
 		// Setup the solver.
 		coopRule = (AbsGPPriorityRule) state.parameters.getInstanceForParameterEq(base.push(P_COOP_RULE), null, AbsGPPriorityRule.class);
