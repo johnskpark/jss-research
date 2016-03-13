@@ -1,8 +1,7 @@
 package app.evolution.coop;
 
-import jasima.core.experiment.Experiment;
-
 import java.util.ArrayList;
+import java.util.Map;
 
 import app.evolution.AbsGPPriorityRule;
 import app.evolution.IJasimaFitness;
@@ -10,6 +9,7 @@ import app.evolution.JasimaGPConfig;
 import app.evolution.JasimaGPData;
 import app.evolution.JasimaGPIndividual;
 import app.evolution.JasimaGPProblem;
+import app.stat.WeightedTardinessStat;
 import ec.EvolutionState;
 import ec.Fitness;
 import ec.Individual;
@@ -19,6 +19,8 @@ import ec.coevolve.GroupedProblemForm;
 import ec.gp.GPIndividual;
 import ec.util.ParamClassLoadException;
 import ec.util.Parameter;
+import jasima.core.experiment.Experiment;
+import jasima.core.statistics.SummaryStat;
 
 /**
  * TODO javadoc.
@@ -112,6 +114,12 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 //		}
 
 //		fitness.clear();
+		
+		// TODO temporary.
+		state.output.message("Best Individual Statistics: " + allIndStats.min());
+		for (int i = 0; i < indStatPerSubpop.length; i++) {
+			state.output.message("Best Individual Statistics Subpop " + i + ": " + indStatPerSubpop[i].min());
+		}
 	}
 
 	@Override
@@ -121,6 +129,12 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 			final boolean countVictoriesOnly,
 			final int[] subpops,
 			final int threadnum) {
+		if (indRule != null) {
+			for (int i = 0; i < inds.length; i++) {
+				evaluateIndividuals(state, inds[i], i, updateFitness, countVictoriesOnly, subpops, threadnum);
+			}
+		}
+		
 		GPIndividual[] gpInds = new GPIndividual[inds.length];
 		for (int i = 0; i < inds.length; i++) {
 			gpInds[i] = (GPIndividual) inds[i];
@@ -172,6 +186,51 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 			getTracker().clear();
 		}
 
+		resetSimSeed();
+	}
+	
+	// TODO temporary.
+	private SummaryStat allIndStats = new SummaryStat();
+	private SummaryStat[] indStatPerSubpop = new SummaryStat[]{ 
+			new SummaryStat(), 
+			new SummaryStat(), 
+			new SummaryStat(), 
+			new SummaryStat(), 
+	};
+	
+	// TODO temporary until I get more permanent solution in here. 
+	public void evaluateIndividuals(final EvolutionState state,
+			final Individual ind,
+			final int index,
+			final boolean[] updateFitness,
+			final boolean countVictoriesOnly,
+			final int[] subpops,
+			final int threadnum) {
+		JasimaGPConfig config = new JasimaGPConfig();
+		config.setState(state);
+		config.setIndividuals(new GPIndividual[]{(GPIndividual) ind});
+		config.setSubpopulations(subpops);
+		config.setThreadnum(threadnum);
+		config.setData((JasimaGPData) input);
+		if (hasTracker()) { config.setTracker(getTracker()); }
+
+		indRule.setConfiguration(config);
+		
+		SummaryStat stat = new SummaryStat();
+		
+		for (int i = 0; i < getSimConfig().getNumConfigs(); i++) {
+			Experiment experiment = getExperiment(state, indRule, i, getWorkStationListener(), getTracker());
+			
+			experiment.runExperiment();
+			
+			stat.value(WeightedTardinessStat.getNormTotalWeightedTardiness(experiment.getResults(), getReferenceStat().get(i)));
+
+			if (hasWorkStationListener()) { getWorkStationListener().clear(); }
+		}
+		
+		allIndStats.value(stat.mean());
+		indStatPerSubpop[index].value(stat.mean());
+		
 		resetSimSeed();
 	}
 

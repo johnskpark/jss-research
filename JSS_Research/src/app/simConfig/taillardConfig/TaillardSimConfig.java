@@ -10,11 +10,11 @@ public class TaillardSimConfig extends StaticSimConfig {
 			"tai15_15",
 			"tai20_15",
 			"tai20_20",
-			"tai30_15",
-			"tai30_20",
-			"tai50_15",
-			"tai50_20",
-			"tai100_20",
+//			"tai30_15",
+//			"tai30_20",
+//			"tai50_15",
+//			"tai50_20",
+//			"tai100_20",
 	};
 	private static final String FILE_EXT = ".txt";
 	private static final int NUM_INSTANCE_PER_SUBSET = 10;

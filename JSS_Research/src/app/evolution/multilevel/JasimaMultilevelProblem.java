@@ -24,7 +24,6 @@ import jasima.core.experiment.Experiment;
  * @author parkjohn
  *
  */
-// TODO need to record the diversity measures.
 public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProblemForm {
 
 	private static final long serialVersionUID = -5150181943760622786L;
