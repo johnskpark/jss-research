@@ -1,15 +1,12 @@
 package app.evolution.coop;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 import app.evolution.AbsGPPriorityRule;
-import app.evolution.IJasimaFitness;
+import app.evolution.AbsJasimaFitness;
 import app.evolution.JasimaGPConfig;
 import app.evolution.JasimaGPData;
-import app.evolution.JasimaGPIndividual;
 import app.evolution.JasimaGPProblem;
-import app.stat.WeightedTardinessStat;
 import ec.EvolutionState;
 import ec.Fitness;
 import ec.Individual;
@@ -41,7 +38,7 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 	public static final String P_NICHING = "niching";
 
 	private AbsGPPriorityRule indRule;
-	private IJasimaFitness<JasimaGPIndividual> indFitness;
+	private AbsJasimaFitness<JasimaCoopIndividual> indFitness;
 
 	private AbsGPPriorityRule coopRule;
 	private JasimaCoopFitness fitness;
@@ -50,6 +47,10 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 
 	private IJasimaCoopNiching niching;
 
+	// TODO temporary.
+	private SummaryStat allIndStats;
+	private SummaryStat[] indStatPerSubpop;
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
@@ -57,12 +58,11 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 
 		// Setup the solver for individual rules.
 		indRule = (AbsGPPriorityRule) state.parameters.getInstanceForParameterEq(base.push(P_IND_RULE), null, AbsGPPriorityRule.class);
-		indFitness = (IJasimaFitness<JasimaGPIndividual>) state.parameters.getInstanceForParameter(base.push(P_IND_FITNESS), null, IJasimaFitness.class);
+		indFitness = (AbsJasimaFitness<JasimaCoopIndividual>) state.parameters.getInstanceForParameter(base.push(P_IND_FITNESS), null, AbsJasimaFitness.class);
+		indFitness.setProblem(this);
 
 		// Setup the solver.
 		coopRule = (AbsGPPriorityRule) state.parameters.getInstanceForParameterEq(base.push(P_COOP_RULE), null, AbsGPPriorityRule.class);
-
-		// Setup the fitness.
 		fitness = (JasimaCoopFitness) state.parameters.getInstanceForParameterEq(base.push(P_FITNESS), null, JasimaCoopFitness.class);
 		fitness.setProblem(this);
 
@@ -99,6 +99,15 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 			clearReference();
 			evaluateReference();
 		}
+
+		if (indRule != null) {
+			allIndStats = new SummaryStat();
+
+        	indStatPerSubpop = new SummaryStat[state.population.subpops.length];
+			for (int i = 0; i < indStatPerSubpop.length; i++) {
+				indStatPerSubpop[i] = new SummaryStat();
+			}
+		}
 	}
 
 	@Override
@@ -114,12 +123,15 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 //		}
 
 //		fitness.clear();
-		
-		// TODO temporary.
-		state.output.message("Best Individual Statistics: " + allIndStats.min());
-		for (int i = 0; i < indStatPerSubpop.length; i++) {
-			state.output.message("Best Individual Statistics Subpop " + i + ": " + indStatPerSubpop[i].min());
-		}
+
+	}
+
+	public SummaryStat getAllIndStats() {
+		return allIndStats;
+	}
+
+	public SummaryStat[] getIndStatPerSubpop() {
+		return indStatPerSubpop;
 	}
 
 	@Override
@@ -134,7 +146,7 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 				evaluateIndividuals(state, inds[i], i, updateFitness, countVictoriesOnly, subpops, threadnum);
 			}
 		}
-		
+
 		GPIndividual[] gpInds = new GPIndividual[inds.length];
 		for (int i = 0; i < inds.length; i++) {
 			gpInds[i] = (GPIndividual) inds[i];
@@ -174,7 +186,6 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 		fitness.setUpdateConfiguration(inds, updateFitness, shouldSetContext());
 		for (int i = 0; i < inds.length; i++) {
 			fitness.setFitness(state, (JasimaCoopIndividual) inds[i], i);
-
 			inds[i].evaluated = true;
 		}
 		fitness.clear();
@@ -188,17 +199,7 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 
 		resetSimSeed();
 	}
-	
-	// TODO temporary.
-	private SummaryStat allIndStats = new SummaryStat();
-	private SummaryStat[] indStatPerSubpop = new SummaryStat[]{ 
-			new SummaryStat(), 
-			new SummaryStat(), 
-			new SummaryStat(), 
-			new SummaryStat(), 
-	};
-	
-	// TODO temporary until I get more permanent solution in here. 
+
 	public void evaluateIndividuals(final EvolutionState state,
 			final Individual ind,
 			final int index,
@@ -215,22 +216,23 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 		if (hasTracker()) { config.setTracker(getTracker()); }
 
 		indRule.setConfiguration(config);
-		
-		SummaryStat stat = new SummaryStat();
-		
+
 		for (int i = 0; i < getSimConfig().getNumConfigs(); i++) {
 			Experiment experiment = getExperiment(state, indRule, i, getWorkStationListener(), getTracker());
-			
 			experiment.runExperiment();
-			
-			stat.value(WeightedTardinessStat.getNormTotalWeightedTardiness(experiment.getResults(), getReferenceStat().get(i)));
+
+			indFitness.accumulateFitness(i, (JasimaCoopIndividual) ind, experiment.getResults());
 
 			if (hasWorkStationListener()) { getWorkStationListener().clear(); }
 		}
-		
-		allIndStats.value(stat.mean());
-		indStatPerSubpop[index].value(stat.mean());
-		
+
+		double finalFitness = indFitness.getFinalFitness(state, (JasimaCoopIndividual) ind);
+
+		allIndStats.value(finalFitness);
+		indStatPerSubpop[index].value(finalFitness);
+
+		indFitness.clear();
+
 		resetSimSeed();
 	}
 

@@ -22,6 +22,8 @@ pop.default-subpop = 0
 pop.subpop.0.size = 256
 pop.subpop.0.species.ind = app.evolution.coop.JasimaCoopIndividual
 
+breed.elite.0 = 10
+
 # the next four items are already defined in koza.params, but we
 # put them here to be clear.
 
@@ -76,7 +78,7 @@ gp.fs.0.func.17.nc = nc0
 gp.fs.0.func.18 = app.evolution.node.hunt.ScoreNumberWaitingNextMachine
 gp.fs.0.func.18.nc = nc0
 
-# stat = app.evolution.coop.statistics.JasimaCoopMOStatistics
+stat = app.evolution.coop.statistics.JasimaCoopStatistics
 
 eval.problem = app.evolution.coop.JasimaCoopProblem
 eval.problem.data = app.evolution.JasimaGPData
@@ -84,7 +86,7 @@ eval.problem.data = app.evolution.JasimaGPData
 eval.problem.reference-rule = app.priorityRules.ATCPRNew
 
 eval.problem.ind-rule = app.evolution.priorityRules.BasicPriorityRule
-eval.problem.ind-fitness = app.evolution.coop.fitness.TWTFitness
+eval.problem.ind-fitness = app.evolution.coop.fitness.IndNormTWTFitness
 
 eval.problem.rule = app.evolution.priorityRules.EnsemblePriorityRule
 eval.problem.fitness = app.evolution.coop.fitness.NormTWTFitness

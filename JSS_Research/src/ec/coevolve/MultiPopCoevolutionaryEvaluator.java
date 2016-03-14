@@ -103,7 +103,7 @@ public class MultiPopCoevolutionaryEvaluator extends Evaluator
     // the number of elite partners selected from the previous generation
     public static final String P_NUM_ELITE = "num-elites";
     protected int numElite;
-    Individual[/*subpopulation*/][/*the elites*/] eliteIndividuals;
+    public Individual[/*subpopulation*/][/*the elites*/] eliteIndividuals;
 
     // the number of random partners selected from the current and previous generations
     public final static String P_NUM_IND = "num-prev";

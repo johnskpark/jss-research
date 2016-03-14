@@ -50,7 +50,7 @@ public class GroupSizeAdjustedTWTFitness extends JasimaMultilevelGroupFitness {
 	}
 
 	@Override
-	protected double getFinalFitness(final EvolutionState state, final MLSSubpopulation subpop) {
+	public double getFinalFitness(final EvolutionState state, final MLSSubpopulation subpop) {
 		double avgFitness = super.getFinalFitness(state, subpop);
 
 		int size = subpop.individuals.length;

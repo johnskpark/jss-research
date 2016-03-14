@@ -99,6 +99,8 @@ public abstract class JasimaCoopFitness implements IJasimaFitness<JasimaCoopIndi
 
 	public void setFitness(final EvolutionState state, final JasimaCoopIndividual ind, int index) {
 		if (updateFitness[index]) {
+			ind.fitness.setContext(individuals, index);
+
 			IJasimaFitness<JasimaCoopIndividual> fitness = individualFitnesses[index];
 
 			fitness.setFitness(state, ind);
