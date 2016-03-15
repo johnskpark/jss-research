@@ -18,7 +18,8 @@ gp.fs.0.name = f0
 
 # We have five functions in the function set.  They are:
 
-#breed.elite.0 = 40
+breed.elite.0 = 40
+generations = 102
 
 gp.fs.0.size = 19
 gp.fs.0.func.0 = app.evolution.node.basic.ERCRandomUniform

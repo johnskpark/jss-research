@@ -17,14 +17,14 @@ public interface MLSProblemForm {
 	 * @param state
 	 * @param pop
 	 */
-	public void beforeEvaluation(final EvolutionState state, Population pop);
+	public void beforeEvaluation(final EvolutionState state, final int threadnum, Population pop);
 
 	/**
 	 * TODO javadoc.
 	 * @param state
 	 * @param pop
 	 */
-	public void afterEvaluation(final EvolutionState state, Population pop);
+	public void afterEvaluation(final EvolutionState state, final int threadnum, Population pop);
 
 	/**
 	 * TODO javadoc.
@@ -36,7 +36,7 @@ public interface MLSProblemForm {
 	 * @param threadnum
 	 */
 	public void evaluateGroup(final EvolutionState state,
-			MLSSubpopulation subpop,
+			final MLSSubpopulation subpop,
 			final boolean[] updateFitness,
 			final boolean countVictoriesOnly,
 			final int[] subpops,
@@ -50,7 +50,7 @@ public interface MLSProblemForm {
 	 * @param threadnum
 	 */
 	public void evaluateInd(final EvolutionState state,
-			Individual ind,
+			final Individual ind,
 			final int subpopulation,
 			final int threadnum);
 }

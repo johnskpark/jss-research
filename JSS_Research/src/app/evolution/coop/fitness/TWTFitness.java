@@ -19,7 +19,7 @@ public class TWTFitness extends JasimaCoopFitness {
 	private class IndividualTWTFitness extends AbsJasimaFitness<JasimaCoopIndividual> {
 
 		@Override
-		protected double getFitness(int index, JasimaCoopIndividual ind, Map<String, Object> results) {
+		public double getFitness(int index, JasimaCoopIndividual ind, Map<String, Object> results) {
 			return WeightedTardinessStat.getTotalWeightedTardiness(results);
 		}
 	}

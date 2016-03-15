@@ -27,10 +27,15 @@ public class TrialTWTFitness extends JasimaGroupFitness {
 			throw new RuntimeException("accumulateIndFitness");
 		}
 
-		double value = WeightedTardinessStat.getTotalWeightedTardiness(results);
-		
+		double value = getFitness(expIndex, ind, results);
+
 		this.ind = ind;
 		this.indFitness.value(value);
+	}
+
+	@Override
+	public double getFitness(final int index, final JasimaGPIndividual ind, final Map<String, Object> results) {
+		return WeightedTardinessStat.getTotalWeightedTardiness(results);
 	}
 
 	@Override
@@ -45,9 +50,14 @@ public class TrialTWTFitness extends JasimaGroupFitness {
 		}
 
 		KozaFitness fitness = (KozaFitness) ind.fitness;
-		fitness.setStandardizedFitness(state, indFitness.mean());
+		fitness.setStandardizedFitness(state, getFinalFitness(state, ind));
 
 		ind.evaluated = true;
+	}
+
+	@Override
+	public double getFinalFitness(final EvolutionState state, JasimaGPIndividual ind) {
+		return indFitness.mean();
 	}
 
 	@Override

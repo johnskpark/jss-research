@@ -7,13 +7,15 @@ import app.IWorkStationListener;
 import app.priorityRules.HolthausRule;
 import app.simConfig.ExperimentGenerator;
 import app.simConfig.SimConfig;
+import app.stat.WeightedTardinessStat;
 import app.tracker.JasimaEvolveExperimentTracker;
 import ec.EvolutionState;
+import ec.Individual;
+import ec.gp.GPIndividual;
 import ec.gp.GPProblem;
 import ec.util.ParamClassLoadException;
 import ec.util.Parameter;
 import jasima.core.experiment.Experiment;
-import jasima.core.statistics.SummaryStat;
 import jasima.shopSim.core.JobShopExperiment;
 import jasima.shopSim.core.PR;
 
@@ -139,6 +141,31 @@ public abstract class JasimaGPProblem extends GPProblem {
 		return referenceInstStats;
 	}
 
+	protected void prepareToEvaluate(final EvolutionState state,
+			final int threadnum,
+			AbsGPPriorityRule rule) {
+		// Reset the seed for the simulator.
+		rotateSimSeed();
+
+		// Setup the tracker.
+		if (hasTracker()) {
+			getTracker().setPriorityRule(rule);
+			getTracker().setSimConfig(simConfig);
+		}
+
+		// Apply the benchmark/reference rule to the problem instances.
+		if (hasReferenceRule()) {
+			clearReference();
+			evaluateReference();
+		}
+	}
+
+	protected void finishEvaluating(final EvolutionState state,
+			final int threadnum,
+			AbsGPPriorityRule rule) {
+		// Is empty for now. Populate with common after evaluation procedure.
+	}
+
 	protected void evaluateReference() {
 		if (!hasReferenceRule()) {
 			throw new RuntimeException("Cannot evaluate reference rule. Reference rule is not initialised.");
@@ -153,10 +180,10 @@ public abstract class JasimaGPProblem extends GPProblem {
 					expIndex);
 
 			experiment.runExperiment();
-			
+
 			// FIXME This part is hard coded, so fix this part in some future date.
-			SummaryStat stat = (SummaryStat) experiment.getResults().get("tardiness");
-			referenceInstStats.add(stat.sum());
+			double twt = WeightedTardinessStat.getTotalWeightedTardiness(experiment.getResults());
+			referenceInstStats.add(twt);
 		}
 
 		resetSimSeed();
@@ -164,6 +191,49 @@ public abstract class JasimaGPProblem extends GPProblem {
 
 	protected void clearReference() {
 		referenceInstStats.clear();
+	}
+
+	protected void configureRule(final EvolutionState state,
+			final AbsGPPriorityRule rule,
+			final JasimaEvolveExperimentTracker tracker,
+			final Individual[] individuals,
+			final int[] subpops,
+			final int threadnum) {
+		GPIndividual[] gpInds = new GPIndividual[individuals.length];
+		for (int i = 0; i < individuals.length; i++) {
+			gpInds[i] = (GPIndividual) individuals[i];
+		}
+
+		JasimaGPConfig config = new JasimaGPConfig();
+		config.setState(state);
+		config.setIndividuals(gpInds);
+		config.setSubpopulations(subpops);
+		config.setThreadnum(threadnum);
+		config.setData((JasimaGPData) input);
+
+		if (tracker != null) { config.setTracker(tracker); }
+
+		rule.setConfiguration(config);
+	}
+
+	protected void initialiseTracker(JasimaEvolveExperimentTracker tracker) {
+		if (tracker != null) {
+			tracker.initialise();
+		}
+	}
+
+	protected void clearForExperiment(IWorkStationListener listener) {
+		if (listener != null) {
+			listener.clear();
+		}
+	}
+
+	protected void clearForRun(JasimaEvolveExperimentTracker tracker) {
+		if (tracker != null) {
+			tracker.clear();
+		}
+
+		resetSimSeed();
 	}
 
 	protected Experiment getExperiment(final EvolutionState state,
@@ -177,8 +247,11 @@ public abstract class JasimaGPProblem extends GPProblem {
 
 		// Add the workstation listener.
 		experiment.addMachineListener(rule);
-		if (listener != null) { experiment.addMachineListener(listener); }
-		if (tracker != null) {
+		if (hasWorkStationListener()) {
+			experiment.addMachineListener(listener);
+		}
+
+		if (hasTracker()) {
 			tracker.clearCurrentExperiment();
 			tracker.setExperimentIndex(index);
 		}

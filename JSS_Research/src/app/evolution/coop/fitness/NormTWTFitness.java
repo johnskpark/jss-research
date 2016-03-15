@@ -20,7 +20,7 @@ public class NormTWTFitness extends JasimaCoopFitness {
 	private class IndividualTWTFitness extends AbsJasimaFitness<JasimaCoopIndividual> {
 
 		@Override
-		protected double getFitness(int expIndex, JasimaCoopIndividual ind, Map<String, Object> results) {
+		public double getFitness(int expIndex, JasimaCoopIndividual ind, Map<String, Object> results) {
 			List<Double> referenceStat = getProblem().getReferenceStat();
 
 			return WeightedTardinessStat.getNormTotalWeightedTardiness(results, referenceStat.get(expIndex));

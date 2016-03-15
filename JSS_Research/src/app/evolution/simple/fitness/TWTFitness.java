@@ -9,7 +9,7 @@ import app.stat.WeightedTardinessStat;
 public class TWTFitness extends AbsJasimaFitness<JasimaGPIndividual> {
 
 	@Override
-	protected double getFitness(int expIndex, JasimaGPIndividual ind, Map<String, Object> results) {
+	public double getFitness(int expIndex, JasimaGPIndividual ind, Map<String, Object> results) {
 		return WeightedTardinessStat.getTotalWeightedTardiness(results);
 	}
 

@@ -4,7 +4,26 @@
 
 parent.0 = koza.params
 
-pop.subpop.0.species.ind = app.evolution.JasimaGPIndividual
+# multi.fitness.num-objectives = 3
+# multi.fitness.maximize = false
+
+eval = ec.coevolve.MultiPopCoevolutionaryEvaluator
+
+eval.num-shuffled =	0
+eval.num-current = 0
+eval.num-elites = 1
+eval.num-prev = 0
+eval.select-current = ec.select.RandomSelection
+eval.select-prev = ec.select.RandomSelection
+
+pop.subpops = 4
+pop.default-subpop = 0
+
+pop.subpop.0.size = 1024
+pop.subpop.0.species.ind = app.evolution.coop.JasimaCoopIndividual
+
+breed.elite.0 = 40
+generations = 102
 
 # the next four items are already defined in koza.params, but we
 # put them here to be clear.
@@ -17,8 +36,6 @@ gp.fs.0 = ec.gp.GPFunctionSet
 gp.fs.0.name = f0
 
 # We have five functions in the function set.  They are:
-
-#breed.elite.0 = 40
 
 gp.fs.0.size = 19
 gp.fs.0.func.0 = app.evolution.node.basic.ERCRandomUniform
@@ -62,21 +79,27 @@ gp.fs.0.func.17.nc = nc0
 gp.fs.0.func.18 = app.evolution.node.hunt.ScoreNumberWaitingNextMachine
 gp.fs.0.func.18.nc = nc0
 
-stat = app.evolution.simple.JasimaSimpleStatistics
+stat = app.evolution.coop.statistics.JasimaCoopStatistics
 
-eval.problem = app.evolution.simple.JasimaSimpleProblem
+eval.problem = app.evolution.coop.JasimaCoopProblem
 eval.problem.data = app.evolution.JasimaGPData
 
 eval.problem.reference-rule = app.priorityRules.ATCPRNew
 
-eval.problem.rule = app.evolution.priorityRules.BasicPriorityRule
-eval.problem.fitness = app.evolution.simple.fitness.NormTWTFitness
+eval.problem.ind-rule = app.evolution.priorityRules.BasicPriorityRule
+eval.problem.ind-fitness = app.evolution.coop.fitness.IndNormTWTFitness
 
-#eval.problem.simulator = app.simConfig.huntConfig.EvolveFactory
-#eval.problem.simulator.instances = 4op
-#eval.problem.simulator.seed = 15
+eval.problem.rule = app.evolution.priorityRules.EnsemblePriorityRule
+eval.problem.fitness = app.evolution.coop.fitness.NormTWTFitness
+# eval.problem.tracker = app.evolution.coop.tracker.CoopDecisionTrackerOriginal
 
-eval.problem.simulator = app.simConfig.taillardConfig.EvolveFactory
+eval.problem.simulator = app.simConfig.huntConfig.EvolveFactory
+eval.problem.simulator.instances = 4op
+eval.problem.simulator.seed = 15
+
+#eval.problem.simulator = app.simConfig.taillardConfig.EvolveFactory
+
+# eval.problem.tracker = app.tracker.JasimaEvolveExperimentTracker
 
 eval.problem.workstation = app.listener.hunt.EvolveFactory
 eval.problem.workstation.max-jobs = 5

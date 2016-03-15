@@ -1,17 +1,11 @@
 package app.evolution.multilevel;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import app.evolution.AbsGPPriorityRule;
-import app.evolution.JasimaGPConfig;
-import app.evolution.JasimaGPData;
 import app.evolution.JasimaGPProblem;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.Population;
 import ec.Subpopulation;
-import ec.gp.GPIndividual;
 import ec.multilevel.MLSProblemForm;
 import ec.multilevel.MLSSubpopulation;
 import ec.util.ParamClassLoadException;
@@ -68,30 +62,24 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 	}
 
 	@Override
-	public void beforeEvaluation(final EvolutionState state, Population pop) {
-		// Reset the seed for the simulator.
-		rotateSimSeed();
+	public void beforeEvaluation(final EvolutionState state, final int threadnum, Population pop) {
+		super.prepareToEvaluate(state, threadnum, groupRule);
 
 		// Set the subpopulation to not being evaluated.
 		for (Subpopulation subpop : pop.subpops) {
 			((MLSSubpopulation) subpop).setEvaluated(false);
 		}
 
-		// Setup the tracker.
-		if (hasTracker()) {
-			getTracker().setPriorityRule(groupRule);
-			getTracker().setSimConfig(getSimConfig());
-		}
-
-		// Apply the benchmark/reference rule to the problem instances.
-		if (hasReferenceRule()) {
-			clearReference();
-			evaluateReference();
+		// Set the individuals to not being evaluated.
+		for (Individual ind : pop.subpops[0].individuals) {
+			ind.evaluated = false;
 		}
 	}
 
 	@Override
-	public void afterEvaluation(final EvolutionState state, Population pop) {
+	public void afterEvaluation(final EvolutionState state, final int threadnum, Population pop) {
+		super.finishEvaluating(state, threadnum, groupRule);
+
 		// Clear the niching method.
 		if (niching != null) {
 			niching.clear();
@@ -117,50 +105,32 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 			final boolean countVictoriesOnly,
 			final int[] subpops,
 			final int threadnum) {
-		// We don't care if the group's been evaluated previously,
-		// since the simulation changes at each generation.
-		List<GPIndividual> indsList = new ArrayList<GPIndividual>();
-		for (Individual ind : group.individuals) { indsList.add((GPIndividual) ind); }
+		if (!group.isEvaluated()) {
+			configureRule(state, groupRule, getTracker(),
+					group.individuals, subpops, threadnum);
 
-		GPIndividual[] gpInds = new GPIndividual[indsList.size()];
-		indsList.toArray(gpInds);
+			initialiseTracker(getTracker());
 
-		JasimaGPConfig config = new JasimaGPConfig();
-		config.setState(state);
-		config.setIndividuals(gpInds);
-		config.setSubpopulations(subpops);
-		config.setThreadnum(threadnum);
-		config.setData((JasimaGPData) input);
-		if (hasTracker()) { config.setTracker(getTracker()); }
+			for (int expIndex = 0; expIndex < getSimConfig().getNumConfigs(); expIndex++) {
+				Experiment experiment = getExperiment(state, groupRule, expIndex, getWorkStationListener(), getTracker());
+				experiment.runExperiment();
+				groupFitness.accumulateFitness(expIndex, group, experiment.getResults());
 
-		groupRule.setConfiguration(config);
+				clearForExperiment(getWorkStationListener());
+			}
 
-		if (hasTracker()) { getTracker().initialise(); }
+			groupFitness.setFitness(state, group);
+			groupFitness.clear();
 
-		for (int expIndex = 0; expIndex < getSimConfig().getNumConfigs(); expIndex++) {
-			Experiment experiment = getExperiment(state, groupRule, expIndex, getWorkStationListener(), getTracker());
-
-			experiment.runExperiment();
-
-			// Add in the results of the training instance to the fitness of the group.
-			groupFitness.accumulateFitness(expIndex, group, experiment.getResults());
-			if (hasWorkStationListener()) { getWorkStationListener().clear(); }
-		}
-
-		groupFitness.setFitness(state, group);
-		groupFitness.clear();
-
-		// Add in the niching adjustment to the fitnesses.
-		if (hasTracker()) {
-			if (niching != null) {
+			// Add in the niching adjustment to the fitnesses.
+			if (hasTracker() && niching != null) {
 				niching.adjustFitness(state, getTracker(), group);
 			}
-			getTracker().clear();
+
+			group.setEvaluated(true);
+
+			clearForRun(getTracker());
 		}
-
-		group.setEvaluated(true);
-
-		resetSimSeed();
 	}
 
 	@Override
@@ -168,32 +138,27 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 			final Individual ind,
 			final int subpopulation,
 			final int threadnum) {
-		// We don't care if the individual's been evaluated previously,
-		// since the simulation changes at each generation.
-		JasimaGPConfig config = new JasimaGPConfig();
-		config.setState(state);
-		config.setIndividuals(new GPIndividual[]{(GPIndividual) ind});
-		config.setSubpopulations(new int[]{subpopulation});
-		config.setThreadnum(threadnum);
-		config.setData((JasimaGPData) input);
+		if (!ind.evaluated) {
+			configureRule(state, indRule, null,
+					new Individual[]{ ind }, new int[]{ subpopulation }, threadnum);
 
-		indRule.setConfiguration(config);
+			initialiseTracker(null);
 
-		for (int expIndex = 0; expIndex < getSimConfig().getNumConfigs(); expIndex++) {
-			Experiment experiment = getExperiment(state, indRule, expIndex, getWorkStationListener(), null);
+			for (int expIndex = 0; expIndex < getSimConfig().getNumConfigs(); expIndex++) {
+				Experiment experiment = getExperiment(state, indRule, expIndex, getWorkStationListener(), null);
+				experiment.runExperiment();
+				indFitness.accumulateFitness(expIndex, (JasimaMultilevelIndividual) ind, experiment.getResults()); // getReferenceStat().get(expIndex));
 
-			experiment.runExperiment();
+				clearForExperiment(getWorkStationListener());
+			}
 
-			indFitness.accumulateFitness(expIndex, (JasimaMultilevelIndividual) ind, experiment.getResults()); // getReferenceStat().get(expIndex));
-			if (hasWorkStationListener()) { getWorkStationListener().clear(); }
+			indFitness.setFitness(state, (JasimaMultilevelIndividual) ind);
+			indFitness.clear();
+
+			ind.evaluated = true;
+
+			clearForRun(null);
 		}
-
-		indFitness.setFitness(state, (JasimaMultilevelIndividual) ind);
-		indFitness.clear();
-
-		ind.evaluated = true;
-
-		resetSimSeed();
 	}
 
 	@Override

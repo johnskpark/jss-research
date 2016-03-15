@@ -7,7 +7,6 @@ import app.evolution.JasimaGPProblem;
 import ec.EvolutionState;
 import ec.Individual;
 
-// TODO I need to set the context again...
 public abstract class JasimaCoopFitness implements IJasimaFitness<JasimaCoopIndividual> {
 
 	private static final boolean DEFAULT_SHOULD_SET_CONTEXT = false;
@@ -57,9 +56,9 @@ public abstract class JasimaCoopFitness implements IJasimaFitness<JasimaCoopIndi
 	}
 
 	@Override
+	@Deprecated
 	public void accumulateFitness(final int expIndex, final JasimaCoopIndividual ind, final Map<String, Object> results) {
 		int index = getFitnessIndex(ind);
-
 		if (index == -1) {
 			throw new RuntimeException("Individual " + ind + " has not been loaded into the fitness.");
 		}
@@ -71,6 +70,23 @@ public abstract class JasimaCoopFitness implements IJasimaFitness<JasimaCoopIndi
 		IJasimaFitness<JasimaCoopIndividual> fitness = individualFitnesses[index];
 
 		fitness.accumulateFitness(expIndex, ind, results);
+	}
+
+	@Override
+	@Deprecated
+	public double getFitness(final int expIndex, final JasimaCoopIndividual ind, final Map<String, Object> results) {
+		int index = getFitnessIndex(ind);
+		if (index == -1) {
+			throw new RuntimeException("Individual " + ind + " has not been loaded into the fitness.");
+		}
+
+		return getFitness(expIndex, ind, results, index);
+	}
+
+	public double getFitness(final int expIndex, final JasimaCoopIndividual ind, final Map<String, Object> results, int index) {
+		IJasimaFitness<JasimaCoopIndividual> fitness = individualFitnesses[index];
+
+		return fitness.getFitness(expIndex, ind, results);
 	}
 
 	// Set the update fitness somewhere here.
@@ -88,6 +104,7 @@ public abstract class JasimaCoopFitness implements IJasimaFitness<JasimaCoopIndi
 	}
 
 	@Override
+	@Deprecated
 	public void setFitness(final EvolutionState state, final JasimaCoopIndividual ind) {
 		int index = getFitnessIndex(ind);
 		if (index == -1) {
@@ -105,6 +122,22 @@ public abstract class JasimaCoopFitness implements IJasimaFitness<JasimaCoopIndi
 
 			fitness.setFitness(state, ind);
 		}
+	}
+
+	@Override
+	@Deprecated
+	public double getFinalFitness(final EvolutionState state, final JasimaCoopIndividual ind) {
+		int index = getFitnessIndex(ind);
+		if (index == -1) {
+			throw new RuntimeException("Individual " + ind + " has not been loaded into the fitness.");
+		}
+		return getFinalFitness(state, ind, index);
+	}
+
+	public double getFinalFitness(final EvolutionState state, final JasimaCoopIndividual ind, int index) {
+		IJasimaFitness<JasimaCoopIndividual> fitness = individualFitnesses[index];
+
+		return fitness.getFinalFitness(state, ind);
 	}
 
 	private int getFitnessIndex(JasimaCoopIndividual ind) {

@@ -30,20 +30,20 @@ public class IndividualTWTFitness extends JasimaMultilevelIndividualFitness {
 			listeners.add(listener);
 		}
 	}
-	
+
 	@Override
 	public void clearListeners() {
 		listeners.clear();
 	}
 
 	@Override
-	protected double getFitness(int expIndex, JasimaMultilevelIndividual ind, Map<String, Object> results) {
-		double twt = WeightedTardinessStat.getTotalWeightedTardiness(results); 
+	public double getFitness(int expIndex, JasimaMultilevelIndividual ind, Map<String, Object> results) {
+		double twt = WeightedTardinessStat.getTotalWeightedTardiness(results);
 
 		for (IJasimaMultilevelFitnessListener listener : listeners) {
 			listener.addFitness(JasimaMultilevelStatistics.INDIVIDUAL_FITNESS, expIndex, twt);
-		}		
-		
+		}
+
 		return twt;
 	}
 

@@ -38,7 +38,7 @@ public class GroupTWTFitness extends JasimaMultilevelGroupFitness {
 	}
 
 	@Override
-	protected double getFitness(int expIndex, MLSSubpopulation subpop, Map<String, Object> results) {
+	public double getFitness(int expIndex, MLSSubpopulation subpop, Map<String, Object> results) {
 		double twt = WeightedTardinessStat.getTotalWeightedTardiness(results);
 
 		for (IJasimaMultilevelFitnessListener listener : listeners) {

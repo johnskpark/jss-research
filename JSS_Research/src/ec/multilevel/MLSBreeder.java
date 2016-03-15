@@ -333,7 +333,7 @@ public class MLSBreeder extends Breeder {
 			int numBreed = produceSubpop(1, upperBound - index, index, newPop, state, threadnum);
 
 			for (int i = index; i < index + numBreed; i++) {
-				((MLSEvaluator) state.evaluator).evaluateGroup(state, coopPopulation.getGroup(i-1), i);
+				((MLSEvaluator) state.evaluator).evaluateGroup(state, coopPopulation.getGroup(i-1), i, threadnum);
 			}
 
 			if (index + numBreed > upperBound) {
@@ -719,7 +719,7 @@ public class MLSBreeder extends Breeder {
 			// Evaluate the newly generated individuals.
 			Individual[] inds = subpop.individuals;
 			for (int i = index; i < index + numBreed; i++) {
-				((MLSEvaluator) state.evaluator).evaluateIndividual(state, subpop, 0, inds[i]);
+				((MLSEvaluator) state.evaluator).evaluateIndividual(state, inds[i], subpop, 0, threadnum);
 
 				coopPopulation.addIndividual(inds[i]);
 			}

@@ -38,7 +38,7 @@ public class GroupNormTWTFitness extends JasimaMultilevelGroupFitness {
 	}
 
 	@Override
-	protected double getFitness(int expIndex, MLSSubpopulation subpop, Map<String, Object> results) {
+	public double getFitness(int expIndex, MLSSubpopulation subpop, Map<String, Object> results) {
 		List<Double> referenceStat = getProblem().getReferenceStat();
 
 		double normTWT = WeightedTardinessStat.getNormTotalWeightedTardiness(results, referenceStat.get(expIndex));

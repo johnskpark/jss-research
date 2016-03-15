@@ -15,4 +15,14 @@ public interface JasimaReproducible {
 	 */
 	public Fitness getFitness();
 
+	/**
+	 * Returns whether the reproducible component has been evaluated.
+	 */
+	public boolean isEvaluated();
+
+	/**
+	 * Set whether the reproducible component has been evaluated.
+	 */
+	public void setEvaluated(boolean evaluated);
+
 }

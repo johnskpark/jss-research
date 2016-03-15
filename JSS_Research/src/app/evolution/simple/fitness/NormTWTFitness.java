@@ -10,7 +10,7 @@ import app.stat.WeightedTardinessStat;
 public class NormTWTFitness extends AbsJasimaFitness<JasimaGPIndividual> {
 
 	@Override
-	protected double getFitness(int expIndex, JasimaGPIndividual ind, Map<String, Object> results) {
+	public double getFitness(int expIndex, JasimaGPIndividual ind, Map<String, Object> results) {
 		List<Double> referenceStat = getProblem().getReferenceStat();
 
 		return WeightedTardinessStat.getNormTotalWeightedTardiness(results, referenceStat.get(expIndex));

@@ -64,24 +64,27 @@ public class MLSEvaluator extends Evaluator {
 			preAssessFitness[i] = postAssessFitness[i] || (state.generation == 0);  // always prepare (set up trials) on generation 0
 		}
 
-		((MLSProblemForm) p_problem).beforeEvaluation(state, state.population);
+		((MLSProblemForm) p_problem).beforeEvaluation(state, 0, state.population);
 
 		MLSSubpopulation pop = (MLSSubpopulation) state.population.subpops[0];
 		for (int ind = 0; ind < pop.individuals.length; ind++) {
-			evaluateIndividual(state, pop, 0, pop.individuals[ind]);
+			evaluateIndividual(state, pop.individuals[ind], pop, 0, 0);
 		}
 
 		for (int group = 1; group < state.population.subpops.length; group++) {
-			evaluateGroup(state, (MLSSubpopulation) state.population.subpops[group], group);
+			evaluateGroup(state, (MLSSubpopulation) state.population.subpops[group], group, 0);
 		}
 
-		((MLSProblemForm) p_problem).afterEvaluation(state, state.population);
+		((MLSProblemForm) p_problem).afterEvaluation(state, 0, state.population);
 	}
 
 	/**
 	 * Evaluate the specified group.
 	 */
-	public void evaluateGroup(final EvolutionState state, MLSSubpopulation subpop, int subpopIndex) {
+	public void evaluateGroup(final EvolutionState state,
+			final MLSSubpopulation subpop,
+			final int subpopIndex,
+			final int threadnum) {
 		MLSProblemForm mlsProblem = (MLSProblemForm) p_problem;
 
 		// By default, we update the fitnesses of all individual in the subpopulation.
@@ -99,9 +102,10 @@ public class MLSEvaluator extends Evaluator {
 	 * Evaluate the specified individual.
 	 */
 	public void evaluateIndividual(final EvolutionState state,
-			MLSSubpopulation subpop,
-			int subpopIndex,
-			Individual ind) {
+			final Individual ind,
+			final MLSSubpopulation subpop,
+			final int subpopIndex,
+			final int threadnum) {
 		MLSProblemForm mlsProblem = (MLSProblemForm) p_problem;
 
 		// Evaluate the individual.

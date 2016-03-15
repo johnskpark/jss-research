@@ -45,8 +45,6 @@ public abstract class AbsJasimaFitness<T extends JasimaReproducible> implements 
 		sumFitness += fitness;
 	}
 
-	protected abstract double getFitness(final int index, final T reproducible, final Map<String, Object> results);
-
 	@Override
 	public void setFitness(final EvolutionState state, final T reproducible) {
 		double finalFitness = getFinalFitness(state, reproducible);
@@ -54,6 +52,7 @@ public abstract class AbsJasimaFitness<T extends JasimaReproducible> implements 
 		((KozaFitness) reproducible.getFitness()).setStandardizedFitness(state, finalFitness);
 	}
 
+	@Override
 	public double getFinalFitness(final EvolutionState state, final T reproducible) {
 		double avgFitness = sumFitness / instanceFitnesses.size();
 

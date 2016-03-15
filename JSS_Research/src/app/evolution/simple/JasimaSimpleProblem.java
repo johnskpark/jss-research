@@ -2,13 +2,12 @@ package app.evolution.simple;
 
 import app.evolution.AbsGPPriorityRule;
 import app.evolution.IJasimaFitness;
-import app.evolution.JasimaGPConfig;
 import app.evolution.JasimaGPData;
 import app.evolution.JasimaGPIndividual;
 import app.evolution.JasimaGPProblem;
 import ec.EvolutionState;
 import ec.Individual;
-import ec.gp.GPIndividual;
+import ec.Subpopulation;
 import ec.util.Parameter;
 import jasima.core.experiment.Experiment;
 
@@ -42,20 +41,18 @@ public class JasimaSimpleProblem extends JasimaGPProblem {
 
 	@Override
 	public void prepareToEvaluate(final EvolutionState state, final int threadnum) {
-		// Reset the seed for the simulator.
-		rotateSimSeed();
+		super.prepareToEvaluate(state, threadnum, rule);
 
-		// Setup the tracker.
-		if (hasTracker()) {
-			getTracker().setPriorityRule(rule);
-			getTracker().setSimConfig(getSimConfig());
+		for (Subpopulation subpop : state.population.subpops) {
+			for (Individual ind : subpop.individuals) {
+				ind.evaluated = false;
+			}
 		}
+	}
 
-		// Evaluate the reference rule, if there is one.
-		if (hasReferenceRule()) {
-			clearReference();
-			evaluateReference();
-		}
+	@Override
+	public void finishEvaluating(final EvolutionState state, final int threadnum) {
+		super.finishEvaluating(state, threadnum, rule);
 	}
 
 	@Override
@@ -63,40 +60,27 @@ public class JasimaSimpleProblem extends JasimaGPProblem {
 			final Individual ind,
 			final int subpopulation,
 			final int threadnum) {
-		// We don't care if the individual's been evaluated previously,
-		// since the simulation changes at each generation.
-		JasimaGPConfig config = new JasimaGPConfig();
-		config.setState(state);
-		config.setIndividuals(new GPIndividual[]{(GPIndividual) ind});
-		config.setIndIndices(new int[]{0});
-		config.setSubpopulations(new int[]{subpopulation});
-		config.setThreadnum(threadnum);
-		config.setData((JasimaGPData)input);
-		if (hasTracker()) { config.setTracker(getTracker()); }
+		if (!ind.evaluated) {
+			configureRule(state, rule, getTracker(),
+					new Individual[]{ ind }, new int[]{ subpopulation }, threadnum);
 
-		rule.setConfiguration(config);
+			initialiseTracker(getTracker());
 
-		if (hasTracker()) { getTracker().initialise(); }
+			for (int i = 0; i < getSimConfig().getNumConfigs(); i++) {
+				Experiment experiment = getExperiment(state, rule, i, getWorkStationListener(), getTracker());
+				experiment.runExperiment();
+				fitness.accumulateFitness(i, (JasimaGPIndividual) ind, experiment.getResults());
 
-		for (int i = 0; i < getSimConfig().getNumConfigs(); i++) {
-			Experiment experiment = getExperiment(state, rule, i, getWorkStationListener(), getTracker());
+				clearForExperiment(getWorkStationListener());
+			}
 
-			experiment.runExperiment();
+			fitness.setFitness(state, (JasimaGPIndividual) ind);
+			fitness.clear();
 
-			fitness.accumulateFitness(i, (JasimaGPIndividual) ind, experiment.getResults());
-			if (hasWorkStationListener()) { getWorkStationListener().clear(); }
+			ind.evaluated = true;
+
+			clearForRun(getTracker());
 		}
-
-		fitness.setFitness(state, (JasimaGPIndividual) ind);
-		fitness.clear();
-
-		if (hasTracker()) {
-			getTracker().clear();
-		}
-
-		ind.evaluated = true;
-
-		resetSimSeed();
 	}
 
 	@Override
