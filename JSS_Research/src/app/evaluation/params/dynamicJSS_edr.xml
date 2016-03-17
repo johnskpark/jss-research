@@ -3,23 +3,25 @@
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>simple_norm_4op.txt</ruleFile>
+			<ruleFile>simple_elitism_taillard.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mls_norm_4op.txt</ruleFile>
+			<ruleFile>coop_elitism_taillard.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
+<!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>coop_norm_4op.txt</ruleFile>
+			<ruleFile>coop_elitism_long_taillard.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
+-->
 
 	<datasetConfig>
 		<datasetClass>app.simConfig.huntConfig.EvalFactory</datasetClass>
