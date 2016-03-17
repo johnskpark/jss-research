@@ -14,23 +14,28 @@
 		</solverFile>
 	</solverConfig>
 
-<!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>coop_elitism_long_taillard.txt</ruleFile>
+			<ruleFile>coop_elitism_large_taillard.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
--->
 
+<!--
 	<datasetConfig>
 		<datasetClass>app.simConfig.huntConfig.EvalFactory</datasetClass>
 		<datasetInstances>test</datasetInstances>
 		<datasetSeed>15</datasetSeed>
 	</datasetConfig>
+-->
+
+	<datasetConfig>
+		<datasetClass>app.simConfig.taillardConfig.EvalFactory</datasetClass>
+		<datasetInstances>all</datasetInstances>
+	</datasetConfig>
 
 	<outputConfig>
-	    <outputFile>norm_4op_output.csv</outputFile>
+	    <outputFile>elitism_taillard_output.csv</outputFile>
 	</outputConfig>
 
 	<fitnessConfig>
