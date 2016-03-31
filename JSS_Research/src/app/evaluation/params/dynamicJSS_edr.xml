@@ -17,7 +17,7 @@
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>coop_elitism_large_taillard.txt</ruleFile>
+			<ruleFile>coop_small_tree_taillard.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
@@ -35,7 +35,7 @@
 	</datasetConfig>
 
 	<outputConfig>
-	    <outputFile>elitism_taillard_output.csv</outputFile>
+	    <outputFile>elitism_taillard_output_gen_20_38.csv</outputFile>
 	</outputConfig>
 
 	<fitnessConfig>

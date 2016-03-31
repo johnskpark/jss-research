@@ -22,6 +22,7 @@ import jasima.core.statistics.SummaryStat;
  * @author parkjohn
  *
  */
+// TODO so now there's a bug where the collaborator's are not equal to each other. What the heck?
 public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblemForm {
 
 	private static final long serialVersionUID = -1068923215891516182L;
