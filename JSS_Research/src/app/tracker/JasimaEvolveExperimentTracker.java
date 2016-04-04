@@ -18,6 +18,8 @@ import jasima.shopSim.core.PriorityQueue;
 // Could I have something where the EnsemblePriorityRule is aggregated from BasicPriorityRule?
 
 // Is there a way to reduce the memory usage for this?
+
+// TODO Also, I need to change this up to match the decision scenario situation.
 public class JasimaEvolveExperimentTracker {
 
 	public static final int NOT_SET = -1;

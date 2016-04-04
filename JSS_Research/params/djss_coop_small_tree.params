@@ -19,7 +19,7 @@ eval.select-prev = ec.select.RandomSelection
 pop.subpops = 40
 pop.default-subpop = 0
 
-pop.subpop.0.size = 26
+pop.subpop.0.size = 103
 pop.subpop.0.species.ind = app.evolution.coop.JasimaCoopIndividual
 
 breed.elite.0 = 1

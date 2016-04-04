@@ -86,7 +86,7 @@ gp.koza.xover.source.0 = ec.select.TournamentSelection
 gp.koza.xover.source.1 = same
 gp.koza.xover.ns.0 = ec.gp.koza.KozaNodeSelector
 gp.koza.xover.ns.1 = same
-gp.koza.xover.maxdepth = 2
+gp.koza.xover.maxdepth = 4
 # This is the default for Koza and lil-gp, though it's
 # a little wimpy; on the other hand, a higher number can
 # make things really slow
@@ -103,7 +103,7 @@ gp.koza.xover.tries = 1
 gp.koza.mutate.source.0 = ec.select.TournamentSelection
 gp.koza.mutate.ns.0 = ec.gp.koza.KozaNodeSelector
 gp.koza.mutate.build.0 = ec.gp.koza.GrowBuilder
-gp.koza.mutate.maxdepth = 2
+gp.koza.mutate.maxdepth = 4
 # This is the default for Koza and lil-gp, though it's
 # a little wimpy; on the other hand, a higher number can
 # make things really slow
