@@ -72,7 +72,8 @@ public class EnsemblePriorityRule extends AbsGPPriorityRule {
 				PrioRuleTarget entry = q.get(j);
 				data.setPrioRuleTarget(entry);
 
-				individuals[i].trees[0].child.eval(state, threadnum, data, null, individuals[i], null);
+				individuals[i].trees[0].child.eval(state, threadnum, data,
+						null, individuals[i], null);
 
 				double priority = data.getPriority();
 

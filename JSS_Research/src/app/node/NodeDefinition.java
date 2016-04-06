@@ -28,6 +28,18 @@ public enum NodeDefinition {
 	SCORE_AVERAGE_WAIT_TIME_NEXT_MACHINE("NQW", 0, NodeType.MACHINE),
 	SCORE_AVERAGE_WAIT_TIME_ALL_MACHINE("AQW", 0, NodeType.MACHINE),
 
+	// Node definitions from Nguyen's R1 representation
+	ACTION("", 1, NodeType.OPERATOR),
+	DISPATCH("", 0, NodeType.SHOP),
+	OP_GREATER_THAN(">", 2, NodeType.OPERATOR),
+	OP_LESS_THAN_OR_EQUAL("<=", 2, NodeType.OPERATOR),
+	ATTRIBUTE_WORKLOAD_RATIO("WR", 0, NodeType.SHOP),
+	ATTRIBUTE_MACHINE_PROGRESS("MP", 0, NodeType.SHOP),
+	ATTRIBUTE_DEVIATION_OF_JOBS("DJ", 0, NodeType.SHOP),
+	ATTRIBUTE_CRITICAL_MACHINE_IDLENESS("CMI", 0, NodeType.SHOP),
+	ATTRIBUTE_CRITICAL_WORKLOAD_RATIO("CWR", 0, NodeType.SHOP),
+	ATTRIBUTE_BOTTLENECK_WORKLOAD_RATIO("BWR", 0, NodeType.SHOP),
+
 	SCORE_OPERATIONAL_DUE_DATE("ODD", 0, NodeType.JOB),
 	SCORE_SLACK("SL", 0, NodeType.JOB),
 	SCORE_TIME_IN_QUEUE("TIQ", 0, NodeType.JOB),
@@ -37,7 +49,9 @@ public enum NodeDefinition {
 
 	SCORE_AVERAGE_PROCESSING_TIME_IN_QUEUE("APTIQ", 0, NodeType.SHOP),
 
-	ERC_RANDOM("", 0, NodeType.CONSTANT);
+	ERC_RANDOM("", 0, NodeType.CONSTANT),
+	ERC_DISCRETE("", 0, NodeType.CONSTANT),
+	ERC_THRESHOLD("", 0, NodeType.CONSTANT);
 
 	private String nodeSymbol;
 	private int numChildren;

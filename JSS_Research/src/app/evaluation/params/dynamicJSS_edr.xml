@@ -21,6 +21,27 @@
 		</solverFile>
 	</solverConfig>
 
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>coop_small_tree_taillard_fixed.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>coop_small_tree_taillard_subpop.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>coop_small_tree_taillard_more_depth.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
 <!--
 	<datasetConfig>
 		<datasetClass>app.simConfig.huntConfig.EvalFactory</datasetClass>
