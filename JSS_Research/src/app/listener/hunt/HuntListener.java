@@ -1,23 +1,20 @@
 package app.listener.hunt;
 
-import jasima.shopSim.core.PrioRuleTarget;
-import jasima.shopSim.core.WorkStation;
-import jasima.shopSim.core.WorkStation.WorkStationEvent;
-
-import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Map;
 import java.util.Queue;
 
 import app.IWorkStationListener;
+import jasima.shopSim.core.PrioRuleTarget;
+import jasima.shopSim.core.WorkStation;
+import jasima.shopSim.core.WorkStation.WorkStationEvent;
 
 public class HuntListener implements IWorkStationListener {
 
 	private int maxSize;
 
-	private Map<WorkStation, OperationStartStat> startedJobs = new HashMap<WorkStation, OperationStartStat>();
-
-	private Map<WorkStation, Queue<OperationCompletionStat>> completedJobs = new HashMap<WorkStation, Queue<OperationCompletionStat>>();
+	private OperationStartStat[] startedJobs;
+	private Queue<OperationCompletionStat>[] completedJobs;
+	private int numMachines;
 
 	private double sumWaitTimes = 0.0;
 	private int numCompleted = 0;
@@ -32,11 +29,15 @@ public class HuntListener implements IWorkStationListener {
 			operationStart(notifier);
 		} else if (event == WorkStation.WS_JOB_COMPLETED){
 			operationComplete(notifier);
+		} else if (event == WorkStation.WS_INIT) {
+			init(notifier);
 		}
 	}
 
 	public void operationStart(WorkStation machine) {
-		if (startedJobs.get(machine) != null) {
+		int index = machine.index();
+
+		if (startedJobs[index] != null) {
 			throw new RuntimeException("The machine should not currently be processing any jobs");
 		}
 
@@ -45,19 +46,17 @@ public class HuntListener implements IWorkStationListener {
 		stat.arrivalTime = stat.entry.getArriveTime();
 		stat.startTime = stat.entry.getShop().simTime();
 
-		startedJobs.put(machine, stat);
+		startedJobs[index] = stat;
 	}
 
 	public void operationComplete(WorkStation machine) {
-		if (startedJobs.get(machine).entry != machine.justCompleted) {
+		int index = machine.index();
+
+		if (startedJobs[index].entry != machine.justCompleted) {
 			throw new RuntimeException("The job selected to be processed on the machine does not match with the completed job");
 		}
 
-		if (!completedJobs.containsKey(machine)) {
-			completedJobs.put(machine, new LinkedList<OperationCompletionStat>());
-		}
-
-		OperationStartStat startStat = startedJobs.get(machine);
+		OperationStartStat startStat = startedJobs[index];
 
 		OperationCompletionStat stat = new OperationCompletionStat(startStat.entry);
 		stat.setArrivalTime(startStat.arrivalTime);
@@ -65,7 +64,7 @@ public class HuntListener implements IWorkStationListener {
 		stat.setWaitTime(startStat.startTime - startStat.arrivalTime);
 		stat.setCompletionTime(startStat.entry.getShop().simTime());
 
-		Queue<OperationCompletionStat> queue = completedJobs.get(machine);
+		Queue<OperationCompletionStat> queue = completedJobs[index];
 		if (queue.size() == maxSize) {
 			OperationCompletionStat oldStat = queue.poll();
 
@@ -78,21 +77,31 @@ public class HuntListener implements IWorkStationListener {
 		sumWaitTimes += stat.getWaitTime();
 		numCompleted++;
 
-		startedJobs.put(machine, null);
+		startedJobs[index] = null;
+	}
+
+	public void init(WorkStation machine) {
+		numMachines = machine.shop().machines.length;
+
+		clear();
 	}
 
 	public Queue<OperationCompletionStat> getLastCompletedJobs(WorkStation machine) {
-		return completedJobs.get(machine);
+		return completedJobs[machine.index()];
 	}
 
 	public double getAverageWaitTimesAllMachines() {
 		return (sumWaitTimes != 0.0) ? (sumWaitTimes / numCompleted) : 0.0;
 	}
 
+	@SuppressWarnings("unchecked")
 	public void clear() {
-		completedJobs.clear();
-		startedJobs.clear();
-		
+		startedJobs = new OperationStartStat[numMachines];
+		completedJobs = new Queue[numMachines];
+		for (int i = 0; i < numMachines; i++) {
+			completedJobs[i] = new LinkedList<OperationCompletionStat>();
+		}
+
 		sumWaitTimes = 0.0;
 		numCompleted = 0;
 	}
