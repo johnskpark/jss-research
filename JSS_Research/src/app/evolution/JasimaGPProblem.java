@@ -210,6 +210,7 @@ public abstract class JasimaGPProblem extends GPProblem {
 		config.setSubpopulations(subpops);
 		config.setThreadnum(threadnum);
 		config.setData((JasimaGPData) input);
+		config.setSimConfig(simConfig);
 
 		if (tracker != null) { config.setTracker(tracker); }
 

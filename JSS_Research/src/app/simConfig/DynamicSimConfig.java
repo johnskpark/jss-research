@@ -27,8 +27,6 @@ public abstract class DynamicSimConfig implements SimConfig {
 		setSeed(seed);
 	}
 
-	public abstract int getNumMachines(int index);
-
 	public abstract DblStream getProcTime(int index);
 
 	public abstract double getUtilLevel(int index);

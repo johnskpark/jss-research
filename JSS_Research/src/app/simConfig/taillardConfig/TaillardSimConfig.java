@@ -11,14 +11,18 @@ public class TaillardSimConfig extends StaticSimConfig {
 	private static final String FILE_EXT = ".txt";
 	private static final int NUM_INSTANCE_PER_SUBSET = 10;
 
+	private List<Integer> numJobs;
+	private List<Integer> numMachines;
 	private List<String> subsetPrefix;
 	private int numConfigs;
-	
-	public TaillardSimConfig(List<String> subsetPrefix) {
+
+	public TaillardSimConfig(List<Integer> jobs, List<Integer> machines, List<String> subsetPrefix) {
+		this.numJobs = jobs;
+		this.numMachines = machines;
 		this.subsetPrefix = subsetPrefix;
 		this.numConfigs = subsetPrefix.size() * NUM_INSTANCE_PER_SUBSET;
 	}
-	
+
 	@Override
 	public String getInstFileName(int index) {
 		String filePath = String.format("%s%s_%02d%s",
@@ -34,6 +38,12 @@ public class TaillardSimConfig extends StaticSimConfig {
 	public int getNumConfigs() {
 		return numConfigs;
 	}
+
+	@Override
+	public int getNumMachines(int index) {
+		return numMachines.get(index);
+	}
+
 
 	@Override
 	public void reset() {
