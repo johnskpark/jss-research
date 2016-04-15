@@ -45,7 +45,7 @@ public class ScoreAverageWaitTimeNextMachine extends SingleLineGPNode {
 			WorkStation machine = entry.getOps()[nextTask].machine;
 
 			Queue<OperationCompletionStat> completedJobsQueue = listener.getLastCompletedJobs(machine);
-			if (completedJobsQueue == null) {
+			if (completedJobsQueue.isEmpty()) {
 				data.setPriority(0);
 			} else {
 				double averageWaitTime = 0.0;

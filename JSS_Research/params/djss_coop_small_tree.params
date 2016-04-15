@@ -92,12 +92,12 @@ eval.problem.rule = app.evolution.priorityRules.EnsemblePriorityRule
 eval.problem.fitness = app.evolution.coop.fitness.NormTWTFitness
 # eval.problem.tracker = app.evolution.coop.tracker.CoopDecisionTrackerOriginal
 
-#eval.problem.simulator = app.simConfig.huntConfig.EvolveFactory
-#eval.problem.simulator.instances = 4op
-#eval.problem.simulator.seed = 15
+eval.problem.simulator = app.simConfig.huntConfig.EvolveFactory
+eval.problem.simulator.instances = 4op
+eval.problem.simulator.seed = 15
 
-eval.problem.simulator = app.simConfig.taillardConfig.EvolveFactory
-eval.problem.simulator.instances = tai15_15,tai20_15,tai20_20
+#eval.problem.simulator = app.simConfig.taillardConfig.EvolveFactory
+#eval.problem.simulator.instances = tai15_15,tai20_15,tai20_20
 
 # eval.problem.tracker = app.tracker.JasimaEvolveExperimentTracker
 

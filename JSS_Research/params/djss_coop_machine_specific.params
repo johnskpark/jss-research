@@ -2,7 +2,7 @@
 # Licensed under the Academic Free License version 3.0
 # See the file "LICENSE" for more information
 
-parent.0 = koza.params
+parent.0 = koza_small_tree.params
 
 # multi.fitness.num-objectives = 3
 # multi.fitness.maximize = false
@@ -19,10 +19,10 @@ eval.select-prev = ec.select.RandomSelection
 pop.subpops = 10
 pop.default-subpop = 0
 
-pop.subpop.0.size = 256
+pop.subpop.0.size = 410
 pop.subpop.0.species.ind = app.evolution.coop.JasimaCoopIndividual
 
-breed.elite.0 = 10
+breed.elite.0 = 1
 
 # the next four items are already defined in koza.params, but we
 # put them here to be clear.

@@ -67,6 +67,10 @@ public class EnsemblePriorityRule extends AbsGPPriorityRule {
 			double bestPriority = Double.NEGATIVE_INFINITY;
 			int bestIndex = -1;
 
+			if (i == 5) {
+				System.out.println("Point of error.");
+			}
+
 			// Find the job selected by the individual rule.
 			for (int j = 0; j < q.size(); j++) {
 				PrioRuleTarget entry = q.get(j);

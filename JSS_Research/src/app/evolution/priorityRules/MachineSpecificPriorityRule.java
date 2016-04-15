@@ -27,15 +27,21 @@ public class MachineSpecificPriorityRule extends AbsGPPriorityRule {
 	}
 
 	@Override
-	public void beforeCalc(PriorityQueue<?> q ) {
-		super.beforeCalc(q);
+	public void init() {
+		super.init();
 
-		PrioRuleTarget entry = q.get(0);
-		int numMachines = entry.getShop().machines.length;
+		int numMachines = getOwner().shop().machines.length;
 
 		if (individuals.length != numMachines) {
 			throw new RuntimeException("The number of individuals (" + individuals.length + ") need to match the number of machines (" + numMachines + ")");
 		}
+	}
+
+	@Override
+	public void beforeCalc(PriorityQueue<?> q ) {
+		super.beforeCalc(q);
+
+		// TODO fill this out later.
 	}
 
 	@Override
