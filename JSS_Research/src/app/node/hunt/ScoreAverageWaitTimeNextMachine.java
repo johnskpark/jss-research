@@ -42,8 +42,9 @@ public class ScoreAverageWaitTimeNextMachine implements INode {
 		if (nextTask < entry.numOps()) {
 			WorkStation machine = entry.getOps()[nextTask].machine;
 
-			Queue<OperationCompletionStat> completedJobsQueue = listener.getLastCompletedJobs(machine);
-			if (completedJobsQueue != null) {
+			if (listener.hasCompletedJobs(machine)) {
+				Queue<OperationCompletionStat> completedJobsQueue = listener.getLastCompletedJobs(machine);
+
 				for (OperationCompletionStat stat : completedJobsQueue) {
 					averageWaitTime += stat.getWaitTime();
 				}

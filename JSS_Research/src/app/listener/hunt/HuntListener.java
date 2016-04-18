@@ -86,6 +86,10 @@ public class HuntListener implements IWorkStationListener {
 		clear();
 	}
 
+	public boolean hasCompletedJobs(WorkStation machine) {
+		return !completedJobs[machine.index()].isEmpty();
+	}
+
 	public Queue<OperationCompletionStat> getLastCompletedJobs(WorkStation machine) {
 		return completedJobs[machine.index()];
 	}

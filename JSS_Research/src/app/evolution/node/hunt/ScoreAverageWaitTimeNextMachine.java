@@ -44,10 +44,9 @@ public class ScoreAverageWaitTimeNextMachine extends SingleLineGPNode {
 		} else {
 			WorkStation machine = entry.getOps()[nextTask].machine;
 
-			Queue<OperationCompletionStat> completedJobsQueue = listener.getLastCompletedJobs(machine);
-			if (completedJobsQueue.isEmpty()) {
-				data.setPriority(0);
-			} else {
+			if (listener.hasCompletedJobs(machine)) {
+				Queue<OperationCompletionStat> completedJobsQueue = listener.getLastCompletedJobs(machine);
+
 				double averageWaitTime = 0.0;
 				for (OperationCompletionStat stat : completedJobsQueue) {
 					averageWaitTime += stat.getWaitTime();
@@ -55,6 +54,8 @@ public class ScoreAverageWaitTimeNextMachine extends SingleLineGPNode {
 				averageWaitTime /= completedJobsQueue.size();
 
 				data.setPriority(averageWaitTime);
+			} else {
+				data.setPriority(0);
 			}
 		}
 	}

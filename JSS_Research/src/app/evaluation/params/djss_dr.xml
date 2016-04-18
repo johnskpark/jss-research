@@ -1,19 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <evaluationConfig>
 	<solverConfig>
-		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mls_prelim_4op.txt</ruleFile>
+			<ruleFile>4op_simple.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>8op_simple.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<datasetConfig>
-		<datasetClass>app.simConfig.huntConfig.FourOpSimConfig</datasetClass>
+		<datasetClass>app.simConfig.huntConfig.EvalFactory</datasetClass>
+		<datasetInstances>train</datasetInstances>
 		<datasetSeed>15</datasetSeed>
 	</datasetConfig>
 
 	<outputConfig>
-	    <outputFile>mls_prelim_train_output.csv</outputFile>
+	    <outputFile>simple_train_output.csv</outputFile>
 	</outputConfig>
 
 	<fitnessConfig>

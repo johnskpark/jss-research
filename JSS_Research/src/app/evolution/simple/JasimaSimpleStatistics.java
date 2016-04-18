@@ -3,6 +3,7 @@ package app.evolution.simple;
 import app.util.ArrayFormatter;
 import ec.EvolutionState;
 import ec.Individual;
+import ec.Subpopulation;
 import ec.gp.koza.KozaFitness;
 import ec.simple.SimpleProblemForm;
 import ec.simple.SimpleStatistics;
@@ -20,8 +21,8 @@ public class JasimaSimpleStatistics extends SimpleStatistics {
 	public static final String V_CURLY = "curly-bracket";
 	public static final String V_R = "R";
 
-	private Individual bestIndOfGen = null;
-	private Individual worstIndOfGen = null;
+	private Individual[] bestIndOfGen = null;
+	private Individual[] worstIndOfGen = null;
 
 	private ArrayFormatter arrayFormat;
 
@@ -49,8 +50,10 @@ public class JasimaSimpleStatistics extends SimpleStatistics {
 	public void preEvaluationStatistics(final EvolutionState state) {
 		super.preEvaluationStatistics(state);
 
-		bestIndOfGen = null;
-		worstIndOfGen = null;
+		int numSubpops = state.population.subpops.length;
+
+		bestIndOfGen = new Individual[numSubpops];
+		worstIndOfGen = new Individual[numSubpops];
 	}
 
 	@Override
@@ -60,25 +63,29 @@ public class JasimaSimpleStatistics extends SimpleStatistics {
 		SummaryStat stat = new SummaryStat();
 
 		// Collect the standarded fitnesses of the individuals.
-		for (int i = 0; i < state.population.subpops[0].individuals.length; i++) {
-			Individual ind = state.population.subpops[0].individuals[i];
+		for (int i = 0; i < state.population.subpops.length; i++) {
+			Subpopulation subpop = state.population.subpops[i];
 
-			// Jasima problems use KozaFitness.
-			if (ind.evaluated) {
-				if (bestIndOfGen == null || ind.fitness.betterThan(bestIndOfGen.fitness)) {
-					bestIndOfGen = ind;
+			for (int j = 0; j < subpop.individuals.length; j++) {
+				Individual ind = subpop.individuals[j];
+
+				// Jasima problems use KozaFitness.
+				if (ind.evaluated) {
+					if (bestIndOfGen[i] == null || ind.fitness.betterThan(bestIndOfGen[i].fitness)) {
+						bestIndOfGen[i] = ind;
+					}
+
+					if (worstIndOfGen[i] == null || worstIndOfGen[i].fitness.betterThan(ind.fitness)) {
+						worstIndOfGen[i] = ind;
+					}
+
+					stat.value(((KozaFitness) ind.fitness).standardizedFitness());
 				}
-
-				if (worstIndOfGen == null || worstIndOfGen.fitness.betterThan(ind.fitness)) {
-					worstIndOfGen = ind;
-				}
-
-				stat.value(((KozaFitness) ind.fitness).standardizedFitness());
 			}
 		}
 
-		double bestFitness = ((KozaFitness) bestIndOfGen.fitness).standardizedFitness();
-		double worstFitness = ((KozaFitness) worstIndOfGen.fitness).standardizedFitness();
+		double bestFitness = stat.min();
+		double worstFitness = stat.max();
 		double avgFitness = stat.mean();
 
 		// Print out a summary of the individual's fitnesses.
@@ -91,24 +98,24 @@ public class JasimaSimpleStatistics extends SimpleStatistics {
 	public void finalStatistics(final EvolutionState state, final int result) {
 		bypassFinalStatistics(state, result);
 
-		// for now we just print the best fitness of last generation of subpopulation 0.
-		if (doFinal){
-			state.output.println("\nBest Individual of Run:", statisticslog);
-			state.output.println("Subpopulation " + 0 + ":",statisticslog);
+		// for now we just print the best fitness of last generation of subpopulation i.
+		if (doFinal) { state.output.println("\nBest Individual of Run:", statisticslog); }
+		for (int i = 0; i < state.population.subpops.length; i++) {
+			if (doFinal) {
+				state.output.println("Subpopulation " + i + ":", statisticslog);
+				bestIndOfGen[i].printIndividualForHumans(state, statisticslog);
+			}
 
-			bestIndOfGen.printIndividualForHumans(state,statisticslog);
-		}
-
-		if (doMessage && !silentPrint) {
-			state.output.message("Subpop " + 0 + " best fitness of run: " + bestIndOfGen.fitness.fitnessToStringForHumans());
-		}
-
-		// finally describe the winner if there is a description
-		if (doFinal && doDescription) {
-			if (state.evaluator.p_problem instanceof SimpleProblemForm) {
-				((SimpleProblemForm)(state.evaluator.p_problem.clone())).describe(state, bestIndOfGen, 0, 0, statisticslog);
+			if (doMessage && !silentPrint) { state.output.message("Subpop " + i + " best fitness of run: " + bestIndOfGen[i].fitness.fitnessToStringForHumans()); }
+			// finally describe the winner if there is a description
+			if (doFinal && doDescription) {
+				if (state.evaluator.p_problem instanceof SimpleProblemForm) {
+					((SimpleProblemForm) (state.evaluator.p_problem.clone())).describe(state, bestIndOfGen[i], 0, 0, statisticslog);
+				}
 			}
 		}
+
+
 	}
 
 }

@@ -42,14 +42,6 @@
 		</solverFile>
 	</solverConfig>
 
-<!--
-	<datasetConfig>
-		<datasetClass>app.simConfig.huntConfig.EvalFactory</datasetClass>
-		<datasetInstances>test</datasetInstances>
-		<datasetSeed>15</datasetSeed>
-	</datasetConfig>
--->
-
 	<datasetConfig>
 		<datasetClass>app.simConfig.taillardConfig.EvalFactory</datasetClass>
 		<datasetInstances>all</datasetInstances>
