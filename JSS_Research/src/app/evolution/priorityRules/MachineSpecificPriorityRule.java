@@ -4,6 +4,7 @@ import java.util.List;
 
 import app.evolution.AbsGPPriorityRule;
 import app.evolution.JasimaGPConfig;
+import ec.Individual;
 import ec.gp.GPIndividual;
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
@@ -12,7 +13,7 @@ public class MachineSpecificPriorityRule extends AbsGPPriorityRule {
 
 	private static final long serialVersionUID = -1896929320056457916L;
 
-	private GPIndividual[] individuals;
+	private Individual[] individuals;
 
 	@Override
 	public void setConfiguration(JasimaGPConfig config) {
@@ -22,7 +23,7 @@ public class MachineSpecificPriorityRule extends AbsGPPriorityRule {
 	}
 
 	@Override
-	public GPIndividual[] getIndividuals() {
+	public Individual[] getIndividuals() {
 		return individuals;
 	}
 
@@ -50,7 +51,8 @@ public class MachineSpecificPriorityRule extends AbsGPPriorityRule {
 
 		data.setPrioRuleTarget(entry);
 
-		individuals[machineIndex].trees[0].child.eval(state, threadnum, data, null, individuals[machineIndex], null);
+		GPIndividual ind = (GPIndividual) individuals[machineIndex];
+		ind.trees[0].child.eval(state, threadnum, data, null, ind, null);
 
 		return data.getPriority();
 	}

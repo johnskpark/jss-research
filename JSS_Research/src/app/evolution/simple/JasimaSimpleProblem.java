@@ -85,7 +85,7 @@ public class JasimaSimpleProblem extends JasimaGPProblem {
 
 	@Override
 	public Object clone() {
-		JasimaSimpleProblem newObject = (JasimaSimpleProblem)super.clone();
+		JasimaSimpleProblem newObject = (JasimaSimpleProblem) super.clone();
 
 		newObject.input = (JasimaGPData)input.clone();
 		newObject.rule = rule;

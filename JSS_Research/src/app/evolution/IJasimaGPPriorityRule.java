@@ -2,14 +2,14 @@ package app.evolution;
 
 import java.util.List;
 
-import ec.gp.GPIndividual;
+import ec.Individual;
 import jasima.shopSim.core.PrioRuleTarget;
 
 public interface IJasimaGPPriorityRule {
 
 	public void setConfiguration(JasimaGPConfig config);
 
-	public GPIndividual[] getIndividuals();
+	public Individual[] getIndividuals();
 
 	public List<PrioRuleTarget> getEntryRankings();
 

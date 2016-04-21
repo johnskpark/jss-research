@@ -199,14 +199,9 @@ public abstract class JasimaGPProblem extends GPProblem {
 			final Individual[] individuals,
 			final int[] subpops,
 			final int threadnum) {
-		GPIndividual[] gpInds = new GPIndividual[individuals.length];
-		for (int i = 0; i < individuals.length; i++) {
-			gpInds[i] = (GPIndividual) individuals[i];
-		}
-
 		JasimaGPConfig config = new JasimaGPConfig();
 		config.setState(state);
-		config.setIndividuals(gpInds);
+		config.setIndividuals(individuals);
 		config.setSubpopulations(subpops);
 		config.setThreadnum(threadnum);
 		config.setData((JasimaGPData) input);

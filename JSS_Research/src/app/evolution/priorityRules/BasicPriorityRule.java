@@ -1,8 +1,5 @@
 package app.evolution.priorityRules;
 
-import jasima.shopSim.core.PrioRuleTarget;
-import jasima.shopSim.core.PriorityQueue;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -12,14 +9,17 @@ import java.util.Map;
 
 import app.evolution.AbsGPPriorityRule;
 import app.evolution.JasimaGPConfig;
+import ec.Individual;
 import ec.gp.GPIndividual;
 import ec.util.Pair;
+import jasima.shopSim.core.PrioRuleTarget;
+import jasima.shopSim.core.PriorityQueue;
 
 public class BasicPriorityRule extends AbsGPPriorityRule {
 
 	private static final long serialVersionUID = 5215861545303707980L;
 
-	private GPIndividual[] individual;
+	private Individual[] individual;
 
 	private int indIndex;
 
@@ -46,7 +46,7 @@ public class BasicPriorityRule extends AbsGPPriorityRule {
 	}
 
 	@Override
-	public GPIndividual[] getIndividuals() {
+	public Individual[] getIndividuals() {
 		return individual;
 	}
 
@@ -65,7 +65,8 @@ public class BasicPriorityRule extends AbsGPPriorityRule {
 
 			data.setPrioRuleTarget(entry);
 
-			individual[indIndex].trees[0].child.eval(state, threadnum, data, null, individual[indIndex], null);
+			GPIndividual ind = (GPIndividual) individual[indIndex];
+			ind.trees[0].child.eval(state, threadnum, data, null, ind, null);
 
 			double priority = data.getPriority();
 

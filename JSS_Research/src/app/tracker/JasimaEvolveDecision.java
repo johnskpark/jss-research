@@ -1,11 +1,10 @@
 package app.tracker;
 
-import jasima.shopSim.core.PrioRuleTarget;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import ec.gp.GPIndividual;
+import ec.Individual;
+import jasima.shopSim.core.PrioRuleTarget;
 
 // So the tracker's going to generate one of these for each dispatching decision.
 public class JasimaEvolveDecision {
@@ -17,10 +16,10 @@ public class JasimaEvolveDecision {
 
 	private PrioRuleTarget startedEntry;
 
-	private GPIndividual[] inds;
+	private Individual[] inds;
 	private JasimaPriorityStat[] stats;
 
-	public JasimaEvolveDecision(List<PrioRuleTarget> entries, GPIndividual[] inds, JasimaPriorityStat[] decisions) {
+	public JasimaEvolveDecision(List<PrioRuleTarget> entries, Individual[] inds, JasimaPriorityStat[] decisions) {
 		this.entries = entries;
 
 		this.inds = inds;
@@ -49,7 +48,7 @@ public class JasimaEvolveDecision {
 		return startedEntry;
 	}
 
-	public GPIndividual[] getIndividuals() {
+	public Individual[] getIndividuals() {
 		return inds;
 	}
 
@@ -75,7 +74,7 @@ public class JasimaEvolveDecision {
 		this.startedEntry = startedEntry;
 	}
 
-	public void setIndividuals(GPIndividual[] inds) {
+	public void setIndividuals(Individual[] inds) {
 		this.inds = inds;
 	}
 

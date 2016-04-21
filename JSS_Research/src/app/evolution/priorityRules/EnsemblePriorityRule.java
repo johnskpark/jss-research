@@ -8,6 +8,7 @@ import java.util.Map;
 
 import app.evolution.AbsGPPriorityRule;
 import app.evolution.JasimaGPConfig;
+import ec.Individual;
 import ec.gp.GPIndividual;
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
@@ -20,7 +21,7 @@ public class EnsemblePriorityRule extends AbsGPPriorityRule {
 
 	public static final double ATC_K_VALUE = 3.0;
 
-	private GPIndividual[] individuals;
+	private Individual[] individuals;
 
 	private Map<PrioRuleTarget, EntryVotes> jobVotes = new HashMap<PrioRuleTarget, EntryVotes>();
 	private List<EntryVotes> jobRankings = new ArrayList<EntryVotes>();
@@ -38,7 +39,7 @@ public class EnsemblePriorityRule extends AbsGPPriorityRule {
 	}
 
 	@Override
-	public GPIndividual[] getIndividuals() {
+	public Individual[] getIndividuals() {
 		return individuals;
 	}
 
@@ -76,8 +77,8 @@ public class EnsemblePriorityRule extends AbsGPPriorityRule {
 				PrioRuleTarget entry = q.get(j);
 				data.setPrioRuleTarget(entry);
 
-				individuals[i].trees[0].child.eval(state, threadnum, data,
-						null, individuals[i], null);
+				GPIndividual ind = (GPIndividual) individuals[i];
+				ind.trees[0].child.eval(state, threadnum, data, null, ind, null);
 
 				double priority = data.getPriority();
 

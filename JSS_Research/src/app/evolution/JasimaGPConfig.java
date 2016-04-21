@@ -3,13 +3,13 @@ package app.evolution;
 import app.simConfig.SimConfig;
 import app.tracker.JasimaEvolveExperimentTracker;
 import ec.EvolutionState;
-import ec.gp.GPIndividual;
+import ec.Individual;
 import ec.gp.GPProblem;
 
 public class JasimaGPConfig {
 
 	private EvolutionState state;
-	private GPIndividual[] ind;
+	private Individual[] ind;
 	private int[] indIndices;
 	private int[] subpopulations;
 	private int threadnum;
@@ -28,7 +28,7 @@ public class JasimaGPConfig {
 		return state;
 	}
 
-	public GPIndividual[] getIndividuals() {
+	public Individual[] getIndividuals() {
 		return ind;
 	}
 
@@ -74,7 +74,7 @@ public class JasimaGPConfig {
 		this.state = state;
 	}
 
-	public void setIndividuals(GPIndividual[] ind) {
+	public void setIndividuals(Individual[] ind) {
 		this.ind = ind;
 	}
 

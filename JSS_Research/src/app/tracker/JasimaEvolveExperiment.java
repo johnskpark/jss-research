@@ -1,19 +1,17 @@
 package app.tracker;
 
-import jasima.shopSim.core.PrioRuleTarget;
-import jasima.shopSim.core.PriorityQueue;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import ec.Individual;
-import ec.gp.GPIndividual;
+import jasima.shopSim.core.PrioRuleTarget;
+import jasima.shopSim.core.PriorityQueue;
 
 // TODO trying to figure out how to do this efficiently.
 // Also, need to record which job that's voted for by the individual.
 public class JasimaEvolveExperiment {
 
-	private GPIndividual[] inds;
+	private Individual[] inds;
 
 	private List<JasimaEvolveDecisionMaker> decisionMakers;
 
@@ -25,7 +23,7 @@ public class JasimaEvolveExperiment {
 	/**
 	 * Initialise the experiment data with the individuals that make up the rule.
 	 */
-	public JasimaEvolveExperiment(GPIndividual[] inds) {
+	public JasimaEvolveExperiment(Individual[] inds) {
 		this.inds = inds;
 
 		decisionMakers = new ArrayList<JasimaEvolveDecisionMaker>(inds.length);
@@ -94,7 +92,7 @@ public class JasimaEvolveExperiment {
 
 	// Getters
 
-	public GPIndividual[] getIndividuals() {
+	public Individual[] getIndividuals() {
 		return inds;
 	}
 
