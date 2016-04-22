@@ -37,6 +37,7 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 
 	private AbsGPPriorityRule indRule;
 	private AbsJasimaFitness<JasimaCoopIndividual> indFitness;
+	private boolean indRuleInitialised = false;
 
 	private AbsGPPriorityRule coopRule;
 	private JasimaCoopFitness fitness;
@@ -55,9 +56,14 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 		super.setup(state, base);
 
 		// Setup the solver for individual rules.
-		indRule = (AbsGPPriorityRule) state.parameters.getInstanceForParameterEq(base.push(P_IND_RULE), null, AbsGPPriorityRule.class);
-		indFitness = (AbsJasimaFitness<JasimaCoopIndividual>) state.parameters.getInstanceForParameter(base.push(P_IND_FITNESS), null, AbsJasimaFitness.class);
-		indFitness.setProblem(this);
+		try {
+			indRule = (AbsGPPriorityRule) state.parameters.getInstanceForParameterEq(base.push(P_IND_RULE), null, AbsGPPriorityRule.class);
+			indFitness = (AbsJasimaFitness<JasimaCoopIndividual>) state.parameters.getInstanceForParameter(base.push(P_IND_FITNESS), null, AbsJasimaFitness.class);
+			indFitness.setProblem(this);
+			indRuleInitialised = true;
+		} catch (ParamClassLoadException ex) {
+			state.output.warning("Individual rule will not be used for this run.");
+		}
 
 		// Setup the solver.
 		coopRule = (AbsGPPriorityRule) state.parameters.getInstanceForParameterEq(base.push(P_COOP_RULE), null, AbsGPPriorityRule.class);
@@ -71,7 +77,7 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
         	niching = (IJasimaCoopNiching) state.parameters.getInstanceForParameterEq(base.push(P_NICHING), null, IJasimaCoopNiching.class);
 			niching.setup(state, base.push(P_NICHING));
         } catch (ParamClassLoadException ex) {
-        	state.output.warning("No niching algorithm provided for JasimaCoopProblem");
+        	state.output.warning("No niching algorithm provided for JasimaCoopProblem.");
         }
 	}
 
@@ -92,7 +98,7 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 			}
 		}
 
-		if (indRule != null) {
+		if (indRuleInitialised()) {
 			allIndStats = new SummaryStat();
 
         	indStatPerSubpop = new SummaryStat[state.population.subpops.length];
@@ -118,6 +124,10 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 		return indStatPerSubpop;
 	}
 
+	public boolean indRuleInitialised() {
+		return indRuleInitialised;
+	}
+
 	@Override
 	public void evaluate(final EvolutionState state,
 			final Individual[] inds,
@@ -125,7 +135,7 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 			final boolean countVictoriesOnly,
 			final int[] subpops,
 			final int threadnum) {
-		if (indRule != null) {
+		if (indRuleInitialised()) {
 			for (int i = 0; i < inds.length; i++) {
 				evaluateIndividuals(state, inds[i], i, updateFitness, countVictoriesOnly, subpops, threadnum);
 			}

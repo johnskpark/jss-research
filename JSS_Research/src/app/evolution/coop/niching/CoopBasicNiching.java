@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import app.evolution.coop.IJasimaCoopNiching;
+import app.evolution.coop.JasimaCoopGPIndividual;
 import app.evolution.coop.JasimaCoopIndividual;
 import app.simConfig.SimConfig;
 import app.tracker.JasimaEvolveExperiment;
@@ -37,7 +38,7 @@ public class CoopBasicNiching implements IJasimaCoopNiching {
 	@Override
 	public void adjustFitness(EvolutionState state,
 			JasimaEvolveExperimentTracker tracker,
-			JasimaCoopIndividual individual) {
+			JasimaCoopGPIndividual individual) {
 		boolean[] updateFitness = new boolean[individual.getCollaborators().length];
 		Arrays.fill(updateFitness, true);
 

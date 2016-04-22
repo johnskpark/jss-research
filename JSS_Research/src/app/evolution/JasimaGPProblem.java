@@ -11,7 +11,6 @@ import app.stat.WeightedTardinessStat;
 import app.tracker.JasimaEvolveExperimentTracker;
 import ec.EvolutionState;
 import ec.Individual;
-import ec.gp.GPIndividual;
 import ec.gp.GPProblem;
 import ec.util.ParamClassLoadException;
 import ec.util.Parameter;

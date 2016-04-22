@@ -1,0 +1,40 @@
+# Copyright 2006 by Sean Luke and George Mason University
+# Licensed under the Academic Free License version 3.0
+# See the file "LICENSE" for more information
+
+parent.0 = djss_coop.params
+
+pop.subpops = 5
+pop.default-subpop = 0
+
+pop.subpop.0.size = 256
+pop.subpop.0.species.ind = app.evolution.coop.JasimaCoopGPIndividual
+
+pop.subpop.4 = ec.Subpopulation
+pop.subpop.4.size = 25
+pop.subpop.4.duplicate-retries = 2
+pop.subpop.4.species = ec.vector.FloatVectorSpecies
+pop.subpop.4.species.fitness = ec.gp.koza.KozaFitness
+pop.subpop.4.species.ind = app.evolution.coop.JasimaCoopVectorIndividual
+
+pop.subpop.4.species.crossover-type = one
+pop.subpop.4.species.genome-size = 4
+pop.subpop.4.species.min-gene = -5.0
+pop.subpop.4.species.max-gene = 5.0
+pop.subpop.4.species.pipe = ec.vector.breed.VectorMutationPipeline
+pop.subpop.4.species.mutation-prob = 0.01
+pop.subpop.4.species.mutation-stdev = 0.5
+pop.subpop.4.species.mutation-type = gauss
+pop.subpop.4.species.mutation-type = polynomial
+pop.subpop.4.species.mutation-distribution-index = 21
+pop.subpop.4.species.alternative-polynomial-version = true
+pop.subpop.4.species.mutation-bounded = true
+pop.subpop.4.species.pipe.source.0 = ec.vector.breed.VectorCrossoverPipeline
+pop.subpop.4.species.pipe.source.0.source.0 = ec.select.TournamentSelection
+pop.subpop.4.species.pipe.source.0.source.1 = same
+
+breed.elite.0 = 10
+
+eval.problem.rule = app.evolution.priorityRules.WeightedVoteRule
+eval.problem.fitness = app.evolution.coop.fitness.NormTWTFitness
+

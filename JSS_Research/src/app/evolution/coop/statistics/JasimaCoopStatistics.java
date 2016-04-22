@@ -23,14 +23,16 @@ public class JasimaCoopStatistics extends SimpleStatistics {
 		// as a single dispatching rule.
 		JasimaCoopProblem problem = (JasimaCoopProblem) state.evaluator.p_problem;
 
-		SummaryStat stat = problem.getAllIndStats();
-		SummaryStat[] statPerSubpop = problem.getIndStatPerSubpop();
+		if (problem.indRuleInitialised()) {
+			SummaryStat stat = problem.getAllIndStats();
+			state.output.message("Best Individual Statistics: " + stat.min());
+			state.output.println("Best Individual Statistics: " + stat.min(), statisticslog);
 
-		state.output.message("Best Individual Statistics: " + stat.min());
-		state.output.println("Best Individual Statistics: " + stat.min(), statisticslog);
-		for (int i = 0; i < statPerSubpop.length; i++) {
-			state.output.message("Best Individual Statistics Subpop " + i + ": " + statPerSubpop[i].min());
-			state.output.println("Best Individual Statistics Subpop " + i + ": " + statPerSubpop[i].min(), statisticslog);
+			SummaryStat[] statPerSubpop = problem.getIndStatPerSubpop();
+			for (int i = 0; i < statPerSubpop.length; i++) {
+				state.output.message("Best Individual Statistics Subpop " + i + ": " + statPerSubpop[i].min());
+				state.output.println("Best Individual Statistics Subpop " + i + ": " + statPerSubpop[i].min(), statisticslog);
+			}
 		}
 	}
 }

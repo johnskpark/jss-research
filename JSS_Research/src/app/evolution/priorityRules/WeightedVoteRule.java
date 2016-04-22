@@ -45,14 +45,14 @@ public class WeightedVoteRule extends AbsGPPriorityRule {
 			throw new RuntimeException("There must be one vector individual and at least one GP individual.");
 		}
 
-		weightInd = (DoubleVectorIndividual) individuals[0];
+		weightInd = (DoubleVectorIndividual) individuals[individuals.length -1];
 		if (weightInd.genome.length != individuals.length - 1) {
 			throw new RuntimeException("The length of the first individual must be equal to the number of GP individuals.");
 		}
 
 		gpInds = new GPIndividual[individuals.length - 1];
-		for (int i = 1; i < individuals.length; i++) {
-			gpInds[i - 1] = (GPIndividual) individuals[i];
+		for (int i = 0; i < individuals.length - 1; i++) {
+			gpInds[i] = (GPIndividual) individuals[i];
 		}
 	}
 
