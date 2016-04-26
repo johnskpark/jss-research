@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<evaluationConfig>
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>mls_prelim_4op.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<datasetConfig>
+		<datasetClass>app.simConfig.huntConfig.EvalFactory</datasetClass>
+		<datasetInstances>4op</datasetInstances>
+		<datasetSeed>15</datasetSeed>
+	</datasetConfig>
+
+	<outputConfig>
+	    <outputFile>mls_prelim_train_output.csv</outputFile>
+	</outputConfig>
+
+	<fitnessConfig>
+		<fitnessClass>app.evaluation.fitness.TWTFitness</fitnessClass>
+	</fitnessConfig>
+
+	<listenerConfig>
+	    <listenerClass>app.listener.hunt.EvalFactory</listenerClass>
+	    <listenerSize>5</listenerSize>
+	</listenerConfig>
+</evaluationConfig>

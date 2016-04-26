@@ -6,6 +6,7 @@ public enum NodeType {
 	JOB,
 	MACHINE,
 	SHOP,
-	CONSTANT;
+	CONSTANT,
+	OTHER;
 
 }

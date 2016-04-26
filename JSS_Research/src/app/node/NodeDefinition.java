@@ -51,7 +51,10 @@ public enum NodeDefinition {
 
 	ERC_RANDOM("", 0, NodeType.CONSTANT),
 	ERC_DISCRETE("", 0, NodeType.CONSTANT),
-	ERC_THRESHOLD("", 0, NodeType.CONSTANT);
+	ERC_THRESHOLD("", 0, NodeType.CONSTANT),
+
+	// TODO documentation explaining how this thing works.
+	DOUBLE_VECTOR("", 0, NodeType.OTHER);
 
 	private String nodeSymbol;
 	private int numChildren;

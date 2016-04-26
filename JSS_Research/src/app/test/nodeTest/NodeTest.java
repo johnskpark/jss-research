@@ -22,6 +22,7 @@ import app.node.INode;
 import app.node.NodeAnnotation;
 import app.node.NodeData;
 import app.node.NodeDefinition;
+import app.node.NodeType;
 import app.node.basic.ERCRandom;
 import ec.EvolutionState;
 import ec.Problem;
@@ -76,9 +77,18 @@ public class NodeTest {
 			Set<Class<? extends INode>> evalNodes = reflections.getSubTypesOf(INode.class);
 
 			for (Class<? extends INode> evalNode : evalNodes) {
-				if (!evalNode.equals(ERCRandom.class) && !evalNode.equals(FakeINode.class)) {
-					NodeDefinition nodeDef = evalNode.getAnnotation(NodeAnnotation.class).node();
+				// Ignore the fake node.
+				if (evalNode == FakeINode.class) {
+					continue;
+				}
 
+				NodeDefinition nodeDef = evalNode.getAnnotation(NodeAnnotation.class).node();
+
+				// Only test the operators, job, machine and shop floor nodes.
+				if (nodeDef.getType() == NodeType.OPERATOR ||
+						nodeDef.getType() == NodeType.JOB ||
+						nodeDef.getType() == NodeType.MACHINE ||
+						nodeDef.getType() == NodeType.SHOP) {
 					Class<?>[] constParams = new Class<?>[nodeDef.numChildren()];
 					Arrays.fill(constParams, INode.class);
 
@@ -101,8 +111,6 @@ public class NodeTest {
 			Set<Class<? extends INode>> evalNodes = reflections.getSubTypesOf(INode.class);
 			Set<Class<? extends SingleLineGPNode>> evolNodes = reflections.getSubTypesOf(SingleLineGPNode.class);
 
-			System.out.println(evalNodes.size() + ", " + evolNodes.size());
-
 			Map<String, Class<? extends INode>> evalNodeMap = new HashMap<String, Class<? extends INode>>();
 			for (Class<? extends INode> evalNode : evalNodes) {
 				String name = evalNode.getSimpleName();
@@ -121,8 +129,6 @@ public class NodeTest {
 			Assert.fail();
 		}
 	}
-
-	// TODO need to have standardised method of testing trees, and outputting values.
 
 	private NodeData nodeData;
 	private JasimaGPData gpData;
@@ -171,10 +177,7 @@ public class NodeTest {
 			}
 
 		} catch (Exception ex) {
-			System.err.println(ex.getMessage());
-			ex.printStackTrace();
-
-			Assert.fail();
+			Assert.fail(ex.getMessage());
 		}
 	}
 
@@ -373,10 +376,7 @@ public class NodeTest {
 			}
 
 		} catch (Exception ex) {
-			System.err.println(ex.getMessage());
-			ex.printStackTrace();
-
-			Assert.fail();
+			Assert.fail(ex.getMessage());
 		}
 	}
 

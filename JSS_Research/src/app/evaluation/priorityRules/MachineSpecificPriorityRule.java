@@ -1,0 +1,47 @@
+package app.evaluation.priorityRules;
+
+import java.util.List;
+
+import app.evaluation.AbsEvalPriorityRule;
+import app.evaluation.JasimaEvalConfig;
+import app.node.INode;
+import jasima.shopSim.core.PrioRuleTarget;
+
+public class MachineSpecificPriorityRule extends AbsEvalPriorityRule {
+
+	private static final long serialVersionUID = -5435868205509788688L;
+
+	private List<INode> rules;
+
+	public MachineSpecificPriorityRule() {
+		super();
+	}
+
+	@Override
+	public void setConfiguration(JasimaEvalConfig config) {
+		setSeed(config.getSeed());
+		setNodeData(config.getNodeData());
+
+		rules = config.getRules();
+	}
+
+	@Override
+	public int getNumRules() {
+		return rules.size();
+	}
+
+	@Override
+	public int getRuleSize(int index) {
+		return rules.get(index).getSize();
+	}
+
+	@Override
+	public double calcPrio(PrioRuleTarget entry) {
+		int machineIndex = entry.getCurrMachine().index();
+
+		getNodeData().setEntry(entry);
+
+		return rules.get(machineIndex).evaluate(getNodeData());
+	}
+
+}

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<evaluationConfig>
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.EvalATC</solverClass>
+	</solverConfig>
+
+	<datasetConfig>
+		<datasetClass>app.simConfig.huntConfig.TestSimConfig</datasetClass>
+	</datasetConfig>
+
+	<outputConfig>
+	    <outputFile>dynamicJSS_atc_output.csv</outputFile>
+	</outputConfig>
+
+	<fitnessConfig>
+		<fitnessClass>app.evaluation.fitness.TWTFitness</fitnessClass>
+	</fitnessConfig>
+</evaluationConfig>

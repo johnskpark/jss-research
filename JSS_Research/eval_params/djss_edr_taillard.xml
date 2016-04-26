@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<evaluationConfig>
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>simple_elitism_taillard.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>coop_elitism_taillard.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>coop_small_tree_taillard.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>coop_small_tree_taillard_fixed.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>coop_small_tree_taillard_subpop.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>coop_small_tree_taillard_more_depth.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<datasetConfig>
+		<datasetClass>app.simConfig.taillardConfig.EvalFactory</datasetClass>
+		<datasetInstances>all</datasetInstances>
+	</datasetConfig>
+
+	<outputConfig>
+	    <outputFile>elitism_taillard_output_gen_20_38.csv</outputFile>
+	</outputConfig>
+
+	<fitnessConfig>
+		<fitnessClass>app.evaluation.fitness.TWTFitness</fitnessClass>
+	</fitnessConfig>
+
+	<fitnessConfig>
+		<fitnessClass>app.evaluation.fitness.RuleSizeFitness</fitnessClass>
+	</fitnessConfig>
+
+	<listenerConfig>
+	    <listenerClass>app.listener.hunt.EvalFactory</listenerClass>
+	    <listenerSize>5</listenerSize>
+	</listenerConfig>
+</evaluationConfig>

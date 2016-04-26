@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<evaluationConfig>
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>simple_small_4op.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.MachineSpecificPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>coop_ms_4op.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<datasetConfig>
+		<datasetClass>app.simConfig.huntConfig.EvalFactory</datasetClass>
+		<datasetInstances>test</datasetInstances>
+		<datasetSeed>15</datasetSeed>
+	</datasetConfig>
+
+	<outputConfig>
+	    <outputFile>coop_weighted_output.csv</outputFile>
+	</outputConfig>
+
+	<fitnessConfig>
+		<fitnessClass>app.evaluation.fitness.TWTFitness</fitnessClass>
+	</fitnessConfig>
+
+	<fitnessConfig>
+		<fitnessClass>app.evaluation.fitness.RuleSizeFitness</fitnessClass>
+	</fitnessConfig>
+
+	<listenerConfig>
+	    <listenerClass>app.listener.hunt.EvalFactory</listenerClass>
+	    <listenerSize>5</listenerSize>
+	</listenerConfig>
+</evaluationConfig>
