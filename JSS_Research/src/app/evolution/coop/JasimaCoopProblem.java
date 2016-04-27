@@ -141,6 +141,10 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 			}
 		}
 
+		if (state.generation == 1) {
+			System.out.println("First generation.");
+		}
+
 		for (int i = 0; i < inds.length; i++) {
 			((JasimaCoopIndividual) inds[i]).setCollaborators(inds);
 		}

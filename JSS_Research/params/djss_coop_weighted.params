@@ -11,7 +11,7 @@ pop.subpop.0.size = 256
 pop.subpop.0.species.ind = app.evolution.coop.JasimaCoopGPIndividual
 
 pop.subpop.4 = ec.Subpopulation
-pop.subpop.4.size = 25
+pop.subpop.4.size = 100
 pop.subpop.4.duplicate-retries = 2
 pop.subpop.4.species = ec.vector.FloatVectorSpecies
 pop.subpop.4.species.fitness = ec.gp.koza.KozaFitness
@@ -19,10 +19,10 @@ pop.subpop.4.species.ind = app.evolution.coop.JasimaCoopVectorIndividual
 
 pop.subpop.4.species.crossover-type = one
 pop.subpop.4.species.genome-size = 4
-pop.subpop.4.species.min-gene = -5.0
-pop.subpop.4.species.max-gene = 5.0
+pop.subpop.4.species.min-gene = 0.0
+pop.subpop.4.species.max-gene = 10.0
 pop.subpop.4.species.pipe = ec.vector.breed.VectorMutationPipeline
-pop.subpop.4.species.mutation-prob = 0.01
+pop.subpop.4.species.mutation-prob = 0.1
 pop.subpop.4.species.mutation-stdev = 0.5
 pop.subpop.4.species.mutation-type = gauss
 pop.subpop.4.species.mutation-type = polynomial
