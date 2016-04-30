@@ -67,6 +67,8 @@ stat = app.evolution.simple.JasimaSimpleStatistics
 eval.problem = app.evolution.simple.JasimaSimpleProblem
 eval.problem.data = app.evolution.JasimaGPData
 
+eval.problem.reference-rule = app.priorityRules.ATCPRNew
+
 eval.problem.rule = app.evolution.priorityRules.BasicPriorityRule
 eval.problem.fitness = app.evolution.simple.fitness.NormTWTFitness
 
@@ -76,10 +78,10 @@ eval.problem.simulator.seed = 15
 
 # eval.problem.simulator = app.simConfig.taillardConfig.EvolveFactory
 
-eval.problem.reference-rule = app.priorityRules.HolthausRule
-
-eval.problem.workstation = app.listener.hunt.EvolveFactory
-eval.problem.workstation.max-jobs = 5
+eval.problem.workstations = 2
+eval.problem.workstation.0 = app.listener.hunt.EvolveFactory
+eval.problem.workstation.0.max-jobs = 5
+eval.problem.workstation.1 = app.listener.nguyen_r1.EvolveFactory
 
 # seed.0=26556
 seed.0=17

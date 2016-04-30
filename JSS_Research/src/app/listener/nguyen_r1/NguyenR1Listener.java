@@ -22,9 +22,7 @@ public class NguyenR1Listener implements IWorkStationListener {
 	private double bneckTotalProcInQueue;
 	private int bneckIndex;
 
-	public NguyenR1Listener(int numMachines) {
-		this.numMachines = numMachines;
-		this.stats = new WorkloadStat[numMachines];
+	public NguyenR1Listener() {
 	}
 
 	public int getNumMachines() {
@@ -116,19 +114,25 @@ public class NguyenR1Listener implements IWorkStationListener {
 		if (workloadIncreased && pos != 0) {
 			WorkloadStat stat = machinesByWorkload.remove(pos);
 
-			int index = pos - 1;
-			while (index >= 0 && machinesByWorkload.get(index).getTotalProcInQueue() < stat.getTotalProcInQueue()) {
-				index--;
+			int newPos = pos - 1;
+			while (newPos >= 0 && machinesByWorkload.get(newPos).getTotalProcInQueue() < stat.getTotalProcInQueue()) {
+				newPos--;
 			}
 
-			machinesByWorkload.add(index, stat);
+			newPos++;
+			machinesByWorkload.add(newPos, stat);
+			indexToPos.put(machine.index(), newPos);
 		} else if (pos != machinesByWorkload.size() - 1){
 			WorkloadStat stat = machinesByWorkload.remove(pos);
 
-			int index = pos + 1;
-			while (index < machinesByWorkload.size() && machinesByWorkload.get(index).getTotalProcInQueue() > stat.getTotalProcInQueue()) {
-				index++;
+			int newPos = pos + 1;
+			while (newPos < machinesByWorkload.size() && machinesByWorkload.get(newPos).getTotalProcInQueue() > stat.getTotalProcInQueue()) {
+				newPos++;
 			}
+
+			newPos--;
+			machinesByWorkload.add(newPos, stat);
+			indexToPos.put(machine.index(), newPos);
 		}
 
 		WorkloadStat bneckStat = machinesByWorkload.get(0);

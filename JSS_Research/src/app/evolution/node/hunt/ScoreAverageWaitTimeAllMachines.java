@@ -30,7 +30,7 @@ public class ScoreAverageWaitTimeAllMachines extends SingleLineGPNode {
 	public void eval(EvolutionState state, int thread, GPData input,
 			ADFStack stack, GPIndividual individual, Problem problem) {
 		JasimaGPData data = (JasimaGPData) input;
-		HuntListener listener = (HuntListener) data.getWorkStationListener();
+		HuntListener listener = (HuntListener) data.getWorkStationListeners().get(0);
 
 		data.setPriority(listener.getAverageWaitTimesAllMachines());
 	}

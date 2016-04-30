@@ -7,16 +7,21 @@ import ec.util.Parameter;
 
 public class EvolveFactory implements IWorkStationListenerEvolveFactory {
 
-	@Override
-	public IWorkStationListener generateWorkStationListener() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	private static final long serialVersionUID = -9030410769000603334L;
+
+	private NguyenR1Listener listener = null;
 
 	@Override
 	public void setup(EvolutionState state, Parameter base) {
-		// TODO Auto-generated method stub
+		// Does nothing.
+	}
 
+	@Override
+	public IWorkStationListener generateWorkStationListener() {
+		if (listener == null) {
+			listener = new NguyenR1Listener();
+		}
+		return listener;
 	}
 
 }

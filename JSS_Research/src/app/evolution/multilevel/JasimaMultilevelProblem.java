@@ -112,11 +112,11 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 			initialiseTracker(getTracker());
 
 			for (int expIndex = 0; expIndex < getSimConfig().getNumConfigs(); expIndex++) {
-				Experiment experiment = getExperiment(state, groupRule, expIndex, getWorkStationListener(), getTracker());
+				Experiment experiment = getExperiment(state, groupRule, expIndex, getWorkStationListeners(), getTracker());
 				experiment.runExperiment();
 				groupFitness.accumulateFitness(expIndex, group, experiment.getResults());
 
-				clearForExperiment(getWorkStationListener());
+				clearForExperiment(getWorkStationListeners());
 			}
 
 			groupFitness.setFitness(state, group);
@@ -145,11 +145,11 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 			initialiseTracker(null);
 
 			for (int expIndex = 0; expIndex < getSimConfig().getNumConfigs(); expIndex++) {
-				Experiment experiment = getExperiment(state, indRule, expIndex, getWorkStationListener(), null);
+				Experiment experiment = getExperiment(state, indRule, expIndex, getWorkStationListeners(), null);
 				experiment.runExperiment();
 				indFitness.accumulateFitness(expIndex, (JasimaMultilevelIndividual) ind, experiment.getResults()); // getReferenceStat().get(expIndex));
 
-				clearForExperiment(getWorkStationListener());
+				clearForExperiment(getWorkStationListeners());
 			}
 
 			indFitness.setFitness(state, (JasimaMultilevelIndividual) ind);

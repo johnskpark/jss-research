@@ -28,6 +28,7 @@ public abstract class JasimaGPProblem extends GPProblem {
 
 	public static final String P_TRACKER = "tracker";
 
+	public static final String P_NUM_WORKSTATIONS = "workstations";
 	public static final String P_WORKSTATION = "workstation";
 
 	public static final String P_REFERENCE_RULE = "reference-rule";
@@ -39,7 +40,7 @@ public abstract class JasimaGPProblem extends GPProblem {
 
 	private JasimaEvolveExperimentTracker experimentTracker;
 
-	private IWorkStationListener workstationListener;
+	private List<IWorkStationListener> workstationListeners = new ArrayList<IWorkStationListener>();
 
 	private PR referenceRule = new HolthausRule();
 	private List<Double> referenceInstStats = new ArrayList<Double>();
@@ -71,13 +72,19 @@ public abstract class JasimaGPProblem extends GPProblem {
 
         // Setup the workstation listener.
         try {
-        	IWorkStationListenerEvolveFactory factory = (IWorkStationListenerEvolveFactory) state.parameters.getInstanceForParameterEq(base.push(P_WORKSTATION), null, IWorkStationListenerEvolveFactory.class);
-        	factory.setup(state, base.push(P_WORKSTATION));
+        	int numWorkstations = state.parameters.getInt(base.push(P_NUM_WORKSTATIONS), null, 0);
 
-        	workstationListener = factory.generateWorkStationListener();
+        	for (int i = 0; i < numWorkstations; i++) {
+        		Parameter workstationParam = base.push(P_WORKSTATION).push(i+"");
+	        	IWorkStationListenerEvolveFactory factory = (IWorkStationListenerEvolveFactory)
+	        			state.parameters.getInstanceForParameterEq(workstationParam, null, IWorkStationListenerEvolveFactory.class);
+	        	factory.setup(state, workstationParam);
+
+	        	workstationListeners.add(factory.generateWorkStationListener());
+        	}
 
     		// Feed in the shop simulation listener to input.
-            ((JasimaGPData) input).setWorkStationListener(workstationListener);
+            ((JasimaGPData) input).setWorkStationListener(workstationListeners);
         } catch (ParamClassLoadException ex) {
         	state.output.warning("No workstation listener provided for JasimaGPProblem.");
         }
@@ -117,11 +124,11 @@ public abstract class JasimaGPProblem extends GPProblem {
 	}
 
 	protected boolean hasWorkStationListener() {
-		return workstationListener != null;
+		return !workstationListeners.isEmpty();
 	}
 
-	protected IWorkStationListener getWorkStationListener() {
-		return workstationListener;
+	protected List<IWorkStationListener> getWorkStationListeners() {
+		return workstationListeners;
 	}
 
 	public boolean hasReferenceRule() {
@@ -217,9 +224,11 @@ public abstract class JasimaGPProblem extends GPProblem {
 		}
 	}
 
-	protected void clearForExperiment(IWorkStationListener listener) {
-		if (listener != null) {
-			listener.clear();
+	protected void clearForExperiment(List<IWorkStationListener> listeners) {
+		if (hasWorkStationListener()) {
+			for (IWorkStationListener listener : listeners) {
+				listener.clear();
+			}
 		}
 	}
 
@@ -234,7 +243,7 @@ public abstract class JasimaGPProblem extends GPProblem {
 	protected Experiment getExperiment(final EvolutionState state,
 			final AbsGPPriorityRule rule,
 			final int index,
-			final IWorkStationListener listener,
+			final List<IWorkStationListener> listeners,
 			final JasimaEvolveExperimentTracker tracker) {
 		JobShopExperiment experiment = ExperimentGenerator.getExperiment(simConfig,
 				rule,
@@ -243,7 +252,9 @@ public abstract class JasimaGPProblem extends GPProblem {
 		// Add the workstation listener.
 		experiment.addMachineListener(rule);
 		if (hasWorkStationListener()) {
-			experiment.addMachineListener(listener);
+			for (IWorkStationListener listener : listeners) {
+				experiment.addMachineListener(listener);
+			}
 		}
 
 		if (hasTracker()) {
@@ -265,8 +276,8 @@ public abstract class JasimaGPProblem extends GPProblem {
 
 		newObject.experimentTracker = experimentTracker;
 
-		newObject.workstationListener = workstationListener;
-		((JasimaGPData) newObject.input).setWorkStationListener(newObject.workstationListener);
+		newObject.workstationListeners = new ArrayList<IWorkStationListener>(workstationListeners);
+		((JasimaGPData) newObject.input).setWorkStationListener(newObject.workstationListeners);
 
 		return newObject;
 	}

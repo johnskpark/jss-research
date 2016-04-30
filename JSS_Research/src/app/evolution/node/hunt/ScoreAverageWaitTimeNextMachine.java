@@ -36,7 +36,7 @@ public class ScoreAverageWaitTimeNextMachine extends SingleLineGPNode {
 			ADFStack stack, GPIndividual individual, Problem problem) {
 		JasimaGPData data = (JasimaGPData) input;
 		PrioRuleTarget entry = data.getPrioRuleTarget();
-		HuntListener listener = (HuntListener) data.getWorkStationListener();
+		HuntListener listener = (HuntListener) data.getWorkStationListeners().get(0);
 
 		int nextTask = entry.getTaskNumber() + 1;
 		if (nextTask >= entry.numOps()) {
