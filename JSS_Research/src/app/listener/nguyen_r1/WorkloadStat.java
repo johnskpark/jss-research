@@ -31,11 +31,11 @@ public class WorkloadStat {
 		return sumCompletedProcTime;
 	}
 
-	public double getWorkloadInQueue() {
+	public double getTotalProcInQueue() {
 		return workloadInQueue;
 	}
 
-	public double getTotalRemainingWorkload() {
+	public double getTotalProcGlobal() {
 		return totalRemainingWorkload;
 	}
 

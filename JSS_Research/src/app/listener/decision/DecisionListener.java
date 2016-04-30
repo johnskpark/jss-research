@@ -1,6 +1,7 @@
 package app.listener.decision;
 
 import app.IWorkStationListener;
+import jasima.shopSim.core.PR;
 import jasima.shopSim.core.WorkStation;
 import jasima.shopSim.core.WorkStation.WorkStationEvent;
 
@@ -18,11 +19,17 @@ public class DecisionListener implements IWorkStationListener {
 	}
 
 	private void operationStart(WorkStation machine) {
-		// TODO
+		PR rule = machine.queue.getSequencingRule();
+
+		// TODO get the results of the rule from here.
+
+		// So what do I actually want here?
 	}
 
 	private void operationComplete(WorkStation machine) {
-		// TODO
+		PR rule = machine.queue.getSequencingRule();
+
+		// TODO get the results of the rule from here.
 	}
 
 	private void init(WorkStation machine) {

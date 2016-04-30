@@ -1,24 +1,47 @@
 package app.listener.nguyen_r1;
 
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 import app.IWorkStationListener;
 import jasima.shopSim.core.Operation;
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.WorkStation;
 import jasima.shopSim.core.WorkStation.WorkStationEvent;
 
+// TODO right, I need to test this to make sure that it works correctly.
 public class NguyenR1Listener implements IWorkStationListener {
 
 	private WorkloadStat[] stats;
 	private int numMachines;
 
-	private int bottleneckIndex;
+	private List<WorkloadStat> machinesByWorkload = new LinkedList<WorkloadStat>();
+	private Map<Integer, Integer> indexToPos = new HashMap<Integer, Integer>();
+	private double bneckTotalProcInQueue;
+	private int bneckIndex;
 
 	public NguyenR1Listener(int numMachines) {
 		this.numMachines = numMachines;
 		this.stats = new WorkloadStat[numMachines];
 	}
 
-	// TODO I will need to update the workload when the jobs arrive as well.
+	public int getNumMachines() {
+		return numMachines;
+	}
+
+	public WorkloadStat getWorkloadStat(int index) {
+		return stats[index];
+	}
+
+	public int getBneckIndex() {
+		return bneckIndex;
+	}
+
+	public WorkloadStat getBneckWorkloadStat() {
+		return stats[bneckIndex];
+	}
 
 	@Override
 	public void update(WorkStation notifier, WorkStationEvent event) {
@@ -31,8 +54,8 @@ public class NguyenR1Listener implements IWorkStationListener {
 		}
 	}
 
-	// So in the paper, Omega prime is the workload is the amount of workload in
-	// the current queue
+	// So in the paper, Omega prime is the workload is the
+	// amount of workload in the current queue
 	// I is the total workload remaining
 
 	public void jobArrival(WorkStation machine) {
@@ -47,7 +70,12 @@ public class NguyenR1Listener implements IWorkStationListener {
 
 		stats[index].operationArrivalInQueue(entry.getCurrentOperation());
 
-//		TODO find the bottleneck machine?
+		if (stats[index].getTotalProcInQueue() > bneckTotalProcInQueue) {
+			bneckTotalProcInQueue = stats[index].getTotalProcInQueue();
+			bneckIndex = index;
+		}
+
+		updateBottleneck(machine, true);
 	}
 
 	public void operationComplete(WorkStation machine) {
@@ -56,7 +84,7 @@ public class NguyenR1Listener implements IWorkStationListener {
 		PrioRuleTarget entry = machine.justCompleted;
 		stats[index].operationComplete(entry.getCurrentOperation());
 
-//		TODO find the bottleneck machine?
+		updateBottleneck(machine, false);
 	}
 
 	public void init(WorkStation machine) {
@@ -71,6 +99,41 @@ public class NguyenR1Listener implements IWorkStationListener {
 		for (int i = 0; i < numMachines; i++) {
 			stats[i] = new WorkloadStat(i);
 		}
+
+		machinesByWorkload.clear();
+		for (int i = 0; i < stats.length; i++) {
+			machinesByWorkload.add(stats[i]);
+			indexToPos.put(i, i);
+		}
+
+		bneckTotalProcInQueue = 0.0;
+		bneckIndex = 0;
+	}
+
+	private void updateBottleneck(WorkStation machine, boolean workloadIncreased) {
+		int pos = indexToPos.get(machine.index());
+
+		if (workloadIncreased && pos != 0) {
+			WorkloadStat stat = machinesByWorkload.remove(pos);
+
+			int index = pos - 1;
+			while (index >= 0 && machinesByWorkload.get(index).getTotalProcInQueue() < stat.getTotalProcInQueue()) {
+				index--;
+			}
+
+			machinesByWorkload.add(index, stat);
+		} else if (pos != machinesByWorkload.size() - 1){
+			WorkloadStat stat = machinesByWorkload.remove(pos);
+
+			int index = pos + 1;
+			while (index < machinesByWorkload.size() && machinesByWorkload.get(index).getTotalProcInQueue() > stat.getTotalProcInQueue()) {
+				index++;
+			}
+		}
+
+		WorkloadStat bneckStat = machinesByWorkload.get(0);
+		bneckTotalProcInQueue = bneckStat.getTotalProcInQueue();
+		bneckIndex = bneckStat.getIndex();
 	}
 
 }
