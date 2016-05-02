@@ -1,6 +1,6 @@
 package app.evolution;
 
-import java.util.List;
+import java.util.Map;
 
 import app.IWorkStationListener;
 import ec.gp.GPData;
@@ -12,7 +12,7 @@ public class JasimaGPData extends GPData {
 
 	private PrioRuleTarget entry;
 	private double priority;
-	private List<IWorkStationListener> workStationListeners;
+	private Map<String, IWorkStationListener> workStationListeners;
 
 	// Getters
 
@@ -24,7 +24,7 @@ public class JasimaGPData extends GPData {
 		return priority;
 	}
 
-	public List<IWorkStationListener> getWorkStationListeners() {
+	public Map<String, IWorkStationListener> getWorkStationListeners() {
 		return workStationListeners;
 	}
 
@@ -38,7 +38,7 @@ public class JasimaGPData extends GPData {
 		this.priority = priority;
 	}
 
-	public void setWorkStationListener(List<IWorkStationListener> listener) {
+	public void setWorkStationListener(Map<String, IWorkStationListener> listener) {
 		this.workStationListeners = listener;
 	}
 

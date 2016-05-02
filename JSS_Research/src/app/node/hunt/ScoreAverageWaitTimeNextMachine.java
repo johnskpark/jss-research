@@ -3,8 +3,10 @@ package app.node.hunt;
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.WorkStation;
 
+import java.util.Map;
 import java.util.Queue;
 
+import app.IWorkStationListener;
 import app.listener.hunt.HuntListener;
 import app.listener.hunt.OperationCompletionStat;
 import app.node.INode;
@@ -34,7 +36,9 @@ public class ScoreAverageWaitTimeNextMachine implements INode {
 	@Override
 	public double evaluate(NodeData data) {
 		PrioRuleTarget entry = data.getEntry();
-		HuntListener listener = (HuntListener) data.getWorkStationListener().get(HuntListener.class.getSimpleName());
+
+		Map<String, IWorkStationListener> listeners = data.getWorkStationListener();
+		HuntListener listener = (HuntListener) listeners.get(HuntListener.class.getSimpleName());
 
 		double averageWaitTime = 0.0;
 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jasima.shopSim.core.Operation;
+import jasima.shopSim.core.PrioRuleTarget;
 
 public class WorkloadStat {
 
@@ -13,7 +14,8 @@ public class WorkloadStat {
 	private double workloadInQueue;
 	private double totalRemainingWorkload;
 
-	private List<Operation> operationInQueue = new ArrayList<Operation>();
+	private List<PrioRuleTarget> jobsInQueue = new ArrayList<PrioRuleTarget>();
+	private List<Operation> opsInQueue = new ArrayList<Operation>();
 	private Operation minWorkloadInQueue;
 	private Operation maxWorkloadInQueue;
 
@@ -47,45 +49,57 @@ public class WorkloadStat {
 		return (maxWorkloadInQueue != null) ? maxWorkloadInQueue.procTime : 0.0;
 	}
 
+	public List<PrioRuleTarget> getJobsInQueue() {
+		return jobsInQueue;
+	}
+
+	public List<Operation> getOpInQueue() {
+		return opsInQueue;
+	}
+
 	// Setters
 
-	public void operationComplete(Operation op) {
+	public void operationComplete(PrioRuleTarget job, Operation op) {
 		sumCompletedProcTime += op.procTime;
 
 		workloadInQueue -= op.procTime;
 		totalRemainingWorkload -= op.procTime;
 
-		operationInQueue.remove(op);
-		if (minWorkloadInQueue.equals(op)) {
-			minWorkloadInQueue = null;
+		jobsInQueue.remove(job);
+		opsInQueue.remove(op);
 
-			for (int i = 0; i < operationInQueue.size(); i++) {
-				Operation newOp = operationInQueue.get(i);
-				if (minWorkloadInQueue == null || minWorkloadInQueue.procTime > newOp.procTime) {
+		if (minWorkloadInQueue.equals(op)) {
+			minWorkloadInQueue = opsInQueue.get(0);
+
+			for (int i = 1; i < opsInQueue.size(); i++) {
+				Operation newOp = opsInQueue.get(i);
+				if (minWorkloadInQueue.procTime > newOp.procTime) {
 					minWorkloadInQueue = newOp;
 				}
 			}
 		}
 		if (maxWorkloadInQueue.equals(op)) {
-			maxWorkloadInQueue = null;
+			maxWorkloadInQueue = opsInQueue.get(0);
 
-			for (int i = 0; i < operationInQueue.size(); i++) {
-				Operation newOp = operationInQueue.get(i);
-				if (maxWorkloadInQueue == null || maxWorkloadInQueue.procTime < newOp.procTime) {
+			for (int i = 1; i < opsInQueue.size(); i++) {
+				Operation newOp = opsInQueue.get(i);
+				if (maxWorkloadInQueue.procTime < newOp.procTime) {
 					maxWorkloadInQueue = newOp;
 				}
 			}
 		}
 	}
 
-	public void operationArrivalInQueue(Operation op) {
-		if (operationInQueue.contains(op)) {
+	public void operationArrivalInQueue(PrioRuleTarget job, Operation op) {
+		if (jobsInQueue.contains(job) || opsInQueue.contains(op)) {
 			return;
 		}
 
 		workloadInQueue += op.procTime;
 
-		operationInQueue.add(op);
+		jobsInQueue.add(job);
+		opsInQueue.add(op);
+
 		if (minWorkloadInQueue == null || minWorkloadInQueue.procTime > op.procTime) {
 			minWorkloadInQueue = op;
 		}

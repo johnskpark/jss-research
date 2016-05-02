@@ -66,7 +66,7 @@ public class NguyenR1Listener implements IWorkStationListener {
 			stats[op.machine.index()].jobArrivalInShop(op);
 		}
 
-		stats[index].operationArrivalInQueue(entry.getCurrentOperation());
+		stats[index].operationArrivalInQueue(entry, entry.getCurrentOperation());
 
 		if (stats[index].getTotalProcInQueue() > bneckTotalProcInQueue) {
 			bneckTotalProcInQueue = stats[index].getTotalProcInQueue();
@@ -80,7 +80,7 @@ public class NguyenR1Listener implements IWorkStationListener {
 		int index = machine.index();
 
 		PrioRuleTarget entry = machine.justCompleted;
-		stats[index].operationComplete(entry.getCurrentOperation());
+		stats[index].operationComplete(entry, entry.getCurrentOperation());
 
 		updateBottleneck(machine, false);
 	}

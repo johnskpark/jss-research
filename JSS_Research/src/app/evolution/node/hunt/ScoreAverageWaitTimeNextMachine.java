@@ -1,7 +1,9 @@
 package app.evolution.node.hunt;
 
+import java.util.Map;
 import java.util.Queue;
 
+import app.IWorkStationListener;
 import app.evolution.JasimaGPData;
 import app.evolution.node.SingleLineGPNode;
 import app.listener.hunt.HuntListener;
@@ -36,7 +38,9 @@ public class ScoreAverageWaitTimeNextMachine extends SingleLineGPNode {
 			ADFStack stack, GPIndividual individual, Problem problem) {
 		JasimaGPData data = (JasimaGPData) input;
 		PrioRuleTarget entry = data.getPrioRuleTarget();
-		HuntListener listener = (HuntListener) data.getWorkStationListeners().get(0);
+
+		Map<String, IWorkStationListener> listeners = data.getWorkStationListeners();
+		HuntListener listener = (HuntListener) listeners.get(HuntListener.class.getSimpleName());
 
 		int nextTask = entry.getTaskNumber() + 1;
 		if (nextTask >= entry.numOps()) {

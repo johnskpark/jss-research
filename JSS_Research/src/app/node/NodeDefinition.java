@@ -30,7 +30,7 @@ public enum NodeDefinition {
 
 	// Node definitions from Nguyen's R1 representation
 	ACTION("", 1, NodeType.OPERATOR),
-	DISPATCH("", 0, NodeType.SHOP),
+	DISPATCH("Dispatch", 0, NodeType.SHOP),
 	OP_GREATER_THAN(">", 2, NodeType.OPERATOR),
 	OP_LESS_THAN_OR_EQUAL("<=", 2, NodeType.OPERATOR),
 	ATTRIBUTE_WORKLOAD_RATIO("WR", 0, NodeType.SHOP),
