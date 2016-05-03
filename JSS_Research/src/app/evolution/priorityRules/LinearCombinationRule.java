@@ -86,7 +86,7 @@ public class LinearCombinationRule extends AbsGPPriorityRule {
 
 			for (int j = 0; j < q.size(); j++) {
 				double normPrio = (priorities[j] - worstPriority) / (bestPriority - worstPriority);
-				jobVotes.get(j).addScore(normPrio);
+				jobVotes.get(q.get(j)).addScore(normPrio);
 			}
 		}
 	}

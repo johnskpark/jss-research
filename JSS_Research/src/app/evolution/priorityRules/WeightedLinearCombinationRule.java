@@ -104,7 +104,7 @@ public class WeightedLinearCombinationRule extends AbsGPPriorityRule {
 
 			for (int j = 0; j < q.size(); j++) {
 				double normPrio = (priorities[j] - worstPriority) / (bestPriority - worstPriority);
-				jobVotes.get(i).addScore(weightInd.genome[i] * normPrio);
+				jobVotes.get(q.get(j)).addScore(weightInd.genome[i] * normPrio);
 			}
 		}
 	}
