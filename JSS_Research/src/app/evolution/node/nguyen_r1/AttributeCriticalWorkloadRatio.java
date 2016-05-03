@@ -1,5 +1,6 @@
 package app.evolution.node.nguyen_r1;
 
+import java.util.List;
 import java.util.Map;
 
 import app.IWorkStationListener;
@@ -13,6 +14,7 @@ import ec.Problem;
 import ec.gp.ADFStack;
 import ec.gp.GPData;
 import ec.gp.GPIndividual;
+import jasima.shopSim.core.Operation;
 import jasima.shopSim.core.PrioRuleTarget;
 
 public class AttributeCriticalWorkloadRatio extends SingleLineGPNode {
@@ -39,20 +41,32 @@ public class AttributeCriticalWorkloadRatio extends SingleLineGPNode {
 		NguyenR1Listener listener = (NguyenR1Listener) listeners.get(NguyenR1Listener.class.getSimpleName());
 
 		PrioRuleTarget entry = data.getPrioRuleTarget();
+		WorkloadStat machineStat = listener.getWorkloadStat(entry.getCurrMachine().index());
 
-		int cmi = 0; // critical machine index
+		List<PrioRuleTarget> jobsInQueue = machineStat.getJobsInQueue();
+		int cmIndex = 0; // critical machine index
+
 		for (int i = 1; i < listener.getNumMachines(); i++) {
 			WorkloadStat stat = listener.getWorkloadStat(i);
 
-			if (stat.getTotalProcGlobal() > listener.getWorkloadStat(cmi).getTotalProcGlobal()) {
-				cmi = i;
+			if (stat.getTotalProcGlobal() > listener.getWorkloadStat(cmIndex).getTotalProcGlobal()) {
+				cmIndex = i;
 			}
 		}
 
-		WorkloadStat cmiStat = listener.getWorkloadStat(cmi);
-		WorkloadStat machineStat = listener.getWorkloadStat(entry.getCurrMachine().index());
+		double cmProcTime = 0.0;
 
-		data.setPriority(1.0 * cmiStat.getTotalProcInQueue() / machineStat.getTotalProcInQueue());
+		for (PrioRuleTarget job : jobsInQueue) {
+			for (int i = job.getTaskNumber() + 1; i < job.numOps(); i++) {
+				Operation futureOp = job.getOps()[i];
+
+				if (futureOp.machine.index() == cmIndex) {
+					cmProcTime += job.currProcTime();
+				}
+			}
+		}
+
+		data.setPriority(1.0 * cmProcTime / machineStat.getTotalProcInQueue());
 	}
 
 }

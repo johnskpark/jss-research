@@ -46,16 +46,19 @@ public class AttributeBottleneckWorkloadRatio extends SingleLineGPNode {
 		List<PrioRuleTarget> jobsInQueue = machineStat.getJobsInQueue();
 		int bneckIndex = listener.getBneckIndex();
 
+		double bneckProcTime = 0.0;
+
 		for (PrioRuleTarget job : jobsInQueue) {
 			for (int i = job.getTaskNumber() + 1; i < job.numOps(); i++) {
 				Operation futureOp = job.getOps()[i];
-			}
 
+				if (futureOp.machine.index() == bneckIndex) {
+					bneckProcTime += job.currProcTime();
+				}
+			}
 		}
 
-		// TODO getTotalProcInQueue() is not what we want. We want the jobs that are waiting at the machines at the moment,
-		// and the number of operations associated with those jobs at the bottleneck machines.
-		// data.setPriority(1.0 * bneckStat.getTotalProcInQueue() / machineStat.getTotalProcInQueue());
+		data.setPriority(1.0 * bneckProcTime / machineStat.getTotalProcInQueue());
 	}
 
 }

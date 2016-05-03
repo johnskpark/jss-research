@@ -6,12 +6,14 @@ import app.IWorkStationListener;
 import app.evolution.JasimaGPData;
 import app.evolution.node.SingleLineGPNode;
 import app.listener.nguyen_r1.NguyenR1Listener;
+import app.listener.nguyen_r1.WorkloadStat;
 import app.node.NodeDefinition;
 import ec.EvolutionState;
 import ec.Problem;
 import ec.gp.ADFStack;
 import ec.gp.GPData;
 import ec.gp.GPIndividual;
+import jasima.shopSim.core.PrioRuleTarget;
 
 public class AttributeMachineProgress extends SingleLineGPNode {
 
@@ -36,6 +38,11 @@ public class AttributeMachineProgress extends SingleLineGPNode {
 		Map<String, IWorkStationListener> listeners = data.getWorkStationListeners();
 		NguyenR1Listener listener = (NguyenR1Listener) listeners.get(NguyenR1Listener.class.getSimpleName());
 
+		PrioRuleTarget entry = data.getPrioRuleTarget();
+		WorkloadStat machineStat = listener.getWorkloadStat(entry.getCurrMachine().index());
+
+		data.setPriority(1.0 * machineStat.getSumCompletedProcTime() /
+				(machineStat.getTotalProcGlobal() + machineStat.getSumCompletedProcTime()));
 	}
 
 }

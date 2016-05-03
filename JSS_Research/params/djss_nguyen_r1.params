@@ -1,0 +1,87 @@
+# Copyright 2006 by Sean Luke and George Mason University
+# Licensed under the Academic Free License version 3.0
+# See the file "LICENSE" for more information
+
+parent.0 = koza.params
+
+pop.subpop.0.species = ec.gp.ge.GESpecies
+pop.subpop.0.speciese.parser = ec.gp.ge.GrammarParser
+pop.subpop.0.species.ind = app.evolution.JasimaGPIndividual # TODO might need to make a GEIndividual
+pop.subpop.0.fitness = ec.gp.koza.KozaFitness
+
+pop.subpop.0.species.file.0 = nguyen_r1.grammar
+
+# the next four items are already defined in koza.params, but we
+# put them here to be clear.
+
+# For this MO problem, we most likely need two function sets to deal with
+# the two objective functions
+gp.fs.size = 1
+gp.fs.0 = ec.gp.GPFunctionSet
+# We'll call the function set "f0".
+gp.fs.0.name = f0
+
+# We have five functions in the function set.  They are:
+
+#breed.elite.0 = 40
+
+gp.fs.0.size = 11
+gp.fs.0.func.0 = app.evolution.node.nguyen_r1.ERCThreshold
+gp.fs.0.func.0.nc = nc0
+gp.fs.0.func.1 = app.evolution.node.basic.OpConditional
+gp.fs.0.func.1.nc = nc3
+gp.fs.0.func.2 = app.evolution.node.nguyen_r1.OpGreaterThan
+gp.fs.0.func.2.nc = nc2
+gp.fs.0.func.3 = app.evolution.node.nguyen_r1.OpLEQ
+gp.fs.0.func.3.nc = nc2
+gp.fs.0.func.4 = app.evolution.node.nguyen_r1.Dispatch
+gp.fs.0.func.4.nc = nc0
+gp.fs.0.func.4.num-rules = 11
+gp.fs.0.func.4.rule.0 = jasima.shopSim.prioRules.basic.FCFS
+gp.fs.0.func.4.rule.1 = jasima.shopSim.prioRules.basic.SPT
+gp.fs.0.func.4.rule.2 = app.priorityRules.LPT
+gp.fs.0.func.4.rule.3 = app.priorityRules.LSO
+gp.fs.0.func.4.rule.4 = app.priorityRules.LRM
+gp.fs.0.func.4.rule.5 = app.priorityRules.MWKR
+gp.fs.0.func.4.rule.6 = app.priorityRules.SWKR
+gp.fs.0.func.4.rule.7 = app.priorityRules.MOPR
+gp.fs.0.func.4.rule.8 = jasima.shopSim.prioRules.basic.EDD
+gp.fs.0.func.4.rule.9 = jasima.shopSim.prioRules.basic.SLK
+gp.fs.0.func.4.rule.10 = jasima.shopSim.prioRules.weighted.WSPT
+gp.fs.0.func.5 = app.evolution.node.nguyen_r1.AttributeBottleneckWorkload
+gp.fs.0.func.5.nc = nc0
+gp.fs.0.func.6 = app.evolution.node.nguyen_r1.AttributeCriticalMachineIdleness
+gp.fs.0.func.6.nc = nc0
+gp.fs.0.func.7 = app.evolution.node.nguyen_r1.AttributeCriticalWorkloadRatio
+gp.fs.0.func.7.nc = nc0
+gp.fs.0.func.8 = app.evolution.node.nguyen_r1.AttributeDeviationOfJobs
+gp.fs.0.func.8.nc = nc0
+gp.fs.0.func.9 = app.evolution.node.nguyen_r1.AttributeMachineProgress
+gp.fs.0.func.9.nc = nc0
+gp.fs.0.func.10 = app.evolution.node.nguyen_r1.AttributeWorkloadRatio
+gp.fs.0.func.10.nc = nc0
+
+stat = app.evolution.simple.JasimaSimpleStatistics
+
+eval.problem = ec.gp.ge.GEProblem
+eval.problem.problem = app.evolution.simple.JasimaSimpleproblem.problem
+eval.problem.problem.data = app.evolution.JasimaGPData
+
+eval.problem.problem.reference-rule = app.priorityRules.ATCPRNew
+
+eval.problem.problem.rule = app.evolution.priorityRules.BasicPriorityRule
+eval.problem.problem.fitness = app.evolution.simple.fitness.NormTWTFitness
+
+eval.problem.problem.simulator = app.simConfig.huntConfig.EvolveFactory
+eval.problem.problem.simulator.instances = 4op
+eval.problem.problem.simulator.seed = 15
+
+#eval.problem.problem.simulator = app.simConfig.taillardConfig.EvolveFactory
+
+eval.problem.problem.workstations = 2
+eval.problem.problem.workstation.0 = app.listener.hunt.EvolveFactory
+eval.problem.problem.workstation.0.max-jobs = 5
+eval.problem.problem.workstation.1 = app.listener.nguyen_r1.EvolveFactory
+
+# seed.0=26556
+seed.0=17

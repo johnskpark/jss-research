@@ -1,9 +1,9 @@
 package app.listener.nguyen_r1;
 
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import app.IWorkStationListener;
 import jasima.shopSim.core.Operation;
@@ -17,10 +17,14 @@ public class NguyenR1Listener implements IWorkStationListener {
 	private WorkloadStat[] stats;
 	private int numMachines;
 
-	private List<WorkloadStat> machinesByWorkload = new LinkedList<WorkloadStat>();
-	private Map<Integer, Integer> indexToPos = new HashMap<Integer, Integer>();
-	private double bneckTotalProcInQueue;
+	// TPQ = total processing time in queue
+	// TPG = total processing time remaining.
+
+	private List<WorkloadStat> machinesByTPQ = new LinkedList<WorkloadStat>();
+	private List<WorkloadStat> machinesByTPG = new LinkedList<WorkloadStat>();
+
 	private int bneckIndex;
+	private int cmIndex;
 
 	public NguyenR1Listener() {
 	}
@@ -39,6 +43,14 @@ public class NguyenR1Listener implements IWorkStationListener {
 
 	public WorkloadStat getBneckWorkloadStat() {
 		return stats[bneckIndex];
+	}
+
+	public int getCMIndex() {
+		return cmIndex;
+	}
+
+	public WorkloadStat getCMWorkloadStat() {
+		return stats[cmIndex];
 	}
 
 	@Override
@@ -68,12 +80,7 @@ public class NguyenR1Listener implements IWorkStationListener {
 
 		stats[index].operationArrivalInQueue(entry, entry.getCurrentOperation());
 
-		if (stats[index].getTotalProcInQueue() > bneckTotalProcInQueue) {
-			bneckTotalProcInQueue = stats[index].getTotalProcInQueue();
-			bneckIndex = index;
-		}
-
-		updateBottleneck(machine, true);
+		update();
 	}
 
 	public void operationComplete(WorkStation machine) {
@@ -82,7 +89,7 @@ public class NguyenR1Listener implements IWorkStationListener {
 		PrioRuleTarget entry = machine.justCompleted;
 		stats[index].operationComplete(entry, entry.getCurrentOperation());
 
-		updateBottleneck(machine, false);
+		update();
 	}
 
 	public void init(WorkStation machine) {
@@ -98,46 +105,49 @@ public class NguyenR1Listener implements IWorkStationListener {
 			stats[i] = new WorkloadStat(i);
 		}
 
-		machinesByWorkload.clear();
+		machinesByTPQ.clear();
+		machinesByTPG.clear();
 		for (int i = 0; i < stats.length; i++) {
-			machinesByWorkload.add(stats[i]);
-			indexToPos.put(i, i);
+			machinesByTPQ.add(stats[i]);
+			machinesByTPG.add(stats[i]);
 		}
 
-		bneckTotalProcInQueue = 0.0;
 		bneckIndex = 0;
+		cmIndex = 0;
 	}
 
-	private void updateBottleneck(WorkStation machine, boolean workloadIncreased) {
-		int pos = indexToPos.get(machine.index());
+	private void update() {
+		Collections.sort(machinesByTPQ, new TPQComparator());
+		Collections.sort(machinesByTPG, new TPGComparator());
 
-		if (workloadIncreased && pos != 0) {
-			WorkloadStat stat = machinesByWorkload.remove(pos);
+		bneckIndex = machinesByTPQ.get(0).getIndex();
+		cmIndex = machinesByTPG.get(0).getIndex();
+	}
 
-			int newPos = pos - 1;
-			while (newPos >= 0 && machinesByWorkload.get(newPos).getTotalProcInQueue() < stat.getTotalProcInQueue()) {
-				newPos--;
+	private class TPQComparator implements Comparator<WorkloadStat> {
+		@Override
+		public int compare(WorkloadStat o1, WorkloadStat o2) {
+			if (o1.getTotalProcInQueue() > o2.getTotalProcInQueue()) {
+				return -1;
+			} else if (o1.getTotalProcInQueue() < o2.getTotalProcInQueue()) {
+				return 1;
+			} else {
+				return 0;
 			}
-
-			newPos++;
-			machinesByWorkload.add(newPos, stat);
-			indexToPos.put(machine.index(), newPos);
-		} else if (pos != machinesByWorkload.size() - 1){
-			WorkloadStat stat = machinesByWorkload.remove(pos);
-
-			int newPos = pos + 1;
-			while (newPos < machinesByWorkload.size() && machinesByWorkload.get(newPos).getTotalProcInQueue() > stat.getTotalProcInQueue()) {
-				newPos++;
-			}
-
-			newPos--;
-			machinesByWorkload.add(newPos, stat);
-			indexToPos.put(machine.index(), newPos);
 		}
+	}
 
-		WorkloadStat bneckStat = machinesByWorkload.get(0);
-		bneckTotalProcInQueue = bneckStat.getTotalProcInQueue();
-		bneckIndex = bneckStat.getIndex();
+	private class TPGComparator implements Comparator<WorkloadStat> {
+		@Override
+		public int compare(WorkloadStat o1, WorkloadStat o2) {
+			if (o1.getTotalProcGlobal() > o2.getTotalProcGlobal()) {
+				return -1;
+			} else if (o1.getTotalProcGlobal() < o2.getTotalProcGlobal()) {
+				return 1;
+			} else {
+				return 0;
+			}
+		}
 	}
 
 }

@@ -1,0 +1,6 @@
+<action> ::= (OpConditional <if>) | (Dispatch <dispatch>)
+<if> ::= (<op> <action> <action>)
+<op> ::= (<rel> <attribute> <threshold>)
+<rel> ::= OpGreaterThan | OpLEQ
+<attribute> ::= AttributeBottleneckWorkload | AttributeCriticalMachineIdleness | AttributeCriticalWorkloadRatio | AttributeDeviationOfJobs | AttributeMachineProgress | AttributeWorkloadRatio
+<threshold> ::= ERCThreshold

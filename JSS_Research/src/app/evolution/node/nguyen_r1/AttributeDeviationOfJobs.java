@@ -13,6 +13,7 @@ import ec.Problem;
 import ec.gp.ADFStack;
 import ec.gp.GPData;
 import ec.gp.GPIndividual;
+import jasima.shopSim.core.PrioRuleTarget;
 
 public class AttributeDeviationOfJobs extends SingleLineGPNode {
 
@@ -37,16 +38,10 @@ public class AttributeDeviationOfJobs extends SingleLineGPNode {
 		Map<String, IWorkStationListener> listeners = data.getWorkStationListeners();
 		NguyenR1Listener listener = (NguyenR1Listener) listeners.get(NguyenR1Listener.class.getSimpleName());
 
-		double minOpProcTime = Double.POSITIVE_INFINITY;
-		double maxOpProcTime = Double.NEGATIVE_INFINITY;
-		for (int i = 0; i < listener.getNumMachines(); i++) {
-			WorkloadStat stat = listener.getWorkloadStat(i);
+		PrioRuleTarget entry = data.getPrioRuleTarget();
+		WorkloadStat machineStat = listener.getWorkloadStat(entry.getCurrMachine().index());
 
-			minOpProcTime = Math.min(minOpProcTime, stat.getMinWorkload());
-			maxOpProcTime = Math.max(maxOpProcTime, stat.getMaxWorkload());
-		}
-
-		data.setPriority(1.0 * minOpProcTime / maxOpProcTime);
+		data.setPriority(1.0 * machineStat.getMinWorkload() / machineStat.getMaxWorkload());
 	}
 
 }

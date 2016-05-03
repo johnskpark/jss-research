@@ -10,12 +10,13 @@ import app.evolution.AbsGPPriorityRule;
 import app.evolution.JasimaGPConfig;
 import ec.Individual;
 import ec.gp.GPIndividual;
+import ec.vector.DoubleVectorIndividual;
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
 import jasima.shopSim.prioRules.basic.ATC;
 
 // TODO this needs to be unit tested.
-public class LinearCombinationRule extends AbsGPPriorityRule {
+public class WeightedLinearCombinationRule extends AbsGPPriorityRule {
 
 	private static final long serialVersionUID = -2159123752873667029L;
 
@@ -23,10 +24,13 @@ public class LinearCombinationRule extends AbsGPPriorityRule {
 
 	private Individual[] individuals;
 
+	private DoubleVectorIndividual weightInd;
+	private GPIndividual[] gpInds;
+
 	private Map<PrioRuleTarget, Score> jobVotes = new HashMap<PrioRuleTarget, Score>();
 	private List<Score> jobRankings = new ArrayList<Score>();
 
-	public LinearCombinationRule() {
+	public WeightedLinearCombinationRule() {
 		super();
 		setTieBreaker(new ATC(ATC_K_VALUE));
 	}
@@ -36,6 +40,20 @@ public class LinearCombinationRule extends AbsGPPriorityRule {
 		super.setConfiguration(config);
 
 		individuals = config.getIndividuals();
+
+		if (individuals.length <= 1) {
+			throw new RuntimeException("There must be one vector individual and at least one GP individual.");
+		}
+
+		weightInd = (DoubleVectorIndividual) individuals[individuals.length -1];
+		if (weightInd.genome.length != individuals.length - 1) {
+			throw new RuntimeException("The length of the first individual must be equal to the number of GP individuals.");
+		}
+
+		gpInds = new GPIndividual[individuals.length - 1];
+		for (int i = 0; i < individuals.length - 1; i++) {
+			gpInds[i] = (GPIndividual) individuals[i];
+		}
 	}
 
 	@Override
@@ -87,7 +105,7 @@ public class LinearCombinationRule extends AbsGPPriorityRule {
 
 			for (int j = 0; j < q.size(); j++) {
 				double normPrio = (priorities[j] - worstPriority) / (bestPriority - worstPriority);
-				jobVotes.get(j).addScore(normPrio);
+				jobVotes.get(j).addScore(weightInd.genome[i] * normPrio);
 			}
 		}
 	}
@@ -116,7 +134,7 @@ public class LinearCombinationRule extends AbsGPPriorityRule {
 			return false;
 		}
 
-		LinearCombinationRule other = (LinearCombinationRule) o;
+		WeightedLinearCombinationRule other = (WeightedLinearCombinationRule) o;
 
 		if (this.individuals.length != other.individuals.length) {
 			return false;
