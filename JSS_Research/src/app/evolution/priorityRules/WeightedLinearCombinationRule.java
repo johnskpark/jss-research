@@ -78,7 +78,7 @@ public class WeightedLinearCombinationRule extends AbsGPPriorityRule {
 		}
 
 		// Go through the individuals and vote on the decisions.
-		for (int i = 0; i < individuals.length; i++) {
+		for (int i = 0; i < gpInds.length; i++) {
 			double[] priorities = new double[q.size()];
 			double bestPriority = Double.NEGATIVE_INFINITY;
 			double worstPriority = Double.POSITIVE_INFINITY;
@@ -88,14 +88,14 @@ public class WeightedLinearCombinationRule extends AbsGPPriorityRule {
 				PrioRuleTarget entry = q.get(j);
 				data.setPrioRuleTarget(entry);
 
-				GPIndividual ind = (GPIndividual) individuals[i];
+				GPIndividual ind = gpInds[i];
 				ind.trees[0].child.eval(state, threadnum, data, null, ind, null);
 
 				priorities[j] = data.getPriority();
 
 				// Add the priority assigned to the entry to the tracker.
 				if (tracker != null) {
-					tracker.addPriority(i, individuals[i], entry, priorities[j]);
+					tracker.addPriority(i, gpInds[i], entry, priorities[j]);
 				}
 
 				bestPriority = Math.max(bestPriority, priorities[j]);
