@@ -15,7 +15,6 @@ import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
 import jasima.shopSim.prioRules.basic.ATC;
 
-// TODO this needs to be unit tested.
 public class WeightedLinearCombinationRule extends AbsGPPriorityRule {
 
 	private static final long serialVersionUID = -2159123752873667029L;
@@ -105,7 +104,7 @@ public class WeightedLinearCombinationRule extends AbsGPPriorityRule {
 
 			for (int j = 0; j < q.size(); j++) {
 				double normPrio = (priorities[j] - worstPriority) / (bestPriority - worstPriority);
-				jobVotes.get(j).addScore(weightInd.genome[i] * normPrio);
+				jobVotes.get(i).addScore(weightInd.genome[i] * normPrio);
 			}
 		}
 	}

@@ -14,7 +14,6 @@ import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
 import jasima.shopSim.prioRules.basic.ATC;
 
-// TODO this needs to be unit tested.
 public class LinearCombinationRule extends AbsGPPriorityRule {
 
 	private static final long serialVersionUID = -2159123752873667029L;
