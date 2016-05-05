@@ -13,7 +13,7 @@ import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
 import jasima.shopSim.prioRules.basic.ATC;
 
-public class WeightedVoteRule extends AbsEvalPriorityRule {
+public class WeightedLinearCombinationRule extends AbsEvalPriorityRule {
 
 	private static final long serialVersionUID = -3888977719103597779L;
 
@@ -27,7 +27,7 @@ public class WeightedVoteRule extends AbsEvalPriorityRule {
 	private Map<PrioRuleTarget, Score> jobVotes = new HashMap<PrioRuleTarget, Score>();
 	private List<Score> jobRankings = new ArrayList<Score>();
 
-	public WeightedVoteRule() {
+	public WeightedLinearCombinationRule() {
 		super();
 		setTieBreaker(new ATC(ATC_K_VALUE));
 	}
@@ -66,27 +66,29 @@ public class WeightedVoteRule extends AbsEvalPriorityRule {
 
 		// Add weights to the voted jobs.
 		for (int i = 0; i < priorityRules.size(); i++) {
-			int entryIndex = getVotedEntryIndex(i, q);
+			double[] priorities = new double[q.size()];
+			double bestPriority = Double.NEGATIVE_INFINITY;
+			double worstPriority = Double.POSITIVE_INFINITY;
 
-			PrioRuleTarget entry = q.get(entryIndex);
-			jobVotes.get(entry).addWeight(weightVector.getValue(i));
-		}
-	}
+			for (int j = 0; j < q.size(); j++) {
+				getNodeData().setEntry(q.get(j));
 
-	private int getVotedEntryIndex(int indIndex, PriorityQueue<?> q) {
-		double bestPriority = Double.NEGATIVE_INFINITY;
-		int bestIndex = -1;
-		for (int i = 0; i < q.size(); i++) {
-			getNodeData().setEntry(q.get(i));
+				priorities[j] = priorityRules.get(i).evaluate(getNodeData());
 
-			double priority = priorityRules.get(indIndex).evaluate(getNodeData());
-			if (priority > bestPriority) {
-				bestPriority = priority;
-				bestIndex = i;
+				bestPriority = Math.max(bestPriority, priorities[j]);
+				worstPriority = Math.min(worstPriority, priorities[j]);
+			}
+
+			for (int j = 0; j < q.size(); j++) {
+				double normPrio;
+				if (bestPriority - worstPriority == 0.0) {
+					normPrio = 0.0;
+				} else {
+					normPrio = (priorities[j] - worstPriority) / (bestPriority - worstPriority);
+				}
+				jobVotes.get(q.get(j)).addScore(weightVector.getValue(i) * normPrio);
 			}
 		}
-
-		return bestIndex;
 	}
 
 	@Override
@@ -111,24 +113,18 @@ public class WeightedVoteRule extends AbsEvalPriorityRule {
 
 	private class Score implements Comparable<Score> {
 		private PrioRuleTarget entry;
-		private List<Double> weights = new ArrayList<Double>();
 		private double score = 0.0;
 
 		public Score(PrioRuleTarget entry) {
 			this.entry = entry;
 		}
 
-		public void addWeight(double weight) {
-			weights.add(weight);
-			score += weight;
+		public void addScore(double score) {
+			this.score += score;
 		}
 
 		public PrioRuleTarget getEntry() {
 			return entry;
-		}
-
-		public List<Double> getWeights() {
-			return weights;
 		}
 
 		public double getScore() {
@@ -142,7 +138,16 @@ public class WeightedVoteRule extends AbsEvalPriorityRule {
 			} else if (this.score < other.score) {
 				return 1;
 			} else {
-				return 0;
+				double prio1 = getTieBreaker().calcPrio(this.entry);
+				double prio2 = getTieBreaker().calcPrio(other.entry);
+
+				if (prio1 > prio2) {
+					return -1;
+				} else if (prio1 < prio2) {
+					return 1;
+				} else {
+					return 0;
+				}
 			}
 		}
 	}

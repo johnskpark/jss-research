@@ -8,9 +8,16 @@
 	</solverConfig>
 
 	<solverConfig>
-		<solverClass>app.evaluation.priorityRules.MachineSpecificPriorityRule</solverClass>
+		<solverClass>app.evaluation.priorityRules.LinearCombinationRule</solverClass>
 		<solverFile>
-			<ruleFile>coop_ms_4op.txt</ruleFile>
+			<ruleFile>coop_lc_4op.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.WeightedLinearCombinationRule</solverClass>
+		<solverFile>
+			<ruleFile>coop_weighted_lc_4op.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
@@ -21,7 +28,7 @@
 	</datasetConfig>
 
 	<outputConfig>
-	    <outputFile>coop_weighted_output.csv</outputFile>
+	    <outputFile>coop_lc_output.csv</outputFile>
 	</outputConfig>
 
 	<fitnessConfig>
