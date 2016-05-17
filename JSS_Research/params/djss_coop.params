@@ -95,6 +95,7 @@ eval.problem.fitness = app.evolution.coop.fitness.NormTWTFitness
 eval.problem.simulator = app.simConfig.huntConfig.EvolveFactory
 eval.problem.simulator.instances = 4op
 eval.problem.simulator.seed = 15
+eval.problem.simulator.rotate-seed = true
 
 #eval.problem.simulator = app.simConfig.taillardConfig.EvolveFactory
 #eval.problem.simulator.instances = tai15_15,tai20_15,tai20_20
