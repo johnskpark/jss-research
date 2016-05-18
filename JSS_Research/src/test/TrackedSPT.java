@@ -1,9 +1,13 @@
 package test;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import jasima.core.util.Pair;
 import jasima.shopSim.core.Job;
+import jasima.shopSim.core.JobShop;
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
 import jasima.shopSim.core.WorkStation;
@@ -31,9 +35,22 @@ public class TrackedSPT extends SPT {
 	public static double getSimTime() { return simTime; }
 	public static List<Double> getPriorities() { return priorities; }
 
+	private List<Pair<Integer, Integer>> machineSimTimePairs = new ArrayList<>();
+	private Set<Pair<Integer, Integer>> savedEvents = new HashSet<>();
+
 	@Override
 	public void beforeCalc(PriorityQueue<?> q) {
 		super.beforeCalc(q);
+
+		JobShop shop = q.get(0).getShop();
+		int oldSetupState = q.get(0).getCurrMachine().oldSetupState;
+		int newSetupState = q.get(0).getCurrMachine().newSetupState;
+
+		// I think these two can be used to sample specific times.
+		// So run it twice, and then calculate the beforeCalc() and calcPrio()
+		// for the.
+		q.get(0).getCurrMachine().index();
+		q.get(0).getShop().simTime();
 
 		try {
 			if (q.size() >= 10 && !notSet) {

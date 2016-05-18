@@ -6,10 +6,12 @@ import java.util.stream.Collectors;
 
 import jasima.core.util.observer.NotifierListener;
 import jasima.shopSim.core.Job;
+import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
 import jasima.shopSim.core.WorkStation;
 import jasima.shopSim.models.dynamicShop.DynamicShopExperiment;
 import jasima.shopSim.util.BasicJobStatCollector;
+import jasima.shopSim.util.WorkStationListenerBase;
 
 public class JasimaTrackingTest {
 
@@ -114,6 +116,19 @@ public class JasimaTrackingTest {
 		}
 
 		return m;
+	}
+
+	private static class MachineListener extends WorkStationListenerBase {
+
+		@Override
+		protected void operationStarted(WorkStation m,
+				PrioRuleTarget justStarted,
+				int oldSetupState,
+				int newSetupState,
+				double setupTime) {
+			// TODO
+		}
+
 	}
 
 }

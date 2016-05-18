@@ -21,6 +21,9 @@ public class DecisionListener implements IWorkStationListener {
 	private void operationStart(WorkStation machine) {
 		PR rule = machine.queue.getSequencingRule();
 
+		int index = machine.index();
+		double simTime = machine.shop().simTime();
+
 		// TODO get the results of the rule from here.
 
 		// So what do I actually want here?
