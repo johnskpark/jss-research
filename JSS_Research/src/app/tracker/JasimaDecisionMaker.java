@@ -2,11 +2,11 @@ package app.tracker;
 
 import java.util.List;
 
-public class JasimaEvolveDecisionMaker {
+public class JasimaDecisionMaker {
 
 	private List<JasimaPriorityStat> priorityStats;
 
-	public JasimaEvolveDecisionMaker() {
+	public JasimaDecisionMaker() {
 	}
 
 	public void setPriorityStats(List<JasimaPriorityStat> priorityStats) {

@@ -7,8 +7,8 @@ import app.evolution.coop.IJasimaCoopNiching;
 import app.evolution.coop.JasimaCoopGPIndividual;
 import app.evolution.coop.JasimaCoopIndividual;
 import app.simConfig.SimConfig;
-import app.tracker.JasimaEvolveExperiment;
-import app.tracker.JasimaEvolveExperimentTracker;
+import app.tracker.JasimaExperiment;
+import app.tracker.JasimaExperimentTracker;
 import app.tracker.distance.DistanceMeasure;
 import ec.EvolutionState;
 import ec.Individual;
@@ -37,7 +37,7 @@ public class CoopANHGPNiching implements IJasimaCoopNiching {
 
 	@Override
 	public void adjustFitness(EvolutionState state,
-			JasimaEvolveExperimentTracker tracker,
+			JasimaExperimentTracker tracker,
 			JasimaCoopGPIndividual individual) {
 		boolean[] updateFitness = new boolean[individual.getCollaborators().length];
 		Arrays.fill(updateFitness, true);
@@ -47,10 +47,10 @@ public class CoopANHGPNiching implements IJasimaCoopNiching {
 
 	@Override
 	public void adjustFitness(final EvolutionState state,
-			final JasimaEvolveExperimentTracker tracker,
+			final JasimaExperimentTracker tracker,
 			final boolean[] updateFitness,
 			final JasimaCoopIndividual individual) {
-		List<JasimaEvolveExperiment> experiments = tracker.getResults();
+		List<JasimaExperiment> experiments = tracker.getResults();
 		SimConfig simConfig = tracker.getSimConfig();
 
 		Individual[] collaborators = individual.getCollaborators();

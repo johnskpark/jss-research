@@ -7,8 +7,8 @@ import app.evolution.multilevel.IJasimaMultilevelFitnessListener;
 import app.evolution.multilevel.IJasimaMultilevelNiching;
 import app.evolution.multilevel.JasimaMultilevelStatistics;
 import app.simConfig.SimConfig;
-import app.tracker.JasimaEvolveExperiment;
-import app.tracker.JasimaEvolveExperimentTracker;
+import app.tracker.JasimaExperiment;
+import app.tracker.JasimaExperimentTracker;
 import app.tracker.distance.DistanceMeasure;
 import ec.EvolutionState;
 import ec.multilevel.MLSSubpopulation;
@@ -54,9 +54,9 @@ public class MultilevelNoNiching implements IJasimaMultilevelNiching {
 
 	@Override
 	public void adjustFitness(final EvolutionState state,
-			final JasimaEvolveExperimentTracker tracker,
+			final JasimaExperimentTracker tracker,
 			final MLSSubpopulation group) {
-		List<JasimaEvolveExperiment> experiments = tracker.getResults();
+		List<JasimaExperiment> experiments = tracker.getResults();
 		SimConfig simConfig = tracker.getSimConfig();
 
 		double[] adjustment = new double[group.individuals.length];

@@ -3,8 +3,8 @@ package app.tracker.distance.individual;
 import java.util.List;
 
 import app.simConfig.SimConfig;
-import app.tracker.JasimaEvolveDecision;
-import app.tracker.JasimaEvolveExperiment;
+import app.tracker.JasimaDecision;
+import app.tracker.JasimaExperiment;
 import app.tracker.JasimaPriorityStat;
 import app.tracker.distance.DistanceMeasure;
 import ec.EvolutionState;
@@ -16,14 +16,14 @@ public class IndividualPriorityDistance implements DistanceMeasure {
 
 	@Override
 	public double[][] getDistances(final EvolutionState state,
-			final JasimaEvolveExperiment experiment,
+			final JasimaExperiment experiment,
 			final SimConfig simConfig,
 			final Individual[] inds) {
 		double[][] distances = new double[inds.length][inds.length];
 
-		List<JasimaEvolveDecision> decisions = experiment.getDecisions();
+		List<JasimaDecision> decisions = experiment.getDecisions();
 
-		for (JasimaEvolveDecision decision : decisions) {
+		for (JasimaDecision decision : decisions) {
 			// Get the normalised priorities assigned to the selected job by the individuals.
 			double[] priorities = getNormPriorities(decision, inds);
 
@@ -48,7 +48,7 @@ public class IndividualPriorityDistance implements DistanceMeasure {
 	/**
 	 * TODO javadoc.
 	 */
-	protected double[] getNormPriorities(final JasimaEvolveDecision decision, final Individual[] inds) {
+	protected double[] getNormPriorities(final JasimaDecision decision, final Individual[] inds) {
 		double[] normPriorities = new double[inds.length];
 
 		List<PrioRuleTarget> entryRankingByGroup = decision.getEntryRankings();

@@ -7,7 +7,7 @@ import ec.Individual;
 import jasima.shopSim.core.PrioRuleTarget;
 
 // So the tracker's going to generate one of these for each dispatching decision.
-public class JasimaEvolveDecision {
+public class JasimaDecision {
 
 	private double startTime;
 
@@ -16,10 +16,10 @@ public class JasimaEvolveDecision {
 
 	private PrioRuleTarget startedEntry;
 
-	private Individual[] inds;
+	private Object[] inds;
 	private JasimaPriorityStat[] stats;
 
-	public JasimaEvolveDecision(List<PrioRuleTarget> entries, Individual[] inds, JasimaPriorityStat[] decisions) {
+	public JasimaDecision(List<PrioRuleTarget> entries, Object[] inds, JasimaPriorityStat[] decisions) {
 		this.entries = entries;
 
 		this.inds = inds;
@@ -48,7 +48,7 @@ public class JasimaEvolveDecision {
 		return startedEntry;
 	}
 
-	public Individual[] getIndividuals() {
+	public Object[] getRules() {
 		return inds;
 	}
 

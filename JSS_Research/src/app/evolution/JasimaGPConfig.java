@@ -1,7 +1,7 @@
 package app.evolution;
 
 import app.simConfig.SimConfig;
-import app.tracker.JasimaEvolveExperimentTracker;
+import app.tracker.JasimaExperimentTracker;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.gp.GPProblem;
@@ -17,7 +17,7 @@ public class JasimaGPConfig {
 	private GPProblem problem;
 	private JasimaGPData data;
 
-	private JasimaEvolveExperimentTracker tracker;
+	private JasimaExperimentTracker tracker;
 
 	private SimConfig simConfig;
 	private int simIndex;
@@ -56,7 +56,7 @@ public class JasimaGPConfig {
 		return tracker != null;
 	}
 
-	public JasimaEvolveExperimentTracker getTracker() {
+	public JasimaExperimentTracker getTracker() {
 		return tracker;
 	}
 
@@ -98,7 +98,7 @@ public class JasimaGPConfig {
 		this.data = data;
 	}
 
-	public void setTracker(JasimaEvolveExperimentTracker newTracker) {
+	public void setTracker(JasimaExperimentTracker newTracker) {
 		this.tracker = newTracker;
 	}
 

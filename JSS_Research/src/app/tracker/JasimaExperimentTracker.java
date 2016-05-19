@@ -5,7 +5,6 @@ import java.util.List;
 
 import app.evolution.IJasimaGPPriorityRule;
 import app.simConfig.SimConfig;
-import ec.Individual;
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
 
@@ -20,19 +19,19 @@ import jasima.shopSim.core.PriorityQueue;
 // Is there a way to reduce the memory usage for this?
 
 // TODO Also, I need to change this up to match the decision scenario situation.
-public class JasimaEvolveExperimentTracker {
+public class JasimaExperimentTracker {
 
 	public static final int NOT_SET = -1;
 
 	private IJasimaGPPriorityRule priorityRule;
 	private SimConfig simConfig;
 
-	private List<JasimaEvolveExperiment> experimentDecisions;
+	private List<JasimaExperiment> experimentDecisions;
 
-	private JasimaEvolveExperiment currentExperimentDecisions = null;
+	private JasimaExperiment currentExperimentDecisions = null;
 	private int currentExperimentIndex = NOT_SET;
 
-	public JasimaEvolveExperimentTracker() {
+	public JasimaExperimentTracker() {
 		// Empty constructor.
 	}
 
@@ -57,10 +56,10 @@ public class JasimaEvolveExperimentTracker {
 	}
 
 	public void initialise() {
-		experimentDecisions = new ArrayList<JasimaEvolveExperiment>(simConfig.getNumConfigs());
+		experimentDecisions = new ArrayList<JasimaExperiment>(simConfig.getNumConfigs());
 
 		for (int i = 0; i < simConfig.getNumConfigs(); i++) {
-			experimentDecisions.add(new JasimaEvolveExperiment(priorityRule.getIndividuals()));
+			experimentDecisions.add(new JasimaExperiment(priorityRule.getIndividuals()));
 		}
 	}
 
@@ -75,7 +74,7 @@ public class JasimaEvolveExperimentTracker {
 	/**
 	 * Get the current experiment.
 	 */
-	public JasimaEvolveExperiment getCurrentExperiment() {
+	public JasimaExperiment getCurrentExperiment() {
 		return currentExperimentDecisions;
 	}
 
@@ -96,8 +95,8 @@ public class JasimaEvolveExperimentTracker {
 	/**
 	 * Add the priority assigned to an entry for the dispatching decision.
 	 */
-	public void addPriority(int index, Individual ind, PrioRuleTarget entry, double priority) {
-		currentExperimentDecisions.addPriority(index, ind, entry, priority);
+	public void addPriority(int index, Object rule, PrioRuleTarget entry, double priority) {
+		currentExperimentDecisions.addPriority(index, rule, entry, priority);
 	}
 
 	/**
@@ -124,7 +123,7 @@ public class JasimaEvolveExperimentTracker {
 	/**
 	 * Get the results of all dispatching decisions made for a problem instance.
 	 */
-	public List<JasimaEvolveExperiment> getResults() {
+	public List<JasimaExperiment> getResults() {
 		return experimentDecisions;
 	}
 

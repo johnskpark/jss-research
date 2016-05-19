@@ -3,8 +3,8 @@ package app.tracker.distance.ensemble;
 import java.util.List;
 
 import app.simConfig.SimConfig;
-import app.tracker.JasimaEvolveDecision;
-import app.tracker.JasimaEvolveExperiment;
+import app.tracker.JasimaDecision;
+import app.tracker.JasimaExperiment;
 import app.tracker.JasimaPriorityStat;
 import app.tracker.distance.DistanceMeasure;
 import ec.EvolutionState;
@@ -15,18 +15,18 @@ public class EnsembleOverlapDistance implements DistanceMeasure {
 
 	@Override
 	public double[][] getDistances(final EvolutionState state,
-			final JasimaEvolveExperiment experiment,
+			final JasimaExperiment experiment,
 			final SimConfig simConfig,
 			final Individual[] inds) {
 		double[][] distances = new double[inds.length][inds.length];
 
-		List<JasimaEvolveDecision> decisions = experiment.getDecisions();
+		List<JasimaDecision> decisions = experiment.getDecisions();
 
 		if (decisions.size() == 0) {
 			System.out.println("Decision size is zero!");
 		}
 
-		for (JasimaEvolveDecision decision : decisions) {
+		for (JasimaDecision decision : decisions) {
 			// Get the overlap between the individuals for the particular decision.
 			boolean[][] overlaps = getOverlaps(decision, inds);
 
@@ -43,7 +43,7 @@ public class EnsembleOverlapDistance implements DistanceMeasure {
 		return distances;
 	}
 
-	protected boolean[][] getOverlaps(final JasimaEvolveDecision decision, final Individual[] inds) {
+	protected boolean[][] getOverlaps(final JasimaDecision decision, final Individual[] inds) {
 		boolean[][] overlaps = new boolean[inds.length][inds.length];
 
 		JasimaPriorityStat[] stats = decision.getStats();

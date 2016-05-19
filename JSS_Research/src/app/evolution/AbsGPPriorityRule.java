@@ -5,7 +5,7 @@ import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.WorkStation;
 import jasima.shopSim.core.WorkStation.WorkStationEvent;
 import app.IWorkStationListener;
-import app.tracker.JasimaEvolveExperimentTracker;
+import app.tracker.JasimaExperimentTracker;
 import ec.EvolutionState;
 
 /**
@@ -22,7 +22,7 @@ public abstract class AbsGPPriorityRule extends PR implements IJasimaGPPriorityR
 	protected int threadnum;
 
 	protected JasimaGPData data;
-	protected JasimaEvolveExperimentTracker tracker;
+	protected JasimaExperimentTracker tracker;
 
 	@Override
 	public void setConfiguration(JasimaGPConfig config) {
