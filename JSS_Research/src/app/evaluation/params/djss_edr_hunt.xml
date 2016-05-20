@@ -49,7 +49,7 @@
 	</datasetConfig>
 
 	<outputConfig>
-	    <outputFile>elitism_taillard_output_gen_20_38.csv</outputFile>
+	    <outputFile>coop_aggregation_output.csv</outputFile>
 	</outputConfig>
 
 	<fitnessConfig>

@@ -31,11 +31,13 @@ import org.xml.sax.SAXException;
 import app.IWorkStationListener;
 import app.node.INode;
 import app.node.NodeData;
+import app.priorityRules.TrackedPR;
 import app.simConfig.ExperimentGenerator;
 import app.simConfig.SimConfig;
 import app.util.RuleParser;
 import jasima.core.experiment.Experiment;
 import jasima.shopSim.core.JobShopExperiment;
+import jasima.shopSim.core.PR;
 
 public class JasimaEvalProblem {
 
@@ -51,6 +53,13 @@ public class JasimaEvalProblem {
 	public static final String XML_DATASET_BASE = "datasetConfig";
 	public static final String XML_DATASET_CLASS = "datasetClass";
 
+	public static final String XML_REFERENCE_BASE = "refConfig";
+	public static final String XML_REFERENCE_RULE = "refRule";
+	public static final String XML_REFERENCE_TRACKING = "refTracking";
+	public static final String XML_REFERENCE_NUM_JOBS = "numJobsThreshold";
+	public static final String XML_REFERENCE_NUM_SAMPLES = "numSamples";
+	public static final String XML_REFERENCE_SEED = "seed";
+
 	public static final String XML_FITNESS_BASE = "fitnessConfig";
 	public static final String XML_FITNESS_CLASS = "fitnessClass";
 
@@ -65,9 +74,10 @@ public class JasimaEvalProblem {
 
 	private SimConfig simConfig;
 
-	private List<IJasimaEvalFitness> fitnesses = new ArrayList<IJasimaEvalFitness>();
-	private List<IWorkStationListener> listeners = new ArrayList<IWorkStationListener>();
-	private Map<String, IWorkStationListener> listenerMap = new HashMap<String, IWorkStationListener>();
+	private List<IJasimaEvalFitness> fitnesses = new ArrayList<>();
+	private List<IWorkStationListener> listeners = new ArrayList<>();
+	private Map<String, IWorkStationListener> listenerMap = new HashMap<>();
+	private List<PR> referenceRules = new ArrayList<>();
 
 	private String outputCsv = null;
 
@@ -109,6 +119,7 @@ public class JasimaEvalProblem {
 		loadListeners(doc);
 		loadSolvers(doc);
 		loadDataset(doc);
+		loadReference(doc);
 		loadFitnesses(doc);
 		loadOutput(doc);
 	}
@@ -232,6 +243,42 @@ public class JasimaEvalProblem {
 		simConfig = factory.generateSimConfig();
 
 		System.out.println("SimConfig: loading complete.");
+	}
+
+	// Load in the reference rule from the XML configuration.
+	private void loadReference(Document doc) throws Exception {
+		System.out.println("Reference: loading reference rules.");
+
+		NodeList nList = doc.getElementsByTagName(XML_REFERENCE_BASE);
+
+		System.out.println("Reference: " + nList.getLength() + " reference rules detected.");
+
+		for (int i = 0; i < nList.getLength(); i++) {
+			Element refBase = (Element) nList.item(i);
+
+			Class<?> refClass = Class.forName(refBase
+					.getElementsByTagName(XML_REFERENCE_RULE)
+					.item(0)
+					.getTextContent());
+
+			PR refRule = (PR) refClass.newInstance();
+
+			NodeList nTrack = refBase.getElementsByTagName(XML_REFERENCE_TRACKING);
+			if (nTrack.getLength() != 0) {
+				Element trackBase = (Element) nTrack.item(0);
+
+				int numJobThreshold = Integer.parseInt(trackBase.getElementsByTagName(XML_REFERENCE_NUM_JOBS).item(0).getTextContent());
+				int numSamples = Integer.parseInt(trackBase.getElementsByTagName(XML_REFERENCE_NUM_SAMPLES).item(0).getTextContent());
+				long seed = Integer.parseInt(trackBase.getElementsByTagName(XML_REFERENCE_SEED).item(0).getTextContent());
+
+				TrackedPR trackedRefRule = new TrackedPR(refRule, numJobThreshold, numSamples, seed);
+				referenceRules.add(trackedRefRule);
+			} else {
+				referenceRules.add(refRule);
+			}
+		}
+
+		System.out.println("Reference: loading complete.");
 	}
 
 	// Load in the performance measure from the XML configuration.

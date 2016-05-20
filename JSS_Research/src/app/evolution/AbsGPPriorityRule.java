@@ -37,6 +37,14 @@ public abstract class AbsGPPriorityRule extends PR implements IJasimaGPPriorityR
 		}
 	}
 
+	protected boolean hasTracker() {
+		return tracker != null;
+	}
+
+	protected JasimaExperimentTracker getTracker() {
+		return tracker;
+	}
+
 	@Override
 	public void update(WorkStation notifier, WorkStationEvent event) {
 		if (event == WorkStation.WS_JOB_SELECTED && tracker != null) {

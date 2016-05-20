@@ -8,13 +8,17 @@ import java.util.Map;
 
 import app.evolution.AbsGPPriorityRule;
 import app.evolution.JasimaGPConfig;
+import app.tracker.JasimaExperimentTracker;
 import ec.Individual;
 import ec.gp.GPIndividual;
 import jasima.shopSim.core.PR;
 import jasima.shopSim.core.PrioRuleTarget;
+import jasima.shopSim.core.PriorityQueue;
 import jasima.shopSim.prioRules.basic.ATC;
 
-public class MultiPriorityRule extends AbsGPPriorityRule {
+public abstract class MultiPriorityRule extends AbsGPPriorityRule {
+
+	private static final long serialVersionUID = -4909211481701584132L;
 
 	public PR tieBreakerPR = new ATC(3.0); // Placeholder.
 
@@ -31,7 +35,13 @@ public class MultiPriorityRule extends AbsGPPriorityRule {
 	@Override
 	public void setConfiguration(JasimaGPConfig config) {
 		super.setConfiguration(config);
-		gpInds = (GPIndividual[]) config.getIndividuals(); // TODO
+
+		Individual[] inds = config.getIndividuals();
+
+		gpInds = new GPIndividual[inds.length];
+		for (int i = 0; i < inds.length; i++) {
+			gpInds[i] = (GPIndividual) inds[i];
+		}
 	}
 
 	@Override
@@ -39,6 +49,48 @@ public class MultiPriorityRule extends AbsGPPriorityRule {
 		return gpInds;
 	}
 
+	// Set the GP individual.
+	protected void setGPIndividuals(GPIndividual[] gpInds) {
+		this.gpInds = gpInds;
+	}
+
+	@Override
+	public void beforeCalc(PriorityQueue<?> q) {
+		super.beforeCalc(q);
+
+		clear();
+		initSituation(q);
+
+		for (int i = 0; i < gpInds.length; i++) {
+			double[] scores = calculateScore(gpInds[i], q);
+
+			for (int j = 0; j < q.size(); j++) {
+				jobScores.get(q.get(j)).addScore(scores[j]);
+			}
+
+			if (hasTracker()) {
+				JasimaExperimentTracker tracker = getTracker();
+
+				for (int j = 0; j < q.size(); j++) {
+					tracker.addPriority(i, gpInds[i], q.get(j), scores[j]);
+				}
+			}
+		}
+	}
+
+	// Initialise the job scores and rankings.
+	protected void initSituation(PriorityQueue<?> q) {
+		for (int i = 0; i < q.size(); i++) {
+			PrioRuleTarget entry = q.get(i);
+			Score score = new Score(entry);
+
+			jobScores.put(entry, score);
+			jobRankings.add(score);
+		}
+	}
+
+	// Calculate the score using the priority queue.
+	protected abstract double[] calculateScore(GPIndividual gpInd, PriorityQueue<?> q);
 
 	@Override
 	public double calcPrio(PrioRuleTarget entry) {
