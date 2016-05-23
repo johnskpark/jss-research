@@ -1,7 +1,6 @@
 package app.evaluation;
 
 import app.node.NodeData;
-import app.tracker.JasimaExperimentTracker;
 import jasima.shopSim.core.PR;
 
 public abstract class AbsEvalPriorityRule extends PR implements IJasimaEvalPriorityRule {

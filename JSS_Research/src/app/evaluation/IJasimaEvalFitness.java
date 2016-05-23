@@ -2,10 +2,17 @@ package app.evaluation;
 
 import java.util.Map;
 
+import app.tracker.JasimaExperimentTracker;
+import jasima.shopSim.core.PR;
+
 public interface IJasimaEvalFitness {
 
 	public String getHeaderName();
 
-	public String getRelevantResult(final AbsEvalPriorityRule solver, final Map<String, Object> results);
+	public boolean resultIsNumeric();
+
+	public double getNumericResult(final PR rule, final Map<String, Object> results, JasimaExperimentTracker tracker);
+
+	public String getStringResult(final PR rule, final Map<String, Object> results, JasimaExperimentTracker tracker);
 
 }

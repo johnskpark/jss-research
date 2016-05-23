@@ -25,7 +25,7 @@ public class TrackedPR extends PR {
 	private Set<DecisionEvent> sampledEvents;
 	private Random rand;
 
-	private PR[] priorityRules = null;
+	private List<PR> priorityRules = new ArrayList<>();
 
 	public TrackedPR(PR refRule, int jobThreshold, int sample, long s) {
 		super();
@@ -60,11 +60,11 @@ public class TrackedPR extends PR {
 		}
 	}
 
-	public PR[] getPriorityRules() {
+	public List<PR> getPriorityRules() {
 		return priorityRules;
 	}
 
-	public void setPriorityRules(PR[] priorityRules) {
+	public void setPriorityRules(List<PR> priorityRules) {
 		this.priorityRules = priorityRules;
 	}
 

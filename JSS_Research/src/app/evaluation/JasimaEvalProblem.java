@@ -34,6 +34,7 @@ import app.node.NodeData;
 import app.priorityRules.TrackedPR;
 import app.simConfig.ExperimentGenerator;
 import app.simConfig.SimConfig;
+import app.tracker.JasimaExperimentTracker;
 import app.util.RuleParser;
 import jasima.core.experiment.Experiment;
 import jasima.shopSim.core.JobShopExperiment;
@@ -70,6 +71,7 @@ public class JasimaEvalProblem {
 	public static final String XML_OUTPUT_FILE = "outputFile";
 
 	private Map<String, List<AbsEvalPriorityRule>> solversMap = new HashMap<String, List<AbsEvalPriorityRule>>();
+	private List<AbsEvalPriorityRule> allSolvers = new ArrayList<>();
 	private RuleParser parser = new RuleParser();
 
 	private SimConfig simConfig;
@@ -77,7 +79,10 @@ public class JasimaEvalProblem {
 	private List<IJasimaEvalFitness> fitnesses = new ArrayList<>();
 	private List<IWorkStationListener> listeners = new ArrayList<>();
 	private Map<String, IWorkStationListener> listenerMap = new HashMap<>();
+
 	private List<PR> referenceRules = new ArrayList<>();
+	private Map<String, Double> refFitness = new HashMap<>();
+	private JasimaExperimentTracker tracker = null;
 
 	private String outputCsv = null;
 
@@ -161,11 +166,13 @@ public class JasimaEvalProblem {
 
 				List<AbsEvalPriorityRule> solvers = loadRuleFile(solverClass, ruleFilename);
 				solversMap.put(ruleFilename, solvers);
+				allSolvers.addAll(solvers);
 			} else {
 				System.out.println("Solver: no rule file detected. Loading a static solver.");
 
 				List<AbsEvalPriorityRule> solvers = loadStaticSolvers(solverClass);
 				solversMap.put(solverClassStr, solvers);
+				allSolvers.addAll(solvers);
 			}
 		}
 
@@ -263,6 +270,8 @@ public class JasimaEvalProblem {
 
 			PR refRule = (PR) refClass.newInstance();
 
+			System.out.println("Reference: loaded the reference rule " + refRule.getClass().getSimpleName());
+
 			NodeList nTrack = refBase.getElementsByTagName(XML_REFERENCE_TRACKING);
 			if (nTrack.getLength() != 0) {
 				Element trackBase = (Element) nTrack.item(0);
@@ -272,6 +281,7 @@ public class JasimaEvalProblem {
 				long seed = Integer.parseInt(trackBase.getElementsByTagName(XML_REFERENCE_SEED).item(0).getTextContent());
 
 				TrackedPR trackedRefRule = new TrackedPR(refRule, numJobThreshold, numSamples, seed);
+
 				referenceRules.add(trackedRefRule);
 			} else {
 				referenceRules.add(refRule);
@@ -368,44 +378,92 @@ public class JasimaEvalProblem {
 
 		output.println();
 
-		for (String ruleFilename : solversMap.keySet()) {
-			List<AbsEvalPriorityRule> solvers = solversMap.get(ruleFilename);
-
-			System.out.println("Evaluation: evaluating " + ruleFilename + ". Number of rules: " + solvers.size() + ", Number of instances: " + simConfig.getNumConfigs());
-
-			for (AbsEvalPriorityRule solver : solvers) {
-				for (int i = 0; i < simConfig.getNumConfigs(); i++) {
-					output.printf("%s,%d,%s,%d", ruleFilename, solver.getSeed(), simConfig.getClass().getSimpleName(), i);
-
-					Experiment experiment = getExperiment(solver, i);
-					experiment.runExperiment();
-
-					for (IJasimaEvalFitness fitness : fitnesses) {
-						String result = fitness.getRelevantResult(solver, experiment.getResults());
-						output.printf(",%s", result);
-					}
-
-					output.println();
-
-					for (IWorkStationListener listener : listeners) {
-						listener.clear();
-					}
-				}
-
-				simConfig.reset();
-			}
-
-			System.out.println("Evaluation: " + ruleFilename + " evaluation complete.");
-		}
+		evaluateReference(output);
+		evaluateSolvers(output);
 
 		output.close();
 
 		System.out.println("Evaluation complete.");
 	}
 
-	// TODO
+	private void evaluateReference(PrintStream output) {
+		for (PR refRule : referenceRules) {
+			System.out.println("Evaluation: evaluating the reference rule " + refRule.getClass().getSimpleName());
 
-	private Experiment getExperiment(AbsEvalPriorityRule rule, int index) {
+			for (int i = 0; i < simConfig.getNumConfigs(); i++) {
+				// TODO bit hacky.
+				if (refRule instanceof TrackedPR) {
+					((TrackedPR) refRule).initSampleRun();
+				}
+
+				Experiment experiment = getExperiment(refRule, i);
+				experiment.runExperiment();
+
+				for (IJasimaEvalFitness fitness : fitnesses) {
+					if (fitness.resultIsNumeric()) {
+						double result = fitness.getNumericResult(refRule, experiment.getResults(), tracker);
+
+						refFitness.put(fitness.getClass().getSimpleName(), result);
+					}
+				}
+
+				for (IWorkStationListener listener : listeners) {
+					listener.clear();
+				}
+			}
+
+			simConfig.reset();
+		}
+	}
+
+	// TODO Need to incorporate the reference rule part here.
+	private void evaluateSolvers(PrintStream output) {
+		for (String ruleFilename : solversMap.keySet()) {
+			List<AbsEvalPriorityRule> solvers = solversMap.get(ruleFilename);
+
+			System.out.println("Evaluation: evaluating " + ruleFilename + ". Number of rules: " + solvers.size() + ", Number of instances: " + simConfig.getNumConfigs());
+
+			evaluateSolversUsingReference(ruleFilename, solvers, output);
+			evaluateSolversIndependently(ruleFilename, solvers, output);
+
+			System.out.println("Evaluation: " + ruleFilename + " evaluation complete.");
+		}
+	}
+
+	private void evaluateSolversUsingReference(String ruleFileName, List<AbsEvalPriorityRule> solvers, PrintStream output) {
+		for (int i = 0; i < simConfig.getNumConfigs(); i++) {
+			// TODO
+		}
+
+		simConfig.reset();
+
+	}
+
+	private void evaluateSolversIndependently(String ruleFilename, List<AbsEvalPriorityRule> solvers, PrintStream output) {
+		for (AbsEvalPriorityRule solver : solvers) {
+			for (int i = 0; i < simConfig.getNumConfigs(); i++) {
+				output.printf("%s,%d,%s,%d", ruleFilename, solver.getSeed(), simConfig.getClass().getSimpleName(), i);
+
+				Experiment experiment = getExperiment(solver, i);
+				experiment.runExperiment();
+
+				for (IJasimaEvalFitness fitness : fitnesses) {
+					String result = fitness.getStringResult(solver, experiment.getResults(), tracker);
+					output.printf(",%s", result);
+				}
+
+				output.println();
+
+				for (IWorkStationListener listener : listeners) {
+					listener.clear();
+				}
+			}
+		}
+
+		simConfig.reset();
+	}
+
+	private Experiment getExperiment(PR rule, int index) {
 		JobShopExperiment experiment = ExperimentGenerator.getExperiment(simConfig, rule, index);
 
 		for (IWorkStationListener listener : listeners) {

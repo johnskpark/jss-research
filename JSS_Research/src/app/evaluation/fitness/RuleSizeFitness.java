@@ -4,6 +4,8 @@ import java.util.Map;
 
 import app.evaluation.AbsEvalPriorityRule;
 import app.evaluation.IJasimaEvalFitness;
+import app.tracker.JasimaExperimentTracker;
+import jasima.shopSim.core.PR;
 
 public class RuleSizeFitness implements IJasimaEvalFitness {
 
@@ -13,8 +15,20 @@ public class RuleSizeFitness implements IJasimaEvalFitness {
 	}
 
 	@Override
-	public String getRelevantResult(final AbsEvalPriorityRule solver, final Map<String, Object> results) {
-		int numRules = solver.getNumRules();
+	public boolean resultIsNumeric() {
+		return false;
+	}
+
+	@Override
+	public double getNumericResult(final PR rule, final Map<String, Object> results, JasimaExperimentTracker tracker) {
+		throw new UnsupportedOperationException("The output is not numeric!");
+	}
+
+	@Override
+	public String getStringResult(final PR rule, final Map<String, Object> results, JasimaExperimentTracker tracker) {
+		AbsEvalPriorityRule evalRule = (AbsEvalPriorityRule) rule;
+
+		int numRules = evalRule.getNumRules();
 		String output = numRules + ",\"";
 
 		for (int i = 0; i < numRules; i++) {
@@ -22,12 +36,10 @@ public class RuleSizeFitness implements IJasimaEvalFitness {
 				output += ",";
 			}
 
-			output += solver.getRuleSize(i);
+			output += evalRule.getRuleSize(i);
 		}
 
 		output += "\"";
-
-
 		return output;
 	}
 
