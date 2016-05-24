@@ -47,10 +47,17 @@
 		<xs:element name="numSamples" type="xs:integer" minOccurs="1" maxOccurs="1" />
 		<xs:element name="seed" type="xs:integer" minOccurs="1" maxOccurs="1" />
 	</xs:sequence>
-</xs:complexType name="refTrackType">
+</xs:complexType>
 
 <!-- Fitness type definition -->
 <xs:complexType name="fitnessType">
+	<xs:sequence>
+		<xs:element name="fitnessClass" type="xs:string" minOccurs="1" maxOccurs="1" />
+	</xs:sequence>
+</xs:complexType>
+
+<!-- Reference fitness type definition -->
+<xs:complexType name="refFitnessType">
 	<xs:sequence>
 		<xs:element name="fitnessClass" type="xs:string" minOccurs="1" maxOccurs="1" />
 	</xs:sequence>
@@ -72,6 +79,7 @@
 			<xs:element name="outputConfig" type="outputType" minOccurs="1" maxOccurs="1" />
 			<xs:element name="fitnessConfig" type="fitnessType" minOccurs="1" maxOccurs="unbounded" />
 			<xs:element name="refConfig" type="refType" minOccurs="0" maxOccurs="1" />
+			<xs:element name="refFitnessConfig" type="refFitnessType" minOccurs="0" maxOccurs="1" />
 			<xs:element name="listenerConfig" type="listenerType" minOccurs="0" maxOccurs="unbounded" /> <!-- Optional -->
 		</xs:sequence>
 	</xs:complexType>

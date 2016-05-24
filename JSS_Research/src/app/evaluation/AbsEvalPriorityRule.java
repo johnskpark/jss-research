@@ -1,6 +1,7 @@
 package app.evaluation;
 
 import app.node.NodeData;
+import app.tracker.JasimaExperimentTracker;
 import jasima.shopSim.core.PR;
 
 public abstract class AbsEvalPriorityRule extends PR implements IJasimaEvalPriorityRule {
@@ -12,6 +13,12 @@ public abstract class AbsEvalPriorityRule extends PR implements IJasimaEvalPrior
 	private long seed;
 	private NodeData nodeData;
 
+	private JasimaExperimentTracker tracker;
+
+	public boolean hasExperimentTracker() {
+		return tracker != null;
+	}
+
 	// Getters
 
 	public long getSeed() {
@@ -22,6 +29,10 @@ public abstract class AbsEvalPriorityRule extends PR implements IJasimaEvalPrior
 		return nodeData;
 	}
 
+	public JasimaExperimentTracker getExperimentTracker() {
+		return tracker;
+	}
+
 	// Setters
 
 	public void setSeed(long seed) {
@@ -30,6 +41,10 @@ public abstract class AbsEvalPriorityRule extends PR implements IJasimaEvalPrior
 
 	public void setNodeData(NodeData data) {
 		this.nodeData = data;
+	}
+
+	public void setExperimentTracker(JasimaExperimentTracker tracker) {
+		this.tracker = tracker;
 	}
 
 	public abstract int getNumRules();

@@ -54,13 +54,17 @@
 	</fitnessConfig>
 
 	<refConfig>
-		<refRule>app.priorityRules.ATCPR</refRule>
+		<refRule>app.evaluation.priorityRules.EvalATC</refRule>
 		<refTracking>
 			<numJobsThreshold>20</numJobsThreshold>
 			<numSamples>100</numSamples>
 			<seed>15</seed>
 		</refTracking>
 	</refConfig>
+
+	<refFitnessConfig>
+		<fitnessClass>app.evaluation.fitness.DiversityFitness</fitnessClass>
+	</refFitnessConfig>
 
 	<listenerConfig>
 	    <listenerClass>app.listener.hunt.EvalFactory</listenerClass>

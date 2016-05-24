@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -77,6 +78,7 @@ public class JasimaEvalProblem {
 	private SimConfig simConfig;
 
 	private List<IJasimaEvalFitness> fitnesses = new ArrayList<>();
+	private List<IJasimaEvalFitness> refFitnesses = new ArrayList<>();
 	private List<IWorkStationListener> listeners = new ArrayList<>();
 	private Map<String, IWorkStationListener> listenerMap = new HashMap<>();
 
@@ -124,8 +126,9 @@ public class JasimaEvalProblem {
 		loadListeners(doc);
 		loadSolvers(doc);
 		loadDataset(doc);
-		loadReference(doc);
 		loadFitnesses(doc);
+		loadReference(doc);
+		loadReferenceFitness(doc);
 		loadOutput(doc);
 	}
 
@@ -252,6 +255,28 @@ public class JasimaEvalProblem {
 		System.out.println("SimConfig: loading complete.");
 	}
 
+	// Load in the performance measure from the XML configuration.
+	private void loadFitnesses(Document doc) throws Exception {
+		System.out.println("Fitness: loading fitnesses.");
+
+		NodeList nList = doc.getElementsByTagName(XML_FITNESS_BASE);
+
+		for (int i = 0; i < nList.getLength(); i++) {
+			Element fitnessBase = (Element) nList.item(i);
+
+			Class<?> fitnessClass = Class.forName(fitnessBase
+					.getElementsByTagName(XML_FITNESS_CLASS)
+					.item(0)
+					.getTextContent());
+
+			System.out.println("Fitness: loading fitness: " + fitnessClass.getSimpleName());
+
+			fitnesses.add((IJasimaEvalFitness) fitnessClass.newInstance());
+		}
+
+		System.out.println("Fitness: loading complete.");
+	}
+
 	// Load in the reference rule from the XML configuration.
 	private void loadReference(Document doc) throws Exception {
 		System.out.println("Reference: loading reference rules.");
@@ -291,9 +316,9 @@ public class JasimaEvalProblem {
 		System.out.println("Reference: loading complete.");
 	}
 
-	// Load in the performance measure from the XML configuration.
-	private void loadFitnesses(Document doc) throws Exception {
-		System.out.println("Fitness: loading fitnesses.");
+	// Load in the fitnesses associated with the reference rules.
+	private void loadReferenceFitness(Document doc) throws Exception {
+		System.out.println("Reference fitness: loading fitnesses.");
 
 		NodeList nList = doc.getElementsByTagName(XML_FITNESS_BASE);
 
@@ -305,12 +330,12 @@ public class JasimaEvalProblem {
 					.item(0)
 					.getTextContent());
 
-			System.out.println("Fitness: loading fitness: " + fitnessClass.getSimpleName());
+			System.out.println("Reference fitness: loading fitness: " + fitnessClass.getSimpleName());
 
 			fitnesses.add((IJasimaEvalFitness) fitnessClass.newInstance());
 		}
 
-		System.out.println("Fitness: loading complete.");
+		System.out.println("Reference fitness: loading complete.");
 	}
 
 	// Load in the workstation listener from the XML configuration (Optional).
@@ -391,7 +416,7 @@ public class JasimaEvalProblem {
 			System.out.println("Evaluation: evaluating the reference rule " + refRule.getClass().getSimpleName());
 
 			for (int i = 0; i < simConfig.getNumConfigs(); i++) {
-				// TODO bit hacky.
+				// FIXME bit hacky.
 				if (refRule instanceof TrackedPR) {
 					((TrackedPR) refRule).initSampleRun();
 				}
@@ -416,51 +441,109 @@ public class JasimaEvalProblem {
 		}
 	}
 
-	// TODO Need to incorporate the reference rule part here.
 	private void evaluateSolvers(PrintStream output) {
 		for (String ruleFilename : solversMap.keySet()) {
 			List<AbsEvalPriorityRule> solvers = solversMap.get(ruleFilename);
 
 			System.out.println("Evaluation: evaluating " + ruleFilename + ". Number of rules: " + solvers.size() + ", Number of instances: " + simConfig.getNumConfigs());
 
-			evaluateSolversUsingReference(ruleFilename, solvers, output);
-			evaluateSolversIndependently(ruleFilename, solvers, output);
+			List<String> results1 = evaluateSolversUsingReference(ruleFilename, solvers, output);
+			List<String> results2 = evaluateSolversIndependently(ruleFilename, solvers);
+
+			for (int i = 0; i < solvers.size(); i++) {
+				AbsEvalPriorityRule solver = solvers.get(i);
+
+				output.printf("%s,%d,%s,%d", ruleFilename, solver.getSeed(), simConfig.getClass().getSimpleName(), i);
+				output.print(results1.get(i));
+				output.print(results2.get(i));
+
+				output.println();
+			}
 
 			System.out.println("Evaluation: " + ruleFilename + " evaluation complete.");
 		}
 	}
 
-	private void evaluateSolversUsingReference(String ruleFileName, List<AbsEvalPriorityRule> solvers, PrintStream output) {
-		for (int i = 0; i < simConfig.getNumConfigs(); i++) {
-			// TODO
+	private List<String> evaluateSolversUsingReference(String ruleFileName, List<AbsEvalPriorityRule> solvers, PrintStream output) {
+		System.out.println("Evaluation: starting reference evaluation.");
+
+		List<String> resultsOutput = new ArrayList<>();
+
+		// Fill in the resultsOutput with empty strings at first.
+		for (int i = 0; i < solvers.size(); i++) {
+			resultsOutput.add("");
 		}
 
-		simConfig.reset();
+		for (PR refRule : referenceRules) {
+			// FIXME bit hacky.
+			if (refRule instanceof TrackedPR) {
+				TrackedPR trackedRefRule = (TrackedPR) refRule;
+				trackedRefRule.setPriorityRules(new ArrayList<PR>(solvers));
 
+				for (AbsEvalPriorityRule solver : solvers) {
+					solver.setExperimentTracker(tracker);
+				}
+
+				trackedRefRule.initTrackedRun();
+			}
+
+			for (int i = 0; i < simConfig.getNumConfigs(); i++) {
+				Experiment experiment = getExperiment(refRule, i);
+				experiment.runExperiment();
+
+				for (int j = 0; j < solvers.size(); j++) {
+					AbsEvalPriorityRule solver = solvers.get(j);
+
+					StringBuilder builder = new StringBuilder();
+
+					for (IJasimaEvalFitness fitness : fitnesses) {
+						 String result = fitness.getStringResult(solver, experiment.getResults(), tracker);
+						 builder.append("," + result);
+					}
+
+					resultsOutput.set(j, resultsOutput.get(j) + builder.toString());
+				}
+			}
+
+			simConfig.reset();
+		}
+
+		System.out.println("Evaluation: reference evaluation complete.");
+
+		return resultsOutput;
 	}
 
-	private void evaluateSolversIndependently(String ruleFilename, List<AbsEvalPriorityRule> solvers, PrintStream output) {
+	private List<String> evaluateSolversIndependently(String ruleFilename, List<AbsEvalPriorityRule> solvers) {
+		System.out.println("Evaluation: starting standard evaluation.");
+
+		List<String> resultsOutput = new ArrayList<>();
+
 		for (AbsEvalPriorityRule solver : solvers) {
 			for (int i = 0; i < simConfig.getNumConfigs(); i++) {
-				output.printf("%s,%d,%s,%d", ruleFilename, solver.getSeed(), simConfig.getClass().getSimpleName(), i);
 
 				Experiment experiment = getExperiment(solver, i);
 				experiment.runExperiment();
 
+				StringBuilder builder = new StringBuilder();
+
 				for (IJasimaEvalFitness fitness : fitnesses) {
 					String result = fitness.getStringResult(solver, experiment.getResults(), tracker);
-					output.printf(",%s", result);
+					builder.append("," + result);
 				}
 
-				output.println();
+				resultsOutput.add(builder.toString());
 
 				for (IWorkStationListener listener : listeners) {
 					listener.clear();
 				}
 			}
+
+			simConfig.reset();
 		}
 
-		simConfig.reset();
+		System.out.println("Evaluation: standard evaluation complete.");
+
+		return resultsOutput;
 	}
 
 	private Experiment getExperiment(PR rule, int index) {

@@ -1,10 +1,11 @@
 package app.evaluation.priorityRules;
 
-import jasima.shopSim.core.PrioRuleTarget;
 import app.evaluation.AbsEvalPriorityRule;
 import app.evaluation.JasimaEvalConfig;
 import app.node.INode;
 import app.node.NodeData;
+import jasima.shopSim.core.PrioRuleTarget;
+import jasima.shopSim.core.PriorityQueue;
 
 public class BasicPriorityRule extends AbsEvalPriorityRule {
 
@@ -24,6 +25,13 @@ public class BasicPriorityRule extends AbsEvalPriorityRule {
 
 		this.rule = config.getRules().get(0);
 		this.data = config.getNodeData();
+	}
+
+	@Override
+	public void beforeCalc(PriorityQueue<?> q) {
+		super.beforeCalc(q);
+
+		// TODO add in the tracking here.
 	}
 
 	@Override

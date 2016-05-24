@@ -72,19 +72,19 @@ public class TrackedPR extends PR {
 	public void beforeCalc(PriorityQueue<?> q) {
 		super.beforeCalc(q);
 
-		if (firstRun && q.size() >= numJobThreshold) {
+		if (q.size() < numJobThreshold) {
+			return;
+		}
+
+		if (firstRun) {
 			// Record this particular decision situation.
 			DecisionEvent event = getDecisionEvent(q.get(0));
 
 			recordedEvents.add(event);
-		} else {
-			// Determine whether this belongs to one of the sampled events.
-			DecisionEvent event = getDecisionEvent(q.get(0));
-
-			if (sampledEvents.contains(event)) {
-				for (PR pr : priorityRules) {
-					beforeCalcPR(pr, q);
-				}
+		} else if (sampledEvents.contains(getDecisionEvent(q.get(0)))) { // Determine whether this belongs to one of the sampled events.
+			// Run it over the different rules.
+			for (PR pr : priorityRules) {
+				beforeCalcPR(pr, q);
 			}
 		}
 	}
