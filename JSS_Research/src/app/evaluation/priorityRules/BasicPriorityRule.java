@@ -31,7 +31,7 @@ public class BasicPriorityRule extends AbsEvalPriorityRule {
 	public void beforeCalc(PriorityQueue<?> q) {
 		super.beforeCalc(q);
 
-		// TODO add in the tracking here.
+		// Basic priority rule does not have diversity measures.
 	}
 
 	@Override

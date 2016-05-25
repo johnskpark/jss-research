@@ -6,10 +6,11 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-import jasima.core.util.Pair;
+import app.tracker.DecisionEvent;
 import jasima.shopSim.core.PR;
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
+import jasima.shopSim.core.WorkStation;
 
 public class TrackedPR extends PR {
 
@@ -83,6 +84,7 @@ public class TrackedPR extends PR {
 			recordedEvents.add(event);
 		} else if (sampledEvents.contains(getDecisionEvent(q.get(0)))) { // Determine whether this belongs to one of the sampled events.
 			// Run it over the different rules.
+
 			for (PR pr : priorityRules) {
 				beforeCalcPR(pr, q);
 			}
@@ -98,50 +100,15 @@ public class TrackedPR extends PR {
 	}
 
 	private DecisionEvent getDecisionEvent(PrioRuleTarget entry) {
-		int machineIndex = entry.getCurrMachine().index();
+		WorkStation machine = entry.getCurrMachine();
 		double simTime = entry.getShop().simTime();
 
-		return new DecisionEvent(machineIndex, simTime);
+		return new DecisionEvent(machine, simTime);
 	}
 
 	@Override
 	public double calcPrio(PrioRuleTarget entry) {
 		return referenceRule.calcPrio(entry);
-	}
-
-	private class DecisionEvent extends Pair<Integer, Double> {
-		private static final long serialVersionUID = -3972902742837636133L;
-
-		private static final double epsilon = 0.001;
-
-		public DecisionEvent(int machineIndex, double simTime) {
-			super(machineIndex, simTime);
-		}
-
-		public int getMachineIndex() {
-			return a;
-		}
-
-		public double getSimTime() {
-			return b;
-		}
-
-		@Override
-		public boolean equals(Object o) {
-			if (o == null || this.getClass() != o.getClass()) {
-				return false;
-			}
-
-			DecisionEvent other = (DecisionEvent) o;
-			if (this.getMachineIndex() != other.getMachineIndex()) {
-				return false;
-			} else if (this.getSimTime() - epsilon < other.getSimTime() ||
-					this.getSimTime() + epsilon > other.getSimTime()) {
-				return false;
-			} else {
-				return true;
-			}
-		}
 	}
 
 }

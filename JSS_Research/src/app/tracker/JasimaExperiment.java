@@ -1,7 +1,9 @@
 package app.tracker;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
@@ -15,6 +17,7 @@ public class JasimaExperiment {
 	private List<JasimaDecisionMaker> decisionMakers;
 
 	private List<JasimaDecision> experimentDecisions;
+	private Map<DecisionEvent, JasimaDecision> expDecMap;
 
 	private JasimaDecision currentDecision;
 	private JasimaPriorityStat[] currentStats;
@@ -37,12 +40,19 @@ public class JasimaExperiment {
 		}
 
 		experimentDecisions = new ArrayList<JasimaDecision>();
+		expDecMap = new HashMap<DecisionEvent, JasimaDecision>();
 	}
 
 	/**
 	 * Load up a dispatching decision to the experiment with the specified priority queue.
 	 */
 	public void addDispatchingDecision(PriorityQueue<?> q) {
+		DecisionEvent event = getDecisionEvent(q);
+		// Ensure that duplicate dispatching decisions are not added.
+		if (expDecMap.containsKey(event)) {
+			return;
+		}
+
 		List<PrioRuleTarget> entries = new ArrayList<PrioRuleTarget>(q.size());
 		for (int i = 0; i < q.size(); i++) {
 			entries.add(q.get(i));
@@ -59,6 +69,13 @@ public class JasimaExperiment {
 
 		currentDecision = new JasimaDecision(entries, rule, currentStats);
 		experimentDecisions.add(currentDecision);
+		expDecMap.put(event, currentDecision);
+	}
+
+	public boolean hasDispatchingDecision(PriorityQueue<?> q) {
+		DecisionEvent event = getDecisionEvent(q);
+
+		return expDecMap.containsKey(event);
 	}
 
 	/**
@@ -101,6 +118,12 @@ public class JasimaExperiment {
 
 	public List<JasimaDecision> getDecisions() {
 		return experimentDecisions;
+	}
+
+	private DecisionEvent getDecisionEvent(PriorityQueue<?> q) {
+		PrioRuleTarget entry = q.get(0);
+
+		return new DecisionEvent(entry.getCurrMachine(), entry.getShop().simTime());
 	}
 
 }

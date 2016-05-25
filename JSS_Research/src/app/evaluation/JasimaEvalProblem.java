@@ -448,7 +448,7 @@ public class JasimaEvalProblem {
 			System.out.println("Evaluation: evaluating " + ruleFilename + ". Number of rules: " + solvers.size() + ", Number of instances: " + simConfig.getNumConfigs());
 
 			List<String> results1 = evaluateSolversUsingReference(ruleFilename, solvers, output);
-			List<String> results2 = evaluateSolversIndependently(ruleFilename, solvers);
+			List<String> results2 = evaluateSolvers(ruleFilename, solvers);
 
 			for (int i = 0; i < solvers.size(); i++) {
 				AbsEvalPriorityRule solver = solvers.get(i);
@@ -513,7 +513,7 @@ public class JasimaEvalProblem {
 		return resultsOutput;
 	}
 
-	private List<String> evaluateSolversIndependently(String ruleFilename, List<AbsEvalPriorityRule> solvers) {
+	private List<String> evaluateSolvers(String ruleFilename, List<AbsEvalPriorityRule> solvers) {
 		System.out.println("Evaluation: starting standard evaluation.");
 
 		List<String> resultsOutput = new ArrayList<>();

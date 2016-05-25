@@ -42,7 +42,7 @@
 	</datasetConfig>
 
 	<outputConfig>
-	    <outputFile>coop_aggregation_output.csv</outputFile>
+	    <outputFile>coop_aggregation_with_diversity_output.csv</outputFile>
 	</outputConfig>
 
 	<fitnessConfig>
