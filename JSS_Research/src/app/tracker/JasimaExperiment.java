@@ -5,42 +5,37 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import app.IMultiRule;
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
 
 // TODO trying to figure out how to do this efficiently.
 // Also, need to record which job that's voted for by the individual.
-public class JasimaExperiment {
+public class JasimaExperiment<T> {
 
-	private Object[] rule;
+	private Map<IMultiRule<T>, SolverData<T>> ruleMap;
 
 	private List<JasimaDecisionMaker> decisionMakers;
 
-	private List<JasimaDecision> experimentDecisions;
-	private Map<DecisionEvent, JasimaDecision> expDecMap;
+	private List<JasimaDecision<T>> experimentDecisions;
+	private Map<DecisionEvent, JasimaDecision<T>> experimentDecisionMap;
 
-	private JasimaDecision currentDecision;
-	private JasimaPriorityStat[] currentStats;
+	private JasimaDecision<T> currentDecision;
+	private Map<IMultiRule<T>, JasimaPriorityStat[]> currentStats;
 
 	/**
-	 * Initialise the experiment data with the individuals that make up the rule.
+	 * Initialise the experiment data with the solvers and the components that make up the solvers.
 	 */
-	public JasimaExperiment(Object[] rule) {
-		this.rule = rule;
+	public JasimaExperiment(List<IMultiRule<T>> solvers) {
+		ruleMap = new HashMap<>();
 
-		decisionMakers = new ArrayList<JasimaDecisionMaker>(rule.length);
-
-		for (int i = 0; i < rule.length; i++) {
-			List<JasimaPriorityStat> priorityStats = new ArrayList<JasimaPriorityStat>();
-
-			JasimaDecisionMaker decisionMaker = new JasimaDecisionMaker();
-			decisionMaker.setPriorityStats(priorityStats);
-
-			decisionMakers.add(decisionMaker);
+		for (IMultiRule<T> solver : solvers) {
+			ruleMap.put(solver, new SolverData<T>(solver));
 		}
 
-		experimentDecisions = new ArrayList<JasimaDecision>();
-		expDecMap = new HashMap<DecisionEvent, JasimaDecision>();
+		experimentDecisions = new ArrayList<>();
+		experimentDecisionMap = new HashMap<>();
+
 	}
 
 	/**
@@ -49,7 +44,7 @@ public class JasimaExperiment {
 	public void addDispatchingDecision(PriorityQueue<?> q) {
 		DecisionEvent event = getDecisionEvent(q);
 		// Ensure that duplicate dispatching decisions are not added.
-		if (expDecMap.containsKey(event)) {
+		if (experimentDecisionMap.containsKey(event)) {
 			return;
 		}
 
@@ -58,31 +53,35 @@ public class JasimaExperiment {
 			entries.add(q.get(i));
 		}
 
-		currentStats = new JasimaPriorityStat[rule.length];
+		for (IMultiRule<T> solver : ruleMap.keySet()) {
+			SolverData<T> data = ruleMap.get(solver);
 
-		for (int i = 0; i < rule.length; i++) {
-			JasimaPriorityStat stat = new JasimaPriorityStat(q.size());
+			JasimaPriorityStat[] stats = new JasimaPriorityStat[data.getRuleComponents().size()];
 
-			currentStats[i] = stat;
-			decisionMakers.get(i).addStat(stat);
+			for (int i = 0; i < data.getRuleComponents().size(); i++) {
+				stats[i] = new JasimaPriorityStat(q.size());
+				decisionMakers.get(i).addStat(stats[i]);
+			}
+
+			currentStats.put(solver, stats);
 		}
 
-		currentDecision = new JasimaDecision(entries, rule, currentStats);
+		currentDecision = new JasimaDecision<T>(entries, ruleMap, currentStats);
 		experimentDecisions.add(currentDecision);
-		expDecMap.put(event, currentDecision);
+		experimentDecisionMap.put(event, currentDecision);
 	}
 
 	public boolean hasDispatchingDecision(PriorityQueue<?> q) {
 		DecisionEvent event = getDecisionEvent(q);
 
-		return expDecMap.containsKey(event);
+		return experimentDecisionMap.containsKey(event);
 	}
 
 	/**
 	 * Add in the priority assigned to an entry by one of the individuals in the experiment.
 	 */
-	public void addPriority(int index, Object rule, PrioRuleTarget entry, double priority) {
-		currentStats[index].addPriority(entry, priority);
+	public void addPriority(IMultiRule<T> solver, int index, T rule, PrioRuleTarget entry, double priority) {
+		currentStats.get(solver)[index].addPriority(entry, priority);
 	}
 
 	/**
@@ -108,15 +107,15 @@ public class JasimaExperiment {
 
 	// Getters
 
-	public Object[] getRules() {
-		return rule;
+	public List<T> getRuleComponents(IMultiRule<T> solver) {
+		return ruleMap.get(solver).getRuleComponents();
 	}
 
 	public List<JasimaDecisionMaker> getDecisionMakers() {
 		return decisionMakers;
 	}
 
-	public List<JasimaDecision> getDecisions() {
+	public List<JasimaDecision<T>> getDecisions() {
 		return experimentDecisions;
 	}
 

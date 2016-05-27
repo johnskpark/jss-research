@@ -305,7 +305,9 @@ public class JasimaEvalProblem {
 				int numSamples = Integer.parseInt(trackBase.getElementsByTagName(XML_REFERENCE_NUM_SAMPLES).item(0).getTextContent());
 				long seed = Integer.parseInt(trackBase.getElementsByTagName(XML_REFERENCE_SEED).item(0).getTextContent());
 
-				TrackedPR trackedRefRule = new TrackedPR(refRule, numJobThreshold, numSamples, seed);
+				tracker = new JasimaExperimentTracker();
+
+				TrackedPR trackedRefRule = new TrackedPR(refRule, numJobThreshold, numSamples, seed, tracker);
 
 				referenceRules.add(trackedRefRule);
 			} else {

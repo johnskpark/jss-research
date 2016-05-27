@@ -56,14 +56,22 @@ public class EnsemblePriorityRule extends AbsEvalPriorityRule {
 
 		// Go through the individuals and vote on the decisions.
 		for (int i = 0; i < ruleNum; i++) {
+			INode rule = rules.get(i);
+
 			double bestPriority = Double.NEGATIVE_INFINITY;
 			int bestIndex = -1;
 
 			// Find the job selected by the individual rule.
 			for (int j = 0; j < q.size(); j++) {
+				PrioRuleTarget entry = q.get(j);
 				getNodeData().setEntry(q.get(j));
 
-				double priority = rules.get(i).evaluate(getNodeData());
+				double priority = rule.evaluate(getNodeData());
+
+				if (hasExperimentTracker()) {
+					getExperimentTracker().addPriority(i, this, rule, entry, priority);
+				}
+
 				if (priority > bestPriority) {
 					bestPriority = priority;
 					bestIndex = j;

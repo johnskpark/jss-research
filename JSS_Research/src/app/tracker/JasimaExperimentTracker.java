@@ -3,7 +3,7 @@ package app.tracker;
 import java.util.ArrayList;
 import java.util.List;
 
-import app.evolution.IJasimaGPPriorityRule;
+import app.IMultiRule;
 import app.simConfig.SimConfig;
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
@@ -19,26 +19,28 @@ import jasima.shopSim.core.PriorityQueue;
 // Is there a way to reduce the memory usage for this?
 
 // TODO Also, I need to change this up to match the decision scenario situation.
-public class JasimaExperimentTracker {
+public class JasimaExperimentTracker<T> {
 
 	public static final int NOT_SET = -1;
 
-	private IJasimaGPPriorityRule priorityRule;
+	private List<IMultiRule<T>> priorityRules;
 	private SimConfig simConfig;
 
-	private List<JasimaExperiment> experimentDecisions;
+	private List<JasimaExperiment<T>> experimentDecisions;
 
-	private JasimaExperiment currentExperimentDecisions = null;
+	private JasimaExperiment<T> currentExperimentDecisions = null;
 	private int currentExperimentIndex = NOT_SET;
 
 	public JasimaExperimentTracker() {
 		// Empty constructor.
+
+		priorityRules = new ArrayList<>();
 	}
 
 	// Getters
 
-	public IJasimaGPPriorityRule getPriorityRule() {
-		return priorityRule;
+	public List<? extends IMultiRule<T>> getPriorityRules() {
+		return priorityRules;
 	}
 
 	public SimConfig getSimConfig() {
@@ -47,19 +49,31 @@ public class JasimaExperimentTracker {
 
 	// Setters
 
-	public void setPriorityRule(IJasimaGPPriorityRule priorityRule) {
-		this.priorityRule = priorityRule;
+	public void setPriorityRule(List<IMultiRule<T>> prs) {
+		this.priorityRules = prs;
 	}
 
 	public void setSimConfig(SimConfig simConfig) {
 		this.simConfig = simConfig;
 	}
 
+	public void addRule(IMultiRule<T> rule) {
+		this.priorityRules.add(rule);
+	}
+
 	public void initialise() {
-		experimentDecisions = new ArrayList<JasimaExperiment>(simConfig.getNumConfigs());
+		experimentDecisions = new ArrayList<>(simConfig.getNumConfigs());
 
 		for (int i = 0; i < simConfig.getNumConfigs(); i++) {
-			experimentDecisions.add(new JasimaExperiment(priorityRule.getIndividuals()));
+			experimentDecisions.add(new JasimaExperiment<>(priorityRules));
+		}
+
+		for (int i = 0; i < simConfig.getNumConfigs(); i++) {
+			JasimaExperiment<T> experiment = new JasimaExperiment<>(priorityRules);
+
+			// TODO
+
+			experimentDecisions.add(experiment);
 		}
 	}
 
@@ -74,7 +88,7 @@ public class JasimaExperimentTracker {
 	/**
 	 * Get the current experiment.
 	 */
-	public JasimaExperiment getCurrentExperiment() {
+	public JasimaExperiment<T> getCurrentExperiment() {
 		return currentExperimentDecisions;
 	}
 
@@ -95,8 +109,9 @@ public class JasimaExperimentTracker {
 	/**
 	 * Add the priority assigned to an entry for the dispatching decision.
 	 */
-	public void addPriority(int index, Object rule, PrioRuleTarget entry, double priority) {
-		currentExperimentDecisions.addPriority(index, rule, entry, priority);
+	// TODO this will not work with the multiple solvers all trying to add priority values!!!
+	public void addPriority(IMultiRule<T> solver, int index, T rule, PrioRuleTarget entry, double priority) {
+		currentExperimentDecisions.addPriority(solver, index, rule, entry, priority);
 	}
 
 	/**
@@ -123,7 +138,7 @@ public class JasimaExperimentTracker {
 	/**
 	 * Get the results of all dispatching decisions made for a problem instance.
 	 */
-	public List<JasimaExperiment> getResults() {
+	public List<JasimaExperiment<T>> getResults() {
 		return experimentDecisions;
 	}
 

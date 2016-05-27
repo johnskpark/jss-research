@@ -7,6 +7,7 @@ import java.util.Random;
 import java.util.Set;
 
 import app.tracker.DecisionEvent;
+import app.tracker.JasimaExperimentTracker;
 import jasima.shopSim.core.PR;
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
@@ -28,7 +29,9 @@ public class TrackedPR extends PR {
 
 	private List<PR> priorityRules = new ArrayList<>();
 
-	public TrackedPR(PR refRule, int jobThreshold, int sample, long s) {
+	private JasimaExperimentTracker tracker;
+
+	public TrackedPR(PR refRule, int jobThreshold, int sample, long s, JasimaExperimentTracker t) {
 		super();
 
 		referenceRule = refRule;
@@ -37,6 +40,7 @@ public class TrackedPR extends PR {
 		seed = s;
 
 		recordedEvents = new ArrayList<>();
+		tracker = t;
 	}
 
 	public boolean isSampleRun() {
@@ -84,6 +88,7 @@ public class TrackedPR extends PR {
 			recordedEvents.add(event);
 		} else if (sampledEvents.contains(getDecisionEvent(q.get(0)))) { // Determine whether this belongs to one of the sampled events.
 			// Run it over the different rules.
+			tracker.addDispatchingDecision(q);
 
 			for (PR pr : priorityRules) {
 				beforeCalcPR(pr, q);

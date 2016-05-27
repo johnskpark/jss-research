@@ -2,12 +2,13 @@ package app.tracker;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-import ec.Individual;
+import app.IMultiRule;
 import jasima.shopSim.core.PrioRuleTarget;
 
 // So the tracker's going to generate one of these for each dispatching decision.
-public class JasimaDecision {
+public class JasimaDecision<T> {
 
 	private double startTime;
 
@@ -16,18 +17,18 @@ public class JasimaDecision {
 
 	private PrioRuleTarget startedEntry;
 
-	private Object[] inds;
-	private JasimaPriorityStat[] stats;
+	private Map<IMultiRule<T>, SolverData<T>> solvers;
+	private Map<IMultiRule<T>, JasimaPriorityStat[]> stats;
 
-	public JasimaDecision(List<PrioRuleTarget> entries, Object[] inds, JasimaPriorityStat[] decisions) {
+	public JasimaDecision(List<PrioRuleTarget> entries, Map<IMultiRule<T>, SolverData<T>> solvers, Map<IMultiRule<T>, JasimaPriorityStat[]> decisions) {
 		this.entries = entries;
 
-		this.inds = inds;
+		this.solvers = solvers;
 		this.stats = decisions;
 	}
 
-	public void addPriority(int index, PrioRuleTarget entry, double priority) {
-		stats[index].addPriority(entry, priority);
+	public void addPriority(IMultiRule<T> solver, int index, PrioRuleTarget entry, double priority) {
+		stats.get(solver)[index].addPriority(entry, priority);
 	}
 
 	// Getters
@@ -48,12 +49,12 @@ public class JasimaDecision {
 		return startedEntry;
 	}
 
-	public Object[] getRules() {
-		return inds;
+	public List<T> getRules(IMultiRule<T> solver) {
+		return solvers.get(solver).getRuleComponents();
 	}
 
-	public JasimaPriorityStat[] getStats() {
-		return stats;
+	public JasimaPriorityStat[] getStats(IMultiRule<T> solver) {
+		return stats.get(solver);
 	}
 
 	// Setters
@@ -72,14 +73,6 @@ public class JasimaDecision {
 
 	public void setSelectedEntry(PrioRuleTarget startedEntry) {
 		this.startedEntry = startedEntry;
-	}
-
-	public void setIndividuals(Individual[] inds) {
-		this.inds = inds;
-	}
-
-	public void setDecisions(JasimaPriorityStat[] decisions) {
-		this.stats = decisions;
 	}
 
 }

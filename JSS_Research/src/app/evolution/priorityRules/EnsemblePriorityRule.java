@@ -80,7 +80,7 @@ public class EnsemblePriorityRule extends AbsGPPriorityRule {
 
 				// Add the priority assigned to the entry to the tracker.
 				if (tracker != null) {
-					tracker.addPriority(i, individuals[i], entry, priority);
+					tracker.addPriority(i, this, individuals[i], entry, priority);
 				}
 
 				if (priority > bestPriority) {
