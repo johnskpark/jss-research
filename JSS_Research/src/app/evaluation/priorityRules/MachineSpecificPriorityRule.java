@@ -26,6 +26,11 @@ public class MachineSpecificPriorityRule extends AbsEvalPriorityRule {
 	}
 
 	@Override
+	public List<INode> getRuleComponents() {
+		return rules;
+	}
+
+	@Override
 	public int getNumRules() {
 		return rules.size();
 	}

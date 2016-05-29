@@ -40,7 +40,7 @@ public abstract class JasimaGPProblem extends GPProblem {
 	private ISimConfigEvolveFactory simConfigFactory;
 	private SimConfig simConfig;
 
-	private JasimaExperimentTracker<AbsGPPriorityRule> experimentTracker;
+	private JasimaExperimentTracker<Individual> experimentTracker;
 
 	private Map<String, IWorkStationListener> workstationListeners = new HashMap<String, IWorkStationListener>();
 
@@ -67,7 +67,7 @@ public abstract class JasimaGPProblem extends GPProblem {
 
 		// Setup the tracker.
 		try {
-			experimentTracker = (JasimaExperimentTracker<AbsGPPriorityRule>) state.parameters.getInstanceForParameterEq(base.push(P_TRACKER), null, JasimaExperimentTracker.class);
+			experimentTracker = (JasimaExperimentTracker<Individual>) state.parameters.getInstanceForParameterEq(base.push(P_TRACKER), null, JasimaExperimentTracker.class);
 			experimentTracker.setSimConfig(simConfig);
 		} catch (ParamClassLoadException ex) {
 			state.output.warning("No tracker provided for JasimaGPProblem.");
@@ -125,7 +125,7 @@ public abstract class JasimaGPProblem extends GPProblem {
 		return experimentTracker != null;
 	}
 
-	protected JasimaExperimentTracker<AbsGPPriorityRule> getTracker() {
+	protected JasimaExperimentTracker<Individual> getTracker() {
 		return experimentTracker;
 	}
 
@@ -161,7 +161,7 @@ public abstract class JasimaGPProblem extends GPProblem {
 
 		// Setup the tracker.
 		if (hasTracker()) {
-			getTracker().addPriorityRule(rule);
+			getTracker().addRule(rule);
 			getTracker().setSimConfig(simConfig);
 		}
 
@@ -207,7 +207,7 @@ public abstract class JasimaGPProblem extends GPProblem {
 
 	protected void configureRule(final EvolutionState state,
 			final AbsGPPriorityRule rule,
-			final JasimaExperimentTracker<AbsGPPriorityRule> tracker,
+			final JasimaExperimentTracker<Individual> tracker,
 			final Individual[] individuals,
 			final int[] subpops,
 			final int threadnum) {
@@ -224,7 +224,7 @@ public abstract class JasimaGPProblem extends GPProblem {
 		rule.setConfiguration(config);
 	}
 
-	protected void initialiseTracker(JasimaExperimentTracker<AbsGPPriorityRule> tracker) {
+	protected void initialiseTracker(JasimaExperimentTracker<Individual> tracker) {
 		if (tracker != null) {
 			tracker.initialise();
 		}
@@ -238,7 +238,7 @@ public abstract class JasimaGPProblem extends GPProblem {
 		}
 	}
 
-	protected void clearForRun(JasimaExperimentTracker<AbsGPPriorityRule> tracker) {
+	protected void clearForRun(JasimaExperimentTracker<Individual> tracker) {
 		if (tracker != null) {
 			tracker.clear();
 		}
@@ -250,7 +250,7 @@ public abstract class JasimaGPProblem extends GPProblem {
 			final AbsGPPriorityRule rule,
 			final int index,
 			final Map<String, IWorkStationListener> listeners,
-			final JasimaExperimentTracker<AbsGPPriorityRule> tracker) {
+			final JasimaExperimentTracker<Individual> tracker) {
 		JobShopExperiment experiment = ExperimentGenerator.getExperiment(simConfig,
 				rule,
 				index);

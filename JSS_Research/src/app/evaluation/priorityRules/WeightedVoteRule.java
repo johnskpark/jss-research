@@ -52,6 +52,11 @@ public class WeightedVoteRule extends AbsEvalPriorityRule {
 	}
 
 	@Override
+	public List<INode> getRuleComponents() {
+		return rules;
+	}
+
+	@Override
 	public void beforeCalc(PriorityQueue<?> q) {
 		super.beforeCalc(q);
 
@@ -123,10 +128,12 @@ public class WeightedVoteRule extends AbsEvalPriorityRule {
 			score += weight;
 		}
 
+		@SuppressWarnings("unused")
 		public PrioRuleTarget getEntry() {
 			return entry;
 		}
 
+		@SuppressWarnings("unused")
 		public List<Double> getWeights() {
 			return weights;
 		}

@@ -3,6 +3,7 @@ package app.evaluation.fitness;
 import java.util.Map;
 
 import app.evaluation.IJasimaEvalFitness;
+import app.node.INode;
 import app.stat.WeightedTardinessStat;
 import app.tracker.JasimaExperimentTracker;
 import jasima.shopSim.core.PR;
@@ -20,12 +21,12 @@ public class TWTFitness implements IJasimaEvalFitness {
 	}
 
 	@Override
-	public double getNumericResult(final PR rule, final Map<String, Object> results, JasimaExperimentTracker tracker) {
+	public double getNumericResult(final PR rule, final Map<String, Object> results, JasimaExperimentTracker<INode> tracker) {
 		return WeightedTardinessStat.getTotalWeightedTardiness(results);
 	}
 
 	@Override
-	public String getStringResult(final PR rule, final Map<String, Object> results, JasimaExperimentTracker tracker) {
+	public String getStringResult(final PR rule, final Map<String, Object> results, JasimaExperimentTracker<INode> tracker) {
 		return String.format("%f", WeightedTardinessStat.getTotalWeightedTardiness(results));
 	}
 

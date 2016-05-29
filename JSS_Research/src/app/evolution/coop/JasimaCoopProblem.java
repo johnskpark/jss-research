@@ -171,7 +171,7 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 		fitness.clear();
 
 		if (hasTracker() && niching != null) {
-			niching.adjustFitness(state, getTracker(), updateFitness, (JasimaCoopIndividual) inds[0]);
+			niching.adjustFitness(state, getTracker(), updateFitness, (JasimaCoopIndividual) inds[0], coopRule);
 		}
 
 		clearForRun(getTracker());

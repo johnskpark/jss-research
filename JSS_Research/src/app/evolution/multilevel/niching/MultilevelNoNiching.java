@@ -1,8 +1,10 @@
 package app.evolution.multilevel.niching;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import app.evolution.AbsGPPriorityRule;
 import app.evolution.multilevel.IJasimaMultilevelFitnessListener;
 import app.evolution.multilevel.IJasimaMultilevelNiching;
 import app.evolution.multilevel.JasimaMultilevelStatistics;
@@ -11,6 +13,7 @@ import app.tracker.JasimaExperiment;
 import app.tracker.JasimaExperimentTracker;
 import app.tracker.distance.DistanceMeasure;
 import ec.EvolutionState;
+import ec.Individual;
 import ec.multilevel.MLSSubpopulation;
 import ec.util.ParamClassLoadException;
 import ec.util.Parameter;
@@ -25,15 +28,16 @@ public class MultilevelNoNiching implements IJasimaMultilevelNiching {
 
 	public static final double LEARNING_RATE = 0.5;
 
-	private DistanceMeasure measure;
+	private DistanceMeasure<Individual> measure;
 	private MultilevelNichingHistory history;
 
 	private List<IJasimaMultilevelFitnessListener> listeners = new ArrayList<IJasimaMultilevelFitnessListener>();
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
 		try {
-			measure = (DistanceMeasure) state.parameters.getInstanceForParameterEq(base.push(P_DISTANCE), null, DistanceMeasure.class);
+			measure = (DistanceMeasure<Individual>) state.parameters.getInstanceForParameterEq(base.push(P_DISTANCE), null, DistanceMeasure.class);
 			history = new MultilevelNichingHistory();
 		} catch (ParamClassLoadException ex) {
 			state.output.fatal("The distance measure was not correctly initialised for MultilevelANHGPNiching.");
@@ -54,28 +58,31 @@ public class MultilevelNoNiching implements IJasimaMultilevelNiching {
 
 	@Override
 	public void adjustFitness(final EvolutionState state,
-			final JasimaExperimentTracker tracker,
-			final MLSSubpopulation group) {
-		List<JasimaExperiment> experiments = tracker.getResults();
+			final JasimaExperimentTracker<Individual> tracker,
+			final MLSSubpopulation group,
+			final AbsGPPriorityRule solver) {
+		List<JasimaExperiment<Individual>> experiments = tracker.getResults();
 		SimConfig simConfig = tracker.getSimConfig();
 
-		double[] adjustment = new double[group.individuals.length];
+		List<Individual> individuals = Arrays.asList(group.individuals);
+
+		double[] adjustment = new double[individuals.size()];
 
 		// Calculate the adjustment from the individual's density.
 		for (int i = 0; i < simConfig.getNumConfigs(); i++) {
 			// Calculate the distances between the individuals.
-			double[][] distances = measure.getDistances(state, experiments.get(i), simConfig, group.individuals);
+			double[][] distances = measure.getDistances(state, experiments.get(i), simConfig, solver, individuals);
 
 			// Calculate the density of the individuals.
 			double[] simAdjust = getAdjustments(state, distances);
 
-			for (int j = 0; j < group.individuals.length; j++) {
+			for (int j = 0; j < individuals.size(); j++) {
 				adjustment[j] += simAdjust[j];
 			}
 
 			// Add in the distances to the statistics.
 			for (IJasimaMultilevelFitnessListener listener : listeners) {
-				listener.addDiversity(JasimaMultilevelStatistics.INDIVIDUAL_FITNESS, i, group.individuals, simAdjust);
+				listener.addDiversity(JasimaMultilevelStatistics.INDIVIDUAL_FITNESS, i, individuals, simAdjust);
 			}
 		}
 

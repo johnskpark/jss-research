@@ -36,7 +36,7 @@ public class JasimaSimpleProblem extends JasimaGPProblem {
 		fitness.setProblem(this);
 
 		// Setup the tracker.
-		if (hasTracker()) { getTracker().setPriorityRule(rule); }
+		if (hasTracker()) { getTracker().addRule(rule); }
 	}
 
 	@Override

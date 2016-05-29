@@ -124,7 +124,7 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 
 			// Add in the niching adjustment to the fitnesses.
 			if (hasTracker() && niching != null) {
-				niching.adjustFitness(state, getTracker(), group);
+				niching.adjustFitness(state, getTracker(), group, groupRule);
 			}
 
 			group.setEvaluated(true);

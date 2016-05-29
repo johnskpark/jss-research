@@ -33,6 +33,11 @@ public class WeightedLinearCombinationRule extends AbsEvalPriorityRule {
 	}
 
 	@Override
+	public List<INode> getRuleComponents() {
+		return rules;
+	}
+
+	@Override
 	public void setConfiguration(JasimaEvalConfig config) {
 		setSeed(config.getSeed());
 		setNodeData(config.getNodeData());
@@ -121,10 +126,6 @@ public class WeightedLinearCombinationRule extends AbsEvalPriorityRule {
 
 		public void addScore(double score) {
 			this.score += score;
-		}
-
-		public PrioRuleTarget getEntry() {
-			return entry;
 		}
 
 		public double getScore() {

@@ -8,7 +8,6 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -84,7 +83,7 @@ public class JasimaEvalProblem {
 
 	private List<PR> referenceRules = new ArrayList<>();
 	private Map<String, Double> refFitness = new HashMap<>();
-	private JasimaExperimentTracker tracker = null;
+	private JasimaExperimentTracker<INode> tracker = null;
 
 	private String outputCsv = null;
 
@@ -305,7 +304,7 @@ public class JasimaEvalProblem {
 				int numSamples = Integer.parseInt(trackBase.getElementsByTagName(XML_REFERENCE_NUM_SAMPLES).item(0).getTextContent());
 				long seed = Integer.parseInt(trackBase.getElementsByTagName(XML_REFERENCE_SEED).item(0).getTextContent());
 
-				tracker = new JasimaExperimentTracker();
+				tracker = new JasimaExperimentTracker<>();
 
 				TrackedPR trackedRefRule = new TrackedPR(refRule, numJobThreshold, numSamples, seed, tracker);
 

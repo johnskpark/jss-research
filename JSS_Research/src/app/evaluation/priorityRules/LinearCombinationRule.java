@@ -39,6 +39,11 @@ public class LinearCombinationRule extends AbsEvalPriorityRule {
 	}
 
 	@Override
+	public List<INode> getRuleComponents() {
+		return rules;
+	}
+
+	@Override
 	public void beforeCalc(PriorityQueue<?> q) {
 		super.beforeCalc(q);
 
@@ -124,6 +129,7 @@ public class LinearCombinationRule extends AbsEvalPriorityRule {
 			this.score += score;
 		}
 
+		@SuppressWarnings("unused")
 		public PrioRuleTarget getEntry() {
 			return entry;
 		}

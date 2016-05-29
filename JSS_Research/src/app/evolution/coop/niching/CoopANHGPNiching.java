@@ -3,6 +3,7 @@ package app.evolution.coop.niching;
 import java.util.Arrays;
 import java.util.List;
 
+import app.evolution.AbsGPPriorityRule;
 import app.evolution.coop.IJasimaCoopNiching;
 import app.evolution.coop.JasimaCoopGPIndividual;
 import app.evolution.coop.JasimaCoopIndividual;
@@ -24,43 +25,46 @@ public class CoopANHGPNiching implements IJasimaCoopNiching {
 
 	public static final double LEARNING_RATE = 0.5;
 
-	private DistanceMeasure measure;
+	private DistanceMeasure<Individual> measure;
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
 		try {
-			measure = (DistanceMeasure) state.parameters.getInstanceForParameterEq(base.push(P_DISTANCE), null, DistanceMeasure.class);
+			measure = (DistanceMeasure<Individual>) state.parameters.getInstanceForParameterEq(base.push(P_DISTANCE), null, DistanceMeasure.class);
 		} catch (ParamClassLoadException ex) {
 			state.output.fatal("The distance measure was not correctly initialised for MultilevelANHGPNiching.");
 		}
 	}
 
 	@Override
-	public void adjustFitness(EvolutionState state,
-			JasimaExperimentTracker tracker,
-			JasimaCoopGPIndividual individual) {
+	public void adjustFitness(final EvolutionState state,
+			final JasimaExperimentTracker<Individual> tracker,
+			final JasimaCoopGPIndividual individual,
+			final AbsGPPriorityRule solver) {
 		boolean[] updateFitness = new boolean[individual.getCollaborators().length];
 		Arrays.fill(updateFitness, true);
 
-		adjustFitness(state, tracker, updateFitness, individual);
+		adjustFitness(state, tracker, updateFitness, individual, solver);
 	}
 
 	@Override
 	public void adjustFitness(final EvolutionState state,
-			final JasimaExperimentTracker tracker,
+			final JasimaExperimentTracker<Individual> tracker,
 			final boolean[] updateFitness,
-			final JasimaCoopIndividual individual) {
-		List<JasimaExperiment> experiments = tracker.getResults();
+			final JasimaCoopIndividual individual,
+			final AbsGPPriorityRule solver) {
+		List<JasimaExperiment<Individual>> experiments = tracker.getResults();
 		SimConfig simConfig = tracker.getSimConfig();
 
-		Individual[] collaborators = individual.getCollaborators();
+		List<Individual> collaborators = Arrays.asList(individual.getCollaborators());
 
-		double[] adjustment = new double[collaborators.length];
+		double[] adjustment = new double[collaborators.size()];
 
 		// Calculate the adjustment from the individual's density.
 		for (int i = 0; i < simConfig.getNumConfigs(); i++) {
 			// Calculate the distances between the individuals.
-			double[][] distances = measure.getDistances(state, experiments.get(i), simConfig, collaborators);
+			double[][] distances = measure.getDistances(state, experiments.get(i), simConfig, solver, collaborators);
 
 			// Calculate the sharing function values.
 			double[][] sharingValues = getSharingValues(state, distances);
@@ -68,18 +72,18 @@ public class CoopANHGPNiching implements IJasimaCoopNiching {
 			// Calculate the density of the individuals.
 			double[] density = getDensity(state, sharingValues);
 
-			for (int j = 0; j < collaborators.length; j++) {
+			for (int j = 0; j < collaborators.size(); j++) {
 				adjustment[j] += density[j];
 			}
 		}
 
 		// Adjust the fitnesses of the individuals according to the niching algorithm.
-		for (int i = 0; i < collaborators.length; i++) {
+		for (int i = 0; i < collaborators.size(); i++) {
 			if (!updateFitness[i]) { continue; }
 
 			adjustment[i] = adjustment[i] / simConfig.getNumConfigs();
 
-			KozaFitness fitness = (KozaFitness) collaborators[i].fitness;
+			KozaFitness fitness = (KozaFitness) collaborators.get(i).fitness;
 			double standardisedFitness = fitness.standardizedFitness();
 			double adjustedFitness = standardisedFitness / adjustment[i];
 

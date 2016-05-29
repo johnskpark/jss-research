@@ -1,6 +1,7 @@
 package app.evolution.priorityRules;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -22,7 +23,7 @@ public class WeightedVoteRule extends AbsGPPriorityRule {
 
 	public static final double ATC_K_VALUE = 3.0;
 
-	private Individual[] individuals;
+	private List<Individual> individuals;
 
 	private DoubleVectorIndividual weightInd;
 	private GPIndividual[] gpInds;
@@ -39,25 +40,25 @@ public class WeightedVoteRule extends AbsGPPriorityRule {
 	public void setConfiguration(JasimaGPConfig config) {
 		super.setConfiguration(config);
 
-		individuals = config.getIndividuals();
+		individuals = Arrays.asList(config.getIndividuals());
 
-		if (individuals.length <= 1) {
+		if (individuals.size() <= 1) {
 			throw new RuntimeException("There must be one vector individual and at least one GP individual.");
 		}
 
-		weightInd = (DoubleVectorIndividual) individuals[individuals.length -1];
-		if (weightInd.genome.length != individuals.length - 1) {
+		weightInd = (DoubleVectorIndividual) individuals.get(individuals.size() - 1);
+		if (weightInd.genome.length != individuals.size() - 1) {
 			throw new RuntimeException("The length of the first individual must be equal to the number of GP individuals.");
 		}
 
-		gpInds = new GPIndividual[individuals.length - 1];
-		for (int i = 0; i < individuals.length - 1; i++) {
-			gpInds[i] = (GPIndividual) individuals[i];
+		gpInds = new GPIndividual[individuals.size() - 1];
+		for (int i = 0; i < individuals.size() - 1; i++) {
+			gpInds[i] = (GPIndividual) individuals.get(i);
 		}
 	}
 
 	@Override
-	public Individual[] getIndividuals() {
+	public List<Individual> getRuleComponents() {
 		return individuals;
 	}
 
@@ -119,12 +120,12 @@ public class WeightedVoteRule extends AbsGPPriorityRule {
 
 		WeightedVoteRule other = (WeightedVoteRule) o;
 
-		if (this.individuals.length != other.individuals.length) {
+		if (this.individuals.size() != other.individuals.size()) {
 			return false;
 		}
 
-		for (int i = 0; i < this.individuals.length; i++) {
-			if (!this.individuals[i].equals(other.individuals[i])) {
+		for (int i = 0; i < this.individuals.size(); i++) {
+			if (!this.individuals.get(i).equals(other.individuals.get(i))) {
 				return false;
 			}
 		}
@@ -162,6 +163,7 @@ public class WeightedVoteRule extends AbsGPPriorityRule {
 			return entry;
 		}
 
+		@SuppressWarnings("unused")
 		public List<Double> getWeights() {
 			return weights;
 		}

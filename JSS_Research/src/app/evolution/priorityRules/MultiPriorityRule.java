@@ -22,7 +22,7 @@ public abstract class MultiPriorityRule extends AbsGPPriorityRule {
 
 	public PR tieBreakerPR = new ATC(3.0); // Placeholder.
 
-	private GPIndividual[] gpInds;
+	private List<GPIndividual> gpInds;
 
 	private Map<PrioRuleTarget, Score> jobScores = new HashMap<>();
 	private List<Score> jobRankings = new ArrayList<>();
@@ -38,19 +38,19 @@ public abstract class MultiPriorityRule extends AbsGPPriorityRule {
 
 		Individual[] inds = config.getIndividuals();
 
-		gpInds = new GPIndividual[inds.length];
+		gpInds = new ArrayList<GPIndividual>();
 		for (int i = 0; i < inds.length; i++) {
-			gpInds[i] = (GPIndividual) inds[i];
+			gpInds.add((GPIndividual) inds[i]);
 		}
 	}
 
 	@Override
-	public Individual[] getIndividuals() {
-		return gpInds;
+	public List<Individual> getRuleComponents() {
+		return new ArrayList<Individual>(gpInds);
 	}
 
 	// Set the GP individual.
-	protected void setGPIndividuals(GPIndividual[] gpInds) {
+	protected void setGPIndividuals(List<GPIndividual> gpInds) {
 		this.gpInds = gpInds;
 	}
 
@@ -61,18 +61,18 @@ public abstract class MultiPriorityRule extends AbsGPPriorityRule {
 		clear();
 		initSituation(q);
 
-		for (int i = 0; i < gpInds.length; i++) {
-			double[] scores = calculateScore(gpInds[i], q);
+		for (int i = 0; i < gpInds.size(); i++) {
+			double[] scores = calculateScore(gpInds.get(i), q);
 
 			for (int j = 0; j < q.size(); j++) {
 				jobScores.get(q.get(j)).addScore(scores[j]);
 			}
 
 			if (hasTracker()) {
-				JasimaExperimentTracker tracker = getTracker();
+				JasimaExperimentTracker<Individual> tracker = getTracker();
 
 				for (int j = 0; j < q.size(); j++) {
-					tracker.addPriority(i, gpInds[i], q.get(j), scores[j]);
+					tracker.addPriority(this, i, gpInds.get(i), q.get(j), scores[j]);
 				}
 			}
 		}
@@ -100,10 +100,10 @@ public abstract class MultiPriorityRule extends AbsGPPriorityRule {
 	@Override
 	public String getName() {
 		StringBuilder builder = new StringBuilder();
-		builder.append(getClass().getSimpleName() + "[ " + gpInds[0].genotypeToString());
+		builder.append(getClass().getSimpleName() + "[ " + gpInds.get(0).genotypeToString());
 
-		for (int i = 1; i < gpInds.length; i++) {
-			builder.append("," + gpInds[i].genotypeToString());
+		for (int i = 1; i < gpInds.size(); i++) {
+			builder.append("," + gpInds.get(i).genotypeToString());
 		}
 
 		builder.append(" ]");

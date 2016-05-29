@@ -17,7 +17,7 @@ public class JasimaGPConfig {
 	private GPProblem problem;
 	private JasimaGPData data;
 
-	private JasimaExperimentTracker tracker;
+	private JasimaExperimentTracker<Individual> tracker;
 
 	private SimConfig simConfig;
 	private int simIndex;
@@ -56,7 +56,7 @@ public class JasimaGPConfig {
 		return tracker != null;
 	}
 
-	public JasimaExperimentTracker getTracker() {
+	public JasimaExperimentTracker<Individual> getTracker() {
 		return tracker;
 	}
 
@@ -98,7 +98,7 @@ public class JasimaGPConfig {
 		this.data = data;
 	}
 
-	public void setTracker(JasimaExperimentTracker newTracker) {
+	public void setTracker(JasimaExperimentTracker<Individual> newTracker) {
 		this.tracker = newTracker;
 	}
 

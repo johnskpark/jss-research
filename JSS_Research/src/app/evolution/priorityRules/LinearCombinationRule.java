@@ -1,6 +1,7 @@
 package app.evolution.priorityRules;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -20,7 +21,7 @@ public class LinearCombinationRule extends AbsGPPriorityRule {
 
 	public static final double ATC_K_VALUE = 3.0;
 
-	private Individual[] individuals;
+	private List<Individual> individuals;
 
 	private Map<PrioRuleTarget, Score> jobVotes = new HashMap<PrioRuleTarget, Score>();
 	private List<Score> jobRankings = new ArrayList<Score>();
@@ -34,11 +35,11 @@ public class LinearCombinationRule extends AbsGPPriorityRule {
 	public void setConfiguration(JasimaGPConfig config) {
 		super.setConfiguration(config);
 
-		individuals = config.getIndividuals();
+		individuals = Arrays.asList(config.getIndividuals());
 	}
 
 	@Override
-	public Individual[] getIndividuals() {
+	public List<Individual> getRuleComponents() {
 		return individuals;
 	}
 
@@ -60,7 +61,7 @@ public class LinearCombinationRule extends AbsGPPriorityRule {
 		}
 
 		// Go through the individuals and vote on the decisions.
-		for (int i = 0; i < individuals.length; i++) {
+		for (int i = 0; i < individuals.size(); i++) {
 			double[] priorities = new double[q.size()];
 			double bestPriority = Double.NEGATIVE_INFINITY;
 			double worstPriority = Double.POSITIVE_INFINITY;
@@ -70,14 +71,14 @@ public class LinearCombinationRule extends AbsGPPriorityRule {
 				PrioRuleTarget entry = q.get(j);
 				data.setPrioRuleTarget(entry);
 
-				GPIndividual ind = (GPIndividual) individuals[i];
+				GPIndividual ind = (GPIndividual) individuals.get(i);
 				ind.trees[0].child.eval(state, threadnum, data, null, ind, null);
 
 				priorities[j] = data.getPriority();
 
 				// Add the priority assigned to the entry to the tracker.
 				if (tracker != null) {
-					tracker.addPriority(i, individuals[i], entry, priorities[j]);
+					tracker.addPriority(this, i, individuals.get(i), entry, priorities[j]);
 				}
 
 				bestPriority = Math.max(bestPriority, priorities[j]);
@@ -89,7 +90,7 @@ public class LinearCombinationRule extends AbsGPPriorityRule {
 				if (bestPriority - worstPriority == 0.0) {
 					normPrio = 0.0;
 				} else {
-					normPrio = (priorities[j] - worstPriority) / (bestPriority - worstPriority); 
+					normPrio = (priorities[j] - worstPriority) / (bestPriority - worstPriority);
 				}
 				jobVotes.get(q.get(j)).addScore(normPrio);
 			}
@@ -104,10 +105,10 @@ public class LinearCombinationRule extends AbsGPPriorityRule {
 	@Override
 	public String getName() {
 		StringBuilder builder = new StringBuilder();
-		builder.append(getClass().getSimpleName() + "[ " + individuals[0].genotypeToString());
+		builder.append(getClass().getSimpleName() + "[ " + individuals.get(0).genotypeToString());
 
-		for (int i = 1; i < individuals.length; i++) {
-			builder.append("," + individuals[i].genotypeToString());
+		for (int i = 1; i < individuals.size(); i++) {
+			builder.append("," + individuals.get(i).genotypeToString());
 		}
 
 		builder.append(" ]");
@@ -122,12 +123,12 @@ public class LinearCombinationRule extends AbsGPPriorityRule {
 
 		LinearCombinationRule other = (LinearCombinationRule) o;
 
-		if (this.individuals.length != other.individuals.length) {
+		if (this.individuals.size() != other.individuals.size()) {
 			return false;
 		}
 
-		for (int i = 0; i < this.individuals.length; i++) {
-			if (!this.individuals[i].equals(other.individuals[i])) {
+		for (int i = 0; i < this.individuals.size(); i++) {
+			if (!this.individuals.get(i).equals(other.individuals.get(i))) {
 				return false;
 			}
 		}
@@ -166,6 +167,7 @@ public class LinearCombinationRule extends AbsGPPriorityRule {
 			this.score += score;
 		}
 
+		@SuppressWarnings("unused")
 		public PrioRuleTarget getEntry() {
 			return entry;
 		}

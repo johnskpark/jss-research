@@ -1,5 +1,8 @@
 package app.evaluation.priorityRules;
 
+import java.util.Arrays;
+import java.util.List;
+
 import app.evaluation.AbsEvalPriorityRule;
 import app.evaluation.JasimaEvalConfig;
 import app.node.INode;
@@ -25,6 +28,11 @@ public class BasicPriorityRule extends AbsEvalPriorityRule {
 
 		this.rule = config.getRules().get(0);
 		this.data = config.getNodeData();
+	}
+
+	@Override
+	public List<INode> getRuleComponents() {
+		return Arrays.asList(new INode[]{ rule });
 	}
 
 	@Override

@@ -2,8 +2,14 @@ package app.evaluation.priorityRules;
 
 import jasima.shopSim.core.PR;
 import jasima.shopSim.core.PrioRuleTarget;
+
+import java.util.Arrays;
+import java.util.List;
+
 import app.evaluation.AbsEvalPriorityRule;
 import app.evaluation.JasimaEvalConfig;
+import app.node.INode;
+import app.node.pr.PRNode;
 import app.priorityRules.COVERTPR;
 
 public class EvalCOVERT extends AbsEvalPriorityRule {
@@ -15,6 +21,11 @@ public class EvalCOVERT extends AbsEvalPriorityRule {
 
 	@Override
 	public void setConfiguration(JasimaEvalConfig config) {
+	}
+
+	@Override
+	public List<INode> getRuleComponents() {
+		return Arrays.asList(new INode[]{ new PRNode(pr) });
 	}
 
 	@Override

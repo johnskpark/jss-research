@@ -1,12 +1,13 @@
 package app.evolution;
 
+import app.IWorkStationListener;
+import app.tracker.JasimaExperimentTracker;
+import ec.EvolutionState;
+import ec.Individual;
 import jasima.shopSim.core.PR;
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.WorkStation;
 import jasima.shopSim.core.WorkStation.WorkStationEvent;
-import app.IWorkStationListener;
-import app.tracker.JasimaExperimentTracker;
-import ec.EvolutionState;
 
 /**
  * TODO javadoc.
@@ -22,7 +23,7 @@ public abstract class AbsGPPriorityRule extends PR implements IJasimaGPPriorityR
 	protected int threadnum;
 
 	protected JasimaGPData data;
-	protected JasimaExperimentTracker<AbsGPPriorityRule> tracker;
+	protected JasimaExperimentTracker<Individual> tracker;
 
 	@Override
 	public void setConfiguration(JasimaGPConfig config) {
@@ -33,7 +34,7 @@ public abstract class AbsGPPriorityRule extends PR implements IJasimaGPPriorityR
 
 		if (config.hasTracker()) {
 			tracker = config.getTracker();
-			tracker.addPriorityRule(this);
+			tracker.addRule(this);
 		}
 	}
 
@@ -41,7 +42,7 @@ public abstract class AbsGPPriorityRule extends PR implements IJasimaGPPriorityR
 		return tracker != null;
 	}
 
-	protected JasimaExperimentTracker getTracker() {
+	protected JasimaExperimentTracker<Individual> getTracker() {
 		return tracker;
 	}
 

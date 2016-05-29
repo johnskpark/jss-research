@@ -39,6 +39,11 @@ public class EnsemblePriorityRule extends AbsEvalPriorityRule {
 	}
 
 	@Override
+	public List<INode> getRuleComponents() {
+		return rules;
+	}
+
+	@Override
 	public void beforeCalc(PriorityQueue<?> q) {
 		super.beforeCalc(q);
 
@@ -69,7 +74,7 @@ public class EnsemblePriorityRule extends AbsEvalPriorityRule {
 				double priority = rule.evaluate(getNodeData());
 
 				if (hasExperimentTracker()) {
-					getExperimentTracker().addPriority(i, this, rule, entry, priority);
+					getExperimentTracker().addPriority(this, i, rule, entry, priority);
 				}
 
 				if (priority > bestPriority) {
@@ -132,6 +137,7 @@ public class EnsemblePriorityRule extends AbsEvalPriorityRule {
 			count++;
 		}
 
+		@SuppressWarnings("unused")
 		public PrioRuleTarget getEntry() {
 			return entry;
 		}

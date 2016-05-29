@@ -65,7 +65,7 @@ public class JasimaMultilevelStatistics extends MLSStatistics implements IJasima
 	}
 
 	@Override
-	public void addDiversity(int type, int index, Individual[] inds, double[] distances) {
+	public void addDiversity(int type, int index, List<Individual> inds, double[] distances) {
 		// Add in the instance diversity
 		if (type == INDIVIDUAL_FITNESS) {
 			addDiversityForIndividuals(index, inds, distances);
@@ -74,8 +74,8 @@ public class JasimaMultilevelStatistics extends MLSStatistics implements IJasima
 		}
 	}
 
-	private void addDiversityForIndividuals(int index, Individual[] inds, double[] distances) {
-		for (int i = 0; i < inds.length; i++) {
+	private void addDiversityForIndividuals(int index, List<Individual> inds, double[] distances) {
+		for (int i = 0; i < inds.size(); i++) {
 			double oldInstDist = instanceDistanceSum.get(index);
 			double newInstDist = oldInstDist + distances[i];
 

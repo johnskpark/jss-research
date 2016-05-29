@@ -1,5 +1,6 @@
 package app.evolution.priorityRules;
 
+import java.util.Arrays;
 import java.util.List;
 
 import app.evolution.AbsGPPriorityRule;
@@ -13,7 +14,7 @@ public class CompositePriorityRule extends AbsGPPriorityRule {
 
 	private static final long serialVersionUID = 6402065211367618261L;
 
-	private Individual[] individuals;
+	private List<Individual> individuals;
 
 	private PrioRuleTarget[] entries;
 	private double[] priorities;
@@ -28,11 +29,11 @@ public class CompositePriorityRule extends AbsGPPriorityRule {
 	public void setConfiguration(JasimaGPConfig config) {
 		super.setConfiguration(config);
 
-		individuals = config.getIndividuals();
+		individuals = Arrays.asList(config.getIndividuals());
 	}
 
 	@Override
-	public Individual[] getIndividuals() {
+	public List<Individual> getRuleComponents() {
 		return individuals;
 	}
 
@@ -56,7 +57,7 @@ public class CompositePriorityRule extends AbsGPPriorityRule {
 
 			data.setPrioRuleTarget(entry);
 
-			GPIndividual ind = (GPIndividual) individuals[0];
+			GPIndividual ind = (GPIndividual) individuals.get(0);
 			ind.trees[0].child.eval(state, threadnum, data, null, ind, null);
 
 			priorities[i] = data.getPriority();
@@ -70,7 +71,7 @@ public class CompositePriorityRule extends AbsGPPriorityRule {
 		for (int i = 0; i < q.size(); i++) {
 			priorities[i] = (priorities[i] - minPriority) / (maxPriority - minPriority);
 
-			selectedIndices[i] = (int) (priorities[i] * (individuals.length - 1)) + 1;
+			selectedIndices[i] = (int) (priorities[i] * (individuals.size() - 1)) + 1;
 		}
 	}
 
@@ -80,7 +81,7 @@ public class CompositePriorityRule extends AbsGPPriorityRule {
 
 		int index = indexOf(entry);
 
-		GPIndividual ind = (GPIndividual) individuals[index];
+		GPIndividual ind = (GPIndividual) individuals.get(index);
 		ind.trees[0].child.eval(state, threadnum, data, null, ind, null);
 
 		return data.getPriority();

@@ -1,6 +1,7 @@
 package app.evolution.priorityRules;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -19,7 +20,7 @@ public class BasicPriorityRule extends AbsGPPriorityRule {
 
 	private static final long serialVersionUID = 5215861545303707980L;
 
-	private Individual[] individual;
+	private List<Individual> individual;
 
 	private int indIndex;
 
@@ -42,11 +43,11 @@ public class BasicPriorityRule extends AbsGPPriorityRule {
 	public void setConfiguration(JasimaGPConfig config) {
 		super.setConfiguration(config);
 
-		individual = config.getIndividuals();
+		individual = Arrays.asList(config.getIndividuals());
 	}
 
 	@Override
-	public Individual[] getIndividuals() {
+	public List<Individual> getRuleComponents() {
 		return individual;
 	}
 
@@ -65,14 +66,14 @@ public class BasicPriorityRule extends AbsGPPriorityRule {
 
 			data.setPrioRuleTarget(entry);
 
-			GPIndividual ind = (GPIndividual) individual[indIndex];
+			GPIndividual ind = (GPIndividual) individual.get(indIndex);
 			ind.trees[0].child.eval(state, threadnum, data, null, ind, null);
 
 			double priority = data.getPriority();
 
 			// Add the priority assigned to the entry to the tracker.
 			if (tracker != null) {
-				tracker.addPriority(i, individual[indIndex], entry, priority);
+				tracker.addPriority(this, i, individual.get(indIndex), entry, priority);
 			}
 
 			jobPriorities.put(entry, priority);

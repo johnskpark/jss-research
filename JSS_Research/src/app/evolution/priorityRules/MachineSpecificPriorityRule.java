@@ -1,5 +1,6 @@
 package app.evolution.priorityRules;
 
+import java.util.Arrays;
 import java.util.List;
 
 import app.evolution.AbsGPPriorityRule;
@@ -13,17 +14,17 @@ public class MachineSpecificPriorityRule extends AbsGPPriorityRule {
 
 	private static final long serialVersionUID = -1896929320056457916L;
 
-	private Individual[] individuals;
+	private List<Individual> individuals;
 
 	@Override
 	public void setConfiguration(JasimaGPConfig config) {
 		super.setConfiguration(config);
 
-		individuals = config.getIndividuals();
+		individuals = Arrays.asList(config.getIndividuals());
 	}
 
 	@Override
-	public Individual[] getIndividuals() {
+	public List<Individual> getRuleComponents() {
 		return individuals;
 	}
 
@@ -33,8 +34,8 @@ public class MachineSpecificPriorityRule extends AbsGPPriorityRule {
 
 		int numMachines = getOwner().shop().machines.length;
 
-		if (individuals.length != numMachines) {
-			throw new RuntimeException("The number of individuals (" + individuals.length + ") need to match the number of machines (" + numMachines + ")");
+		if (individuals.size() != numMachines) {
+			throw new RuntimeException("The number of individuals (" + individuals.size() + ") need to match the number of machines (" + numMachines + ")");
 		}
 	}
 
@@ -51,7 +52,7 @@ public class MachineSpecificPriorityRule extends AbsGPPriorityRule {
 
 		data.setPrioRuleTarget(entry);
 
-		GPIndividual ind = (GPIndividual) individuals[machineIndex];
+		GPIndividual ind = (GPIndividual) individuals.get(machineIndex);
 		ind.trees[0].child.eval(state, threadnum, data, null, ind, null);
 
 		return data.getPriority();
@@ -65,12 +66,12 @@ public class MachineSpecificPriorityRule extends AbsGPPriorityRule {
 
 		MachineSpecificPriorityRule other = (MachineSpecificPriorityRule) o;
 
-		if (this.individuals.length != other.individuals.length) {
+		if (this.individuals.size() != other.individuals.size()) {
 			return false;
 		}
 
-		for (int i = 0; i < this.individuals.length; i++) {
-			if (!this.individuals[i].equals(other.individuals[i])) {
+		for (int i = 0; i < this.individuals.size(); i++) {
+			if (!this.individuals.get(i).equals(other.individuals.get(i))) {
 				return false;
 			}
 		}
