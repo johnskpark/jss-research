@@ -2,41 +2,43 @@ package app.tracker.distance.individual;
 
 import java.util.List;
 
+import app.IMultiRule;
 import app.simConfig.SimConfig;
 import app.tracker.JasimaDecision;
 import app.tracker.JasimaExperiment;
 import app.tracker.JasimaPriorityStat;
 import app.tracker.distance.DistanceMeasure;
 import ec.EvolutionState;
-import ec.Individual;
 import jasima.shopSim.core.PrioRuleTarget;
 
-public class IndividualDecisionDistance implements DistanceMeasure {
+public class IndividualDecisionDistance<T> implements DistanceMeasure<T> {
 
 	@Override
 	public double[][] getDistances(final EvolutionState state,
-			final JasimaExperiment experiment,
+			final JasimaExperiment<T> experiment,
 			final SimConfig simConfig,
-			final Individual[] inds) {
-		double[][] distances = new double[inds.length][inds.length];
+			final IMultiRule<T> solver,
+			final List<T> ruleComponents) {
+		int numComponents = ruleComponents.size();
+		double[][] distances = new double[numComponents][numComponents];
 
-		List<JasimaDecision> decisions = experiment.getDecisions();
+		List<JasimaDecision<T>> decisions = experiment.getDecisions();
 
-		for (JasimaDecision decision : decisions) {
+		for (JasimaDecision<T> decision : decisions) {
 			// Get the ranks assigned to the individual voted job by the ensemble.
-			double[] rankings = getEntryRankings(decision, inds);
+			double[] rankings = getEntryRankings(decision, solver, ruleComponents, numComponents);
 
 			// Find the squared distances between the ranks.
-			for (int i = 0; i < inds.length; i++) {
-				for (int j = 0; j < inds.length; j++) {
+			for (int i = 0; i < numComponents; i++) {
+				for (int j = 0; j < numComponents; j++) {
 					distances[i][j] += (rankings[i] - rankings[j]) * (rankings[i] - rankings[j]);
 				}
 			}
 		}
 
 		// Normalise the distances by taking the root mean of the distances over all decisions.
-		for (int i = 0; i < inds.length; i++) {
-			for (int j = 0; j < inds.length; j++) {
+		for (int i = 0; i < numComponents; i++) {
+			for (int j = 0; j < numComponents; j++) {
 				distances[i][j] = Math.sqrt(distances[i][j] / decisions.size());
 			}
 		}
@@ -44,13 +46,16 @@ public class IndividualDecisionDistance implements DistanceMeasure {
 		return distances;
 	}
 
-	protected double[] getEntryRankings(final JasimaDecision decision, final Individual[] inds) {
-		double[] rankings = new double[inds.length];
+	protected double[] getEntryRankings(final JasimaDecision<T> decision,
+			final IMultiRule<T> solver,
+			final List<T> ruleComponents,
+			final int numComponents) {
+		double[] rankings = new double[numComponents];
 
 		List<PrioRuleTarget> entryRankings = decision.getEntryRankings();
-		JasimaPriorityStat[] stats = decision.getStats();
+		JasimaPriorityStat[] stats = decision.getStats(solver);
 
-		for (int i = 0; i < inds.length; i++) {
+		for (int i = 0; i < numComponents; i++) {
 			JasimaPriorityStat stat = stats[i];
 
 			rankings[i] = 1.0 * entryRankings.indexOf(stat.getBestEntry()) / entryRankings.size();

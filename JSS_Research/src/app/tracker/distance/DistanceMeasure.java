@@ -1,15 +1,18 @@
 package app.tracker.distance;
 
+import java.util.List;
+
+import app.IMultiRule;
 import app.simConfig.SimConfig;
 import app.tracker.JasimaExperiment;
 import ec.EvolutionState;
-import ec.Individual;
 
-public interface DistanceMeasure {
+public interface DistanceMeasure<T> {
 
 	public double[][] getDistances(final EvolutionState state,
-			final JasimaExperiment experiment,
+			final JasimaExperiment<T> experiment,
 			final SimConfig simConfig,
-			final Individual[] inds);
+			final IMultiRule<T> solver,
+			final List<T> ruleComponents);
 
 }

@@ -2,32 +2,34 @@ package app.tracker.distance.individual;
 
 import java.util.List;
 
+import app.IMultiRule;
 import app.simConfig.SimConfig;
 import app.tracker.JasimaDecision;
 import app.tracker.JasimaExperiment;
 import app.tracker.JasimaPriorityStat;
 import app.tracker.distance.DistanceMeasure;
 import ec.EvolutionState;
-import ec.Individual;
 
-public class IndividualOverlapDistance implements DistanceMeasure {
+public class IndividualOverlapDistance<T> implements DistanceMeasure<T> {
 
 	@Override
 	public double[][] getDistances(final EvolutionState state,
-			final JasimaExperiment experiment,
+			final JasimaExperiment<T> experiment,
 			final SimConfig simConfig,
-			final Individual[] inds) {
-		double[][] distances = new double[inds.length][inds.length];
+			final IMultiRule<T> solver,
+			final List<T> ruleComponents) {
+		int numComponents = ruleComponents.size();
+		double[][] distances = new double[numComponents][numComponents];
 
-		List<JasimaDecision> decisions = experiment.getDecisions();
+		List<JasimaDecision<T>> decisions = experiment.getDecisions();
 
-		for (JasimaDecision decision : decisions) {
+		for (JasimaDecision<T> decision : decisions) {
 			// Get the overlap between the individuals for the particular decision.
-			boolean[][] overlaps = getOverlaps(decision, inds);
+			boolean[][] overlaps = getOverlaps(decision, solver, ruleComponents, numComponents);
 
 			// If the decisions do not overlap, then increment the distance between the two individuals.
-			for (int i = 0; i < inds.length; i++) {
-				for (int j = 0; j < inds.length; j++) {
+			for (int i = 0; i < numComponents; i++) {
+				for (int j = 0; j < numComponents; j++) {
 					if (!overlaps[i][j]) {
 						distances[i][j] += 1.0 / decisions.size();
 					}
@@ -38,13 +40,16 @@ public class IndividualOverlapDistance implements DistanceMeasure {
 		return distances;
 	}
 
-	protected boolean[][] getOverlaps(final JasimaDecision decision, final Individual[] inds) {
-		boolean[][] overlaps = new boolean[inds.length][inds.length];
+	protected boolean[][] getOverlaps(final JasimaDecision<T> decision,
+			final IMultiRule<T> solver,
+			final List<T> ruleComponents,
+			final int numComponents) {
+		boolean[][] overlaps = new boolean[numComponents][numComponents];
 
-		JasimaPriorityStat[] stats = decision.getStats();
+		JasimaPriorityStat[] stats = decision.getStats(solver);
 
-		for (int i = 0; i < inds.length; i++) {
-			for (int j = 0; j < inds.length; j++) {
+		for (int i = 0; i < numComponents; i++) {
+			for (int j = 0; j < numComponents; j++) {
 				if (i == j) { continue; }
 
 				JasimaPriorityStat stat1 = stats[i];

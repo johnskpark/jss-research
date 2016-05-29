@@ -22,7 +22,7 @@ public abstract class AbsGPPriorityRule extends PR implements IJasimaGPPriorityR
 	protected int threadnum;
 
 	protected JasimaGPData data;
-	protected JasimaExperimentTracker tracker;
+	protected JasimaExperimentTracker<AbsGPPriorityRule> tracker;
 
 	@Override
 	public void setConfiguration(JasimaGPConfig config) {
