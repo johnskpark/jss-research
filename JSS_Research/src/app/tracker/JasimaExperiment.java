@@ -15,8 +15,6 @@ public class JasimaExperiment<T> {
 
 	private Map<IMultiRule<T>, SolverData<T>> ruleMap;
 
-	private List<JasimaDecisionMaker> decisionMakers;
-
 	private List<JasimaDecision<T>> experimentDecisions;
 	private Map<DecisionEvent, JasimaDecision<T>> experimentDecisionMap;
 
@@ -35,7 +33,6 @@ public class JasimaExperiment<T> {
 
 		experimentDecisions = new ArrayList<>();
 		experimentDecisionMap = new HashMap<>();
-
 	}
 
 	/**
@@ -60,6 +57,8 @@ public class JasimaExperiment<T> {
 
 			for (int i = 0; i < data.getRuleComponents().size(); i++) {
 				stats[i] = new JasimaPriorityStat(q.size());
+
+				// TODO Add this to the solver.
 				decisionMakers.get(i).addStat(stats[i]);
 			}
 
@@ -109,10 +108,6 @@ public class JasimaExperiment<T> {
 
 	public List<T> getRuleComponents(IMultiRule<T> solver) {
 		return ruleMap.get(solver).getRuleComponents();
-	}
-
-	public List<JasimaDecisionMaker> getDecisionMakers() {
-		return decisionMakers;
 	}
 
 	public List<JasimaDecision<T>> getDecisions() {

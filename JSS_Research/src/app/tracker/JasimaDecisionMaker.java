@@ -6,9 +6,6 @@ public class JasimaDecisionMaker {
 
 	private List<JasimaPriorityStat> priorityStats;
 
-	public JasimaDecisionMaker() {
-	}
-
 	public void setPriorityStats(List<JasimaPriorityStat> priorityStats) {
 		this.priorityStats = priorityStats;
 	}

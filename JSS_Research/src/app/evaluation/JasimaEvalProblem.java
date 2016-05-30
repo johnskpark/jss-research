@@ -76,8 +76,8 @@ public class JasimaEvalProblem {
 
 	private SimConfig simConfig;
 
-	private List<IJasimaEvalFitness> fitnesses = new ArrayList<>();
-	private List<IJasimaEvalFitness> refFitnesses = new ArrayList<>();
+	private List<IJasimaEvalFitness> referenceEvaluation = new ArrayList<>();
+	private List<IJasimaEvalFitness> standardEvaluation = new ArrayList<>();
 	private List<IWorkStationListener> listeners = new ArrayList<>();
 	private Map<String, IWorkStationListener> listenerMap = new HashMap<>();
 
@@ -270,7 +270,7 @@ public class JasimaEvalProblem {
 
 			System.out.println("Fitness: loading fitness: " + fitnessClass.getSimpleName());
 
-			fitnesses.add((IJasimaEvalFitness) fitnessClass.newInstance());
+			standardEvaluation.add((IJasimaEvalFitness) fitnessClass.newInstance());
 		}
 
 		System.out.println("Fitness: loading complete.");
@@ -333,7 +333,7 @@ public class JasimaEvalProblem {
 
 			System.out.println("Reference fitness: loading fitness: " + fitnessClass.getSimpleName());
 
-			fitnesses.add((IJasimaEvalFitness) fitnessClass.newInstance());
+			standardEvaluation.add((IJasimaEvalFitness) fitnessClass.newInstance());
 		}
 
 		System.out.println("Reference fitness: loading complete.");
@@ -398,7 +398,7 @@ public class JasimaEvalProblem {
 		// Print out the headers.
 		output.print("RuleFile,RuleSeed,TestSet,InstanceNum");
 
-		for (IJasimaEvalFitness fitness : fitnesses) {
+		for (IJasimaEvalFitness fitness : standardEvaluation) {
 			output.printf(",%s", fitness.getHeaderName());
 		}
 
@@ -425,7 +425,7 @@ public class JasimaEvalProblem {
 				Experiment experiment = getExperiment(refRule, i);
 				experiment.runExperiment();
 
-				for (IJasimaEvalFitness fitness : fitnesses) {
+				for (IJasimaEvalFitness fitness : standardEvaluation) {
 					if (fitness.resultIsNumeric()) {
 						double result = fitness.getNumericResult(refRule, experiment.getResults(), tracker);
 
@@ -449,7 +449,7 @@ public class JasimaEvalProblem {
 			System.out.println("Evaluation: evaluating " + ruleFilename + ". Number of rules: " + solvers.size() + ", Number of instances: " + simConfig.getNumConfigs());
 
 			List<String> results1 = evaluateSolversUsingReference(ruleFilename, solvers, output);
-			List<String> results2 = evaluateSolvers(ruleFilename, solvers);
+			List<String> results2 = evaluateSolversNormally(ruleFilename, solvers);
 
 			for (int i = 0; i < solvers.size(); i++) {
 				AbsEvalPriorityRule solver = solvers.get(i);
@@ -483,6 +483,7 @@ public class JasimaEvalProblem {
 
 				for (AbsEvalPriorityRule solver : solvers) {
 					solver.setExperimentTracker(tracker);
+					tracker.addRule(solver);
 				}
 
 				trackedRefRule.initTrackedRun();
@@ -492,20 +493,24 @@ public class JasimaEvalProblem {
 				Experiment experiment = getExperiment(refRule, i);
 				experiment.runExperiment();
 
+				// TODO I think this is incorrect. This needs to go on the outside.
 				for (int j = 0; j < solvers.size(); j++) {
 					AbsEvalPriorityRule solver = solvers.get(j);
 
 					StringBuilder builder = new StringBuilder();
 
-					for (IJasimaEvalFitness fitness : fitnesses) {
+					for (IJasimaEvalFitness fitness : referenceEvaluation) {
 						 String result = fitness.getStringResult(solver, experiment.getResults(), tracker);
 						 builder.append("," + result);
 					}
 
 					resultsOutput.set(j, resultsOutput.get(j) + builder.toString());
 				}
+
+				tracker.clearCurrentExperiment();
 			}
 
+			tracker.clear();
 			simConfig.reset();
 		}
 
@@ -514,7 +519,7 @@ public class JasimaEvalProblem {
 		return resultsOutput;
 	}
 
-	private List<String> evaluateSolvers(String ruleFilename, List<AbsEvalPriorityRule> solvers) {
+	private List<String> evaluateSolversNormally(String ruleFilename, List<AbsEvalPriorityRule> solvers) {
 		System.out.println("Evaluation: starting standard evaluation.");
 
 		List<String> resultsOutput = new ArrayList<>();
@@ -527,7 +532,7 @@ public class JasimaEvalProblem {
 
 				StringBuilder builder = new StringBuilder();
 
-				for (IJasimaEvalFitness fitness : fitnesses) {
+				for (IJasimaEvalFitness fitness : standardEvaluation) {
 					String result = fitness.getStringResult(solver, experiment.getResults(), tracker);
 					builder.append("," + result);
 				}
