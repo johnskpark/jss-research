@@ -39,4 +39,8 @@ class SolverData<T> {
 		return decisionMakers;
 	}
 
+	public void addPriorityStat(int index, JasimaPriorityStat stat) {
+		decisionMakers.get(index).addStat(stat);
+	}
+
 }

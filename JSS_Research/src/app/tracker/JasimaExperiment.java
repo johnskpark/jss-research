@@ -56,10 +56,7 @@ public class JasimaExperiment<T> {
 			JasimaPriorityStat[] stats = new JasimaPriorityStat[data.getRuleComponents().size()];
 
 			for (int i = 0; i < data.getRuleComponents().size(); i++) {
-				stats[i] = new JasimaPriorityStat(q.size());
-
-				// TODO Add this to the solver.
-				decisionMakers.get(i).addStat(stats[i]);
+				data.addPriorityStat(i, new JasimaPriorityStat(q.size()));
 			}
 
 			currentStats.put(solver, stats);
