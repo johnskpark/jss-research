@@ -337,7 +337,7 @@ public class JasimaEvalProblem {
 
 			System.out.println("Reference fitness: loading fitness: " + fitnessClass.getSimpleName());
 
-			standardEvaluation.add((IJasimaEvalFitness) fitnessClass.newInstance());
+			referenceEvaluation.add((IJasimaEvalFitness) fitnessClass.newInstance());
 		}
 
 		System.out.println("Reference fitness: loading complete.");
