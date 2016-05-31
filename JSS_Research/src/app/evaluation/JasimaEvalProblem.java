@@ -64,6 +64,9 @@ public class JasimaEvalProblem {
 	public static final String XML_FITNESS_BASE = "fitnessConfig";
 	public static final String XML_FITNESS_CLASS = "fitnessClass";
 
+	public static final String XML_REF_FITNESS_BASE = "refFitnessConfig";
+	public static final String XML_REF_FITNESS_CLASS = "fitnessClass";
+
 	public static final String XML_LISTENER_BASE = "listenerConfig";
 	public static final String XML_LISTENER_CLASS = "listenerClass";
 
@@ -305,6 +308,7 @@ public class JasimaEvalProblem {
 				long seed = Integer.parseInt(trackBase.getElementsByTagName(XML_REFERENCE_SEED).item(0).getTextContent());
 
 				tracker = new JasimaExperimentTracker<>();
+				tracker.setSimConfig(simConfig);
 
 				TrackedPR trackedRefRule = new TrackedPR(refRule, numJobThreshold, numSamples, seed, tracker);
 
@@ -321,13 +325,13 @@ public class JasimaEvalProblem {
 	private void loadReferenceFitness(Document doc) throws Exception {
 		System.out.println("Reference fitness: loading fitnesses.");
 
-		NodeList nList = doc.getElementsByTagName(XML_FITNESS_BASE);
+		NodeList nList = doc.getElementsByTagName(XML_REF_FITNESS_BASE);
 
 		for (int i = 0; i < nList.getLength(); i++) {
 			Element fitnessBase = (Element) nList.item(i);
 
 			Class<?> fitnessClass = Class.forName(fitnessBase
-					.getElementsByTagName(XML_FITNESS_CLASS)
+					.getElementsByTagName(XML_REF_FITNESS_CLASS)
 					.item(0)
 					.getTextContent());
 
@@ -401,6 +405,9 @@ public class JasimaEvalProblem {
 		for (IJasimaEvalFitness fitness : standardEvaluation) {
 			output.printf(",%s", fitness.getHeaderName());
 		}
+		for (IJasimaEvalFitness fitness : referenceEvaluation) {
+			output.printf(",%s", fitness.getHeaderName());
+		}
 
 		output.println();
 
@@ -448,7 +455,7 @@ public class JasimaEvalProblem {
 
 			System.out.println("Evaluation: evaluating " + ruleFilename + ". Number of rules: " + solvers.size() + ", Number of instances: " + simConfig.getNumConfigs());
 
-			List<String> results1 = evaluateSolversUsingReference(ruleFilename, solvers, output);
+			List<String> results1 = evaluateSolversUsingReference(ruleFilename, solvers);
 			List<String> results2 = evaluateSolversNormally(ruleFilename, solvers);
 
 			for (int i = 0; i < solvers.size(); i++) {
@@ -465,7 +472,7 @@ public class JasimaEvalProblem {
 		}
 	}
 
-	private List<String> evaluateSolversUsingReference(String ruleFileName, List<AbsEvalPriorityRule> solvers, PrintStream output) {
+	private List<String> evaluateSolversUsingReference(String ruleFileName, List<AbsEvalPriorityRule> solvers) {
 		System.out.println("Evaluation: starting reference evaluation.");
 
 		List<String> resultsOutput = new ArrayList<>();
@@ -477,23 +484,27 @@ public class JasimaEvalProblem {
 
 		for (PR refRule : referenceRules) {
 			// FIXME bit hacky.
-			if (refRule instanceof TrackedPR) {
-				TrackedPR trackedRefRule = (TrackedPR) refRule;
-				trackedRefRule.setPriorityRules(new ArrayList<PR>(solvers));
-
-				for (AbsEvalPriorityRule solver : solvers) {
-					solver.setExperimentTracker(tracker);
-					tracker.addRule(solver);
-				}
-
-				trackedRefRule.initTrackedRun();
+			if (!(refRule instanceof TrackedPR)) {
+				continue;
 			}
 
+			TrackedPR trackedRefRule = (TrackedPR) refRule;
+			trackedRefRule.setPriorityRules(new ArrayList<PR>(solvers));
+
+			for (AbsEvalPriorityRule solver : solvers) {
+				solver.setTracker(tracker);
+				tracker.addRule(solver);
+			}
+
+			trackedRefRule.initTrackedRun();
+			tracker.initialise();
+
 			for (int i = 0; i < simConfig.getNumConfigs(); i++) {
+				tracker.setExperimentIndex(i);
+
 				Experiment experiment = getExperiment(refRule, i);
 				experiment.runExperiment();
 
-				// TODO I think this is incorrect. This needs to go on the outside.
 				for (int j = 0; j < solvers.size(); j++) {
 					AbsEvalPriorityRule solver = solvers.get(j);
 
@@ -510,6 +521,10 @@ public class JasimaEvalProblem {
 				tracker.clearCurrentExperiment();
 			}
 
+			for (AbsEvalPriorityRule solver : solvers) {
+				solver.setTracker(null);
+			}
+
 			tracker.clear();
 			simConfig.reset();
 		}
@@ -520,6 +535,8 @@ public class JasimaEvalProblem {
 	}
 
 	private List<String> evaluateSolversNormally(String ruleFilename, List<AbsEvalPriorityRule> solvers) {
+		// TODO I need to clear out the trackers from the rules before I run this.
+
 		System.out.println("Evaluation: starting standard evaluation.");
 
 		List<String> resultsOutput = new ArrayList<>();

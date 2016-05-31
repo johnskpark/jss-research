@@ -35,6 +35,9 @@ public class JasimaExperimentTracker<T> {
 		// Empty constructor.
 
 		priorityRules = new ArrayList<>();
+		simConfig = null;
+
+		experimentDecisions = new ArrayList<>();
 	}
 
 	// Getters
@@ -66,14 +69,6 @@ public class JasimaExperimentTracker<T> {
 
 		for (int i = 0; i < simConfig.getNumConfigs(); i++) {
 			experimentDecisions.add(new JasimaExperiment<>(priorityRules));
-		}
-
-		for (int i = 0; i < simConfig.getNumConfigs(); i++) {
-			JasimaExperiment<T> experiment = new JasimaExperiment<>(priorityRules);
-
-			// TODO
-
-			experimentDecisions.add(experiment);
 		}
 	}
 
@@ -143,6 +138,7 @@ public class JasimaExperimentTracker<T> {
 	}
 
 	public void clear() {
+		priorityRules.clear();
 		experimentDecisions.clear();
 
 		clearCurrentExperiment();

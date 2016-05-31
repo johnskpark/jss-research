@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <evaluationConfig>
+
+<!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
 			<ruleFile>simple_4op.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
+-->
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
@@ -14,6 +17,7 @@
 		</solverFile>
 	</solverConfig>
 
+<!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.WeightedVoteRule</solverClass>
 		<solverFile>
@@ -34,6 +38,7 @@
 			<ruleFile>coop_weighted_lc_4op.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
+-->
 
 	<datasetConfig>
 		<datasetClass>app.simConfig.huntConfig.EvalFactory</datasetClass>

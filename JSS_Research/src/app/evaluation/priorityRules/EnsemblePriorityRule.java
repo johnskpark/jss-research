@@ -73,8 +73,8 @@ public class EnsemblePriorityRule extends AbsEvalPriorityRule {
 
 				double priority = rule.evaluate(getNodeData());
 
-				if (hasExperimentTracker()) {
-					getExperimentTracker().addPriority(this, i, rule, entry, priority);
+				if (hasTracker()) {
+					getTracker().addPriority(this, i, rule, entry, priority);
 				}
 
 				if (priority > bestPriority) {

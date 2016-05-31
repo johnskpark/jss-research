@@ -1,5 +1,8 @@
 package app.evaluation.fitness;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -7,17 +10,13 @@ import app.IMultiRule;
 import app.evaluation.IJasimaEvalFitness;
 import app.node.INode;
 import app.tracker.JasimaDecision;
-import app.tracker.JasimaDecisionMaker;
 import app.tracker.JasimaExperiment;
 import app.tracker.JasimaExperimentTracker;
 import app.tracker.JasimaPriorityStat;
 import jasima.shopSim.core.PR;
 import jasima.shopSim.core.PrioRuleTarget;
 
-// TODO Right, what do I need to measure again?
 public class DiversityFitness implements IJasimaEvalFitness {
-
-	// TODO need to define the distance measures here.
 
 	@Override
 	public String getHeaderName() {
@@ -27,20 +26,17 @@ public class DiversityFitness implements IJasimaEvalFitness {
 		// - For each rule:
 		// * The number of times they partook in the majority
 		// * The number of times they partook in the minority
-		// * The priorities assigned to each of the rules.
 
 		String allSingleJobNum = "SingleJobNum";
 		String tieBreakNum = "TieBreakNum";
 		String ruleMajorityNum = "RuleMajorityNum";
 		String ruleMinorityNum = "RuleMinorityNum";
-		String rulePriorities = "RulePriorities";
 
-		return String.format("%s,%s,%s,%s,%s",
+		return String.format("%s,%s,%s,%s",
 				allSingleJobNum,
 				tieBreakNum,
 				ruleMajorityNum,
-				ruleMinorityNum,
-				rulePriorities);
+				ruleMinorityNum);
 	}
 
 	@Override
@@ -60,81 +56,125 @@ public class DiversityFitness implements IJasimaEvalFitness {
 			throw new RuntimeException("The rule being evaluated must be a type of multirule.");
 		}
 
+		@SuppressWarnings("unchecked")
 		IMultiRule<INode> solver = (IMultiRule<INode>) rule;
 		List<JasimaExperiment<INode>> experiments = tracker.getResults();
 
 		String[] experimentResults = new String[5];
 		for (JasimaExperiment<INode> experiment : experiments) {
-			experimentResults[0] = getSingleVotedJobResults(results, experiment);
-			experimentResults[1] = getTieBreakJobResults(results, experiment);
+			experimentResults[0] = getSingleVotedJobResults(solver, results, experiment);
+			experimentResults[1] = getTieBreakJobResults(solver, results, experiment);
 			experimentResults[2] = getMajorityResults(solver, results, experiment);
 			experimentResults[3] = getMinorityResults(solver, results, experiment);
-			experimentResults[4] = getPriorityResults(solver, results, experiment);
 		}
 
-		return String.format("%s,%s,%s,%s,%s", experimentResults[0],
+		return String.format("%s,%s,%s,%s", experimentResults[0],
 				experimentResults[1],
 				experimentResults[2],
-				experimentResults[3],
-				experimentResults[4]);
+				experimentResults[3]);
 	}
 
-	protected String getSingleVotedJobResults(Map<String, Object> results, JasimaExperiment<INode> experiment) {
+	protected String getSingleVotedJobResults(IMultiRule<INode> solver, Map<String, Object> results, JasimaExperiment<INode> experiment) {
 		List<JasimaDecision<INode>> decisions = experiment.getDecisions();
 
 		double singleVoteJobCount = 0.0;
 		for (JasimaDecision<INode> decision : decisions) {
 			PrioRuleTarget selectedJob = decision.getSelectedEntry();
+			JasimaPriorityStat[] stats = decision.getStats(solver);
 
-			for (JasimaDecisionMaker decisionMaker : experiment.getDecisionMakers()) {
-				// TODO
+			boolean singleVotedJob = true;
+			for (int i = 0; i < stats.length && singleVotedJob; i++) {
+				if (!selectedJob.equals(stats[i].getBestEntry())) {
+					singleVotedJob = false;
+				}
+			}
+
+			if (singleVotedJob) {
+				singleVoteJobCount++;
 			}
 		}
 
 		return String.format("%f", singleVoteJobCount / decisions.size());
 	}
 
-	protected String getTieBreakJobResults(Map<String, Object> results, JasimaExperiment<INode> experiment) {
-		// TODO Auto-generated method stub
-		return null;
+	protected String getTieBreakJobResults(IMultiRule<INode> solver, Map<String, Object> results, JasimaExperiment<INode> experiment) {
+		List<JasimaDecision<INode>> decisions = experiment.getDecisions();
+
+		double tieBreakJobCount = 0.0;
+		for (JasimaDecision<INode> decision : decisions) {
+			JasimaPriorityStat[] stats = decision.getStats(solver);
+
+			Map<PrioRuleTarget, Integer> jobScores = new HashMap<>();
+			for (PrioRuleTarget entry : decision.getEntries()) {
+				jobScores.put(entry, 0);
+			}
+
+			for (int i = 0; i < stats.length; i++) {
+				PrioRuleTarget bestEntry = stats[i].getBestEntry();
+				jobScores.put(bestEntry, jobScores.get(bestEntry) + 1);
+			}
+
+			List<Integer> scores = new ArrayList<>(jobScores.values());
+			Collections.sort(scores);
+
+			if (scores.size() >= 2 && scores.get(scores.size() - 1) == scores.get(scores.size() - 2)) {
+				tieBreakJobCount++;
+			}
+		}
+
+		return String.format("%f", tieBreakJobCount / decisions.size());
 	}
 
-	// TODO this part shouldn't be a string. Now it is.
 	protected String getMajorityResults(IMultiRule<INode> solver, Map<String, Object> results, JasimaExperiment<INode> experiment) {
 		List<JasimaDecision<INode>> decisions = experiment.getDecisions();
+		List<INode> ruleComponents = solver.getRuleComponents();
+
+		double[] majorityCounts = new double[ruleComponents.size()];
 
 		for (JasimaDecision<INode> decision: decisions) {
+			PrioRuleTarget selectedJob = decision.getSelectedEntry();
 			JasimaPriorityStat[] stats = decision.getStats(solver);
 
-			// TODO
+			for (int i = 0; i < stats.length; i++) {
+				if (stats[i].getBestEntry().equals(selectedJob)) {
+					majorityCounts[i]++;
+				}
+			}
 		}
 
-		return null;
+		String majorityResults = String.format("\"%f", 1.0 * majorityCounts[0] / decisions.size());
+		for (int i = 1; i < ruleComponents.size(); i++) {
+			majorityResults += String.format(",%f", 1.0 * majorityCounts[i] / decisions.size());
+		}
+		majorityResults += "\"";
+
+		return majorityResults;
 	}
 
-	// TODO this part shouldn't be a string. Now it is.
 	protected String getMinorityResults(IMultiRule<INode> solver, Map<String, Object> results, JasimaExperiment<INode> experiment) {
 		List<JasimaDecision<INode>> decisions = experiment.getDecisions();
+		List<INode> ruleComponents = solver.getRuleComponents();
+
+		double[] minorityCounts = new double[ruleComponents.size()];
 
 		for (JasimaDecision<INode> decision: decisions) {
+			List<PrioRuleTarget> jobRankings = decision.getEntryRankings();
+			PrioRuleTarget worstJob = jobRankings.get(jobRankings.size() - 1);
 			JasimaPriorityStat[] stats = decision.getStats(solver);
 
-			// TODO
+			for (int i = 0; i < stats.length; i++) {
+				if (stats[i].getBestEntry().equals(worstJob)) {
+					minorityCounts[i]++;
+				}
+			}
 		}
 
-		return null;
-	}
-
-	// TODO this part shouldn't be a string. Now it is.
-	protected String getPriorityResults(IMultiRule<INode> solver, Map<String, Object> results, JasimaExperiment<INode> experiment) {
-		List<JasimaDecision<INode>> decisions = experiment.getDecisions();
-
-		for (JasimaDecision<INode> decision: decisions) {
-			JasimaPriorityStat[] stats = decision.getStats(solver);
-
-			// TODO
+		String minorityResults = String.format("%f", 1.0 * minorityCounts[0] / decisions.size());
+		for (int i = 1; i < ruleComponents.size(); i++) {
+			minorityResults += String.format(",%f", 1.0 * minorityCounts[i] / decisions.size());
 		}
 
-		return null;
+		return minorityResults;
 	}
+
 }

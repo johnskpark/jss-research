@@ -107,6 +107,10 @@ public class JasimaExperiment<T> {
 		return ruleMap.get(solver).getRuleComponents();
 	}
 
+	public List<JasimaDecisionMaker> getDecisionMakers(IMultiRule<T> solver) {
+		return ruleMap.get(solver).getDecisionMakers();
+	}
+
 	public List<JasimaDecision<T>> getDecisions() {
 		return experimentDecisions;
 	}

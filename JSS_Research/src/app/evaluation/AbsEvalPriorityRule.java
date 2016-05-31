@@ -16,7 +16,7 @@ public abstract class AbsEvalPriorityRule extends PR implements IJasimaEvalPrior
 
 	private JasimaExperimentTracker<INode> tracker;
 
-	public boolean hasExperimentTracker() {
+	public boolean hasTracker() {
 		return tracker != null;
 	}
 
@@ -30,7 +30,7 @@ public abstract class AbsEvalPriorityRule extends PR implements IJasimaEvalPrior
 		return nodeData;
 	}
 
-	public JasimaExperimentTracker<INode> getExperimentTracker() {
+	public JasimaExperimentTracker<INode> getTracker() {
 		return tracker;
 	}
 
@@ -44,7 +44,7 @@ public abstract class AbsEvalPriorityRule extends PR implements IJasimaEvalPrior
 		this.nodeData = data;
 	}
 
-	public void setExperimentTracker(JasimaExperimentTracker<INode> tracker) {
+	public void setTracker(JasimaExperimentTracker<INode> tracker) {
 		this.tracker = tracker;
 	}
 
