@@ -48,12 +48,12 @@ public abstract class AbsGPPriorityRule extends PR implements IJasimaGPPriorityR
 
 	@Override
 	public void update(WorkStation notifier, WorkStationEvent event) {
-		if (event == WorkStation.WS_JOB_SELECTED && tracker != null) {
+		if (event == WorkStation.WS_JOB_SELECTED && hasTracker()) {
 			PrioRuleTarget entry = notifier.justStarted;
 
-			tracker.addSelectedEntry(entry);
 			tracker.addStartTime(entry.getShop().simTime());
-			tracker.addEntryRankings(getEntryRankings());
+			tracker.addSelectedEntry(this, entry);
+			tracker.addEntryRankings(this, getEntryRankings());
 
 			clear();
 		}

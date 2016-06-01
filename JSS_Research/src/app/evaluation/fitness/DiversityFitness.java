@@ -79,7 +79,7 @@ public class DiversityFitness implements IJasimaEvalFitness {
 
 		double singleVoteJobCount = 0.0;
 		for (JasimaDecision<INode> decision : decisions) {
-			PrioRuleTarget selectedJob = decision.getSelectedEntry();
+			PrioRuleTarget selectedJob = decision.getSelectedEntry(solver);
 			JasimaPriorityStat[] stats = decision.getStats(solver);
 
 			boolean singleVotedJob = true;
@@ -132,7 +132,7 @@ public class DiversityFitness implements IJasimaEvalFitness {
 		double[] majorityCounts = new double[ruleComponents.size()];
 
 		for (JasimaDecision<INode> decision: decisions) {
-			PrioRuleTarget selectedJob = decision.getSelectedEntry();
+			PrioRuleTarget selectedJob = decision.getSelectedEntry(solver);
 			JasimaPriorityStat[] stats = decision.getStats(solver);
 
 			for (int i = 0; i < stats.length; i++) {
@@ -158,7 +158,7 @@ public class DiversityFitness implements IJasimaEvalFitness {
 		double[] minorityCounts = new double[ruleComponents.size()];
 
 		for (JasimaDecision<INode> decision: decisions) {
-			List<PrioRuleTarget> jobRankings = decision.getEntryRankings();
+			List<PrioRuleTarget> jobRankings = decision.getEntryRankings(solver);
 			PrioRuleTarget worstJob = jobRankings.get(jobRankings.size() - 1);
 			JasimaPriorityStat[] stats = decision.getStats(solver);
 

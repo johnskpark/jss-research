@@ -28,6 +28,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import app.AbsMultiRule;
 import app.IWorkStationListener;
 import app.node.INode;
 import app.node.NodeData;
@@ -426,7 +427,7 @@ public class JasimaEvalProblem {
 			for (int i = 0; i < simConfig.getNumConfigs(); i++) {
 				// FIXME bit hacky.
 				if (refRule instanceof TrackedPR) {
-					((TrackedPR) refRule).initSampleRun();
+					((TrackedPR) refRule).initSampleRun(i);
 				}
 
 				Experiment experiment = getExperiment(refRule, i);
@@ -489,18 +490,18 @@ public class JasimaEvalProblem {
 			}
 
 			TrackedPR trackedRefRule = (TrackedPR) refRule;
-			trackedRefRule.setPriorityRules(new ArrayList<PR>(solvers));
+			trackedRefRule.setPriorityRules(new ArrayList<AbsMultiRule<INode>>(solvers));
 
 			for (AbsEvalPriorityRule solver : solvers) {
 				solver.setTracker(tracker);
 				tracker.addRule(solver);
 			}
 
-			trackedRefRule.initTrackedRun();
 			tracker.initialise();
 
 			for (int i = 0; i < simConfig.getNumConfigs(); i++) {
 				tracker.setExperimentIndex(i);
+				trackedRefRule.initTrackedRun(i);
 
 				Experiment experiment = getExperiment(refRule, i);
 				experiment.runExperiment();

@@ -33,8 +33,7 @@ public class DecisionEvent extends Pair<WorkStation, Double> {
 		DecisionEvent other = (DecisionEvent) o;
 		if (this.getMachineIndex() != other.getMachineIndex()) {
 			return false;
-		} else if (this.getSimTime() - epsilon < other.getSimTime() ||
-				this.getSimTime() + epsilon > other.getSimTime()) {
+		} else if (Math.abs(this.getSimTime() - other.getSimTime()) > epsilon) {
 			return false;
 		} else {
 			return true;

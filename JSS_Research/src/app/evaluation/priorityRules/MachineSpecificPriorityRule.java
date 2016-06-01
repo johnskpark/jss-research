@@ -6,6 +6,7 @@ import app.evaluation.AbsEvalPriorityRule;
 import app.evaluation.JasimaEvalConfig;
 import app.node.INode;
 import jasima.shopSim.core.PrioRuleTarget;
+import jasima.shopSim.core.PriorityQueue;
 
 public class MachineSpecificPriorityRule extends AbsEvalPriorityRule {
 
@@ -49,4 +50,14 @@ public class MachineSpecificPriorityRule extends AbsEvalPriorityRule {
 		return rules.get(machineIndex).evaluate(getNodeData());
 	}
 
+	@Override
+	public void clear() {
+		// Does nothing.
+	}
+
+	@Override
+	public void jobSelected(PrioRuleTarget entry, PriorityQueue<?> q) {
+		// Does nothing.
+	}
+	
 }

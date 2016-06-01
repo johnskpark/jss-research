@@ -52,7 +52,7 @@ public class IndividualDecisionDistance<T> implements DistanceMeasure<T> {
 			final int numComponents) {
 		double[] rankings = new double[numComponents];
 
-		List<PrioRuleTarget> entryRankings = decision.getEntryRankings();
+		List<PrioRuleTarget> entryRankings = decision.getEntryRankings(solver);
 		JasimaPriorityStat[] stats = decision.getStats(solver);
 
 		for (int i = 0; i < numComponents; i++) {

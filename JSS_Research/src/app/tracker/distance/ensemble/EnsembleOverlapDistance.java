@@ -53,7 +53,7 @@ public class EnsembleOverlapDistance<T> implements DistanceMeasure<T> {
 
 		JasimaPriorityStat[] stats = decision.getStats(solver);
 
-		if (decision.getSelectedEntry() == null) {
+		if (decision.getSelectedEntry(solver) == null) {
 			throw new RuntimeException("You fucked up.");
 		}
 
@@ -61,7 +61,7 @@ public class EnsembleOverlapDistance<T> implements DistanceMeasure<T> {
 			for (int j = 0; j < numComponents; j++) {
 				if (i == j) { continue; }
 
-				overlaps[i][j] = stats[i].getBestEntry().equals(decision.getSelectedEntry());
+				overlaps[i][j] = stats[i].getBestEntry().equals(decision.getSelectedEntry(solver));
 			}
 		}
 

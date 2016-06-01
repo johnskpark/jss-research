@@ -33,6 +33,8 @@ public class JasimaExperiment<T> {
 
 		experimentDecisions = new ArrayList<>();
 		experimentDecisionMap = new HashMap<>();
+		
+		currentStats = new HashMap<>();
 	}
 
 	/**
@@ -49,6 +51,8 @@ public class JasimaExperiment<T> {
 		for (int i = 0; i < q.size(); i++) {
 			entries.add(q.get(i));
 		}
+		
+		currentStats.clear();
 
 		for (IMultiRule<T> solver : ruleMap.keySet()) {
 			SolverData<T> data = ruleMap.get(solver);
@@ -56,7 +60,10 @@ public class JasimaExperiment<T> {
 			JasimaPriorityStat[] stats = new JasimaPriorityStat[data.getRuleComponents().size()];
 
 			for (int i = 0; i < data.getRuleComponents().size(); i++) {
-				data.addPriorityStat(i, new JasimaPriorityStat(q.size()));
+				JasimaPriorityStat stat = new JasimaPriorityStat(q.size());
+				
+				data.addPriorityStat(i, stat);
+				stats[i] = stat;
 			}
 
 			currentStats.put(solver, stats);
@@ -77,14 +84,16 @@ public class JasimaExperiment<T> {
 	 * Add in the priority assigned to an entry by one of the individuals in the experiment.
 	 */
 	public void addPriority(IMultiRule<T> solver, int index, T rule, PrioRuleTarget entry, double priority) {
-		currentStats.get(solver)[index].addPriority(entry, priority);
+		JasimaPriorityStat[] stats = currentStats.get(solver);
+		
+		stats[index].addPriority(entry, priority);
 	}
 
 	/**
 	 * Set the entry selected to be processed by the rule.
 	 */
-	public void addSelectedEntry(PrioRuleTarget entry) {
-		currentDecision.setSelectedEntry(entry);
+	public void addSelectedEntry(IMultiRule<T> solver, PrioRuleTarget entry) {
+		currentDecision.setSelectedEntry(solver, entry);
 	}
 
 	/**
@@ -97,8 +106,8 @@ public class JasimaExperiment<T> {
 	/**
 	 * Set the ranking for each entry given by the rule.
 	 */
-	public void addEntryRankings(List<PrioRuleTarget> rankings) {
-		currentDecision.setEntryRankings(rankings);
+	public void addEntryRankings(IMultiRule<T> solver, List<PrioRuleTarget> rankings) {
+		currentDecision.setEntryRankings(solver, rankings);
 	}
 
 	// Getters

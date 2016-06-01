@@ -109,11 +109,17 @@ public class WeightedVoteRule extends AbsEvalPriorityRule {
 		return rules.get(index).getSize();
 	}
 
+	@Override
 	public void clear() {
 		jobVotes.clear();
 		jobRankings.clear();
 	}
 
+	@Override
+	public void jobSelected(PrioRuleTarget entry, PriorityQueue<?> q) {
+		// TODO
+	}
+	
 	private class Score implements Comparable<Score> {
 		private PrioRuleTarget entry;
 		private List<Double> weights = new ArrayList<Double>();

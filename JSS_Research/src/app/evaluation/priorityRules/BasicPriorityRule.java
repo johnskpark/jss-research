@@ -66,5 +66,15 @@ public class BasicPriorityRule extends AbsEvalPriorityRule {
 		}
 		return rule.getSize();
 	}
+	
+	@Override
+	public void clear() {
+		// Does nothing.
+	}
 
+	@Override
+	public void jobSelected(PrioRuleTarget entry, PriorityQueue<?> q) {
+		// Does nothing.
+	}
+	
 }

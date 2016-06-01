@@ -10,6 +10,7 @@ import app.node.pr.PRNode;
 import app.priorityRules.ATCPR;
 import jasima.shopSim.core.PR;
 import jasima.shopSim.core.PrioRuleTarget;
+import jasima.shopSim.core.PriorityQueue;
 
 public class EvalATC extends AbsEvalPriorityRule {
 
@@ -45,4 +46,14 @@ public class EvalATC extends AbsEvalPriorityRule {
 		return SIZE_NOT_SET;
 	}
 
+	@Override
+	public void clear() {
+		// Does nothing.
+	}
+
+	@Override
+	public void jobSelected(PrioRuleTarget entry, PriorityQueue<?> q) {
+		// Does nothing.
+	}
+	
 }

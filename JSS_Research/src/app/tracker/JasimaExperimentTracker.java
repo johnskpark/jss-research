@@ -104,7 +104,6 @@ public class JasimaExperimentTracker<T> {
 	/**
 	 * Add the priority assigned to an entry for the dispatching decision.
 	 */
-	// TODO this will not work with the multiple solvers all trying to add priority values!!!
 	public void addPriority(IMultiRule<T> solver, int index, T rule, PrioRuleTarget entry, double priority) {
 		currentExperimentDecisions.addPriority(solver, index, rule, entry, priority);
 	}
@@ -112,8 +111,8 @@ public class JasimaExperimentTracker<T> {
 	/**
 	 * Set the entry that is selected to be processed.
 	 */
-	public void addSelectedEntry(PrioRuleTarget entry) {
-		currentExperimentDecisions.addSelectedEntry(entry);
+	public void addSelectedEntry(IMultiRule<T> solver, PrioRuleTarget entry) {
+		currentExperimentDecisions.addSelectedEntry(solver, entry);
 	}
 
 	/**
@@ -126,8 +125,8 @@ public class JasimaExperimentTracker<T> {
 	/**
 	 * Set the rankings set by the rule for the entries in the dispatching decision.
 	 */
-	public void addEntryRankings(List<PrioRuleTarget> entryRankings) {
-		currentExperimentDecisions.addEntryRankings(entryRankings);
+	public void addEntryRankings(IMultiRule<T> solver, List<PrioRuleTarget> entryRankings) {
+		currentExperimentDecisions.addEntryRankings(solver, entryRankings);
 	}
 
 	/**

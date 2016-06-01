@@ -1,11 +1,13 @@
 package app.priorityRules;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 
+import app.AbsMultiRule;
+import app.node.INode;
 import app.tracker.DecisionEvent;
 import app.tracker.JasimaExperimentTracker;
 import jasima.shopSim.core.PR;
@@ -23,15 +25,18 @@ public class TrackedPR extends PR {
 	private long seed;
 
 	private boolean firstRun = true;
-	private List<DecisionEvent> recordedEvents;
-	private Set<DecisionEvent> sampledEvents;
+	private List<List<DecisionEvent>> recordedEvents;
+	private List<Collection<DecisionEvent>> sampledEvents;
 	private Random rand;
+	
+	private List<DecisionEvent> currentRecording;
+	private Collection<DecisionEvent> currentSample;
 
-	private List<PR> priorityRules = new ArrayList<>();
+	private List<AbsMultiRule<INode>> priorityRules = new ArrayList<>();
 
-	private JasimaExperimentTracker tracker;
+	private JasimaExperimentTracker<?> tracker;
 
-	public TrackedPR(PR refRule, int jobThreshold, int sample, long s, JasimaExperimentTracker t) {
+	public TrackedPR(PR refRule, int jobThreshold, int sample, long s, JasimaExperimentTracker<?> t) {
 		super();
 
 		referenceRule = refRule;
@@ -40,6 +45,7 @@ public class TrackedPR extends PR {
 		seed = s;
 
 		recordedEvents = new ArrayList<>();
+		sampledEvents = new ArrayList<>();
 		tracker = t;
 	}
 
@@ -47,29 +53,38 @@ public class TrackedPR extends PR {
 		return firstRun;
 	}
 
-	public void initSampleRun() {
+	public void initSampleRun(int configIndex) {
 		firstRun = true;
-		recordedEvents = new ArrayList<>();
+		currentRecording = new ArrayList<>();
+		recordedEvents.add(configIndex, currentRecording);
 	}
 
-	public void initTrackedRun() {
+	public void initTrackedRun(int configIndex) {
 		firstRun = false;
-
-		List<DecisionEvent> copy = new ArrayList<>(recordedEvents);
-		sampledEvents = new HashSet<>();
+		currentSample = new HashSet<>();
+		sampledEvents.add(configIndex, currentSample);
 		rand = new Random(seed);
-
-		for (int i = 0; i < numSample; i++) {
+		
+		List<DecisionEvent> copy = new ArrayList<>(recordedEvents.get(configIndex));
+		
+		for (int i = 0; i < numSample && !copy.isEmpty(); i++) {
 			int index = rand.nextInt(copy.size());
-			sampledEvents.add(copy.remove(index));
+			
+			DecisionEvent event = copy.remove(index);
+			
+//			System.out.printf("Sampled event at %d, %f\n", event.getMachineIndex(), event.getSimTime());
+			
+			currentSample.add(event);
 		}
+		
+//		currentSample.addAll(copy);
 	}
 
-	public List<PR> getPriorityRules() {
+	public List<AbsMultiRule<INode>> getPriorityRules() {
 		return priorityRules;
 	}
 
-	public void setPriorityRules(List<PR> priorityRules) {
+	public void setPriorityRules(List<AbsMultiRule<INode>> priorityRules) {
 		this.priorityRules = priorityRules;
 	}
 
@@ -81,27 +96,32 @@ public class TrackedPR extends PR {
 			return;
 		}
 
+		DecisionEvent event = getDecisionEvent(q.get(0));
+		
 		if (firstRun) {
 			// Record this particular decision situation.
-			DecisionEvent event = getDecisionEvent(q.get(0));
-
-			recordedEvents.add(event);
-		} else if (sampledEvents.contains(getDecisionEvent(q.get(0)))) { // Determine whether this belongs to one of the sampled events.
-			// Run it over the different rules.
-			tracker.addDispatchingDecision(q);
-
-			for (PR pr : priorityRules) {
-				beforeCalcPR(pr, q);
+			currentRecording.add(event);
+		} else {
+			 // Determine whether this belongs to one of the sampled events.
+			if (currentSample.contains(event)) {
+				// Run it over the different rules.
+				tracker.addDispatchingDecision(q);
+	
+				for (AbsMultiRule<INode> pr : priorityRules) {
+					prPriorityCalculation(pr, q);
+				}
 			}
 		}
 	}
 
-	protected void beforeCalcPR(PR pr, PriorityQueue<?> q) {
+	protected void prPriorityCalculation(AbsMultiRule<INode> pr, PriorityQueue<?> q) {
 		pr.beforeCalc(q);
 
 		for (int i = 0; i < q.size(); i++) {
 			pr.calcPrio(q.get(i));
 		}
+		
+		pr.jobSelected(q.peekLargest(), q);
 	}
 
 	private DecisionEvent getDecisionEvent(PrioRuleTarget entry) {

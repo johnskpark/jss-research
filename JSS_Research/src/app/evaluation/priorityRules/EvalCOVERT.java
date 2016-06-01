@@ -2,6 +2,7 @@ package app.evaluation.priorityRules;
 
 import jasima.shopSim.core.PR;
 import jasima.shopSim.core.PrioRuleTarget;
+import jasima.shopSim.core.PriorityQueue;
 
 import java.util.Arrays;
 import java.util.List;
@@ -46,4 +47,14 @@ public class EvalCOVERT extends AbsEvalPriorityRule {
 		return SIZE_NOT_SET;
 	}
 
+	@Override
+	public void clear() {
+		// Does nothing.
+	}
+
+	@Override
+	public void jobSelected(PrioRuleTarget entry, PriorityQueue<?> q) {
+		// Does nothing.
+	}
+	
 }

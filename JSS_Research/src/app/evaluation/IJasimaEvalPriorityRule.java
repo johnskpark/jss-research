@@ -1,9 +1,6 @@
 package app.evaluation;
 
-import app.IMultiRule;
-import app.node.INode;
-
-public interface IJasimaEvalPriorityRule extends IMultiRule<INode> {
+public interface IJasimaEvalPriorityRule {
 
 	public void setConfiguration(JasimaEvalConfig config);
 

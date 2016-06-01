@@ -1,6 +1,7 @@
 package app.tracker;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,9 +14,9 @@ public class JasimaDecision<T> {
 	private double startTime;
 
 	private List<PrioRuleTarget> entries = new ArrayList<PrioRuleTarget>();
-	private List<PrioRuleTarget> entryRankings = new ArrayList<PrioRuleTarget>();
-
-	private PrioRuleTarget startedEntry;
+	 
+	private Map<IMultiRule<T>, List<PrioRuleTarget>> entryRankings;
+	private Map<IMultiRule<T>, PrioRuleTarget> startedEntry;
 
 	private Map<IMultiRule<T>, SolverData<T>> solvers;
 	private Map<IMultiRule<T>, JasimaPriorityStat[]> stats;
@@ -23,6 +24,9 @@ public class JasimaDecision<T> {
 	public JasimaDecision(List<PrioRuleTarget> entries, Map<IMultiRule<T>, SolverData<T>> solvers, Map<IMultiRule<T>, JasimaPriorityStat[]> decisions) {
 		this.entries = entries;
 
+		this.entryRankings = new HashMap<>();
+		this.startedEntry = new HashMap<>();
+		
 		this.solvers = solvers;
 		this.stats = decisions;
 	}
@@ -41,12 +45,12 @@ public class JasimaDecision<T> {
 		return entries;
 	}
 
-	public List<PrioRuleTarget> getEntryRankings() {
-		return entryRankings;
+	public List<PrioRuleTarget> getEntryRankings(IMultiRule<T> solver) {
+		return entryRankings.get(solver);
 	}
 
-	public PrioRuleTarget getSelectedEntry() {
-		return startedEntry;
+	public PrioRuleTarget getSelectedEntry(IMultiRule<T> solver) {
+		return startedEntry.get(solver);
 	}
 
 	public List<T> getRules(IMultiRule<T> solver) {
@@ -67,12 +71,12 @@ public class JasimaDecision<T> {
 		this.entries = entries;
 	}
 
-	public void setEntryRankings(List<PrioRuleTarget> entryRankings) {
-		this.entryRankings = entryRankings;
+	public void setEntryRankings(IMultiRule<T> solver, List<PrioRuleTarget> entryRankings) {
+		this.entryRankings.put(solver, entryRankings);
 	}
 
-	public void setSelectedEntry(PrioRuleTarget startedEntry) {
-		this.startedEntry = startedEntry;
+	public void setSelectedEntry(IMultiRule<T> solver, PrioRuleTarget startedEntry) {
+		this.startedEntry.put(solver, startedEntry);
 	}
 
 }

@@ -111,11 +111,17 @@ public class WeightedLinearCombinationRule extends AbsEvalPriorityRule {
 		return rules.get(index).getSize();
 	}
 
+	@Override
 	public void clear() {
 		jobVotes.clear();
 		jobRankings.clear();
 	}
 
+	@Override
+	public void jobSelected(PrioRuleTarget entry, PriorityQueue<?> q) {
+		// TODO
+	}
+	
 	private class Score implements Comparable<Score> {
 		private PrioRuleTarget entry;
 		private double score = 0.0;
