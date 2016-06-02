@@ -33,13 +33,14 @@ public class JasimaExperiment<T> {
 
 		experimentDecisions = new ArrayList<>();
 		experimentDecisionMap = new HashMap<>();
-		
+
 		currentStats = new HashMap<>();
 	}
 
 	/**
 	 * Load up a dispatching decision to the experiment with the specified priority queue.
 	 */
+	// TODO right, it seems that this doesn't get called the second time, which is a bug.
 	public void addDispatchingDecision(PriorityQueue<?> q) {
 		DecisionEvent event = getDecisionEvent(q);
 		// Ensure that duplicate dispatching decisions are not added.
@@ -51,8 +52,8 @@ public class JasimaExperiment<T> {
 		for (int i = 0; i < q.size(); i++) {
 			entries.add(q.get(i));
 		}
-		
-		currentStats.clear();
+
+		currentStats = new HashMap<>();
 
 		for (IMultiRule<T> solver : ruleMap.keySet()) {
 			SolverData<T> data = ruleMap.get(solver);
@@ -61,7 +62,7 @@ public class JasimaExperiment<T> {
 
 			for (int i = 0; i < data.getRuleComponents().size(); i++) {
 				JasimaPriorityStat stat = new JasimaPriorityStat(q.size());
-				
+
 				data.addPriorityStat(i, stat);
 				stats[i] = stat;
 			}
@@ -85,7 +86,7 @@ public class JasimaExperiment<T> {
 	 */
 	public void addPriority(IMultiRule<T> solver, int index, T rule, PrioRuleTarget entry, double priority) {
 		JasimaPriorityStat[] stats = currentStats.get(solver);
-		
+
 		stats[index].addPriority(entry, priority);
 	}
 

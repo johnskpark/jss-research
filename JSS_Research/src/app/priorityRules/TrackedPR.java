@@ -28,7 +28,7 @@ public class TrackedPR extends PR {
 	private List<List<DecisionEvent>> recordedEvents;
 	private List<Collection<DecisionEvent>> sampledEvents;
 	private Random rand;
-	
+
 	private List<DecisionEvent> currentRecording;
 	private Collection<DecisionEvent> currentSample;
 
@@ -64,19 +64,19 @@ public class TrackedPR extends PR {
 		currentSample = new HashSet<>();
 		sampledEvents.add(configIndex, currentSample);
 		rand = new Random(seed);
-		
+
 		List<DecisionEvent> copy = new ArrayList<>(recordedEvents.get(configIndex));
-		
+
 		for (int i = 0; i < numSample && !copy.isEmpty(); i++) {
 			int index = rand.nextInt(copy.size());
-			
+
 			DecisionEvent event = copy.remove(index);
-			
+
 //			System.out.printf("Sampled event at %d, %f\n", event.getMachineIndex(), event.getSimTime());
-			
+
 			currentSample.add(event);
 		}
-		
+
 //		currentSample.addAll(copy);
 	}
 
@@ -97,7 +97,7 @@ public class TrackedPR extends PR {
 		}
 
 		DecisionEvent event = getDecisionEvent(q.get(0));
-		
+
 		if (firstRun) {
 			// Record this particular decision situation.
 			currentRecording.add(event);
@@ -106,7 +106,7 @@ public class TrackedPR extends PR {
 			if (currentSample.contains(event)) {
 				// Run it over the different rules.
 				tracker.addDispatchingDecision(q);
-	
+
 				for (AbsMultiRule<INode> pr : priorityRules) {
 					prPriorityCalculation(pr, q);
 				}
@@ -118,10 +118,10 @@ public class TrackedPR extends PR {
 		pr.beforeCalc(q);
 
 		for (int i = 0; i < q.size(); i++) {
-			pr.calcPrio(q.get(i));
+			pr.calcPrio(q.get(0));
 		}
-		
-		pr.jobSelected(q.peekLargest(), q);
+
+		pr.jobSelected(pr.getEntryRankings().get(0), q);
 	}
 
 	private DecisionEvent getDecisionEvent(PrioRuleTarget entry) {

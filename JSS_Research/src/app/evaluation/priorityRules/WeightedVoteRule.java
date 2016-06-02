@@ -1,9 +1,11 @@
 package app.evaluation.priorityRules;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import app.evaluation.AbsEvalPriorityRule;
 import app.evaluation.JasimaEvalConfig;
@@ -110,16 +112,29 @@ public class WeightedVoteRule extends AbsEvalPriorityRule {
 	}
 
 	@Override
+	public List<PrioRuleTarget> getEntryRankings() {
+		Collections.sort(jobRankings);
+
+		return jobRankings.stream().map(x -> x.getEntry()).collect(Collectors.toList());
+	}
+
+	@Override
+	public void jobSelected(PrioRuleTarget entry, PriorityQueue<?> q) {
+		if (hasTracker()) {
+			getTracker().addStartTime(entry.getShop().simTime());
+			getTracker().addSelectedEntry(this, entry);
+			getTracker().addEntryRankings(this, getEntryRankings());
+
+			clear();
+		}
+	}
+
+	@Override
 	public void clear() {
 		jobVotes.clear();
 		jobRankings.clear();
 	}
 
-	@Override
-	public void jobSelected(PrioRuleTarget entry, PriorityQueue<?> q) {
-		// TODO
-	}
-	
 	private class Score implements Comparable<Score> {
 		private PrioRuleTarget entry;
 		private List<Double> weights = new ArrayList<Double>();
@@ -134,7 +149,6 @@ public class WeightedVoteRule extends AbsEvalPriorityRule {
 			score += weight;
 		}
 
-		@SuppressWarnings("unused")
 		public PrioRuleTarget getEntry() {
 			return entry;
 		}
