@@ -79,7 +79,7 @@ eval.problem.data = app.evolution.JasimaGPData
 eval.problem.reference-rule = app.priorityRules.ATCPRNew
 
 eval.problem.group-rule = app.evolution.priorityRules.EnsemblePriorityRule
-eval.problem.group-fitness = app.evolution.multilevel.fitness.GroupNormTWTFitness
+eval.problem.group-fitness = app.evolution.multilevel.fitness.GroupSizeAdjustedNormTWTFitness
 
 eval.problem.ind-rule = app.evolution.priorityRules.BasicPriorityRule
 eval.problem.ind-fitness = app.evolution.multilevel.fitness.IndividualNormTWTFitness
