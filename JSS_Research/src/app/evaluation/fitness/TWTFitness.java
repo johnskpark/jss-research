@@ -21,12 +21,18 @@ public class TWTFitness implements IJasimaEvalFitness {
 	}
 
 	@Override
-	public double getNumericResult(final PR rule, final Map<String, Object> results, JasimaExperimentTracker<INode> tracker) {
+	public double getNumericResult(final PR rule,
+			final int configIndex,
+			final Map<String, Object> results,
+			final JasimaExperimentTracker<INode> tracker) {
 		return WeightedTardinessStat.getTotalWeightedTardiness(results);
 	}
 
 	@Override
-	public String getStringResult(final PR rule, final Map<String, Object> results, JasimaExperimentTracker<INode> tracker) {
+	public String getStringResult(final PR rule,
+			final int configIndex,
+			final Map<String, Object> results,
+			final JasimaExperimentTracker<INode> tracker) {
 		return String.format("%f", WeightedTardinessStat.getTotalWeightedTardiness(results));
 	}
 

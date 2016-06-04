@@ -45,12 +45,18 @@ public class DiversityFitness implements IJasimaEvalFitness {
 	}
 
 	@Override
-	public double getNumericResult(PR rule, Map<String, Object> results, JasimaExperimentTracker<INode> tracker) {
+	public double getNumericResult(final PR rule,
+			final int configIndex,
+			final Map<String, Object> results,
+			final JasimaExperimentTracker<INode> tracker) {
 		throw new UnsupportedOperationException("The output is not numeric!");
 	}
 
 	@Override
-	public String getStringResult(PR rule, Map<String, Object> results, JasimaExperimentTracker<INode> tracker) {
+	public String getStringResult(final PR rule,
+			final int configIndex,
+			final Map<String, Object> results,
+			final JasimaExperimentTracker<INode> tracker) {
 		// Check to make sure that the rule is multirule
 		if (!(rule instanceof IMultiRule)) {
 			throw new RuntimeException("The rule being evaluated must be a type of multirule.");
@@ -61,17 +67,20 @@ public class DiversityFitness implements IJasimaEvalFitness {
 		List<JasimaExperiment<INode>> experiments = tracker.getResults();
 
 		String[] experimentResults = new String[5];
-		for (JasimaExperiment<INode> experiment : experiments) {
-			experimentResults[0] = getSingleVotedJobResults(solver, results, experiment);
-			experimentResults[1] = getTieBreakJobResults(solver, results, experiment);
-			experimentResults[2] = getMajorityResults(solver, results, experiment);
-			experimentResults[3] = getMinorityResults(solver, results, experiment);
-		}
 
-		return String.format("%s,%s,%s,%s", experimentResults[0],
+		JasimaExperiment<INode> experiment = experiments.get(configIndex);
+
+		experimentResults[0] = getSingleVotedJobResults(solver, results, experiment);
+		experimentResults[1] = getTieBreakJobResults(solver, results, experiment);
+		experimentResults[2] = getMajorityResults(solver, results, experiment);
+		experimentResults[3] = getMinorityResults(solver, results, experiment);
+
+		String output = String.format("%s,%s,%s,%s", experimentResults[0],
 				experimentResults[1],
 				experimentResults[2],
 				experimentResults[3]);
+
+		return output;
 	}
 
 	protected String getSingleVotedJobResults(IMultiRule<INode> solver, Map<String, Object> results, JasimaExperiment<INode> experiment) {
@@ -169,10 +178,11 @@ public class DiversityFitness implements IJasimaEvalFitness {
 			}
 		}
 
-		String minorityResults = String.format("%f", 1.0 * minorityCounts[0] / decisions.size());
+		String minorityResults = String.format("\"%f", 1.0 * minorityCounts[0] / decisions.size());
 		for (int i = 1; i < ruleComponents.size(); i++) {
 			minorityResults += String.format(",%f", 1.0 * minorityCounts[i] / decisions.size());
 		}
+		minorityResults += "\"";
 
 		return minorityResults;
 	}

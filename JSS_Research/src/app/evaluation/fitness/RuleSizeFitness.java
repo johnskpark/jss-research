@@ -21,12 +21,18 @@ public class RuleSizeFitness implements IJasimaEvalFitness {
 	}
 
 	@Override
-	public double getNumericResult(final PR rule, final Map<String, Object> results, JasimaExperimentTracker<INode> tracker) {
+	public double getNumericResult(final PR rule,
+			final int configIndex,
+			final Map<String, Object> results,
+			final JasimaExperimentTracker<INode> tracker) {
 		throw new UnsupportedOperationException("The output is not numeric!");
 	}
 
 	@Override
-	public String getStringResult(final PR rule, final Map<String, Object> results, JasimaExperimentTracker<INode> tracker) {
+	public String getStringResult(final PR rule,
+			final int configIndex,
+			final Map<String, Object> results,
+			final JasimaExperimentTracker<INode> tracker) {
 		AbsEvalPriorityRule evalRule = (AbsEvalPriorityRule) rule;
 
 		int numRules = evalRule.getNumRules();

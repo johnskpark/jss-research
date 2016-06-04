@@ -77,7 +77,7 @@
 			<xs:element name="solverConfig" type="solverType" minOccurs="1" maxOccurs="unbounded"/>
 			<xs:element name="datasetConfig" type="datasetType" minOccurs="1" maxOccurs="1"/>
 			<xs:element name="outputConfig" type="outputType" minOccurs="1" maxOccurs="1" />
-			<xs:element name="fitnessConfig" type="fitnessType" minOccurs="1" maxOccurs="unbounded" />
+			<xs:element name="fitnessConfig" type="fitnessType" minOccurs="0" maxOccurs="unbounded" />
 			<xs:element name="refConfig" type="refType" minOccurs="0" maxOccurs="1" />
 			<xs:element name="refFitnessConfig" type="refFitnessType" minOccurs="0" maxOccurs="1" />
 			<xs:element name="listenerConfig" type="listenerType" minOccurs="0" maxOccurs="unbounded" /> <!-- Optional -->

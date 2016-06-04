@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -86,7 +87,7 @@ public class JasimaEvalProblem {
 	private Map<String, IWorkStationListener> listenerMap = new HashMap<>();
 
 	private List<PR> referenceRules = new ArrayList<>();
-	private Map<String, Double> refFitness = new HashMap<>();
+	private Map<PR, Map<String, Double>> refFitness = new HashMap<>();
 	private JasimaExperimentTracker<INode> tracker = null;
 
 	private String outputCsv = null;
@@ -424,20 +425,22 @@ public class JasimaEvalProblem {
 		for (PR refRule : referenceRules) {
 			System.out.println("Evaluation: evaluating the reference rule " + refRule.getClass().getSimpleName());
 
-			for (int i = 0; i < simConfig.getNumConfigs(); i++) {
+			refFitness.put(refRule, new HashMap<String, Double>());
+
+			for (int configIndex = 0; configIndex < simConfig.getNumConfigs(); configIndex++) {
 				// FIXME bit hacky.
 				if (refRule instanceof TrackedPR) {
-					((TrackedPR) refRule).initSampleRun(i);
+					((TrackedPR) refRule).initSampleRun(configIndex);
 				}
 
-				Experiment experiment = getExperiment(refRule, i);
+				Experiment experiment = getExperiment(refRule, configIndex);
 				experiment.runExperiment();
 
 				for (IJasimaEvalFitness fitness : standardEvaluation) {
 					if (fitness.resultIsNumeric()) {
-						double result = fitness.getNumericResult(refRule, experiment.getResults(), tracker);
+						double result = fitness.getNumericResult(refRule, configIndex, experiment.getResults(), tracker);
 
-						refFitness.put(fitness.getClass().getSimpleName(), result);
+						refFitness.get(refRule).put(fitness.getClass().getSimpleName(), result);
 					}
 				}
 
@@ -456,15 +459,28 @@ public class JasimaEvalProblem {
 
 			System.out.println("Evaluation: evaluating " + ruleFilename + ". Number of rules: " + solvers.size() + ", Number of instances: " + simConfig.getNumConfigs());
 
-			List<String> results1 = evaluateSolversUsingReference(ruleFilename, solvers);
-			List<String> results2 = evaluateSolversNormally(ruleFilename, solvers);
+			List<String> standardResults = null;
+			List<String> referenceResults = null;
+
+			if (!referenceEvaluation.isEmpty()) {
+				referenceResults = evaluateSolversUsingReference(ruleFilename, solvers);
+			}
+			if (!standardEvaluation.isEmpty()) {
+				standardResults = evaluateSolversNormally(ruleFilename, solvers);
+			}
 
 			for (int i = 0; i < solvers.size(); i++) {
 				AbsEvalPriorityRule solver = solvers.get(i);
 
 				output.printf("%s,%d,%s,%d", ruleFilename, solver.getSeed(), simConfig.getClass().getSimpleName(), i);
-				output.print(results1.get(i));
-				output.print(results2.get(i));
+
+				if (standardResults != null) {
+					output.print(standardResults.get(i));
+				}
+
+				if (referenceResults != null) {
+					output.print(referenceResults.get(i));
+				}
 
 				output.println();
 			}
@@ -476,12 +492,9 @@ public class JasimaEvalProblem {
 	private List<String> evaluateSolversUsingReference(String ruleFileName, List<AbsEvalPriorityRule> solvers) {
 		System.out.println("Evaluation: starting reference evaluation.");
 
-		List<String> resultsOutput = new ArrayList<>();
+		int numResults = solvers.size() * simConfig.getNumConfigs();
 
-		// Fill in the resultsOutput with empty strings at first.
-		for (int i = 0; i < solvers.size(); i++) {
-			resultsOutput.add("");
-		}
+		String[] resultsOutput = new String[numResults];
 
 		for (PR refRule : referenceRules) {
 			// FIXME bit hacky.
@@ -499,24 +512,38 @@ public class JasimaEvalProblem {
 
 			tracker.initialise();
 
-			for (int i = 0; i < simConfig.getNumConfigs(); i++) {
-				tracker.setExperimentIndex(i);
-				trackedRefRule.initTrackedRun(i);
+			for (int configIndex = 0; configIndex < simConfig.getNumConfigs(); configIndex++) {
+				tracker.setExperimentIndex(configIndex);
+				trackedRefRule.initTrackedRun(configIndex);
 
-				Experiment experiment = getExperiment(refRule, i);
+				Experiment experiment = getExperiment(refRule, configIndex);
 				experiment.runExperiment();
 
-				for (int j = 0; j < solvers.size(); j++) {
-					AbsEvalPriorityRule solver = solvers.get(j);
+				for (IJasimaEvalFitness fitness : standardEvaluation) {
+					if (fitness.resultIsNumeric()) {
+						double actual = fitness.getNumericResult(refRule, configIndex, experiment.getResults(), tracker);
+						double expected = refFitness.get(refRule).get(fitness.getClass().getSimpleName());
+
+						if (Math.abs(expected - actual) > 0.0001) {
+							System.out.println("NOT CORRECT.");
+						}
+					}
+				}
+
+
+				for (int solverIndex = 0; solverIndex < solvers.size(); solverIndex++) {
+					AbsEvalPriorityRule solver = solvers.get(solverIndex);
 
 					StringBuilder builder = new StringBuilder();
 
 					for (IJasimaEvalFitness fitness : referenceEvaluation) {
-						 String result = fitness.getStringResult(solver, experiment.getResults(), tracker);
+						 String result = fitness.getStringResult(solver, configIndex, experiment.getResults(), tracker);
 						 builder.append("," + result);
 					}
 
-					resultsOutput.set(j, resultsOutput.get(j) + builder.toString());
+					int resultsIndex = solverIndex * simConfig.getNumConfigs() + configIndex;
+
+					resultsOutput[resultsIndex] = builder.toString();
 				}
 
 				tracker.clearCurrentExperiment();
@@ -532,26 +559,24 @@ public class JasimaEvalProblem {
 
 		System.out.println("Evaluation: reference evaluation complete.");
 
-		return resultsOutput;
+		return Arrays.asList(resultsOutput);
 	}
 
 	private List<String> evaluateSolversNormally(String ruleFilename, List<AbsEvalPriorityRule> solvers) {
-		// TODO I need to clear out the trackers from the rules before I run this.
-
 		System.out.println("Evaluation: starting standard evaluation.");
 
 		List<String> resultsOutput = new ArrayList<>();
 
 		for (AbsEvalPriorityRule solver : solvers) {
-			for (int i = 0; i < simConfig.getNumConfigs(); i++) {
+			for (int configIndex = 0; configIndex < simConfig.getNumConfigs(); configIndex++) {
 
-				Experiment experiment = getExperiment(solver, i);
+				Experiment experiment = getExperiment(solver, configIndex);
 				experiment.runExperiment();
 
 				StringBuilder builder = new StringBuilder();
 
 				for (IJasimaEvalFitness fitness : standardEvaluation) {
-					String result = fitness.getStringResult(solver, experiment.getResults(), tracker);
+					String result = fitness.getStringResult(solver, configIndex, experiment.getResults(), tracker);
 					builder.append("," + result);
 				}
 

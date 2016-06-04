@@ -12,8 +12,8 @@ public interface IJasimaEvalFitness {
 
 	public boolean resultIsNumeric();
 
-	public double getNumericResult(final PR rule, final Map<String, Object> results, JasimaExperimentTracker<INode> tracker);
+	public double getNumericResult(final PR rule, final int configIndex, final Map<String, Object> results, JasimaExperimentTracker<INode> tracker);
 
-	public String getStringResult(final PR rule, final Map<String, Object> results, JasimaExperimentTracker<INode> tracker);
+	public String getStringResult(final PR rule, final int configIndex, final Map<String, Object> results, JasimaExperimentTracker<INode> tracker);
 
 }

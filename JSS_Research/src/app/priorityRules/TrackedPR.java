@@ -72,12 +72,10 @@ public class TrackedPR extends PR {
 
 			DecisionEvent event = copy.remove(index);
 
-//			System.out.printf("Sampled event at %d, %f\n", event.getMachineIndex(), event.getSimTime());
-
 			currentSample.add(event);
 		}
 
-//		currentSample.addAll(copy);
+		System.out.println(currentSample.size());
 	}
 
 	public List<AbsMultiRule<INode>> getPriorityRules() {
