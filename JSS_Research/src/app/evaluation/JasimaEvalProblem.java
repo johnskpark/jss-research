@@ -39,6 +39,7 @@ import app.simConfig.SimConfig;
 import app.tracker.JasimaExperimentTracker;
 import app.util.RuleParser;
 import jasima.core.experiment.Experiment;
+import jasima.core.util.Pair;
 import jasima.shopSim.core.JobShopExperiment;
 import jasima.shopSim.core.PR;
 
@@ -87,7 +88,7 @@ public class JasimaEvalProblem {
 	private Map<String, IWorkStationListener> listenerMap = new HashMap<>();
 
 	private List<PR> referenceRules = new ArrayList<>();
-	private Map<PR, Map<String, Double>> refFitness = new HashMap<>();
+	private Map<Pair<PR, String>, List<Double>> refFitness = new HashMap<>();
 	private JasimaExperimentTracker<INode> tracker = null;
 
 	private String outputCsv = null;
@@ -425,10 +426,13 @@ public class JasimaEvalProblem {
 		for (PR refRule : referenceRules) {
 			System.out.println("Evaluation: evaluating the reference rule " + refRule.getClass().getSimpleName());
 
-			refFitness.put(refRule, new HashMap<String, Double>());
+			for (IJasimaEvalFitness fitness : standardEvaluation) {
+				Pair<PR, String> key = new Pair<>(refRule, fitness.getClass().getSimpleName());
+
+				refFitness.put(key, new ArrayList<>());
+			}
 
 			for (int configIndex = 0; configIndex < simConfig.getNumConfigs(); configIndex++) {
-				// FIXME bit hacky.
 				if (refRule instanceof TrackedPR) {
 					((TrackedPR) refRule).initSampleRun(configIndex);
 				}
@@ -437,10 +441,12 @@ public class JasimaEvalProblem {
 				experiment.runExperiment();
 
 				for (IJasimaEvalFitness fitness : standardEvaluation) {
+					Pair<PR, String> key = new Pair<>(refRule, fitness.getClass().getSimpleName());
+
 					if (fitness.resultIsNumeric()) {
 						double result = fitness.getNumericResult(refRule, configIndex, experiment.getResults(), tracker);
 
-						refFitness.get(refRule).put(fitness.getClass().getSimpleName(), result);
+						refFitness.get(key).add(configIndex, result);
 					}
 				}
 
@@ -497,7 +503,6 @@ public class JasimaEvalProblem {
 		String[] resultsOutput = new String[numResults];
 
 		for (PR refRule : referenceRules) {
-			// FIXME bit hacky.
 			if (!(refRule instanceof TrackedPR)) {
 				continue;
 			}
@@ -519,17 +524,18 @@ public class JasimaEvalProblem {
 				Experiment experiment = getExperiment(refRule, configIndex);
 				experiment.runExperiment();
 
-				for (IJasimaEvalFitness fitness : standardEvaluation) {
-					if (fitness.resultIsNumeric()) {
-						double actual = fitness.getNumericResult(refRule, configIndex, experiment.getResults(), tracker);
-						double expected = refFitness.get(refRule).get(fitness.getClass().getSimpleName());
-
-						if (Math.abs(expected - actual) > 0.0001) {
-							System.out.println("NOT CORRECT.");
-						}
-					}
-				}
-
+				// TODO remove after all the bugs have been fixed.
+//				for (IJasimaEvalFitness fitness : standardEvaluation) {
+//					if (fitness.resultIsNumeric()) {
+//						double actual = fitness.getNumericResult(refRule, configIndex, experiment.getResults(), tracker);
+//						double expected = refFitness.get(new Pair<>(refRule, fitness.getClass().getSimpleName())).get(configIndex);
+//
+//						// All of the fitnesses are the same for the expected.
+//						if (Math.abs(expected - actual) > 0.0001) {
+//							System.out.printf("NOT CORRECT: %f, %f\n", actual, expected);
+//						}
+//					}
+//				}
 
 				for (int solverIndex = 0; solverIndex < solvers.size(); solverIndex++) {
 					AbsEvalPriorityRule solver = solvers.get(solverIndex);

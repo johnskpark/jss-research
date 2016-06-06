@@ -13,7 +13,7 @@
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>coop_4op.txt</ruleFile>
+			<ruleFile>mls_4op.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
@@ -21,21 +21,23 @@
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.WeightedVoteRule</solverClass>
 		<solverFile>
-			<ruleFile>coop_weighted_4op.txt</ruleFile>
+			<ruleFile>mls_weighted_4op.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
+-->
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.LinearCombinationRule</solverClass>
 		<solverFile>
-			<ruleFile>coop_lc_4op.txt</ruleFile>
+			<ruleFile>mls_lc_4op.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
+<!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.WeightedLinearCombinationRule</solverClass>
 		<solverFile>
-			<ruleFile>coop_weighted_lc_4op.txt</ruleFile>
+			<ruleFile>mls_weighted_lc_4op.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 -->
@@ -47,7 +49,7 @@
 	</datasetConfig>
 
 	<outputConfig>
-	    <outputFile>coop_aggregation_with_diversity_output.csv</outputFile>
+	    <outputFile>mls_aggregation_with_diversity_output.csv</outputFile>
 	</outputConfig>
 
 	<fitnessConfig>
@@ -61,8 +63,8 @@
 	<refConfig>
 		<refRule>app.evaluation.priorityRules.EvalATC</refRule>
 		<refTracking>
-			<numJobsThreshold>20</numJobsThreshold>
-			<numSamples>100</numSamples>
+			<numJobsThreshold>10</numJobsThreshold>
+			<numSamples>50</numSamples>
 			<seed>15</seed>
 		</refTracking>
 	</refConfig>

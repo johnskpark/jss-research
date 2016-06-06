@@ -36,7 +36,7 @@ public class WeightedLinearCombinationRule extends AbsEvalPriorityRule {
 
 	@Override
 	public List<INode> getRuleComponents() {
-		return rules;
+		return priorityRules;
 	}
 
 	@Override
@@ -73,6 +73,8 @@ public class WeightedLinearCombinationRule extends AbsEvalPriorityRule {
 
 		// Add weights to the voted jobs.
 		for (int i = 0; i < priorityRules.size(); i++) {
+			INode rule = priorityRules.get(i);
+
 			double[] priorities = new double[q.size()];
 			double bestPriority = Double.NEGATIVE_INFINITY;
 			double worstPriority = Double.POSITIVE_INFINITY;
@@ -80,19 +82,26 @@ public class WeightedLinearCombinationRule extends AbsEvalPriorityRule {
 			for (int j = 0; j < q.size(); j++) {
 				getNodeData().setEntry(q.get(j));
 
-				priorities[j] = priorityRules.get(i).evaluate(getNodeData());
+				priorities[j] = rule.evaluate(getNodeData());
 
 				bestPriority = Math.max(bestPriority, priorities[j]);
 				worstPriority = Math.min(worstPriority, priorities[j]);
 			}
 
 			for (int j = 0; j < q.size(); j++) {
+				PrioRuleTarget entry = q.get(j);
+
 				double normPrio;
 				if (bestPriority - worstPriority == 0.0) {
 					normPrio = 0.0;
 				} else {
 					normPrio = (priorities[j] - worstPriority) / (bestPriority - worstPriority);
 				}
+
+				if (hasTracker()) {
+					getTracker().addPriority(this, i, rule, entry, normPrio);
+				}
+
 				jobVotes.get(q.get(j)).addScore(weightVector.getValue(i) * normPrio);
 			}
 		}

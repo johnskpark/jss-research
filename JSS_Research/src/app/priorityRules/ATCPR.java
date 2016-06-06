@@ -9,6 +9,7 @@ import jasima.shopSim.core.PriorityQueue;
  * @author John
  *
  */
+// TODO this is returning INFINITY on a few of the priority calculations.
 public class ATCPR extends PR {
 
 	private static final long serialVersionUID = -5200383919674123645L;
@@ -47,7 +48,6 @@ public class ATCPR extends PR {
 		double slack = entry.getDueDate() - entry.getShop().simTime() - entry.remainingProcTime();
 
 		double remainingWaitTime = ff * (entry.remainingProcTime() - entry.currProcTime());
-
 		double prod = -Math.max((slack - remainingWaitTime) / (k * averageProcTime), 0.0);
 
 		return Math.log(entry.getWeight() / entry.currProcTime()) - prod;

@@ -1,8 +1,6 @@
 package app.priorityRules;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 
@@ -19,6 +17,8 @@ public class TrackedPR extends PR {
 
 	private static final long serialVersionUID = -6359385279252431755L;
 
+//	private static final int NUM_DP_ROUNDED = 4;
+
 	private PR referenceRule;
 	private int numJobThreshold;
 	private int numSample;
@@ -26,11 +26,11 @@ public class TrackedPR extends PR {
 
 	private boolean firstRun = true;
 	private List<List<DecisionEvent>> recordedEvents;
-	private List<Collection<DecisionEvent>> sampledEvents;
+	private List<List<DecisionEvent>> sampledEvents;
 	private Random rand;
 
 	private List<DecisionEvent> currentRecording;
-	private Collection<DecisionEvent> currentSample;
+	private List<DecisionEvent> currentSample;
 
 	private List<AbsMultiRule<INode>> priorityRules = new ArrayList<>();
 
@@ -61,7 +61,7 @@ public class TrackedPR extends PR {
 
 	public void initTrackedRun(int configIndex) {
 		firstRun = false;
-		currentSample = new HashSet<>();
+		currentSample = new ArrayList<>();
 		sampledEvents.add(configIndex, currentSample);
 		rand = new Random(seed);
 
@@ -74,8 +74,6 @@ public class TrackedPR extends PR {
 
 			currentSample.add(event);
 		}
-
-		System.out.println(currentSample.size());
 	}
 
 	public List<AbsMultiRule<INode>> getPriorityRules() {
@@ -89,6 +87,7 @@ public class TrackedPR extends PR {
 	@Override
 	public void beforeCalc(PriorityQueue<?> q) {
 		super.beforeCalc(q);
+		referenceRule.beforeCalc(q);
 
 		if (q.size() < numJobThreshold) {
 			return;
@@ -124,14 +123,24 @@ public class TrackedPR extends PR {
 
 	private DecisionEvent getDecisionEvent(PrioRuleTarget entry) {
 		WorkStation machine = entry.getCurrMachine();
+
 		double simTime = entry.getShop().simTime();
+//		for (int i = 0; i < NUM_DP_ROUNDED; i++) { simTime *= 10; }
+//		simTime = Math.round(simTime);
+//		for (int i = 0; i < NUM_DP_ROUNDED; i++) { simTime /= 10; }
 
 		return new DecisionEvent(machine, simTime);
 	}
 
 	@Override
 	public double calcPrio(PrioRuleTarget entry) {
-		return referenceRule.calcPrio(entry);
+		double prio = referenceRule.calcPrio(entry);
+
+//		if (entry.getCurrMachine().queue.size() >= numJobThreshold) {
+//			System.out.printf("%s run: %d, %f\n", ((firstRun) ? "first" : "tracked"), entry.getJobNum(), prio);
+//		}
+
+		return prio;
 	}
 
 }

@@ -6,7 +6,7 @@ import jasima.shopSim.core.WorkStation;
 public class DecisionEvent extends Pair<WorkStation, Double> {
 
 	private static final long serialVersionUID = 7768965394498336195L;
-	private static double epsilon = 0.001;
+	private static final double EPSILON = 0.001;
 
 	public DecisionEvent(WorkStation machine, double simTime) {
 		super(machine, simTime);
@@ -24,6 +24,7 @@ public class DecisionEvent extends Pair<WorkStation, Double> {
 		return b;
 	}
 
+	// TODO this doesn't get called wtf.
 	@Override
 	public boolean equals(Object o) {
 		if (o == null || this.getClass() != o.getClass()) {
@@ -33,7 +34,7 @@ public class DecisionEvent extends Pair<WorkStation, Double> {
 		DecisionEvent other = (DecisionEvent) o;
 		if (this.getMachineIndex() != other.getMachineIndex()) {
 			return false;
-		} else if (Math.abs(this.getSimTime() - other.getSimTime()) > epsilon) {
+		} else if (Math.abs(this.getSimTime() - other.getSimTime()) > EPSILON) {
 			return false;
 		} else {
 			return true;

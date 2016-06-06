@@ -37,6 +37,13 @@ public class EvalATC extends AbsEvalPriorityRule {
 	}
 
 	@Override
+	public void beforeCalc(PriorityQueue<?> q) {
+		super.beforeCalc(q);
+
+		pr.beforeCalc(q);
+	}
+
+	@Override
 	public double calcPrio(PrioRuleTarget entry) {
 		double prio = pr.calcPrio(entry);
 

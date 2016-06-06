@@ -55,7 +55,7 @@ public class WeightedVoteRule extends AbsEvalPriorityRule {
 
 	@Override
 	public List<INode> getRuleComponents() {
-		return rules;
+		return priorityRules;
 	}
 
 	@Override
@@ -81,12 +81,20 @@ public class WeightedVoteRule extends AbsEvalPriorityRule {
 	}
 
 	private int getVotedEntryIndex(int indIndex, PriorityQueue<?> q) {
+		INode rule = priorityRules.get(indIndex);
+
 		double bestPriority = Double.NEGATIVE_INFINITY;
 		int bestIndex = -1;
 		for (int i = 0; i < q.size(); i++) {
-			getNodeData().setEntry(q.get(i));
+			PrioRuleTarget entry = q.get(i);
+			getNodeData().setEntry(entry);
 
-			double priority = priorityRules.get(indIndex).evaluate(getNodeData());
+			double priority = rule.evaluate(getNodeData());
+
+			if (hasTracker()) {
+				getTracker().addPriority(this, indIndex, rule, entry, priority);
+			}
+
 			if (priority > bestPriority) {
 				bestPriority = priority;
 				bestIndex = i;

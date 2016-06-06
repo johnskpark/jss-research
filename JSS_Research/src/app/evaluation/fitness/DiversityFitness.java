@@ -66,7 +66,7 @@ public class DiversityFitness implements IJasimaEvalFitness {
 		IMultiRule<INode> solver = (IMultiRule<INode>) rule;
 		List<JasimaExperiment<INode>> experiments = tracker.getResults();
 
-		String[] experimentResults = new String[5];
+		String[] experimentResults = new String[4];
 
 		JasimaExperiment<INode> experiment = experiments.get(configIndex);
 
@@ -83,6 +83,7 @@ public class DiversityFitness implements IJasimaEvalFitness {
 		return output;
 	}
 
+	// TODO double check this.
 	protected String getSingleVotedJobResults(IMultiRule<INode> solver, Map<String, Object> results, JasimaExperiment<INode> experiment) {
 		List<JasimaDecision<INode>> decisions = experiment.getDecisions();
 
@@ -160,6 +161,7 @@ public class DiversityFitness implements IJasimaEvalFitness {
 		return majorityResults;
 	}
 
+	// This will never get called if there's more jobs than voters.
 	protected String getMinorityResults(IMultiRule<INode> solver, Map<String, Object> results, JasimaExperiment<INode> experiment) {
 		List<JasimaDecision<INode>> decisions = experiment.getDecisions();
 		List<INode> ruleComponents = solver.getRuleComponents();
@@ -168,12 +170,17 @@ public class DiversityFitness implements IJasimaEvalFitness {
 
 		for (JasimaDecision<INode> decision: decisions) {
 			List<PrioRuleTarget> jobRankings = decision.getEntryRankings(solver);
-			PrioRuleTarget worstJob = jobRankings.get(jobRankings.size() - 1);
 			JasimaPriorityStat[] stats = decision.getStats(solver);
 
-			for (int i = 0; i < stats.length; i++) {
-				if (stats[i].getBestEntry().equals(worstJob)) {
-					minorityCounts[i]++;
+			boolean foundHit = false;
+			for (int i = jobRankings.size() - 1; i >= 0 && !foundHit; i--) {
+				PrioRuleTarget job = jobRankings.get(i);
+
+				for (int j = 0; j < stats.length; j++) {
+					if (stats[j].getBestEntry().equals(job)) {
+						minorityCounts[j]++;
+						foundHit = true;
+					}
 				}
 			}
 		}
