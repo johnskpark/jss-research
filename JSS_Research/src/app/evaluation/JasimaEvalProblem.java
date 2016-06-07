@@ -475,20 +475,22 @@ public class JasimaEvalProblem {
 				standardResults = evaluateSolversNormally(ruleFilename, solvers);
 			}
 
-			for (int i = 0; i < solvers.size(); i++) {
-				AbsEvalPriorityRule solver = solvers.get(i);
+			for (int solverIndex = 0; solverIndex < solvers.size(); solverIndex++) {
+				AbsEvalPriorityRule solver = solvers.get(solverIndex);
 
-				output.printf("%s,%d,%s,%d", ruleFilename, solver.getSeed(), simConfig.getClass().getSimpleName(), i);
+				for (int configIndex = 0; configIndex < simConfig.getNumConfigs(); configIndex++) {
+					output.printf("%s,%d,%s,%d", ruleFilename, solver.getSeed(), simConfig.getClass().getSimpleName(), configIndex);
 
-				if (standardResults != null) {
-					output.print(standardResults.get(i));
+					if (standardResults != null) {
+						output.print(standardResults.get(solverIndex * simConfig.getNumConfigs() + configIndex));
+					}
+
+					if (referenceResults != null) {
+						output.print(referenceResults.get(solverIndex * simConfig.getNumConfigs() + configIndex));
+					}
+
+					output.println();
 				}
-
-				if (referenceResults != null) {
-					output.print(referenceResults.get(i));
-				}
-
-				output.println();
 			}
 
 			System.out.println("Evaluation: " + ruleFilename + " evaluation complete.");

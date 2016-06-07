@@ -145,10 +145,16 @@ public class DiversityFitness implements IJasimaEvalFitness {
 			PrioRuleTarget selectedJob = decision.getSelectedEntry(solver);
 			JasimaPriorityStat[] stats = decision.getStats(solver);
 
+			boolean incremented = false;
 			for (int i = 0; i < stats.length; i++) {
 				if (stats[i].getBestEntry().equals(selectedJob)) {
 					majorityCounts[i]++;
+					incremented = true;
 				}
+			}
+
+			if (!incremented) {
+				throw new RuntimeException("At least one rule must have partaken in the majority.");
 			}
 		}
 

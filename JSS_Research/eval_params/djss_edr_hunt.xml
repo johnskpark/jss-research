@@ -10,34 +10,34 @@
 	</solverConfig>
 -->
 
+<!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mls_4op.txt</ruleFile>
-		</solverFile>
-	</solverConfig>
-
-<!--
-	<solverConfig>
-		<solverClass>app.evaluation.priorityRules.WeightedVoteRule</solverClass>
-		<solverFile>
-			<ruleFile>mls_weighted_4op.txt</ruleFile>
+			<ruleFile>coop_4op.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 -->
 
 	<solverConfig>
-		<solverClass>app.evaluation.priorityRules.LinearCombinationRule</solverClass>
+		<solverClass>app.evaluation.priorityRules.WeightedVoteRule</solverClass>
 		<solverFile>
-			<ruleFile>mls_lc_4op.txt</ruleFile>
+			<ruleFile>coop_weighted_4op.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 <!--
 	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.LinearCombinationRule</solverClass>
+		<solverFile>
+			<ruleFile>coop_lc_4op.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.WeightedLinearCombinationRule</solverClass>
 		<solverFile>
-			<ruleFile>mls_weighted_lc_4op.txt</ruleFile>
+			<ruleFile>coop_weighted_lc_4op.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 -->
@@ -49,7 +49,7 @@
 	</datasetConfig>
 
 	<outputConfig>
-	    <outputFile>mls_aggregation_with_diversity_output.csv</outputFile>
+	    <outputFile>coop_weighted_4op_output.csv</outputFile>
 	</outputConfig>
 
 	<fitnessConfig>
