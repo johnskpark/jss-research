@@ -10,14 +10,12 @@
 	</solverConfig>
 -->
 
-<!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
 		<solverFile>
 			<ruleFile>coop_4op.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
--->
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.WeightedVoteRule</solverClass>
@@ -26,7 +24,6 @@
 		</solverFile>
 	</solverConfig>
 
-<!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.LinearCombinationRule</solverClass>
 		<solverFile>
@@ -40,7 +37,6 @@
 			<ruleFile>coop_weighted_lc_4op.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
--->
 
 	<datasetConfig>
 		<datasetClass>app.simConfig.huntConfig.EvalFactory</datasetClass>
@@ -49,7 +45,7 @@
 	</datasetConfig>
 
 	<outputConfig>
-	    <outputFile>coop_weighted_4op_output.csv</outputFile>
+	    <outputFile>coop_aggregation_with_diversity_output.csv</outputFile>
 	</outputConfig>
 
 	<fitnessConfig>

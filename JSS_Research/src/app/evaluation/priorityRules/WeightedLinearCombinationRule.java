@@ -102,7 +102,7 @@ public class WeightedLinearCombinationRule extends AbsEvalPriorityRule {
 					getTracker().addPriority(this, i, rule, entry, normPrio);
 				}
 
-				jobVotes.get(q.get(j)).addScore(weightVector.getValue(i) * normPrio);
+				jobVotes.get(entry).addScore(weightVector.getValue(i) * normPrio);
 			}
 		}
 	}
