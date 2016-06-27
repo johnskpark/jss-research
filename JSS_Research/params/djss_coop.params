@@ -92,7 +92,7 @@ eval.problem.rule = app.evolution.priorityRules.EnsemblePriorityRule
 eval.problem.fitness = app.evolution.coop.fitness.NormTWTFitness
 
 eval.problem.simulator = app.simConfig.huntConfig.EvolveFactory
-eval.problem.simulator.instances = 4op
+eval.problem.simulator.instances = 8op
 eval.problem.simulator.seed = 15
 eval.problem.simulator.rotate-seed = true
 
