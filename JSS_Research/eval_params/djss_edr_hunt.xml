@@ -8,33 +8,40 @@
 			<ruleFile>simple_4op.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>simple_8op.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
 -->
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>coop_4op.txt</ruleFile>
+			<ruleFile>coop_8op.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.WeightedVoteRule</solverClass>
 		<solverFile>
-			<ruleFile>coop_weighted_4op.txt</ruleFile>
+			<ruleFile>coop_weighted_8op.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.LinearCombinationRule</solverClass>
 		<solverFile>
-			<ruleFile>coop_lc_4op.txt</ruleFile>
+			<ruleFile>coop_lc_8op.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.WeightedLinearCombinationRule</solverClass>
 		<solverFile>
-			<ruleFile>coop_weighted_lc_4op.txt</ruleFile>
+			<ruleFile>coop_weighted_lc_8op.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
@@ -45,7 +52,7 @@
 	</datasetConfig>
 
 	<outputConfig>
-	    <outputFile>coop_aggregation_with_diversity_4op_train_output.csv</outputFile>
+	    <outputFile>coop_aggregation_with_diversity_8op_train_output.csv</outputFile>
 	</outputConfig>
 
 	<fitnessConfig>

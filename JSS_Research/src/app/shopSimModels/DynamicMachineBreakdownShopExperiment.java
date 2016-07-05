@@ -6,6 +6,7 @@ import java.util.List;
 import jasima.shopSim.core.DowntimeSource;
 import jasima.shopSim.core.IndividualMachine;
 import jasima.shopSim.models.dynamicShop.DynamicShopExperiment;
+import jasima.shopSim.util.BasicJobStatCollector;
 
 public class DynamicMachineBreakdownShopExperiment extends DynamicShopExperiment {
 
@@ -21,8 +22,7 @@ public class DynamicMachineBreakdownShopExperiment extends DynamicShopExperiment
 	@Override
 	public void init() {
 		super.init();
-
-		// TODO for additional breakdown components.
+		addShopListener(new BasicJobStatCollector()); // TODO replace with a machine statistics listener.
 	}
 
 	@Override
