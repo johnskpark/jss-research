@@ -3,6 +3,9 @@ package app.shopSimModels;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.math3.distribution.ExponentialDistribution;
+
+import jasima.core.random.continuous.DblDistribution;
 import jasima.shopSim.core.DowntimeSource;
 import jasima.shopSim.core.IndividualMachine;
 import jasima.shopSim.models.dynamicShop.DynamicShopExperiment;
@@ -19,10 +22,16 @@ public class DynamicMachineBreakdownShopExperiment extends DynamicShopExperiment
 	protected List<IndividualMachine> indMachines;
 	protected List<DowntimeSource> downtimeSrc;
 
+	public DynamicMachineBreakdownShopExperiment() {
+		super();
+		addShopListener(new BasicJobStatCollector()); // TODO replace with a machine statistics listener.
+	}
+
 	@Override
 	public void init() {
 		super.init();
-		addShopListener(new BasicJobStatCollector()); // TODO replace with a machine statistics listener.
+
+		// TODO need to stop the machine breakdowns after a certain point? Maybe not.
 	}
 
 	@Override
@@ -43,9 +52,13 @@ public class DynamicMachineBreakdownShopExperiment extends DynamicShopExperiment
 	protected DowntimeSource createDowntimeSource(IndividualMachine machine) {
 		DowntimeSource src = new DowntimeSource(machine);
 
-		// TODO
-		src.setTimeBetweenFailures(null);
-		src.setTimeToRepair(null);
+		double repairTime = 0.0; // TODO
+		double breakdownTime = 0.0; // TODO
+
+		src.setTimeBetweenFailures(new DblDistribution(
+				new ExponentialDistribution(breakdownTime)));
+		src.setTimeToRepair(new DblDistribution(
+				new ExponentialDistribution(repairTime)));
 
 		return src;
 	}
