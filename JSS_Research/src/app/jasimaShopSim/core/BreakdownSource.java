@@ -7,7 +7,7 @@ public class BreakdownSource extends DowntimeSource {
 
 	public BreakdownSource(IndividualMachine machine) {
 		super(machine);
-		// TODO
 	}
 
+	// TODO all of the modifications down here... If I need them.
 }
