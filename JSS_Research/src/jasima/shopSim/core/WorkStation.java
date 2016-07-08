@@ -44,9 +44,9 @@ import java.util.Set;
 /**
  * Class to represent a workstation. A workstation is a collection of identical
  * {@link IndividualMachine}s sharing a common queue.
- * 
+ *
  * @author Torsten Hildebrandt
- * @version 
+ * @version
  *          "$Id$"
  */
 public class WorkStation implements Notifier<WorkStation, WorkStationEvent>,
@@ -208,7 +208,7 @@ public class WorkStation implements Notifier<WorkStation, WorkStationEvent>,
 		}
 	}
 
-	void activated(IndividualMachine im) {
+	public void activated(IndividualMachine im) {
 		assert currMachine == im;
 		freeMachines.addFirst(currMachine);
 
@@ -224,7 +224,7 @@ public class WorkStation implements Notifier<WorkStation, WorkStationEvent>,
 		}
 	}
 
-	void takenDown(IndividualMachine im) {
+	public void takenDown(IndividualMachine im) {
 		assert currMachine == im;
 		freeMachines.remove(currMachine);
 
@@ -376,11 +376,11 @@ public class WorkStation implements Notifier<WorkStation, WorkStationEvent>,
 		}
 
 		double tCompl = simTime + op.procTime + setupTime;
-		currMachine.onDepart.setTime(tCompl);
+		currMachine.onDepart().setTime(tCompl);
 		currMachine.procFinished = tCompl;
 		currMachine.procStarted = simTime;
 		currMachine.curJob = batch;
-		shop.schedule(currMachine.onDepart);
+		shop.schedule(currMachine.onDepart());
 
 		for (int i = 0; i < batch.numJobsInBatch(); i++) {
 			Job j = batch.job(i);
@@ -391,7 +391,7 @@ public class WorkStation implements Notifier<WorkStation, WorkStationEvent>,
 	}
 
 	/** Called when an operation of Job j is finished. */
-	protected void depart() {
+	public void depart() {
 		assert currMachine.state == MachineState.WORKING;
 
 		PrioRuleTarget b = currMachine.curJob;
@@ -533,7 +533,7 @@ public class WorkStation implements Notifier<WorkStation, WorkStationEvent>,
 	 * immediately. This does not include the KeepIdleDummy. This means, the
 	 * following equation holds: queue.size()=={@link #numJobsWaiting()}+
 	 * {@link #numFutures()}+1.
-	 * 
+	 *
 	 * @see #numFutures()
 	 */
 	public int numJobsWaiting() {
@@ -544,7 +544,7 @@ public class WorkStation implements Notifier<WorkStation, WorkStationEvent>,
 	/**
 	 * Returns the number of future jobs in the {@link #queue}. This does not
 	 * include the KeepIdleDummy.
-	 * 
+	 *
 	 * @see #numJobsWaiting()
 	 */
 	public int numFutures() {
@@ -606,7 +606,7 @@ public class WorkStation implements Notifier<WorkStation, WorkStationEvent>,
 
 	/**
 	 * Translates a setup state {@code s} in a numeric constant.
-	 * 
+	 *
 	 * @see #setupStateToString(int)
 	 * @param s
 	 *            A setup state name.
@@ -631,7 +631,7 @@ public class WorkStation implements Notifier<WorkStation, WorkStationEvent>,
 
 	/**
 	 * Provides a human-readable string for a numeric setup state.
-	 * 
+	 *
 	 * @see #translateSetupState(String)
 	 * @param id
 	 *            The numeric setup id. This was usually (optionally) created
@@ -781,7 +781,7 @@ public class WorkStation implements Notifier<WorkStation, WorkStationEvent>,
 	 * Offers a simple get/put-mechanism to store and retrieve information as a
 	 * kind of global data store. This can be used as a simple extension
 	 * mechanism.
-	 * 
+	 *
 	 * @param key
 	 *            The key name.
 	 * @param value
@@ -797,7 +797,7 @@ public class WorkStation implements Notifier<WorkStation, WorkStationEvent>,
 
 	/**
 	 * Retrieves a value from the value store.
-	 * 
+	 *
 	 * @param key
 	 *            The entry to return, e.g., identified by a name.
 	 * @return The value associated with {@code key}.
@@ -833,7 +833,7 @@ public class WorkStation implements Notifier<WorkStation, WorkStationEvent>,
 
 	/**
 	 * Removes an entry from the value store.
-	 * 
+	 *
 	 * @return The value previously associated with "key", or null, if no such
 	 *         key was found.
 	 */

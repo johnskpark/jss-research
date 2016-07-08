@@ -26,9 +26,9 @@ import java.util.List;
 /**
  * This class represents a single machine, which is part of a
  * {@link WorkStation}.
- * 
+ *
  * @author Torsten Hildebrandt
- * @version 
+ * @version
  *          "$Id$"
  */
 public class IndividualMachine {
@@ -66,7 +66,7 @@ public class IndividualMachine {
 	}
 
 	// called whenever an operation is finished
-	Event onDepart = new Event(0.0d, WorkStation.DEPART_PRIO) {
+	private Event onDepart = new Event(0.0d, WorkStation.DEPART_PRIO) {
 		@Override
 		public void handle() {
 			workStation.currMachine = IndividualMachine.this;
@@ -74,6 +74,10 @@ public class IndividualMachine {
 			workStation.currMachine = null;
 		}
 	};
+
+	public Event onDepart() {
+		return onDepart;
+	}
 
 	/** Activation from DOWN state. */
 	public void activate() {
@@ -95,7 +99,7 @@ public class IndividualMachine {
 	 * Machine going down for a certain amount of time. If this machine is
 	 * already down or currently processing, this operation is finished before
 	 * the new downtime can become active.
-	 * 
+	 *
 	 * @param downReason
 	 *            The {@link DowntimeSource} causing the shutdown.
 	 */

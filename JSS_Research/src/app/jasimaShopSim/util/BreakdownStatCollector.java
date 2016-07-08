@@ -43,16 +43,17 @@ public class BreakdownStatCollector extends WorkStationListenerBase {
 
 	@Override
 	protected void activated(WorkStation m, IndividualMachine justActivated) {
-		if (justActivated.state != MachineState.DOWN && prevDeactivated) {
-			// TODO need to find the variable that determines when the machine failed.
-			// Also needs to ignore the first time it deactivates.
-			double deactivateTime = justActivated.procStarted; // TODO not correct.
-			double activateTime = m.shop().simTime();
+		assert justActivated.state != MachineState.DOWN;
+
+		if (prevDeactivated) {
+
 		}
 	}
 
 	@Override
 	protected void deactivated(WorkStation m, IndividualMachine justDeactivated) {
+		assert justDeactivated.state == MachineState.DOWN;
+
 		if (justDeactivated.state == MachineState.DOWN) {
 			// TODO need to find the
 
