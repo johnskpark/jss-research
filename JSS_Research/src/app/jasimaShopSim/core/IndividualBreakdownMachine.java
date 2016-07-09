@@ -19,17 +19,30 @@ public class IndividualBreakdownMachine extends IndividualMachine {
 	private Event onDepart = new Event(0.0d, WorkStation.DEPART_PRIO) {
 		@Override
 		public void handle() {
+			final JobShop shop = workStation.shop();
+
 			if (state != MachineState.DOWN) {
-				workStation.currMachine = IndividualBreakdownMachine.this;
-				workStation.depart();
-				workStation.currMachine = null;
+				if (procFinished > shop.simTime()) {
+					// If the machine has been fixed in between the job's processing time
+					// duration, then the departure needs to be delayed.
+
+					// procFinished is the new time that the job is delayed to in this case.
+					double newDepartTime = procFinished;
+
+					this.setTime(newDepartTime);
+					shop.schedule(this);
+				} else {
+					// Standard procedure for job departure.
+					workStation.currMachine = IndividualBreakdownMachine.this;
+					workStation.depart();
+					workStation.currMachine = null;
+				}
 			} else {
 				// If the machine has broken down, then reschedule the departure time,
 				// as the job has not finished yet.
 				assert state == MachineState.DOWN;
 
 				// procFinished is the time when machine is repaired in this case.
-				JobShop shop = workStation.shop();
 				double newDepartTime = procFinished + procRemaining;
 
 				this.setTime(newDepartTime);
@@ -45,15 +58,25 @@ public class IndividualBreakdownMachine extends IndividualMachine {
 
 	@Override
 	public void activate() {
-		// TODO this needs to be modified if there are jobs currently stuck on the machine.
 		if (state != MachineState.DOWN) {
 			throw new IllegalStateException("Only a machine in state DOWN can be activated.");
 		}
 		if (curJob != null) {
-			// TODO if the job was stuck on the machine during the break down.
-			// workStation.activated(this); will select a new job to be processed on the machine.
-			// Therefore, we can't use that function.
+			// The machine broke down while a job was in the middle of processing.
+			// Update the procFinished to be the operation's completion time.
+			state = MachineState.WORKING;
+			procFinished = workStation.shop().simTime() + procRemaining;
+			procStarted = -1.0d;
+			procProgress = -1.0d;
+			procRemaining = -1.0d;
+
+			// We can't call workStation.activated(), since it calls selectAndStart().
+			// Therefore, we need to do everything that workStation.activated() does,
+			// except for the selectAndStart() part.
+			workStation.activatedStillBusy(this);
 		} else {
+			// The machine did not breakdown while a job was in the middle of processing.
+			// Continue as normal.
 			state = MachineState.IDLE;
 			procFinished = -1.0d;
 			procStarted = -1.0d;
@@ -61,9 +84,9 @@ public class IndividualBreakdownMachine extends IndividualMachine {
 			procRemaining = -1.0d;
 
 			workStation.activated(this);
-
-			downReason = null;
 		}
+
+		downReason = null;
 	}
 
 	@Override

@@ -224,6 +224,15 @@ public class WorkStation implements Notifier<WorkStation, WorkStationEvent>,
 		}
 	}
 
+	public void activatedStillBusy(IndividualMachine im) {
+		assert currMachine == im;
+		assert currMachine.curJob != null;
+
+		if (numListener() > 0) {
+			fire(WS_ACTIVATED);
+		}
+	}
+
 	public void takenDown(IndividualMachine im) {
 		assert currMachine == im;
 		freeMachines.remove(currMachine);
