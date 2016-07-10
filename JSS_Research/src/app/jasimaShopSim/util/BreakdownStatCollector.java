@@ -1,11 +1,16 @@
 package app.jasimaShopSim.util;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
+import app.jasimaShopSim.core.IndividualBreakdownMachine;
 import jasima.core.statistics.SummaryStat;
 import jasima.shopSim.core.IndividualMachine;
-import jasima.shopSim.core.WorkStation;
 import jasima.shopSim.core.IndividualMachine.MachineState;
+import jasima.shopSim.core.JobShop;
+import jasima.shopSim.core.WorkStation;
 import jasima.shopSim.util.WorkStationListenerBase;
 
 public class BreakdownStatCollector extends WorkStationListenerBase {
@@ -15,7 +20,10 @@ public class BreakdownStatCollector extends WorkStationListenerBase {
 	public SummaryStat avgRepairTime;
 	public SummaryStat avgTimeBetweenBreakdowns;
 
-	private boolean prevDeactivated = false;
+	private Set<WorkStation> prevDeactivated = new HashSet<WorkStation>();
+
+	private Map<WorkStation, Double> lastBreakdownTime = new HashMap<WorkStation, Double>();
+	private Map<WorkStation, Double> lastRepairTime = new HashMap<WorkStation, Double>();
 
 	public BreakdownStatCollector() {
 		super();
@@ -35,18 +43,17 @@ public class BreakdownStatCollector extends WorkStationListenerBase {
 		res.put(m.getName() + ".breakdownTime", avgTimeBetweenBreakdowns);
 	}
 
-	// So in the default implementation, the shop floor waits until the operation
-	// finishes before the machine gets taken down? What kind of bullshit is this?
-	// What do I need to modify before I can get this working?
-
-	//
-
 	@Override
 	protected void activated(WorkStation m, IndividualMachine justActivated) {
 		assert justActivated.state != MachineState.DOWN;
 
-		if (prevDeactivated) {
+		if (prevDeactivated.contains(m)) {
+			final JobShop shop = justActivated.workStation.shop();
 
+			double repairTime = shop.simTime() - lastBreakdownTime.get(m);
+			avgRepairTime.value(repairTime);
+
+			lastRepairTime.put(m, repairTime);
 		}
 	}
 
@@ -54,11 +61,27 @@ public class BreakdownStatCollector extends WorkStationListenerBase {
 	protected void deactivated(WorkStation m, IndividualMachine justDeactivated) {
 		assert justDeactivated.state == MachineState.DOWN;
 
-		if (justDeactivated.state == MachineState.DOWN) {
-			// TODO need to find the
+		final IndividualBreakdownMachine breakdownMachine = (IndividualBreakdownMachine) justDeactivated;
+		final JobShop shop = justDeactivated.workStation.shop();
 
-			prevDeactivated = true;
+		// Update the station disruption and the average time between breakdowns.
+		double jobProgress = 0.0;
+		if (justDeactivated.curJob != null) {
+			jobProgress = breakdownMachine.procProgress;
 		}
+
+		double breakdownTime;
+		if (prevDeactivated.contains(m)) {
+			breakdownTime = shop.simTime() - (lastBreakdownTime.get(m) + lastRepairTime.get(m));
+		} else {
+			breakdownTime = shop.simTime();
+			prevDeactivated.add(m);
+		}
+
+		stationDisruption.value(jobProgress);
+		avgTimeBetweenBreakdowns.value(breakdownTime);
+
+		lastBreakdownTime.put(m, breakdownTime);
 	}
 
 }
