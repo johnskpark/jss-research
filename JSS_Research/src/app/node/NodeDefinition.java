@@ -53,8 +53,16 @@ public enum NodeDefinition {
 	ERC_DISCRETE("", 0, NodeType.CONSTANT),
 	ERC_THRESHOLD("", 0, NodeType.CONSTANT),
 
-	// TODO documentation explaining how this thing works.
-	DOUBLE_VECTOR("", 0, NodeType.OTHER);
+	// Double vector is a unique node type that wraps around a GA individual.
+	// Because of this, it has no "name", but outputted as n-tuple doubles.
+	DOUBLE_VECTOR("", 0, NodeType.OTHER),
+
+	// Terminals specific to machine breakdown problem.
+	SCORE_AVERAGE_BREAKDOWN_TIME_NEXT_MACHINE("NBT", 0, NodeType.MACHINE),
+	SCORE_AVERAGE_REPAIR_TIME_NEXT_MACHINE("NRT", 0, NodeType.MACHINE),
+	SCORE_AVERAGE_BREAKDOWN_TIME_ALL_MACHINE("ABT", 0, NodeType.MACHINE),
+	SCORE_AVERAGE_REPAIR_TIME_ALL_MACHINE("ART", 0, NodeType.MACHINE);
+	// TODO need a terminal for the disruption of jobs.
 
 	private String nodeSymbol;
 	private int numChildren;
