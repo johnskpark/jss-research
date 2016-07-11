@@ -29,11 +29,14 @@ public class HolthausSimConfig extends DynamicBreakdownSimConfig {
 
 	public HolthausSimConfig(List<Double> repairTimeFactors,
 			List<Double> breakdownLevels,
-			List<Integer> ddfs) {
+			List<Integer> dueDateFactors) {
 		numRTFs = repairTimeFactors;
 		numBLs = breakdownLevels;
-		numDDFs = ddfs;
-		numConfigs = repairTimeFactors.size() * breakdownLevels.size() * ddfs.size();
+		numDDFs = dueDateFactors;
+
+		numConfigs = repairTimeFactors.size() *
+				breakdownLevels.size() *
+				dueDateFactors.size();
 	}
 
 	@Override
