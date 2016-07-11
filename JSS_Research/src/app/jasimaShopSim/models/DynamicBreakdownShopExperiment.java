@@ -2,6 +2,7 @@ package app.jasimaShopSim.models;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.apache.commons.math3.distribution.ExponentialDistribution;
 
@@ -14,17 +15,18 @@ import jasima.shopSim.core.WorkStation;
 import jasima.shopSim.models.dynamicShop.DynamicShopExperiment;
 import jasima.shopSim.util.MachineStatCollector;
 
-public class DynamicMachineBreakdownShopExperiment extends DynamicShopExperiment {
+public class DynamicBreakdownShopExperiment extends DynamicShopExperiment {
 
 	private static final long serialVersionUID = 4039817323228849037L;
 
 	// Default parameters for machine breakdown.
 	private double repairTimeFactor = 5.0;
-	private double BreakdownLevel = 0.025;
+	private double breakdownLevel = 0.025;
+	private Random machineRand = new Random();
 
-	protected List<BreakdownSource> BreakdownSrc;
+	protected List<BreakdownSource> breakdownSrc;
 
-	public DynamicMachineBreakdownShopExperiment() {
+	public DynamicBreakdownShopExperiment() {
 		super();
 		addMachineListener(new MachineStatCollector());
 		addMachineListener(new BreakdownStatCollector());
@@ -41,12 +43,12 @@ public class DynamicMachineBreakdownShopExperiment extends DynamicShopExperiment
 
 		configureMachines();
 
-		BreakdownSrc = new ArrayList<BreakdownSource>();
+		breakdownSrc = new ArrayList<BreakdownSource>();
 
 		for (int i = 0; i < getNumMachines(); i++) {
 			BreakdownSource src = createBreakdownSource(shop.machines[i].currMachine);
 
-			BreakdownSrc.add(src);
+			breakdownSrc.add(src);
 		}
 	}
 
@@ -68,13 +70,13 @@ public class DynamicMachineBreakdownShopExperiment extends DynamicShopExperiment
 		// Repair time is dependent on the processing time, and the down time is
 		// dependent on repair time and breakdown level.
 		double meanRepairTime = repairTimeFactor * meanProcTime;
-		double meanBreakdown = meanRepairTime / BreakdownLevel - meanRepairTime;
+		double meanBreakdown = meanRepairTime / breakdownLevel - meanRepairTime;
 
 		src.setName(machine.name);
 		src.setTimeBetweenFailures(new DblDistribution(
-				new ExponentialDistribution(meanBreakdown)));
+				machineRand, new ExponentialDistribution(meanBreakdown)));
 		src.setTimeToRepair(new DblDistribution(
-				new ExponentialDistribution(meanRepairTime)));
+				machineRand, new ExponentialDistribution(meanRepairTime)));
 
 		return src;
 	}
@@ -88,11 +90,19 @@ public class DynamicMachineBreakdownShopExperiment extends DynamicShopExperiment
 	}
 
 	public void setBreakdownLevel(double breakdownLevel) {
-		this.BreakdownLevel = breakdownLevel;
+		this.breakdownLevel = breakdownLevel;
 	}
 
 	public double getBreakdownLevel() {
-		return BreakdownLevel;
+		return breakdownLevel;
+	}
+
+	public void setMachineRandom(Random machineRand) {
+		this.machineRand = machineRand;
+	}
+
+	public Random getMachineRandom() {
+		return machineRand;
 	}
 
 }

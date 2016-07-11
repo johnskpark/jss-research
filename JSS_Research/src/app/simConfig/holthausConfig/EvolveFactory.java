@@ -1,4 +1,4 @@
-package app.simConfig.holthaus;
+package app.simConfig.holthausConfig;
 
 import app.evolution.ISimConfigEvolveFactory;
 import app.simConfig.SimConfig;
@@ -8,6 +8,8 @@ import ec.util.Parameter;
 public class EvolveFactory implements ISimConfigEvolveFactory {
 
 	private static final long serialVersionUID = -9063400761986620802L;
+
+	public static final String P_INSTANCES = "instances";
 
 	@Override
 	public void setup(EvolutionState state, Parameter base) {

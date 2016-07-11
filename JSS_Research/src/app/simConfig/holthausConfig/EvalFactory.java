@@ -1,4 +1,4 @@
-package app.simConfig.holthaus;
+package app.simConfig.holthausConfig;
 
 import java.io.IOException;
 

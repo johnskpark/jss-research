@@ -1,4 +1,4 @@
-package app.simConfig.holthaus;
+package app.simConfig.holthausConfig;
 
 public class HolthausSimConfigGenerator {
 
