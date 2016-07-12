@@ -73,7 +73,7 @@ eval.problem.rule = app.evolution.priorityRules.BasicPriorityRule
 eval.problem.fitness = app.evolution.simple.fitness.NormTWTFitness
 
 eval.problem.simulator = app.simConfig.holthausConfig.EvolveFactory
-eval.problem.simulator.instances = (all),(0.025),(all)
+eval.problem.simulator.instances = (all),(0.05),(all)
 eval.problem.simulator.job-seed = 15
 eval.problem.simulator.machine-seed = 15
 eval.problem.simulator.rotate-seed = false
