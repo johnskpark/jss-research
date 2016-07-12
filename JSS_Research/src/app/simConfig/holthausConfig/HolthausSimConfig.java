@@ -32,6 +32,13 @@ public class HolthausSimConfig extends DynamicBreakdownSimConfig {
 		numBLs = breakdownLevels;
 		numDDFs = dueDateFactors;
 
+		// If there is no breakdown, then repair time factors do not matter.
+		// Therefore, have only one repair time factor in the configuration.
+		if (numBLs.size() == 1 && numBLs.get(0) == 0.0) {
+			numRTFs.clear();
+			numRTFs.add(1.0);
+		}
+
 		numConfigs = repairTimeFactors.size() *
 				breakdownLevels.size() *
 				dueDateFactors.size();
