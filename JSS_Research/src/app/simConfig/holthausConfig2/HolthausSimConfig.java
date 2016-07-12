@@ -1,12 +1,12 @@
-package app.simConfig.holthausConfig;
+package app.simConfig.holthausConfig2;
 
 import java.util.List;
 
-import app.simConfig.DynamicBreakdownSimConfig;
+import app.simConfig.DynamicSimConfig;
 import jasima.core.random.continuous.DblConst;
 import jasima.core.random.continuous.DblStream;
 
-public class HolthausSimConfig extends DynamicBreakdownSimConfig {
+public class HolthausSimConfig extends DynamicSimConfig {
 
 	private static final int MIN_PROC_TIME = 1;
 	private static final int MAX_PROC_TIME = 49;
@@ -20,21 +20,12 @@ public class HolthausSimConfig extends DynamicBreakdownSimConfig {
 	private static final int NUM_IGNORE = 500;
 	private static final int STOP_AFTER_NUM_JOBS = 2500;
 
-	private List<Double> numRTFs; // repair time factors
-	private List<Double> numBLs; // breakdown levels
 	private List<Integer> numDDFs; // due date factors
 	private int numConfigs;
 
-	public HolthausSimConfig(List<Double> repairTimeFactors,
-			List<Double> breakdownLevels,
-			List<Integer> dueDateFactors) {
-		numRTFs = repairTimeFactors;
-		numBLs = breakdownLevels;
+	public HolthausSimConfig(List<Integer> dueDateFactors) {
 		numDDFs = dueDateFactors;
-
-		numConfigs = repairTimeFactors.size() *
-				breakdownLevels.size() *
-				dueDateFactors.size();
+		numConfigs = dueDateFactors.size();
 	}
 
 	@Override
@@ -44,7 +35,7 @@ public class HolthausSimConfig extends DynamicBreakdownSimConfig {
 
 	@Override
 	public DblStream getProcTime(int index) {
-		return new ProcTimeStream(MIN_PROC_TIME, MAX_PROC_TIME, getLongValueForJob());
+		return new ProcTimeStream(MIN_PROC_TIME, MAX_PROC_TIME, getLongValue());
 	}
 
 	@Override
@@ -60,7 +51,7 @@ public class HolthausSimConfig extends DynamicBreakdownSimConfig {
 
 	@Override
 	public DblStream getWeight(int index) {
-		return new WeightStream(getLongValueForJob());
+		return new WeightStream(getLongValue());
 	}
 
 	@Override
@@ -81,18 +72,6 @@ public class HolthausSimConfig extends DynamicBreakdownSimConfig {
 	@Override
 	public int getStopAfterNumJobs() {
 		return STOP_AFTER_NUM_JOBS;
-	}
-
-	@Override
-	public double getRepairTimeFactor(int index) {
-		int rtfIndex = index / (numBLs.size() * numDDFs.size());
-		return numRTFs.get(rtfIndex);
-	}
-
-	@Override
-	public double getBreakdownLevel(int index) {
-		int blIndex = (index / (numDDFs.size())) % numBLs.size();
-		return numBLs.get(blIndex);
 	}
 
 	@Override

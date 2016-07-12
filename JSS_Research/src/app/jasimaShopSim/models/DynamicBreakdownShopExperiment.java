@@ -46,7 +46,7 @@ public class DynamicBreakdownShopExperiment extends DynamicShopExperiment {
 		breakdownSrc = new ArrayList<BreakdownSource>();
 
 		for (int i = 0; i < getNumMachines(); i++) {
-			BreakdownSource src = createBreakdownSource(shop.machines[i].currMachine);
+			BreakdownSource src = createBreakdownSource(shop.machines[i].machDat()[0]);
 
 			breakdownSrc.add(src);
 		}
@@ -55,8 +55,7 @@ public class DynamicBreakdownShopExperiment extends DynamicShopExperiment {
 	private void configureMachines() {
 		WorkStation[] workStations = shop.getMachines();
 		for (int n = 0; n < getNumMachines(); n++) {
-			// Replace the IndividualMachine data in the WorkStation
-			// with IndividualBreakdownMachine
+			// Replace the IndividualMachine data in the WorkStation with IndividualBreakdownMachine
 			IndividualBreakdownMachine machine = new IndividualBreakdownMachine(workStations[n], n);
 			workStations[n].machDat()[0] = machine;
 		}

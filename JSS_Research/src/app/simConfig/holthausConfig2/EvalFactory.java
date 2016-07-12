@@ -1,4 +1,4 @@
-package app.simConfig.holthausConfig;
+package app.simConfig.holthausConfig2;
 
 import java.io.IOException;
 
@@ -6,7 +6,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import app.evaluation.ISimConfigEvalFactory;
-import app.simConfig.DynamicBreakdownSimConfig;
+import app.simConfig.DynamicSimConfig;
 import app.simConfig.SimConfig;
 
 public class EvalFactory implements ISimConfigEvalFactory {
@@ -14,7 +14,7 @@ public class EvalFactory implements ISimConfigEvalFactory {
 	public static final String XML_DATASET_INSTANCES = "datasetInstances";
 	public static final String XML_DATASET_SEED = "datasetSeed";
 
-	private DynamicBreakdownSimConfig simConfig = null;
+	private DynamicSimConfig simConfig = null;
 	private long initialSeed;
 	private boolean initialSeedSet = false;
 
@@ -55,8 +55,7 @@ public class EvalFactory implements ISimConfigEvalFactory {
 	@Override
 	public SimConfig generateSimConfig() {
 		if (!initialSeedSet) {
-			simConfig.setJobSeed(initialSeed);
-			simConfig.setMachineSeed(initialSeed);
+			simConfig.setSeed(initialSeed);
 			initialSeedSet = true;
 		}
 
