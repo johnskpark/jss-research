@@ -31,9 +31,9 @@ import java.util.Map;
  * Possible base class for workstation listeners. Delegates all events to
  * seperate methods. Additional events can be processed by overriding
  * {@link #handleOther(WorkStation, WorkStation.WorkStationEvent)}.
- * 
+ *
  * @author Torsten Hildebrandt
- * @version 
+ * @version
  *          "$Id$"
  */
 public abstract class WorkStationListenerBase implements
@@ -41,12 +41,17 @@ public abstract class WorkStationListenerBase implements
 
 	@Override
 	public final void update(WorkStation m, WorkStationEvent event) {
-		if (event == WorkStation.WS_JOB_ARRIVAL) {
+ 		if (event == WorkStation.WS_JOB_ARRIVAL) {
 			arrival(m, m.justArrived);
 		} else if (event == WorkStation.WS_JOB_SELECTED) {
 			operationStarted(m, m.justStarted, m.oldSetupState,
 					m.newSetupState, m.setupTime);
 		} else if (event == WorkStation.WS_JOB_COMPLETED) {
+			// TODO temporary code.
+			if (m.shop().simTime() > 363.0939373012135 && m.shop().simTime() < 363.0959373012135) {
+				System.out.println("Should be the job that was stuck at machine 3, machine: " + m.index());
+			}
+
 			operationCompleted(m, m.justCompleted);
 		} else if (event == WorkStation.WS_ACTIVATED) {
 			activated(m, m.currMachine);

@@ -77,6 +77,8 @@ public class DynamicBreakdownShopExperiment extends DynamicShopExperiment {
 		src.setTimeToRepair(new DblDistribution(
 				machineRand, new ExponentialDistribution(meanRepairTime)));
 
+		machine.addDowntimeSource(src);
+
 		return src;
 	}
 

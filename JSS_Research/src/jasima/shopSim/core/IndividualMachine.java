@@ -18,10 +18,10 @@
  *******************************************************************************/
 package jasima.shopSim.core;
 
-import jasima.core.simulation.Event;
-
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
+
+import jasima.core.simulation.Event;
 
 /**
  * This class represents a single machine, which is part of a
@@ -45,8 +45,7 @@ public class IndividualMachine {
 	public int initialSetup;
 	public String name = null;
 
-	@SuppressWarnings("unchecked")
-	public List<? extends DowntimeSource> downsources = Collections.EMPTY_LIST;
+	private List<DowntimeSource> downsources = new ArrayList<DowntimeSource>();
 
 	public MachineState state;
 	public DowntimeSource downReason;
@@ -156,6 +155,14 @@ public class IndividualMachine {
 		for (DowntimeSource ds : downsources) {
 			ds.init();
 		}
+	}
+
+	public void addDowntimeSource(DowntimeSource downSrc) {
+		downsources.add(downSrc);
+	}
+
+	public List<DowntimeSource> getDowntimeSources() {
+		return downsources;
 	}
 
 	@Override
