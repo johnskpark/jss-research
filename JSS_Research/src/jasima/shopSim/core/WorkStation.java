@@ -420,11 +420,6 @@ public class WorkStation implements Notifier<WorkStation, WorkStationEvent>,
 		currMachine.procStarted = -1.0d;
 		freeMachines.addFirst(currMachine);
 
-		// TODO temporary code.
-		if (numBusy == 2) {
-			System.out.println("You done fucked up son.");
-		}
-
 		numBusy--;
 
 		if (numListener() > 0) {
