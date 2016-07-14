@@ -49,6 +49,9 @@ public class ExperimentGenerator {
 
 		experiment.setStopAfterNumJobs(simConfig.getStopAfterNumJobs());
 
+		// TODO temporary code.
+		System.out.println("Repair time factor: " + simConfig.getRepairTimeFactor(index) + ", breakdown level: " + simConfig.getBreakdownLevel(index));
+
 		experiment.setRepairTimeFactor(simConfig.getRepairTimeFactor(index));
 		experiment.setBreakdownLevel(simConfig.getBreakdownLevel(index));
 		experiment.setMachineRandom(new Random(simConfig.getMachineSeed()));

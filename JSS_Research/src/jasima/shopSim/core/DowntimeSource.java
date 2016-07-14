@@ -35,10 +35,10 @@ import jasima.shopSim.util.WorkStationListenerBase;
  * Using {@code DowntimeSource}, this is modeled setting
  * {@code timeBetweenFailures} to 23 hours and using a {@code timeToRepair} of 1
  * hour.
- * 
+ *
  * @see MaintenanceSource
  * @author Torsten Hildebrandt, 2014-04-15
- * @version 
+ * @version
  *          "$Id$"
  */
 public class DowntimeSource {

@@ -51,6 +51,7 @@ public class BreakdownStatCollector extends WorkStationListenerBase {
 			final JobShop shop = justActivated.workStation.shop();
 
 			double repairTime = shop.simTime() - lastBreakdownTime.get(m);
+
 			avgRepairTime.value(repairTime);
 
 			lastRepairTime.put(m, repairTime);
@@ -81,7 +82,7 @@ public class BreakdownStatCollector extends WorkStationListenerBase {
 		stationDisruption.value(jobProgress);
 		avgTimeBetweenBreakdowns.value(breakdownTime);
 
-		lastBreakdownTime.put(m, breakdownTime);
+		lastBreakdownTime.put(m, shop.simTime());
 	}
 
 }

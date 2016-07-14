@@ -47,11 +47,6 @@ public abstract class WorkStationListenerBase implements
 			operationStarted(m, m.justStarted, m.oldSetupState,
 					m.newSetupState, m.setupTime);
 		} else if (event == WorkStation.WS_JOB_COMPLETED) {
-			// TODO temporary code.
-			if (m.shop().simTime() > 363.0939373012135 && m.shop().simTime() < 363.0959373012135) {
-				System.out.println("Should be the job that was stuck at machine 3, machine: " + m.index());
-			}
-
 			operationCompleted(m, m.justCompleted);
 		} else if (event == WorkStation.WS_ACTIVATED) {
 			activated(m, m.currMachine);

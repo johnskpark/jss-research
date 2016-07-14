@@ -245,6 +245,15 @@ public class WorkStation implements Notifier<WorkStation, WorkStationEvent>,
 		}
 	}
 
+	public void takenDownStillBusy(IndividualMachine im) {
+		assert currMachine == im;
+		assert numBusy >= 0 && numBusy <= numInGroup;
+
+		if (numListener() > 0) {
+			fire(WS_DEACTIVATED);
+		}
+	}
+
 	public void done() {
 		selectEventCache = null;
 
