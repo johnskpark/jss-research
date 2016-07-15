@@ -68,6 +68,7 @@ eval.problem = app.evolution.simple.JasimaSimpleProblem
 eval.problem.data = app.evolution.JasimaGPData
 
 eval.problem.reference-rule = app.priorityRules.ATCPRNew
+eval.problem.reference-fitness = app.evolution.simple.fitness.TWTFitness
 
 eval.problem.rule = app.evolution.priorityRules.BasicPriorityRule
 eval.problem.fitness = app.evolution.simple.fitness.NormTWTFitness

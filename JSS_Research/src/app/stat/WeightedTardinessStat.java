@@ -26,4 +26,10 @@ public class WeightedTardinessStat {
 		return twt / factor;
 	}
 
+	public static double getNormMeanWeightedTardiness(final Map<String, Object> results, final double factor) {
+		double mwt = getMeanWeightedTardiness(results);
+
+		return mwt / factor;
+	}
+
 }

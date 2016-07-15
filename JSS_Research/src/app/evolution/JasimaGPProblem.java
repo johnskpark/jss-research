@@ -9,7 +9,6 @@ import app.IWorkStationListener;
 import app.priorityRules.HolthausRule;
 import app.simConfig.ExperimentGenerator;
 import app.simConfig.SimConfig;
-import app.stat.WeightedTardinessStat;
 import app.tracker.JasimaExperimentTracker;
 import ec.EvolutionState;
 import ec.Individual;
@@ -34,6 +33,7 @@ public abstract class JasimaGPProblem extends GPProblem {
 	public static final String P_WORKSTATION = "workstation";
 
 	public static final String P_REFERENCE_RULE = "reference-rule";
+	public static final String P_REFERENCE_FITNESS = "reference-fitness";
 
 	private boolean shouldSetContext;
 
@@ -46,6 +46,7 @@ public abstract class JasimaGPProblem extends GPProblem {
 
 	private PR referenceRule = new HolthausRule();
 	private List<Double> referenceInstStats = new ArrayList<Double>();
+	private IJasimaFitness<JasimaGPIndividual> referenceFitness = null;
 
 	@SuppressWarnings("unchecked")
 	public void setup(final EvolutionState state, final Parameter base) {
@@ -98,6 +99,7 @@ public abstract class JasimaGPProblem extends GPProblem {
         // Setup the reference rule.
         try {
         	referenceRule = (PR) state.parameters.getInstanceForParameterEq(base.push(P_REFERENCE_RULE), null, PR.class);
+        	referenceFitness = (IJasimaFitness<JasimaGPIndividual>) state.parameters.getInstanceForParameterEq(base.push(P_REFERENCE_FITNESS), null, IJasimaFitness.class);
 
         	state.output.message("Reference rule provided: " + referenceRule.getClass().getSimpleName());
         } catch (ParamClassLoadException ex) {
@@ -193,9 +195,8 @@ public abstract class JasimaGPProblem extends GPProblem {
 
 			experiment.runExperiment();
 
-			// FIXME This part is hard coded, so fix this part in some future date.
-			double twt = WeightedTardinessStat.getTotalWeightedTardiness(experiment.getResults());
-			referenceInstStats.add(twt);
+			double result = referenceFitness.getFitness(expIndex, null, experiment.getResults());
+			referenceInstStats.add(result);
 		}
 
 		resetSimSeed();
