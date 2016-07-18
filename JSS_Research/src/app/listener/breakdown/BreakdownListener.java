@@ -44,6 +44,8 @@ public class BreakdownListener implements IWorkStationListener {
 		stat.machine = machine;
 		stat.breakdownTime = machine.shop().simTime();
 
+		brokenDownMachines[index] = stat;
+
 		previouslyDeactivated[index] = true;
 		previouslyDeactivatedAny = true;
 	}
