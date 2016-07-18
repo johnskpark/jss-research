@@ -15,7 +15,7 @@ import jasima.shopSim.core.WorkStation.WorkStationEvent;
  * @author parkjohn
  *
  */
-public abstract class AbsGPPriorityRule extends PR implements IJasimaGPPriorityRule, IWorkStationListener {
+public abstract class GPPriorityRuleBase extends PR implements IJasimaGPPriorityRule, IWorkStationListener {
 
 	private static final long serialVersionUID = 5132364772745774943L;
 

@@ -34,7 +34,7 @@ public class ScoreNumberWaitingNextMachine extends SingleLineGPNode {
 
 		int nextTask = entry.getTaskNumber() + 1;
 		if (nextTask >= entry.numOps()) {
-			data.setPriority(0);
+			data.setPriority(0.0);
 		} else {
 			WorkStation machine = entry.getOps()[nextTask].machine;
 			data.setPriority(machine.numJobsWaiting());

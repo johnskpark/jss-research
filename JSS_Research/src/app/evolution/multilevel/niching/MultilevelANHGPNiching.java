@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import app.evolution.AbsGPPriorityRule;
+import app.evolution.GPPriorityRuleBase;
 import app.evolution.multilevel.IJasimaMultilevelFitnessListener;
 import app.evolution.multilevel.IJasimaMultilevelNiching;
 import app.simConfig.SimConfig;
@@ -56,7 +56,7 @@ public class MultilevelANHGPNiching implements IJasimaMultilevelNiching {
 	public void adjustFitness(final EvolutionState state,
 			final JasimaExperimentTracker<Individual> tracker,
 			final MLSSubpopulation group,
-			final AbsGPPriorityRule solver) {
+			final GPPriorityRuleBase solver) {
 		List<JasimaExperiment<Individual>> experiments = tracker.getResults();
 		SimConfig simConfig = tracker.getSimConfig();
 

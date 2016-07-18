@@ -2,8 +2,8 @@ package app.evolution.coop;
 
 import java.util.ArrayList;
 
-import app.evolution.AbsGPPriorityRule;
-import app.evolution.AbsJasimaFitness;
+import app.evolution.GPPriorityRuleBase;
+import app.evolution.JasimaFitnessBase;
 import app.evolution.JasimaGPProblem;
 import ec.EvolutionState;
 import ec.Fitness;
@@ -35,11 +35,11 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 
 	public static final String P_NICHING = "niching";
 
-	private AbsGPPriorityRule indRule;
-	private AbsJasimaFitness<JasimaCoopIndividual> indFitness;
+	private GPPriorityRuleBase indRule;
+	private JasimaFitnessBase<JasimaCoopIndividual> indFitness;
 	private boolean indRuleInitialised = false;
 
-	private AbsGPPriorityRule coopRule;
+	private GPPriorityRuleBase coopRule;
 	private JasimaCoopFitness fitness;
 
 	private int numSubpops;
@@ -57,8 +57,8 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 
 		// Setup the solver for individual rules.
 		try {
-			indRule = (AbsGPPriorityRule) state.parameters.getInstanceForParameterEq(base.push(P_IND_RULE), null, AbsGPPriorityRule.class);
-			indFitness = (AbsJasimaFitness<JasimaCoopIndividual>) state.parameters.getInstanceForParameter(base.push(P_IND_FITNESS), null, AbsJasimaFitness.class);
+			indRule = (GPPriorityRuleBase) state.parameters.getInstanceForParameterEq(base.push(P_IND_RULE), null, GPPriorityRuleBase.class);
+			indFitness = (JasimaFitnessBase<JasimaCoopIndividual>) state.parameters.getInstanceForParameter(base.push(P_IND_FITNESS), null, JasimaFitnessBase.class);
 			indFitness.setProblem(this);
 			indRuleInitialised = true;
 		} catch (ParamClassLoadException ex) {
@@ -66,7 +66,7 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 		}
 
 		// Setup the solver.
-		coopRule = (AbsGPPriorityRule) state.parameters.getInstanceForParameterEq(base.push(P_COOP_RULE), null, AbsGPPriorityRule.class);
+		coopRule = (GPPriorityRuleBase) state.parameters.getInstanceForParameterEq(base.push(P_COOP_RULE), null, GPPriorityRuleBase.class);
 		fitness = (JasimaCoopFitness) state.parameters.getInstanceForParameterEq(base.push(P_FITNESS), null, JasimaCoopFitness.class);
 		fitness.setProblem(this);
 

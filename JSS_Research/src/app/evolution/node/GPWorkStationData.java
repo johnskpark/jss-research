@@ -1,6 +1,6 @@
 package app.evolution.node;
 
-public class GPWorkStationData extends AbsWorkStationData {
+public class GPWorkStationData extends WorkStationDataBase {
 
 	public double getWorkStationData(String key) {
 		// TODO

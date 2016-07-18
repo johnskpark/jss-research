@@ -2,7 +2,7 @@ package app.evolution.coop.fitness;
 
 import java.util.Map;
 
-import app.evolution.AbsJasimaFitness;
+import app.evolution.JasimaFitnessBase;
 import app.evolution.IJasimaFitness;
 import app.evolution.coop.JasimaCoopFitness;
 import app.evolution.coop.JasimaCoopIndividual;
@@ -16,7 +16,7 @@ public class TWTFitness extends JasimaCoopFitness {
 		return new IndividualTWTFitness();
 	}
 
-	private class IndividualTWTFitness extends AbsJasimaFitness<JasimaCoopIndividual> {
+	private class IndividualTWTFitness extends JasimaFitnessBase<JasimaCoopIndividual> {
 
 		@Override
 		public double getFitness(int index, JasimaCoopIndividual ind, Map<String, Object> results) {

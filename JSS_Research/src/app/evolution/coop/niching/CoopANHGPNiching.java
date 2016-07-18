@@ -3,7 +3,7 @@ package app.evolution.coop.niching;
 import java.util.Arrays;
 import java.util.List;
 
-import app.evolution.AbsGPPriorityRule;
+import app.evolution.GPPriorityRuleBase;
 import app.evolution.coop.IJasimaCoopNiching;
 import app.evolution.coop.JasimaCoopGPIndividual;
 import app.evolution.coop.JasimaCoopIndividual;
@@ -41,7 +41,7 @@ public class CoopANHGPNiching implements IJasimaCoopNiching {
 	public void adjustFitness(final EvolutionState state,
 			final JasimaExperimentTracker<Individual> tracker,
 			final JasimaCoopGPIndividual individual,
-			final AbsGPPriorityRule solver) {
+			final GPPriorityRuleBase solver) {
 		boolean[] updateFitness = new boolean[individual.getCollaborators().length];
 		Arrays.fill(updateFitness, true);
 
@@ -53,7 +53,7 @@ public class CoopANHGPNiching implements IJasimaCoopNiching {
 			final JasimaExperimentTracker<Individual> tracker,
 			final boolean[] updateFitness,
 			final JasimaCoopIndividual individual,
-			final AbsGPPriorityRule solver) {
+			final GPPriorityRuleBase solver) {
 		List<JasimaExperiment<Individual>> experiments = tracker.getResults();
 		SimConfig simConfig = tracker.getSimConfig();
 

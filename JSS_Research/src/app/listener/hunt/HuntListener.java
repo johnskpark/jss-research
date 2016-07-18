@@ -27,7 +27,7 @@ public class HuntListener implements IWorkStationListener {
 	public void update(WorkStation notifier, WorkStationEvent event) {
 		if (event == WorkStation.WS_JOB_SELECTED) {
 			operationStart(notifier);
-		} else if (event == WorkStation.WS_JOB_COMPLETED){
+		} else if (event == WorkStation.WS_JOB_COMPLETED) {
 			operationComplete(notifier);
 		} else if (event == WorkStation.WS_INIT) {
 			init(notifier);

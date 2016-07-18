@@ -1,4 +1,4 @@
-package app.listener.downtime;
+package app.listener.breakdown;
 
 import app.IWorkStationListener;
 import jasima.shopSim.core.WorkStation;

@@ -1,6 +1,6 @@
 package app.evolution.multilevel;
 
-import app.evolution.AbsJasimaFitness;
+import app.evolution.JasimaFitnessBase;
 import ec.multilevel.MLSSubpopulation;
 
 /**
@@ -9,7 +9,7 @@ import ec.multilevel.MLSSubpopulation;
  * @author parkjohn
  *
  */
-public abstract class JasimaMultilevelGroupFitness extends AbsJasimaFitness<MLSSubpopulation> {
+public abstract class JasimaMultilevelGroupFitness extends JasimaFitnessBase<MLSSubpopulation> {
 
 	/**
 	 * TODO javadoc.

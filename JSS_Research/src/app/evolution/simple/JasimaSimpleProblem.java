@@ -1,6 +1,6 @@
 package app.evolution.simple;
 
-import app.evolution.AbsGPPriorityRule;
+import app.evolution.GPPriorityRuleBase;
 import app.evolution.IJasimaFitness;
 import app.evolution.JasimaGPData;
 import app.evolution.JasimaGPIndividual;
@@ -20,7 +20,7 @@ public class JasimaSimpleProblem extends JasimaGPProblem {
 
 	public static final int NUM_INDS_IN_EVAL = 1;
 
-	private AbsGPPriorityRule rule;
+	private GPPriorityRuleBase rule;
 	private IJasimaFitness<JasimaGPIndividual> fitness;
 
 	@SuppressWarnings("unchecked")
@@ -29,7 +29,7 @@ public class JasimaSimpleProblem extends JasimaGPProblem {
 		super.setup(state, base);
 
 		// Setup the the solver.
-		rule = (AbsGPPriorityRule) state.parameters.getInstanceForParameterEq(base.push(P_RULE), null, AbsGPPriorityRule.class);
+		rule = (GPPriorityRuleBase) state.parameters.getInstanceForParameterEq(base.push(P_RULE), null, GPPriorityRuleBase.class);
 
 		// Setup the fitness.
 		fitness = (IJasimaFitness<JasimaGPIndividual>) state.parameters.getInstanceForParameterEq(base.push(P_FITNESS), null, IJasimaFitness.class);

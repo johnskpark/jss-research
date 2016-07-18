@@ -1,6 +1,6 @@
 package app.evolution.node;
 
-public abstract class AbsWorkStationData {
+public abstract class WorkStationDataBase {
 
 	public static final String TODO = "";
 

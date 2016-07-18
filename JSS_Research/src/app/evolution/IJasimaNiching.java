@@ -10,7 +10,7 @@ public interface IJasimaNiching<T extends JasimaReproducible> extends Setup {
 	public void adjustFitness(final EvolutionState state,
 			final JasimaExperimentTracker<Individual> tracker,
 			final T individual,
-			final AbsGPPriorityRule solver);
+			final GPPriorityRuleBase solver);
 
 	public void clear();
 

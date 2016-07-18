@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import app.evolution.AbsGPPriorityRule;
+import app.evolution.GPPriorityRuleBase;
 import app.evolution.JasimaGPConfig;
 import app.tracker.JasimaExperimentTracker;
 import ec.Individual;
@@ -16,7 +16,7 @@ import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
 import jasima.shopSim.prioRules.basic.ATC;
 
-public abstract class MultiPriorityRule extends AbsGPPriorityRule {
+public abstract class MultiPriorityRule extends GPPriorityRuleBase {
 
 	private static final long serialVersionUID = -4909211481701584132L;
 

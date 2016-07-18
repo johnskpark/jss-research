@@ -3,14 +3,14 @@ package app.evolution.priorityRules;
 import java.util.Arrays;
 import java.util.List;
 
-import app.evolution.AbsGPPriorityRule;
+import app.evolution.GPPriorityRuleBase;
 import app.evolution.JasimaGPConfig;
 import ec.Individual;
 import ec.gp.GPIndividual;
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
 
-public class MachineSpecificPriorityRule extends AbsGPPriorityRule {
+public class MachineSpecificPriorityRule extends GPPriorityRuleBase {
 
 	private static final long serialVersionUID = -1896929320056457916L;
 

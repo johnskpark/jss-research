@@ -29,7 +29,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import app.AbsMultiRule;
+import app.MultiRuleBase;
 import app.IWorkStationListener;
 import app.node.INode;
 import app.node.NodeData;
@@ -510,7 +510,7 @@ public class JasimaEvalProblem {
 			}
 
 			TrackedPR trackedRefRule = (TrackedPR) refRule;
-			trackedRefRule.setPriorityRules(new ArrayList<AbsMultiRule<INode>>(solvers));
+			trackedRefRule.setPriorityRules(new ArrayList<MultiRuleBase<INode>>(solvers));
 
 			for (AbsEvalPriorityRule solver : solvers) {
 				solver.setTracker(tracker);

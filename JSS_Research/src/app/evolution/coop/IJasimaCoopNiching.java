@@ -1,6 +1,6 @@
 package app.evolution.coop;
 
-import app.evolution.AbsGPPriorityRule;
+import app.evolution.GPPriorityRuleBase;
 import app.evolution.IJasimaNiching;
 import app.tracker.JasimaExperimentTracker;
 import ec.EvolutionState;
@@ -12,5 +12,5 @@ public interface IJasimaCoopNiching extends IJasimaNiching<JasimaCoopGPIndividua
 			final JasimaExperimentTracker<Individual> tracker,
 			final boolean[] updateFitness,
 			final JasimaCoopIndividual individual,
-			final AbsGPPriorityRule solver);
+			final GPPriorityRuleBase solver);
 }

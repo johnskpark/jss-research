@@ -1,6 +1,6 @@
 package app.evolution.multilevel;
 
-import app.evolution.AbsGPPriorityRule;
+import app.evolution.GPPriorityRuleBase;
 import app.evolution.JasimaGPProblem;
 import ec.EvolutionState;
 import ec.Individual;
@@ -30,10 +30,10 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 
 	public static final String P_NICHING = "niching";
 
-	private AbsGPPriorityRule groupRule;
+	private GPPriorityRuleBase groupRule;
 	private JasimaMultilevelGroupFitness groupFitness;
 
-	private AbsGPPriorityRule indRule;
+	private GPPriorityRuleBase indRule;
 	private JasimaMultilevelIndividualFitness indFitness;
 
 	private IJasimaMultilevelNiching niching;
@@ -43,12 +43,12 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 		super.setup(state, base);
 
 		// Setup the individual solver for evaluating groups.
-		groupRule = (AbsGPPriorityRule) state.parameters.getInstanceForParameterEq(base.push(P_GROUP_RULE), null, AbsGPPriorityRule.class);
+		groupRule = (GPPriorityRuleBase) state.parameters.getInstanceForParameterEq(base.push(P_GROUP_RULE), null, GPPriorityRuleBase.class);
 		groupFitness = (JasimaMultilevelGroupFitness) state.parameters.getInstanceForParameterEq(base.push(P_GROUP_FITNESS), null, JasimaMultilevelGroupFitness.class);
 		groupFitness.setProblem(this);
 
 		// Setup the individual solver for evaluating individuals.
-		indRule = (AbsGPPriorityRule) state.parameters.getInstanceForParameterEq(base.push(P_IND_RULE), null, AbsGPPriorityRule.class);
+		indRule = (GPPriorityRuleBase) state.parameters.getInstanceForParameterEq(base.push(P_IND_RULE), null, GPPriorityRuleBase.class);
 		indFitness = (JasimaMultilevelIndividualFitness) state.parameters.getInstanceForParameterEq(base.push(P_IND_FITNESS), null, JasimaMultilevelIndividualFitness.class);
 		indFitness.setProblem(this);
 

@@ -1,6 +1,6 @@
 package app.evolution.multilevel;
 
-import app.evolution.AbsJasimaFitness;
+import app.evolution.JasimaFitnessBase;
 
 /**
  * TODO javadoc.
@@ -8,7 +8,7 @@ import app.evolution.AbsJasimaFitness;
  * @author parkjohn
  *
  */
-public abstract class JasimaMultilevelIndividualFitness extends AbsJasimaFitness<JasimaMultilevelIndividual> {
+public abstract class JasimaMultilevelIndividualFitness extends JasimaFitnessBase<JasimaMultilevelIndividual> {
 
 	/**
 	 * TODO javadoc.

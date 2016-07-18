@@ -3,11 +3,11 @@ package app.evolution.simple.fitness;
 import java.util.List;
 import java.util.Map;
 
-import app.evolution.AbsJasimaFitness;
+import app.evolution.JasimaFitnessBase;
 import app.evolution.JasimaGPIndividual;
 import app.stat.WeightedTardinessStat;
 
-public class NormMWTFitness extends AbsJasimaFitness<JasimaGPIndividual> {
+public class NormMWTFitness extends JasimaFitnessBase<JasimaGPIndividual> {
 
 	@Override
 	public double getFitness(int expIndex, JasimaGPIndividual ind, Map<String, Object> results) {

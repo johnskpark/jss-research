@@ -157,7 +157,7 @@ public abstract class JasimaGPProblem extends GPProblem {
 
 	protected void prepareToEvaluate(final EvolutionState state,
 			final int threadnum,
-			AbsGPPriorityRule rule) {
+			GPPriorityRuleBase rule) {
 		// Reset the seed for the simulator.
 		rotateSimSeed();
 
@@ -176,7 +176,7 @@ public abstract class JasimaGPProblem extends GPProblem {
 
 	protected void finishEvaluating(final EvolutionState state,
 			final int threadnum,
-			AbsGPPriorityRule rule) {
+			GPPriorityRuleBase rule) {
 		// Is empty for now. Populate with common after evaluation procedure.
 	}
 
@@ -207,7 +207,7 @@ public abstract class JasimaGPProblem extends GPProblem {
 	}
 
 	protected void configureRule(final EvolutionState state,
-			final AbsGPPriorityRule rule,
+			final GPPriorityRuleBase rule,
 			final JasimaExperimentTracker<Individual> tracker,
 			final Individual[] individuals,
 			final int[] subpops,
@@ -248,7 +248,7 @@ public abstract class JasimaGPProblem extends GPProblem {
 	}
 
 	protected Experiment getExperiment(final EvolutionState state,
-			final AbsGPPriorityRule rule,
+			final GPPriorityRuleBase rule,
 			final int index,
 			final Map<String, IWorkStationListener> listeners,
 			final JasimaExperimentTracker<Individual> tracker) {

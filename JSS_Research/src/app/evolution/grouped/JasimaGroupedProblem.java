@@ -1,6 +1,6 @@
 package app.evolution.grouped;
 
-import app.evolution.AbsGPPriorityRule;
+import app.evolution.GPPriorityRuleBase;
 import app.evolution.JasimaGPConfig;
 import app.evolution.JasimaGPData;
 import app.evolution.JasimaGPIndividual;
@@ -21,8 +21,8 @@ public class JasimaGroupedProblem extends JasimaGPProblem {
 	public static final String P_FITNESS = "fitness";
 	public static final String P_GROUPING = "grouping";
 
-	private AbsGPPriorityRule rule;
-	private AbsGPPriorityRule groupRule;
+	private GPPriorityRuleBase rule;
+	private GPPriorityRuleBase groupRule;
 
 	private JasimaGroupFitness fitness;
 	private IJasimaGrouping grouping;
@@ -33,11 +33,11 @@ public class JasimaGroupedProblem extends JasimaGPProblem {
 
 		// Setup the solvers.
 		if (state.parameters.exists(base.push(P_IND_RULE), null)) {
-			rule = (AbsGPPriorityRule) state.parameters.getInstanceForParameterEq(base.push(P_IND_RULE), null, AbsGPPriorityRule.class);
+			rule = (GPPriorityRuleBase) state.parameters.getInstanceForParameterEq(base.push(P_IND_RULE), null, GPPriorityRuleBase.class);
 		}
 
 		if (state.parameters.exists(base.push(P_GROUP_RULE), null)) {
-			groupRule = (AbsGPPriorityRule) state.parameters.getInstanceForParameterEq(base.push(P_GROUP_RULE), null, AbsGPPriorityRule.class);
+			groupRule = (GPPriorityRuleBase) state.parameters.getInstanceForParameterEq(base.push(P_GROUP_RULE), null, GPPriorityRuleBase.class);
 		}
 
 		// Setup the fitness.

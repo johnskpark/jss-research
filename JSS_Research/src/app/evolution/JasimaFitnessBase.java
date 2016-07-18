@@ -13,7 +13,7 @@ import ec.gp.koza.KozaFitness;
  * @author parkjohn
  *
  */
-public abstract class AbsJasimaFitness<T extends JasimaReproducible> implements IJasimaFitness<T> {
+public abstract class JasimaFitnessBase<T extends JasimaReproducible> implements IJasimaFitness<T> {
 
 	private List<Double> instanceFitnesses = new ArrayList<Double>();
 	private double sumFitness = 0.0;

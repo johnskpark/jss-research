@@ -3,7 +3,7 @@ package app.evaluation;
 import java.util.Arrays;
 import java.util.List;
 
-import app.AbsMultiRule;
+import app.MultiRuleBase;
 import app.IWorkStationListener;
 import app.node.INode;
 import app.node.NodeData;
@@ -14,7 +14,7 @@ import jasima.shopSim.core.PriorityQueue;
 import jasima.shopSim.core.WorkStation;
 import jasima.shopSim.core.WorkStation.WorkStationEvent;
 
-public abstract class AbsEvalPriorityRule extends AbsMultiRule<INode> implements IJasimaEvalPriorityRule, IWorkStationListener {
+public abstract class AbsEvalPriorityRule extends MultiRuleBase<INode> implements IJasimaEvalPriorityRule, IWorkStationListener {
 
 	private static final long serialVersionUID = -4755178527963577302L;
 
