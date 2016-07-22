@@ -14,7 +14,7 @@ import jasima.shopSim.core.PriorityQueue;
 import jasima.shopSim.core.WorkStation;
 import jasima.shopSim.core.WorkStation.WorkStationEvent;
 
-public abstract class AbsEvalPriorityRule extends MultiRuleBase<INode> implements IJasimaEvalPriorityRule, IWorkStationListener {
+public abstract class EvalPriorityRuleBase extends MultiRuleBase<INode> implements IJasimaEvalPriorityRule, IWorkStationListener {
 
 	private static final long serialVersionUID = -4755178527963577302L;
 

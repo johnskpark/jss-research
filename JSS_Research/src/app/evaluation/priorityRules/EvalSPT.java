@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import app.evaluation.AbsEvalPriorityRule;
+import app.evaluation.EvalPriorityRuleBase;
 import app.evaluation.JasimaEvalConfig;
 import app.node.INode;
 import app.node.pr.PRNode;
@@ -17,7 +17,7 @@ import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
 import jasima.shopSim.prioRules.basic.SPT;
 
-public class EvalSPT extends AbsEvalPriorityRule {
+public class EvalSPT extends EvalPriorityRuleBase {
 
 	private static final long serialVersionUID = -2174938171377918612L;
 

@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import app.evaluation.AbsEvalPriorityRule;
+import app.evaluation.EvalPriorityRuleBase;
 import app.evaluation.JasimaEvalConfig;
 import app.node.INode;
 import app.node.vector.DoubleVector;
@@ -15,7 +15,7 @@ import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
 import jasima.shopSim.prioRules.basic.ATC;
 
-public class WeightedLinearCombinationRule extends AbsEvalPriorityRule {
+public class WeightedLinearCombinationRule extends EvalPriorityRuleBase {
 
 	private static final long serialVersionUID = -3888977719103597779L;
 

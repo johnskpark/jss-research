@@ -2,7 +2,7 @@ package app.evaluation.fitness;
 
 import java.util.Map;
 
-import app.evaluation.AbsEvalPriorityRule;
+import app.evaluation.EvalPriorityRuleBase;
 import app.evaluation.IJasimaEvalFitness;
 import app.node.INode;
 import app.tracker.JasimaExperimentTracker;
@@ -33,7 +33,7 @@ public class RuleSizeFitness implements IJasimaEvalFitness {
 			final int configIndex,
 			final Map<String, Object> results,
 			final JasimaExperimentTracker<INode> tracker) {
-		AbsEvalPriorityRule evalRule = (AbsEvalPriorityRule) rule;
+		EvalPriorityRuleBase evalRule = (EvalPriorityRuleBase) rule;
 
 		int numRules = evalRule.getNumRules();
 		String output = numRules + ",\"";

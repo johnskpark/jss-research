@@ -7,13 +7,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import app.evaluation.AbsEvalPriorityRule;
+import app.evaluation.EvalPriorityRuleBase;
 import app.evaluation.JasimaEvalConfig;
 import app.node.INode;
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
 
-public class MachineSpecificPriorityRule extends AbsEvalPriorityRule {
+public class MachineSpecificPriorityRule extends EvalPriorityRuleBase {
 
 	private static final long serialVersionUID = -5435868205509788688L;
 

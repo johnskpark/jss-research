@@ -7,14 +7,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import app.evaluation.AbsEvalPriorityRule;
+import app.evaluation.EvalPriorityRuleBase;
 import app.evaluation.JasimaEvalConfig;
 import app.node.INode;
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
 import jasima.shopSim.prioRules.basic.ATC;
 
-public class LinearCombinationRule extends AbsEvalPriorityRule {
+public class LinearCombinationRule extends EvalPriorityRuleBase {
 
 	private static final long serialVersionUID = 543262729792177270L;
 

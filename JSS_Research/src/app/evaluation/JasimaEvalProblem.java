@@ -76,8 +76,8 @@ public class JasimaEvalProblem {
 	public static final String XML_OUTPUT_BASE = "outputConfig";
 	public static final String XML_OUTPUT_FILE = "outputFile";
 
-	private Map<String, List<AbsEvalPriorityRule>> solversMap = new HashMap<String, List<AbsEvalPriorityRule>>();
-	private List<AbsEvalPriorityRule> allSolvers = new ArrayList<>();
+	private Map<String, List<EvalPriorityRuleBase>> solversMap = new HashMap<String, List<EvalPriorityRuleBase>>();
+	private List<EvalPriorityRuleBase> allSolvers = new ArrayList<>();
 	private RuleParser parser = new RuleParser();
 
 	private SimConfig simConfig;
@@ -152,13 +152,13 @@ public class JasimaEvalProblem {
 			String solverClassStr = solverBase.getElementsByTagName(XML_SOLVER_CLASS).item(0).getTextContent();
 
 			Class<?> retrievedClass = Class.forName(solverClassStr);
-			if (retrievedClass.isAssignableFrom(AbsEvalPriorityRule.class)) {
+			if (retrievedClass.isAssignableFrom(EvalPriorityRuleBase.class)) {
 				throw new XMLStreamException("Solver must be of type JSSEvalSolver");
 			}
 
 			@SuppressWarnings("unchecked")  // The checks right above.
-			Class<? extends AbsEvalPriorityRule> solverClass =
-					(Class<? extends AbsEvalPriorityRule>) retrievedClass;
+			Class<? extends EvalPriorityRuleBase> solverClass =
+					(Class<? extends EvalPriorityRuleBase>) retrievedClass;
 
 			System.out.println("Solver: loading solver: " + solverClass.getSimpleName());
 
@@ -172,13 +172,13 @@ public class JasimaEvalProblem {
 
 				System.out.println("Solver: detected rule file. Reading from rule file: " + ruleFilename);
 
-				List<AbsEvalPriorityRule> solvers = loadRuleFile(solverClass, ruleFilename);
+				List<EvalPriorityRuleBase> solvers = loadRuleFile(solverClass, ruleFilename);
 				solversMap.put(ruleFilename, solvers);
 				allSolvers.addAll(solvers);
 			} else {
 				System.out.println("Solver: no rule file detected. Loading a static solver.");
 
-				List<AbsEvalPriorityRule> solvers = loadStaticSolvers(solverClass);
+				List<EvalPriorityRuleBase> solvers = loadStaticSolvers(solverClass);
 				solversMap.put(solverClassStr, solvers);
 				allSolvers.addAll(solvers);
 			}
@@ -188,13 +188,13 @@ public class JasimaEvalProblem {
 	}
 
 	// Load in the rule from the specified file.
-	private List<AbsEvalPriorityRule> loadRuleFile(Class<? extends AbsEvalPriorityRule> solverClass,
+	private List<EvalPriorityRuleBase> loadRuleFile(Class<? extends EvalPriorityRuleBase> solverClass,
 			String ruleFilename) throws Exception {
 		InputStream fileStream = new FileInputStream(new File(ruleFilename));
 		InputStreamReader fileReader = new InputStreamReader(fileStream);
 		BufferedReader reader = new BufferedReader(fileReader);
 
-		List<AbsEvalPriorityRule> solvers = new ArrayList<AbsEvalPriorityRule>();
+		List<EvalPriorityRuleBase> solvers = new ArrayList<EvalPriorityRuleBase>();
 
 		String ruleString;
 		while ((ruleString = reader.readLine()) != null) {
@@ -213,7 +213,7 @@ public class JasimaEvalProblem {
 			}
 			config.setRules(roots);
 
-			AbsEvalPriorityRule solver = solverClass.newInstance();
+			EvalPriorityRuleBase solver = solverClass.newInstance();
 			solver.setConfiguration(config);
 
 			solvers.add(solver);
@@ -225,11 +225,11 @@ public class JasimaEvalProblem {
 	}
 
 	// Load in a preset rule (e.g. SPT, FIFO).
-	private List<AbsEvalPriorityRule> loadStaticSolvers(Class<? extends AbsEvalPriorityRule> solverClass)
+	private List<EvalPriorityRuleBase> loadStaticSolvers(Class<? extends EvalPriorityRuleBase> solverClass)
 			throws Exception {
-		List<AbsEvalPriorityRule> solvers = new ArrayList<AbsEvalPriorityRule>();
+		List<EvalPriorityRuleBase> solvers = new ArrayList<EvalPriorityRuleBase>();
 
-		AbsEvalPriorityRule solver = solverClass.newInstance();
+		EvalPriorityRuleBase solver = solverClass.newInstance();
 		solver.setConfiguration(new JasimaEvalConfig());
 
 		solvers.add(solver);
@@ -461,7 +461,7 @@ public class JasimaEvalProblem {
 
 	private void evaluateSolvers(PrintStream output) {
 		for (String ruleFilename : solversMap.keySet()) {
-			List<AbsEvalPriorityRule> solvers = solversMap.get(ruleFilename);
+			List<EvalPriorityRuleBase> solvers = solversMap.get(ruleFilename);
 
 			System.out.println("Evaluation: evaluating " + ruleFilename + ". Number of rules: " + solvers.size() + ", Number of instances: " + simConfig.getNumConfigs());
 
@@ -476,7 +476,7 @@ public class JasimaEvalProblem {
 			}
 
 			for (int solverIndex = 0; solverIndex < solvers.size(); solverIndex++) {
-				AbsEvalPriorityRule solver = solvers.get(solverIndex);
+				EvalPriorityRuleBase solver = solvers.get(solverIndex);
 
 				for (int configIndex = 0; configIndex < simConfig.getNumConfigs(); configIndex++) {
 					output.printf("%s,%d,%s,%d", ruleFilename, solver.getSeed(), simConfig.getClass().getSimpleName(), configIndex);
@@ -497,7 +497,7 @@ public class JasimaEvalProblem {
 		}
 	}
 
-	private List<String> evaluateSolversUsingReference(String ruleFileName, List<AbsEvalPriorityRule> solvers) {
+	private List<String> evaluateSolversUsingReference(String ruleFileName, List<EvalPriorityRuleBase> solvers) {
 		System.out.println("Evaluation: starting reference evaluation.");
 
 		int numResults = solvers.size() * simConfig.getNumConfigs();
@@ -512,7 +512,7 @@ public class JasimaEvalProblem {
 			TrackedPR trackedRefRule = (TrackedPR) refRule;
 			trackedRefRule.setPriorityRules(new ArrayList<MultiRuleBase<INode>>(solvers));
 
-			for (AbsEvalPriorityRule solver : solvers) {
+			for (EvalPriorityRuleBase solver : solvers) {
 				solver.setTracker(tracker);
 				tracker.addRule(solver);
 			}
@@ -540,7 +540,7 @@ public class JasimaEvalProblem {
 //				}
 
 				for (int solverIndex = 0; solverIndex < solvers.size(); solverIndex++) {
-					AbsEvalPriorityRule solver = solvers.get(solverIndex);
+					EvalPriorityRuleBase solver = solvers.get(solverIndex);
 
 					StringBuilder builder = new StringBuilder();
 
@@ -557,7 +557,7 @@ public class JasimaEvalProblem {
 				tracker.clearCurrentExperiment();
 			}
 
-			for (AbsEvalPriorityRule solver : solvers) {
+			for (EvalPriorityRuleBase solver : solvers) {
 				solver.setTracker(null);
 			}
 
@@ -570,12 +570,12 @@ public class JasimaEvalProblem {
 		return Arrays.asList(resultsOutput);
 	}
 
-	private List<String> evaluateSolversNormally(String ruleFilename, List<AbsEvalPriorityRule> solvers) {
+	private List<String> evaluateSolversNormally(String ruleFilename, List<EvalPriorityRuleBase> solvers) {
 		System.out.println("Evaluation: starting standard evaluation.");
 
 		List<String> resultsOutput = new ArrayList<>();
 
-		for (AbsEvalPriorityRule solver : solvers) {
+		for (EvalPriorityRuleBase solver : solvers) {
 			for (int configIndex = 0; configIndex < simConfig.getNumConfigs(); configIndex++) {
 
 				Experiment experiment = getExperiment(solver, configIndex);

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<evaluationConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>simple_bl_none_mwt.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>simple_bl_mid_mwt.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>simple_bl_high_mwt.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<datasetConfig>
+		<datasetClass>app.simConfig.holthausConfig.EvalFactory</datasetClass>
+		<datasetInstances>(all),(all),(all)</datasetInstances>
+		<datasetSeed>15</datasetSeed>
+	</datasetConfig>
+
+	<outputConfig>
+	    <outputFile>simple_breakdown_output.csv</outputFile>
+	</outputConfig>
+
+	<fitnessConfig>
+		<fitnessClass>app.evaluation.fitness.TWTFitness</fitnessClass>
+	</fitnessConfig>
+	
+	<fitnessConfig>
+		<fitnessClass>app.evaluation.fitness.MWTFitness</fitnessClass>
+	</fitnessConfig>
+
+	<fitnessConfig>
+		<fitnessClass>app.evaluation.fitness.RuleSizeFitness</fitnessClass>
+	</fitnessConfig>
+
+<!--
+	<refConfig>
+		<refRule>app.evaluation.priorityRules.EvalATC</refRule>
+		<refTracking>
+			<numJobsThreshold>10</numJobsThreshold>
+			<numSamples>50</numSamples>
+			<seed>15</seed>
+		</refTracking>
+	</refConfig>
+
+	<refFitnessConfig>
+		<fitnessClass>app.evaluation.fitness.DiversityFitness</fitnessClass>
+	</refFitnessConfig>
+-->
+
+	<listenerConfig>
+	    <listenerClass>app.listener.hunt.EvalFactory</listenerClass>
+	    <listenerSize>5</listenerSize>
+	</listenerConfig>
+</evaluationConfig>
