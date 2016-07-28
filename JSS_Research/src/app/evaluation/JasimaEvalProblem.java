@@ -29,8 +29,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import app.MultiRuleBase;
 import app.IWorkStationListener;
+import app.MultiRuleBase;
 import app.node.INode;
 import app.node.NodeData;
 import app.priorityRules.TrackedPR;
@@ -526,19 +526,6 @@ public class JasimaEvalProblem {
 				Experiment experiment = getExperiment(refRule, configIndex);
 				experiment.runExperiment();
 
-				// TODO remove after all the bugs have been fixed.
-//				for (IJasimaEvalFitness fitness : standardEvaluation) {
-//					if (fitness.resultIsNumeric()) {
-//						double actual = fitness.getNumericResult(refRule, configIndex, experiment.getResults(), tracker);
-//						double expected = refFitness.get(new Pair<>(refRule, fitness.getClass().getSimpleName())).get(configIndex);
-//
-//						// All of the fitnesses are the same for the expected.
-//						if (Math.abs(expected - actual) > 0.0001) {
-//							System.out.printf("NOT CORRECT: %f, %f\n", actual, expected);
-//						}
-//					}
-//				}
-
 				for (int solverIndex = 0; solverIndex < solvers.size(); solverIndex++) {
 					EvalPriorityRuleBase solver = solvers.get(solverIndex);
 
@@ -585,6 +572,7 @@ public class JasimaEvalProblem {
 
 				for (IJasimaEvalFitness fitness : standardEvaluation) {
 					String result = fitness.getStringResult(solver, configIndex, experiment.getResults(), tracker);
+
 					builder.append("," + result);
 				}
 

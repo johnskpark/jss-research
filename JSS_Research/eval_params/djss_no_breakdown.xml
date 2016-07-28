@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <evaluationConfig>
 
-<!-- Rule file definitions -->
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>simple_bl_none_mwt.txt</ruleFile>
+			<ruleFile>test_rule.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+<!--
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>simple_bl_mid_twt.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>simple_bl_mid_mwt.txt</ruleFile>
+			<ruleFile>simple_bl_high_twt.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
-
-	<solverConfig>
-		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
-		<solverFile>
-			<ruleFile>simple_bl_high_mwt.txt</ruleFile>
-		</solverFile>
-	</solverConfig>
+-->
 
 	<datasetConfig>
-		<datasetClass>app.simConfig.holthausConfig.EvalFactory</datasetClass>
-		<datasetInstances>(all),(all),(all)</datasetInstances>
-		<datasetSeed>51</datasetSeed>
+		<datasetClass>app.simConfig.holthausConfig2.EvalFactory</datasetClass>
+		<datasetInstances>(all)</datasetInstances>
+		<datasetSeed>15</datasetSeed>
 	</datasetConfig>
 
-<!-- Output file definition -->
 	<outputConfig>
-	    <outputFile>simple_breakdown_mwt_output_seed_51.csv</outputFile>
+	    <outputFile>simple_no_breakdown_output.csv</outputFile>
 	</outputConfig>
 
 

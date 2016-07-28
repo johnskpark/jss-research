@@ -45,8 +45,6 @@ public class IndividualBreakdownMachine extends IndividualMachine {
 				// procFinished is the time when machine is repaired in this case.
 				double newDepartTime = procFinished + procRemaining;
 
-				//System.out.println("Job's completion at time " + shop.simTime() + " interrupted by breakdown of machine " + workStation.index() + " new departure time: " + newDepartTime);
-
 				this.setTime(newDepartTime);
 				shop.schedule(this);
 			}
