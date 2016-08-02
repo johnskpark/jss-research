@@ -9,6 +9,7 @@ import java.util.Map;
 import app.IMultiRule;
 import app.evaluation.IJasimaEvalFitness;
 import app.node.INode;
+import app.simConfig.SimConfig;
 import app.tracker.JasimaDecision;
 import app.tracker.JasimaExperiment;
 import app.tracker.JasimaExperimentTracker;
@@ -46,6 +47,7 @@ public class DiversityFitness implements IJasimaEvalFitness {
 
 	@Override
 	public double getNumericResult(final PR rule,
+			final SimConfig simConfig,
 			final int configIndex,
 			final Map<String, Object> results,
 			final JasimaExperimentTracker<INode> tracker) {
@@ -54,6 +56,7 @@ public class DiversityFitness implements IJasimaEvalFitness {
 
 	@Override
 	public String getStringResult(final PR rule,
+			final SimConfig simConfig,
 			final int configIndex,
 			final Map<String, Object> results,
 			final JasimaExperimentTracker<INode> tracker) {

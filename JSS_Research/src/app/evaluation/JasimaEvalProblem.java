@@ -56,6 +56,7 @@ public class JasimaEvalProblem {
 
 	public static final String XML_DATASET_BASE = "datasetConfig";
 	public static final String XML_DATASET_CLASS = "datasetClass";
+	public static final String XML_DATASET_REPEAT = "datasetRepeat";
 
 	public static final String XML_REFERENCE_BASE = "refConfig";
 	public static final String XML_REFERENCE_RULE = "refRule";
@@ -76,11 +77,14 @@ public class JasimaEvalProblem {
 	public static final String XML_OUTPUT_BASE = "outputConfig";
 	public static final String XML_OUTPUT_FILE = "outputFile";
 
+	public static final int DEFAULT_REPLICATION = 1;
+
 	private Map<String, List<EvalPriorityRuleBase>> solversMap = new HashMap<String, List<EvalPriorityRuleBase>>();
 	private List<EvalPriorityRuleBase> allSolvers = new ArrayList<>();
 	private RuleParser parser = new RuleParser();
 
 	private SimConfig simConfig;
+	private int numRepeats = DEFAULT_REPLICATION;
 
 	private List<IJasimaEvalFitness> referenceEvaluation = new ArrayList<>();
 	private List<IJasimaEvalFitness> standardEvaluation = new ArrayList<>();
@@ -257,6 +261,13 @@ public class JasimaEvalProblem {
 
 		simConfig = factory.generateSimConfig();
 
+		NodeList repeatList = datasetBase.getElementsByTagName(XML_DATASET_REPEAT);
+		if (repeatList.getLength() != 0) {
+			numRepeats = Integer.parseInt(repeatList.item(0).getTextContent());
+
+			System.out.println("SimConfig: number of replications for dataset: " + numRepeats);
+		}
+
 		System.out.println("SimConfig: loading complete.");
 	}
 
@@ -403,7 +414,7 @@ public class JasimaEvalProblem {
 		PrintStream output = new PrintStream(new File(outputCsv));
 
 		// Print out the headers.
-		output.print("RuleFile,RuleSeed,TestSet,InstanceNum");
+		output.print("RuleFile,RuleSeed,Repeat,TestSet,InstanceNum");
 
 		for (IJasimaEvalFitness fitness : standardEvaluation) {
 			output.printf(",%s", fitness.getHeaderName());
@@ -432,26 +443,29 @@ public class JasimaEvalProblem {
 				refFitness.put(key, new ArrayList<>());
 			}
 
-			for (int configIndex = 0; configIndex < simConfig.getNumConfigs(); configIndex++) {
-				if (refRule instanceof TrackedPR) {
-					((TrackedPR) refRule).initSampleRun(configIndex);
-				}
-
-				Experiment experiment = getExperiment(refRule, configIndex);
-				experiment.runExperiment();
-
-				for (IJasimaEvalFitness fitness : standardEvaluation) {
-					Pair<PR, String> key = new Pair<>(refRule, fitness.getClass().getSimpleName());
-
-					if (fitness.resultIsNumeric()) {
-						double result = fitness.getNumericResult(refRule, configIndex, experiment.getResults(), tracker);
-
-						refFitness.get(key).add(configIndex, result);
+			for (int repeat = 0; repeat < numRepeats; repeat++) {
+				for (int configIndex = 0; configIndex < simConfig.getNumConfigs(); configIndex++) {
+					if (refRule instanceof TrackedPR) {
+						((TrackedPR) refRule).initSampleRun(configIndex);
 					}
-				}
 
-				for (IWorkStationListener listener : listeners) {
-					listener.clear();
+					Experiment experiment = getExperiment(refRule, configIndex);
+					experiment.runExperiment();
+
+					for (IJasimaEvalFitness fitness : standardEvaluation) {
+						Pair<PR, String> key = new Pair<>(refRule, fitness.getClass().getSimpleName());
+
+						// FIXME need to account for the repetition code that I added.
+						if (fitness.resultIsNumeric()) {
+							double result = fitness.getNumericResult(refRule, simConfig, configIndex, experiment.getResults(), tracker);
+
+							refFitness.get(key).add(configIndex, result);
+						}
+					}
+
+					for (IWorkStationListener listener : listeners) {
+						listener.clear();
+					}
 				}
 			}
 
@@ -478,18 +492,22 @@ public class JasimaEvalProblem {
 			for (int solverIndex = 0; solverIndex < solvers.size(); solverIndex++) {
 				EvalPriorityRuleBase solver = solvers.get(solverIndex);
 
-				for (int configIndex = 0; configIndex < simConfig.getNumConfigs(); configIndex++) {
-					output.printf("%s,%d,%s,%d", ruleFilename, solver.getSeed(), simConfig.getClass().getSimpleName(), configIndex);
+				for (int repeat = 0; repeat < numRepeats; repeat++) {
+					for (int configIndex = 0; configIndex < simConfig.getNumConfigs(); configIndex++) {
+						output.printf("%s,%d,%d,%s,%d", ruleFilename, solver.getSeed(), repeat, simConfig.getClass().getSimpleName(), configIndex);
 
-					if (standardResults != null) {
-						output.print(standardResults.get(solverIndex * simConfig.getNumConfigs() + configIndex));
+						int index = solverIndex * (numRepeats * simConfig.getNumConfigs()) + repeat * (simConfig.getNumConfigs()) + configIndex;
+
+						if (standardResults != null) {
+							output.print(standardResults.get(index));
+						}
+
+						if (referenceResults != null) {
+							output.print(referenceResults.get(index));
+						}
+
+						output.println();
 					}
-
-					if (referenceResults != null) {
-						output.print(referenceResults.get(solverIndex * simConfig.getNumConfigs() + configIndex));
-					}
-
-					output.println();
 				}
 			}
 
@@ -519,29 +537,32 @@ public class JasimaEvalProblem {
 
 			tracker.initialise();
 
-			for (int configIndex = 0; configIndex < simConfig.getNumConfigs(); configIndex++) {
-				tracker.setExperimentIndex(configIndex);
-				trackedRefRule.initTrackedRun(configIndex);
+			for (int repeat = 0; repeat < numRepeats; repeat++) {
+				for (int configIndex = 0; configIndex < simConfig.getNumConfigs(); configIndex++) {
+					tracker.setExperimentIndex(configIndex);
+					trackedRefRule.initTrackedRun(configIndex);
 
-				Experiment experiment = getExperiment(refRule, configIndex);
-				experiment.runExperiment();
+					Experiment experiment = getExperiment(refRule, configIndex);
+					experiment.runExperiment();
 
-				for (int solverIndex = 0; solverIndex < solvers.size(); solverIndex++) {
-					EvalPriorityRuleBase solver = solvers.get(solverIndex);
+					for (int solverIndex = 0; solverIndex < solvers.size(); solverIndex++) {
+						EvalPriorityRuleBase solver = solvers.get(solverIndex);
 
-					StringBuilder builder = new StringBuilder();
+						StringBuilder builder = new StringBuilder();
 
-					for (IJasimaEvalFitness fitness : referenceEvaluation) {
-						 String result = fitness.getStringResult(solver, configIndex, experiment.getResults(), tracker);
-						 builder.append("," + result);
+						for (IJasimaEvalFitness fitness : referenceEvaluation) {
+							 String result = fitness.getStringResult(solver, simConfig, configIndex, experiment.getResults(), tracker);
+							 builder.append("," + result);
+						}
+
+						// TODO need to work with the repeats.
+						int resultsIndex = solverIndex * simConfig.getNumConfigs() + configIndex;
+
+						resultsOutput[resultsIndex] = builder.toString();
 					}
 
-					int resultsIndex = solverIndex * simConfig.getNumConfigs() + configIndex;
-
-					resultsOutput[resultsIndex] = builder.toString();
+					tracker.clearCurrentExperiment();
 				}
-
-				tracker.clearCurrentExperiment();
 			}
 
 			for (EvalPriorityRuleBase solver : solvers) {
@@ -563,23 +584,25 @@ public class JasimaEvalProblem {
 		List<String> resultsOutput = new ArrayList<>();
 
 		for (EvalPriorityRuleBase solver : solvers) {
-			for (int configIndex = 0; configIndex < simConfig.getNumConfigs(); configIndex++) {
+			for (int repeat = 0; repeat < numRepeats; repeat++) {
+				for (int configIndex = 0; configIndex < simConfig.getNumConfigs(); configIndex++) {
 
-				Experiment experiment = getExperiment(solver, configIndex);
-				experiment.runExperiment();
+					Experiment experiment = getExperiment(solver, configIndex);
+					experiment.runExperiment();
 
-				StringBuilder builder = new StringBuilder();
+					StringBuilder builder = new StringBuilder();
 
-				for (IJasimaEvalFitness fitness : standardEvaluation) {
-					String result = fitness.getStringResult(solver, configIndex, experiment.getResults(), tracker);
+					for (IJasimaEvalFitness fitness : standardEvaluation) {
+						String result = fitness.getStringResult(solver, simConfig, configIndex, experiment.getResults(), tracker);
 
-					builder.append("," + result);
-				}
+						builder.append("," + result);
+					}
 
-				resultsOutput.add(builder.toString());
+					resultsOutput.add(builder.toString());
 
-				for (IWorkStationListener listener : listeners) {
-					listener.clear();
+					for (IWorkStationListener listener : listeners) {
+						listener.clear();
+					}
 				}
 			}
 
