@@ -5,15 +5,17 @@ import java.util.Map;
 import app.IWorkStationListener;
 import app.listener.breakdown.BreakdownListener;
 import app.node.INode;
+import app.node.NodeAnnotation;
 import app.node.NodeData;
 import app.node.NodeDefinition;
 import jasima.core.statistics.SummaryStat;
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.WorkStation;
 
+@NodeAnnotation(node=NodeDefinition.SCORE_PREVIOUS_REPAIR_TIME_NEXT_MACHINE)
 public class ScorePreviousRepairTimeNextMachine implements INode {
 
-	private static final NodeDefinition NODE_DEFINITION = NodeDefinition.SCORE_AVERAGE_BREAKDOWN_TIME_NEXT_MACHINE;
+	private static final NodeDefinition NODE_DEFINITION = NodeDefinition.SCORE_PREVIOUS_REPAIR_TIME_NEXT_MACHINE;
 
 	@Override
 	public int getChildrenNum() {

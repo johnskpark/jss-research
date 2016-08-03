@@ -17,7 +17,7 @@ import jasima.core.statistics.SummaryStat;
 public class ScoreAverageRepairTimeAllMachines extends SingleLineGPNode {
 
 	private static final long serialVersionUID = -2088494524904208735L;
-	private static final NodeDefinition NODE_DEFINITION = NodeDefinition.SCORE_AVERAGE_BREAKDOWN_TIME_ALL_MACHINES;
+	private static final NodeDefinition NODE_DEFINITION = NodeDefinition.SCORE_AVERAGE_REPAIR_TIME_ALL_MACHINES;
 
 	@Override
 	public String toString() {

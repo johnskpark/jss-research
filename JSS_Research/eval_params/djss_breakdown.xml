@@ -2,6 +2,7 @@
 <evaluationConfig>
 
 <!-- Rule file definitions -->
+<!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
@@ -22,18 +23,19 @@
 			<ruleFile>simple_bl_high_mwt.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
+-->
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>simple_bl_high_mwt.txt</ruleFile>
+			<ruleFile>mb_bl_high_mwt.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>simple_bl_high_mwt.txt</ruleFile>
+			<ruleFile>mb_bl_mid_mwt.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
@@ -41,12 +43,12 @@
 		<datasetClass>app.simConfig.holthausConfig.EvalFactory</datasetClass>
 		<datasetInstances>(all),(all),(all)</datasetInstances>
 		<datasetSeed>15</datasetSeed>
-		<datasetRepeat>30</datasetRepeat>
+		<datasetRepeat>1</datasetRepeat>
 	</datasetConfig>
 
 <!-- Output file definition -->
 	<outputConfig>
-	    <outputFile>simple_breakdown_mwt_output_new.csv</outputFile>
+	    <outputFile>mb_breakdown_mwt_output_new.csv</outputFile>
 	</outputConfig>
 
 

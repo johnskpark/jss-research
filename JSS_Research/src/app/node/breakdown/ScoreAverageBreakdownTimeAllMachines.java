@@ -5,10 +5,12 @@ import java.util.Map;
 import app.IWorkStationListener;
 import app.listener.breakdown.BreakdownListener;
 import app.node.INode;
+import app.node.NodeAnnotation;
 import app.node.NodeData;
 import app.node.NodeDefinition;
 import jasima.core.statistics.SummaryStat;
 
+@NodeAnnotation(node=NodeDefinition.SCORE_AVERAGE_BREAKDOWN_TIME_ALL_MACHINES)
 public class ScoreAverageBreakdownTimeAllMachines implements INode {
 
 	private static final NodeDefinition NODE_DEFINITION = NodeDefinition.SCORE_AVERAGE_BREAKDOWN_TIME_ALL_MACHINES;

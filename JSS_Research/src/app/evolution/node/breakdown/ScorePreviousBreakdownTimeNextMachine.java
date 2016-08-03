@@ -19,7 +19,7 @@ import jasima.shopSim.core.WorkStation;
 public class ScorePreviousBreakdownTimeNextMachine extends SingleLineGPNode {
 
 	private static final long serialVersionUID = 3266125165564189293L;
-	private static final NodeDefinition NODE_DEFINITION = NodeDefinition.SCORE_AVERAGE_BREAKDOWN_TIME_ALL_MACHINES;
+	private static final NodeDefinition NODE_DEFINITION = NodeDefinition.SCORE_PREVIOUS_BREAKDOWN_TIME_NEXT_MACHINE;
 
 	@Override
 	public String toString() {
