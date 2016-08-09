@@ -32,8 +32,12 @@ public class ScoreAverageBreakdownTimeNextMachine extends SingleLineGPNode {
 	}
 
 	@Override
-	public void eval(EvolutionState state, int thread, GPData input,
-			ADFStack stack, GPIndividual individual, Problem problem) {
+	public void eval(final EvolutionState state,
+			final int thread,
+			final GPData input,
+			final ADFStack stack,
+			final GPIndividual individual,
+			final Problem problem) {
 		JasimaGPData data = (JasimaGPData) input;
 		PrioRuleTarget entry = data.getPrioRuleTarget();
 

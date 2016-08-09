@@ -22,9 +22,9 @@ public class WeightStream extends DblStream {
 
 	public WeightStream(long seed) {
 		super();
-		
+
 		numWeights = WEIGHTS.length;
-		
+
 		numericalMean = 0.0;
 		numericalMin = Double.POSITIVE_INFINITY;
 		numericalMax = Double.NEGATIVE_INFINITY;

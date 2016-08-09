@@ -16,10 +16,10 @@ import jasima.core.statistics.SummaryStat;
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.WorkStation;
 
-public class ScoreAverageRepairTimeNextMachine extends SingleLineGPNode {
+public class ScoreAverageUpTimeNextMachine extends SingleLineGPNode {
 
-	private static final long serialVersionUID = 4648196972425260512L;
-	private static final NodeDefinition NODE_DEFINITION = NodeDefinition.SCORE_AVERAGE_REPAIR_TIME_NEXT_MACHINE;
+	private static final long serialVersionUID = -8245586378929337142L;
+	private static final NodeDefinition NODE_DEFINITION = NodeDefinition.SCORE_AVERAGE_UP_TIME_NEXT_MACHINE;
 
 	@Override
 	public String toString() {
@@ -51,9 +51,9 @@ public class ScoreAverageRepairTimeNextMachine extends SingleLineGPNode {
 			WorkStation machine = entry.getOps()[nextTask].machine;
 
 			if (listener.hasBrokenDown(machine)) {
-				SummaryStat repairStat = listener.getMachineRepairTimeStat(machine);
+				SummaryStat upTimeStat = listener.getMachineUpTimeStat(machine);
 
-				data.setPriority(repairStat.mean());
+				data.setPriority(upTimeStat.mean());
 			} else {
 				data.setPriority(0.0);
 			}

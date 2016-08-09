@@ -9,9 +9,11 @@ public class BreakdownListener implements IWorkStationListener {
 
 	private SummaryStat[] breakdownTimePerMachine;
 	private SummaryStat[] repairTimePerMachine;
+	private SummaryStat[] upTimePerMachine;
 
 	private SummaryStat breakdownTimeAllMachines;
 	private SummaryStat repairTimeAllMachines;
+	private SummaryStat upTimeAllMachines;
 
 	private BreakdownStartStat[] brokenDownMachines;
 
@@ -90,6 +92,10 @@ public class BreakdownListener implements IWorkStationListener {
 		return repairTimePerMachine[machine.index()];
 	}
 
+	public SummaryStat getMachineUpTimeStat(WorkStation machine) {
+		return upTimePerMachine[machine.index()];
+	}
+
 	public boolean hasBrokenDownAnyMachine() {
 		return previouslyDeactivatedAny;
 	}
@@ -102,13 +108,19 @@ public class BreakdownListener implements IWorkStationListener {
 		return repairTimeAllMachines;
 	}
 
+	public SummaryStat getAllMachineUpTimeStat() {
+		return upTimeAllMachines;
+	}
+
 	@Override
 	public void clear() {
 		breakdownTimePerMachine = new SummaryStat[numMachines];
 		repairTimePerMachine = new SummaryStat[numMachines];
+		upTimePerMachine = new SummaryStat[numMachines];
 
 		breakdownTimeAllMachines = new SummaryStat();
 		repairTimeAllMachines = new SummaryStat();
+		upTimeAllMachines = new SummaryStat();
 
 		brokenDownMachines = new BreakdownStartStat[numMachines];
 
@@ -118,6 +130,7 @@ public class BreakdownListener implements IWorkStationListener {
 		for (int i = 0; i < numMachines; i++) {
 			breakdownTimePerMachine[i] = new SummaryStat();
 			repairTimePerMachine[i] = new SummaryStat();
+			upTimePerMachine[i] = new SummaryStat();
 
 			previouslyDeactivated[i] = false;
 		}

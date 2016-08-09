@@ -13,13 +13,11 @@ import ec.gp.ADFStack;
 import ec.gp.GPData;
 import ec.gp.GPIndividual;
 import jasima.core.statistics.SummaryStat;
-import jasima.shopSim.core.PrioRuleTarget;
-import jasima.shopSim.core.WorkStation;
 
-public class ScoreAverageRepairTimeNextMachine extends SingleLineGPNode {
+public class ScoreAverageUpTimeAllMachines extends SingleLineGPNode {
 
-	private static final long serialVersionUID = 4648196972425260512L;
-	private static final NodeDefinition NODE_DEFINITION = NodeDefinition.SCORE_AVERAGE_REPAIR_TIME_NEXT_MACHINE;
+	private static final long serialVersionUID = 809891465301720083L;
+	private static final NodeDefinition NODE_DEFINITION = NodeDefinition.SCORE_AVERAGE_UP_TIME_ALL_MACHINES;
 
 	@Override
 	public String toString() {
@@ -39,24 +37,16 @@ public class ScoreAverageRepairTimeNextMachine extends SingleLineGPNode {
 			final GPIndividual individual,
 			final Problem problem) {
 		JasimaGPData data = (JasimaGPData) input;
-		PrioRuleTarget entry = data.getPrioRuleTarget();
 
 		Map<String, IWorkStationListener> listeners = data.getWorkStationListeners();
 		BreakdownListener listener = (BreakdownListener) listeners.get(BreakdownListener.class.getSimpleName());
 
-		int nextTask = entry.getTaskNumber() + 1;
-		if (nextTask >= entry.numOps()) {
-			data.setPriority(0.0);
+		if (listener.hasBrokenDownAnyMachine()) {
+			SummaryStat upTimeStat = listener.getAllMachineUpTimeStat();
+
+			data.setPriority(upTimeStat.mean());
 		} else {
-			WorkStation machine = entry.getOps()[nextTask].machine;
-
-			if (listener.hasBrokenDown(machine)) {
-				SummaryStat repairStat = listener.getMachineRepairTimeStat(machine);
-
-				data.setPriority(repairStat.mean());
-			} else {
-				data.setPriority(0.0);
-			}
+			data.setPriority(0.0);
 		}
 	}
 
