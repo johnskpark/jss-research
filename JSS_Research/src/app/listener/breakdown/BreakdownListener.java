@@ -43,12 +43,27 @@ public class BreakdownListener implements IWorkStationListener {
 		}
 
 		BreakdownStartStat stat = new BreakdownStartStat();
+		double breakdownTime = machine.shop().simTime();
+
 		stat.machine = machine;
-		stat.breakdownTime = machine.shop().simTime();
+		stat.breakdownTime = breakdownTime;
 
 		brokenDownMachines[index] = stat;
 
-		previouslyDeactivated[index] = true;
+		if (previouslyDeactivated[index]) {
+			double upTime = breakdownTime - breakdownTimePerMachine[index].lastValue() - repairTimePerMachine[index].lastValue();
+			upTimePerMachine[index].value(upTime);
+			upTimeAllMachines.value(upTime);
+		} else {
+			upTimePerMachine[index].value(breakdownTime);
+			upTimeAllMachines.value(breakdownTime);
+
+			previouslyDeactivated[index] = true;
+		}
+
+		breakdownTimePerMachine[index].value(stat.breakdownTime);
+		breakdownTimeAllMachines.value(stat.breakdownTime);
+
 		previouslyDeactivatedAny = true;
 	}
 

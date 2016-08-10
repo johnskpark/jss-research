@@ -4,7 +4,7 @@
 
 parent.0 = djss_breakdown.params
 
-gp.fs.0.size = 25
+gp.fs.0.size = 29
 gp.fs.0.func.0 = app.evolution.node.basic.ERCRandomUniform
 gp.fs.0.func.0.nc = nc0
 gp.fs.0.func.0.min = 0
@@ -45,18 +45,40 @@ gp.fs.0.func.17 = app.evolution.node.hunt.ScoreNextProcessingTime
 gp.fs.0.func.17.nc = nc0
 gp.fs.0.func.18 = app.evolution.node.hunt.ScoreNumberWaitingNextMachine
 gp.fs.0.func.18.nc = nc0
-gp.fs.0.func.19 = app.evolution.node.breakdown.ScoreAverageBreakdownTimeAllMachines
+gp.fs.0.func.19 = app.evolution.node.breakdown.ScoreAverageUpTimeAllMachines
 gp.fs.0.func.19.nc = nc0
-gp.fs.0.func.20 = app.evolution.node.breakdown.ScoreAverageBreakdownTimeNextMachine
+gp.fs.0.func.20 = app.evolution.node.breakdown.ScoreAverageUpTimeNextMachine
 gp.fs.0.func.20.nc = nc0
-gp.fs.0.func.21 = app.evolution.node.breakdown.ScoreAverageRepairTimeAllMachines
+gp.fs.0.func.21 = app.evolution.node.breakdown.ScoreAverageUpTime
 gp.fs.0.func.21.nc = nc0
-gp.fs.0.func.22 = app.evolution.node.breakdown.ScoreAverageRepairTimeNextMachine
+gp.fs.0.func.22 = app.evolution.node.breakdown.ScoreAverageRepairTimeAllMachines
 gp.fs.0.func.22.nc = nc0
-gp.fs.0.func.23 = app.evolution.node.breakdown.ScorePreviousBreakdownTimeNextMachine
+gp.fs.0.func.23 = app.evolution.node.breakdown.ScoreAverageRepairTimeNextMachine
 gp.fs.0.func.23.nc = nc0
-gp.fs.0.func.24 = app.evolution.node.breakdown.ScorePreviousRepairTimeNextMachine
+gp.fs.0.func.24 = app.evolution.node.breakdown.ScoreAverageRepairTime
 gp.fs.0.func.24.nc = nc0
+gp.fs.0.func.25 = app.evolution.node.breakdown.ScorePreviousBreakdownTimeNextMachine
+gp.fs.0.func.25.nc = nc0
+gp.fs.0.func.26 = app.evolution.node.breakdown.ScorePreviousBreakdownTime
+gp.fs.0.func.26.nc = nc0
+gp.fs.0.func.27 = app.evolution.node.breakdown.ScorePreviousRepairTimeNextMachine
+gp.fs.0.func.27.nc = nc0
+gp.fs.0.func.28 = app.evolution.node.breakdown.ScorePreviousRepairTime
+gp.fs.0.func.28.nc = nc0
+
+# Old terminals from terminal index 19 onwards.
+#gp.fs.0.func.19 = app.evolution.node.breakdown.ScoreAverageBreakdownTimeAllMachines
+#gp.fs.0.func.19.nc = nc0
+#gp.fs.0.func.20 = app.evolution.node.breakdown.ScoreAverageBreakdownTimeNextMachine
+#gp.fs.0.func.20.nc = nc0
+#gp.fs.0.func.21 = app.evolution.node.breakdown.ScoreAverageRepairTimeAllMachines
+#gp.fs.0.func.21.nc = nc0
+#gp.fs.0.func.22 = app.evolution.node.breakdown.ScoreAverageRepairTimeNextMachine
+#gp.fs.0.func.22.nc = nc0
+#gp.fs.0.func.23 = app.evolution.node.breakdown.ScorePreviousBreakdownTimeNextMachine
+#gp.fs.0.func.23.nc = nc0
+#gp.fs.0.func.24 = app.evolution.node.breakdown.ScorePreviousRepairTimeNextMachine
+#gp.fs.0.func.24.nc = nc0
 
 eval.problem.workstations = 2
 eval.problem.workstation.0 = app.listener.hunt.EvolveFactory
