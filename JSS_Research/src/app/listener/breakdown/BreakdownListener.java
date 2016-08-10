@@ -81,9 +81,7 @@ public class BreakdownListener implements IWorkStationListener {
 		double breakdownTime = startStat.breakdownTime;
 		double repairTime = machine.shop().simTime() - breakdownTime;
 
-		breakdownTimePerMachine[index].value(breakdownTime);
 		repairTimePerMachine[index].value(repairTime);
-		breakdownTimeAllMachines.value(breakdownTime);
 		repairTimeAllMachines.value(repairTime);
 
 		brokenDownMachines[index] = null;
