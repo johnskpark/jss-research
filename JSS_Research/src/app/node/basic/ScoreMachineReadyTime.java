@@ -25,7 +25,7 @@ public class ScoreMachineReadyTime implements INode {
 
 	@Override
 	public double evaluate(NodeData data) {
-		return data.getEntry().getShop().simTime();
+		return data.getPrioRuleTarget().getShop().simTime();
 	}
 
 	@Override

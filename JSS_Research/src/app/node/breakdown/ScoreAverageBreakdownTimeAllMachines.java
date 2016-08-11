@@ -27,7 +27,7 @@ public class ScoreAverageBreakdownTimeAllMachines implements INode {
 
 	@Override
 	public double evaluate(NodeData data) {
-		Map<String, IWorkStationListener> listeners = data.getWorkStationListener();
+		Map<String, IWorkStationListener> listeners = data.getWorkStationListeners();
 		BreakdownListener listener = (BreakdownListener) listeners.get(BreakdownListener.class.getSimpleName());
 
 		if (listener.hasBrokenDownAnyMachine()) {

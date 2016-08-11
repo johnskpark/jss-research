@@ -12,10 +12,10 @@ import jasima.core.statistics.SummaryStat;
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.WorkStation;
 
-@NodeAnnotation(node=NodeDefinition.SCORE_AVERAGE_BREAKDOWN_TIME_NEXT_MACHINE)
-public class ScoreAverageBreakdownTimeNextMachine implements INode {
+@NodeAnnotation(node=NodeDefinition.SCORE_AVERAGE_UP_TIME_NEXT_MACHINE)
+public class ScoreAverageUpTimeNextMachine implements INode {
 
-	private static final NodeDefinition NODE_DEFINITION = NodeDefinition.SCORE_AVERAGE_BREAKDOWN_TIME_NEXT_MACHINE;
+	private static final NodeDefinition NODE_DEFINITION = NodeDefinition.SCORE_AVERAGE_UP_TIME_NEXT_MACHINE;
 
 	@Override
 	public int getChildrenNum() {
@@ -41,9 +41,9 @@ public class ScoreAverageBreakdownTimeNextMachine implements INode {
 			WorkStation machine = entry.getOps()[nextTask].machine;
 
 			if (listener.hasBrokenDown(machine)) {
-				SummaryStat breakdownStat = listener.getMachineBreakdownStat(machine);
+				SummaryStat upTimeStat = listener.getMachineUpTimeStat(machine);
 
-				return breakdownStat.mean();
+				return upTimeStat.mean();
 			} else {
 				return 0.0;
 			}

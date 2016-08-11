@@ -27,7 +27,7 @@ public class ScoreAverageProcessingTimeInQueue implements INode {
 
 	@Override
 	public double evaluate(NodeData data) {
-		PrioRuleTarget entry = data.getEntry();
+		PrioRuleTarget entry = data.getPrioRuleTarget();
 
 		double sumProcTime = 0.0;
 

@@ -26,7 +26,7 @@ public class ScoreTimeInSystem implements INode {
 
 	@Override
 	public double evaluate(NodeData data) {
-		PrioRuleTarget entry = data.getEntry();
+		PrioRuleTarget entry = data.getPrioRuleTarget();
 
 		return Math.max(entry.getShop().simTime() - entry.getRelDate(), 0);
 	}

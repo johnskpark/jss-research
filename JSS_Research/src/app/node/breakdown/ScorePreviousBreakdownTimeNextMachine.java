@@ -29,9 +29,9 @@ public class ScorePreviousBreakdownTimeNextMachine implements INode {
 
 	@Override
 	public double evaluate(NodeData data) {
-		PrioRuleTarget entry = data.getEntry();
+		PrioRuleTarget entry = data.getPrioRuleTarget();
 
-		Map<String, IWorkStationListener> listeners = data.getWorkStationListener();
+		Map<String, IWorkStationListener> listeners = data.getWorkStationListeners();
 		BreakdownListener listener = (BreakdownListener) listeners.get(BreakdownListener.class.getSimpleName());
 
 		int nextTask = entry.getTaskNumber() + 1;

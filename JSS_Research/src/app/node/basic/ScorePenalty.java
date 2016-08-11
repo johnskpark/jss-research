@@ -25,7 +25,7 @@ public class ScorePenalty implements INode {
 
 	@Override
 	public double evaluate(NodeData data) {
-		return data.getEntry().getWeight();
+		return data.getPrioRuleTarget().getWeight();
 	}
 
 	@Override

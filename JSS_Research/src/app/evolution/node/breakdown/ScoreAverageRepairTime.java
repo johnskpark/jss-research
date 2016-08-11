@@ -46,7 +46,7 @@ public class ScoreAverageRepairTime extends SingleLineGPNode {
 
 		WorkStation machine = entry.getCurrMachine();
 
-		if (listener.hasBrokenDown(machine)) {
+		if (listener.hasBeenRepaired(machine)) {
 			SummaryStat repairStat = listener.getMachineRepairTimeStat(machine);
 
 			data.setPriority(repairStat.mean());

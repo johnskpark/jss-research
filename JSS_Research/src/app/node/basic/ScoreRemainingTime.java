@@ -25,7 +25,7 @@ public class ScoreRemainingTime implements INode {
 
 	@Override
 	public double evaluate(NodeData data) {
-		return data.getEntry().remainingProcTime();
+		return data.getPrioRuleTarget().remainingProcTime();
 	}
 
 	@Override

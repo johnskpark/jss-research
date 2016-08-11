@@ -26,7 +26,7 @@ public class ScoreTimeTillDue implements INode {
 
 	@Override
 	public double evaluate(NodeData data) {
-		PrioRuleTarget entry = data.getEntry();
+		PrioRuleTarget entry = data.getPrioRuleTarget();
 
 		return Math.max(entry.getDueDate() - entry.getShop().simTime(), 0);
 	}

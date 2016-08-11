@@ -25,7 +25,7 @@ public class ScoreOperationalDueDate implements INode {
 
 	@Override
 	public double evaluate(NodeData data) {
-		return data.getEntry().getCurrentOperationDueDate();
+		return data.getPrioRuleTarget().getCurrentOperationDueDate();
 	}
 
 	@Override

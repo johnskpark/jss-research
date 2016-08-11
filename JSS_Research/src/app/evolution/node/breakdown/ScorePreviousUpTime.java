@@ -19,7 +19,7 @@ import jasima.shopSim.core.WorkStation;
 public class ScorePreviousUpTime extends SingleLineGPNode {
 
 	private static final long serialVersionUID = 809891465301720083L;
-	private static final NodeDefinition NODE_DEFINITION = NodeDefinition.SCORE_AVERAGE_UP_TIME;
+	private static final NodeDefinition NODE_DEFINITION = NodeDefinition.SCORE_PREVIOUS_UP_TIME;
 
 	@Override
 	public String toString() {

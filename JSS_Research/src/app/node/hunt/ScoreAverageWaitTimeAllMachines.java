@@ -30,7 +30,7 @@ public class ScoreAverageWaitTimeAllMachines implements INode {
 
 	@Override
 	public double evaluate(NodeData data) {
-		Map<String, IWorkStationListener> listeners = data.getWorkStationListener();
+		Map<String, IWorkStationListener> listeners = data.getWorkStationListeners();
 		HuntListener listener = (HuntListener) listeners.get(HuntListener.class.getSimpleName());
 
 		return listener.getAverageWaitTimesAllMachines();

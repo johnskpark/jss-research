@@ -25,7 +25,7 @@ public class ScoreNumJobsWaiting implements INode {
 
 	@Override
 	public double evaluate(NodeData data) {
-		return data.getEntry().getCurrMachine().numJobsWaiting();
+		return data.getPrioRuleTarget().getCurrMachine().numJobsWaiting();
 	}
 
 	@Override

@@ -12,10 +12,10 @@ import jasima.core.statistics.SummaryStat;
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.WorkStation;
 
-@NodeAnnotation(node=NodeDefinition.SCORE_AVERAGE_BREAKDOWN_TIME_NEXT_MACHINE)
-public class ScoreAverageBreakdownTimeNextMachine implements INode {
+@NodeAnnotation(node=NodeDefinition.SCORE_PREVIOUS_BREAKDOWN_TIME)
+public class ScorePreviousBreakdownTime implements INode {
 
-	private static final NodeDefinition NODE_DEFINITION = NodeDefinition.SCORE_AVERAGE_BREAKDOWN_TIME_NEXT_MACHINE;
+	private static final NodeDefinition NODE_DEFINITION = NodeDefinition.SCORE_PREVIOUS_BREAKDOWN_TIME;
 
 	@Override
 	public int getChildrenNum() {
@@ -34,19 +34,14 @@ public class ScoreAverageBreakdownTimeNextMachine implements INode {
 		Map<String, IWorkStationListener> listeners = data.getWorkStationListeners();
 		BreakdownListener listener = (BreakdownListener) listeners.get(BreakdownListener.class.getSimpleName());
 
-		int nextTask = entry.getTaskNumber() + 1;
-		if (nextTask >= entry.numOps()) {
-			return 0.0;
+		WorkStation machine = entry.getCurrMachine();
+
+		if (listener.hasBrokenDown(machine)) {
+			SummaryStat breakdownStat = listener.getMachineBreakdownStat(machine);
+
+			return breakdownStat.lastValue();
 		} else {
-			WorkStation machine = entry.getOps()[nextTask].machine;
-
-			if (listener.hasBrokenDown(machine)) {
-				SummaryStat breakdownStat = listener.getMachineBreakdownStat(machine);
-
-				return breakdownStat.mean();
-			} else {
-				return 0.0;
-			}
+			return 0.0;
 		}
 	}
 

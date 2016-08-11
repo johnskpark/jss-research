@@ -18,7 +18,9 @@ public class BreakdownListener implements IWorkStationListener {
 	private BreakdownStartStat[] brokenDownMachines;
 
 	private boolean[] previouslyDeactivated;
+	private boolean[] previouslyRepaired;
 	private boolean previouslyDeactivatedAny;
+	private boolean previouslyRepairedAny;
 	private int numMachines;
 
 	public BreakdownListener() {
@@ -85,6 +87,9 @@ public class BreakdownListener implements IWorkStationListener {
 		repairTimeAllMachines.value(repairTime);
 
 		brokenDownMachines[index] = null;
+
+		previouslyRepaired[index] = true;
+		previouslyRepairedAny = true;
 	}
 
 	public void init(WorkStation machine) {
@@ -101,6 +106,10 @@ public class BreakdownListener implements IWorkStationListener {
 		return breakdownTimePerMachine[machine.index()];
 	}
 
+	public boolean hasBeenRepaired(WorkStation machine) {
+		return previouslyRepaired[machine.index()];
+	}
+
 	public SummaryStat getMachineRepairTimeStat(WorkStation machine) {
 		return repairTimePerMachine[machine.index()];
 	}
@@ -115,6 +124,10 @@ public class BreakdownListener implements IWorkStationListener {
 
 	public SummaryStat getAllMachineBreakdownStat() {
 		return breakdownTimeAllMachines;
+	}
+
+	public boolean hasBeenRepairedAnyMachine() {
+		return previouslyRepairedAny;
 	}
 
 	public SummaryStat getAllMachineRepairStat() {
@@ -138,7 +151,9 @@ public class BreakdownListener implements IWorkStationListener {
 		brokenDownMachines = new BreakdownStartStat[numMachines];
 
 		previouslyDeactivated = new boolean[numMachines];
+		previouslyRepaired = new boolean[numMachines];
 		previouslyDeactivatedAny = false;
+		previouslyRepairedAny = false;
 
 		for (int i = 0; i < numMachines; i++) {
 			breakdownTimePerMachine[i] = new SummaryStat();
@@ -146,6 +161,7 @@ public class BreakdownListener implements IWorkStationListener {
 			upTimePerMachine[i] = new SummaryStat();
 
 			previouslyDeactivated[i] = false;
+			previouslyRepaired[i] = false;
 		}
 	}
 

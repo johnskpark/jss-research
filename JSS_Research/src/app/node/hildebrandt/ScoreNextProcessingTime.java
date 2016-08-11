@@ -26,7 +26,7 @@ public class ScoreNextProcessingTime implements INode {
 
 	@Override
 	public double evaluate(NodeData data) {
-		PrioRuleTarget entry = data.getEntry();
+		PrioRuleTarget entry = data.getPrioRuleTarget();
 
 		int nextTask = entry.getTaskNumber() + 1;
 		if (nextTask >= entry.numOps()) {

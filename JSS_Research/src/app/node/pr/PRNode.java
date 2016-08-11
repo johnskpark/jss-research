@@ -24,7 +24,7 @@ public class PRNode implements INode {
 
 	@Override
 	public double evaluate(NodeData data) {
-		return pr.calcPrio(data.getEntry());
+		return pr.calcPrio(data.getPrioRuleTarget());
 	}
 
 	@Override

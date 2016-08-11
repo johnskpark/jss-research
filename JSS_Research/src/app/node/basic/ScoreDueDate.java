@@ -25,7 +25,7 @@ public class ScoreDueDate implements INode {
 
 	@Override
 	public double evaluate(NodeData data) {
-		return data.getEntry().getDueDate();
+		return data.getPrioRuleTarget().getDueDate();
 	}
 
 	@Override

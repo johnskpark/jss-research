@@ -15,11 +15,11 @@ public class NodeData {
 
 	// Getters
 
-	public PrioRuleTarget getEntry() {
+	public PrioRuleTarget getPrioRuleTarget() {
 		return entry;
 	}
 
-	public Map<String, IWorkStationListener> getWorkStationListener() {
+	public Map<String, IWorkStationListener> getWorkStationListeners() {
 		return listener;
 	}
 

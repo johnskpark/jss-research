@@ -41,7 +41,7 @@ public class ScoreAverageRepairTimeAllMachines extends SingleLineGPNode {
 		Map<String, IWorkStationListener> listeners = data.getWorkStationListeners();
 		BreakdownListener listener = (BreakdownListener) listeners.get(BreakdownListener.class.getSimpleName());
 
-		if (listener.hasBrokenDownAnyMachine()) {
+		if (listener.hasBeenRepairedAnyMachine()) {
 			SummaryStat repairStat = listener.getAllMachineRepairStat();
 
 			data.setPriority(repairStat.mean());

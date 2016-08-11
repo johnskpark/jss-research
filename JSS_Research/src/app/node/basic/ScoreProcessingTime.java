@@ -25,7 +25,7 @@ public class ScoreProcessingTime implements INode {
 
 	@Override
 	public double evaluate(NodeData data) {
-		return data.getEntry().currProcTime();
+		return data.getPrioRuleTarget().currProcTime();
 	}
 
 	@Override

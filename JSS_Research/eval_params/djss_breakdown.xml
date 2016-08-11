@@ -2,6 +2,7 @@
 <evaluationConfig>
 
 <!-- Rule file definitions -->
+<!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
@@ -36,6 +37,21 @@
 			<ruleFile>mb_bl_mid_mwt.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
+-->
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>mb_bl_mid_pilot_rule.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>simple_bl_mid_pilot_rule.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
 
 	<datasetConfig>
 		<datasetClass>app.simConfig.holthausConfig.EvalFactory</datasetClass>
@@ -46,7 +62,7 @@
 
 <!-- Output file definition -->
 	<outputConfig>
-	    <outputFile>all_breakdown_output.csv</outputFile>
+	    <outputFile>pilot_breakdown_output.csv</outputFile>
 	</outputConfig>
 
 

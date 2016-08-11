@@ -25,7 +25,7 @@ public class ScoreOperationReadyTime implements INode {
 
 	@Override
 	public double evaluate(NodeData data) {
-		return data.getEntry().getArriveTime();
+		return data.getPrioRuleTarget().getArriveTime();
 	}
 
 	@Override
