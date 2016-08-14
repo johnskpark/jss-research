@@ -2,54 +2,38 @@
 <evaluationConfig>
 
 <!-- Rule file definitions -->
-<!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>simple_bl_none_mwt_new.txt</ruleFile>
+			<ruleFile>simple_bl_none_best.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>simple_bl_mid_mwt.txt</ruleFile>
+			<ruleFile>simple_bl_mid_best.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>simple_bl_high_mwt.txt</ruleFile>
+			<ruleFile>simple_bl_high_best.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_bl_high_mwt.txt</ruleFile>
+			<ruleFile>mb_bl_high_best.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_bl_mid_mwt.txt</ruleFile>
-		</solverFile>
-	</solverConfig>
--->
-
-	<solverConfig>
-		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
-		<solverFile>
-			<ruleFile>mb_bl_mid_pilot_rule.txt</ruleFile>
-		</solverFile>
-	</solverConfig>
-
-	<solverConfig>
-		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
-		<solverFile>
-			<ruleFile>simple_bl_mid_pilot_rule.txt</ruleFile>
+			<ruleFile>mb_bl_mid_best.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
@@ -57,12 +41,12 @@
 		<datasetClass>app.simConfig.holthausConfig.EvalFactory</datasetClass>
 		<datasetInstances>(all),(all),(all)</datasetInstances>
 		<datasetSeed>15</datasetSeed>
-		<datasetRepeat>1</datasetRepeat>
+		<datasetRepeat>30</datasetRepeat>
 	</datasetConfig>
 
 <!-- Output file definition -->
 	<outputConfig>
-	    <outputFile>pilot_breakdown_output.csv</outputFile>
+	    <outputFile>all_breakdown_output_best.csv</outputFile>
 	</outputConfig>
 
 
