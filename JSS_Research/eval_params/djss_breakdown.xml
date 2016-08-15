@@ -5,48 +5,49 @@
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>simple_bl_none_best.txt</ruleFile>
+			<ruleFile>simple_bl_none_gen_10.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>simple_bl_mid_best.txt</ruleFile>
+			<ruleFile>simple_bl_mid_gen_10.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>simple_bl_high_best.txt</ruleFile>
+			<ruleFile>simple_bl_high_gen_10.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_bl_high_best.txt</ruleFile>
+			<ruleFile>mb_bl_high_gen_10.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_bl_mid_best.txt</ruleFile>
+			<ruleFile>mb_bl_mid_gen_10.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<datasetConfig>
 		<datasetClass>app.simConfig.holthausConfig.EvalFactory</datasetClass>
-		<datasetInstances>(all),(all),(all)</datasetInstances>
+		<datasetInstances>(all),(0.05),(all)</datasetInstances>
 		<datasetSeed>15</datasetSeed>
-		<datasetRepeat>30</datasetRepeat>
+		<!-- <datasetSeed>4609823032865163582</datasetSeed> TODO test this seed, since its the one expected for the training -->
+		<datasetRepeat>10</datasetRepeat>
 	</datasetConfig>
 
 <!-- Output file definition -->
 	<outputConfig>
-	    <outputFile>all_breakdown_output_best.csv</outputFile>
+	    <outputFile>high_breakdown_output_gen_10.csv</outputFile>
 	</outputConfig>
 
 
