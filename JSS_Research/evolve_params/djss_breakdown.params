@@ -77,7 +77,7 @@ eval.problem.simulator = app.simConfig.holthausConfig.EvolveFactory
 eval.problem.simulator.instances = (all),(0.025),(all)
 eval.problem.simulator.job-seed = 15
 eval.problem.simulator.machine-seed = 15
-eval.problem.simulator.rotate-seed = false
+eval.problem.simulator.rotate-seed = true
 
 #eval.problem.simulator = app.simConfig.taillardConfig.EvolveFactory
 
