@@ -55,6 +55,7 @@ public enum NodeDefinition {
 
 	// Double vector is a unique node type that wraps around a GA individual.
 	// Because of this, it has no "name", but outputted as n-tuple doubles.
+	PR_NODE("", 0, NodeType.OTHER, NodeValueRange.ANY),
 	DOUBLE_VECTOR("", 0, NodeType.OTHER, NodeValueRange.ANY),
 
 	// Terminals specific to machine breakdown problem.

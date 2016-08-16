@@ -1,14 +1,18 @@
 package app.test.simTest;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import app.simConfig.DynamicBreakdownSimConfig;
 import app.simConfig.DynamicSimConfig;
 import app.simConfig.ExperimentGenerator;
+import app.simConfig.SimConfig;
+import app.simConfig.holthausConfig.HolthausSimConfig;
 import app.simConfig.huntConfig.EightOpSimConfig;
 import app.simConfig.huntConfig.FourOpSimConfig;
 import app.simConfig.huntConfig.TestSimConfig;
@@ -26,7 +30,6 @@ public class SimTest {
 	private static final String TARDINESS = "tardiness";
 	private static final int REPEAT = 500;
 
-	private DynamicSimConfig simConfig;
 	private PR rule;
 
 	private List<Double> dueDates;
@@ -47,61 +50,140 @@ public class SimTest {
 
 	@Test
 	public void consistencyTest_HuntTrain4op() {
-		simConfig = new FourOpSimConfig();
+		DynamicSimConfig simConfig = new FourOpSimConfig();
 		simConfig.setSeed(17);
 		rule = new SPT();
 
-		initialRuns();
+		initialRuns(simConfig);
 
 		for (int i = 0; i < REPEAT; i++) {
-			repeatRuns(i);
+			repeatRuns(simConfig, i);
 		}
 	}
 
 	@Test
 	public void consistencyTest_HuntTrain8op() {
-		simConfig = new EightOpSimConfig();
+		DynamicSimConfig simConfig = new EightOpSimConfig();
 		simConfig.setSeed(17);
 		rule = new SPT();
 
-		initialRuns();
+		initialRuns(simConfig);
 
 		for (int i = 0; i < REPEAT; i++) {
-			repeatRuns(i);
+			repeatRuns(simConfig, i);
 		}
 	}
 
 	@Test
 	public void consistencyTest_HuntTrain() {
-		simConfig = new TrainSimConfig();
+		DynamicSimConfig simConfig = new TrainSimConfig();
 		simConfig.setSeed(17);
 		rule = new SPT();
 
-		initialRuns();
+		initialRuns(simConfig);
 
 		for (int i = 0; i < REPEAT; i++) {
-			repeatRuns(i);
+			repeatRuns(simConfig, i);
 		}
 	}
 
 	@Test
 	public void consistencyTest_HuntTest() {
-		simConfig = new TestSimConfig();
+		DynamicSimConfig simConfig = new TestSimConfig();
 		simConfig.setSeed(17);
 		rule = new SPT();
 
-		initialRuns();
+		initialRuns(simConfig);
 
 		for (int i = 0; i < REPEAT; i++) {
-			repeatRuns(i);
+			repeatRuns(simConfig, i);
 		}
 	}
 
-	private void initialRuns() {
+	@Test
+	public void consistencyTest_HolthausAll() {
+		List<Double> repairTimeFactors = Arrays.asList(new Double[]{1.0, 5.0, 10.0});
+		List<Double> breakdownLevels = Arrays.asList(new Double[]{0.0, 0.025, 0.05});
+		List<Integer> dueDateFactors = Arrays.asList(new Integer[]{4, 8});
+
+		DynamicBreakdownSimConfig simConfig = new HolthausSimConfig(repairTimeFactors, breakdownLevels, dueDateFactors);
+		simConfig.setJobSeed(15);
+		simConfig.setMachineSeed(15);
+
+		initialRuns(simConfig);
+
+		for (int i = 0; i < REPEAT; i++) {
+			repeatRuns(simConfig, i);
+		}
+	}
+
+	@Test
+	public void consistencyTest_HolthausZeroBreakdownLevel() {
+		List<Double> repairTimeFactors = Arrays.asList(new Double[]{1.0, 5.0, 10.0});
+		List<Double> breakdownLevels = Arrays.asList(new Double[]{0.0});
+		List<Integer> dueDateFactors = Arrays.asList(new Integer[]{4, 8});
+
+		DynamicBreakdownSimConfig simConfig = new HolthausSimConfig(repairTimeFactors, breakdownLevels, dueDateFactors);
+		simConfig.setJobSeed(15);
+		simConfig.setMachineSeed(15);
+
+		initialRuns(simConfig);
+
+		for (int i = 0; i < REPEAT; i++) {
+			repeatRuns(simConfig, i);
+		}
+	}
+	@Test
+	public void consistencyTest_HolthausMediumBreakdownLevel() {
+		List<Double> repairTimeFactors = Arrays.asList(new Double[]{1.0, 5.0, 10.0});
+		List<Double> breakdownLevels = Arrays.asList(new Double[]{0.025});
+		List<Integer> dueDateFactors = Arrays.asList(new Integer[]{4, 8});
+
+		DynamicBreakdownSimConfig simConfig = new HolthausSimConfig(repairTimeFactors, breakdownLevels, dueDateFactors);
+		simConfig.setJobSeed(15);
+		simConfig.setMachineSeed(15);
+
+		initialRuns(simConfig);
+
+		for (int i = 0; i < REPEAT; i++) {
+			repeatRuns(simConfig, i);
+		}
+	}
+	@Test
+	public void consistencyTest_HolthausHighBreakdownLevel() {
+		List<Double> repairTimeFactors = Arrays.asList(new Double[]{1.0, 5.0, 10.0});
+		List<Double> breakdownLevels = Arrays.asList(new Double[]{0.05});
+		List<Integer> dueDateFactors = Arrays.asList(new Integer[]{4, 8});
+
+		DynamicBreakdownSimConfig simConfig = new HolthausSimConfig(repairTimeFactors, breakdownLevels, dueDateFactors);
+		simConfig.setJobSeed(15);
+		simConfig.setMachineSeed(15);
+
+		initialRuns(simConfig);
+
+		for (int i = 0; i < REPEAT; i++) {
+			repeatRuns(simConfig, i);
+		}
+	}
+
+	private void initialRuns(SimConfig simConfig) {
 		for (int expIndex = 0; expIndex < simConfig.getNumConfigs(); expIndex++) {
 			// Get a few samples of the due date and the weights.
-			DblStream dueDate = simConfig.getDueDateFactor(expIndex);
-			DblStream weight = simConfig.getWeight(expIndex);
+			DblStream dueDate;
+			DblStream weight;
+			if (simConfig instanceof DynamicSimConfig) {
+				DynamicSimConfig config = (DynamicSimConfig) simConfig;
+				dueDate = config.getDueDateFactor(expIndex);
+				weight = config.getWeight(expIndex);
+			} else if (simConfig instanceof DynamicBreakdownSimConfig) {
+				DynamicBreakdownSimConfig config = (DynamicBreakdownSimConfig) simConfig;
+				dueDate = config.getDueDateFactor(expIndex);
+				weight = config.getWeight(expIndex);
+			} else {
+				throw new RuntimeException("Not an instance of DynamicSimConfig or DynamicBreakdownSimConfig");
+			}
+
+			// TODO so DblConst needs to be initialised before it can run without a NullPointerException. WTF.
 			dueDates.add(dueDate.nextDbl());
 			weights.add(weight.nextDbl());
 
@@ -118,11 +200,22 @@ public class SimTest {
 		simConfig.reset();
 	}
 
-	private void repeatRuns(int index) {
+	private void repeatRuns(SimConfig simConfig, int index) {
 		for (int expIndex = 0; expIndex < simConfig.getNumConfigs(); expIndex++) {
 			// Get a few samples of the due date and the weights.
-			DblStream dueDate = simConfig.getDueDateFactor(expIndex);
-			DblStream weight = simConfig.getWeight(expIndex);
+			DblStream dueDate;
+			DblStream weight;
+			if (simConfig instanceof DynamicSimConfig) {
+				DynamicSimConfig config = (DynamicSimConfig) simConfig;
+				dueDate = config.getDueDateFactor(expIndex);
+				weight = config.getWeight(expIndex);
+			} else if (simConfig instanceof DynamicBreakdownSimConfig) {
+				DynamicBreakdownSimConfig config = (DynamicBreakdownSimConfig) simConfig;
+				dueDate = config.getDueDateFactor(expIndex);
+				weight = config.getWeight(expIndex);
+			} else {
+				throw new RuntimeException("Not an instance of DynamicSimConfig or DynamicBreakdownSimConfig");
+			}
 
 			Assert.assertEquals("The due dates are not consistent with the initial run for index " + index, dueDates.get(expIndex), new Double(dueDate.nextDbl()), RANGE_OF_ERROR);
 			Assert.assertEquals("The weights are not consistent with the initial run for index " + index, weights.get(expIndex), new Double(weight.nextDbl()), RANGE_OF_ERROR);

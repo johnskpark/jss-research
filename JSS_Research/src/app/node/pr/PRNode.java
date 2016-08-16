@@ -1,9 +1,12 @@
 package app.node.pr;
 
 import app.node.INode;
+import app.node.NodeAnnotation;
 import app.node.NodeData;
+import app.node.NodeDefinition;
 import jasima.shopSim.core.PR;
 
+@NodeAnnotation(node=NodeDefinition.PR_NODE)
 public class PRNode implements INode {
 
 	private PR pr;

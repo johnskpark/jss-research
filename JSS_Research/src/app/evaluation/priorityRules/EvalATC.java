@@ -12,7 +12,7 @@ import app.evaluation.EvalPriorityRuleBase;
 import app.evaluation.JasimaEvalConfig;
 import app.node.INode;
 import app.node.pr.PRNode;
-import app.priorityRules.ATCPR;
+import app.priorityRules.ATCPRNew;
 import jasima.shopSim.core.PR;
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
@@ -21,8 +21,7 @@ public class EvalATC extends EvalPriorityRuleBase {
 
 	private static final long serialVersionUID = 374528155611648088L;
 
-	private static final double ATC_K_VALUE = 3.0;
-	private PR pr = new ATCPR(ATC_K_VALUE);
+	private PR pr = new ATCPRNew();
 
 	private List<PrioRuleTarget> entries = new ArrayList<PrioRuleTarget>();
 	private Map<PrioRuleTarget, Double> entryPrios = new HashMap<>();
