@@ -18,7 +18,6 @@ import app.simConfig.huntConfig.FourOpSimConfig;
 import app.simConfig.huntConfig.TestSimConfig;
 import app.simConfig.huntConfig.TrainSimConfig;
 import jasima.core.experiment.Experiment;
-import jasima.core.random.continuous.DblStream;
 import jasima.core.statistics.SummaryStat;
 import jasima.shopSim.core.PR;
 import jasima.shopSim.prioRules.basic.SPT;
@@ -32,17 +31,11 @@ public class SimTest {
 
 	private PR rule;
 
-	private List<Double> dueDates;
-	private List<Double> weights;
-
 	private List<Long> seeds;
 	private List<Double> perfValues;
 
 	@Before
 	public void init() {
-		dueDates = new ArrayList<Double>();
-		weights = new ArrayList<Double>();
-
 		seeds = new ArrayList<Long>();
 		perfValues = new ArrayList<Double>();
 	}
@@ -168,25 +161,6 @@ public class SimTest {
 
 	private void initialRuns(SimConfig simConfig) {
 		for (int expIndex = 0; expIndex < simConfig.getNumConfigs(); expIndex++) {
-			// Get a few samples of the due date and the weights.
-			DblStream dueDate;
-			DblStream weight;
-			if (simConfig instanceof DynamicSimConfig) {
-				DynamicSimConfig config = (DynamicSimConfig) simConfig;
-				dueDate = config.getDueDateFactor(expIndex);
-				weight = config.getWeight(expIndex);
-			} else if (simConfig instanceof DynamicBreakdownSimConfig) {
-				DynamicBreakdownSimConfig config = (DynamicBreakdownSimConfig) simConfig;
-				dueDate = config.getDueDateFactor(expIndex);
-				weight = config.getWeight(expIndex);
-			} else {
-				throw new RuntimeException("Not an instance of DynamicSimConfig or DynamicBreakdownSimConfig");
-			}
-
-			// TODO so DblConst needs to be initialised before it can run without a NullPointerException. WTF.
-			dueDates.add(dueDate.nextDbl());
-			weights.add(weight.nextDbl());
-
 			// Setup the experiment.
 			Experiment experiment = ExperimentGenerator.getExperiment(simConfig, rule, expIndex);
 			experiment.runExperiment();
@@ -194,7 +168,7 @@ public class SimTest {
 			SummaryStat stat = (SummaryStat) experiment.getResults().get(TARDINESS);
 
 			seeds.add(experiment.getInitialSeed());
-			perfValues.add(stat.sum());
+			perfValues.add(stat.mean());
 		}
 
 		simConfig.reset();
@@ -202,24 +176,6 @@ public class SimTest {
 
 	private void repeatRuns(SimConfig simConfig, int index) {
 		for (int expIndex = 0; expIndex < simConfig.getNumConfigs(); expIndex++) {
-			// Get a few samples of the due date and the weights.
-			DblStream dueDate;
-			DblStream weight;
-			if (simConfig instanceof DynamicSimConfig) {
-				DynamicSimConfig config = (DynamicSimConfig) simConfig;
-				dueDate = config.getDueDateFactor(expIndex);
-				weight = config.getWeight(expIndex);
-			} else if (simConfig instanceof DynamicBreakdownSimConfig) {
-				DynamicBreakdownSimConfig config = (DynamicBreakdownSimConfig) simConfig;
-				dueDate = config.getDueDateFactor(expIndex);
-				weight = config.getWeight(expIndex);
-			} else {
-				throw new RuntimeException("Not an instance of DynamicSimConfig or DynamicBreakdownSimConfig");
-			}
-
-			Assert.assertEquals("The due dates are not consistent with the initial run for index " + index, dueDates.get(expIndex), new Double(dueDate.nextDbl()), RANGE_OF_ERROR);
-			Assert.assertEquals("The weights are not consistent with the initial run for index " + index, weights.get(expIndex), new Double(weight.nextDbl()), RANGE_OF_ERROR);
-
 			// Setup the experiment.
 			Experiment experiment = ExperimentGenerator.getExperiment(simConfig, rule, expIndex);
 			experiment.runExperiment();
@@ -227,7 +183,7 @@ public class SimTest {
 			SummaryStat stat = (SummaryStat) experiment.getResults().get(TARDINESS);
 
 			Assert.assertEquals("The seeds are not consistent with the initial run for index " + index, seeds.get(expIndex), new Long(experiment.getInitialSeed()));
-			Assert.assertEquals("The output values are not consistent with the initial run for index " + index, perfValues.get(expIndex), stat.sum(), RANGE_OF_ERROR);
+			Assert.assertEquals("The output values are not consistent with the initial run for index " + index, perfValues.get(expIndex), stat.mean(), RANGE_OF_ERROR);
 		}
 
 		simConfig.reset();

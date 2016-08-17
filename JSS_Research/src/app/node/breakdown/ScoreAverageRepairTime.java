@@ -36,7 +36,7 @@ public class ScoreAverageRepairTime implements INode {
 
 		WorkStation machine = entry.getCurrMachine();
 
-		if (listener.hasBrokenDown(machine)) {
+		if (listener.hasBeenRepaired(machine)) {
 			SummaryStat repairStat = listener.getMachineRepairTimeStat(machine);
 
 			return repairStat.mean();

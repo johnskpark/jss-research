@@ -30,7 +30,7 @@ public class ScoreAverageRepairTimeAllMachines implements INode {
 		Map<String, IWorkStationListener> listeners = data.getWorkStationListeners();
 		BreakdownListener listener = (BreakdownListener) listeners.get(BreakdownListener.class.getSimpleName());
 
-		if (listener.hasBrokenDownAnyMachine()) {
+		if (listener.hasBeenRepairedAnyMachine()) {
 			SummaryStat repairStat = listener.getAllMachineRepairStat();
 
 			return repairStat.mean();

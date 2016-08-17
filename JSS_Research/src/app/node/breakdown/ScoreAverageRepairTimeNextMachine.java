@@ -40,7 +40,7 @@ public class ScoreAverageRepairTimeNextMachine implements INode {
 		} else {
 			WorkStation machine = entry.getOps()[nextTask].machine;
 
-			if (listener.hasBrokenDown(machine)) {
+			if (listener.hasBeenRepaired(machine)) {
 				SummaryStat repairStat = listener.getMachineRepairTimeStat(machine);
 
 				return repairStat.mean();

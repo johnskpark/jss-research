@@ -4,6 +4,7 @@
 
 parent.0 = koza.params
 
+pop.subpop.0.size = 256
 pop.subpop.0.species.ind = app.evolution.JasimaGPIndividual
 
 # the next four items are already defined in koza.params, but we
@@ -74,7 +75,7 @@ eval.problem.rule = app.evolution.priorityRules.BasicPriorityRule
 eval.problem.fitness = app.evolution.simple.fitness.NormMWTFitness
 
 eval.problem.simulator = app.simConfig.holthausConfig.EvolveFactory
-eval.problem.simulator.instances = (all),(0.025),(all)
+eval.problem.simulator.instances = (all),(0.0),(all)
 eval.problem.simulator.job-seed = 15
 eval.problem.simulator.machine-seed = 15
 eval.problem.simulator.rotate-seed = true

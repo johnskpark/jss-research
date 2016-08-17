@@ -141,6 +141,7 @@ public class NodeTest {
 	private static final String BASIC_TERMINAL = "basic";
 	private static final String HILDEBRANDT_TERMINAL = "hildebrandt";
 	private static final String HUNT_TERMINAL = "hunt";
+	private static final String BREAKDOWN_TERMINAL = "breakdown";
 
 	@Test
 	public void basicTerminals_EqualOutput() {

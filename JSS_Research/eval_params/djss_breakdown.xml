@@ -16,6 +16,7 @@
 			<ruleFile>simple_bl_mid_gen_10.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
+-->
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
@@ -24,6 +25,7 @@
 		</solverFile>
 	</solverConfig>
 
+<!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
@@ -39,21 +41,27 @@
 	</solverConfig>
 -->
 
+<!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EvalATC</solverClass>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>simple_bl_high_gen_10_sample.txt</ruleFile>
+		</solverFile>
 	</solverConfig>
+-->
 
 	<datasetConfig>
 		<datasetClass>app.simConfig.holthausConfig.EvalFactory</datasetClass>
 		<datasetInstances>(all),(0.05),(all)</datasetInstances>
-		<!-- <datasetSeed>15</datasetSeed> -->
-		<datasetSeed>4609823032865163582</datasetSeed>
+		<datasetSeed>15</datasetSeed>
+		<!-- <datasetSeed>4609823032865163582</datasetSeed> -->
 		<datasetRepeat>1</datasetRepeat>
 	</datasetConfig>
 
 <!-- Output file definition -->
 	<outputConfig>
-	    <outputFile>high_breakdown_output_reference_rule.csv</outputFile>
+	    <outputFile>simple_bl_high_output_gen_10.csv</outputFile>
 	</outputConfig>
 
 
