@@ -10,7 +10,7 @@ import app.simConfig.DynamicSimConfig;
 
 public class HolthausSimConfigGenerator {
 
-	private static final double[] NUM_DUE_DATE_FACTORS = new double[]{4, 8};
+	private static final double[] NUM_DUE_DATE_FACTORS = new double[]{3, 5};
 
 	private static final String V_CATEGORY_ALL = "all";
 

@@ -4,7 +4,7 @@
 
 parent.0 = djss_breakdown.params
 
-gp.fs.0.size = 23
+gp.fs.0.size = 22
 gp.fs.0.func.0 = app.evolution.node.basic.ERCRandomUniform
 gp.fs.0.func.0.nc = nc0
 gp.fs.0.func.0.min = 0
@@ -49,12 +49,12 @@ gp.fs.0.func.18.nc = nc0
 # Machine breakdown terminals.
 gp.fs.0.func.19 = app.evolution.node.breakdown.ScoreAverageUpTimeAllMachines
 gp.fs.0.func.19.nc = nc0
-gp.fs.0.func.20 = app.evolution.node.breakdown.ScoreAverageRepairTimeAllMachines
+#gp.fs.0.func.20 = app.evolution.node.breakdown.ScoreAverageRepairTimeAllMachines
+#gp.fs.0.func.20.nc = nc0
+gp.fs.0.func.20 = app.evolution.node.breakdown.ScorePreviousBreakdownTime
 gp.fs.0.func.20.nc = nc0
-gp.fs.0.func.21 = app.evolution.node.breakdown.ScorePreviousBreakdownTime
+gp.fs.0.func.21 = app.evolution.node.breakdown.ScorePreviousRepairTime
 gp.fs.0.func.21.nc = nc0
-gp.fs.0.func.22 = app.evolution.node.breakdown.ScorePreviousRepairTime
-gp.fs.0.func.22.nc = nc0
 
 #gp.fs.0.func.20 = app.evolution.node.breakdown.ScoreAverageUpTimeNextMachine
 #gp.fs.0.func.20.nc = nc0
