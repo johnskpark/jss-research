@@ -51,7 +51,9 @@ public class MBSPT extends PR {
 
 		// Assume that the breakdowns are exponentially distributed.
 		DblStream breakdownTimes = downSrc.getTimeBetweenFailures();
-		// TODO need the last breakdown repair time.
+		double meanBreakdown = breakdownTimes.getNumericalMean();
+
+		// TODO
 
 		return false;
 	}
