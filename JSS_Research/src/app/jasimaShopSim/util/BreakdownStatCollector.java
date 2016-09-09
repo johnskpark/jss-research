@@ -1,6 +1,5 @@
 package app.jasimaShopSim.util;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -22,8 +21,8 @@ public class BreakdownStatCollector extends WorkStationListenerBase {
 
 	private Set<WorkStation> prevDeactivated = new HashSet<WorkStation>();
 
-	private Map<WorkStation, Double> lastBreakdownTime = new HashMap<WorkStation, Double>();
-	private Map<WorkStation, Double> lastRepairTime = new HashMap<WorkStation, Double>();
+	private double[] lastBreakdownTime;
+	private double[] lastRepairTime;
 
 	public BreakdownStatCollector() {
 		super();
@@ -34,6 +33,10 @@ public class BreakdownStatCollector extends WorkStationListenerBase {
 		stationDisruption = new SummaryStat();
 		avgRepairTime = new SummaryStat();
 		avgTimeBetweenBreakdowns = new SummaryStat();
+
+		WorkStation[] machines = m.shop().machines;
+		lastBreakdownTime = new double[machines.length];
+		lastRepairTime = new double[machines.length];
 	}
 
 	@Override
@@ -50,11 +53,11 @@ public class BreakdownStatCollector extends WorkStationListenerBase {
 		if (prevDeactivated.contains(m)) {
 			final JobShop shop = justActivated.workStation.shop();
 
-			double repairTime = shop.simTime() - lastBreakdownTime.get(m);
+			double repairTime = shop.simTime() - lastBreakdownTime[m.index()];
 
 			avgRepairTime.value(repairTime);
 
-			lastRepairTime.put(m, repairTime);
+			lastRepairTime[m.index()] = repairTime;
 		}
 	}
 
@@ -73,7 +76,7 @@ public class BreakdownStatCollector extends WorkStationListenerBase {
 
 		double breakdownTime;
 		if (prevDeactivated.contains(m)) {
-			breakdownTime = shop.simTime() - (lastBreakdownTime.get(m) + lastRepairTime.get(m));
+			breakdownTime = shop.simTime() - (lastBreakdownTime[m.index()] + lastRepairTime[m.index()]);
 		} else {
 			breakdownTime = shop.simTime();
 			prevDeactivated.add(m);
@@ -82,7 +85,15 @@ public class BreakdownStatCollector extends WorkStationListenerBase {
 		stationDisruption.value(jobProgress);
 		avgTimeBetweenBreakdowns.value(breakdownTime);
 
-		lastBreakdownTime.put(m, shop.simTime());
+		lastBreakdownTime[m.index()] = shop.simTime();
+	}
+
+	public double getLastBreakdownTime(WorkStation machine) {
+		return lastBreakdownTime[machine.index()];
+	}
+
+	public double getLastRepairTime(WorkStation machine) {
+		return lastRepairTime[machine.index()];
 	}
 
 }

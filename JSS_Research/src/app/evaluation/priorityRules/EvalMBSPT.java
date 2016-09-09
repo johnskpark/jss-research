@@ -2,10 +2,14 @@ package app.evaluation.priorityRules;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
+import app.IWorkStationListener;
 import app.evaluation.EvalPriorityRuleBase;
 import app.evaluation.JasimaEvalConfig;
+import app.listener.breakdown.BreakdownListener;
 import app.node.INode;
+import app.node.NodeData;
 import app.node.pr.PRNode;
 import app.priorityRules.MBSPT;
 import jasima.shopSim.core.PR;
@@ -14,13 +18,19 @@ import jasima.shopSim.core.PriorityQueue;
 
 public class EvalMBSPT extends EvalPriorityRuleBase {
 
+	private static final long serialVersionUID = 6174064107259033769L;
+
 	private static final double THRESHOLD = 0.9;
 
-	private PR pr = new MBSPT(THRESHOLD);
+	private PR pr = null;
 
 	@Override
 	public void setConfiguration(JasimaEvalConfig config) {
-		// Does nothing.
+		NodeData data = config.getNodeData();
+		Map<String, IWorkStationListener> listeners = data.getWorkStationListeners();
+
+		BreakdownListener listener = (BreakdownListener) listeners.get(BreakdownListener.class.getSimpleName());
+		pr = new MBSPT(THRESHOLD, listener);
 	}
 
 	@Override
@@ -30,8 +40,7 @@ public class EvalMBSPT extends EvalPriorityRuleBase {
 
 	@Override
 	public double calcPrio(PrioRuleTarget entry) {
-		// TODO Auto-generated method stub
-		return 0;
+		return pr.calcPrio(entry);
 	}
 
 	@Override

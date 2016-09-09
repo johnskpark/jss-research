@@ -1,36 +1,33 @@
 package app.evaluation.priorityRules;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import app.IWorkStationListener;
 import app.evaluation.EvalPriorityRuleBase;
 import app.evaluation.JasimaEvalConfig;
-import app.listener.breakdown.BreakdownListener;
 import app.node.INode;
-import app.node.NodeData;
 import app.node.pr.PRNode;
-import app.priorityRules.MBWSPT;
 import jasima.shopSim.core.PR;
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
+import jasima.shopSim.prioRules.weighted.WSPT;
 
-public class EvalMBWSPT extends EvalPriorityRuleBase {
+public class EvalWSPT extends EvalPriorityRuleBase {
 
-	private static final long serialVersionUID = 6174064107259033769L;
+	private static final long serialVersionUID = 1608472469110269073L;
 
-	private static final double THRESHOLD = 0.9;
+	private PR pr = new WSPT();
 
-	private PR pr = null;
+	private List<PrioRuleTarget> entries = new ArrayList<PrioRuleTarget>();
+	private Map<PrioRuleTarget, Double> entryPrios = new HashMap<>();
 
 	@Override
 	public void setConfiguration(JasimaEvalConfig config) {
-		NodeData data = config.getNodeData();
-		Map<String, IWorkStationListener> listeners = data.getWorkStationListeners();
-
-		BreakdownListener listener = (BreakdownListener) listeners.get(BreakdownListener.class.getSimpleName());
-		pr = new MBWSPT(THRESHOLD, listener);
 	}
 
 	@Override
@@ -40,7 +37,13 @@ public class EvalMBWSPT extends EvalPriorityRuleBase {
 
 	@Override
 	public double calcPrio(PrioRuleTarget entry) {
-		return pr.calcPrio(entry);
+		double prio = pr.calcPrio(entry);
+
+		clear();
+		entries.add(entry);
+		entryPrios.put(entry, prio);
+
+		return prio;
 	}
 
 	@Override
@@ -58,7 +61,9 @@ public class EvalMBWSPT extends EvalPriorityRuleBase {
 
 	@Override
 	public List<PrioRuleTarget> getEntryRankings() {
-		throw new UnsupportedOperationException("Not yet implemented.");
+		Collections.sort(entries, new PrioComparator());
+
+		return entries;
 	}
 
 	@Override
@@ -68,7 +73,24 @@ public class EvalMBWSPT extends EvalPriorityRuleBase {
 
 	@Override
 	public void clear() {
-		// Does nothing.
+		entries.clear();
+		entryPrios.clear();
+	}
+
+	private class PrioComparator implements Comparator<PrioRuleTarget> {
+		@Override
+		public int compare(PrioRuleTarget o1, PrioRuleTarget o2) {
+			double prio1 = entryPrios.get(o1);
+			double prio2 = entryPrios.get(o2);
+
+			if (prio1 > prio2) {
+				return -1;
+			} else if (prio1 < prio2) {
+				return 1;
+			} else {
+				return 0;
+			}
+		}
 	}
 
 }

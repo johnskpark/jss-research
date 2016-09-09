@@ -233,8 +233,14 @@ public class JasimaEvalProblem {
 			throws Exception {
 		List<EvalPriorityRuleBase> solvers = new ArrayList<EvalPriorityRuleBase>();
 
+		JasimaEvalConfig config = new JasimaEvalConfig();
+
+		NodeData data = new NodeData();
+		data.setWorkStationListeners(listenerMap);
+		config.setNodeData(data);
+
 		EvalPriorityRuleBase solver = solverClass.newInstance();
-		solver.setConfiguration(new JasimaEvalConfig());
+		solver.setConfiguration(config);
 
 		solvers.add(solver);
 

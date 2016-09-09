@@ -2,73 +2,22 @@
 <evaluationConfig>
 
 <!-- Rule file definitions -->
+
 	<solverConfig>
-		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
-		<solverFile>
-			<ruleFile>simple_bl_none_small.txt</ruleFile>
-		</solverFile>
+		<solverClass>app.evaluation.priorityRules.EvalMBSPT</solverClass>
 	</solverConfig>
 
 	<solverConfig>
-		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
-		<solverFile>
-			<ruleFile>simple_bl_mid_small.txt</ruleFile>
-		</solverFile>
+		<solverClass>app.evaluation.priorityRules.EvalSPT</solverClass>
 	</solverConfig>
 
 	<solverConfig>
-		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
-		<solverFile>
-			<ruleFile>simple_bl_high_small.txt</ruleFile>
-		</solverFile>
+		<solverClass>app.evaluation.priorityRules.EvalMBWSPT</solverClass>
 	</solverConfig>
 
 	<solverConfig>
-		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
-		<solverFile>
-			<ruleFile>simple_bl_none_mid_small.txt</ruleFile>
-		</solverFile>
+		<solverClass>app.evaluation.priorityRules.EvalWSPT</solverClass>
 	</solverConfig>
-
-	<solverConfig>
-		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
-		<solverFile>
-			<ruleFile>simple_bl_mid_high_small.txt</ruleFile>
-		</solverFile>
-	</solverConfig>
-
-	<solverConfig>
-		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
-		<solverFile>
-			<ruleFile>simple_bl_all_small.txt</ruleFile>
-		</solverFile>
-	</solverConfig>
-
-<!--
-	<solverConfig>
-		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
-		<solverFile>
-			<ruleFile>mb_bl_high_small.txt</ruleFile>
-		</solverFile>
-	</solverConfig>
-
-	<solverConfig>
-		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
-		<solverFile>
-			<ruleFile>mb_bl_mid_small.txt</ruleFile>
-		</solverFile>
-	</solverConfig>
--->
-
-<!--
-	<solverConfig>
-		<solverClass>app.evaluation.priorityRules.EvalFIFO</solverClass>
-		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
-		<solverFile>
-			<ruleFile>simple_bl_high_gen_10_sample.txt</ruleFile>
-		</solverFile>
-	</solverConfig>
--->
 
 	<datasetConfig>
 		<datasetClass>app.simConfig.holthausConfig.EvalFactory</datasetClass>
@@ -80,7 +29,7 @@
 
 <!-- Output file definition -->
 	<outputConfig>
-	    <outputFile>simple_breakdown_output_small.csv</outputFile>
+	    <outputFile>benchmark_breakdown_output.csv</outputFile>
 	</outputConfig>
 
 

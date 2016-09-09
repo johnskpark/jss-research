@@ -39,6 +39,7 @@ public class EvalSPT extends EvalPriorityRuleBase {
 	public double calcPrio(PrioRuleTarget entry) {
 		double prio = pr.calcPrio(entry);
 
+		clear();
 		entries.add(entry);
 		entryPrios.put(entry, prio);
 
