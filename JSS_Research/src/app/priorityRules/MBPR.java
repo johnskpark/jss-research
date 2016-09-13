@@ -2,7 +2,6 @@ package app.priorityRules;
 
 import java.util.List;
 
-import app.listener.breakdown.BreakdownListener;
 import jasima.core.random.continuous.DblStream;
 import jasima.shopSim.core.DowntimeSource;
 import jasima.shopSim.core.IndividualMachine;
@@ -15,17 +14,16 @@ public abstract class MBPR extends PR {
 
 	private static final long serialVersionUID = -7828165567635585395L;
 
-	private double threshold;
-	private BreakdownListener listener;
-
 	private WorkStation machine;
 	private DowntimeSource downSrc;
 
-	public MBPR(double threshold, BreakdownListener listener) {
+	public MBPR() {
 		super();
+	}
 
-		this.threshold = threshold;
-		this.listener = listener;
+	@Override
+	public void init() {
+		// Does nothing for now.
 	}
 
 	@Override
@@ -42,29 +40,28 @@ public abstract class MBPR extends PR {
 		}
 	}
 
-	protected boolean addRepairTime(PrioRuleTarget entry) {
+	protected boolean addRepairTime(PrioRuleTarget entry, double threshold) {
 		if (downSrc == null) {
 			return false;
+		}
+
+		if (getProbBreakdown(entry) > threshold) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	protected double getProbBreakdown(PrioRuleTarget entry) {
+		if (downSrc == null) {
+			return 0.0;
 		}
 
 		// Assume that the breakdowns are exponentially distributed.
 		DblStream breakdownTimes = downSrc.getTimeBetweenFailures();
 		double meanBreakdown = breakdownTimes.getNumericalMean();
 
-		// Calculate the time when the machine was last repaired.
-		double breakdownTime = listener.getMachineBreakdownStat(machine).lastValue();
-		double repairTime = listener.getMachineRepairTimeStat(machine).lastValue();
-		double availableTime = breakdownTime + repairTime;
-
-		// Calculate the probability of breaking down.
-		double time = entry.getShop().simTime() + entry.getCurrentOperation().procTime - availableTime;
-		double prob = 1.0 - Math.exp(-meanBreakdown * time);
-
-		if (prob > threshold) {
-			return true;
-		} else {
-			return false;
-		}
+		return 1.0 - Math.exp(-entry.getCurrentOperation().procTime / meanBreakdown);
 	}
 
 	protected double getMeanRepairTime(PrioRuleTarget entry) {

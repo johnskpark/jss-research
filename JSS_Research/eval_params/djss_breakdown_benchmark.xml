@@ -3,21 +3,25 @@
 
 <!-- Rule file definitions -->
 
+<!--
 	<solverConfig>
-		<solverClass>app.evaluation.priorityRules.EvalMBSPT</solverClass>
+		<solverClass>app.evaluation.priorityRules.EvalMBSPTDiscrete</solverClass>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EvalSPT</solverClass>
 	</solverConfig>
+-->
 
 	<solverConfig>
-		<solverClass>app.evaluation.priorityRules.EvalMBWSPT</solverClass>
+		<solverClass>app.evaluation.priorityRules.EvalMBWSPTDiscrete</solverClass>
 	</solverConfig>
 
+<!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EvalWSPT</solverClass>
 	</solverConfig>
+-->
 
 	<datasetConfig>
 		<datasetClass>app.simConfig.holthausConfig.EvalFactory</datasetClass>

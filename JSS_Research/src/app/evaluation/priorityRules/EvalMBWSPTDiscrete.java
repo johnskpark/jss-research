@@ -2,40 +2,46 @@ package app.evaluation.priorityRules;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
-import app.IWorkStationListener;
 import app.evaluation.EvalPriorityRuleBase;
 import app.evaluation.JasimaEvalConfig;
-import app.listener.breakdown.BreakdownListener;
 import app.node.INode;
-import app.node.NodeData;
 import app.node.pr.PRNode;
-import app.priorityRules.MBSPT;
+import app.priorityRules.MBWSPTDiscrete;
 import jasima.shopSim.core.PR;
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
 
-public class EvalMBSPT extends EvalPriorityRuleBase {
+public class EvalMBWSPTDiscrete extends EvalPriorityRuleBase {
 
 	private static final long serialVersionUID = 6174064107259033769L;
 
-	private static final double THRESHOLD = 0.9;
+	private static final double THRESHOLD = 0.7;
 
 	private PR pr = null;
 
 	@Override
 	public void setConfiguration(JasimaEvalConfig config) {
-		NodeData data = config.getNodeData();
-		Map<String, IWorkStationListener> listeners = data.getWorkStationListeners();
-
-		BreakdownListener listener = (BreakdownListener) listeners.get(BreakdownListener.class.getSimpleName());
-		pr = new MBSPT(THRESHOLD, listener);
+		pr = new MBWSPTDiscrete(THRESHOLD);
 	}
 
 	@Override
 	public List<INode> getRuleComponents() {
 		return Arrays.asList(new INode[]{ new PRNode(pr) });
+	}
+
+	@Override
+	public void init() {
+		super.init();
+
+		pr.init();
+	}
+
+	@Override
+	public void beforeCalc(PriorityQueue<?> q) {
+		super.beforeCalc(q);
+
+		pr.beforeCalc(q);
 	}
 
 	@Override
