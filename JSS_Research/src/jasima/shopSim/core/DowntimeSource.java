@@ -48,6 +48,9 @@ public class DowntimeSource {
 	private DblStream timeToRepair;
 	private String name;
 
+	private double deactivationTime;
+	private double activationTime;
+
 	public DowntimeSource(IndividualMachine machine) {
 		super();
 		this.machine = machine;
@@ -137,11 +140,23 @@ public class DowntimeSource {
 	}
 
 	protected double calcDeactivateTime(JobShop shop) {
-		return shop.simTime() + timeBetweenFailures.nextDbl();
+		deactivationTime = shop.simTime() + timeBetweenFailures.nextDbl();
+
+		return deactivationTime;
 	}
 
 	protected double calcActivateTime(JobShop shop) {
-		return shop.simTime() + timeToRepair.nextDbl();
+		activationTime = shop.simTime() + timeToRepair.nextDbl();
+
+		return activationTime;
+	}
+
+	public double getDeactivateTime() {
+		return deactivationTime;
+	}
+
+	public double getActivateTime() {
+		return activationTime;
 	}
 
 	@Override

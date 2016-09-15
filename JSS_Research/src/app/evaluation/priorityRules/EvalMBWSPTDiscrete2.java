@@ -7,22 +7,20 @@ import app.evaluation.EvalPriorityRuleBase;
 import app.evaluation.JasimaEvalConfig;
 import app.node.INode;
 import app.node.pr.PRNode;
-import app.priorityRules.MBWSPTDiscrete;
+import app.priorityRules.MBWSPTDiscrete2;
 import jasima.shopSim.core.PR;
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
 
-public class EvalMBWSPTDiscrete extends EvalPriorityRuleBase {
+public class EvalMBWSPTDiscrete2 extends EvalPriorityRuleBase {
 
 	private static final long serialVersionUID = 6174064107259033769L;
-
-	private static final double THRESHOLD = 0.5;
 
 	private PR pr = null;
 
 	@Override
 	public void setConfiguration(JasimaEvalConfig config) {
-		pr = new MBWSPTDiscrete(THRESHOLD);
+		pr = new MBWSPTDiscrete2();
 	}
 
 	@Override

@@ -45,7 +45,9 @@ public abstract class MBPR extends PR {
 			return false;
 		}
 
-		if (getProbBreakdown(entry) > threshold) {
+		double prob = getProbBreakdown(entry);
+
+		if (prob > threshold) {
 			return true;
 		} else {
 			return false;
@@ -60,17 +62,26 @@ public abstract class MBPR extends PR {
 		// Assume that the breakdowns are exponentially distributed.
 		DblStream breakdownTimes = downSrc.getTimeBetweenFailures();
 		double meanBreakdown = breakdownTimes.getNumericalMean();
+		double procTime = entry.getCurrentOperation().procTime;
 
-		return 1.0 - Math.exp(-entry.getCurrentOperation().procTime / meanBreakdown);
+		return 1.0 - Math.exp(-procTime / meanBreakdown);
 	}
 
-	protected double getMeanRepairTime(PrioRuleTarget entry) {
+	protected double getMeanRepairTime() {
 		if (downSrc == null) {
 			return 0.0;
 		}
 
 		DblStream repairTimes = downSrc.getTimeToRepair();
 		return repairTimes.getNumericalMean();
+	}
+
+	protected double getNextBreakdown() {
+		if (downSrc == null) {
+			return Double.POSITIVE_INFINITY;
+		}
+
+		return downSrc.getDeactivateTime();
 	}
 
 }

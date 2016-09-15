@@ -16,7 +16,7 @@ public class MBWSPTContinuous extends MBPR {
 		double proc = entry.getCurrentOperation().procTime;
 		double prob = getProbBreakdown(entry);
 
-		double adjustedProc = prob * (proc + getMeanRepairTime(entry)) + (1 - prob) * proc;
+		double adjustedProc = prob * (proc + getMeanRepairTime()) + (1 - prob) * proc;
 
 		if (adjustedProc > 0) {
 			return entry.getWeight() / adjustedProc;

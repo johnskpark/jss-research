@@ -16,7 +16,7 @@ public class EvalMBSPTDiscrete extends EvalPriorityRuleBase {
 
 	private static final long serialVersionUID = 6174064107259033769L;
 
-	private static final double THRESHOLD = 0.7;
+	private static final double THRESHOLD = 0.5;
 
 	private PR pr = null;
 
@@ -26,15 +26,15 @@ public class EvalMBSPTDiscrete extends EvalPriorityRuleBase {
 	}
 
 	@Override
+	public List<INode> getRuleComponents() {
+		return Arrays.asList(new INode[]{ new PRNode(pr) });
+	}
+
+	@Override
 	public void init() {
 		super.init();
 
 		pr.init();
-	}
-
-	@Override
-	public List<INode> getRuleComponents() {
-		return Arrays.asList(new INode[]{ new PRNode(pr) });
 	}
 
 	@Override

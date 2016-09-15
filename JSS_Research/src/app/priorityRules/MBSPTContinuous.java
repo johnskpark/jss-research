@@ -15,7 +15,7 @@ public class MBSPTContinuous extends MBPR {
 		double proc = entry.getCurrentOperation().procTime;
 		double prob = getProbBreakdown(entry);
 
-		return -1.0 * (prob * (proc + getMeanRepairTime(entry)) + (1 - prob) * proc);
+		return -1.0 * (prob * (proc + getMeanRepairTime()) + (1 - prob) * proc);
 	}
 
 }

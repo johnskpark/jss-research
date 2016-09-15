@@ -36,10 +36,16 @@ public class EvalSPT extends EvalPriorityRuleBase {
 	}
 
 	@Override
+	public void beforeCalc(PriorityQueue<?> q) {
+		super.beforeCalc(q);
+
+		clear();
+	}
+
+	@Override
 	public double calcPrio(PrioRuleTarget entry) {
 		double prio = pr.calcPrio(entry);
 
-		clear();
 		entries.add(entry);
 		entryPrios.put(entry, prio);
 

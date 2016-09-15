@@ -5,19 +5,35 @@
 
 <!--
 	<solverConfig>
-		<solverClass>app.evaluation.priorityRules.EvalMBSPTDiscrete</solverClass>
+		<solverClass>app.evaluation.priorityRules.EvalMBEDDFilter</solverClass>
 	</solverConfig>
 
 	<solverConfig>
-		<solverClass>app.evaluation.priorityRules.EvalSPT</solverClass>
+		<solverClass>app.evaluation.priorityRules.EvalEDD</solverClass>
 	</solverConfig>
 -->
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.EvalMBWSPTFilter</solverClass>
+	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EvalMBWSPTDiscrete</solverClass>
 	</solverConfig>
 
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.EvalMBWSPTDiscrete2</solverClass>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.EvalWSPT</solverClass>
+	</solverConfig>
+
 <!--
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.EvalMBWSPTDiscrete</solverClass>
+	</solverConfig>
+
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EvalWSPT</solverClass>
 	</solverConfig>
