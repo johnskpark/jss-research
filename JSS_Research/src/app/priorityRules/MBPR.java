@@ -32,8 +32,13 @@ public abstract class MBPR extends PR {
 
 	protected DowntimeSource getDowntimeSource(WorkStation machine) {
 		IndividualMachine indMachine = machine.currMachine;
+
+		if (indMachine == null) {
+			System.out.println("TODO");
+		}
+
 		List<DowntimeSource> srcs = indMachine.getDowntimeSources();
-		if (!srcs.isEmpty()) {
+		if (srcs != null && !srcs.isEmpty()) {
 			return srcs.get(0);
 		} else {
 			return null;

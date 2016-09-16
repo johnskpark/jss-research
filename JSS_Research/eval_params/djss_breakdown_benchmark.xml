@@ -3,41 +3,17 @@
 
 <!-- Rule file definitions -->
 
-<!--
 	<solverConfig>
-		<solverClass>app.evaluation.priorityRules.EvalMBEDDFilter</solverClass>
+		<solverClass>app.evaluation.priorityRules.EvalHolthausRule</solverClass>
 	</solverConfig>
 
 	<solverConfig>
-		<solverClass>app.evaluation.priorityRules.EvalEDD</solverClass>
-	</solverConfig>
--->
-
-	<solverConfig>
-		<solverClass>app.evaluation.priorityRules.EvalMBWSPTFilter</solverClass>
+		<solverClass>app.evaluation.priorityRules.EvalMBHolthausRuleContinuous</solverClass>
 	</solverConfig>
 
 	<solverConfig>
-		<solverClass>app.evaluation.priorityRules.EvalMBWSPTDiscrete</solverClass>
+		<solverClass>app.evaluation.priorityRules.EvalMBHolthausRuleDiscrete2</solverClass>
 	</solverConfig>
-
-	<solverConfig>
-		<solverClass>app.evaluation.priorityRules.EvalMBWSPTDiscrete2</solverClass>
-	</solverConfig>
-
-	<solverConfig>
-		<solverClass>app.evaluation.priorityRules.EvalWSPT</solverClass>
-	</solverConfig>
-
-<!--
-	<solverConfig>
-		<solverClass>app.evaluation.priorityRules.EvalMBWSPTDiscrete</solverClass>
-	</solverConfig>
-
-	<solverConfig>
-		<solverClass>app.evaluation.priorityRules.EvalWSPT</solverClass>
-	</solverConfig>
--->
 
 	<datasetConfig>
 		<datasetClass>app.simConfig.holthausConfig.EvalFactory</datasetClass>
