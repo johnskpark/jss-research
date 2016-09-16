@@ -11,11 +11,11 @@ public class MBSPTContinuous extends MBPR {
 	}
 
 	@Override
-	public double calcPrio(PrioRuleTarget entry) {
-		double proc = entry.getCurrentOperation().procTime;
-		double prob = getProbBreakdown(entry);
+	public double calcPrio(PrioRuleTarget job) {
+		double proc = job.getCurrentOperation().procTime;
+		double prob = getProbBreakdown(job, job.getCurrMachine());
 
-		return -1.0 * (prob * (proc + getMeanRepairTime()) + (1 - prob) * proc);
+		return -1.0 * (prob * (proc + getMeanRepairTime(job.getCurrMachine())) + (1 - prob) * proc);
 	}
 
 }

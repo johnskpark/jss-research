@@ -14,38 +14,34 @@ public abstract class MBPR extends PR {
 
 	private static final long serialVersionUID = -7828165567635585395L;
 
-	private WorkStation machine;
-	private DowntimeSource downSrc;
-
 	public MBPR() {
 		super();
 	}
 
 	@Override
 	public void init() {
-		// Does nothing for now.
+		// Does nothing fo rnow.
 	}
 
 	@Override
 	public void beforeCalc(PriorityQueue<?> q) {
 		super.beforeCalc(q);
 
-		// Assume that there is only zero or one breakdown source.
-		machine = q.getWorkStation();
+		// Does nothing.
+	}
 
+	protected DowntimeSource getDowntimeSource(WorkStation machine) {
 		IndividualMachine indMachine = machine.currMachine;
 		List<DowntimeSource> srcs = indMachine.getDowntimeSources();
 		if (!srcs.isEmpty()) {
-			downSrc = srcs.get(0);
+			return srcs.get(0);
+		} else {
+			return null;
 		}
 	}
 
-	protected boolean addRepairTime(PrioRuleTarget entry, double threshold) {
-		if (downSrc == null) {
-			return false;
-		}
-
-		double prob = getProbBreakdown(entry);
+	protected boolean addRepairTime(PrioRuleTarget entry, WorkStation machine, double threshold) {
+		double prob = getProbBreakdown(entry, machine);
 
 		if (prob > threshold) {
 			return true;
@@ -54,20 +50,26 @@ public abstract class MBPR extends PR {
 		}
 	}
 
-	protected double getProbBreakdown(PrioRuleTarget entry) {
+	protected double getProbBreakdown(PrioRuleTarget entry, WorkStation machine) {
+		double meanBreakdown = getMeanBreakdown(machine);
+		double procTime = entry.getCurrentOperation().procTime;
+
+		// Assume that the breakdowns are exponentially distributed.
+		return 1.0 - Math.exp(-procTime / meanBreakdown);
+	}
+
+	protected double getMeanBreakdown(WorkStation machine) {
+		DowntimeSource downSrc = getDowntimeSource(machine);
 		if (downSrc == null) {
 			return 0.0;
 		}
 
-		// Assume that the breakdowns are exponentially distributed.
 		DblStream breakdownTimes = downSrc.getTimeBetweenFailures();
-		double meanBreakdown = breakdownTimes.getNumericalMean();
-		double procTime = entry.getCurrentOperation().procTime;
-
-		return 1.0 - Math.exp(-procTime / meanBreakdown);
+		return breakdownTimes.getNumericalMean();
 	}
 
-	protected double getMeanRepairTime() {
+	protected double getMeanRepairTime(WorkStation machine) {
+		DowntimeSource downSrc = getDowntimeSource(machine);
 		if (downSrc == null) {
 			return 0.0;
 		}
@@ -76,7 +78,8 @@ public abstract class MBPR extends PR {
 		return repairTimes.getNumericalMean();
 	}
 
-	protected double getNextBreakdown() {
+	protected double getNextBreakdown(WorkStation machine) {
+		DowntimeSource downSrc = getDowntimeSource(machine);
 		if (downSrc == null) {
 			return Double.POSITIVE_INFINITY;
 		}

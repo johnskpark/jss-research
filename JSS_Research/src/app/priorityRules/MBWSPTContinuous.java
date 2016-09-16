@@ -12,14 +12,14 @@ public class MBWSPTContinuous extends MBPR {
 	}
 
 	@Override
-	public double calcPrio(PrioRuleTarget entry) {
-		double proc = entry.getCurrentOperation().procTime;
-		double prob = getProbBreakdown(entry);
+	public double calcPrio(PrioRuleTarget job) {
+		double proc = job.getCurrentOperation().procTime;
+		double prob = getProbBreakdown(job, job.getCurrMachine());
 
-		double adjustedProc = prob * (proc + getMeanRepairTime()) + (1 - prob) * proc;
+		double adjustedProc = prob * (proc + getMeanRepairTime(job.getCurrMachine())) + (1 - prob) * proc;
 
 		if (adjustedProc > 0) {
-			return entry.getWeight() / adjustedProc;
+			return job.getWeight() / adjustedProc;
 		} else {
 			return PriorityQueue.MAX_PRIO;
 		}

@@ -15,10 +15,10 @@ public class MBSPTDiscrete extends MBPR {
 	}
 
 	@Override
-	public double calcPrio(PrioRuleTarget entry) {
-		double p = entry.getCurrentOperation().procTime;
-		if (addRepairTime(entry, threshold)) {
-			double adjustedPrio = -(p + getMeanRepairTime());
+	public double calcPrio(PrioRuleTarget job) {
+		double p = job.getCurrentOperation().procTime;
+		if (addRepairTime(job, job.getCurrMachine(), threshold)) {
+			double adjustedPrio = -(p + getMeanRepairTime(job.getCurrMachine()));
 
 			return -(p + adjustedPrio);
 		} else {

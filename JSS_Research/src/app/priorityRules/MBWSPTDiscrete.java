@@ -19,16 +19,16 @@ public class MBWSPTDiscrete extends MBPR {
 	}
 
 	@Override
-	public double calcPrio(PrioRuleTarget entry) {
-		if (addRepairTime(entry, threshold)) {
-			double p = entry.getCurrentOperation().procTime;
-			if (p + getMeanRepairTime() > 0) {
-				return entry.getWeight() / (p + getMeanRepairTime());
+	public double calcPrio(PrioRuleTarget job) {
+		if (addRepairTime(job, job.getCurrMachine(), threshold)) {
+			double p = job.getCurrentOperation().procTime;
+			if (p + getMeanRepairTime(job.getCurrMachine()) > 0) {
+				return job.getWeight() / (p + getMeanRepairTime(job.getCurrMachine()));
 			} else {
 				return PriorityQueue.MAX_PRIO;
 			}
 		} else {
-			return wspt.calcPrio(entry);
+			return wspt.calcPrio(job);
 		}
 	}
 

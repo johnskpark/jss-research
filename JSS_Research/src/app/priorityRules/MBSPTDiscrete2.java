@@ -21,7 +21,7 @@ public class MBSPTDiscrete2 extends MBPR {
 			PrioRuleTarget job = q.get(i);
 			double p = job.getCurrentOperation().procTime;
 
-			if (job.getShop().simTime() + p < getNextBreakdown()) {
+			if (job.getShop().simTime() + p < getNextBreakdown(job.getCurrMachine())) {
 				withinFilter = true;
 			}
 		}
@@ -30,10 +30,10 @@ public class MBSPTDiscrete2 extends MBPR {
 	@Override
 	public double calcPrio(PrioRuleTarget job) {
 		double p = job.getCurrentOperation().procTime;
-		if (!withinFilter || job.getShop().simTime() + p < getNextBreakdown()) {
+		if (!withinFilter || job.getShop().simTime() + p < getNextBreakdown(job.getCurrMachine())) {
 			return -p;
 		} else {
-			return -(p + getMeanRepairTime());
+			return -(p + getMeanRepairTime(job.getCurrMachine()));
 		}
 	}
 
