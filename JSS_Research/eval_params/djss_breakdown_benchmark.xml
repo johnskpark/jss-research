@@ -17,7 +17,7 @@
 
 	<datasetConfig>
 		<datasetClass>app.simConfig.holthausConfig.EvalFactory</datasetClass>
-		<datasetInstances>(all),(all),(all)</datasetInstances>
+		<datasetInstances>(all),(0.05),(all)</datasetInstances>
 		<datasetSeed>15</datasetSeed>
 		<!-- <datasetSeed>4609823032865163582</datasetSeed> -->
 		<datasetRepeat>30</datasetRepeat>

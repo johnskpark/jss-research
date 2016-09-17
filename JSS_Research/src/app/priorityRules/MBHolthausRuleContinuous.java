@@ -35,7 +35,7 @@ public class MBHolthausRuleContinuous extends MBPR {
 
 	protected double calculateProcTime(PrioRuleTarget job, WorkStation machine) {
 		double proc = job.getCurrentOperation().procTime;
-		double prob = getProbBreakdown(job, machine);
+		double prob = 3.0 * Math.sqrt(getProbBreakdown(job, machine));
 
 		return (prob * (proc + getMeanRepairTime(machine)) + (1 - prob) * proc);
 	}

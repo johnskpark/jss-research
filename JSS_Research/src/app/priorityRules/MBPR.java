@@ -20,7 +20,7 @@ public abstract class MBPR extends PR {
 
 	@Override
 	public void init() {
-		// Does nothing fo rnow.
+		// Does nothing for now.
 	}
 
 	@Override
@@ -31,11 +31,7 @@ public abstract class MBPR extends PR {
 	}
 
 	protected DowntimeSource getDowntimeSource(WorkStation machine) {
-		IndividualMachine indMachine = machine.currMachine;
-
-		if (indMachine == null) {
-			System.out.println("TODO");
-		}
+		IndividualMachine indMachine = machine.machDat()[0];
 
 		List<DowntimeSource> srcs = indMachine.getDowntimeSources();
 		if (srcs != null && !srcs.isEmpty()) {
