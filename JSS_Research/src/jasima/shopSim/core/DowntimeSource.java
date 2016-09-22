@@ -48,6 +48,9 @@ public class DowntimeSource {
 	private DblStream timeToRepair;
 	private String name;
 
+	private double nextTimeBetweenFailure;
+	private double nextTimeToRepair;
+
 	private double deactivationTime;
 	private double activationTime;
 
@@ -64,10 +67,14 @@ public class DowntimeSource {
 			fact.initNumberStream(timeBetweenFailures, toString()
 					+ ".timeBetweenFailures");
 			timeBetweenFailures.init();
+
+			nextTimeBetweenFailure = timeBetweenFailures.nextDbl();
 		}
 		if (timeToRepair != null && timeToRepair.getRndGen() == null) {
 			fact.initNumberStream(timeToRepair, toString() + ".timeToRepair");
 			timeToRepair.init();
+
+			nextTimeToRepair = timeBetweenFailures.nextDbl();
 		}
 
 		machine.workStation.addNotifierListener(new WorkStationListenerBase() {
@@ -140,22 +147,16 @@ public class DowntimeSource {
 	}
 
 	protected double calcDeactivateTime(JobShop shop) {
-		deactivationTime = shop.simTime() + timeBetweenFailures.nextDbl();
+		deactivationTime = shop.simTime() + nextTimeBetweenFailure;
+		nextTimeBetweenFailure = timeBetweenFailures.nextDbl();
 
 		return deactivationTime;
 	}
 
 	protected double calcActivateTime(JobShop shop) {
-		activationTime = shop.simTime() + timeToRepair.nextDbl();
+		activationTime = shop.simTime() + nextTimeToRepair;
+		nextTimeToRepair = timeToRepair.nextDbl();
 
-		return activationTime;
-	}
-
-	public double getDeactivateTime() {
-		return deactivationTime;
-	}
-
-	public double getActivateTime() {
 		return activationTime;
 	}
 
@@ -193,6 +194,22 @@ public class DowntimeSource {
 
 	public IndividualMachine getMachine() {
 		return machine;
+	}
+
+	public double getDeactivateTime() {
+		return deactivationTime;
+	}
+
+	public double getActivateTime() {
+		return activationTime;
+	}
+
+	public double getNextTimeBetweenFailure() {
+		return nextTimeBetweenFailure;
+	}
+
+	public double getNextTimeToRepair() {
+		return nextTimeToRepair;
 	}
 
 }

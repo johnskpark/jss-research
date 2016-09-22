@@ -75,7 +75,12 @@ public enum NodeDefinition {
 	SCORE_AVERAGE_UP_TIME_NEXT_MACHINE("NAUT", 0, NodeType.MACHINE, NodeValueRange.NON_NEGATIVE),
 	SCORE_PREVIOUS_UP_TIME_NEXT_MACHINE("NPUT", 0, NodeType.MACHINE, NodeValueRange.NON_NEGATIVE),
 	SCORE_AVERAGE_UP_TIME("AUT", 0, NodeType.MACHINE, NodeValueRange.NON_NEGATIVE),
-	SCORE_PREVIOUS_UP_TIME("PUT", 0, NodeType.MACHINE, NodeValueRange.NON_NEGATIVE);
+	SCORE_PREVIOUS_UP_TIME("PUT", 0, NodeType.MACHINE, NodeValueRange.NON_NEGATIVE),
+
+	// Terminals specific to machine breakdown problem that knows when the machines breaks down.
+	SCORE_PT_WITH_MB("MBPT", 0, NodeType.JOB, NodeValueRange.NON_NEGATIVE),
+	SCORE_NPT_WITH_MB("MBNPT", 0, NodeType.JOB, NodeValueRange.NON_NEGATIVE),
+	SCORE_WINQ_WITH_MB("MBWINQ", 0, NodeType.JOB, NodeValueRange.NON_NEGATIVE);
 
 	private String nodeSymbol;
 	private int numChildren;

@@ -48,6 +48,8 @@ public class MBHolthausRuleContinuous extends MBPR {
 			double adjustedWINQ = 0.0;
 
 			WorkStation machine = job.getOps()[nextTask].machine;
+
+			// TODO this is incorrect.
 			for (int i = 0; i < machine.queue.size(); i++) {
 				PrioRuleTarget jobNextQueue = machine.queue.get(i);
 
