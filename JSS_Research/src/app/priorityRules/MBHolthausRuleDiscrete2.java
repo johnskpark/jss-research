@@ -1,5 +1,6 @@
 package app.priorityRules;
 
+import jasima.shopSim.core.IndividualMachine;
 import jasima.shopSim.core.Operation;
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
@@ -50,12 +51,20 @@ public class MBHolthausRuleDiscrete2 extends MBPR {
 			double adjustedWINQ = 0.0;
 
 			WorkStation machine = job.getOps()[nextTask].machine;
-
-			// TODO this is incorrect.
 			for (int i = 0; i < machine.queue.size(); i++) {
-				PrioRuleTarget jobNextQueue = machine.queue.get(i);
+				adjustedWINQ += calculateProcTime(machine.queue.get(i));
+			}
 
-				adjustedWINQ += calculateProcTime(jobNextQueue);
+			IndividualMachine indMachine = machine.machDat()[0];
+			if (indMachine.procFinished > job.getShop().simTime()) {
+				// Calculate the work remaining on the current job being processed.
+				double workRemaining;
+				if (indMachine.procFinished <= getNextBreakdown(machine)) {
+					workRemaining = indMachine.procFinished - job.getShop().simTime();
+				} else {
+					workRemaining = indMachine.procFinished - job.getShop().simTime() + getMeanRepairTime(machine);
+				}
+				adjustedWINQ += workRemaining;
 			}
 
 			return adjustedWINQ;

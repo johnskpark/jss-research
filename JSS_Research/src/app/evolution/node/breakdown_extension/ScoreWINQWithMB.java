@@ -7,8 +7,8 @@ import ec.Problem;
 import ec.gp.ADFStack;
 import ec.gp.GPData;
 import ec.gp.GPIndividual;
+import jasima.shopSim.core.IndividualMachine;
 import jasima.shopSim.core.Job;
-import jasima.shopSim.core.Operation;
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
 import jasima.shopSim.core.WorkStation;
@@ -42,39 +42,35 @@ public class ScoreWINQWithMB extends AbsMBNode {
 		if (nextTask >= job.numOps()) {
 			data.setPriority(0.0);
 		} else {
-			Operation nextOp = job.getOps()[nextTask];
-			WorkStation nextMachine = nextOp.machine;
+			WorkStation nextMachine = job.getOps()[nextTask].machine;
 
-			// TODO winq2, winq3 and err are just for test purposes
-			// So its done by procFinished, which is going by what job is currently on the machine.
-
-			PriorityQueue<Job> queue = nextMachine.queue;
-			double winq = 0.0;
-			double winq2 = 0.0;
-
-			// TODO temporary.
-			System.out.printf("Queue: %d, num jobs waiting: %d, sim time: %f\n", queue.size(), nextMachine.numJobsWaiting(), nextMachine.shop().simTime());
-
-			for (int i = 0; i < queue.size(); i++) {
-				PrioRuleTarget jobInNextQueue = queue.get(i);
-				winq += getProcTime(jobInNextQueue, nextMachine);
-				winq2 += jobInNextQueue.getCurrentOperation().procTime;
-			}
-
-			// TODO temporary.
-			PrioRuleTarget jub = nextMachine.machDat()[0].curJob;
-			if (jub != null) {
-				System.out.printf("Machine id: %d, Jub op: %d, m_id: %d, proc: %f\n", nextMachine.index(), jub.getTaskNumber(), jub.getOps()[0].machine.index(), jub.getOps()[0].procTime);
-			}
-
-			double winq3 = nextMachine.workContent(false);
-			double err = 0.001;
-			if (winq2 - err > winq3 || winq2 + err < winq3) {
-				throw new RuntimeException("WINQ values do not match: " + winq2 + ", " + winq3);
-			}
-
-			data.setPriority(winq);
+			data.setPriority(getWorkInQueue(job, nextMachine));
 		}
+	}
+
+	private double getWorkInQueue(PrioRuleTarget job, WorkStation nextMachine) {
+		PriorityQueue<Job> queue = nextMachine.queue;
+
+		// WINQ = all the jobs in the queue and the time left on the current job.
+		double winq = 0.0;
+		for (int i = 0; i < queue.size(); i++) {
+			winq += getProcTime(queue.get(i), nextMachine);
+		}
+
+		IndividualMachine indMachine = nextMachine.machDat()[0];
+
+		if (indMachine.procFinished > job.getShop().simTime()) {
+			// Calculate the work remaining on the current job being processed.
+			double workRemaining;
+			if (indMachine.procFinished <= getDeactivateTime(nextMachine)) {
+				workRemaining = indMachine.procFinished - job.getShop().simTime();
+			} else {
+				workRemaining = indMachine.procFinished - job.getShop().simTime() + getNextRepairTime(nextMachine);
+			}
+			winq += workRemaining;
+		}
+
+		return winq;
 	}
 
 	private double getProcTime(PrioRuleTarget job, WorkStation machine) {

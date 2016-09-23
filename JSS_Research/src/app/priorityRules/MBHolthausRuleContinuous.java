@@ -1,5 +1,6 @@
 package app.priorityRules;
 
+import jasima.shopSim.core.IndividualMachine;
 import jasima.shopSim.core.Operation;
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
@@ -35,7 +36,7 @@ public class MBHolthausRuleContinuous extends MBPR {
 
 	protected double calculateProcTime(PrioRuleTarget job, WorkStation machine) {
 		double proc = job.getCurrentOperation().procTime;
-		double prob = 3.0 * Math.sqrt(getProbBreakdown(job, machine));
+		double prob = getProbBreakdown(job, machine);
 
 		return (prob * (proc + getMeanRepairTime(machine)) + (1 - prob) * proc);
 	}
@@ -48,12 +49,20 @@ public class MBHolthausRuleContinuous extends MBPR {
 			double adjustedWINQ = 0.0;
 
 			WorkStation machine = job.getOps()[nextTask].machine;
-
-			// TODO this is incorrect.
 			for (int i = 0; i < machine.queue.size(); i++) {
-				PrioRuleTarget jobNextQueue = machine.queue.get(i);
+				adjustedWINQ += calculateProcTime(machine.queue.get(i));
+			}
 
-				adjustedWINQ += calculateProcTime(jobNextQueue);
+			IndividualMachine indMachine = machine.machDat()[0];
+			if (indMachine.procFinished > job.getShop().simTime()) {
+				// Calculate the work remaining on the current job being processed.
+				double workRemaining = indMachine.procFinished - job.getShop().simTime();
+				if (indMachine.procFinished > getNextBreakdown(machine)) {
+					double prob = 1.0 - Math.exp(-workRemaining / getMeanBreakdown(machine));
+
+					workRemaining += (prob * (workRemaining + getMeanRepairTime(machine)) + (1 - prob) * workRemaining);
+				}
+				adjustedWINQ += workRemaining;
 			}
 
 			return adjustedWINQ;
