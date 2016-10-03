@@ -12,10 +12,10 @@ import jasima.shopSim.core.Operation;
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.WorkStation;
 
-public class ScoreWINQ extends AbsMBNode {
+public class ScoreWorkInNextQueue extends AbsMBNode {
 
 	private static final long serialVersionUID = 2069135023251215510L;
-	private static final NodeDefinition NODE_DEFINITION = NodeDefinition.SCORE_WINQ_WITH_MB;
+	private static final NodeDefinition NODE_DEFINITION = NodeDefinition.SCORE_WORK_IN_NEXT_QUEUE;
 
 	@Override
 	public String toString() {
