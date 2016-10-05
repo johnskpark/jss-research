@@ -9,6 +9,7 @@
 		</solverFile>
 	</solverConfig>
 
+<!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
@@ -16,7 +17,6 @@
 		</solverFile>
 	</solverConfig>
 
-<!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
@@ -47,7 +47,7 @@
 		<datasetInstances>(all),(all),(all)</datasetInstances>
 		<datasetSeed>15</datasetSeed>
 		<!-- <datasetSeed>4609823032865163582</datasetSeed> -->
-		<datasetRepeat>1</datasetRepeat>
+		<datasetRepeat>30</datasetRepeat>
 	</datasetConfig>
 
 <!-- Output file definition -->

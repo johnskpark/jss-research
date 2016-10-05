@@ -92,6 +92,7 @@ public class JasimaEvalProblem {
 	private Map<String, IWorkStationListener> listenerMap = new HashMap<>();
 
 	private List<PR> referenceRules = new ArrayList<>();
+	private List<PR> trackedRefRules = new ArrayList<>();
 	private Map<Pair<PR, String>, List<Double>> refFitness = new HashMap<>();
 	private JasimaExperimentTracker<INode> tracker = null;
 
@@ -333,6 +334,7 @@ public class JasimaEvalProblem {
 				TrackedPR trackedRefRule = new TrackedPR(refRule, numJobThreshold, numSamples, seed, tracker);
 
 				referenceRules.add(trackedRefRule);
+				trackedRefRules.add(trackedRefRule);
 			} else {
 				referenceRules.add(refRule);
 			}
@@ -422,6 +424,10 @@ public class JasimaEvalProblem {
 		// Print out the headers.
 		output.print("RuleFile,RuleSeed,Repeat,TestSet,InstanceNum");
 
+		if (hasReferenceEvaluation()) {
+			output.print(",ReferenceRule");
+		}
+
 		for (IJasimaEvalFitness fitness : standardEvaluation) {
 			output.printf(",%s", fitness.getHeaderName());
 		}
@@ -461,11 +467,13 @@ public class JasimaEvalProblem {
 					for (IJasimaEvalFitness fitness : standardEvaluation) {
 						Pair<PR, String> key = new Pair<>(refRule, fitness.getClass().getSimpleName());
 
-						// FIXME need to account for the repetition code that I added.
+						// FIXME
+						// First count by the configurations, then by the repetitions.
+						int refIndex = repeat * simConfig.getNumConfigs() + configIndex;
 						if (fitness.resultIsNumeric()) {
 							double result = fitness.getNumericResult(refRule, simConfig, configIndex, experiment.getResults(), tracker);
 
-							refFitness.get(key).add(configIndex, result);
+							refFitness.get(key).add(refIndex, result);
 						}
 					}
 
@@ -488,28 +496,57 @@ public class JasimaEvalProblem {
 			List<String> standardResults = null;
 			List<String> referenceResults = null;
 
-			if (!referenceEvaluation.isEmpty()) {
+			if (hasReferenceEvaluation()) {
 				referenceResults = evaluateSolversUsingReference(ruleFilename, solvers);
 			}
-			if (!standardEvaluation.isEmpty()) {
+			if (hasStandardEvaluation()) {
 				standardResults = evaluateSolversNormally(ruleFilename, solvers);
 			}
 
 			for (int solverIndex = 0; solverIndex < solvers.size(); solverIndex++) {
 				EvalPriorityRuleBase solver = solvers.get(solverIndex);
-
-				for (int repeat = 0; repeat < numRepeats; repeat++) {
+				for (int repeatIndex = 0; repeatIndex < numRepeats; repeatIndex++) {
 					for (int configIndex = 0; configIndex < simConfig.getNumConfigs(); configIndex++) {
-						output.printf("%s,%d,%d,%s,%d", ruleFilename, solver.getSeed(), repeat, simConfig.getClass().getSimpleName(), configIndex);
+						if (!hasReferenceEvaluation()) {
+							// Prints out the standard evaluation.
+							output.printf("%s,%d,%d,%s,%d",
+									ruleFilename,
+									solver.getSeed(),
+									repeatIndex, simConfig.getClass().getSimpleName(),
+									configIndex);
 
-						int index = solverIndex * (numRepeats * simConfig.getNumConfigs()) + repeat * (simConfig.getNumConfigs()) + configIndex;
+							int index = solverIndex * (numRepeats * simConfig.getNumConfigs()) + repeatIndex * (simConfig.getNumConfigs()) + configIndex;
 
-						if (standardResults != null) {
-							output.print(standardResults.get(index));
-						}
+							if (standardResults != null) {
+								output.print(standardResults.get(index));
+							}
+						} else {
+							// Prints out the standard evaluation plus the reference evaluation.
+							for (int refRuleIndex = 0; refRuleIndex < trackedRefRules.size(); refRuleIndex++) {
+								PR refRule = trackedRefRules.get(refRuleIndex);
+								output.printf("%s,%d,%d,%s,%d,%s",
+										ruleFilename,
+										solver.getSeed(),
+										repeatIndex, simConfig.getClass().getSimpleName(),
+										configIndex,
+										refRule.getClass().getSimpleName());
 
-						if (referenceResults != null) {
-							output.print(referenceResults.get(index));
+								int standardIndex = solverIndex * (numRepeats * simConfig.getNumConfigs()) +
+										repeatIndex * (simConfig.getNumConfigs()) +
+										configIndex;
+								int referenceIndex = refRuleIndex * (trackedRefRules.size() * numRepeats * simConfig.getNumConfigs()) +
+										solverIndex * (numRepeats * simConfig.getNumConfigs()) +
+										repeatIndex * (simConfig.getNumConfigs()) +
+										configIndex;
+
+								if (standardResults != null) {
+									output.print(standardResults.get(standardIndex));
+								}
+
+								if (referenceResults != null) {
+									output.print(referenceResults.get(referenceIndex));
+								}
+							}
 						}
 
 						output.println();
@@ -528,12 +565,8 @@ public class JasimaEvalProblem {
 
 		String[] resultsOutput = new String[numResults];
 
-		for (PR refRule : referenceRules) {
-			if (!(refRule instanceof TrackedPR)) {
-				continue;
-			}
-
-			TrackedPR trackedRefRule = (TrackedPR) refRule;
+		for (int refRuleIndex = 0; refRuleIndex < trackedRefRules.size(); refRuleIndex++) {
+			TrackedPR trackedRefRule = (TrackedPR) trackedRefRules.get(refRuleIndex);
 			trackedRefRule.setPriorityRules(new ArrayList<MultiRuleBase<INode>>(solvers));
 
 			for (EvalPriorityRuleBase solver : solvers) {
@@ -548,7 +581,7 @@ public class JasimaEvalProblem {
 					tracker.setExperimentIndex(configIndex);
 					trackedRefRule.initTrackedRun(configIndex);
 
-					Experiment experiment = getExperiment(refRule, configIndex);
+					Experiment experiment = getExperiment(trackedRefRule, configIndex);
 					experiment.runExperiment();
 
 					for (int solverIndex = 0; solverIndex < solvers.size(); solverIndex++) {
@@ -562,6 +595,7 @@ public class JasimaEvalProblem {
 						}
 
 						// TODO need to work with the repeats.
+						// TODO this needs to be homogenious with the indexing I provided above. How do I do this?
 						int resultsIndex = solverIndex * simConfig.getNumConfigs() + configIndex;
 
 						resultsOutput[resultsIndex] = builder.toString();
@@ -628,6 +662,18 @@ public class JasimaEvalProblem {
 		}
 
 		return experiment;
+	}
+
+	private boolean hasReferenceEvaluation() {
+		return hasReferenceRules() && referenceEvaluation != null && !referenceEvaluation.isEmpty();
+	}
+
+	private boolean hasStandardEvaluation() {
+		return standardEvaluation != null && !standardEvaluation.isEmpty();
+	}
+
+	private boolean hasReferenceRules() {
+		return !referenceRules.isEmpty();
 	}
 
 }
