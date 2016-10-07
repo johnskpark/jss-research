@@ -446,7 +446,9 @@ public class JasimaEvalProblem {
 	}
 
 	private void evaluateReference(PrintStream output) {
-		for (PR refRule : referenceRules) {
+		for (int refRuleIndex = 0; refRuleIndex < referenceRules.size(); refRuleIndex++) {
+			PR refRule = referenceRules.get(refRuleIndex);
+
 			System.out.println("Evaluation: evaluating the reference rule " + refRule.getClass().getSimpleName());
 
 			for (IJasimaEvalFitness fitness : standardEvaluation) {
@@ -455,7 +457,7 @@ public class JasimaEvalProblem {
 				refFitness.put(key, new ArrayList<>());
 			}
 
-			for (int repeat = 0; repeat < numRepeats; repeat++) {
+			for (int repeatIndex = 0; repeatIndex < numRepeats; repeatIndex++) {
 				for (int configIndex = 0; configIndex < simConfig.getNumConfigs(); configIndex++) {
 					if (refRule instanceof TrackedPR) {
 						((TrackedPR) refRule).initSampleRun(configIndex);
@@ -467,9 +469,11 @@ public class JasimaEvalProblem {
 					for (IJasimaEvalFitness fitness : standardEvaluation) {
 						Pair<PR, String> key = new Pair<>(refRule, fitness.getClass().getSimpleName());
 
-						// FIXME
-						// First count by the configurations, then by the repetitions.
-						int refIndex = repeat * simConfig.getNumConfigs() + configIndex;
+						// Count in the order of configuration, repetition and reference rule.
+						int refIndex = refRuleIndex * (numRepeats * simConfig.getNumConfigs()) +
+								repeatIndex * simConfig.getNumConfigs() +
+								configIndex;
+
 						if (fitness.resultIsNumeric()) {
 							double result = fitness.getNumericResult(refRule, simConfig, configIndex, experiment.getResults(), tracker);
 
@@ -576,7 +580,7 @@ public class JasimaEvalProblem {
 
 			tracker.initialise();
 
-			for (int repeat = 0; repeat < numRepeats; repeat++) {
+			for (int repeatIndex = 0; repeatIndex < numRepeats; repeatIndex++) {
 				for (int configIndex = 0; configIndex < simConfig.getNumConfigs(); configIndex++) {
 					tracker.setExperimentIndex(configIndex);
 					trackedRefRule.initTrackedRun(configIndex);
@@ -594,9 +598,10 @@ public class JasimaEvalProblem {
 							 builder.append("," + result);
 						}
 
-						// TODO need to work with the repeats.
-						// TODO this needs to be homogenious with the indexing I provided above. How do I do this?
-						int resultsIndex = solverIndex * simConfig.getNumConfigs() + configIndex;
+						int resultsIndex = refRuleIndex * (trackedRefRules.size() * numRepeats * simConfig.getNumConfigs()) +
+								solverIndex * (numRepeats * simConfig.getNumConfigs()) +
+								repeatIndex * (simConfig.getNumConfigs()) +
+								configIndex;
 
 						resultsOutput[resultsIndex] = builder.toString();
 					}
