@@ -197,4 +197,13 @@ public class DiversityFitness implements IJasimaEvalFitness {
 		return minorityResults;
 	}
 
+	protected String getLowRankResults(IMultiRule<INode> solver, Map<String, Object> results, JasimaExperiment<INode> experiment) {
+		// TODO
+
+
+		String lowRankResults = "";
+
+		return lowRankResults;
+	}
+
 }

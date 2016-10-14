@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <evaluationConfig>
 
-<!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
@@ -15,8 +14,8 @@
 			<ruleFile>simple_8op.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
--->
 
+<!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
 		<solverFile>
@@ -44,15 +43,17 @@
 			<ruleFile>coop_weighted_lc_8op.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
+-->
 
 	<datasetConfig>
 		<datasetClass>app.simConfig.huntConfig.EvalFactory</datasetClass>
-		<datasetInstances>train</datasetInstances>
+		<datasetInstances>test</datasetInstances>
 		<datasetSeed>15</datasetSeed>
+		<datasetRepeat>10</datasetRepeat>
 	</datasetConfig>
 
 	<outputConfig>
-	    <outputFile>coop_aggregation_with_diversity_8op_train_output.csv</outputFile>
+	    <outputFile>simple_output.csv</outputFile>
 	</outputConfig>
 
 	<fitnessConfig>
@@ -72,9 +73,11 @@
 		</refTracking>
 	</refConfig>
 
+<!--
 	<refFitnessConfig>
 		<fitnessClass>app.evaluation.fitness.DiversityFitness</fitnessClass>
 	</refFitnessConfig>
+-->
 
 	<listenerConfig>
 	    <listenerClass>app.listener.hunt.EvalFactory</listenerClass>

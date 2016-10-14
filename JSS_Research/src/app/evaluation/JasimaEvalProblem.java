@@ -457,35 +457,40 @@ public class JasimaEvalProblem {
 				refFitness.put(key, new ArrayList<>());
 			}
 
-			for (int repeatIndex = 0; repeatIndex < numRepeats; repeatIndex++) {
-				for (int configIndex = 0; configIndex < simConfig.getNumConfigs(); configIndex++) {
-					if (refRule instanceof TrackedPR) {
-						((TrackedPR) refRule).initSampleRun(configIndex);
-					}
+			// TODO remove the commented out code once this is sorted.
+//			for (int repeatIndex = 0; repeatIndex < numRepeats; repeatIndex++) {
+			for (int configIndex = 0; configIndex < simConfig.getNumConfigs(); configIndex++) {
+				if (refRule instanceof TrackedPR) {
+					((TrackedPR) refRule).initSampleRun(configIndex);
+				}
 
-					Experiment experiment = getExperiment(refRule, configIndex);
-					experiment.runExperiment();
+				Experiment experiment = getExperiment(refRule, configIndex);
+				experiment.runExperiment();
 
-					for (IJasimaEvalFitness fitness : standardEvaluation) {
-						Pair<PR, String> key = new Pair<>(refRule, fitness.getClass().getSimpleName());
+				for (IJasimaEvalFitness fitness : standardEvaluation) {
+					Pair<PR, String> key = new Pair<>(refRule, fitness.getClass().getSimpleName());
 
-						// Count in the order of configuration, repetition and reference rule.
-						int refIndex = refRuleIndex * (numRepeats * simConfig.getNumConfigs()) +
-								repeatIndex * simConfig.getNumConfigs() +
-								configIndex;
+					// Count in the order of configuration, repetition and reference rule.
+//					int refIndex = refRuleIndex * (numRepeats * simConfig.getNumConfigs()) +
+//							repeatIndex * simConfig.getNumConfigs() +
+//							configIndex;
 
-						if (fitness.resultIsNumeric()) {
-							double result = fitness.getNumericResult(refRule, simConfig, configIndex, experiment.getResults(), tracker);
+					int refIndex = refRuleIndex * (simConfig.getNumConfigs()) +
+//							repeatIndex * simConfig.getNumConfigs() +
+							configIndex;
 
-							refFitness.get(key).add(refIndex, result);
-						}
-					}
+					if (fitness.resultIsNumeric()) {
+						double result = fitness.getNumericResult(refRule, simConfig, configIndex, experiment.getResults(), tracker);
 
-					for (IWorkStationListener listener : listeners) {
-						listener.clear();
+						refFitness.get(key).add(refIndex, result);
 					}
 				}
+
+				for (IWorkStationListener listener : listeners) {
+					listener.clear();
+				}
 			}
+//			}
 
 			simConfig.reset();
 		}
@@ -538,9 +543,15 @@ public class JasimaEvalProblem {
 								int standardIndex = solverIndex * (numRepeats * simConfig.getNumConfigs()) +
 										repeatIndex * (simConfig.getNumConfigs()) +
 										configIndex;
-								int referenceIndex = refRuleIndex * (trackedRefRules.size() * numRepeats * simConfig.getNumConfigs()) +
-										solverIndex * (numRepeats * simConfig.getNumConfigs()) +
-										repeatIndex * (simConfig.getNumConfigs()) +
+
+								// TODO remove the commented out code once this is sorted.
+//								int referenceIndex = refRuleIndex * (trackedRefRules.size() * numRepeats * simConfig.getNumConfigs()) +
+//										solverIndex * (numRepeats * simConfig.getNumConfigs()) +
+//										repeatIndex * (simConfig.getNumConfigs()) +
+//										configIndex;
+
+								int referenceIndex = refRuleIndex * (trackedRefRules.size() * simConfig.getNumConfigs()) +
+										solverIndex * (simConfig.getNumConfigs()) +
 										configIndex;
 
 								if (standardResults != null) {
@@ -580,35 +591,40 @@ public class JasimaEvalProblem {
 
 			tracker.initialise();
 
-			for (int repeatIndex = 0; repeatIndex < numRepeats; repeatIndex++) {
-				for (int configIndex = 0; configIndex < simConfig.getNumConfigs(); configIndex++) {
-					tracker.setExperimentIndex(configIndex);
-					trackedRefRule.initTrackedRun(configIndex);
+			// TODO remove the commented out code once we've confirmed that everything works.
+//			for (int repeatIndex = 0; repeatIndex < numRepeats; repeatIndex++) {
+			for (int configIndex = 0; configIndex < simConfig.getNumConfigs(); configIndex++) {
+				tracker.setExperimentIndex(configIndex);
+				trackedRefRule.initTrackedRun(configIndex);
 
-					Experiment experiment = getExperiment(trackedRefRule, configIndex);
-					experiment.runExperiment();
+				Experiment experiment = getExperiment(trackedRefRule, configIndex);
+				experiment.runExperiment();
 
-					for (int solverIndex = 0; solverIndex < solvers.size(); solverIndex++) {
-						EvalPriorityRuleBase solver = solvers.get(solverIndex);
+				for (int solverIndex = 0; solverIndex < solvers.size(); solverIndex++) {
+					EvalPriorityRuleBase solver = solvers.get(solverIndex);
 
-						StringBuilder builder = new StringBuilder();
+					StringBuilder builder = new StringBuilder();
 
-						for (IJasimaEvalFitness fitness : referenceEvaluation) {
-							 String result = fitness.getStringResult(solver, simConfig, configIndex, experiment.getResults(), tracker);
-							 builder.append("," + result);
-						}
-
-						int resultsIndex = refRuleIndex * (trackedRefRules.size() * numRepeats * simConfig.getNumConfigs()) +
-								solverIndex * (numRepeats * simConfig.getNumConfigs()) +
-								repeatIndex * (simConfig.getNumConfigs()) +
-								configIndex;
-
-						resultsOutput[resultsIndex] = builder.toString();
+					for (IJasimaEvalFitness fitness : referenceEvaluation) {
+						 String result = fitness.getStringResult(solver, simConfig, configIndex, experiment.getResults(), tracker);
+						 builder.append("," + result);
 					}
 
-					tracker.clearCurrentExperiment();
+//					int resultsIndex = refRuleIndex * (trackedRefRules.size() * numRepeats * simConfig.getNumConfigs()) +
+//							solverIndex * (numRepeats * simConfig.getNumConfigs()) +
+//							repeatIndex * (simConfig.getNumConfigs()) +
+//							configIndex;
+
+					int resultsIndex = refRuleIndex * (trackedRefRules.size() * simConfig.getNumConfigs()) +
+							solverIndex * (simConfig.getNumConfigs()) +
+							configIndex;
+
+					resultsOutput[resultsIndex] = builder.toString();
 				}
+
+				tracker.clearCurrentExperiment();
 			}
+//			}
 
 			for (EvalPriorityRuleBase solver : solvers) {
 				solver.setTracker(null);
