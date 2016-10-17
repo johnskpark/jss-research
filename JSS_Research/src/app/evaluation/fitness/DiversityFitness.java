@@ -32,12 +32,14 @@ public class DiversityFitness implements IJasimaEvalFitness {
 		String tieBreakNum = "TieBreakNum";
 		String ruleMajorityNum = "RuleMajorityNum";
 		String ruleMinorityNum = "RuleMinorityNum";
+		String ruleRankNum = "RuleRankNum";
 
-		return String.format("%s,%s,%s,%s",
+		return String.format("%s,%s,%s,%s,%s",
 				allSingleJobNum,
 				tieBreakNum,
 				ruleMajorityNum,
-				ruleMinorityNum);
+				ruleMinorityNum,
+				ruleRankNum);
 	}
 
 	@Override
@@ -69,19 +71,21 @@ public class DiversityFitness implements IJasimaEvalFitness {
 		IMultiRule<INode> solver = (IMultiRule<INode>) rule;
 		List<JasimaExperiment<INode>> experiments = tracker.getResults();
 
-		String[] experimentResults = new String[4];
-
 		JasimaExperiment<INode> experiment = experiments.get(configIndex);
 
-		experimentResults[0] = getSingleVotedJobResults(solver, results, experiment);
-		experimentResults[1] = getTieBreakJobResults(solver, results, experiment);
-		experimentResults[2] = getMajorityResults(solver, results, experiment);
-		experimentResults[3] = getMinorityResults(solver, results, experiment);
+		String[] experimentResults = new String[] {
+				getSingleVotedJobResults(solver, results, experiment),
+				getTieBreakJobResults(solver, results, experiment),
+				getMajorityResults(solver, results, experiment),
+				getMinorityResults(solver, results, experiment),
+				getRankResults(solver, results, experiment)
+		};
 
-		String output = String.format("%s,%s,%s,%s", experimentResults[0],
-				experimentResults[1],
-				experimentResults[2],
-				experimentResults[3]);
+
+		String output = String.format("%s", experimentResults[0]);
+		for (int i = 1; i < experimentResults.length; i++) {
+			output += String.format(",%s", experimentResults[i]);
+		}
 
 		return output;
 	}
@@ -164,7 +168,6 @@ public class DiversityFitness implements IJasimaEvalFitness {
 		return majorityResults;
 	}
 
-	// This will never get called if there's more jobs than voters.
 	protected String getMinorityResults(IMultiRule<INode> solver, Map<String, Object> results, JasimaExperiment<INode> experiment) {
 		List<JasimaDecision<INode>> decisions = experiment.getDecisions();
 		List<INode> ruleComponents = solver.getRuleComponents();
@@ -197,11 +200,27 @@ public class DiversityFitness implements IJasimaEvalFitness {
 		return minorityResults;
 	}
 
-	protected String getLowRankResults(IMultiRule<INode> solver, Map<String, Object> results, JasimaExperiment<INode> experiment) {
-		// TODO
+	protected String getRankResults(IMultiRule<INode> solver, Map<String, Object> results, JasimaExperiment<INode> experiment) {
+		List<JasimaDecision<INode>> decisions = experiment.getDecisions();
+		List<INode> ruleComponents = solver.getRuleComponents();
 
+		double[] ranks = new double[ruleComponents.size()];
 
-		String lowRankResults = "";
+		for (JasimaDecision<INode> decision : decisions) {
+			List<PrioRuleTarget> jobRankings = decision.getEntryRankings(solver);
+			JasimaPriorityStat[] stats = decision.getStats(solver);
+
+			for (int i = 0; i < stats.length; i++) {
+				int rank = jobRankings.indexOf(stats[i].getBestEntry());
+				ranks[i] += 1.0 * rank / jobRankings.size();
+			}
+		}
+
+		String lowRankResults = String.format("\"%f", 1.0 * ranks[0] / decisions.size());
+		for (int i = 1; i < ruleComponents.size(); i++) {
+			lowRankResults += String.format(",%f", 1.0 * ranks[i] / decisions.size());
+		}
+		lowRankResults += "\"";
 
 		return lowRankResults;
 	}
