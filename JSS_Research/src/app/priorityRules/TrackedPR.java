@@ -115,7 +115,7 @@ public class TrackedPR extends PR {
 		pr.beforeCalc(q);
 
 		for (int i = 0; i < q.size(); i++) {
-			pr.calcPrio(q.get(0));
+			pr.calcPrio(q.get(i));
 		}
 
 		pr.jobSelected(pr.getEntryRankings().get(0), q);
@@ -125,9 +125,6 @@ public class TrackedPR extends PR {
 		WorkStation machine = entry.getCurrMachine();
 
 		double simTime = entry.getShop().simTime();
-//		for (int i = 0; i < NUM_DP_ROUNDED; i++) { simTime *= 10; }
-//		simTime = Math.round(simTime);
-//		for (int i = 0; i < NUM_DP_ROUNDED; i++) { simTime /= 10; }
 
 		return new DecisionEvent(machine, simTime);
 	}
@@ -135,10 +132,6 @@ public class TrackedPR extends PR {
 	@Override
 	public double calcPrio(PrioRuleTarget entry) {
 		double prio = referenceRule.calcPrio(entry);
-
-//		if (entry.getCurrMachine().queue.size() >= numJobThreshold) {
-//			System.out.printf("%s run: %d, %f\n", ((firstRun) ? "first" : "tracked"), entry.getJobNum(), prio);
-//		}
 
 		return prio;
 	}

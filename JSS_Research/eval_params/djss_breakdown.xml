@@ -2,10 +2,18 @@
 <evaluationConfig>
 
 <!-- Rule file definitions -->
+
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>attempt2_baseline.txt</ruleFile>
+			<ruleFile>breakdown_sample_gp_rule_baseline.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>breakdown_sample_gp_rule_predictive.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
@@ -47,28 +55,16 @@
 		<datasetInstances>(all),(all),(all)</datasetInstances>
 		<datasetSeed>15</datasetSeed>
 		<!-- <datasetSeed>4609823032865163582</datasetSeed> -->
-		<datasetRepeat>30</datasetRepeat>
+		<datasetRepeat>1</datasetRepeat>
 	</datasetConfig>
 
 <!-- Output file definition -->
 	<outputConfig>
-	    <outputFile>simple_breakdown_extension_output_small.csv</outputFile>
+	    <outputFile>breakdown_sample_gp_rule_output.csv</outputFile>
 	</outputConfig>
 
 
 <!-- Fitness definitions -->
-	<fitnessConfig>
-		<fitnessClass>app.evaluation.fitness.TWFFitness</fitnessClass>
-	</fitnessConfig>
-
-	<fitnessConfig>
-		<fitnessClass>app.evaluation.fitness.MWFFitness</fitnessClass>
-	</fitnessConfig>
-
-	<fitnessConfig>
-		<fitnessClass>app.evaluation.fitness.TWTFitness</fitnessClass>
-	</fitnessConfig>
-
 	<fitnessConfig>
 		<fitnessClass>app.evaluation.fitness.MWTFitness</fitnessClass>
 	</fitnessConfig>
@@ -81,7 +77,6 @@
 		<fitnessClass>app.evaluation.fitness.BreakdownLevelFitness</fitnessClass>
 	</fitnessConfig>
 
-<!--
 	<refConfig>
 		<refRule>app.evaluation.priorityRules.EvalATC</refRule>
 		<refTracking>
@@ -91,6 +86,11 @@
 		</refTracking>
 	</refConfig>
 
+	<refFitnessConfig>
+		<fitnessClass>app.evaluation.fitness.JobPriorityFitness</fitnessClass>
+	</refFitnessConfig>
+
+<!--
 	<refFitnessConfig>
 		<fitnessClass>app.evaluation.fitness.DiversityFitness</fitnessClass>
 	</refFitnessConfig>

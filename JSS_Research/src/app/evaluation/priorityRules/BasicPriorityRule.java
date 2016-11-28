@@ -11,7 +11,6 @@ import java.util.Map;
 import app.evaluation.EvalPriorityRuleBase;
 import app.evaluation.JasimaEvalConfig;
 import app.node.INode;
-import app.node.NodeData;
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
 
@@ -22,8 +21,6 @@ public class BasicPriorityRule extends EvalPriorityRuleBase {
 
 	private INode rule;
 
-	private NodeData data;
-
 	private List<PrioRuleTarget> entries = new ArrayList<PrioRuleTarget>();
 	private Map<PrioRuleTarget, Double> entryPrios = new HashMap<>();
 
@@ -33,9 +30,9 @@ public class BasicPriorityRule extends EvalPriorityRuleBase {
 			throw new RuntimeException("Invalid number of rules: " + config.getRules().size());
 		}
 		setSeed(config.getSeed());
+		setNodeData(config.getNodeData());
 
 		this.rule = config.getRules().get(0);
-		this.data = config.getNodeData();
 	}
 
 	@Override
@@ -47,15 +44,18 @@ public class BasicPriorityRule extends EvalPriorityRuleBase {
 	public void beforeCalc(PriorityQueue<?> q) {
 		super.beforeCalc(q);
 
-		// Basic priority rule does not have diversity measures.
 		clear();
 	}
 
 	@Override
 	public double calcPrio(PrioRuleTarget entry) {
-		data.setEntry(entry);
+		getNodeData().setEntry(entry);
 
-		double prio = rule.evaluate(data);
+		double prio = rule.evaluate(getNodeData());
+
+		if (hasTracker()) {
+			getTracker().addPriority(this, 0, rule, entry, prio);
+		}
 
 		entries.add(entry);
 		entryPrios.put(entry, prio);
@@ -90,7 +90,13 @@ public class BasicPriorityRule extends EvalPriorityRuleBase {
 
 	@Override
 	public void jobSelected(PrioRuleTarget entry, PriorityQueue<?> q) {
-		// Does nothing.
+		if (hasTracker()) {
+			getTracker().addStartTime(entry.getShop().simTime());
+			getTracker().addSelectedEntry(this, entry);
+			getTracker().addEntryRankings(this, getEntryRankings());
+
+			clear();
+		}
 	}
 
 	@Override

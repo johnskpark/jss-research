@@ -12,7 +12,7 @@ public enum NodeDefinition {
 	OP_MINIMUM("Min", 2, NodeType.OPERATOR, NodeValueRange.OPERATOR),
 	SCORE_LARGE_VALUE("Inf", 0, NodeType.CONSTANT, NodeValueRange.POSITIVE),
 	SCORE_DUE_DATE("DD", 0, NodeType.JOB, NodeValueRange.NON_NEGATIVE),
-	SCORE_PROCESSING_TIME("PR", 0, NodeType.JOB, NodeValueRange.NON_NEGATIVE),
+	SCORE_PROCESSING_TIME("PT", 0, NodeType.JOB, NodeValueRange.NON_NEGATIVE),
 	SCORE_OPERATION_READY_TIME("RJ", 0, NodeType.JOB, NodeValueRange.NON_NEGATIVE),
 	SCORE_REMAINING_TIME("RT", 0, NodeType.JOB, NodeValueRange.NON_NEGATIVE),
 	SCORE_SETUP_TIME("S", 0, NodeType.JOB, NodeValueRange.NON_NEGATIVE),

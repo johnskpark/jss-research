@@ -17,29 +17,21 @@ import app.tracker.JasimaPriorityStat;
 import jasima.shopSim.core.PR;
 import jasima.shopSim.core.PrioRuleTarget;
 
-public class DiversityFitness implements IJasimaEvalFitness {
+public class JobPriorityFitness implements IJasimaEvalFitness {
+
+	// TODO need to implement the job priority calculation.
 
 	@Override
 	public String getHeaderName() {
-		// The diversity measures for a single problem instance are:
-		// - The number of times all the rules vote for the same job.
-		// - The number of times the tie-breaker is used (i.e. the same number of votes on two jobs).
-		// - For each rule:
-		// * The number of times they partook in the majority
-		// * The number of times they partook in the minority
+		// Get the list of all the indices of the jobs that are selected.
+		// Get the list of all the priorities assigned to the waiting jobs.
 
-		String allSingleJobNum = "SingleJobNum";
-		String tieBreakNum = "TieBreakNum";
-		String ruleMajorityNum = "RuleMajorityNum";
-		String ruleMinorityNum = "RuleMinorityNum";
-		String ruleRankNum = "RuleRankNum";
+		String jobSelected = "JobSelected";
+		String jobPriorities = "JobPriorities";
 
-		return String.format("%s,%s,%s,%s,%s",
-				allSingleJobNum,
-				tieBreakNum,
-				ruleMajorityNum,
-				ruleMinorityNum,
-				ruleRankNum);
+		return String.format("%s,%s",
+				jobSelected,
+				jobPriorities);
 	}
 
 	@Override
@@ -74,11 +66,8 @@ public class DiversityFitness implements IJasimaEvalFitness {
 		JasimaExperiment<INode> experiment = experiments.get(configIndex);
 
 		String[] experimentResults = new String[] {
-				getSingleVotedJobResults(solver, results, experiment),
-				getTieBreakJobResults(solver, results, experiment),
-				getMajorityResults(solver, results, experiment),
-				getMinorityResults(solver, results, experiment),
-				getRankResults(solver, results, experiment)
+				getJobSelectedResults(solver, results, experiment),
+				getJobPriorityResults(solver, results, experiment)
 		};
 
 
@@ -90,6 +79,51 @@ public class DiversityFitness implements IJasimaEvalFitness {
 		return output;
 	}
 
+	protected String getJobSelectedResults(IMultiRule<INode> solver, Map<String, Object> results, JasimaExperiment<INode> experiment) {
+		List<JasimaDecision<INode>> decisions = experiment.getDecisions();
+		StringBuilder jobSelected = new StringBuilder();
+
+		jobSelected.append("\"");
+		for (int i = 0; i < decisions.size(); i++) {
+			JasimaDecision<INode> decision = decisions.get(i);
+
+			if (i != 0) { jobSelected.append(","); }
+			jobSelected.append(decision.getSelectedEntry(solver).getJobNum());
+		}
+		jobSelected.append("\"");
+
+		return jobSelected.toString();
+	}
+
+	protected String getJobPriorityResults(IMultiRule<INode> solver, Map<String, Object> results, JasimaExperiment<INode> experiment) {
+		List<JasimaDecision<INode>> decisions = experiment.getDecisions();
+		StringBuilder jobPriority = new StringBuilder();
+
+		jobPriority.append("\"");
+		for (int i = 0; i < decisions.size(); i++) {
+			JasimaDecision<INode> decision = decisions.get(i);
+
+			if (i != 0) { jobPriority.append(","); }
+			jobPriority.append("\'");
+
+			JasimaPriorityStat stat = decision.getStats(solver)[0];
+			for (int j = 0; j < stat.getEntries().length; j++) {
+				if (j != 0) { jobPriority.append(","); }
+
+				jobPriority.append(String.format("(%d:%.4f)",
+						stat.getEntries()[j].getJobNum(),
+						stat.getPriorities()[j]));
+			}
+			jobPriority.append("\'");
+		}
+		jobPriority.append("\"");
+
+		return jobPriority.toString();
+	}
+
+
+	// TODO old writing, remove after implementation.
+	// TODO double check this.
 	protected String getSingleVotedJobResults(IMultiRule<INode> solver, Map<String, Object> results, JasimaExperiment<INode> experiment) {
 		List<JasimaDecision<INode>> decisions = experiment.getDecisions();
 

@@ -71,7 +71,7 @@ public class EnsemblePriorityRule extends EvalPriorityRuleBase {
 			// Find the job selected by the individual rule.
 			for (int j = 0; j < q.size(); j++) {
 				PrioRuleTarget entry = q.get(j);
-				getNodeData().setEntry(q.get(j));
+				getNodeData().setEntry(entry);
 
 				double priority = rule.evaluate(getNodeData());
 
