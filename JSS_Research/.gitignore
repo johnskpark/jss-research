@@ -377,3 +377,8 @@
 /simple_breakdown_extension_output_small.csv
 /coop_only_diversity_4op_output.csv
 /coop_only_diversity_8op_output.csv
+/breakdown_sample_gp_rule_baseline.txt
+/breakdown_sample_gp_rule_baseline.txt.backup
+/breakdown_sample_gp_rule_output.csv
+/breakdown_sample_gp_rule_predictive.txt
+/breakdown_sample_gp_rule_predictive.txt.backup
