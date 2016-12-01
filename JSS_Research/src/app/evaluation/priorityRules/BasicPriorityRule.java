@@ -13,6 +13,7 @@ import app.evaluation.JasimaEvalConfig;
 import app.node.INode;
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
+import jasima.shopSim.core.WorkStation;
 
 public class BasicPriorityRule extends EvalPriorityRuleBase {
 
@@ -45,6 +46,15 @@ public class BasicPriorityRule extends EvalPriorityRuleBase {
 		super.beforeCalc(q);
 
 		clear();
+
+		// TODO so this doesn't work at all. Why is this?
+		WorkStation[] machines = q.get(0).getShop().machines;
+		for (int i = 0; i < machines.length; i++) {
+			int future = machines[i].numFutures();
+			if (future > 0) {
+				System.out.println(future);
+			}
+		}
 	}
 
 	@Override
