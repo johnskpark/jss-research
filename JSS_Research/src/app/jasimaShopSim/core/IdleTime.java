@@ -4,33 +4,27 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Set;
 
-import app.jasimaShopSim.core.IdleTime.IdleTimeEvent;
-import jasima.core.util.ValueStore;
-import jasima.core.util.observer.Notifier;
-import jasima.core.util.observer.NotifierAdapter;
-import jasima.core.util.observer.NotifierListener;
 import jasima.shopSim.core.Job;
 import jasima.shopSim.core.JobShop;
 import jasima.shopSim.core.Operation;
-import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.WorkStation;
 
 // TODO Now just need to incorporate this into the process. How do I do that?
-public class IdleTime extends PrioRuleTarget implements Cloneable,
-		Notifier<IdleTime, IdleTimeEvent>, ValueStore {
+//public class IdleTime extends PrioRuleTarget implements Cloneable,
+//		Notifier<IdleTime, IdleTimeEvent>, ValueStore {
 
-	/** Base class for idle time events */
-	public static class IdleTimeEvent {
-	}
+public class IdleTime extends Job {
 
-	public static final IdleTimeEvent IDLE_TIME_INTRODUCED = new IdleTimeEvent();
-	public static final IdleTimeEvent IDLE_TIME_STARTED = new IdleTimeEvent();
-	public static final IdleTimeEvent IDLE_TIME_FINISHED = new IdleTimeEvent();
+//	/** Base class for idle time events */
+//	public static class IdleTimeEvent {
+//	}
+
+	public static final JobEvent IDLE_TIME_INTRODUCED = new JobEvent();
+	public static final JobEvent IDLE_TIME_STARTED = new JobEvent();
+	public static final JobEvent IDLE_TIME_FINISHED = new JobEvent();
 
 	private final double DUE_DATE = Double.POSITIVE_INFINITY; // idle time should not have a due date
 	private final double WEIGHT = 0.0d; // idle time should have no weight.
-
-	private final JobShop shop;
 
 	private double arriveTime; // should be at machine ready time.
 	private WorkStation currMachine;
@@ -42,8 +36,7 @@ public class IdleTime extends PrioRuleTarget implements Cloneable,
 	private String name = null;
 
 	public IdleTime(JobShop shop) {
-		super();
-		this.shop = shop;
+		super(shop);
 	}
 
 	public void setArriveTime(double arriveTime) {
@@ -144,11 +137,6 @@ public class IdleTime extends PrioRuleTarget implements Cloneable,
 		} else {
 			return name;
 		}
-	}
-
-	@Override
-	public JobShop getShop() {
-		return shop;
 	}
 
 	@Override
@@ -281,36 +269,36 @@ public class IdleTime extends PrioRuleTarget implements Cloneable,
 	// Event notification
 	//
 	//
-
-	private NotifierAdapter<IdleTime, IdleTimeEvent> adapter = null;
-
-	@Override
-	public void addNotifierListener(NotifierListener<IdleTime, IdleTimeEvent> listener) {
-		if (adapter == null) {
-			adapter = new NotifierAdapter<IdleTime, IdleTimeEvent>(this);
-		}
-		adapter.addNotifierListener(listener);
-	}
-
-	@Override
-	public NotifierListener<IdleTime, IdleTimeEvent> getNotifierListener(int index) {
-		return adapter.getNotifierListener(index);
-	}
-
-	@Override
-	public void removeNotifierListener(NotifierListener<IdleTime, IdleTimeEvent> listener) {
-		adapter.removeNotifierListener(listener);
-	}
-
-	@Override
-	public int numListener() {
-		return adapter == null ? 0 : adapter.numListener();
-	}
-
-	protected void fire(IdleTimeEvent event) {
-		if (adapter != null) {
-			adapter.fire(event);
-		}
-	}
+//
+//	private NotifierAdapter<IdleTime, IdleTimeEvent> adapter = null;
+//
+//	@Override
+//	public void addNotifierListener(NotifierListener<IdleTime, IdleTimeEvent> listener) {
+//		if (adapter == null) {
+//			adapter = new NotifierAdapter<IdleTime, IdleTimeEvent>(this);
+//		}
+//		adapter.addNotifierListener(listener);
+//	}
+//
+//	@Override
+//	public NotifierListener<IdleTime, IdleTimeEvent> getNotifierListener(int index) {
+//		return adapter.getNotifierListener(index);
+//	}
+//
+//	@Override
+//	public void removeNotifierListener(NotifierListener<IdleTime, IdleTimeEvent> listener) {
+//		adapter.removeNotifierListener(listener);
+//	}
+//
+//	@Override
+//	public int numListener() {
+//		return adapter == null ? 0 : adapter.numListener();
+//	}
+//
+//	protected void fire(IdleTimeEvent event) {
+//		if (adapter != null) {
+//			adapter.fire(event);
+//		}
+//	}
 
 }

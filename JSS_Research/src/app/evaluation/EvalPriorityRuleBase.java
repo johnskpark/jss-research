@@ -63,21 +63,20 @@ public abstract class EvalPriorityRuleBase extends MultiRuleBase<INode> implemen
 
 	@Override
 	public void update(WorkStation notifier, WorkStationEvent event) {
-		// TODO this never gets called. 
 		if (event == WorkStation.WS_JOB_SELECTED && hasTracker()) {
 			PrioRuleTarget entry = notifier.justStarted;
-			
+
 			PriorityQueue<Job> q = notifier.queue;
-			
+
 			Job[] entryByPrio = new Job[q.size()];
 			q.getAllElementsInOrder(entryByPrio);
-			
+
 			List<PrioRuleTarget> entryRankings = Arrays.asList(entryByPrio);
 
 			tracker.addStartTime(entry.getShop().simTime());
 			tracker.addSelectedEntry(this, entry);
 			tracker.addEntryRankings(this, entryRankings);
-			
+
 			jobSelected(notifier.justStarted, notifier.queue);
 
 			clear();

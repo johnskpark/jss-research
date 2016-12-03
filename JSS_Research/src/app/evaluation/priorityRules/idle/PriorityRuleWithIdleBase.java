@@ -6,15 +6,18 @@ import java.util.Map;
 
 import app.evaluation.EvalPriorityRuleBase;
 import app.evaluation.JasimaEvalConfig;
+import app.jasimaShopSim.core.IdleTime;
 import app.node.INode;
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
+import jasima.shopSim.core.WorkStation;
 
-public class PriorityRuleWithIdleBase extends EvalPriorityRuleBase {
+public abstract class PriorityRuleWithIdleBase extends EvalPriorityRuleBase {
 
 	private static final long serialVersionUID = 2191207420087763065L;
 
 	private Map<PrioRuleTarget, Double> jobPrioMap = new HashMap<PrioRuleTarget, Double>();
+	private double idlePrio = Double.NEGATIVE_INFINITY;
 
 	// TODO need to find out how long to idle for.
 	private boolean includeIdleTimes = false;
@@ -51,30 +54,31 @@ public class PriorityRuleWithIdleBase extends EvalPriorityRuleBase {
 		}
 
 		if (includeIdleTimes) {
-			double idlePrio = calcIdlePrio(q);
+			idlePrio = calcIdlePrio(q);
+
 			if (idlePrio > maxPrio) {
 				double calcIdleTime = calcIdleTime(q);
 
-				// TODO create a new event here that delays the work further.
+				PrioRuleTarget idleTime = generateIdleTime(q.getWorkStation(), calcIdleTime);
+
+				// TODO need to put this into the queue somehow.
+				// Well fuck I can't seem to add this to the queue because the queue in the workstation is a job.
+				// q.add(idleTime);
 			}
 		}
 
-		// TODO
-		// TODO need to postpone the event for job selection until sometime in the future.
-
-		// TODO
-
 	}
 
-	public double calcIdlePrio(PriorityQueue<?> q) {
-		// TODO Auto-generated method stub
-		return 0;
+	// TODO insert the idle time operator here.
+	public IdleTime generateIdleTime(WorkStation currMachine, double idleTime) {
+		IdleTime idleTimeEntry = new IdleTime(currMachine.shop());
+
+		return idleTimeEntry;
 	}
 
-	public double calcIdleTime(PriorityQueue<?> q) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+	public abstract double calcIdlePrio(PriorityQueue<?> q);
+
+	public abstract double calcIdleTime(PriorityQueue<?> q);
 
 	@Override
 	public double calcPrio(PrioRuleTarget entry) {
