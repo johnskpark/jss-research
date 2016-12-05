@@ -1,23 +1,10 @@
-package app.jasimaShopSim.core;
+package jasima.shopSim.core;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Set;
 
-import jasima.shopSim.core.Job;
-import jasima.shopSim.core.JobShop;
-import jasima.shopSim.core.Operation;
-import jasima.shopSim.core.WorkStation;
-
-// TODO Now just need to incorporate this into the process. How do I do that?
-//public class IdleTime extends PrioRuleTarget implements Cloneable,
-//		Notifier<IdleTime, IdleTimeEvent>, ValueStore {
-
 public class IdleTime extends Job {
-
-//	/** Base class for idle time events */
-//	public static class IdleTimeEvent {
-//	}
 
 	public static final JobEvent IDLE_TIME_INTRODUCED = new JobEvent();
 	public static final JobEvent IDLE_TIME_STARTED = new JobEvent();
@@ -94,25 +81,35 @@ public class IdleTime extends Job {
 		return getOps().length - getTaskNumber();
 	}
 
-	public void proceed() {
-		// TODO Wondering if I even need this.
+	void proceed() {
+		// Idle time isn't a job, so just ignore this.
 	}
 
-	public void idleTimeIntroduced(WorkStation workStation) {
+	void jobReleased() {
+		// FIXME should be the same as idle time introduced (i.e. arrive in queue?)?
+		// Let's leave it blank for now, and see what happens later down the line.
+	}
+
+	void arriveInQueue(WorkStation workStation, double arrivesAt) {
 		setCurrMachine(workStation);
-		setArriveTime(workStation.shop().simTime());
+		setArriveTime(arrivesAt);
 
 		fire(IDLE_TIME_INTRODUCED);
 	}
 
-	public void idleTimeStarted() {
+	void removedFromQueue() {
+		// Remove from queue only sends message to the listeners,
+		// so don't bother doing anything.
+	}
+
+	void startProcessing() {
 		setFinishTime(currMachine.currMachine.procFinished);
 		setStartTime(currMachine.shop().simTime());
 
 		fire(IDLE_TIME_STARTED);
 	}
 
-	public void idleTimeFinished() {
+	void endProcessing() {
 		fire(IDLE_TIME_FINISHED);
 	}
 

@@ -8,10 +8,12 @@ import app.node.NodeData;
 public class JasimaEvalConfig {
 
 	private List<INode> rules;
-
 	private long seed;
-
 	private NodeData data;
+	private boolean includeIdleTimes;
+
+
+	// Setters
 
 	public void setRules(List<INode> rules) {
 		this.rules = rules;
@@ -25,6 +27,13 @@ public class JasimaEvalConfig {
 		this.data = data;
 	}
 
+	public void setIncludeIdleTimes(boolean includeIdleTimes) {
+		this.includeIdleTimes = includeIdleTimes;
+	}
+
+
+	// Getters
+
 	public long getSeed() {
 		return seed;
 	}
@@ -35,6 +44,10 @@ public class JasimaEvalConfig {
 
 	public NodeData getNodeData() {
 		return data;
+	}
+
+	public boolean getIncludeIdleTimes() {
+		return includeIdleTimes;
 	}
 
 }
