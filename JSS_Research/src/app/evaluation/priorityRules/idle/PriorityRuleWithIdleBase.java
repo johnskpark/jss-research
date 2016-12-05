@@ -30,21 +30,21 @@ public abstract class PriorityRuleWithIdleBase extends EvalPriorityRuleBase {
 		clear();
 
 		if (includeIdleTimes && currIdleTime == null) {
-
-			double calcIdleTime = calcIdleTime(q);
-
-			currIdleTime = generateIdleTime(q.getWorkStation(), calcIdleTime);
-			currIdlePrio = calcIdlePrio(q);
+			currIdlePrio = calcIdleTime(q);
+			currIdleTime = generateIdleTime(q.getWorkStation(), currIdlePrio);
 
 			// TODO need to put this into the queue somehow.
 			// Well fuck I can't seem to add this to the queue
 			// because the queue in the workstation is a job.
+			
+			// TODO I have a feeling that this will not work the first time,
+			// so will need extensive testing.
 
 			// This is going to result in an infinite loop,
 			// need to think of this carefully.
-			q.getWorkStation().enqueueOrProcess(currIdleTime);
+			assert q.equals(q.getWorkStation().queue);
+			q.getWorkStation().queue.add(currIdleTime);
 		}
-
 	}
 
 	public IdleTime generateIdleTime(WorkStation currMachine, double idleTime) {
@@ -67,12 +67,16 @@ public abstract class PriorityRuleWithIdleBase extends EvalPriorityRuleBase {
 	public abstract double calcIdlePrio(PriorityQueue<?> q);
 
 	public abstract double calcIdleTime(PriorityQueue<?> q);
+	
+	public abstract double calcJobPrio(PrioRuleTarget entry);
 
 	@Override
 	public double calcPrio(PrioRuleTarget entry) {
-
-		// TODO Auto-generated method stub
-		return 0;
+		if (entry instanceof IdleTime) {
+			return currIdlePrio;
+		} else {
+			return calcJobPrio(entry);
+		}
 	}
 
 }
