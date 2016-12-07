@@ -54,6 +54,7 @@
 		<datasetClass>app.simConfig.holthausConfig.EvalFactory</datasetClass>
 		<datasetInstances>(all),(all),(all)</datasetInstances>
 		<datasetSeed>15</datasetSeed>
+		<datasetRotateSeed>false</datasetRotateSeed>
 		<!-- <datasetSeed>4609823032865163582</datasetSeed> -->
 		<datasetRepeat>1</datasetRepeat>
 	</datasetConfig>
@@ -76,7 +77,12 @@
 	<fitnessConfig>
 		<fitnessClass>app.evaluation.fitness.BreakdownLevelFitness</fitnessClass>
 	</fitnessConfig>
+	
+	<fitnessConfig>
+		<fitnessClass>app.evaluation.fitness.JobFlowtimeFitness</fitnessClass>
+	</fitnessConfig>
 
+<!--
 	<refConfig>
 		<refRule>app.evaluation.priorityRules.EvalATC</refRule>
 		<refTracking>
@@ -89,6 +95,7 @@
 	<refFitnessConfig>
 		<fitnessClass>app.evaluation.fitness.JobPriorityFitness</fitnessClass>
 	</refFitnessConfig>
+-->
 
 <!--
 	<refFitnessConfig>

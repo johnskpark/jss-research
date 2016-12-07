@@ -14,6 +14,7 @@ import app.tracker.JasimaDecision;
 import app.tracker.JasimaExperiment;
 import app.tracker.JasimaExperimentTracker;
 import app.tracker.JasimaPriorityStat;
+import jasima.shopSim.core.JobShopExperiment;
 import jasima.shopSim.core.PR;
 import jasima.shopSim.core.PrioRuleTarget;
 
@@ -45,6 +46,14 @@ public class DiversityFitness implements IJasimaEvalFitness {
 	@Override
 	public boolean resultIsNumeric() {
 		return false;
+	}
+
+	@Override
+	public void beforeExperiment(final PR rule,
+			final SimConfig simConfig,
+			final JobShopExperiment experiment,
+			final JasimaExperimentTracker<INode> tracker) {
+		// Do nothing.
 	}
 
 	@Override

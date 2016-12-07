@@ -57,6 +57,7 @@ public class JasimaEvalProblem {
 	public static final String XML_DATASET_BASE = "datasetConfig";
 	public static final String XML_DATASET_CLASS = "datasetClass";
 	public static final String XML_DATASET_REPEAT = "datasetRepeat";
+	public static final String XML_DATASET_ROTATE_SEED = "datasetRotateSeed";
 
 	public static final String XML_REFERENCE_BASE = "refConfig";
 	public static final String XML_REFERENCE_RULE = "refRule";
@@ -648,7 +649,11 @@ public class JasimaEvalProblem {
 			for (int repeat = 0; repeat < numRepeats; repeat++) {
 				for (int configIndex = 0; configIndex < simConfig.getNumConfigs(); configIndex++) {
 
-					Experiment experiment = getExperiment(solver, configIndex);
+					JobShopExperiment experiment = getExperiment(solver, configIndex);
+					for(IJasimaEvalFitness fitness: standardEvaluation) {
+						fitness.beforeExperiment(solver, simConfig, experiment, tracker);
+					}
+					
 					experiment.runExperiment();
 
 					StringBuilder builder = new StringBuilder();
@@ -675,7 +680,7 @@ public class JasimaEvalProblem {
 		return resultsOutput;
 	}
 
-	private Experiment getExperiment(PR rule, int index) {
+	private JobShopExperiment getExperiment(PR rule, int index) {
 		JobShopExperiment experiment = ExperimentGenerator.getExperiment(simConfig, rule, index);
 
 		for (IWorkStationListener listener : listeners) {

@@ -13,10 +13,12 @@ public class EvalFactory implements ISimConfigEvalFactory {
 
 	public static final String XML_DATASET_INSTANCES = "datasetInstances";
 	public static final String XML_DATASET_SEED = "datasetSeed";
+	public static final String XML_DATASET_ROTATE_SEED = "datasetRotateSeed";
 
 	private DynamicSimConfig simConfig = null;
 	private long initialSeed;
 	private boolean initialSeedSet = false;
+	private boolean rotateSeed = false;
 
 	@Override
 	public void loadConfig(Element doc) throws IOException {
@@ -42,6 +44,12 @@ public class EvalFactory implements ISimConfigEvalFactory {
 			System.out.println("SimConfig: initial seed set for simulator: " + initialSeed);
 		} else {
 			throw new IOException("SimConfig: initial seed for the dataset must be provided.");
+		}
+		
+		NodeList datasetRotateSeedNodeList = doc.getElementsByTagName(XML_DATASET_ROTATE_SEED);
+		if (datasetRotateSeedNodeList.getLength() != 0) {
+			rotateSeed = Boolean.parseBoolean(datasetRotateSeedNodeList.item(0).getTextContent());
+			System.out.println("SimConfig: rotate seed set for simulator: " + rotateSeed);
 		}
 
 		System.out.println("SimConfig: modified Holthaus simulator loading complete.");

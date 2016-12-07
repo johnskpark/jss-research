@@ -14,12 +14,11 @@ import app.tracker.JasimaDecision;
 import app.tracker.JasimaExperiment;
 import app.tracker.JasimaExperimentTracker;
 import app.tracker.JasimaPriorityStat;
+import jasima.shopSim.core.JobShopExperiment;
 import jasima.shopSim.core.PR;
 import jasima.shopSim.core.PrioRuleTarget;
 
 public class JobPriorityFitness implements IJasimaEvalFitness {
-
-	// TODO need to implement the job priority calculation.
 
 	@Override
 	public String getHeaderName() {
@@ -37,6 +36,14 @@ public class JobPriorityFitness implements IJasimaEvalFitness {
 	@Override
 	public boolean resultIsNumeric() {
 		return false;
+	}
+
+	@Override
+	public void beforeExperiment(final PR rule,
+			final SimConfig simConfig,
+			final JobShopExperiment experiment,
+			final JasimaExperimentTracker<INode> tracker) {
+		// Do nothing.
 	}
 
 	@Override

@@ -10,6 +10,7 @@ import app.evaluation.IJasimaEvalFitness;
 import app.node.INode;
 import app.simConfig.SimConfig;
 import app.tracker.JasimaExperimentTracker;
+import jasima.shopSim.core.JobShopExperiment;
 import jasima.shopSim.core.PR;
 
 // FIXME finish sometime later.
@@ -23,6 +24,14 @@ public class TerminalNodeCountFitness implements IJasimaEvalFitness {
 	@Override
 	public boolean resultIsNumeric() {
 		return false;
+	}
+
+	@Override
+	public void beforeExperiment(final PR rule,
+			final SimConfig simConfig,
+			final JobShopExperiment experiment,
+			final JasimaExperimentTracker<INode> tracker) {
+		// Do nothing.
 	}
 
 	@Override
