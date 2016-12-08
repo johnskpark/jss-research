@@ -11,7 +11,7 @@ import jasima.shopSim.util.ShopListenerBase;
 public class IndJobStatCollector extends ShopListenerBase {
 
 	private static final long serialVersionUID = -4011992602302111428L;
- 
+
 	private Map<Integer, Double> releaseDate;
 	private Map<Integer, Double> completionTime;
 	private Map<Integer, Double> flowtime;
@@ -31,7 +31,12 @@ public class IndJobStatCollector extends ShopListenerBase {
 			return;
 
 		int num = j.getJobNum();
-		
+
+		// TODO Job 1801 never finishes for WCOVERT at BL 0.05
+		if (num == 1801) {
+			System.out.println("Stop here.");
+		}
+
 		double relDate = j.getRelDate();
 		double compTime = shop.simTime();
 		releaseDate.put(num, relDate);

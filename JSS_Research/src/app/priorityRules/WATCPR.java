@@ -5,15 +5,15 @@ import jasima.shopSim.core.PriorityQueue;
 import jasima.shopSim.prioRules.basic.ATC;
 
 /**
- * TODO javadoc.
+ * Vepsalainen and Morton's definition.
  * @author John
  *
  */
-public class ATCPRNew extends ATC {
+public class WATCPR extends ATC {
 
 	private static final long serialVersionUID = -5200383919674123645L;
 
-	public ATCPRNew() {
+	public WATCPR() {
 		super(3.0);
 	}
 

@@ -385,6 +385,11 @@ public class WorkStation implements Notifier<WorkStation, WorkStationEvent>,
 
 		Operation op = batch.getCurrentOperation();
 
+		// TODO temporary code.
+		if (batch.getJobNum() == 1801) {
+			System.out.printf("startproc: time: %f, task: %d\n", shop.simTime(), batch.getTaskNumber());
+		}
+
 		oldSetupState = currMachine.setupState;
 		newSetupState = op.setupState;
 		setupTime = 0.0;
@@ -411,6 +416,11 @@ public class WorkStation implements Notifier<WorkStation, WorkStationEvent>,
 	/** Called when an operation of Job j is finished. */
 	public void depart() {
 		assert currMachine.state == MachineState.WORKING;
+
+		// TODO this fucken bug.
+		if (currMachine.curJob.getJobNum() == 1801 && currMachine.curJob.getTaskNumber() >= 5) {
+			System.out.printf("workstation depart: time: %f, task: %d, num ops: %d\n", shop.simTime(), currMachine.curJob.getTaskNumber(), currMachine.curJob.numOps());
+		}
 
 		PrioRuleTarget b = currMachine.curJob;
 		currMachine.curJob = null;

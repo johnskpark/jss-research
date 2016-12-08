@@ -79,6 +79,7 @@ public class JasimaEvalProblem {
 	public static final String XML_OUTPUT_FILE = "outputFile";
 
 	public static final int DEFAULT_REPLICATION = 1;
+	public static final boolean DEFAULT_ROTATE_SEED = true;
 
 	private Map<String, List<EvalPriorityRuleBase>> solversMap = new HashMap<String, List<EvalPriorityRuleBase>>();
 	private List<EvalPriorityRuleBase> allSolvers = new ArrayList<>();
@@ -86,6 +87,7 @@ public class JasimaEvalProblem {
 
 	private SimConfig simConfig;
 	private int numRepeats = DEFAULT_REPLICATION;
+	private boolean rotateSeed = DEFAULT_ROTATE_SEED;
 
 	private List<IJasimaEvalFitness> referenceEvaluation = new ArrayList<>();
 	private List<IJasimaEvalFitness> standardEvaluation = new ArrayList<>();
@@ -274,6 +276,13 @@ public class JasimaEvalProblem {
 			numRepeats = Integer.parseInt(repeatList.item(0).getTextContent());
 
 			System.out.println("SimConfig: number of replications for dataset: " + numRepeats);
+		}
+
+		NodeList rotateSeedList = datasetBase.getElementsByTagName(XML_DATASET_ROTATE_SEED);
+		if (rotateSeedList.getLength() != 0) {
+			rotateSeed = Boolean.parseBoolean(repeatList.item(0).getTextContent());
+
+			System.out.println("SimConfig: rotate seed for each problem configuration: " + rotateSeed);
 		}
 
 		System.out.println("SimConfig: loading complete.");
@@ -490,6 +499,10 @@ public class JasimaEvalProblem {
 				for (IWorkStationListener listener : listeners) {
 					listener.clear();
 				}
+
+				if (!rotateSeed) {
+					simConfig.reset();
+				}
 			}
 //			}
 
@@ -624,6 +637,10 @@ public class JasimaEvalProblem {
 				}
 
 				tracker.clearCurrentExperiment();
+
+				if (!rotateSeed) {
+					simConfig.reset();
+				}
 			}
 //			}
 
@@ -653,7 +670,7 @@ public class JasimaEvalProblem {
 					for(IJasimaEvalFitness fitness: standardEvaluation) {
 						fitness.beforeExperiment(solver, simConfig, experiment, tracker);
 					}
-					
+
 					experiment.runExperiment();
 
 					StringBuilder builder = new StringBuilder();
@@ -668,6 +685,10 @@ public class JasimaEvalProblem {
 
 					for (IWorkStationListener listener : listeners) {
 						listener.clear();
+					}
+
+					if (!rotateSeed) {
+						simConfig.reset();
 					}
 				}
 			}

@@ -12,16 +12,17 @@ import app.evaluation.EvalPriorityRuleBase;
 import app.evaluation.JasimaEvalConfig;
 import app.node.INode;
 import app.node.pr.PRNode;
-import app.priorityRules.ATCPRNew;
+import app.priorityRules.WCOVERTPR;
 import jasima.shopSim.core.PR;
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
 
-public class EvalATC extends EvalPriorityRuleBase {
+public class EvalWCOVERT extends EvalPriorityRuleBase {
 
-	private static final long serialVersionUID = 374528155611648088L;
+	private static final long serialVersionUID = 2205586413073374194L;
 
-	private PR pr = new ATCPRNew();
+	private static final double COVERT_K_VALUE = 3.0;
+	private PR pr = new WCOVERTPR(COVERT_K_VALUE);
 
 	private List<PrioRuleTarget> entries = new ArrayList<PrioRuleTarget>();
 	private Map<PrioRuleTarget, Double> entryPrios = new HashMap<>();
@@ -33,13 +34,6 @@ public class EvalATC extends EvalPriorityRuleBase {
 	@Override
 	public List<INode> getRuleComponents() {
 		return Arrays.asList(new INode[]{ new PRNode(pr) });
-	}
-
-	@Override
-	public void beforeCalc(PriorityQueue<?> q) {
-		super.beforeCalc(q);
-
-		pr.beforeCalc(q);
 	}
 
 	@Override

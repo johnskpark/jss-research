@@ -3,6 +3,7 @@
 
 <!-- Rule file definitions -->
 
+<!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
@@ -16,52 +17,50 @@
 			<ruleFile>breakdown_sample_gp_rule_predictive.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
-
-<!--
-	<solverConfig>
-		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
-		<solverFile>
-			<ruleFile>attempt2_predictive.txt</ruleFile>
-		</solverFile>
-	</solverConfig>
-
-	<solverConfig>
-		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
-		<solverFile>
-			<ruleFile>mb_bl_high_small.txt</ruleFile>
-		</solverFile>
-	</solverConfig>
-
-	<solverConfig>
-		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
-		<solverFile>
-			<ruleFile>mb_bl_mid_small.txt</ruleFile>
-		</solverFile>
-	</solverConfig>
 -->
 
 <!--
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.EvalHolthausRule</solverClass>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.EvalWSPT</solverClass>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.EvalEDD</solverClass>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.EvalWATC</solverClass>
+	</solverConfig>
+
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EvalFIFO</solverClass>
-		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
-		<solverFile>
-			<ruleFile>simple_bl_high_gen_10_sample.txt</ruleFile>
-		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.EvalSPT</solverClass>
 	</solverConfig>
 -->
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.EvalWCOVERT</solverClass>
+	</solverConfig>
 
 	<datasetConfig>
 		<datasetClass>app.simConfig.holthausConfig.EvalFactory</datasetClass>
-		<datasetInstances>(all),(all),(all)</datasetInstances>
+		<datasetInstances>(all),(0.05),(all)</datasetInstances>
 		<datasetSeed>15</datasetSeed>
-		<datasetRotateSeed>false</datasetRotateSeed>
 		<!-- <datasetSeed>4609823032865163582</datasetSeed> -->
 		<datasetRepeat>1</datasetRepeat>
+		<datasetRotateSeed>false</datasetRotateSeed>
 	</datasetConfig>
 
 <!-- Output file definition -->
 	<outputConfig>
-	    <outputFile>breakdown_sample_gp_rule_output.csv</outputFile>
+	    <outputFile>breakdown_ft_mwt_test_output.csv</outputFile>
 	</outputConfig>
 
 
@@ -77,7 +76,7 @@
 	<fitnessConfig>
 		<fitnessClass>app.evaluation.fitness.BreakdownLevelFitness</fitnessClass>
 	</fitnessConfig>
-	
+
 	<fitnessConfig>
 		<fitnessClass>app.evaluation.fitness.JobFlowtimeFitness</fitnessClass>
 	</fitnessConfig>

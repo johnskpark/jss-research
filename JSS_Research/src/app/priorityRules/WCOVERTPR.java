@@ -5,17 +5,17 @@ import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
 
 /**
- * TODO I really wish I documented where I got this from. 
+ * TODO I really wish I documented where I got this from.
  * @author John
  *
  */
-public class COVERTPR extends PR {
+public class WCOVERTPR extends PR {
 
 	private static final long serialVersionUID = 3694129880044402062L;
 
 	private double k;
 
-	public COVERTPR(double k) {
+	public WCOVERTPR(double k) {
 		this.k = k;
 	}
 
@@ -29,12 +29,9 @@ public class COVERTPR extends PR {
 		double slack = entry.getDueDate() - entry.getShop().simTime() -
 				entry.remainingProcTime();
 
-		double previousWaitTime = ff * 0.0; // TODO oh oh...
 		double remainingWaitTime = ff * entry.remainingProcTime();
-		double totalWaitTime = previousWaitTime + remainingWaitTime;
-
 		double prod = Math.max(1.0 - Math.max(slack, 0.0) /
-				(k * totalWaitTime), 0.0);
+				(k * remainingWaitTime), 0.0);
 
 		return entry.getWeight() / entry.currProcTime() * prod;
 	}
