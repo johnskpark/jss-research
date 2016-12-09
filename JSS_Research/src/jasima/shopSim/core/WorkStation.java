@@ -215,6 +215,11 @@ public class WorkStation implements Notifier<WorkStation, WorkStationEvent>,
 		numBusy--;
 		assert numBusy >= 0 && numBusy <= numInGroup;
 
+		// TODO temporary code.
+		if (index == 6) {
+			System.out.printf("workstation activated: index: %d, time: %f\n", index, shop.simTime());
+		}
+
 		// start a job on this machine
 		if (numJobsWaiting() > 0)
 			selectAndStart();
@@ -228,6 +233,11 @@ public class WorkStation implements Notifier<WorkStation, WorkStationEvent>,
 		assert currMachine == im;
 		assert currMachine.curJob != null;
 
+		// TODO temporary code.
+		if (index == 6 && currMachine.curJob.getJobNum() == 1801) {
+			System.out.printf("workstation activatedStillBusy: index: %d, time: %f, job: %d\n", index, shop.simTime(), currMachine.curJob.getJobNum());
+		}
+
 		if (numListener() > 0) {
 			fire(WS_ACTIVATED);
 		}
@@ -236,6 +246,11 @@ public class WorkStation implements Notifier<WorkStation, WorkStationEvent>,
 	public void takenDown(IndividualMachine im) {
 		assert currMachine == im;
 		freeMachines.remove(currMachine);
+
+		// TODO temporary code.
+		if (index == 6) {
+			System.out.printf("workstation takendown: index: %d, time: %f\n", index, shop.simTime());
+		}
 
 		numBusy++;
 		assert numBusy >= 0 && numBusy <= numInGroup;
@@ -248,6 +263,11 @@ public class WorkStation implements Notifier<WorkStation, WorkStationEvent>,
 	public void takenDownStillBusy(IndividualMachine im) {
 		assert currMachine == im;
 		assert numBusy >= 0 && numBusy <= numInGroup;
+
+		// TODO temporary code.
+		if (index == 6 && currMachine.curJob.getJobNum() == 1801) {
+			System.out.printf("workstation takendownStillBusy: index: %d, time: %f, job: %d\n", index, shop.simTime(), currMachine.curJob.getJobNum());
+		}
 
 		if (numListener() > 0) {
 			fire(WS_DEACTIVATED);
@@ -418,8 +438,12 @@ public class WorkStation implements Notifier<WorkStation, WorkStationEvent>,
 		assert currMachine.state == MachineState.WORKING;
 
 		// TODO this fucken bug.
-		if (currMachine.curJob.getJobNum() == 1801 && currMachine.curJob.getTaskNumber() >= 5) {
-			System.out.printf("workstation depart: time: %f, task: %d, num ops: %d\n", shop.simTime(), currMachine.curJob.getTaskNumber(), currMachine.curJob.numOps());
+		if (currMachine.curJob.getJobNum() == 1801 && currMachine.curJob.getTaskNumber() >= 4) {
+			PrioRuleTarget jub = currMachine.curJob;
+			System.out.printf("workstation depart: time: %f, task: %d, num ops: %d\n", shop.simTime(), jub.getTaskNumber(), jub.numOps());
+
+			WorkStation m = jub.getOps()[jub.getTaskNumber()+1].machine;
+			System.out.printf("next workstation: index: %d, status: %s\n", m.index(), m.machDat[0].state.toString());
 		}
 
 		PrioRuleTarget b = currMachine.curJob;
@@ -477,6 +501,12 @@ public class WorkStation implements Notifier<WorkStation, WorkStationEvent>,
 
 		PrioRuleTarget nextBatch = nextJobAndMachine();
 		assert freeMachines.contains(currMachine);
+
+		// TODO this fucken bug.
+		if (nextBatch.getJobNum() == 1801) {
+			System.out.printf("workstation selectandstart0: time: %f, task: %d, num ops: %d\n", shop.simTime(), nextBatch.getTaskNumber(), nextBatch.numOps());
+			System.out.printf("workstation selectandstart0: index: %d\n", index);
+		}
 
 		// start work on selected job/batch
 		if (nextBatch != null) {
