@@ -103,6 +103,7 @@ public class WorkStation implements Notifier<WorkStation, WorkStationEvent>,
 	int index; // in shop.machines
 
 	private int numBusy;
+	private int numDown;
 	private int numFutures; // number of future arrivals currently in queue
 
 	private boolean batchingUsed;
@@ -187,6 +188,7 @@ public class WorkStation implements Notifier<WorkStation, WorkStationEvent>,
 
 		freeMachines = new ArrayDeque<IndividualMachine>(numInGroup);
 		numBusy = 0;
+		numDown = 0;
 
 		queue.clear();
 		selectEventCache = null;
@@ -216,6 +218,7 @@ public class WorkStation implements Notifier<WorkStation, WorkStationEvent>,
 		assert numBusy >= 0 && numBusy <= numInGroup;
 
 		// TODO temporary code.
+		// So this never gets called after job 1801 arrives at the machine.
 		if (index == 6) {
 			System.out.printf("workstation activated: index: %d, time: %f\n", index, shop.simTime());
 		}
@@ -300,6 +303,8 @@ public class WorkStation implements Notifier<WorkStation, WorkStationEvent>,
 			removeFromQueue(j.getMyFuture());
 		}
 
+		// TODO need to add in code here to trigger the selection event if the machine is down.
+
 		addToQueue(j, shop.simTime());
 	}
 
@@ -326,6 +331,11 @@ public class WorkStation implements Notifier<WorkStation, WorkStationEvent>,
 	private void addToQueue(Job j, double arrivesAt) {
 		j.arriveInQueue(this, arrivesAt);
 
+		// TODO temporary code.
+		if (j.getJobNum() == 1801 && j.getTaskNumber() == 5) {
+			System.out.println("Job successfully arrived on machine " + index);
+		}
+
 		queue.add(j);
 		Operation o = j.getCurrentOperation();
 		if (!batchingUsed) {
@@ -348,11 +358,31 @@ public class WorkStation implements Notifier<WorkStation, WorkStationEvent>,
 			justArrived = null;
 		}
 
+		// TODO So it seems that this line of code is incompatible with the original.
+
 		// are there jobs that could be started and at least a free
 		// machine
 		if (numBusy < numInGroup && numJobsWaiting() > 0) {
 			// at least 1 machine idle, start job selection
 			selectAndStart();
+		} else if (currMachine != null && currMachine.state == MachineState.DOWN && numJobsWaiting() > 0) {
+			// schedule the job selection to when the machine activates
+			assert currMachine.curJob == null;
+
+			selectAndStart(currMachine.downReason.getActivateTime());
+		}
+
+		if (numJobsWaiting() > 0) {
+			// TODO need to determine whether there is already an event scheduled for the situation
+			if (numBusy < numInGroup) {
+				// at least 1 machine idle, start job selection
+				selectAndStart();
+			} else {
+				// TODO
+				// The machines could be working, in which case the job starts immediately.
+				// Or, the machine could be down, in which case we need to schedule an event.
+				// So I think I need both numBusy and numDown, since I only need to schedule if there's no numBusy.
+			}
 		}
 	}
 
@@ -482,13 +512,22 @@ public class WorkStation implements Notifier<WorkStation, WorkStationEvent>,
 	 * know exactly what you are doing.
 	 */
 	public void selectAndStart() {
+		selectAndStart(shop.simTime());
+	}
+
+	/**
+	 * Selects the next batch from the queue and starts processing. Even though
+	 * this method is public it should never be called externally unless you
+	 * know exactly what you are doing.
+	 */
+	public void selectAndStart(double eventTime) {
 		// reuse select event objects
 		SelectEvent e = selectEventCache;
 		if (e == null) {
-			e = new SelectEvent(shop.simTime());
+			e = new SelectEvent(eventTime);
 		} else {
 			selectEventCache = e.next;
-			e.setTime(shop.simTime());
+			e.setTime(eventTime);
 		}
 
 		// execute asynchronously so all jobs arrived/departed before selection
