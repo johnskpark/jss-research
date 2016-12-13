@@ -44,9 +44,9 @@ import java.util.Set;
  * completing a simulation the {@link #done()}-method should be called to
  * perform clean-up, collecting simulation results, etc.
  * </p>
- * 
+ *
  * @author Torsten Hildebrandt, 2012-02-08
- * @version 
+ * @version
  *          "$Id$"
  */
 public class Simulation implements Notifier<Simulation, SimEvent>, ValueStore {
@@ -187,7 +187,7 @@ public class Simulation implements Notifier<Simulation, SimEvent>, ValueStore {
 	 * reached, there are no more application events in the queue, or some other
 	 * code called {@link #end()}.
 	 * <p>
-	 * 
+	 *
 	 * @see jasima.core.simulation.Event#isAppEvent()
 	 */
 	public void run() {
@@ -311,7 +311,7 @@ public class Simulation implements Notifier<Simulation, SimEvent>, ValueStore {
 
 	/**
 	 * Triggers a print event of category "normal".
-	 * 
+	 *
 	 * @param message
 	 *            The message to print.
 	 * @see #print(SimMsgCategory, String)
@@ -323,7 +323,7 @@ public class Simulation implements Notifier<Simulation, SimEvent>, ValueStore {
 	/**
 	 * Triggers a print event of the given category. If an appropriate listener
 	 * is installed, this should produce an output of {@code message}.
-	 * 
+	 *
 	 * @param message
 	 *            The message to print.
 	 */
@@ -356,7 +356,7 @@ public class Simulation implements Notifier<Simulation, SimEvent>, ValueStore {
 
 	/**
 	 * Factory method to create a new event queue.
-	 * 
+	 *
 	 * @return The event queue to use in this simulation.
 	 */
 	protected EventQueue createEventQueue() {
@@ -419,7 +419,7 @@ public class Simulation implements Notifier<Simulation, SimEvent>, ValueStore {
 	 * {@link #addNotifierListener(NotifierListener)} in its ability to
 	 * (optionally) clone the listener (using
 	 * {@link TypeUtil#cloneIfPossible(Object)}) before installing it.
-	 * 
+	 *
 	 * @param l
 	 *            The shop listener to add.
 	 * @param cloneIfPossbile
@@ -459,7 +459,7 @@ public class Simulation implements Notifier<Simulation, SimEvent>, ValueStore {
 	 * Offers a simple get/put-mechanism to store and retrieve information as a
 	 * kind of global data store. This can be used as a simple extension
 	 * mechanism.
-	 * 
+	 *
 	 * @param key
 	 *            The key name.
 	 * @param value
@@ -475,7 +475,7 @@ public class Simulation implements Notifier<Simulation, SimEvent>, ValueStore {
 
 	/**
 	 * Retrieves a value from the value store.
-	 * 
+	 *
 	 * @param key
 	 *            The entry to return, e.g., identified by a name.
 	 * @return The value associated with {@code key}.
@@ -511,7 +511,7 @@ public class Simulation implements Notifier<Simulation, SimEvent>, ValueStore {
 
 	/**
 	 * Removes an entry from this simulation's value store.
-	 * 
+	 *
 	 * @return The value previously associated with "key", or null, if no such
 	 *         key was found.
 	 */

@@ -162,6 +162,7 @@ public class WorkStation implements Notifier<WorkStation, WorkStationEvent>,
 		this.numInGroup = numInGroup;
 
 		numBusy = 0;
+		numDown = numInGroup;
 		queue = new PriorityQueue<Job>(this);
 
 		PR sr = new FCFS();
@@ -188,7 +189,7 @@ public class WorkStation implements Notifier<WorkStation, WorkStationEvent>,
 
 		freeMachines = new ArrayDeque<IndividualMachine>(numInGroup);
 		numBusy = 0;
-		numDown = 0;
+		numDown = numInGroup; // Initially, all the machines are down.
 
 		queue.clear();
 		selectEventCache = null;
@@ -215,7 +216,9 @@ public class WorkStation implements Notifier<WorkStation, WorkStationEvent>,
 		freeMachines.addFirst(currMachine);
 
 		numBusy--;
+		numDown--;
 		assert numBusy >= 0 && numBusy <= numInGroup;
+		assert numDown >= 0 && numDown <= numInGroup;
 
 		// TODO temporary code.
 		// So this never gets called after job 1801 arrives at the machine.
@@ -235,6 +238,9 @@ public class WorkStation implements Notifier<WorkStation, WorkStationEvent>,
 	public void activatedStillBusy(IndividualMachine im) {
 		assert currMachine == im;
 		assert currMachine.curJob != null;
+
+		numDown--;
+		assert numDown >= 0 && numDown <= numInGroup;
 
 		// TODO temporary code.
 		if (index == 6 && currMachine.curJob.getJobNum() == 1801) {
@@ -256,7 +262,9 @@ public class WorkStation implements Notifier<WorkStation, WorkStationEvent>,
 		}
 
 		numBusy++;
+		numDown++;
 		assert numBusy >= 0 && numBusy <= numInGroup;
+		assert numDown >= 0 && numDown <= numInGroup;
 
 		if (numListener() > 0) {
 			fire(WS_DEACTIVATED);
@@ -265,12 +273,14 @@ public class WorkStation implements Notifier<WorkStation, WorkStationEvent>,
 
 	public void takenDownStillBusy(IndividualMachine im) {
 		assert currMachine == im;
-		assert numBusy >= 0 && numBusy <= numInGroup;
 
 		// TODO temporary code.
 		if (index == 6 && currMachine.curJob.getJobNum() == 1801) {
 			System.out.printf("workstation takendownStillBusy: index: %d, time: %f, job: %d\n", index, shop.simTime(), currMachine.curJob.getJobNum());
 		}
+
+		numDown++;
+		assert numDown >= 0 && numDown <= numInGroup;
 
 		if (numListener() > 0) {
 			fire(WS_DEACTIVATED);
@@ -332,8 +342,9 @@ public class WorkStation implements Notifier<WorkStation, WorkStationEvent>,
 		j.arriveInQueue(this, arrivesAt);
 
 		// TODO temporary code.
+		// Right, there's a bug here since there's zero machines "down" when
 		if (j.getJobNum() == 1801 && j.getTaskNumber() == 5) {
-			System.out.println("Job successfully arrived on machine " + index);
+			System.out.printf("Job successfully arrived on machine %d, machine status: %s\n", index, machDat[0].state.toString());
 		}
 
 		queue.add(j);
@@ -362,26 +373,32 @@ public class WorkStation implements Notifier<WorkStation, WorkStationEvent>,
 
 		// are there jobs that could be started and at least a free
 		// machine
-		if (numBusy < numInGroup && numJobsWaiting() > 0) {
-			// at least 1 machine idle, start job selection
-			selectAndStart();
-		} else if (currMachine != null && currMachine.state == MachineState.DOWN && numJobsWaiting() > 0) {
-			// schedule the job selection to when the machine activates
-			assert currMachine.curJob == null;
-
-			selectAndStart(currMachine.downReason.getActivateTime());
-		}
+//		if (numBusy < numInGroup && numJobsWaiting() > 0) {
+//			// at least 1 machine idle, start job selection
+//			selectAndStart();
+//		} else if (currMachine != null && currMachine.state == MachineState.DOWN && numJobsWaiting() > 0) {
+//			// schedule the job selection to when the machine activates
+//			assert currMachine.curJob == null;
+//
+//			selectAndStart(currMachine.downReason.getActivateTime());
+//		}
 
 		if (numJobsWaiting() > 0) {
-			// TODO need to determine whether there is already an event scheduled for the situation
 			if (numBusy < numInGroup) {
 				// at least 1 machine idle, start job selection
 				selectAndStart();
-			} else {
-				// TODO
-				// The machines could be working, in which case the job starts immediately.
-				// Or, the machine could be down, in which case we need to schedule an event.
-				// So I think I need both numBusy and numDown, since I only need to schedule if there's no numBusy.
+			} else if (numDown == numInGroup) {
+				// all machines are down, reschedule the selection until at least one machine reactivates again.
+				double minActivateTime = Double.POSITIVE_INFINITY;
+				for (IndividualMachine mach : machDat()) {
+					assert mach.downReason != null;
+
+					double activateTime = mach.downReason.getActivateTime();
+					if (activateTime < minActivateTime) {
+						minActivateTime = activateTime;
+					}
+				}
+				selectAndStart(minActivateTime);
 			}
 		}
 	}
@@ -541,10 +558,12 @@ public class WorkStation implements Notifier<WorkStation, WorkStationEvent>,
 		PrioRuleTarget nextBatch = nextJobAndMachine();
 		assert freeMachines.contains(currMachine);
 
-		// TODO this fucken bug.
+		// TODO this fucken bug. The job 1801 just disappears into thin air after it goes to machine 6. Why is that?
 		if (nextBatch.getJobNum() == 1801) {
 			System.out.printf("workstation selectandstart0: time: %f, task: %d, num ops: %d\n", shop.simTime(), nextBatch.getTaskNumber(), nextBatch.numOps());
 			System.out.printf("workstation selectandstart0: index: %d\n", index);
+		} else if (index == 6 && shop.simTime() >= 43418) {
+			System.out.printf("workstation selectandstart0: time: %f, job: %d, task: %d\n", shop.simTime(), nextBatch.getJobNum(), nextBatch.getTaskNumber());
 		}
 
 		// start work on selected job/batch
@@ -760,6 +779,10 @@ public class WorkStation implements Notifier<WorkStation, WorkStationEvent>,
 
 	public int numBusy() {
 		return numBusy;
+	}
+
+	public int numDown() {
+		return numDown;
 	}
 
 	public int numInGroup() {

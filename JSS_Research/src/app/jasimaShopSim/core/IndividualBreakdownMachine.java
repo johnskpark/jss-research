@@ -67,6 +67,7 @@ public class IndividualBreakdownMachine extends IndividualMachine {
 		if (state != MachineState.DOWN) {
 			throw new IllegalStateException("Only a machine in state DOWN can be activated.");
 		}
+
 		if (curJob != null) {
 			// The machine broke down while a job was in the middle of processing.
 			// Update the procFinished to be the operation's completion time.
@@ -102,11 +103,6 @@ public class IndividualBreakdownMachine extends IndividualMachine {
 		if (state != MachineState.DOWN) {
 			// If the machine's not down, then either it is currently processing a job or is idle.
 			if (state == MachineState.WORKING) {
-				// TODO temporary code.
-				if (curJob.getJobNum() == 1801) {
-					System.out.printf("takedown: time: %f, task: %d, num ops: %d\n", workStation.shop().simTime(), curJob.getTaskNumber(), curJob.numOps());
-				}
-
 				// If the machine's currently processing a job, interrupt the job by setting the job's
 				// procFinished time to be after the machine is repaired and the job is resumed.
 				assert procFinished > shop.simTime();
