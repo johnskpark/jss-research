@@ -58,7 +58,7 @@ public class EightOpSimConfig extends DynamicSimConfig {
 	}
 
 	@Override
-	public int getStopAfterNumJobs() {
+	public int getStopArrivalsAfterNumJobs() {
 		return STOP_AFTER_NUM_JOBS;
 	}
 

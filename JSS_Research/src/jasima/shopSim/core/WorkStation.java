@@ -220,12 +220,6 @@ public class WorkStation implements Notifier<WorkStation, WorkStationEvent>,
 		assert numBusy >= 0 && numBusy <= numInGroup;
 		assert numDown >= 0 && numDown <= numInGroup;
 
-		// TODO temporary code.
-		// So this never gets called after job 1801 arrives at the machine.
-		if (index == 6) {
-			System.out.printf("workstation activated: index: %d, time: %f\n", index, shop.simTime());
-		}
-
 		// start a job on this machine
 		if (numJobsWaiting() > 0)
 			selectAndStart();
@@ -242,11 +236,6 @@ public class WorkStation implements Notifier<WorkStation, WorkStationEvent>,
 		numDown--;
 		assert numDown >= 0 && numDown <= numInGroup;
 
-		// TODO temporary code.
-		if (index == 6 && currMachine.curJob.getJobNum() == 1801) {
-			System.out.printf("workstation activatedStillBusy: index: %d, time: %f, job: %d\n", index, shop.simTime(), currMachine.curJob.getJobNum());
-		}
-
 		if (numListener() > 0) {
 			fire(WS_ACTIVATED);
 		}
@@ -255,11 +244,6 @@ public class WorkStation implements Notifier<WorkStation, WorkStationEvent>,
 	public void takenDown(IndividualMachine im) {
 		assert currMachine == im;
 		freeMachines.remove(currMachine);
-
-		// TODO temporary code.
-		if (index == 6) {
-			System.out.printf("workstation takendown: index: %d, time: %f\n", index, shop.simTime());
-		}
 
 		numBusy++;
 		numDown++;
@@ -273,11 +257,6 @@ public class WorkStation implements Notifier<WorkStation, WorkStationEvent>,
 
 	public void takenDownStillBusy(IndividualMachine im) {
 		assert currMachine == im;
-
-		// TODO temporary code.
-		if (index == 6 && currMachine.curJob.getJobNum() == 1801) {
-			System.out.printf("workstation takendownStillBusy: index: %d, time: %f, job: %d\n", index, shop.simTime(), currMachine.curJob.getJobNum());
-		}
 
 		numDown++;
 		assert numDown >= 0 && numDown <= numInGroup;
@@ -313,8 +292,6 @@ public class WorkStation implements Notifier<WorkStation, WorkStationEvent>,
 			removeFromQueue(j.getMyFuture());
 		}
 
-		// TODO need to add in code here to trigger the selection event if the machine is down.
-
 		addToQueue(j, shop.simTime());
 	}
 
@@ -341,12 +318,6 @@ public class WorkStation implements Notifier<WorkStation, WorkStationEvent>,
 	private void addToQueue(Job j, double arrivesAt) {
 		j.arriveInQueue(this, arrivesAt);
 
-		// TODO temporary code.
-		// Right, there's a bug here since there's zero machines "down" when
-		if (j.getJobNum() == 1801 && j.getTaskNumber() == 5) {
-			System.out.printf("Job successfully arrived on machine %d, machine status: %s\n", index, machDat[0].state.toString());
-		}
-
 		queue.add(j);
 		Operation o = j.getCurrentOperation();
 		if (!batchingUsed) {
@@ -368,8 +339,6 @@ public class WorkStation implements Notifier<WorkStation, WorkStationEvent>,
 			fire(WS_JOB_ARRIVAL);
 			justArrived = null;
 		}
-
-		// TODO So it seems that this line of code is incompatible with the original.
 
 		// are there jobs that could be started and at least a free
 		// machine
@@ -452,11 +421,6 @@ public class WorkStation implements Notifier<WorkStation, WorkStationEvent>,
 
 		Operation op = batch.getCurrentOperation();
 
-		// TODO temporary code.
-		if (batch.getJobNum() == 1801) {
-			System.out.printf("startproc: time: %f, task: %d\n", shop.simTime(), batch.getTaskNumber());
-		}
-
 		oldSetupState = currMachine.setupState;
 		newSetupState = op.setupState;
 		setupTime = 0.0;
@@ -483,15 +447,6 @@ public class WorkStation implements Notifier<WorkStation, WorkStationEvent>,
 	/** Called when an operation of Job j is finished. */
 	public void depart() {
 		assert currMachine.state == MachineState.WORKING;
-
-		// TODO this fucken bug.
-		if (currMachine.curJob.getJobNum() == 1801 && currMachine.curJob.getTaskNumber() >= 4) {
-			PrioRuleTarget jub = currMachine.curJob;
-			System.out.printf("workstation depart: time: %f, task: %d, num ops: %d\n", shop.simTime(), jub.getTaskNumber(), jub.numOps());
-
-			WorkStation m = jub.getOps()[jub.getTaskNumber()+1].machine;
-			System.out.printf("next workstation: index: %d, status: %s\n", m.index(), m.machDat[0].state.toString());
-		}
 
 		PrioRuleTarget b = currMachine.curJob;
 		currMachine.curJob = null;
@@ -557,14 +512,6 @@ public class WorkStation implements Notifier<WorkStation, WorkStationEvent>,
 
 		PrioRuleTarget nextBatch = nextJobAndMachine();
 		assert freeMachines.contains(currMachine);
-
-		// TODO this fucken bug. The job 1801 just disappears into thin air after it goes to machine 6. Why is that?
-		if (nextBatch.getJobNum() == 1801) {
-			System.out.printf("workstation selectandstart0: time: %f, task: %d, num ops: %d\n", shop.simTime(), nextBatch.getTaskNumber(), nextBatch.numOps());
-			System.out.printf("workstation selectandstart0: index: %d\n", index);
-		} else if (index == 6 && shop.simTime() >= 43418) {
-			System.out.printf("workstation selectandstart0: time: %f, job: %d, task: %d\n", shop.simTime(), nextBatch.getJobNum(), nextBatch.getTaskNumber());
-		}
 
 		// start work on selected job/batch
 		if (nextBatch != null) {

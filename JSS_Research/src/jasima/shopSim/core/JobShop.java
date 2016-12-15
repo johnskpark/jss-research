@@ -30,9 +30,9 @@ import java.util.Map;
 /**
  * Implements a shop simulation. Despite its name the scenario not necessarily
  * has to be a job shop.
- * 
+ *
  * @author Torsten Hildebrandt
- * @version 
+ * @version
  *          "$Id$"
  */
 public class JobShop extends Simulation {
@@ -140,7 +140,7 @@ public class JobShop extends Simulation {
 
 	/**
 	 * Adds a listener to all {@link WorkStation}s in the shop.
-	 * 
+	 *
 	 * @param listener
 	 *            The machine listener to add.
 	 * @param cloneIfPossible
@@ -160,7 +160,7 @@ public class JobShop extends Simulation {
 
 	/**
 	 * Returns the status of lookahead mechanism.
-	 * 
+	 *
 	 * @return Whether lookahead is used.
 	 */
 	public boolean isEnableLookAhead() {
@@ -170,7 +170,7 @@ public class JobShop extends Simulation {
 	/**
 	 * Enable the lookahead mechanism of this shop. If enabled dispatching rules
 	 * can select jobs arriving from in the near future.
-	 * 
+	 *
 	 * @param enableLookAhead
 	 *            Whether to enable or disable lookahead.
 	 */
@@ -180,7 +180,7 @@ public class JobShop extends Simulation {
 
 	/**
 	 * End simulation if WIP (work in process) reaches this value (0: no limit)
-	 * 
+	 *
 	 * @param maxJobsInSystem
 	 *            The maximum number of jobs in the system.
 	 */
@@ -191,7 +191,7 @@ public class JobShop extends Simulation {
 	/**
 	 * Returns the maximum number of jobs in the system, before the simulation
 	 * is terminated.
-	 * 
+	 *
 	 * @return The maximum number of jobs in the system.
 	 */
 	public int getMaxJobsInSystem() {
@@ -201,7 +201,7 @@ public class JobShop extends Simulation {
 	/**
 	 * End simulation if a certain number of jobs was completed (%lt;=0
 	 * (default): no limit).
-	 * 
+	 *
 	 * @param stopAfterNumJobs
 	 *            The number of jobs to finish.
 	 */
@@ -211,7 +211,7 @@ public class JobShop extends Simulation {
 
 	/**
 	 * Returns the number of jobs to complete before the simulation is ended.
-	 * 
+	 *
 	 * @return The number of jobs to complete before terminating the simulation.
 	 */
 	public int getStopAfterNumJobs() {
@@ -221,7 +221,7 @@ public class JobShop extends Simulation {
 	/**
 	 * Gets the list of job sources in this shop. Do not modify the returned
 	 * array, before manually creating a clone of it.
-	 * 
+	 *
 	 * @return The array of job sources.
 	 */
 	public JobSource[] getSources() {
@@ -230,7 +230,7 @@ public class JobShop extends Simulation {
 
 	/**
 	 * Sets all job sources in this shop.
-	 * 
+	 *
 	 * @param sources
 	 *            An array with all job sources.
 	 */
@@ -272,7 +272,7 @@ public class JobShop extends Simulation {
 	/**
 	 * Gets the list of workstations in this shop. This returns method returns
 	 * the internal array, so do not modify it externally.
-	 * 
+	 *
 	 * @return An array of all workstations of this shop.
 	 */
 	public WorkStation[] getMachines() {
@@ -281,7 +281,7 @@ public class JobShop extends Simulation {
 
 	/**
 	 * Sets the workstations of this shop.
-	 * 
+	 *
 	 * @param machines
 	 *            An array containing all workstations for this shop.
 	 */
@@ -296,7 +296,7 @@ public class JobShop extends Simulation {
 
 	/**
 	 * Adds a single machine to this shop.
-	 * 
+	 *
 	 * @see #getMachines()
 	 * @param machine
 	 *            The workstation to add.
@@ -314,7 +314,7 @@ public class JobShop extends Simulation {
 
 	/**
 	 * Removes a machine from this shop.
-	 * 
+	 *
 	 * @param machine
 	 *            The workstation to remove.
 	 */
@@ -335,7 +335,7 @@ public class JobShop extends Simulation {
 	/**
 	 * Returns a workstation with the given name, or {@code null} if no such
 	 * workstation exists.
-	 * 
+	 *
 	 * @param name
 	 *            The workstation's name.
 	 * @return The workstation with the given name, if it exists. {@code null}
@@ -357,7 +357,7 @@ public class JobShop extends Simulation {
 
 	/**
 	 * Returns the routes added to this job shop. Do not modify externally.
-	 * 
+	 *
 	 * @return An array of all routes in this shop.
 	 */
 	public Route[] getRoutes() {
@@ -366,7 +366,7 @@ public class JobShop extends Simulation {
 
 	/**
 	 * Sets the routes available for this job shop.
-	 * 
+	 *
 	 * @param routes
 	 *            The route list.
 	 */

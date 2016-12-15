@@ -21,6 +21,11 @@ public class SixBySixSimConfig extends StaticSimConfig {
 	}
 
 	@Override
+	public int getNumJobs(int index) {
+		return NUM_JOBS;
+	}
+
+	@Override
 	public int getNumMachines(int index) {
 		return NUM_MACHINES;
 	}

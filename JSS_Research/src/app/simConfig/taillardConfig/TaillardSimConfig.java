@@ -39,6 +39,10 @@ public class TaillardSimConfig extends StaticSimConfig {
 		return numConfigs;
 	}
 
+	public int getNumJobs(int index) {
+		return numJobs.get(index);
+	}
+
 	@Override
 	public int getNumMachines(int index) {
 		return numMachines.get(index);

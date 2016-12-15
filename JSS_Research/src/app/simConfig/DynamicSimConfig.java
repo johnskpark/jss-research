@@ -41,6 +41,6 @@ public abstract class DynamicSimConfig implements SimConfig {
 
 	public abstract int getNumIgnore();
 
-	public abstract int getStopAfterNumJobs();
+	public abstract int getStopArrivalsAfterNumJobs();
 
 }

@@ -57,7 +57,7 @@ public abstract class DynamicBreakdownSimConfig implements SimConfig {
 
 	public abstract int getNumIgnore();
 
-	public abstract int getStopAfterNumJobs();
+	public abstract int getStopArrivalsAfterNumJobs();
 
 	public abstract double getRepairTimeFactor(int index);
 
