@@ -32,11 +32,6 @@ public class IndJobStatCollector extends ShopListenerBase {
 
 		int num = j.getJobNum();
 
-		// TODO Job 1801 never finishes for WCOVERT at BL 0.05
-		if (num == 1801) {
-			System.out.println("Stop here.");
-		}
-
 		double relDate = j.getRelDate();
 		double compTime = shop.simTime();
 		releaseDate.put(num, relDate);

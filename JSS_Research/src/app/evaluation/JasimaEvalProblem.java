@@ -29,7 +29,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import app.IWorkStationListener;
+import app.JasimaWorkStationListener;
 import app.MultiRuleBase;
 import app.node.INode;
 import app.node.NodeData;
@@ -91,8 +91,8 @@ public class JasimaEvalProblem {
 
 	private List<IJasimaEvalFitness> referenceEvaluation = new ArrayList<>();
 	private List<IJasimaEvalFitness> standardEvaluation = new ArrayList<>();
-	private List<IWorkStationListener> listeners = new ArrayList<>();
-	private Map<String, IWorkStationListener> listenerMap = new HashMap<>();
+	private List<JasimaWorkStationListener> listeners = new ArrayList<>();
+	private Map<String, JasimaWorkStationListener> listenerMap = new HashMap<>();
 
 	private List<PR> referenceRules = new ArrayList<>();
 	private List<PR> trackedRefRules = new ArrayList<>();
@@ -391,11 +391,11 @@ public class JasimaEvalProblem {
 					.item(0)
 					.getTextContent());
 
-			IWorkStationListenerEvalFactory factory;
-			factory = (IWorkStationListenerEvalFactory) listenerClass.newInstance();
+			JasimaWorkStationListenerEvalFactory factory;
+			factory = (JasimaWorkStationListenerEvalFactory) listenerClass.newInstance();
 			factory.loadConfig(listenerBase);
 
-			IWorkStationListener listener = factory.generateWorkStationListener();
+			JasimaWorkStationListener listener = factory.generateWorkStationListener();
 
 			listeners.add(listener);
 			listenerMap.put(listener.getClass().getSimpleName(), listener);
@@ -496,7 +496,7 @@ public class JasimaEvalProblem {
 					}
 				}
 
-				for (IWorkStationListener listener : listeners) {
+				for (JasimaWorkStationListener listener : listeners) {
 					listener.clear();
 				}
 
@@ -683,7 +683,7 @@ public class JasimaEvalProblem {
 
 					resultsOutput.add(builder.toString());
 
-					for (IWorkStationListener listener : listeners) {
+					for (JasimaWorkStationListener listener : listeners) {
 						listener.clear();
 					}
 
@@ -704,7 +704,7 @@ public class JasimaEvalProblem {
 	private JobShopExperiment getExperiment(PR rule, int index) {
 		JobShopExperiment experiment = ExperimentGenerator.getExperiment(simConfig, rule, index);
 
-		for (IWorkStationListener listener : listeners) {
+		for (JasimaWorkStationListener listener : listeners) {
 			experiment.addMachineListener(listener);
 		}
 

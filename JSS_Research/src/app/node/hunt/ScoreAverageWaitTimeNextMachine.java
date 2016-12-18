@@ -1,18 +1,17 @@
 package app.node.hunt;
 
-import jasima.shopSim.core.PrioRuleTarget;
-import jasima.shopSim.core.WorkStation;
-
 import java.util.Map;
 import java.util.Queue;
 
-import app.IWorkStationListener;
+import app.JasimaWorkStationListener;
 import app.listener.hunt.HuntListener;
 import app.listener.hunt.OperationCompletionStat;
 import app.node.INode;
 import app.node.NodeAnnotation;
 import app.node.NodeData;
 import app.node.NodeDefinition;
+import jasima.shopSim.core.PrioRuleTarget;
+import jasima.shopSim.core.WorkStation;
 
 // The average wait time of last five jobs processed at the next machine job visits.
 @NodeAnnotation(node=NodeDefinition.SCORE_AVERAGE_WAIT_TIME_NEXT_MACHINE)
@@ -37,7 +36,7 @@ public class ScoreAverageWaitTimeNextMachine implements INode {
 	public double evaluate(NodeData data) {
 		PrioRuleTarget entry = data.getPrioRuleTarget();
 
-		Map<String, IWorkStationListener> listeners = data.getWorkStationListeners();
+		Map<String, JasimaWorkStationListener> listeners = data.getWorkStationListeners();
 		HuntListener listener = (HuntListener) listeners.get(HuntListener.class.getSimpleName());
 
 		double averageWaitTime = 0.0;

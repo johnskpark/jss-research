@@ -4,10 +4,10 @@ import java.io.IOException;
 
 import org.w3c.dom.Element;
 
-import app.IWorkStationListener;
-import app.evaluation.IWorkStationListenerEvalFactory;
+import app.JasimaWorkStationListener;
+import app.evaluation.JasimaWorkStationListenerEvalFactory;
 
-public class EvalFactory implements IWorkStationListenerEvalFactory {
+public class EvalFactory implements JasimaWorkStationListenerEvalFactory {
 
 	private BreakdownListener listener = null;
 
@@ -21,7 +21,7 @@ public class EvalFactory implements IWorkStationListenerEvalFactory {
 	}
 
 	@Override
-	public IWorkStationListener generateWorkStationListener() {
+	public JasimaWorkStationListener generateWorkStationListener() {
 		if (listener == null) {
 			listener = new BreakdownListener();
 		}

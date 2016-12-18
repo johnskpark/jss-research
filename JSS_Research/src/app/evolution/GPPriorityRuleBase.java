@@ -1,9 +1,10 @@
 package app.evolution;
 
-import app.IWorkStationListener;
+import app.Clearable;
 import app.tracker.JasimaExperimentTracker;
 import ec.EvolutionState;
 import ec.Individual;
+import jasima.core.util.observer.NotifierListener;
 import jasima.shopSim.core.PR;
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.WorkStation;
@@ -15,7 +16,10 @@ import jasima.shopSim.core.WorkStation.WorkStationEvent;
  * @author parkjohn
  *
  */
-public abstract class GPPriorityRuleBase extends PR implements IJasimaGPPriorityRule, IWorkStationListener {
+public abstract class GPPriorityRuleBase extends PR implements
+		IJasimaGPPriorityRule,
+		NotifierListener<WorkStation, WorkStationEvent>,
+		Clearable {
 
 	private static final long serialVersionUID = 5132364772745774943L;
 

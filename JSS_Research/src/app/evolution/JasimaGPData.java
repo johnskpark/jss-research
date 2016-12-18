@@ -2,7 +2,7 @@ package app.evolution;
 
 import java.util.Map;
 
-import app.IWorkStationListener;
+import app.JasimaWorkStationListener;
 import ec.gp.GPData;
 import jasima.shopSim.core.PrioRuleTarget;
 
@@ -12,7 +12,7 @@ public class JasimaGPData extends GPData {
 
 	private PrioRuleTarget entry;
 	private double priority;
-	private Map<String, IWorkStationListener> workStationListeners;
+	private Map<String, JasimaWorkStationListener> workStationListeners;
 
 	// Getters
 
@@ -24,7 +24,7 @@ public class JasimaGPData extends GPData {
 		return priority;
 	}
 
-	public Map<String, IWorkStationListener> getWorkStationListeners() {
+	public Map<String, JasimaWorkStationListener> getWorkStationListeners() {
 		return workStationListeners;
 	}
 
@@ -38,7 +38,7 @@ public class JasimaGPData extends GPData {
 		this.priority = priority;
 	}
 
-	public void setWorkStationListener(Map<String, IWorkStationListener> listener) {
+	public void setWorkStationListener(Map<String, JasimaWorkStationListener> listener) {
 		this.workStationListeners = listener;
 	}
 

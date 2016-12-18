@@ -1,11 +1,11 @@
 package app.listener.hunt;
 
-import app.IWorkStationListener;
-import app.evolution.IWorkStationListenerEvolveFactory;
+import app.JasimaWorkStationListener;
+import app.evolution.JasimaWorkStationListenerEvolveFactory;
 import ec.EvolutionState;
 import ec.util.Parameter;
 
-public class EvolveFactory implements IWorkStationListenerEvolveFactory {
+public class EvolveFactory implements JasimaWorkStationListenerEvolveFactory {
 
 	private static final long serialVersionUID = -8366845139333729953L;
 
@@ -24,7 +24,7 @@ public class EvolveFactory implements IWorkStationListenerEvolveFactory {
 	}
 
 	@Override
-	public IWorkStationListener generateWorkStationListener() {
+	public JasimaWorkStationListener generateWorkStationListener() {
 		if (listener == null) {
 			listener = new HuntListener(maxSize);
 		}

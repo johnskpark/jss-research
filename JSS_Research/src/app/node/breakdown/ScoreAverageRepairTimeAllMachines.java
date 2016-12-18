@@ -2,7 +2,7 @@ package app.node.breakdown;
 
 import java.util.Map;
 
-import app.IWorkStationListener;
+import app.JasimaWorkStationListener;
 import app.listener.breakdown.BreakdownListener;
 import app.node.INode;
 import app.node.NodeAnnotation;
@@ -27,7 +27,7 @@ public class ScoreAverageRepairTimeAllMachines implements INode {
 
 	@Override
 	public double evaluate(NodeData data) {
-		Map<String, IWorkStationListener> listeners = data.getWorkStationListeners();
+		Map<String, JasimaWorkStationListener> listeners = data.getWorkStationListeners();
 		BreakdownListener listener = (BreakdownListener) listeners.get(BreakdownListener.class.getSimpleName());
 
 		if (listener.hasBeenRepairedAnyMachine()) {

@@ -1,11 +1,11 @@
 package app.listener.nguyen_r1;
 
-import app.IWorkStationListener;
-import app.evolution.IWorkStationListenerEvolveFactory;
+import app.JasimaWorkStationListener;
+import app.evolution.JasimaWorkStationListenerEvolveFactory;
 import ec.EvolutionState;
 import ec.util.Parameter;
 
-public class EvolveFactory implements IWorkStationListenerEvolveFactory {
+public class EvolveFactory implements JasimaWorkStationListenerEvolveFactory {
 
 	private static final long serialVersionUID = -9030410769000603334L;
 
@@ -17,7 +17,7 @@ public class EvolveFactory implements IWorkStationListenerEvolveFactory {
 	}
 
 	@Override
-	public IWorkStationListener generateWorkStationListener() {
+	public JasimaWorkStationListener generateWorkStationListener() {
 		if (listener == null) {
 			listener = new NguyenR1Listener();
 		}

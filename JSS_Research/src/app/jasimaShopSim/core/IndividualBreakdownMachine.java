@@ -21,12 +21,6 @@ public class IndividualBreakdownMachine extends IndividualMachine {
 		public void handle() {
 			final JobShop shop = workStation.shop();
 
-			// TODO why is task 0 being called again? what's so different about the two?
-			// Some cunt is scheduling this earlier in advance, what the actual fuck?
-			if (curJob != null && curJob.getJobNum() == 1801 && curJob.getTaskNumber() >= 5) {
-				System.out.printf("indmachine ondepart: time: %f, task: %d, num ops: %d\n", shop.simTime(), curJob.getTaskNumber(), curJob.numOps());
-			}
-
 			if (state != MachineState.DOWN) {
 				if (procFinished > shop.simTime()) {
 					// If the machine has been fixed in between the job's processing time

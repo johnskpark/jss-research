@@ -3,12 +3,11 @@ package app.listener.hunt;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import app.IWorkStationListener;
+import app.JasimaWorkStationListener;
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.WorkStation;
-import jasima.shopSim.core.WorkStation.WorkStationEvent;
 
-public class HuntListener implements IWorkStationListener {
+public class HuntListener extends JasimaWorkStationListener {
 
 	private int maxSize;
 
@@ -24,35 +23,10 @@ public class HuntListener implements IWorkStationListener {
 	}
 
 	@Override
-	public void update(WorkStation notifier, WorkStationEvent event) {
-		if (event == WorkStation.WS_JOB_SELECTED) {
-			operationStart(notifier);
-		} else if (event == WorkStation.WS_JOB_COMPLETED) {
-			operationComplete(notifier);
-		} else if (event == WorkStation.WS_INIT) {
-			init(notifier);
-		}
-	}
+	protected void operationCompleted(WorkStation m, PrioRuleTarget justCompleted) {
+		int index = m.index();
 
-	public void operationStart(WorkStation machine) {
-		int index = machine.index();
-
-		if (startedJobs[index] != null) {
-			throw new RuntimeException("The machine should not currently be processing any jobs");
-		}
-
-		OperationStartStat stat = new OperationStartStat();
-		stat.entry = machine.justStarted;
-		stat.arrivalTime = stat.entry.getArriveTime();
-		stat.startTime = stat.entry.getShop().simTime();
-
-		startedJobs[index] = stat;
-	}
-
-	public void operationComplete(WorkStation machine) {
-		int index = machine.index();
-
-		if (startedJobs[index].entry != machine.justCompleted) {
+		if (startedJobs[index].entry != justCompleted) {
 			throw new RuntimeException("The job selected to be processed on the machine does not match with the completed job");
 		}
 
@@ -80,8 +54,29 @@ public class HuntListener implements IWorkStationListener {
 		startedJobs[index] = null;
 	}
 
-	public void init(WorkStation machine) {
-		numMachines = machine.shop().machines.length;
+	@Override
+	protected void operationStarted(WorkStation m,
+			PrioRuleTarget justStarted,
+			int oldSetupState,
+			int newSetupState,
+			double setupTime) {
+		int index = m.index();
+
+		if (startedJobs[index] != null) {
+			throw new RuntimeException("The machine should not currently be processing any jobs");
+		}
+
+		OperationStartStat stat = new OperationStartStat();
+		stat.entry = justStarted;
+		stat.arrivalTime = stat.entry.getArriveTime();
+		stat.startTime = stat.entry.getShop().simTime();
+
+		startedJobs[index] = stat;
+	}
+
+	@Override
+	protected void init(WorkStation m) {
+		numMachines = m.shop().machines.length;
 
 		clear();
 	}

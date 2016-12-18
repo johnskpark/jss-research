@@ -5,10 +5,10 @@ import java.io.IOException;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import app.IWorkStationListener;
-import app.evaluation.IWorkStationListenerEvalFactory;
+import app.JasimaWorkStationListener;
+import app.evaluation.JasimaWorkStationListenerEvalFactory;
 
-public class EvalFactory implements IWorkStationListenerEvalFactory {
+public class EvalFactory implements JasimaWorkStationListenerEvalFactory {
 
 	public static final String XML_MAX_SIZE = "listenerSize";
 
@@ -31,7 +31,7 @@ public class EvalFactory implements IWorkStationListenerEvalFactory {
 	}
 
 	@Override
-	public IWorkStationListener generateWorkStationListener() {
+	public JasimaWorkStationListener generateWorkStationListener() {
 		if (listener == null) {
 			listener = new HuntListener(maxSize);
 		}

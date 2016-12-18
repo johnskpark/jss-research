@@ -1,11 +1,11 @@
 package app.listener.breakdown;
 
-import app.IWorkStationListener;
+import app.JasimaWorkStationListener;
 import jasima.core.statistics.SummaryStat;
+import jasima.shopSim.core.IndividualMachine;
 import jasima.shopSim.core.WorkStation;
-import jasima.shopSim.core.WorkStation.WorkStationEvent;
 
-public class BreakdownListener implements IWorkStationListener {
+public class BreakdownListener extends JasimaWorkStationListener {
 
 	private SummaryStat[] breakdownTimePerMachine;
 	private SummaryStat[] repairTimePerMachine;
@@ -27,27 +27,48 @@ public class BreakdownListener implements IWorkStationListener {
 	}
 
 	@Override
-	public void update(WorkStation notifier, WorkStationEvent event) {
-		if (event == WorkStation.WS_DEACTIVATED) {
-			machineDeactivated(notifier);
-		} else if (event == WorkStation.WS_ACTIVATED) {
-			machineActivated(notifier);
-		} else if (event == WorkStation.WS_INIT) {
-			init(notifier);
-		}
+	protected void init(WorkStation m) {
+		numMachines = m.shop().machines.length;
+
+		clear();
 	}
 
-	public void machineDeactivated(WorkStation machine) {
-		int index = machine.index();
+	@Override
+	protected void activated(WorkStation m, IndividualMachine justActivated) {
+		int index = m.index();
+		if (!previouslyDeactivated[index]) {
+			return;
+		}
+
+		if (brokenDownMachines[index].machine != m) {
+			throw new RuntimeException("The machine previously recorded to be broken down does not match the current activated machine.");
+		}
+
+		BreakdownStartStat startStat = brokenDownMachines[index];
+		double breakdownTime = startStat.breakdownTime;
+		double repairTime = m.shop().simTime() - breakdownTime;
+
+		repairTimePerMachine[index].value(repairTime);
+		repairTimeAllMachines.value(repairTime);
+
+		brokenDownMachines[index] = null;
+
+		previouslyRepaired[index] = true;
+		previouslyRepairedAny = true;
+	}
+
+	@Override
+	protected void deactivated(WorkStation m, IndividualMachine justDeactivated) {
+		int index = m.index();
 
 		if (brokenDownMachines[index] != null) {
 			throw new RuntimeException("The machine should not currently be broken down.");
 		}
 
 		BreakdownStartStat stat = new BreakdownStartStat();
-		double breakdownTime = machine.shop().simTime();
+		double breakdownTime = m.shop().simTime();
 
-		stat.machine = machine;
+		stat.machine = m;
 		stat.breakdownTime = breakdownTime;
 
 		brokenDownMachines[index] = stat;
@@ -67,35 +88,6 @@ public class BreakdownListener implements IWorkStationListener {
 		breakdownTimeAllMachines.value(stat.breakdownTime);
 
 		previouslyDeactivatedAny = true;
-	}
-
-	public void machineActivated(WorkStation machine) {
-		int index = machine.index();
-		if (!previouslyDeactivated[index]) {
-			return;
-		}
-
-		if (brokenDownMachines[index].machine != machine) {
-			throw new RuntimeException("The machine previously recorded to be broken down does not match the current activated machine.");
-		}
-
-		BreakdownStartStat startStat = brokenDownMachines[index];
-		double breakdownTime = startStat.breakdownTime;
-		double repairTime = machine.shop().simTime() - breakdownTime;
-
-		repairTimePerMachine[index].value(repairTime);
-		repairTimeAllMachines.value(repairTime);
-
-		brokenDownMachines[index] = null;
-
-		previouslyRepaired[index] = true;
-		previouslyRepairedAny = true;
-	}
-
-	public void init(WorkStation machine) {
-		numMachines = machine.shop().machines.length;
-
-		clear();
 	}
 
 	public boolean hasBrokenDown(WorkStation machine) {

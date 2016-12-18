@@ -3,6 +3,7 @@ package app.tracker;
 import java.util.ArrayList;
 import java.util.List;
 
+import app.Clearable;
 import app.IMultiRule;
 import app.simConfig.SimConfig;
 import jasima.shopSim.core.PrioRuleTarget;
@@ -19,7 +20,7 @@ import jasima.shopSim.core.PriorityQueue;
 // Is there a way to reduce the memory usage for this?
 
 // TODO Also, I need to change this up to match the decision scenario situation.
-public class JasimaExperimentTracker<T> {
+public class JasimaExperimentTracker<T> implements Clearable {
 
 	public static final int NOT_SET = -1;
 

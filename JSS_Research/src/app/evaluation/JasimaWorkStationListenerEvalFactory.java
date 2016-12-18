@@ -4,9 +4,9 @@ import java.io.IOException;
 
 import org.w3c.dom.Element;
 
-import app.IWorkStationListenerFactory;
+import app.JasimaWorkStationListenerFactory;
 
-public interface IWorkStationListenerEvalFactory extends IWorkStationListenerFactory {
+public interface JasimaWorkStationListenerEvalFactory extends JasimaWorkStationListenerFactory {
 
 	public void loadConfig(Element doc) throws IOException;
 

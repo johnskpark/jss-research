@@ -6,9 +6,10 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import app.IWorkStationListener;
+import app.JasimaWorkStationListener;
+import app.JasimaWorkStationListener;
 import app.evolution.IJasimaFitness;
-import app.evolution.IWorkStationListenerEvolveFactory;
+import app.evolution.JasimaWorkStationListenerEvolveFactory;
 import app.evolution.pickardt.presetRules.PRCR;
 import app.evolution.pickardt.presetRules.PRFCFS;
 import app.node.CompositePR;
@@ -92,7 +93,7 @@ public class JasimaPickardtProblem extends Problem implements SimpleProblemForm 
 	private DynamicSimConfig simConfig;
 	private long simSeed;
 
-	private Map<String, IWorkStationListener> workstationListeners = new HashMap<String, IWorkStationListener>();
+	private Map<String, JasimaWorkStationListener> workstationListeners = new HashMap<String, JasimaWorkStationListener>();
 	private NodeData nodeData = new NodeData();
 
 	@SuppressWarnings("unchecked")
@@ -102,10 +103,10 @@ public class JasimaPickardtProblem extends Problem implements SimpleProblemForm 
 
         // Setup the workstation listener.
         try {
-        	IWorkStationListenerEvolveFactory factory = (IWorkStationListenerEvolveFactory) state.parameters.getInstanceForParameterEq(base.push(P_WORKSTATION), null, IWorkStationListenerEvolveFactory.class);
+        	JasimaWorkStationListenerEvolveFactory factory = (JasimaWorkStationListenerEvolveFactory) state.parameters.getInstanceForParameterEq(base.push(P_WORKSTATION), null, JasimaWorkStationListenerEvolveFactory.class);
         	factory.setup(state, base.push(P_WORKSTATION));
 
-        	IWorkStationListener listener = factory.generateWorkStationListener();
+        	JasimaWorkStationListener listener = factory.generateWorkStationListener();
         	workstationListeners.put(listener.getClass().getSimpleName(), listener);
 
     		// Feed in the shop simulation listener to input.

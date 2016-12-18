@@ -5,14 +5,14 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
-import app.IWorkStationListener;
+import app.JasimaWorkStationListener;
+import jasima.shopSim.core.Job;
 import jasima.shopSim.core.Operation;
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.WorkStation;
-import jasima.shopSim.core.WorkStation.WorkStationEvent;
 
 // TODO right, I need to test this to make sure that it works correctly.
-public class NguyenR1Listener implements IWorkStationListener {
+public class NguyenR1Listener extends JasimaWorkStationListener {
 
 	private WorkloadStat[] stats;
 	private int numMachines;
@@ -53,49 +53,39 @@ public class NguyenR1Listener implements IWorkStationListener {
 		return stats[cmIndex];
 	}
 
-	@Override
-	public void update(WorkStation notifier, WorkStationEvent event) {
-		if (event == WorkStation.WS_JOB_ARRIVAL) {
-			jobArrival(notifier);
-		} else if (event == WorkStation.WS_JOB_COMPLETED){
-			operationComplete(notifier);
-		} else if (event == WorkStation.WS_INIT) {
-			init(notifier);
-		}
-	}
-
 	// So in the paper, Omega prime is the workload is the
 	// amount of workload in the current queue
 	// I is the total workload remaining
 
-	public void jobArrival(WorkStation machine) {
-		int index = machine.index();
+	@Override
+	protected void init(WorkStation m) {
+		numMachines = m.shop().machines.length;
 
-		PrioRuleTarget entry = machine.justArrived;
-		for (int i = entry.getTaskNumber(); i < entry.numOps(); i++) {
-			Operation op = entry.getOps()[i];
+		clear();
+	}
+
+	@Override
+	protected void operationCompleted(WorkStation m, PrioRuleTarget justCompleted) {
+		int index = m.index();
+
+		stats[index].operationComplete(justCompleted, justCompleted.getCurrentOperation());
+
+		update();
+	}
+
+	@Override
+	protected void arrival(WorkStation m, Job justArrived) {
+		int index = m.index();
+
+		for (int i = justArrived.getTaskNumber(); i < justArrived.numOps(); i++) {
+			Operation op = justArrived.getOps()[i];
 
 			stats[op.machine.index()].jobArrivalInShop(op);
 		}
 
-		stats[index].operationArrivalInQueue(entry, entry.getCurrentOperation());
+		stats[index].operationArrivalInQueue(justArrived, justArrived.getCurrentOperation());
 
 		update();
-	}
-
-	public void operationComplete(WorkStation machine) {
-		int index = machine.index();
-
-		PrioRuleTarget entry = machine.justCompleted;
-		stats[index].operationComplete(entry, entry.getCurrentOperation());
-
-		update();
-	}
-
-	public void init(WorkStation machine) {
-		numMachines = machine.shop().machines.length;
-
-		clear();
 	}
 
 	@Override

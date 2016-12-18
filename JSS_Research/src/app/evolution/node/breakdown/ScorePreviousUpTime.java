@@ -2,7 +2,7 @@ package app.evolution.node.breakdown;
 
 import java.util.Map;
 
-import app.IWorkStationListener;
+import app.JasimaWorkStationListener;
 import app.evolution.JasimaGPData;
 import app.evolution.node.SingleLineGPNode;
 import app.listener.breakdown.BreakdownListener;
@@ -41,7 +41,7 @@ public class ScorePreviousUpTime extends SingleLineGPNode {
 		JasimaGPData data = (JasimaGPData) input;
 		PrioRuleTarget entry = data.getPrioRuleTarget();
 
-		Map<String, IWorkStationListener> listeners = data.getWorkStationListeners();
+		Map<String, JasimaWorkStationListener> listeners = data.getWorkStationListeners();
 		BreakdownListener listener = (BreakdownListener) listeners.get(BreakdownListener.class.getSimpleName());
 
 		WorkStation machine = entry.getCurrMachine();

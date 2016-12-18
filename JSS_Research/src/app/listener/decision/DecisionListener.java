@@ -1,41 +1,37 @@
 package app.listener.decision;
 
-import app.IWorkStationListener;
+import app.JasimaWorkStationListener;
 import jasima.shopSim.core.PR;
+import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.WorkStation;
-import jasima.shopSim.core.WorkStation.WorkStationEvent;
 
-public class DecisionListener implements IWorkStationListener {
+public class DecisionListener extends JasimaWorkStationListener {
 
 	@Override
-	public void update(WorkStation notifier, WorkStationEvent event) {
-		if (event == WorkStation.WS_JOB_SELECTED) {
-			operationStart(notifier);
-		} else if (event == WorkStation.WS_JOB_COMPLETED){
-			operationComplete(notifier);
-		} else if (event == WorkStation.WS_INIT) {
-			init(notifier);
-		}
+	protected void operationCompleted(WorkStation m, PrioRuleTarget justCompleted) {
+		PR rule = m.queue.getSequencingRule();
+
+		// TODO get the results of the rule from here.
 	}
 
-	private void operationStart(WorkStation machine) {
-		PR rule = machine.queue.getSequencingRule();
+	@Override
+	protected void operationStarted(WorkStation m,
+			PrioRuleTarget justStarted,
+			int oldSetupState,
+			int newSetupState,
+			double setupTime) {
+		PR rule = m.queue.getSequencingRule();
 
-		int index = machine.index();
-		double simTime = machine.shop().simTime();
+		int index = m.index();
+		double simTime = m.shop().simTime();
 
 		// TODO get the results of the rule from here.
 
 		// So what do I actually want here?
 	}
 
-	private void operationComplete(WorkStation machine) {
-		PR rule = machine.queue.getSequencingRule();
-
-		// TODO get the results of the rule from here.
-	}
-
-	private void init(WorkStation machine) {
+	@Override
+	protected void init(WorkStation m) {
 		// TODO
 	}
 

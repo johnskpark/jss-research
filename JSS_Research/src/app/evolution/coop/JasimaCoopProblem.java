@@ -153,6 +153,9 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 		for (int expIndex = 0; expIndex < getSimConfig().getNumConfigs(); expIndex++) {
 			Experiment experiment = getExperiment(state, coopRule, expIndex, getWorkStationListeners(), getTracker());
 
+			// TODO
+			System.out.printf("coopproblem: expIndex: %d\n", expIndex);
+
 			experiment.runExperiment();
 
 			// Add in the results of the training instance to the fitness of the group.

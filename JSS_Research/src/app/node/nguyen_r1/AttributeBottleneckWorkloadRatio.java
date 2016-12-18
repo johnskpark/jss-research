@@ -3,7 +3,7 @@ package app.node.nguyen_r1;
 import java.util.List;
 import java.util.Map;
 
-import app.IWorkStationListener;
+import app.JasimaWorkStationListener;
 import app.listener.nguyen_r1.NguyenR1Listener;
 import app.listener.nguyen_r1.WorkloadStat;
 import app.node.INode;
@@ -30,7 +30,7 @@ public class AttributeBottleneckWorkloadRatio implements INode {
 
 	@Override
 	public double evaluate(NodeData data) {
-		Map<String, IWorkStationListener> listeners = data.getWorkStationListeners();
+		Map<String, JasimaWorkStationListener> listeners = data.getWorkStationListeners();
 		NguyenR1Listener listener = (NguyenR1Listener) listeners.get(NguyenR1Listener.class.getSimpleName());
 
 		PrioRuleTarget entry = data.getPrioRuleTarget();

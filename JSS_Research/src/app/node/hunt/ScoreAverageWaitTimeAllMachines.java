@@ -2,7 +2,7 @@ package app.node.hunt;
 
 import java.util.Map;
 
-import app.IWorkStationListener;
+import app.JasimaWorkStationListener;
 import app.listener.hunt.HuntListener;
 import app.node.INode;
 import app.node.NodeAnnotation;
@@ -30,7 +30,7 @@ public class ScoreAverageWaitTimeAllMachines implements INode {
 
 	@Override
 	public double evaluate(NodeData data) {
-		Map<String, IWorkStationListener> listeners = data.getWorkStationListeners();
+		Map<String, JasimaWorkStationListener> listeners = data.getWorkStationListeners();
 		HuntListener listener = (HuntListener) listeners.get(HuntListener.class.getSimpleName());
 
 		return listener.getAverageWaitTimesAllMachines();
