@@ -23,11 +23,12 @@ public class EvalWSPT extends EvalPriorityRuleBase {
 
 	private PR pr = new WSPT();
 
-	private List<PrioRuleTarget> entries = new ArrayList<PrioRuleTarget>();
+	private List<PrioRuleTarget> entries = new ArrayList<>();
 	private Map<PrioRuleTarget, Double> entryPrios = new HashMap<>();
 
 	@Override
 	public void setConfiguration(JasimaEvalConfig config) {
+		// Does nothing, no need to set configurations.
 	}
 
 	@Override
@@ -36,10 +37,16 @@ public class EvalWSPT extends EvalPriorityRuleBase {
 	}
 
 	@Override
+	public void beforeCalc(PriorityQueue<?> q) {
+		super.beforeCalc(q);
+
+		clear();
+	}
+
+	@Override
 	public double calcPrio(PrioRuleTarget entry) {
 		double prio = pr.calcPrio(entry);
 
-		clear();
 		entries.add(entry);
 		entryPrios.put(entry, prio);
 

@@ -66,6 +66,7 @@ public class WorkStation implements Notifier<WorkStation, WorkStationEvent>,
 	public static final WorkStationEvent WS_DONE = new WorkStationEvent();
 	public static final WorkStationEvent WS_COLLECT_RESULTS = new WorkStationEvent();
 	public static final WorkStationEvent WS_INIT = new WorkStationEvent();
+	public static final WorkStationEvent WS_MACHINE_IDLED = new WorkStationEvent();
 
 	public static final String DEF_SETUP_STR = "DEF_SETUP";
 	public static final int DEF_SETUP = 0;
@@ -501,19 +502,33 @@ public class WorkStation implements Notifier<WorkStation, WorkStationEvent>,
 		PrioRuleTarget nextBatch = nextJobAndMachine();
 		assert freeMachines.contains(currMachine);
 
-		// start work on selected job/batch
-		// TODO this part needs to be modified so that idle times can be inserted.
 		if (nextBatch != null) {
-			startProc(nextBatch);
+			if (!(nextBatch instanceof IdleTime)) {
+				// start work on selected job/batch
+				startProc(nextBatch);
 
-			// inform listener
-			if (numListener() > 0) {
-				justStarted = nextBatch;
-				fire(WS_JOB_SELECTED);
-				justStarted = null;
+				// inform listener
+				if (numListener() > 0) {
+					justStarted = nextBatch;
+					fire(WS_JOB_SELECTED);
+					justStarted = null;
+				}
+
+				currMachine = null;
+			} else {
+				// Idle for the duration and reschedule the selection to later down the line.
+				double rescheduleTime = shop.simTime() + nextBatch.currProcTime();
+
+				selectAndStart(rescheduleTime);
+
+				// inform listener
+				if (numListener() > 0) {
+					fire(WS_MACHINE_IDLED);
+				}
+
+				// remove the idle time from the queue
+				queue.remove((Job) nextBatch); // TODO remove the cast later down the line.
 			}
-
-			currMachine = null;
 		}
 	}
 

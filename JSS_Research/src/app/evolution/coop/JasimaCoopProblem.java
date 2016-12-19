@@ -22,7 +22,6 @@ import jasima.core.statistics.SummaryStat;
  * @author parkjohn
  *
  */
-// TODO so now there's a bug where the collaborator's are not equal to each other. What the heck?
 public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblemForm {
 
 	private static final long serialVersionUID = -1068923215891516182L;
@@ -152,9 +151,6 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 
 		for (int expIndex = 0; expIndex < getSimConfig().getNumConfigs(); expIndex++) {
 			Experiment experiment = getExperiment(state, coopRule, expIndex, getWorkStationListeners(), getTracker());
-
-			// TODO
-			System.out.printf("coopproblem: inds: %s, expIndex: %d\n", inds[0], expIndex);
 
 			experiment.runExperiment();
 
