@@ -7,28 +7,15 @@ import jasima.shopSim.core.WorkStation;
 
 public class BreakdownListener extends JasimaWorkStationListener {
 
-	private SummaryStat[] breakdownTimePerMachine;
-	private SummaryStat[] repairTimePerMachine;
-	private SummaryStat[] upTimePerMachine;
-
-	private SummaryStat breakdownTimeAllMachines;
-	private SummaryStat repairTimeAllMachines;
-	private SummaryStat upTimeAllMachines;
-
-	private BreakdownStartStat[] brokenDownMachines;
-
-	private boolean[] previouslyDeactivated;
-	private boolean[] previouslyRepaired;
-	private boolean previouslyDeactivatedAny;
-	private boolean previouslyRepairedAny;
-	private int numMachines;
+	private ReferenceStat stat = new ReferenceStat();
 
 	public BreakdownListener() {
+		super();
 	}
 
 	@Override
 	protected void init(WorkStation m) {
-		numMachines = m.shop().machines.length;
+		stat.numMachines = m.shop().machines.length;
 
 		clear();
 	}
@@ -36,32 +23,32 @@ public class BreakdownListener extends JasimaWorkStationListener {
 	@Override
 	protected void activated(WorkStation m, IndividualMachine justActivated) {
 		int index = m.index();
-		if (!previouslyDeactivated[index]) {
+		if (!stat.previouslyDeactivated[index]) {
 			return;
 		}
 
-		if (brokenDownMachines[index].machine != m) {
+		if (stat.brokenDownMachines[index].machine != m) {
 			throw new RuntimeException("The machine previously recorded to be broken down does not match the current activated machine.");
 		}
 
-		BreakdownStartStat startStat = brokenDownMachines[index];
+		BreakdownStartStat startStat = stat.brokenDownMachines[index];
 		double breakdownTime = startStat.breakdownTime;
 		double repairTime = m.shop().simTime() - breakdownTime;
 
-		repairTimePerMachine[index].value(repairTime);
-		repairTimeAllMachines.value(repairTime);
+		stat.repairTimePerMachine[index].value(repairTime);
+		stat.repairTimeAllMachines.value(repairTime);
 
-		brokenDownMachines[index] = null;
+		stat.brokenDownMachines[index] = null;
 
-		previouslyRepaired[index] = true;
-		previouslyRepairedAny = true;
+		stat.previouslyRepaired[index] = true;
+		stat.previouslyRepairedAny = true;
 	}
 
 	@Override
 	protected void deactivated(WorkStation m, IndividualMachine justDeactivated) {
 		int index = m.index();
 
-		if (brokenDownMachines[index] != null) {
+		if (stat.brokenDownMachines[index] != null) {
 			throw new RuntimeException("The machine should not currently be broken down.");
 		}
 
@@ -71,89 +58,89 @@ public class BreakdownListener extends JasimaWorkStationListener {
 		stat.machine = m;
 		stat.breakdownTime = breakdownTime;
 
-		brokenDownMachines[index] = stat;
+		this.stat.brokenDownMachines[index] = stat;
 
-		if (previouslyDeactivated[index]) {
-			double upTime = breakdownTime - breakdownTimePerMachine[index].lastValue() - repairTimePerMachine[index].lastValue();
-			upTimePerMachine[index].value(upTime);
-			upTimeAllMachines.value(upTime);
+		if (this.stat.previouslyDeactivated[index]) {
+			double upTime = breakdownTime - this.stat.breakdownTimePerMachine[index].lastValue() - this.stat.repairTimePerMachine[index].lastValue();
+			this.stat.upTimePerMachine[index].value(upTime);
+			this.stat.upTimeAllMachines.value(upTime);
 		} else {
-			upTimePerMachine[index].value(breakdownTime);
-			upTimeAllMachines.value(breakdownTime);
+			this.stat.upTimePerMachine[index].value(breakdownTime);
+			this.stat.upTimeAllMachines.value(breakdownTime);
 
-			previouslyDeactivated[index] = true;
+			this.stat.previouslyDeactivated[index] = true;
 		}
 
-		breakdownTimePerMachine[index].value(stat.breakdownTime);
-		breakdownTimeAllMachines.value(stat.breakdownTime);
+		this.stat.breakdownTimePerMachine[index].value(stat.breakdownTime);
+		this.stat.breakdownTimeAllMachines.value(stat.breakdownTime);
 
-		previouslyDeactivatedAny = true;
+		this.stat.previouslyDeactivatedAny = true;
 	}
 
 	public boolean hasBrokenDown(WorkStation machine) {
-		return previouslyDeactivated[machine.index()];
+		return stat.previouslyDeactivated[machine.index()];
 	}
 
 	public SummaryStat getMachineBreakdownStat(WorkStation machine) {
-		return breakdownTimePerMachine[machine.index()];
+		return stat.breakdownTimePerMachine[machine.index()];
 	}
 
 	public boolean hasBeenRepaired(WorkStation machine) {
-		return previouslyRepaired[machine.index()];
+		return stat.previouslyRepaired[machine.index()];
 	}
 
 	public SummaryStat getMachineRepairTimeStat(WorkStation machine) {
-		return repairTimePerMachine[machine.index()];
+		return stat.repairTimePerMachine[machine.index()];
 	}
 
 	public SummaryStat getMachineUpTimeStat(WorkStation machine) {
-		return upTimePerMachine[machine.index()];
+		return stat.upTimePerMachine[machine.index()];
 	}
 
 	public boolean hasBrokenDownAnyMachine() {
-		return previouslyDeactivatedAny;
+		return stat.previouslyDeactivatedAny;
 	}
 
 	public SummaryStat getAllMachineBreakdownStat() {
-		return breakdownTimeAllMachines;
+		return stat.breakdownTimeAllMachines;
 	}
 
 	public boolean hasBeenRepairedAnyMachine() {
-		return previouslyRepairedAny;
+		return stat.previouslyRepairedAny;
 	}
 
 	public SummaryStat getAllMachineRepairStat() {
-		return repairTimeAllMachines;
+		return stat.repairTimeAllMachines;
 	}
 
 	public SummaryStat getAllMachineUpTimeStat() {
-		return upTimeAllMachines;
+		return stat.upTimeAllMachines;
 	}
 
 	@Override
 	public void clear() {
-		breakdownTimePerMachine = new SummaryStat[numMachines];
-		repairTimePerMachine = new SummaryStat[numMachines];
-		upTimePerMachine = new SummaryStat[numMachines];
+		stat.breakdownTimePerMachine = new SummaryStat[stat.numMachines];
+		stat.repairTimePerMachine = new SummaryStat[stat.numMachines];
+		stat.upTimePerMachine = new SummaryStat[stat.numMachines];
 
-		breakdownTimeAllMachines = new SummaryStat();
-		repairTimeAllMachines = new SummaryStat();
-		upTimeAllMachines = new SummaryStat();
+		stat.breakdownTimeAllMachines = new SummaryStat();
+		stat.repairTimeAllMachines = new SummaryStat();
+		stat.upTimeAllMachines = new SummaryStat();
 
-		brokenDownMachines = new BreakdownStartStat[numMachines];
+		stat.brokenDownMachines = new BreakdownStartStat[stat.numMachines];
 
-		previouslyDeactivated = new boolean[numMachines];
-		previouslyRepaired = new boolean[numMachines];
-		previouslyDeactivatedAny = false;
-		previouslyRepairedAny = false;
+		stat.previouslyDeactivated = new boolean[stat.numMachines];
+		stat.previouslyRepaired = new boolean[stat.numMachines];
+		stat.previouslyDeactivatedAny = false;
+		stat.previouslyRepairedAny = false;
 
-		for (int i = 0; i < numMachines; i++) {
-			breakdownTimePerMachine[i] = new SummaryStat();
-			repairTimePerMachine[i] = new SummaryStat();
-			upTimePerMachine[i] = new SummaryStat();
+		for (int i = 0; i < stat.numMachines; i++) {
+			stat.breakdownTimePerMachine[i] = new SummaryStat();
+			stat.repairTimePerMachine[i] = new SummaryStat();
+			stat.upTimePerMachine[i] = new SummaryStat();
 
-			previouslyDeactivated[i] = false;
-			previouslyRepaired[i] = false;
+			stat.previouslyDeactivated[i] = false;
+			stat.previouslyRepaired[i] = false;
 		}
 	}
 
@@ -161,6 +148,25 @@ public class BreakdownListener extends JasimaWorkStationListener {
 		WorkStation machine;
 
 		double breakdownTime;
+	}
+
+	// Used explicitly for cloning, since it will be used by the experiment as well.
+	class ReferenceStat {
+		SummaryStat[] breakdownTimePerMachine;
+		SummaryStat[] repairTimePerMachine;
+		SummaryStat[] upTimePerMachine;
+
+		SummaryStat breakdownTimeAllMachines;
+		SummaryStat repairTimeAllMachines;
+		SummaryStat upTimeAllMachines;
+
+		BreakdownStartStat[] brokenDownMachines;
+
+		boolean[] previouslyDeactivated;
+		boolean[] previouslyRepaired;
+		boolean previouslyDeactivatedAny;
+		boolean previouslyRepairedAny;
+		int numMachines;
 	}
 
 }

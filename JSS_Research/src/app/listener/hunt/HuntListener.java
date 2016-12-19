@@ -9,28 +9,23 @@ import jasima.shopSim.core.WorkStation;
 
 public class HuntListener extends JasimaWorkStationListener {
 
-	private int maxSize;
-
-	private OperationStartStat[] startedJobs;
-	private Queue<OperationCompletionStat>[] completedJobs;
-	private int numMachines;
-
-	private double sumWaitTimes = 0.0;
-	private int numCompleted = 0;
+	private ReferenceStat stat = new ReferenceStat();
 
 	public HuntListener(int maxSize) {
-		this.maxSize = maxSize;
+		super();
+
+		this.stat.maxSize = maxSize;
 	}
 
 	@Override
 	protected void operationCompleted(WorkStation m, PrioRuleTarget justCompleted) {
 		int index = m.index();
 
-		if (startedJobs[index].entry != justCompleted) {
+		if (stat.startedJobs[index].entry != justCompleted) {
 			throw new RuntimeException("The job selected to be processed on the machine does not match with the completed job");
 		}
 
-		OperationStartStat startStat = startedJobs[index];
+		OperationStartStat startStat = stat.startedJobs[index];
 
 		OperationCompletionStat stat = new OperationCompletionStat(startStat.entry);
 		stat.setArrivalTime(startStat.arrivalTime);
@@ -38,20 +33,20 @@ public class HuntListener extends JasimaWorkStationListener {
 		stat.setWaitTime(startStat.startTime - startStat.arrivalTime);
 		stat.setCompletionTime(startStat.entry.getShop().simTime());
 
-		Queue<OperationCompletionStat> queue = completedJobs[index];
-		if (queue.size() == maxSize) {
+		Queue<OperationCompletionStat> queue = this.stat.completedJobs[index];
+		if (queue.size() == this.stat.maxSize) {
 			OperationCompletionStat oldStat = queue.poll();
 
-			sumWaitTimes -= oldStat.getWaitTime();
-			numCompleted--;
+			this.stat.sumWaitTimes -= oldStat.getWaitTime();
+			this.stat.numCompleted--;
 		}
 
 		queue.offer(stat);
 
-		sumWaitTimes += stat.getWaitTime();
-		numCompleted++;
+		this.stat.sumWaitTimes += stat.getWaitTime();
+		this.stat.numCompleted++;
 
-		startedJobs[index] = null;
+		this.stat.startedJobs[index] = null;
 	}
 
 	@Override
@@ -62,7 +57,7 @@ public class HuntListener extends JasimaWorkStationListener {
 			double setupTime) {
 		int index = m.index();
 
-		if (startedJobs[index] != null) {
+		if (stat.startedJobs[index] != null) {
 			throw new RuntimeException("The machine should not currently be processing any jobs");
 		}
 
@@ -71,38 +66,60 @@ public class HuntListener extends JasimaWorkStationListener {
 		stat.arrivalTime = stat.entry.getArriveTime();
 		stat.startTime = stat.entry.getShop().simTime();
 
-		startedJobs[index] = stat;
+		this.stat.startedJobs[index] = stat;
 	}
 
 	@Override
 	protected void init(WorkStation m) {
-		numMachines = m.shop().machines.length;
+		stat.numMachines = m.shop().machines.length;
+		stat.initialised = true;
 
 		clear();
 	}
 
 	public boolean hasCompletedJobs(WorkStation machine) {
-		return !completedJobs[machine.index()].isEmpty();
+		if (!stat.initialised) {
+			throw new RuntimeException("The listener has not yet been stat.initialised!");
+		}
+
+		return !stat.completedJobs[machine.index()].isEmpty();
 	}
 
 	public Queue<OperationCompletionStat> getLastCompletedJobs(WorkStation machine) {
-		return completedJobs[machine.index()];
+		if (!stat.initialised) {
+			throw new RuntimeException("The listener has not yet been stat.initialised!");
+		}
+
+		return stat.completedJobs[machine.index()];
 	}
 
 	public double getAverageWaitTimesAllMachines() {
-		return (sumWaitTimes != 0.0) ? (sumWaitTimes / numCompleted) : 0.0;
+		if (!stat.initialised) {
+			throw new RuntimeException("The listener has not yet been stat.initialised!");
+		}
+
+		return (stat.sumWaitTimes != 0.0) ? (stat.sumWaitTimes / stat.numCompleted) : 0.0;
 	}
 
 	@SuppressWarnings("unchecked")
 	public void clear() {
-		startedJobs = new OperationStartStat[numMachines];
-		completedJobs = new Queue[numMachines];
-		for (int i = 0; i < numMachines; i++) {
-			completedJobs[i] = new LinkedList<OperationCompletionStat>();
+		stat.startedJobs = new OperationStartStat[stat.numMachines];
+		stat.completedJobs = new Queue[stat.numMachines];
+		for (int i = 0; i < stat.numMachines; i++) {
+			stat.completedJobs[i] = new LinkedList<OperationCompletionStat>();
 		}
 
-		sumWaitTimes = 0.0;
-		numCompleted = 0;
+		stat.sumWaitTimes = 0.0;
+		stat.numCompleted = 0;
+	}
+
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		HuntListener obj = (HuntListener) super.clone();
+
+		obj.stat = this.stat;
+
+		return obj;
 	}
 
 	private class OperationStartStat {
@@ -112,4 +129,17 @@ public class HuntListener extends JasimaWorkStationListener {
 		double startTime;
 	}
 
+	// Used explicitly for cloning, since it will be used by the experiment as well.
+	private class ReferenceStat {
+		int maxSize;
+
+		OperationStartStat[] startedJobs;
+		Queue<OperationCompletionStat>[] completedJobs;
+		int numMachines;
+
+		double sumWaitTimes = 0.0;
+		int numCompleted = 0;
+
+		boolean initialised = false;
+	}
 }

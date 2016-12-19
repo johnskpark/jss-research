@@ -154,7 +154,7 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 			Experiment experiment = getExperiment(state, coopRule, expIndex, getWorkStationListeners(), getTracker());
 
 			// TODO
-			System.out.printf("coopproblem: expIndex: %d\n", expIndex);
+			System.out.printf("coopproblem: inds: %s, expIndex: %d\n", inds[0], expIndex);
 
 			experiment.runExperiment();
 

@@ -340,18 +340,6 @@ public class WorkStation implements Notifier<WorkStation, WorkStationEvent>,
 			justArrived = null;
 		}
 
-		// are there jobs that could be started and at least a free
-		// machine
-//		if (numBusy < numInGroup && numJobsWaiting() > 0) {
-//			// at least 1 machine idle, start job selection
-//			selectAndStart();
-//		} else if (currMachine != null && currMachine.state == MachineState.DOWN && numJobsWaiting() > 0) {
-//			// schedule the job selection to when the machine activates
-//			assert currMachine.curJob == null;
-//
-//			selectAndStart(currMachine.downReason.getActivateTime());
-//		}
-
 		if (numJobsWaiting() > 0) {
 			if (numBusy < numInGroup) {
 				// at least 1 machine idle, start job selection
@@ -514,18 +502,19 @@ public class WorkStation implements Notifier<WorkStation, WorkStationEvent>,
 		assert freeMachines.contains(currMachine);
 
 		// start work on selected job/batch
+		// TODO this part needs to be modified so that idle times can be inserted.
 		if (nextBatch != null) {
 			startProc(nextBatch);
-		}
 
-		// inform listener
-		if (numListener() > 0) {
-			justStarted = nextBatch;
-			fire(WS_JOB_SELECTED);
-			justStarted = null;
-		}
+			// inform listener
+			if (numListener() > 0) {
+				justStarted = nextBatch;
+				fire(WS_JOB_SELECTED);
+				justStarted = null;
+			}
 
-		currMachine = null;
+			currMachine = null;
+		}
 	}
 
 	protected PrioRuleTarget nextJobAndMachine() {
