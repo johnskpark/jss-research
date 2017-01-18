@@ -8,26 +8,26 @@
 package ec.gp;
 import java.io.Serializable;
 
-/* 
+/*
  * GPNodeGatherer.java
- * 
+ *
  * Created: Fri Nov  5 17:01:13 1999
  * By: Sean Luke
  */
 
 /**
  * GPNodeGatherer is a small container object for the GPNode.nodeInPosition(...)
- * method and GPNode.numNodes(...) method. 
+ * method and GPNode.numNodes(...) method.
  * It may be safely reused without being reinitialized.
  *
  * @author Sean Luke
- * @version 1.0 
+ * @version 1.0
  */
 
-public abstract class GPNodeGatherer implements Serializable
+public class GPNodeGatherer implements Serializable
     {
     // used internally by GPNode
-    GPNode node;
+    public GPNode node;
 
     /** Returns true if thisNode is the kind of node to be considered in the
         gather count for nodeInPosition(...) and GPNode.numNodes(GPNodeGatherer).

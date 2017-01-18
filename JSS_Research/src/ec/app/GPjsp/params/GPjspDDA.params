@@ -1,0 +1,61 @@
+# Copyright 2006 by Sean Luke and George Mason University
+# Licensed under the Academic Free License version 3.0
+# See the file "LICENSE" for more information
+
+parent.0 = kozaDD.params
+
+# the next four items are already defined in koza.params, but we
+# put them here to be clear.
+
+# We have one function set, of class GPFunctionSet
+gp.fs.size = 1
+gp.fs.0 = ec.gp.GPFunctionSet
+# We'll call the function set "f0".
+gp.fs.0.name = f0
+
+# We have five functions in the function set.  They are:
+
+gp.fs.0.size = 19
+gp.fs.0.func.0 = ec.app.GPjsp.func.DDA.ESTAdd
+gp.fs.0.func.0.nc = ncESTOP2
+gp.fs.0.func.1 = ec.app.GPjsp.func.DDA.ESTSub
+gp.fs.0.func.1.nc = ncESTOP2
+gp.fs.0.func.2 = ec.app.GPjsp.func.DDA.ESTMul
+gp.fs.0.func.2.nc = ncESTOP2
+gp.fs.0.func.3 = ec.app.GPjsp.func.DDA.ESTDiv
+gp.fs.0.func.3.nc = ncESTOP2
+gp.fs.0.func.4 = ec.app.GPjsp.func.DDA.ESTIf
+gp.fs.0.func.4.nc = ncESTOP3
+gp.fs.0.func.5 = ec.app.GPjsp.func.DDA.ESTSAR
+gp.fs.0.func.5.nc = ncESTSTAT
+gp.fs.0.func.6 = ec.app.GPjsp.func.DDA.ESTN
+gp.fs.0.func.6.nc = ncESTSTAT
+gp.fs.0.func.7 = ec.app.GPjsp.func.DDA.ESTSL
+gp.fs.0.func.7.nc = ncESTSTAT
+gp.fs.0.func.8 = ec.app.GPjsp.func.DDA.ESTTAPR
+gp.fs.0.func.8.nc = ncESTSTAT
+gp.fs.0.func.9 = ec.app.GPjsp.func.DDA.ESTTQWL
+gp.fs.0.func.9.nc = ncESTSTAT
+gp.fs.0.func.10 = ec.app.GPjsp.func.DDA.ESTTSAPR
+gp.fs.0.func.10.nc = ncESTSTAT
+gp.fs.0.func.11 = ec.app.GPjsp.func.DDA.ESTTRWL
+gp.fs.0.func.11.nc = ncESTSTAT
+gp.fs.0.func.12 = ec.app.GPjsp.func.DDA.ESTTOT
+gp.fs.0.func.12.nc = ncESTSTAT
+gp.fs.0.func.13 = ec.app.GPjsp.func.DDA.ERCrandom
+gp.fs.0.func.13.nc = ncESTSTAT
+gp.fs.0.func.14 = ec.app.GPjsp.func.DDA.ESTTLOT
+gp.fs.0.func.14.nc = ncESTSTAT
+gp.fs.0.func.15 = ec.app.GPjsp.func.DDA.ESTTOTR
+gp.fs.0.func.15.nc = ncESTSTAT
+gp.fs.0.func.16 = ec.app.GPjsp.func.DDA.ESTTSOTR
+gp.fs.0.func.16.nc = ncESTSTAT
+gp.fs.0.func.17 = ec.app.GPjsp.func.DDA.ESTNO
+gp.fs.0.func.17.nc = ncESTSTAT
+gp.fs.0.func.18 = ec.app.GPjsp.func.DDA.ESTM
+gp.fs.0.func.18.nc = ncESTSTAT
+
+eval.problem = ec.app.GPjsp.GPjspDDA
+eval.problem.data = ec.app.GPjsp.jspData
+
+seed.0=13412

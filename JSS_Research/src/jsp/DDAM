@@ -1,0 +1,33 @@
+ ((-1*) 
+
+(- (+ (+ (* ((-1*) RT) (/ RO PR))
+     (- (Max DJ rJ) (/ CMI RM))) (- 
+     rJ W)) 
+
+
+(If (* ((-1*) CWR)  (/ SJ PR)) DJ 
+
+((-1*) (* (* ((-1*) RT) (/ RO PR)) (/ RO PR))))))
+
+--> -RT*RO/PR + max(DJ,rJ)-CMI/RM + rJ-W -IF(-CWR*SJ/PR,DJ,RT*RO*RO/(PR*PR)) 
+
+-->
+
+
+    
+[90.7736126,0.1700848,0.0985820 min]
+2*RO*RO*MP/(0.9087407-RJ)+IF(max(BWR,WR)-2*SJ,-PR,-RJ);
+OT + QWL + LOT
+
+[83.597275 0.047874182 0.31209436 min] 
+max(-0.043989424,((2*PR+RT)/PR + max(RT,PR)-SJ)/PR)
+OT + QWL + LOT
+
+[68.162186 0.05931046 1.3205847 min]
+-3*rJ+W+2*RT*RO/PR-CWR*RT
+2*SOTR + 2*QWL + 2*LOT + OT
+
+
+[66.843544 0.3113277 0.6075445 min]
+RT*RO/PR - 2*rJ+W +IF(-CWR*SJ/PR,DJ,RT*RO*RO/(PR*PR))
+OT+2*LOT+QWL

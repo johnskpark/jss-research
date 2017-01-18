@@ -1,0 +1,165 @@
+# Copyright 2006 by Sean Luke and George Mason University
+# Licensed under the Academic Free License version 3.0
+# See the file "LICENSE" for more information
+
+parent.0 = koza2wayMOcoevolve.params
+
+# the next four items are already defined in koza.params, but we
+# put them here to be clear.
+
+# We have one function set, of class GPFunctionSet
+gp.fs.size = 2
+gp.fs.0 = ec.gp.GPFunctionSet
+gp.fs.1 = ec.gp.GPFunctionSet
+# We'll call the function set "f0".
+gp.fs.0.name = f0
+gp.fs.1.name = f1
+
+# We have five functions in the function set.  They are:
+
+gp.fs.0.size = 25
+gp.fs.0.func.0 = ec.app.GPjsp.func.PRIORITYAdd
+gp.fs.0.func.0.nc = ncPRIORITYOP
+gp.fs.0.func.1 = ec.app.GPjsp.func.PRIORITYDiv
+gp.fs.0.func.1.nc = ncPRIORITYOP
+gp.fs.0.func.2 = ec.app.GPjsp.func.PRIORITYSub
+gp.fs.0.func.2.nc = ncPRIORITYOP
+gp.fs.0.func.3 = ec.app.GPjsp.func.PRIORITYMul
+gp.fs.0.func.3.nc = ncPRIORITYOP
+gp.fs.0.func.4 = ec.app.GPjsp.func.PRIORITYChangeSign
+gp.fs.0.func.4.nc = ncPRIORITYSIGN
+gp.fs.0.func.5 = ec.app.GPjsp.func.PRIORITYJobReadyTime
+gp.fs.0.func.5.nc = ncPRIORITYSTAT
+gp.fs.0.func.6 = ec.app.GPjsp.func.PRIORITYJobRemainingOperation
+gp.fs.0.func.6.nc = ncPRIORITYSTAT
+gp.fs.0.func.7 = ec.app.GPjsp.func.PRIORITYJobRemainingTime
+gp.fs.0.func.7.nc = ncPRIORITYSTAT
+gp.fs.0.func.8 = ec.app.GPjsp.func.PRIORITYMachineReadyTime
+gp.fs.0.func.8.nc = ncPRIORITYSTAT
+gp.fs.0.func.9 = ec.app.GPjsp.func.PRIORITYProcessingTime
+gp.fs.0.func.9.nc = ncPRIORITYSTAT
+gp.fs.0.func.10 = ec.app.GPjsp.func.ERCrandom
+gp.fs.0.func.10.nc = ncPRIORITYSTAT
+gp.fs.0.func.11 = ec.app.GPjsp.func.PRIORITYJobWeight
+gp.fs.0.func.11.nc = ncPRIORITYSTAT
+gp.fs.0.func.12 = ec.app.GPjsp.func.PRIORITYJobDueDate
+gp.fs.0.func.12.nc = ncPRIORITYSTAT
+gp.fs.0.func.13 = ec.app.GPjsp.func.PRIORITYJobReleaseTime
+gp.fs.0.func.13.nc = ncPRIORITYSTAT
+gp.fs.0.func.14 = ec.app.GPjsp.func.PRIORITYJobSlack
+gp.fs.0.func.14.nc = ncPRIORITYSTAT
+gp.fs.0.func.15 = ec.app.GPjsp.func.PRIORITYMin
+gp.fs.0.func.15.nc = ncPRIORITYOP
+gp.fs.0.func.16 = ec.app.GPjsp.func.PRIORITYMax
+gp.fs.0.func.16.nc = ncPRIORITYOP
+gp.fs.0.func.17 = ec.app.GPjsp.func.PRIORITYAbs
+gp.fs.0.func.17.nc = ncPRIORITYSIGN
+gp.fs.0.func.18 = ec.app.GPjsp.func.PRIORITYIf
+gp.fs.0.func.18.nc = ncPRIORITY3OP
+gp.fs.0.func.19 = ec.app.GPjsp.func.PRIORITYWorkloadRatio
+gp.fs.0.func.19.nc = ncPRIORITYSTAT
+gp.fs.0.func.20 = ec.app.GPjsp.func.PRIORITYMachineProgress
+gp.fs.0.func.20.nc = ncPRIORITYSTAT
+gp.fs.0.func.21 = ec.app.GPjsp.func.PRIORITYDeviationInQueue
+gp.fs.0.func.21.nc = ncPRIORITYSTAT
+gp.fs.0.func.22 = ec.app.GPjsp.func.PRIORITYCriticalWorkloadRatio
+gp.fs.0.func.22.nc = ncPRIORITYSTAT
+gp.fs.0.func.23 = ec.app.GPjsp.func.PRIORITYCriticalMachineIdleness
+gp.fs.0.func.23.nc = ncPRIORITYSTAT
+gp.fs.0.func.24 = ec.app.GPjsp.func.PRIORITYBottleneckRatio
+gp.fs.0.func.24.nc = ncPRIORITYSTAT
+
+gp.fs.1.size = 18
+gp.fs.1.func.0 = ec.app.GPjsp.func.DDA.ESTAdd
+gp.fs.1.func.0.nc = ncESTOP2
+gp.fs.1.func.1 = ec.app.GPjsp.func.DDA.ESTSub
+gp.fs.1.func.1.nc = ncESTOP2
+gp.fs.1.func.2 = ec.app.GPjsp.func.DDA.ESTMul
+gp.fs.1.func.2.nc = ncESTOP2
+gp.fs.1.func.3 = ec.app.GPjsp.func.DDA.ESTDiv
+gp.fs.1.func.3.nc = ncESTOP2
+gp.fs.1.func.4 = ec.app.GPjsp.func.DDA.ESTIf
+gp.fs.1.func.4.nc = ncESTOP3
+gp.fs.1.func.5 = ec.app.GPjsp.func.DDA.ESTAPR
+gp.fs.1.func.5.nc = ncESTSTAT
+gp.fs.1.func.6 = ec.app.GPjsp.func.DDA.ESTQWL
+gp.fs.1.func.6.nc = ncESTSTAT
+gp.fs.1.func.7 = ec.app.GPjsp.func.DDA.ESTN
+gp.fs.1.func.7.nc = ncESTSTAT
+gp.fs.1.func.8 = ec.app.GPjsp.func.DDA.ESTPEF
+gp.fs.1.func.8.nc = ncESTSTAT
+gp.fs.1.func.9 = ec.app.GPjsp.func.DDA.ESTSAPR
+gp.fs.1.func.9.nc = ncESTSTAT
+gp.fs.1.func.10 = ec.app.GPjsp.func.DDA.ESTOT
+gp.fs.1.func.10.nc = ncESTSTAT
+gp.fs.1.func.11 = ec.app.GPjsp.func.DDA.ERCrandom
+gp.fs.1.func.11.nc = ncESTSTAT
+gp.fs.1.func.12 = ec.app.GPjsp.func.DDA.ESTRWL
+gp.fs.1.func.12.nc = ncESTSTAT
+gp.fs.1.func.13 = ec.app.GPjsp.func.DDA.ESTSAR
+gp.fs.1.func.13.nc = ncESTSTAT
+gp.fs.1.func.14 = ec.app.GPjsp.func.DDA.ESTLOT
+gp.fs.1.func.14.nc = ncESTSTAT
+gp.fs.1.func.15 = ec.app.GPjsp.func.DDA.ESTOTR
+gp.fs.1.func.15.nc = ncESTSTAT
+gp.fs.1.func.16 = ec.app.GPjsp.func.DDA.ESTSOTR
+gp.fs.1.func.16.nc = ncESTSTAT
+gp.fs.1.func.17 = ec.app.GPjsp.func.DDA.ESTW
+gp.fs.1.func.17.nc = ncESTSTAT
+
+eval.problem.data = ec.app.GPjsp.jspData
+
+seed.0=44444
+
+generations =				101
+#print-used-params =			true
+quit-on-run-complete =			false
+
+eval =                                  ec.coevolve.SPEA2Coevolve
+
+eval.num-current=			1
+eval.num-elites =			1
+eval.num-prev =				0
+eval.select-current =			ec.select.RandomSelection
+eval.select-prev = 			ec.select.RandomSelection
+
+eval.problem =                          ec.app.GPjsp.GPjsp2WayMOCoevolveSPEA
+
+pop.subpops =                           2
+pop.subpop.0 = 				ec.Subpopulation
+pop.subpop.0.duplicate-retries = 	10
+pop.subpop.0.size = 			450
+pop.subpop.0.species.fitness =		ec.multiobjective.spea2.SPEA2MultiObjectiveFitness
+pop.subpop.0.species.fitness.maximize = false
+
+pop.subpop.1 = 				ec.Subpopulation
+pop.subpop.1.duplicate-retries = 	10
+pop.subpop.1.size = 			450
+pop.subpop.1.species.fitness =		ec.multiobjective.spea2.SPEA2MultiObjectiveFitness
+pop.subpop.1.species.fitness.maximize = false
+
+# how many objectives should we have by default?
+# you can also assign this on a per-subpopulation basis
+multi.fitness.num-objectives 	= 3
+
+# max and min values of all each objective function
+multi.fitness.max 		= 100000
+multi.fitness.min 		= -1000000
+
+# override specific max and min values, e.g
+# multi.fitness.max.0		= 1000
+
+# Use a statistics object which dumps the front
+stat =                                          ec.multiobjective.MultiObjectiveStatistics
+stat.front =                                    $front.stat
+
+#stat =                                  ec.simple.SimpleStatistics
+#stat.file =				$out.stat
+stat.num-children = 			1
+stat.child.0 = 				ec.simple.SimpleShortStatistics
+stat.child.0.file =			$out2.stat
+
+breed.elite.0 =				200
+breed.elite.1 =				200
+
+breed =						ec.multiobjective.spea2.SPEA2CoevolveBreeder

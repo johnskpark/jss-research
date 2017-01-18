@@ -1,0 +1,65 @@
+# Copyright 2006 by Sean Luke and George Mason University
+# Licensed under the Academic Free License version 3.0
+# See the file "LICENSE" for more information
+
+parent.0 = kozaIterativeDualPriority.params
+
+# the next four items are already defined in koza.params, but we
+# put them here to be clear.
+
+# We have one function set, of class GPFunctionSet
+gp.fs.size = 1
+gp.fs.0 = ec.gp.GPFunctionSet
+# We'll call the function set "f0".
+gp.fs.0.name = f0
+
+# We have five functions in the function set.  They are:
+
+gp.fs.0.size = 20
+gp.fs.0.func.0 = ec.app.GPjsp.func.PRIORITYAdd
+gp.fs.0.func.0.nc = ncPRIORITYOP
+gp.fs.0.func.1 = ec.app.GPjsp.func.PRIORITYDiv
+gp.fs.0.func.1.nc = ncPRIORITYOP
+gp.fs.0.func.2 = ec.app.GPjsp.func.PRIORITYSub
+gp.fs.0.func.2.nc = ncPRIORITYOP
+gp.fs.0.func.3 = ec.app.GPjsp.func.PRIORITYMul
+gp.fs.0.func.3.nc = ncPRIORITYOP
+gp.fs.0.func.4 = ec.app.GPjsp.func.PRIORITYChangeSign
+gp.fs.0.func.4.nc = ncPRIORITYSIGN
+gp.fs.0.func.5 = ec.app.GPjsp.func.PRIORITYJobReadyTime
+gp.fs.0.func.5.nc = ncPRIORITYSTAT
+gp.fs.0.func.6 = ec.app.GPjsp.func.PRIORITYJobRemainingOperation
+gp.fs.0.func.6.nc = ncPRIORITYSTAT
+gp.fs.0.func.7 = ec.app.GPjsp.func.PRIORITYJobRemainingTime
+gp.fs.0.func.7.nc = ncPRIORITYSTAT
+gp.fs.0.func.8 = ec.app.GPjsp.func.PRIORITYMachineReadyTime
+gp.fs.0.func.8.nc = ncPRIORITYSTAT
+gp.fs.0.func.9 = ec.app.GPjsp.func.PRIORITYProcessingTime
+gp.fs.0.func.9.nc = ncPRIORITYSTAT
+gp.fs.0.func.10 = ec.app.GPjsp.func.ERCrandom
+gp.fs.0.func.10.nc = ncPRIORITYSTAT
+gp.fs.0.func.11 = ec.app.GPjsp.func.PRIORITYJobWeight
+gp.fs.0.func.11.nc = ncPRIORITYSTAT
+gp.fs.0.func.12 = ec.app.GPjsp.func.PRIORITYJobDueDate
+gp.fs.0.func.12.nc = ncPRIORITYSTAT
+gp.fs.0.func.13 = ec.app.GPjsp.func.PRIORITYMin
+gp.fs.0.func.13.nc = ncPRIORITYOP
+gp.fs.0.func.14 = ec.app.GPjsp.func.PRIORITYMax
+gp.fs.0.func.14.nc = ncPRIORITYOP
+gp.fs.0.func.15 = ec.app.GPjsp.func.PRIORITYAbs
+gp.fs.0.func.15.nc = ncPRIORITYSIGN
+gp.fs.0.func.16 = ec.app.GPjsp.func.PRIORITYIf
+gp.fs.0.func.16.nc = ncPRIORITY3OP
+gp.fs.0.func.17 = ec.app.GPjsp.func.PRIORITYJobRecordFinishTime
+gp.fs.0.func.17.nc = ncPRIORITYSTAT
+gp.fs.0.func.18 = ec.app.GPjsp.func.PRIORITYJobRecordWaitingTime
+gp.fs.0.func.18.nc = ncPRIORITYSTAT
+gp.fs.0.func.19 = ec.app.GPjsp.func.PRIORITYJobRecordNextWaitingTime
+gp.fs.0.func.19.nc = ncPRIORITYSTAT
+gp.fs.0.func.20 = ec.app.GPjsp.func.PRIORITYJobRecordTardy
+gp.fs.0.func.20.nc = ncPRIORITYSTAT
+
+eval.problem = ec.app.GPjsp.Iterative.GPjspPriorityIterativeDual
+eval.problem.data = ec.app.GPjsp.jspData
+
+seed.0=44444

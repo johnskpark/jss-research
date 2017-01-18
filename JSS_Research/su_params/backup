@@ -1,0 +1,5 @@
+            double[] utilisation = {0.7,0.8,0.9};
+            int[] numbeOfMachines = {4,6};
+            String[] lowers = {"miss"};
+            String[] dists = {"expo"};  
+            float[] objectives = ((Multi

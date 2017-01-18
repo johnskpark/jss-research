@@ -9,9 +9,9 @@ package ec;
 import ec.util.*;
 import java.io.*;
 
-/* 
+/*
  * Population.java
- * 
+ *
  * Created: Tue Aug 10 20:50:54 1999
  * By: Sean Luke
  */
@@ -56,7 +56,7 @@ import java.io.*;
  </table>
  *
  * @author Sean Luke
- * @version 1.0 
+ * @version 1.0
  */
 
 public class Population implements Group
@@ -64,6 +64,7 @@ public class Population implements Group
     private static final long serialVersionUID = 1;
 
     public Subpopulation[] subpops;
+    public Individual[] archive = new Individual[0];
     public static final String P_SIZE = "subpops";
     public static final String P_SUBPOP = "subpop";
     public static final String P_DEFAULT_SUBPOP = "default-subpop";
@@ -93,11 +94,11 @@ public class Population implements Group
             p.subpops = new Subpopulation[subpops.length];
             for(int x=0;x<subpops.length;x++)
                 p.subpops[x] = (Subpopulation)(subpops[x].emptyClone());
-            return p;   
+            return p;
             }
         catch (CloneNotSupportedException e) { throw new InternalError(); } // never happens
         }
-                
+
     /** Sets all Individuals in the Population to null, preparing it to be reused. */
     public void clear()
         {
@@ -114,9 +115,9 @@ public class Population implements Group
         // do we load from a file?
         file = base.push(P_FILE);
         loadInds = state.parameters.exists(file,null);
-        
+
         // how many subpopulations do we have?
-        
+
         p = base.push(P_SIZE);
         int size = state.parameters.getInt(p,null,1);
         if (size==0) // uh oh
@@ -130,7 +131,7 @@ public class Population implements Group
             if (!state.parameters.exists(p,null))
                 {
                 p = base.push(P_DEFAULT_SUBPOP);
-                int defaultSubpop = state.parameters.getInt(p, null, 0); 
+                int defaultSubpop = state.parameters.getInt(p, null, 0);
                 if ( defaultSubpop >= 0)
                     {
                     state.output.warning("Using subpopulation " + defaultSubpop + " as the default for subpopulation " + x);
@@ -140,7 +141,7 @@ public class Population implements Group
                 }
             subpops[x] = (Subpopulation)(state.parameters.getInstanceForParameterEq(p,null,Subpopulation.class));  // Subpopulation.class is fine
             subpops[x].setup(state,p);
-            
+
             // test for loadinds
             if (loadInds && subpops[x].loadInds)  // uh oh
                 state.output.fatal("Both a subpopulation and its parent population have been told to load from files.  This can't happen.  It's got to be one or the other.",
@@ -148,7 +149,7 @@ public class Population implements Group
             }
         }
 
-    /** Populates the population with new random individuals. */ 
+    /** Populates the population with new random individuals. */
     public void populate(EvolutionState state, int thread)
         {
         // should we load individuals from a file? -- duplicates are permitted
@@ -157,7 +158,7 @@ public class Population implements Group
             InputStream stream = state.parameters.getResource(file,null);
             if (stream == null)
                 state.output.fatal("Could not load population from file", file);
-            
+
             try { readPopulation(state, new LineNumberReader(new InputStreamReader(stream))); }
             catch (IOException e) { state.output.fatal("An IOException occurred when trying to read from the file " + state.parameters.getString(file, null) + ".  The IOException was: \n" + e,
                     file, null); }
@@ -169,28 +170,28 @@ public class Population implements Group
                 subpops[x].populate(state, thread);
             }
         }
-        
-        
-    /** Prints an entire population in a form readable by humans. 
+
+
+    /** Prints an entire population in a form readable by humans.
         @deprecated Verbosity no longer has meaning
     */
     public final void printPopulationForHumans(final EvolutionState state,
-        final int log, 
+        final int log,
         final int verbosity)
         {
         printPopulationForHumans(state, log);
         }
-        
+
     /** Prints an entire population in a form readable by humans but also parseable by the computer using readPopulation(EvolutionState, LineNumberReader).
         @deprecated Verbosity no longer has meaning
     */
     public final void printPopulation(final EvolutionState state,
-        final int log, 
+        final int log,
         final int verbosity)
         {
         printPopulation(state, log);
         }
-        
+
     /** Prints an entire population in a form readable by humans, with a verbosity of Output.V_NO_GENERAL. */
     public void printPopulationForHumans(final EvolutionState state,
         final int log)
@@ -202,7 +203,7 @@ public class Population implements Group
             subpops[i].printSubpopulationForHumans(state, log);
             }
         }
-        
+
     /** Prints an entire population in a form readable by humans but also parseable by the computer using readPopulation(EvolutionState, LineNumberReader), with a verbosity of Output.V_NO_GENERAL. */
     public void printPopulation(final EvolutionState state,
         final int log)
@@ -214,7 +215,7 @@ public class Population implements Group
             subpops[i].printSubpopulation(state, log);
             }
         }
-        
+
     /** Prints an entire population in a form readable by humans but also parseable by the computer using readPopulation(EvolutionState, LineNumberReader). */
     public void printPopulation(final EvolutionState state,
         final PrintWriter writer)
@@ -222,18 +223,18 @@ public class Population implements Group
         writer.println(NUM_SUBPOPS_PREAMBLE + Code.encode(subpops.length));
         for(int i = 0 ; i < subpops.length; i++)
             {
-            writer.println(SUBPOP_INDEX_PREAMBLE + Code.encode(i));         
+            writer.println(SUBPOP_INDEX_PREAMBLE + Code.encode(i));
             subpops[i].printSubpopulation(state, writer);
             }
         }
-    
+
     /** Reads a population from the format generated by printPopulation(....).  The number of subpopulations and the species information must be identical. */
-    public void readPopulation(final EvolutionState state, 
+    public void readPopulation(final EvolutionState state,
         final LineNumberReader reader) throws IOException
         {
         // read the number of subpops and check to see if this appears to be a valid individual
         int numSubpops = Code.readIntegerWithPreamble(NUM_SUBPOPS_PREAMBLE, state, reader);
-        
+
         // read in subpops
         if (numSubpops != subpops.length)  // definitely wrong
             state.output.fatal("On reading population from text stream, the number of subpopulations was wrong.");
@@ -246,7 +247,7 @@ public class Population implements Group
             subpops[i].readSubpopulation(state, reader);
             }
         }
-    
+
     /** Writes a population in binary form, in a format readable by readPopulation(EvolutionState, DataInput). */
     public void writePopulation(final EvolutionState state,
         final DataOutput dataOutput) throws IOException
@@ -255,7 +256,7 @@ public class Population implements Group
         for(int i = 0 ; i < subpops.length; i++)
             subpops[i].writeSubpopulation(state, dataOutput);
         }
-    
+
     /** Reads a population in binary form, from the format generated by writePopulation(...). The number of subpopulations and the species information must be identical. */
     public void readPopulation(final EvolutionState state,
         final DataInput dataInput) throws IOException

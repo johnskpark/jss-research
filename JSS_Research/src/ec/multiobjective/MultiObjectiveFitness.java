@@ -6,14 +6,20 @@
 
 package ec.multiobjective;
 
-import java.io.*;
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
+import java.io.LineNumberReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+
+import ec.EvolutionState;
+import ec.Fitness;
+import ec.Individual;
+import ec.util.Code;
 import ec.util.DecodeReturn;
 import ec.util.Parameter;
-import ec.util.Code;
-import ec.Fitness;
-import ec.EvolutionState;
-import java.util.*;
-import ec.*;
 
 /*
  * MultiObjectiveFitness.java
@@ -132,6 +138,9 @@ public class MultiObjectiveFitness extends Fitness
     /** Maximization.  Shared. */
     public boolean[] maximize;
 
+    /** temporary variable */
+    public double temp;
+
     /** The various fitnesses. */
     protected double[] objectives; // values range from 0 (worst) to 1 INCLUSIVE
 
@@ -175,6 +184,13 @@ public class MultiObjectiveFitness extends Fitness
         {
         return objectives[i];
         }
+
+    public void setObjectives(boolean minmax, double[] newObjectives)
+    {
+    	maximize = new boolean[newObjectives.length];
+        Arrays.fill(maximize, minmax);
+        objectives = newObjectives;
+    }
 
     public void setObjectives(final EvolutionState state, double[] newObjectives)
         {
@@ -504,6 +520,19 @@ public class MultiObjectiveFitness extends Fitness
         return s;
         }
 
+    /**
+     * Returns the normalised sum of the squared difference between two Fitnesses in Objective space.
+     */
+    public double sumSquaredObjectiveDistance_normalised(MultiObjectiveFitness other, double[] range)
+    {
+    	double s = 0;
+    	for (int i = 0; i < objectives.length; i++)
+    	{
+    		double a = (objectives[i] - other.objectives[i])/range[i];
+    		s += a * a;
+    	}
+    	return s;
+    }
 
     /**
      * Returns the Manhattan difference between two Fitnesses in Objective space.

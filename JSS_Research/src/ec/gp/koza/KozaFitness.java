@@ -10,9 +10,9 @@ import ec.util.*;
 import ec.*;
 import java.io.*;
 
-/* 
+/*
  * KozaFitness.java
- * 
+ *
  * Created: Fri Oct 15 14:26:44 1999
  * By: Sean Luke
  */
@@ -35,7 +35,7 @@ import java.io.*;
  *
  *
  * @author Sean Luke
- * @version 1.0 
+ * @version 1.0
  */
 
 public class KozaFitness extends Fitness
@@ -50,12 +50,16 @@ public class KozaFitness extends Fitness
         information.  It's a traditional feature of Koza-style GP, and so
         although I think it's not very useful, I'll leave it in anyway. */
     public int hits;
+    public double min;
+    public double max;
+    public double average;
+    public static String results;
 
     public Parameter defaultBase()
         {
         return GPKozaDefaults.base().push(P_KOZAFITNESS);
         }
-        
+
     /**
        Do not use this function.  Use the identical setStandardizedFitness() instead.
        The reason for the name change is that fitness() returns a differently-defined
@@ -68,7 +72,7 @@ public class KozaFitness extends Fitness
         }
 
     /** Set the standardized fitness in the half-open interval [0.0,infinity)
-        which is defined (NOTE: DIFFERENT FROM fitness()!!!) as 0.0 
+        which is defined (NOTE: DIFFERENT FROM fitness()!!!) as 0.0
         being the IDEAL and infinity being worse than the worst possible.
         This is the GP tradition.  The fitness() function instead will output
         the equivalent of Adjusted Fitness.
@@ -89,10 +93,10 @@ public class KozaFitness extends Fitness
 
     public double fitness()
         {
-        return 1.0/(1.0 + standardizedFitness);     
+        return 1.0/(1.0 + standardizedFitness);
         }
 
-    /** Returns the raw fitness metric.  
+    /** Returns the raw fitness metric.
         @deprecated use standardizedFitness()
     */
     public double rawFitness()
@@ -117,12 +121,12 @@ public class KozaFitness extends Fitness
         }
 
     public void setup(final EvolutionState state, final Parameter base) { }
-    
+
     public boolean isIdealFitness()
         {
         return standardizedFitness <= 0.0;  // should always be == 0.0, <0.0 is illegal, but just in case...
         }
-    
+
     public boolean equivalentTo(final Fitness _fitness)
         {
         // We're comparing standardized fitness because adjusted fitness can
@@ -138,30 +142,30 @@ public class KozaFitness extends Fitness
         // loose some precision in the division.
         return ((KozaFitness)_fitness).standardizedFitness() > standardizedFitness;
         }
- 
+
     public String fitnessToString()
         {
         return FITNESS_PREAMBLE + Code.encode(standardizedFitness) + Code.encode(hits);
         }
-        
+
     public String fitnessToStringForHumans()
         {
         return FITNESS_PREAMBLE + "Standardized=" + standardizedFitness + " Adjusted=" + adjustedFitness() + " Hits=" + hits;
         }
-            
-    public void readFitness(final EvolutionState state, 
+
+    public void readFitness(final EvolutionState state,
         final LineNumberReader reader)
         throws IOException
         {
         DecodeReturn d = Code.checkPreamble(FITNESS_PREAMBLE, state, reader);
-        
+
         // extract fitness
         Code.decode(d);
         if (d.type!=DecodeReturn.T_DOUBLE)
             state.output.fatal("Reading Line " + d.lineNumber + ": " +
                 "Bad Fitness.");
         standardizedFitness = (double)d.d;
-        
+
         // extract hits
         Code.decode(d);
         if (d.type!=DecodeReturn.T_INT)

@@ -1,0 +1,29 @@
+        IndexMaxPQ<Double> jobs = new IndexMaxPQ<Double>(n);
+        for (int i = 0; i < n; i++) {
+            data.updateData(p[i], r[i], w[i], d[i], d_[i], e[i], s_[i], ready);
+            ind.trees[treeIndex].child.eval(state,thread,data,stack,((GPIndividual)ind),gpproblem);
+            data.tempVal = 1 / (1 + Math.exp(-data.tempVal));
+            priority[i] = data.tempVal;
+            jobs.insert(i, data.tempVal);
+        }
+        int count = 0;
+        for (int i:jobs){
+            double setup = si[i];
+            if (prev != -1) setup = s[prev][i];
+            if (ready + setup + p[i] > d_[i]) {
+                continue;
+            }
+            if (jobs.keyOf(i)<0.5) break;
+            if (r[i]>ready) ready = r[i];
+            if (prev == -1) ready += si[i];
+            else ready += s[prev][i];
+            ready += p[i];
+            revenue += e[i] - w[i]*maxPlus(ready-d[i]);
+            prev = i;
+            flowtime += ready - r[i];
+            if (fmax < ready - r[i]) fmax = ready - r[i];
+            tardy += maxPlus(ready-d[i]);
+            if (tmax < maxPlus(ready-d[i])) tmax = maxPlus(ready-d[i]);
+            mae += Math.abs((ready-d[i]));
+            count++;
+        }

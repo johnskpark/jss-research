@@ -1,0 +1,59 @@
+# Copyright 2006 by Sean Luke and George Mason University
+# Licensed under the Academic Free License version 3.0
+# See the file "LICENSE" for more information
+
+parent.0 = kozaQCSP.params
+
+# the next four items are already defined in koza.params, but we
+# put them here to be clear.
+
+# We have one function set, of class GPFunctionSet
+gp.fs.size = 1
+gp.fs.0 = ec.gp.GPFunctionSet
+# We'll call the function set "f0".
+gp.fs.0.name = f0
+
+# We have five functions in the function set.  They are:
+
+gp.fs.0.size = 18
+gp.fs.0.func.0 = ec.app.QCSP.func.SCOREAdd
+gp.fs.0.func.0.nc = ncSCOREOP
+gp.fs.0.func.1 = ec.app.QCSP.func.SCOREDiv
+gp.fs.0.func.1.nc = ncSCOREOP
+gp.fs.0.func.2 = ec.app.QCSP.func.SCORESub
+gp.fs.0.func.2.nc = ncSCOREOP
+gp.fs.0.func.3 = ec.app.QCSP.func.SCOREMul
+gp.fs.0.func.3.nc = ncSCOREOP
+gp.fs.0.func.4 = ec.app.QCSP.func.SCOREMin
+gp.fs.0.func.4.nc = ncSCOREOP
+gp.fs.0.func.5 = ec.app.QCSP.func.SCOREMax
+gp.fs.0.func.5.nc = ncSCOREOP
+gp.fs.0.func.6 = ec.app.QCSP.func.SCOREIf
+gp.fs.0.func.6.nc = ncSCORE3OP
+gp.fs.0.func.7 = ec.app.QCSP.func.SCOREProcessingTime
+gp.fs.0.func.7.nc = ncSCORESTAT
+gp.fs.0.func.8 = ec.app.QCSP.func.SCOREHoldingWorkload
+gp.fs.0.func.8.nc = ncSCORESTAT
+gp.fs.0.func.9 = ec.app.QCSP.func.SCOREDistanceToQC
+gp.fs.0.func.9.nc = ncSCORESTAT
+gp.fs.0.func.10 = ec.app.QCSP.func.SCORELocalWorkload
+gp.fs.0.func.10.nc = ncSCORESTAT
+gp.fs.0.func.11 = ec.app.QCSP.func.SCOREDistanceToNearestQC
+gp.fs.0.func.11.nc = ncSCORESTAT
+gp.fs.0.func.12 = ec.app.QCSP.func.SCOREQCcompletionTime
+gp.fs.0.func.12.nc = ncSCORESTAT
+gp.fs.0.func.13 = ec.app.QCSP.func.SCORECompletionTimeOfNearestQC
+gp.fs.0.func.13.nc = ncSCORESTAT
+gp.fs.0.func.14 = ec.app.QCSP.func.SCORENunmberBetweenQCandTASK
+gp.fs.0.func.14.nc = ncSCORESTAT
+gp.fs.0.func.15 = ec.app.QCSP.func.SCOREQCmovingSpeed
+gp.fs.0.func.15.nc = ncSCORESTAT
+gp.fs.0.func.16 = ec.app.QCSP.func.SCORESafeDistance
+gp.fs.0.func.16.nc = ncSCORESTAT
+gp.fs.0.func.17 = ec.app.QCSP.func.SCORERecordFinishTime
+gp.fs.0.func.17.nc = ncSCORESTAT
+
+eval.problem = ec.app.QCSP.GPqcsp
+eval.problem.data = ec.app.QCSP.qcspData
+
+seed.0=223432

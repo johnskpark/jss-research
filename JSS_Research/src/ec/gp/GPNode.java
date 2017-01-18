@@ -560,7 +560,7 @@ public abstract class GPNode implements GPNodeParent, Prototype
        as the constraining predicate.
        p ranges from 0 to this number minus 1. O(n). The
        resultant node is returned in <i>g</i>.*/
-    int nodeInPosition(int p, final GPNodeGatherer g, final int nodesearch)
+    public int nodeInPosition(int p, final GPNodeGatherer g, final int nodesearch)
         {
         // am I of the type I'm looking for?
         if (nodesearch==NODESEARCH_ALL ||

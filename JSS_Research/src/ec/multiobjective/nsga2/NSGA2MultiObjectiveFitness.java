@@ -12,9 +12,9 @@ import ec.multiobjective.MultiObjectiveFitness;
 import ec.EvolutionState;
 import ec.Fitness;
 
-/* 
+/*
  * NSGA2MultiObjectiveFitness.java
- * 
+ *
  * Created: Thu Feb 04 2010
  * By: Faisal Abidi and Sean Luke
  */
@@ -23,7 +23,7 @@ import ec.Fitness;
  * NSGA2MultiObjectiveFitness is a subclass of MultiObjeciveFitness which
  * adds auxiliary fitness measures (sparsity, rank) largely used by MultiObjectiveStatistics.
  * It also redefines the comparison measures to compare based on rank, and break ties
- * based on sparsity. 
+ * based on sparsity.
  *
  */
 
@@ -34,12 +34,15 @@ public class NSGA2MultiObjectiveFitness extends MultiObjectiveFitness
 
     public String[] getAuxilliaryFitnessNames() { return new String[] { "Rank", "Sparsity" }; }
     public double[] getAuxilliaryFitnessValues() { return new double[] { rank, sparsity }; }
-        
+
     /** Pareto front rank measure (lower ranks are better) */
     public int rank;
 
     /** Sparsity along front rank measure (higher sparsity is better) */
     public double sparsity;
+
+    /** Size of the individual (only for GPindividual) */
+    public double size;
 
     public String fitnessToString()
         {
@@ -93,7 +96,7 @@ public class NSGA2MultiObjectiveFitness extends MultiObjectiveFitness
             return true;
         else if (rank > ((NSGA2MultiObjectiveFitness) _fitness).rank)
             return false;
-                
+
         // otherwise try sparsity
         return (sparsity > other.sparsity);
         }

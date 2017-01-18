@@ -1,0 +1,67 @@
+# Copyright 2006 by Sean Luke and George Mason University
+# Licensed under the Academic Free License version 3.0
+# See the file "LICENSE" for more information
+
+parent.0 = kozaLocalSearch.params
+
+# the next four items are already defined in koza.params, but we
+# put them here to be clear.
+
+# We have one function set, of class GPFunctionSet
+gp.fs.size = 1
+gp.fs.0 = ec.gp.GPFunctionSet
+gp.fs.0.name = f0
+#gp.fs.1 = ec.gp.GPFunctionSet
+#gp.fs.1.name = f1
+
+# We have five functions in the function set.  They are:
+
+
+gp.fs.0.size = 7
+gp.fs.0.func.0 = ec.app.GPjsp.LocalSearch.func.ERFMoveProcessingTime
+gp.fs.0.func.0.nc = ncMOVEOP
+gp.fs.0.func.1 = ec.app.GPjsp.LocalSearch.func.ERFMoveRank
+gp.fs.0.func.1.nc = ncMOVEOP
+gp.fs.0.func.2 = ec.app.GPjsp.LocalSearch.func.ERFMoveWaiting
+gp.fs.0.func.2.nc = ncMOVEOP
+gp.fs.0.func.3 = ec.app.GPjsp.LocalSearch.func.ERFMoveStep
+gp.fs.0.func.3.nc = ncMOVESTAT
+gp.fs.0.func.4 = ec.app.GPjsp.LocalSearch.func.ERFMoveJobFinishTime
+gp.fs.0.func.4.nc = ncMOVEOP
+gp.fs.0.func.5 = ec.app.GPjsp.LocalSearch.func.ERFMoveRandomStep
+gp.fs.0.func.5.nc = ncMOVESTAT
+gp.fs.0.func.6 = ec.app.GPjsp.LocalSearch.func.ERFMoveWeight
+gp.fs.0.func.6.nc = ncMOVEOP
+
+#gp.fs.1.size = 6
+
+#gp.fs.1.func.0 = ec.app.GPjsp.LocalSearch.func.LSAccAdd
+#gp.fs.1.func.0.nc = ncACCOP
+#gp.fs.1.func.1 = ec.app.GPjsp.LocalSearch.func.LSAccSub
+#gp.fs.1.func.1.nc = ncACCOP
+#gp.fs.1.func.2 = ec.app.GPjsp.LocalSearch.func.LSAccMul
+#gp.fs.1.func.2.nc = ncACCOP
+#gp.fs.1.func.3 = ec.app.GPjsp.LocalSearch.func.LSAccDiv
+#gp.fs.1.func.3.nc = ncACCOP
+#gp.fs.1.func.4 = ec.app.GPjsp.LocalSearch.func.LSAccBestObj
+#gp.fs.1.func.4.nc = ncACCSTAT
+#gp.fs.1.func.5 = ec.app.GPjsp.LocalSearch.func.LSAccCurrentObj
+#gp.fs.1.func.5.nc = ncACCSTAT
+
+#gp.fs.1.func.11 = ec.app.GPjsp.LocalSearch.func.LSAccRandom
+#gp.fs.1.func.11.nc = ncACCSTAT
+#gp.fs.1.func.9 = ec.app.GPjsp.LocalSearch.func.LSAccMaxTotalJobPR
+#gp.fs.1.func.9.nc = ncACCSTAT
+#gp.fs.1.func.10 = ec.app.GPjsp.LocalSearch.func.LSAccMaxTotalMachinePr
+#gp.fs.1.func.10.nc = ncACCSTAT
+#gp.fs.1.func.4 = ec.app.GPjsp.LocalSearch.func.LSAccMin
+#gp.fs.1.func.4.nc = ncACCOP
+#gp.fs.1.func.5 = ec.app.GPjsp.LocalSearch.func.LSAccMax
+#gp.fs.1.func.5.nc = ncACCOP
+#gp.fs.1.func.6 = ec.app.GPjsp.LocalSearch.func.LSAccIf
+#gp.fs.1.func.6.nc = ncACC3OP
+
+eval.problem = ec.app.GPjsp.LocalSearch.GPjspLocalSearch
+eval.problem.data = ec.app.GPjsp.jspData
+
+seed.0=66758

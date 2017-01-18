@@ -1,0 +1,99 @@
+1.320546724175573
+1.274711073118958
+0.0
+2.889625820859311
+0.0
+0.0
+0.315807336974141
+0.03516534924358601
+
+
+1.320546724175573
+1.274711073118958
+0.0
+2.889625820859311
+0.0
+0.0
+0.315807336974141
+0.03516534924358601
+0.0
+1.1879007381203952
+
+(div(APR,div(div(LOT,LOT)* 0.6224075),SAR)))
+
+(+ (+ (* OTR (+ QWL (* SOTR (/ APR (/ (* (/ LOT LOT) 0.6224075) SAR))))) OT) LOT) 
+
+
+for (int i = 0; i < newjob.getNumberOperations(); i++) {
+                            int mm = newjob.getKthMachine(i);
+                            double APR = jspDynamic.getMachines()[mm].getAverageProcessingTimeinQueue(newjob.getReleaseTime());
+                            double M = m;
+                            double NJQ = jspDynamic.getMachines()[mm].getNumberofJobInQueue(newjob.getReleaseTime());
+                            double N = jspDynamic.getNumberofJobs();
+                            double NO = newjob.getNumberOperations();
+                            double OT = newjob.getKthOperationProcessingTime(i);
+                            double PEF = estimatedFlowTime;
+                            double RWL = jspDynamic.getMachines()[mm].getRemainingWorkload();
+                            double SAPR = jspDynamic.getMachines()[mm].getSampleAverageProcessingTime();
+                            double SAR = jspDynamic.getMovingAverageArrivalRate();
+                            double SAW = jspDynamic.getMachines()[mm].getSampleAverageWaitingTime();
+                            double SER = jspDynamic.getMovingAverageErrorDD();
+                            double SL = jspDynamic.getMovingAverageJobLength();
+                            double TAPR = jspDynamic.getTotalAverageProcessingTime_Route(newjob);
+                            double TAW = jspDynamic.getTotalAverageWaiting_Route(newjob);
+                            double TOT = newjob.getTotalProcessingTime();
+                            double LOT = jspDynamic.getMachines()[mm].getLeftoverTimetoProcessCurrentJob(newjob.getReleaseTime());
+                            double CPOT = jspDynamic.getMachines()[mm].getCompletedPartialTimeCurrentJob(newjob.getReleaseTime());
+                            double QWL = jspDynamic.getMachines()[mm].getQueueWorkload(newjob.getReleaseTime());
+                            double OTR = jspDynamic.getMachines()[mm].getOTRatio(newjob.getKthOperationProcessingTime(i));
+                            double SOTR = jspDynamic.getMachines()[mm].getSampledOTRatio(newjob.getKthOperationProcessingTime(i));
+                            double rLOT = 0;
+                            if (LOT==0){
+                                rLOT=0;
+                            } else {
+                                rLOT=1;
+                            }
+                            double tempt=0;
+                            /*
+                            if (rLOT+OT+2*SAPR-2*PEF>=0){
+                                if (2*(LOT-PEF)>=0){
+                                    tempt=OT+QWL+LOT;
+                                } else{
+                                    tempt=QWL+OT;
+                                }
+                            } else{
+                                double x = (RWL+SAPR-3*QWL-2*LOT)/LOT;
+                                if (LOT==0){
+                                    x = 0;
+                                }
+                                if (x-QWL-LOT+SAPR>=0){
+                                    tempt=OT+OTR+QWL+LOT;
+                                } else{
+                                    tempt=LOT+QWL+OT-rLOT;
+                                }
+                                tempt = tempt - OTR;
+                            }
+                             * *
+                             */
+                            double x =0;
+                             double cond = 0;
+                             if (QWL!=0) cond = APR/QWL;
+                             else cond = 0;
+                             if (cond!=0) cond=QWL/cond;
+                             else cond=0;
+                             if (cond>=0){
+                                 if (APR!=0) x = APR/APR;
+                                 else x = 0;
+                                 if (x!=0) x=QWL/x;
+                                 else x=0;
+                                 tempt=x;
+                             } else{
+                                 if (QWL!=0) x = APR/QWL;
+                                 else x = 0;
+                                 if (APR!=0) x = x/APR;
+                                 else x=0;    
+                                 tempt=x;
+                             }
+                             //estimatedFlowTime+=tempt;
+                             estimatedFlowTime+=APR+APR;
+                        }
