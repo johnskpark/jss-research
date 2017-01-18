@@ -5,7 +5,7 @@
 
 package ec.app.GPjsp.func;
 import ec.*;
-import ec.app.GPjsp.jspData;
+import ec.app.GPjsp.JSPData;
 import ec.gp.*;
 import ec.util.*;
 import jsp.AbstractJSPFramework;
@@ -37,7 +37,7 @@ public class DISPATCHMix extends GPNode{
         final ADFStack stack,
         final GPIndividual individual,
         final Problem problem) {
-        jspData jd = (jspData)(input);
+        JSPData jd = (JSPData)(input);
         Machine M = jd.M;
         AbstractJSPFramework jsp = jd.abjsp;
         children[0].eval(state,thread,input,stack,individual,problem);

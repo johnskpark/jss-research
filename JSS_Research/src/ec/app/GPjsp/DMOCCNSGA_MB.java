@@ -27,7 +27,7 @@ public class DMOCCNSGA_MB extends GPjsp2WayMOCoevolveNSGA {
 	public static String fitness = "";
 	public static String objective = "";
 
-	public jspData input;
+	public JSPData input;
 
 	public static final int[] SIM_JOB_SEED = {2734, 72734, 72605, 12628, 20029, 1991,
 			55013, 84005, 54972, 80531, 45414, 25675,
@@ -44,7 +44,7 @@ public class DMOCCNSGA_MB extends GPjsp2WayMOCoevolveNSGA {
 
 	public Object clone() {
 		DMOCCNSGA_MB newobj = (DMOCCNSGA_MB) (super.clone());
-		newobj.input = (jspData)(input.clone());
+		newobj.input = (JSPData)(input.clone());
 		return newobj;
 	}
 
@@ -53,7 +53,7 @@ public class DMOCCNSGA_MB extends GPjsp2WayMOCoevolveNSGA {
 		super.setup(state,base);
 
 		// set up our input -- don't want to use the default base, it's unsafe here
-		input = (jspData) state.parameters.getInstanceForParameterEq(base.push(P_DATA), null, jspData.class);
+		input = (JSPData) state.parameters.getInstanceForParameterEq(base.push(P_DATA), null, JSPData.class);
 		input.setup(state,base.push(P_DATA));
 	}
 
@@ -77,6 +77,7 @@ public class DMOCCNSGA_MB extends GPjsp2WayMOCoevolveNSGA {
 			double[] utilisation = {0.8, 0.9};
 //			double[] utilisation = {0.95};
 			double[] breakdownLevel = {0.05};
+			double[] meanRepair = {4.3, 4.7, 5.3};
 //			double[] breakdownLevel = {0.0};
 			int[] numberOfMachines = {4, 6};
 			String[] lowers = {"miss"};

@@ -923,6 +923,18 @@ import SmallStatistics.SmallStatistics;
             return totalPercentageDDError/throughput;
         }
         /*
+         * return the actual inter breakdown times for the machines
+         */
+        public double getBreakdownRate() {
+        	return breakdownRate;
+        }
+        /*
+         * return the actual mean repair times for the machines
+         */
+        public double getMeanRepairTimes() {
+        	return mRepair;
+        }
+        /*
          * return the average inter breakdown times for the machines
          */
         public double getAvgInterBreakdownTimes() {

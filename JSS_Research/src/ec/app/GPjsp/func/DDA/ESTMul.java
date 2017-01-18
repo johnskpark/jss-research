@@ -5,7 +5,7 @@
 
 package ec.app.GPjsp.func.DDA;
 import ec.*;
-import ec.app.GPjsp.jspData;
+import ec.app.GPjsp.JSPData;
 import ec.gp.*;
 import ec.util.*;
 import jsp.Job;
@@ -36,7 +36,7 @@ public class ESTMul extends GPNode{
         final GPIndividual individual,
         final Problem problem) {
 
-        jspData jd = ((jspData)(input));        
+        JSPData jd = ((JSPData)(input));        
         children[0].eval(state,thread,input,stack,individual,problem);
         double result = jd.tempVal;
         children[1].eval(state,thread,input,stack,individual,problem);

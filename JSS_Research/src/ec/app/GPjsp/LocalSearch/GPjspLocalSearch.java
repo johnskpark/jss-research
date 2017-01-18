@@ -9,7 +9,7 @@ package ec.app.GPjsp.LocalSearch;
 import SmallStatistics.SmallStatistics;
 import ec.util.*;
 import ec.*;
-import ec.app.GPjsp.jspData;
+import ec.app.GPjsp.JSPData;
 import ec.gp.*;
 import ec.gp.koza.*;
 import ec.simple.*;
@@ -28,12 +28,12 @@ public class GPjspLocalSearch extends GPProblem implements SimpleProblemForm {
     //public static MACHINE.priorityType[] pts = {MACHINE.priorityType.FCFS,MACHINE.priorityType.SPT,MACHINE.priorityType.LPT,MACHINE.priorityType.LRM};
     public static Machine.priorityType[] pts = {Machine.priorityType.W_CR_SPT};
     public int MaxSteps = 100;
-    public jspData input;
+    public JSPData input;
     
     public LocalSearchJSPFramework[] jspTrainning = new LocalSearchJSPFramework[1];
     public Object clone(){
         GPjspLocalSearch newobj = (GPjspLocalSearch) (super.clone());
-        newobj.input = (jspData)(input.clone());
+        newobj.input = (JSPData)(input.clone());
         return newobj;
     }
 
@@ -53,8 +53,8 @@ public class GPjspLocalSearch extends GPProblem implements SimpleProblemForm {
             }
 
         // set up our input -- don't want to use the default base, it's unsafe here
-        input = (jspData) state.parameters.getInstanceForParameterEq(
-            base.push(P_DATA), null, jspData.class);
+        input = (JSPData) state.parameters.getInstanceForParameterEq(
+            base.push(P_DATA), null, JSPData.class);
         input.setup(state,base.push(P_DATA));
     }
 

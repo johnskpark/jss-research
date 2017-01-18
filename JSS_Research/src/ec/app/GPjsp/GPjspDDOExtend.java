@@ -26,7 +26,7 @@ public class GPjspDDOExtend extends GPProblem implements SimpleProblemForm {
     public static String fitness = "";
     public static String objective = "";
 
-    public jspData input;
+    public JSPData input;
 
     //setting ************************************************
     public double meanTime = 1;
@@ -37,7 +37,7 @@ public class GPjspDDOExtend extends GPProblem implements SimpleProblemForm {
 
     public Object clone(){
         GPjspDDOExtend newobj = (GPjspDDOExtend) (super.clone());
-        newobj.input = (jspData)(input.clone());
+        newobj.input = (JSPData)(input.clone());
         return newobj;
     }
 
@@ -46,8 +46,8 @@ public class GPjspDDOExtend extends GPProblem implements SimpleProblemForm {
         super.setup(state,base);
 
         // set up our input -- don't want to use the default base, it's unsafe here
-        input = (jspData) state.parameters.getInstanceForParameterEq(
-            base.push(P_DATA), null, jspData.class);
+        input = (JSPData) state.parameters.getInstanceForParameterEq(
+            base.push(P_DATA), null, JSPData.class);
         input.setup(state,base.push(P_DATA));
     }
 

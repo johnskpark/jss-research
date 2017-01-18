@@ -5,7 +5,7 @@
 
 package ec.app.GPjsp.func.GP3;
 import ec.*;
-import ec.app.GPjsp.jspData;
+import ec.app.GPjsp.JSPData;
 import ec.gp.*;
 import ec.util.*;
 
@@ -34,7 +34,7 @@ public class dGP3Add extends GPNode{
         final ADFStack stack,
         final GPIndividual individual,
         final Problem problem) {
-        jspData jd = ((jspData)(input));        
+        JSPData jd = ((JSPData)(input));        
         children[0].eval(state,thread,input,stack,individual,problem);
         double result = jd.tempVal;
         children[1].eval(state,thread,input,stack,individual,problem);

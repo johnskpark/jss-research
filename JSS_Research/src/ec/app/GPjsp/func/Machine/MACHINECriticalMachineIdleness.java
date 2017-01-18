@@ -5,7 +5,7 @@
 
 package ec.app.GPjsp.func.Machine;
 import ec.*;
-import ec.app.GPjsp.jspData;
+import ec.app.GPjsp.JSPData;
 import ec.gp.*;
 import ec.util.*;
 import jsp.JSPFramework;
@@ -36,7 +36,7 @@ public class MACHINECriticalMachineIdleness extends GPNode{
         final GPIndividual individual,
         final Problem problem) {
 
-        jspData jd = ((jspData)(input));
+        JSPData jd = ((JSPData)(input));
         JSPFramework jsp = (JSPFramework) jd.abjsp;
         jd.tempVal = jsp.getCriticalMachineIdleness();
    }

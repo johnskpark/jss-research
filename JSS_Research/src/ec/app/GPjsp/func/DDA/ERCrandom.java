@@ -5,7 +5,7 @@
 
 package ec.app.GPjsp.func.DDA;
 import ec.*;
-import ec.app.GPjsp.jspData;
+import ec.app.GPjsp.JSPData;
 import ec.gp.*;
 import ec.util.*;
 import java.io.*;
@@ -99,7 +99,7 @@ public class ERCrandom extends ERC{
         final GPIndividual individual,
         final Problem problem)
         {
-            jspData jd = ((jspData)(input));
+            JSPData jd = ((JSPData)(input));
             jd.tempVal = r_constant;
         }
 }

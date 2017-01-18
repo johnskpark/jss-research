@@ -20,7 +20,7 @@ import jsp.Machine;
 public class GPjspMixTestMODynamic extends GPProblem implements SimpleProblemForm {
     public static String fitness = "";
     public static String objective = "";
-    public jspData input;
+    public JSPData input;
     public static int[] SimSeed = {2734,72734,	72605,12628,20029,1991,
                         55013,84005,54972,80531,45414,25675,
                         79032,14882,17423,2798,77874,3805,
@@ -29,7 +29,7 @@ public class GPjspMixTestMODynamic extends GPProblem implements SimpleProblemFor
     public static double[] utilisation = {0.7,0.8,0.9};
     public Object clone(){
         GPjspMixTestMODynamic newobj = (GPjspMixTestMODynamic) (super.clone());
-        newobj.input = (jspData)(input.clone());
+        newobj.input = (JSPData)(input.clone());
         return newobj;
     }
 
@@ -38,8 +38,8 @@ public class GPjspMixTestMODynamic extends GPProblem implements SimpleProblemFor
         super.setup(state,base);
 
         // set up our input -- don't want to use the default base, it's unsafe here
-        input = (jspData) state.parameters.getInstanceForParameterEq(
-            base.push(P_DATA), null, jspData.class);
+        input = (JSPData) state.parameters.getInstanceForParameterEq(
+            base.push(P_DATA), null, JSPData.class);
         input.setup(state,base.push(P_DATA));
     }
 

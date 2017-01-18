@@ -5,7 +5,7 @@
 
 package ec.app.GPjsp.func.GP3;
 import ec.*;
-import ec.app.GPjsp.jspData;
+import ec.app.GPjsp.JSPData;
 import ec.gp.*;
 import ec.util.*;
 import jsp.Machine;
@@ -35,7 +35,7 @@ public class TOPGP3classification extends GPNode{
         final GPIndividual individual,
         final Problem problem) {
 
-        jspData jd = ((jspData)(input));
+        JSPData jd = ((JSPData)(input));
         
         Machine thisM  = jd.M;
         int thisID = jd.M.getID();

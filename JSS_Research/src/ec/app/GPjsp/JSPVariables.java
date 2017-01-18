@@ -13,7 +13,7 @@ import jsp.Job;
  *
  * @author nguyensu
  */
-public class jspVariables {
+public class JSPVariables {
     public int mm = -1;
     public double kTH = -1;
     public double APR = -1;
@@ -50,6 +50,13 @@ public class jspVariables {
     public double PO = -1;
     public double Nq = -1;
     public double W = -1;
+    // variables for machine breakdown.
+    public double prevDTime = -1;
+    public double prevATime = -1;
+    public double DTime = -1;
+    public double ATime = -1;
+    public double breakdownRate = -1;
+    public double meanRepairTime = -1;
     public double tempDuate = -1;
     public void gatherStatFromJSPModel(AbstractJSPFramework jsp, int m, Job newjob, int i, double pef) {
     	if (jsp instanceof DynamicJSPFramework) {
@@ -133,6 +140,16 @@ public class jspVariables {
         if (i==-1) TSOTR = jspDynamic.getAverageSampledOTRatio_Route(newJob);
         Nq = jspDynamic.getTotalNumberOfJobInQueue(newJob.getReleaseTime());
         W = newJob.getWeight();
+
+        // variables for machine breakdown
+        if (i!=-1) {
+        	prevDTime = jspDynamic.getMachines()[mm].getPrevDeactivationTime();
+        	prevATime = jspDynamic.getMachines()[mm].getPrevActivationTime();
+        	DTime = jspDynamic.getMachines()[mm].getDeactivationTime();
+        	ATime = jspDynamic.getMachines()[mm].getActivationTime();
+        	breakdownRate = jspDynamic.getBreakdownRate();
+        	meanRepairTime = jspDynamic.getMeanRepairTimes();
+        }
     }
 
     public static double max(double a, double b){

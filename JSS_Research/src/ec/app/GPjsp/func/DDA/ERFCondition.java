@@ -6,7 +6,7 @@
 package ec.app.GPjsp.func.DDA;
 import ec.*;
 import ec.app.GPjsp.Operators.ERF;
-import ec.app.GPjsp.jspData;
+import ec.app.GPjsp.JSPData;
 import ec.gp.*;
 import ec.util.*;
 import java.io.*;
@@ -106,7 +106,7 @@ public class ERFCondition extends ERF{
         final GPIndividual individual,
         final Problem problem)
         {
-            jspData jd = ((jspData)(input));
+            JSPData jd = ((JSPData)(input));
             
             double attributeValue = -1;
             if (attribute == 0) attributeValue = jd.stat.SAR*jd.stat.SAPR;

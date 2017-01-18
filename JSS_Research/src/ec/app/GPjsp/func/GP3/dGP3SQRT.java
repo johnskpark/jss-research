@@ -5,7 +5,7 @@
 
 package ec.app.GPjsp.func.GP3;
 import ec.*;
-import ec.app.GPjsp.jspData;
+import ec.app.GPjsp.JSPData;
 import ec.gp.*;
 import ec.util.*;
 import jsp.Job;
@@ -36,7 +36,7 @@ public class dGP3SQRT extends GPNode{
         final GPIndividual individual,
         final Problem problem) {
 
-        jspData jd = ((jspData)(input));        
+        JSPData jd = ((JSPData)(input));        
         children[0].eval(state,thread,input,stack,individual,problem);
         if (jd.tempVal>=0) jd.tempVal = Math.sqrt(jd.tempVal);
         else jd.tempVal =1;

@@ -6,7 +6,7 @@
 package ec.app.GPjsp.func;
 import ec.*;
 import ec.app.GPjsp.GPjsp;
-import ec.app.GPjsp.jspData;
+import ec.app.GPjsp.JSPData;
 import ec.gp.*;
 import ec.util.*;
 import jsp.JSPFramework;
@@ -37,7 +37,7 @@ public class CONDITIONLessEq extends GPNode{
         final GPIndividual individual,
         final Problem problem) {
 
-        jspData jd = (jspData)(input);
+        JSPData jd = (JSPData)(input);
         double attributeValue = -1;
 
         children[0].eval(state,thread,input,stack,individual,problem);

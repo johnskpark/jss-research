@@ -5,7 +5,7 @@
 
 package ec.app.GPjsp.func;
 import ec.*;
-import ec.app.GPjsp.jspData;
+import ec.app.GPjsp.JSPData;
 import ec.gp.*;
 import ec.util.*;
 import jsp.Machine;
@@ -35,7 +35,7 @@ public class ATTRIBUTEMachineProgress extends GPNode{
         final GPIndividual individual,
         final Problem problem) {
 
-        jspData jd = (jspData)(input);
+        JSPData jd = (JSPData)(input);
         Machine M = jd.M;
 
         jd.attributeValue = M.getMachineProgress();

@@ -12,7 +12,7 @@ import jsp.Job;
 import jsp.Machine;
 import jsp.Operation;
 
-public class jspData extends GPData
+public class JSPData extends GPData
     {
 
     public boolean satisfyCONDITION = false;
@@ -26,7 +26,7 @@ public class jspData extends GPData
     public Job J;
     public Machine M;
     public AbstractJSPFramework abjsp;
-    public jspVariables stat = new jspVariables();
+    public JSPVariables stat = new JSPVariables();
     public double improve = -1;
     public double maxJobTotal = -1;
     public double maxMachineTotal = -1;
