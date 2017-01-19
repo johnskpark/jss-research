@@ -9,13 +9,13 @@ import ec.gp.GPIndividual;
 import ec.gp.GPNode;
 import ec.util.Parameter;
 
-public class PriorityExactBreakdownProb extends GPNode {
+public class PriorityExactNextBreakdownTime extends GPNode {
 
-	private static final long serialVersionUID = 8415406794300911723L;
+	private static final long serialVersionUID = 7410067554225425587L;
 
 	@Override
 	public String toString() {
-		return "EBP";
+		return "ENBT";
 	}
 
 	@Override
@@ -37,12 +37,7 @@ public class PriorityExactBreakdownProb extends GPNode {
 			final GPIndividual individual,
 			final Problem problem) {
         JSPData jd = (JSPData) input;
-
-        // For now, assume exponential distribution for the breakdowns (memoryless).
-        double procTime = jd.stat.OT;
-        double breakdownRate = jd.stat.breakdownRate;
-
-        jd.tempVal = 1-Math.exp(-procTime / breakdownRate);
+        jd.tempVal = jd.stat.DTime;
 	}
 
 }

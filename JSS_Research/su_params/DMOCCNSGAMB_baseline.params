@@ -107,7 +107,7 @@ gp.fs.1.func.16.nc = ncESTSTAT
 gp.fs.1.func.17 = ec.app.GPjsp.func.DDA.ESTW
 gp.fs.1.func.17.nc = ncESTSTAT
 
-eval.problem.data = ec.app.GPjsp.jspData
+eval.problem.data = ec.app.GPjsp.JSPData
 
 seed.0=13412
 
@@ -130,13 +130,13 @@ eval.problem =                          ec.app.GPjsp.DMOCCNSGA_MB
 pop.subpops =                           2
 pop.subpop.0 = 				ec.Subpopulation
 pop.subpop.0.duplicate-retries = 	10
-pop.subpop.0.size = 			20
+pop.subpop.0.size = 			100
 pop.subpop.0.species.fitness =		ec.multiobjective.nsga2.NSGA2MultiObjectiveFitness
 pop.subpop.0.species.fitness.maximize = false
 
 pop.subpop.1 = 				ec.Subpopulation
 pop.subpop.1.duplicate-retries = 	10
-pop.subpop.1.size = 			20
+pop.subpop.1.size = 			100
 pop.subpop.1.species.fitness =		ec.multiobjective.nsga2.NSGA2MultiObjectiveFitness
 pop.subpop.1.species.fitness.maximize = false
 

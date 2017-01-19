@@ -74,11 +74,9 @@ public class DMOCCNSGA_MB extends GPjsp2WayMOCoevolveNSGA {
 			Coevolutionary2WayGPIndividual ind1 = (Coevolutionary2WayGPIndividual) ind[0];
 			Coevolutionary2WayGPIndividual ind2 = (Coevolutionary2WayGPIndividual) ind[1];
 
-			double[] utilisation = {0.8, 0.9};
-//			double[] utilisation = {0.95};
+			double[] utilisation = {0.75, 0.85};
 			double[] breakdownLevel = {0.05};
-			double[] meanRepair = {4.3, 4.7, 5.3};
-//			double[] breakdownLevel = {0.0};
+			double[] meanRepair = {2.3, 3.3};
 			int[] numberOfMachines = {4, 6};
 			String[] lowers = {"miss"};
 			String[] dists = {"expo"};
@@ -91,7 +89,8 @@ public class DMOCCNSGA_MB extends GPjsp2WayMOCoevolveNSGA {
 			SmallStatistics resultDD = new SmallStatistics();
 
 			StringBuilder detail = new StringBuilder();
-			runExperiments(dists, lowers, numberOfMachines, utilisation, breakdownLevel, 1,
+			runExperiments(dists, lowers, numberOfMachines, utilisation,
+					breakdownLevel, meanRepair, 1,
 					(GPIndividual) ind1, (GPIndividual) ind2, state, threadnum,
 					resultDD,
 					result,
@@ -154,8 +153,9 @@ public class DMOCCNSGA_MB extends GPjsp2WayMOCoevolveNSGA {
 		Coevolutionary2WayGPIndividual ind1 = (Coevolutionary2WayGPIndividual)(ind[0]);
 		Coevolutionary2WayGPIndividual ind2 = (Coevolutionary2WayGPIndividual)(ind[1]);
 
-		double[] utilisation = {0.7, 0.8, 0.9, 0.95};
-		double[] breakdownLevel = {0.0, 0.025, 0.05};
+		double[] utilisation = {0.65, 0.75, 0.85, 0.9};
+		double[] breakdownLevel = {0.05};
+		double[] meanRepair = {2.3, 3.3, 4.3};
 		int[] numberOfMachines = {5, 10, 20};
 		String[] lowers = {"miss", "full"};
 		String[] dists = {"expo", "uniform"};
@@ -168,7 +168,8 @@ public class DMOCCNSGA_MB extends GPjsp2WayMOCoevolveNSGA {
 		SmallStatistics resultDD = new SmallStatistics();
 
 		StringBuilder detail = new StringBuilder();
-		runExperiments(dists, lowers, numberOfMachines, utilisation, breakdownLevel, 5,
+		runExperiments(dists, lowers, numberOfMachines, utilisation,
+				breakdownLevel, meanRepair, 5,
 				(GPIndividual) ind1, (GPIndividual) ind2, state, threadnum,
 				resultDD,
 				result,
@@ -183,6 +184,7 @@ public class DMOCCNSGA_MB extends GPjsp2WayMOCoevolveNSGA {
 			int[] numberOfMachines,
 			double[] utilisation,
 			double[] breakdownLevel,
+			double[] meanRepair,
 			int numDS,
 			GPIndividual ind1,
 			GPIndividual ind2,
@@ -192,7 +194,7 @@ public class DMOCCNSGA_MB extends GPjsp2WayMOCoevolveNSGA {
 			SmallStatistics[] result,
 			StringBuilder detail) {
 		outerLoop:
-			for (String dist : dists) { for (String s : lowers) { for (int m : numberOfMachines) { for (double u : utilisation) { for (double bl : breakdownLevel) {
+			for (String dist : dists) { for (String s : lowers) { for (int m : numberOfMachines) { for (double u : utilisation) { for (double bl : breakdownLevel) { for (double mr : meanRepair) {
 				for (int ds = 0; ds < numDS; ds++) {
 					int lower = 0;
 					String distribution ="";
@@ -215,9 +217,8 @@ public class DMOCCNSGA_MB extends GPjsp2WayMOCoevolveNSGA {
 						param = 0.5;
 					}
 
-					// TODO just filling in temporary parameters for now.
 					DynamicJSPFrameworkBreakdown jspDynamic = new DynamicJSPFrameworkBreakdown(SIM_JOB_SEED[ds], m, lower,
-							m, u, u, meanTime, distribution, param, 1000, 5000, SIM_BREAKDOWN_SEED[ds], bl, 5.3);
+							m, u, u, meanTime, distribution, param, 1000, 5000, SIM_BREAKDOWN_SEED[ds], bl, mr);
 					input.abjsp = jspDynamic;
 
 					//set dispatching rule
@@ -353,7 +354,7 @@ public class DMOCCNSGA_MB extends GPjsp2WayMOCoevolveNSGA {
 					result[1].add(jspDynamic.getNormalisedTotalWeightedTardiness());
 					detail.append(jspDynamic.getCmax() + " " + jspDynamic.getNormalisedTotalWeightedTardiness() + " " + mape + " ");
 				}
-			}}}}}
+			}}}}}}
 	}
 
 	public void preprocessPopulation(final EvolutionState state, Population pop, boolean countVictoriesOnly) {

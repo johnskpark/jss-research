@@ -7,7 +7,7 @@ import ec.gp.GPData;
 import ec.gp.GPIndividual;
 import ec.gp.GPNode;
 
-public class PriorityExactBreakdownTime extends GPNode {
+public class PriorityPredictedNextBreakdownTime extends GPNode {
 
 	@Override
 	public String toString() {

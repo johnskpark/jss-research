@@ -1,4 +1,4 @@
-package ec.app.GPjsp.func.DDA.machineBreakdown;
+package ec.app.GPjsp.func.machineBreakdown;
 
 import ec.EvolutionState;
 import ec.Problem;
@@ -9,13 +9,13 @@ import ec.gp.GPIndividual;
 import ec.gp.GPNode;
 import ec.util.Parameter;
 
-public class ESTExactRepairTime extends GPNode {
+public class PriorityExactNextRepairTime extends GPNode {
 
-	private static final long serialVersionUID = -1332026403372462415L;
+	private static final long serialVersionUID = 7132607948394043671L;
 
 	@Override
 	public String toString() {
-		return "EMR";
+		return "ENRT";
 	}
 
 	@Override
