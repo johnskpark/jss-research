@@ -64,6 +64,9 @@ public class Machine {
     private int numDeactivate = 0;
     private int numDisrupt = 0;
 
+    // TODO temporary
+    private boolean disrupt = false;
+
     //End param for ADRES;
     //sub-routine
     /*
@@ -384,10 +387,18 @@ public class Machine {
         double expectedProcessingTime = job.getCurrentOperationProcessingTime();
         double actualProcessingTime = job.getCurrentOperationProcessingTime();
         double repairTime = 0;
+
+        if (disrupt) {
+        	throw new RuntimeException("completeJob");
+        }
+
         if (expectedProcessingTime + readyTime >= deactivateTime) {
         	// add the repair time to the processing time
         	repairTime = activateTime - deactivateTime;
         	actualProcessingTime += repairTime;
+
+        	// TODO
+        	disrupt = true;
         }
 
         queueWorkload -= expectedProcessingTime;
@@ -479,13 +490,33 @@ public class Machine {
         	// a job's already been started, and completeJob already handles part of the logic
     		// TODO this part is less than the number of times the machine deactivates, this is not good.
     		numDisrupt++;
+
+    		// Why would the ready time be greater than the deactivate time?
+
+    		if (disrupt) {
+    			disrupt = false;
+    		} else {
+    			throw new RuntimeException("Empty queue: " + jobInQueue.size());
+    		}
+
+    		// TODO need to check whether this is correct or not.
+    		// Right, is this actually correct?
+//    		if (jobInQueue.isEmpty()) {
+//    			throw new RuntimeException("Empty queue: " + jobInQueue.size());
+//    		}
     	} else {
     		// the machine is not currently processing a job, delay the machine's availability to after it is repaired
     		queueWorkload += repairTime;
     		remainingAggregateWorkLoad += repairTime;
     		readyTime = activateTime;
+
+    		// TODO need to check whether this is correct or not.
+//    		if (!jobInQueue.isEmpty()) {
+//    			throw new RuntimeException("Non empty queue: " + jobInQueue.size());
+//    		}
     	}
     	// TODO need to update earliest start and earliest completion times maybe? I dunno.
+    	// Yeah seriously what the fuck man.
 
     	prevDTime = deactivateTime;
     	prevATime = activateTime;
@@ -762,18 +793,12 @@ public class Machine {
      * get number of times the machine is deactivated
      */
     public int numDeactivated() {
-    	// TODO
-    	System.out.println("deactivate: " + numDeactivate);
-
     	return numDeactivate;
     }
     /*
      * get number of times job processing was disrupted due to machine deactivation
      */
     public int numDisruption() {
-    	// TODO
-    	System.out.println("disrupt: " + numDisrupt);
-
     	return numDisrupt;
     }
     /*
