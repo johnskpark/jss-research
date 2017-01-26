@@ -940,7 +940,7 @@ import SmallStatistics.SmallStatistics;
         public double getAvgInterBreakdownTimes() {
         	double sum = 0.0;
         	for (int i = 0; i < nMachine; i++) {
-        		sum += machines[i].getAvgInterBreakdownTimes();
+        		sum += machines[i].getSampleAvgInterBreakdownTimes();
         	}
         	return sum / nMachine;
         }
@@ -950,7 +950,7 @@ import SmallStatistics.SmallStatistics;
         public double getAvgRepairTimes() {
         	double sum = 0.0;
         	for (int i = 0; i < nMachine; i++) {
-        		sum += machines[i].getAvgRepairTimes();
+        		sum += machines[i].getSampleAvgRepairTimes();
         	}
         	return sum / nMachine;
         }

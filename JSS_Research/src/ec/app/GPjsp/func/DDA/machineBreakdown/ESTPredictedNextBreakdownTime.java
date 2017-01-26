@@ -36,9 +36,8 @@ public class ESTPredictedNextBreakdownTime extends GPNode {
 			final ADFStack stack,
 			final GPIndividual individual,
 			final Problem problem) {
-		// TODO Auto-generated method stub
         JSPData jd = (JSPData) input;
-        jd.tempVal = jd.stat.OT;
+        jd.tempVal = jd.stat.prevDTime + jd.stat.sampleInterBreakdownTimes;
 	}
 
 }

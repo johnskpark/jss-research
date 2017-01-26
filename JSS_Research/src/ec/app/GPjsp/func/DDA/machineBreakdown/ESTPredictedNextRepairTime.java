@@ -9,13 +9,13 @@ import ec.gp.GPIndividual;
 import ec.gp.GPNode;
 import ec.util.Parameter;
 
-public class ESTPredictedRepairTime extends GPNode {
+public class ESTPredictedNextRepairTime extends GPNode {
 
 	private static final long serialVersionUID = -5034294772207419812L;
 
 	@Override
 	public String toString() {
-		return "PMR";
+		return "PNRT";
 	}
 
 	@Override
@@ -36,9 +36,8 @@ public class ESTPredictedRepairTime extends GPNode {
 			final ADFStack stack,
 			final GPIndividual individual,
 			final Problem problem) {
-		// TODO Auto-generated method stub
         JSPData jd = (JSPData) input;
-        jd.tempVal = jd.stat.OT;
+        jd.tempVal = jd.stat.sampleRepairTimes;
 	}
 
 }

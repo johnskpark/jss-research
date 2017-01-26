@@ -237,8 +237,6 @@ public class DMOCCNSGA_MB extends GPjsp2WayMOCoevolveNSGA {
 					while (!jspDynamic.isStop()) {
 						int event = jspDynamic.getNextEventType();
 						if (event == DynamicJSPFrameworkBreakdown.ARRIVAL_EVENT) {
-//							System.out.println("Arrival event: " + jspDynamic.getNextArrivalTime());
-
 							//JOB newjob = jspDynamic.GenerateNonRecirculatedJob(jspDynamic.getNextArrivalTime());
 							///*
 							Job newjob = jspDynamic.generateRandomJob(jspDynamic.getNextArrivalTime());
@@ -271,16 +269,6 @@ public class DMOCCNSGA_MB extends GPjsp2WayMOCoevolveNSGA {
 							//newjob.assignDuedate(1.3*newjob.getTotalProcessingTime());
 							//jspDynamic.setNextArrivalTime();
 						} else if (event == DynamicJSPFrameworkBreakdown.READY_EVENT) {
-//							System.out.println("Ready event: " + jspDynamic.getNextEarliestReadyTime());
-
-//							for (int i = 0; i < m; i++) {
-//								if (!jspDynamic.machines[i].isPlanned) {
-//									System.out.println("Machine " + i +
-//											", Ready time: " + jspDynamic.machines[i].getReadyTime() +
-//											", NumJobs: " + jspDynamic.machines[i].getQueue().size());
-//								}
-//							}
-
 							jspDynamic.unplanAll();
 							do {
 								int nextMachine = jspDynamic.nextMachine();
@@ -307,7 +295,6 @@ public class DMOCCNSGA_MB extends GPjsp2WayMOCoevolveNSGA {
 								if (M.getPlannedStartTimeNextOperation() <= jspDynamic.getNextArrivalTime() &&
 										M.getPlannedStartTimeNextOperation() < M.getDeactivationTime()) {
 									// job will start, but may be interrupted by machine deactivation
-//									System.out.println("Beginning processing at machine " + nextMachine + " at time " + M.getPlannedStartTimeNextOperation());
 
 									Job J = M.completeJob();
 									if (!J.isCompleted()) {
@@ -322,32 +309,18 @@ public class DMOCCNSGA_MB extends GPjsp2WayMOCoevolveNSGA {
 						} else if (event == DynamicJSPFrameworkBreakdown.DEACTIVATE_EVENT) {
 							int mIndex = jspDynamic.getNextEarliestDeactivateMachine();
 
-//							System.out.println("Breakdown event: " + jspDynamic.getNextEarliestDeactivateTime() + ", machine: " + mIndex);
-
 							jspDynamic.repairMachine(mIndex);
 							jspDynamic.setNextDeactivateTime(mIndex);
 							jspDynamic.setNextActivateTime(mIndex);
-
-//							System.out.println("Next breakdown: " + jspDynamic.getNextEarliestDeactivateTime());
 						} else {
 							throw new RuntimeException("Unrecognised type of event: " + event);
 						}
 					}
 
-//					System.out.printf("%f, %f, %f, %f\n", jspDynamic.getAvgInterBreakdownTimes(),
-//							jspDynamic.getAvgRepairTimes(),
-//							jspDynamic.getAvgDeactivation(),
-//							jspDynamic.getAvgDisruption());
-
 					double mape = jspDynamic.getMAPE();
 					if (mape < 0.0 || mape == Double.POSITIVE_INFINITY || Double.isNaN(mape)) {
 						break outerLoop;
 					}
-
-//					System.out.printf("Results: mape: %f, maxF: %f, normTWT: %f\n",
-//							mape,
-//							jspDynamic.getCmax(),
-//							jspDynamic.getNormalisedTotalWeightedTardiness());
 
 					resultDD.add(mape);
 					result[0].add(jspDynamic.getCmax());

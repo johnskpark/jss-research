@@ -55,6 +55,8 @@ public class JSPVariables {
     public double prevATime = -1;
     public double DTime = -1;
     public double ATime = -1;
+    public double sampleInterBreakdownTimes = -1;
+    public double sampleRepairTimes = -1;
     public double breakdownRate = -1;
     public double meanRepairTime = -1;
     public double tempDuate = -1;
@@ -147,6 +149,8 @@ public class JSPVariables {
         	prevATime = jspDynamic.getMachines()[mm].getPrevActivationTime();
         	DTime = jspDynamic.getMachines()[mm].getDeactivationTime();
         	ATime = jspDynamic.getMachines()[mm].getActivationTime();
+        	sampleInterBreakdownTimes = jspDynamic.getMachines()[mm].getSampleAvgInterBreakdownTimes();
+        	sampleRepairTimes = jspDynamic.getMachines()[mm].getSampleAvgRepairTimes();
         	breakdownRate = jspDynamic.getBreakdownRate();
         	meanRepairTime = jspDynamic.getMeanRepairTimes();
         }

@@ -65,7 +65,8 @@ public class Machine {
     private int numDisrupt = 0;
 
     // TODO temporary
-    private boolean disrupt = false;
+    public boolean disrupt = false;
+    public int falseDisruptNum = 0;
 
     //End param for ADRES;
     //sub-routine
@@ -487,36 +488,21 @@ public class Machine {
     	numDeactivate++;
     	double repairTime = activateTime - deactivateTime;
     	if (deactivateTime < readyTime) {
-        	// a job's already been started, and completeJob already handles part of the logic
-    		// TODO this part is less than the number of times the machine deactivates, this is not good.
     		numDisrupt++;
 
     		// Why would the ready time be greater than the deactivate time?
-
+    		// TODO temporary code until this is fixed.
     		if (disrupt) {
     			disrupt = false;
     		} else {
-    			throw new RuntimeException("Empty queue: " + jobInQueue.size());
+    			falseDisruptNum++;
     		}
-
-    		// TODO need to check whether this is correct or not.
-    		// Right, is this actually correct?
-//    		if (jobInQueue.isEmpty()) {
-//    			throw new RuntimeException("Empty queue: " + jobInQueue.size());
-//    		}
     	} else {
     		// the machine is not currently processing a job, delay the machine's availability to after it is repaired
     		queueWorkload += repairTime;
     		remainingAggregateWorkLoad += repairTime;
     		readyTime = activateTime;
-
-    		// TODO need to check whether this is correct or not.
-//    		if (!jobInQueue.isEmpty()) {
-//    			throw new RuntimeException("Non empty queue: " + jobInQueue.size());
-//    		}
     	}
-    	// TODO need to update earliest start and earliest completion times maybe? I dunno.
-    	// Yeah seriously what the fuck man.
 
     	prevDTime = deactivateTime;
     	prevATime = activateTime;
@@ -772,7 +758,7 @@ public class Machine {
     /*
      * get the average inter breakdown times
      */
-    public double getAvgInterBreakdownTimes() {
+    public double getSampleAvgInterBreakdownTimes() {
     	if (numDeactivate != 0) {
         	return sumInterDeactivationTimes / numDeactivate;
     	} else {
@@ -782,7 +768,7 @@ public class Machine {
     /*
      * get the average repair times
      */
-    public double getAvgRepairTimes() {
+    public double getSampleAvgRepairTimes() {
     	if (numDeactivate != 0) {
     		return sumRepairTimes / numDeactivate;
     	} else {

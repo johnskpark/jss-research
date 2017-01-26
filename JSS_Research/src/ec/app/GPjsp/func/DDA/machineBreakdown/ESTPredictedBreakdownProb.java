@@ -36,9 +36,13 @@ public class ESTPredictedBreakdownProb extends GPNode {
 			final ADFStack stack,
 			final GPIndividual individual,
 			final Problem problem) {
-		// TODO Auto-generated method stub
         JSPData jd = (JSPData) input;
-        jd.tempVal = jd.stat.OT;
+
+        // For now, assume exponential distribution for the breakdowns (memoryless).
+        double procTime = jd.stat.OT;
+        double predBreakdownRate = jd.stat.sampleInterBreakdownTimes;
+
+        jd.tempVal = 1-Math.exp(-procTime / predBreakdownRate);
 	}
 
 }
