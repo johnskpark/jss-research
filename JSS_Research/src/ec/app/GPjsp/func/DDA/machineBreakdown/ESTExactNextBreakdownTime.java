@@ -37,7 +37,7 @@ public class ESTExactNextBreakdownTime extends GPNode {
 			final GPIndividual individual,
 			final Problem problem) {
         JSPData jd = (JSPData) input;
-        jd.tempVal = jd.stat.DTime;
+        jd.tempVal = jd.stat.DTime; // TODO need to look at an approach that uses this.
 	}
 
 }

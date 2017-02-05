@@ -1,4 +1,4 @@
-package ec.app.GPjsp.func.machineBreakdown;
+package ec.app.GPjsp.func.DDA.machineBreakdown;
 
 import ec.EvolutionState;
 import ec.Problem;
@@ -9,9 +9,9 @@ import ec.gp.GPIndividual;
 import ec.gp.GPNode;
 import ec.util.Parameter;
 
-public class PriorityPredictedBreakdownProb extends GPNode {
+public class ESTPredictiveBreakdownProb extends GPNode {
 
-	private static final long serialVersionUID = 592970560560839962L;
+	private static final long serialVersionUID = 599538529564286950L;
 
 	@Override
 	public String toString() {

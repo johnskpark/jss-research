@@ -60,6 +60,8 @@ public class JSPVariables {
     public double breakdownRate = -1;
     public double meanRepairTime = -1;
     public double tempDuate = -1;
+    public double nextArrivalTime = -1;
+    public double nextReadyTime = -1; // TODO
     public void gatherStatFromJSPModel(AbstractJSPFramework jsp, int m, Job newjob, int i, double pef) {
     	if (jsp instanceof DynamicJSPFramework) {
     		gatherStatFromDynamicJSPModel((DynamicJSPFramework) jsp, m, newjob, i, pef);

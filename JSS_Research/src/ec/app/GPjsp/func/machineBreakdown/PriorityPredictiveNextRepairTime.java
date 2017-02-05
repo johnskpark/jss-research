@@ -1,4 +1,4 @@
-package ec.app.GPjsp.func.DDA.machineBreakdown;
+package ec.app.GPjsp.func.machineBreakdown;
 
 import ec.EvolutionState;
 import ec.Problem;
@@ -9,13 +9,13 @@ import ec.gp.GPIndividual;
 import ec.gp.GPNode;
 import ec.util.Parameter;
 
-public class ESTPredictedNextBreakdownTime extends GPNode {
+public class PriorityPredictiveNextRepairTime extends GPNode {
 
-	private static final long serialVersionUID = 6314694437300222802L;
+	private static final long serialVersionUID = 8873721925068578653L;
 
 	@Override
 	public String toString() {
-		return "PNBT";
+		return "PNRT";
 	}
 
 	@Override
@@ -37,7 +37,7 @@ public class ESTPredictedNextBreakdownTime extends GPNode {
 			final GPIndividual individual,
 			final Problem problem) {
         JSPData jd = (JSPData) input;
-        jd.tempVal = jd.stat.prevDTime + jd.stat.sampleInterBreakdownTimes;
+        jd.tempVal = jd.stat.sampleRepairTimes;
 	}
 
 }

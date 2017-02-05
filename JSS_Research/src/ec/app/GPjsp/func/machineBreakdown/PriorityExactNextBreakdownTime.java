@@ -37,7 +37,7 @@ public class PriorityExactNextBreakdownTime extends GPNode {
 			final GPIndividual individual,
 			final Problem problem) {
         JSPData jd = (JSPData) input;
-        jd.tempVal = jd.stat.DTime;
+        jd.tempVal = jd.stat.DTime; // TODO this might need some fixing.
 	}
 
 }

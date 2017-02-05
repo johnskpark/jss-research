@@ -9,13 +9,13 @@ import ec.gp.GPIndividual;
 import ec.gp.GPNode;
 import ec.util.Parameter;
 
-public class PriorityPredictedNextRepairTime extends GPNode {
+public class PriorityPredictiveBreakdownProb extends GPNode {
 
-	private static final long serialVersionUID = 8873721925068578653L;
+	private static final long serialVersionUID = 592970560560839962L;
 
 	@Override
 	public String toString() {
-		return "PNRT";
+		return "PBP";
 	}
 
 	@Override
@@ -37,7 +37,12 @@ public class PriorityPredictedNextRepairTime extends GPNode {
 			final GPIndividual individual,
 			final Problem problem) {
         JSPData jd = (JSPData) input;
-        jd.tempVal = jd.stat.sampleRepairTimes;
+
+        // For now, assume exponential distribution for the breakdowns (memoryless).
+        double procTime = jd.stat.OT;
+        double predBreakdownRate = jd.stat.sampleInterBreakdownTimes;
+
+        jd.tempVal = 1-Math.exp(-procTime / predBreakdownRate);
 	}
 
 }

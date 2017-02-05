@@ -9,13 +9,13 @@ import ec.gp.GPIndividual;
 import ec.gp.GPNode;
 import ec.util.Parameter;
 
-public class ESTPredictedBreakdownProb extends GPNode {
+public class ESTPredictiveNextBreakdownTime extends GPNode {
 
-	private static final long serialVersionUID = 599538529564286950L;
+	private static final long serialVersionUID = 6314694437300222802L;
 
 	@Override
 	public String toString() {
-		return "PBP";
+		return "PNBT";
 	}
 
 	@Override
@@ -37,12 +37,7 @@ public class ESTPredictedBreakdownProb extends GPNode {
 			final GPIndividual individual,
 			final Problem problem) {
         JSPData jd = (JSPData) input;
-
-        // For now, assume exponential distribution for the breakdowns (memoryless).
-        double procTime = jd.stat.OT;
-        double predBreakdownRate = jd.stat.sampleInterBreakdownTimes;
-
-        jd.tempVal = 1-Math.exp(-procTime / predBreakdownRate);
+        jd.tempVal = jd.stat.prevATime + jd.stat.sampleInterBreakdownTimes;
 	}
 
 }

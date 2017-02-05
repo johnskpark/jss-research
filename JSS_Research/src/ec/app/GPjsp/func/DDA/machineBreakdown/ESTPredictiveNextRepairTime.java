@@ -9,7 +9,7 @@ import ec.gp.GPIndividual;
 import ec.gp.GPNode;
 import ec.util.Parameter;
 
-public class ESTPredictedNextRepairTime extends GPNode {
+public class ESTPredictiveNextRepairTime extends GPNode {
 
 	private static final long serialVersionUID = -5034294772207419812L;
 

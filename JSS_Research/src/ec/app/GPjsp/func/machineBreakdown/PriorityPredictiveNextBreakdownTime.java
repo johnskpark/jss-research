@@ -9,7 +9,7 @@ import ec.gp.GPIndividual;
 import ec.gp.GPNode;
 import ec.util.Parameter;
 
-public class PriorityPredictedNextBreakdownTime extends GPNode {
+public class PriorityPredictiveNextBreakdownTime extends GPNode {
 
 	private static final long serialVersionUID = -8834471711484284906L;
 
@@ -37,7 +37,7 @@ public class PriorityPredictedNextBreakdownTime extends GPNode {
 			final GPIndividual individual,
 			final Problem problem) {
         JSPData jd = (JSPData) input;
-        jd.tempVal = jd.stat.prevDTime + jd.stat.sampleInterBreakdownTimes;
+        jd.tempVal = jd.stat.prevATime + jd.stat.sampleInterBreakdownTimes;
 	}
 
 }
