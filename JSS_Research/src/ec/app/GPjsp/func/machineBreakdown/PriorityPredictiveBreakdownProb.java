@@ -8,6 +8,8 @@ import ec.gp.GPData;
 import ec.gp.GPIndividual;
 import ec.gp.GPNode;
 import ec.util.Parameter;
+import jsp.Job;
+import jsp.Machine;
 
 public class PriorityPredictiveBreakdownProb extends GPNode {
 
@@ -39,10 +41,12 @@ public class PriorityPredictiveBreakdownProb extends GPNode {
         JSPData jd = (JSPData) input;
 
         // For now, assume exponential distribution for the breakdowns (memoryless).
-        double procTime = jd.stat.OT;
-        double predBreakdownRate = jd.stat.sampleInterBreakdownTimes;
+        Machine machine = jd.M;
+        double predBreakdownRate = machine.getSampleAvgInterBreakdownTimes();
 
-        jd.tempVal = 1-Math.exp(-procTime / predBreakdownRate);
+        for (Job job : machine.getQueue()) {
+        	job.tempPriority = 1.0 - Math.exp(-job.getCurrentOperationProcessingTime() / predBreakdownRate);
+        }
 	}
 
 }

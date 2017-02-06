@@ -8,6 +8,8 @@ import ec.gp.GPData;
 import ec.gp.GPIndividual;
 import ec.gp.GPNode;
 import ec.util.Parameter;
+import jsp.Job;
+import jsp.Machine;
 
 public class PriorityExactNextRepairTime extends GPNode {
 
@@ -37,7 +39,13 @@ public class PriorityExactNextRepairTime extends GPNode {
 			final GPIndividual individual,
 			final Problem problem) {
         JSPData jd = (JSPData) input;
-        jd.tempVal = jd.stat.ATime - jd.stat.DTime;
+
+        Machine machine = jd.M;
+        double nextRepair = machine.getActivationTime() - machine.getDeactivationTime();
+
+        for (Job job : machine.getQueue()) {
+        	job.tempPriority = nextRepair;
+        }
 	}
 
 }

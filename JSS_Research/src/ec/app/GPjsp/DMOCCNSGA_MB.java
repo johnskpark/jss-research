@@ -243,7 +243,7 @@ public class DMOCCNSGA_MB extends GPjsp2WayMOCoevolveNSGA {
 							input.partialEstimatedFlowtime = 0;
 							input.J = newjob;
 							for (int i = 0; i < newjob.getNumberOperations(); i++) {
-								input.stat.gatherStatFromJSPModel(jspDynamic, m , newjob,i , input.partialEstimatedFlowtime);
+								input.stat.gatherStatFromJSPModel(jspDynamic, m , newjob, i, input.partialEstimatedFlowtime);
 								//calculcate parital flowtime
 								input.tempVal = 0;
 								input.k = i;

@@ -8,6 +8,8 @@ import ec.gp.GPData;
 import ec.gp.GPIndividual;
 import ec.gp.GPNode;
 import ec.util.Parameter;
+import jsp.Job;
+import jsp.Machine;
 
 public class PriorityPredictiveNextBreakdownTime extends GPNode {
 
@@ -37,7 +39,13 @@ public class PriorityPredictiveNextBreakdownTime extends GPNode {
 			final GPIndividual individual,
 			final Problem problem) {
         JSPData jd = (JSPData) input;
-        jd.tempVal = jd.stat.prevATime + jd.stat.sampleInterBreakdownTimes;
+
+        Machine machine = jd.M;
+        double predNextBreakdown = machine.getActivationTime() + machine.getSampleAvgInterBreakdownTimes();
+
+        for (Job job : machine.getQueue()) {
+        	job.tempPriority = predNextBreakdown;
+        }
 	}
 
 }

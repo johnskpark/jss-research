@@ -64,10 +64,6 @@ public class Machine {
     private int numDeactivate = 0;
     private int numDisrupt = 0;
 
-    // TODO temporary
-    public boolean disrupt = false;
-    public int falseDisruptNum = 0;
-
     //End param for ADRES;
     //sub-routine
     /*
@@ -389,17 +385,10 @@ public class Machine {
         double actualProcessingTime = job.getCurrentOperationProcessingTime();
         double repairTime = 0;
 
-        if (disrupt) {
-        	throw new RuntimeException("completeJob");
-        }
-
         if (expectedProcessingTime + readyTime >= deactivateTime) {
         	// add the repair time to the processing time
         	repairTime = activateTime - deactivateTime;
         	actualProcessingTime += repairTime;
-
-        	// TODO
-        	disrupt = true;
         }
 
         queueWorkload -= expectedProcessingTime;
@@ -489,14 +478,6 @@ public class Machine {
     	double repairTime = activateTime - deactivateTime;
     	if (deactivateTime < readyTime) {
     		numDisrupt++;
-
-    		// Why would the ready time be greater than the deactivate time?
-    		// TODO temporary code until this is fixed.
-    		if (disrupt) {
-    			disrupt = false;
-    		} else {
-    			falseDisruptNum++;
-    		}
     	} else {
     		// the machine is not currently processing a job, delay the machine's availability to after it is repaired
     		queueWorkload += repairTime;
@@ -756,7 +737,7 @@ public class Machine {
         return 1 - idleTime/(readyTime-timeToCollectStat);
     }
     /*
-     * get the average inter breakdown times
+     * get the average inter breakdown times (sampled)
      */
     public double getSampleAvgInterBreakdownTimes() {
     	if (numDeactivate != 0) {
@@ -766,7 +747,7 @@ public class Machine {
     	}
     }
     /*
-     * get the average repair times
+     * get the average repair times (sampled)
      */
     public double getSampleAvgRepairTimes() {
     	if (numDeactivate != 0) {
