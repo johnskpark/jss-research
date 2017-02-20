@@ -6,14 +6,11 @@
 
 
 package ec.app.GPjsp;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.LineNumberReader;
 import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.List;
 
 import SmallStatistics.SmallStatistics;
 import ec.EvolutionState;
@@ -22,18 +19,25 @@ import ec.Population;
 import ec.gp.GPIndividual;
 import ec.multiobjective.MultiObjectiveFitness;
 import ec.multiobjective.MultiObjectiveStatisticsSu;
+import ec.simple.SimpleStatistics;
 import ec.util.Parameter;
 import jsp.DynamicJSPFrameworkBreakdown;
 import jsp.Job;
 import jsp.Machine;
 
-public class DMOCCNSGA_MB extends GPjsp2WayMOCoevolveNSGA {
+public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 
 	private static final long serialVersionUID = -7145910495558748714L;
+
+	public static final String P_FILE = "input-file";
+	public static final String P_INTERMEDIATE_FILE = "intermediate-file";
 
 	public double meanTime = 1;
 	public static String fitness = "";
 	public static String objective = "";
+
+	public String inputFile = null;
+	public String intermediateFile = null;
 
 	public JSPData input;
 
@@ -63,6 +67,9 @@ public class DMOCCNSGA_MB extends GPjsp2WayMOCoevolveNSGA {
 		// set up our input -- don't want to use the default base, it's unsafe here
 		input = (JSPData) state.parameters.getInstanceForParameterEq(base.push(P_DATA), null, JSPData.class);
 		input.setup(state,base.push(P_DATA));
+
+		inputFile = state.parameters.getStringWithDefault(base.push(P_FILE), null, null);
+		intermediateFile = state.parameters.getStringWithDefault(base.push(P_INTERMEDIATE_FILE), null, null);
 	}
 
 	public void evaluate(final EvolutionState state,
@@ -71,120 +78,62 @@ public class DMOCCNSGA_MB extends GPjsp2WayMOCoevolveNSGA {
 			final boolean countVictoriesOnly,
 			final int[] subpops,
 			final int threadnum) {
-		if ((updateFitness[0] && !ind[0].evaluated) ||
-				(updateFitness[1] && !ind[1].evaluated)) {
-			if (ind.length != 2 ||
-					!(ind[0] instanceof Coevolutionary2WayGPIndividual) ||
-					!(ind[1] instanceof Coevolutionary2WayGPIndividual)) {
-				state.output.error( "There should be two subpopulations, both with CoevolutionaryDoubleVectorIndividual." );
-			}
+		// TODO prematurely end the program here.
 
-			Coevolutionary2WayGPIndividual ind1 = (Coevolutionary2WayGPIndividual) ind[0];
-			Coevolutionary2WayGPIndividual ind2 = (Coevolutionary2WayGPIndividual) ind[1];
 
-			double[] utilisation = {0.75, 0.85};
-			double[] breakdownLevel = {0.05};
-			double[] meanRepair = {2.3, 3.3};
-			int[] numberOfMachines = {4, 6};
-			String[] lowers = {"miss"};
-			String[] dists = {"expo"};
-
-			double[] objectives = new double[3];
-
-			SmallStatistics[] result = new SmallStatistics[] {
-					new SmallStatistics(), new SmallStatistics()
-			};
-			SmallStatistics resultDD = new SmallStatistics();
-
-			StringBuilder detail = new StringBuilder();
-			runExperiments(dists, lowers, numberOfMachines, utilisation,
-					breakdownLevel, meanRepair, 1,
-					(GPIndividual) ind1, (GPIndividual) ind2, state, threadnum,
-					resultDD,
-					result,
-					detail);
-
-			objectives[0] = result[0].getAverage();
-			objectives[1] = result[1].getAverage();
-			objectives[2] = resultDD.getAverage();
-
-			for (int i = 0; i < 3; i++) {
-				if (objectives[i]  < 0.0f || objectives[i] == Float.POSITIVE_INFINITY || Double.isNaN(objectives[i])) {
-					objectives[i] = Float.POSITIVE_INFINITY;
-				}
-				if (i == 2 && objectives[2] > 3) {
-					for (int j = 0; j < 3; j++) objectives[j]=1000000;
-					break;
-				}
-			}
-
-			//((MultiObjectiveFitness)ind[1].fitness).setObjectives(state, objectives);
-			//ind[1].evaluated = true;
-			//coevolve fitness update
-			//double functionValue = objectives[0];
-
-			MultiObjectiveFitness moFitness = new MultiObjectiveFitness();
-			moFitness.setObjectives(false, objectives);
-			if( updateFitness[0] )
-			{
-				if( moFitness.paretoDominates(((MultiObjectiveFitness)ind1.fitness)) )
-				{
-					((MultiObjectiveFitness)ind1.fitness).setObjectives(state, objectives);
-					ind1.context = new Coevolutionary2WayGPIndividual[2];
-					ind1.context[1] = ind2;
-				}
-			}
-			if( updateFitness[1] )
-			{
-				if( moFitness.paretoDominates(((MultiObjectiveFitness)ind2.fitness)) )
-				{
-					((MultiObjectiveFitness)ind2.fitness).setObjectives(state, objectives);
-					ind2.context = new Coevolutionary2WayGPIndividual[2];
-					ind2.context[0] = ind1;
-				}
-			}
-			//ind1.printTrees(state, threadnum);
-			//System.out.println("|" + objectives[0] + " " + objectives[1] + " " + objectives[2]);
-			System.out.print("|");// + ind1.trees[0].child.numNodes(GPNode.NODESEARCH_ALL) + "**" + ind2.trees[0].child.numNodes(GPNode.NODESEARCH_ALL));
-		}
 	}
 
+	// TODO I can't really use this.
 	public String getTestPerformance(final EvolutionState state,
 			final int threadnum,
 			Individual[] ind) {
-		if( ind.length != 2 ||
-				( ! ( ind[0] instanceof Coevolutionary2WayGPIndividual ) ) ||
-				( ! ( ind[1] instanceof Coevolutionary2WayGPIndividual ) ) )
-		{
-			state.output.error( "There should be two subpopulations, both with CoevolutionaryDoubleVectorIndividual." );
+		try {
+			System.out.println("Reading file...");
+			LineNumberReader fileReader = new LineNumberReader(new FileReader(new File(inputFile)));
+			PrintStream intermediateOutput = new PrintStream(new File(intermediateFile));
+
+			String line;
+			line = fileReader.readLine(); // Read in the header.
+			while ((line = fileReader.readLine()) != null) {
+				// Read in the individuals, and then output it in a format that is readable by ECJ.
+				String[] split = line.split(",");
+
+				String dr = split[3];
+				String ddar = split[4];
+
+				String evaluated = ""; // TODO
+				String fitness = ""; // TODO
+			}
+
+			System.out.println("Getting individual 1...");
+			Individual IND = state.population.subpops[0].individuals[0];
+
+			System.out.println("Printing original individual to log...");
+			IND.printIndividual(state, ((SimpleStatistics) state.statistics).statisticslog);
+
+			System.out.println("Reading individual from file...");
+			IND.readIndividual(state, fileReader);
+
+			System.out.println("Printing read individual to log...");
+			IND.printIndividual(state, ((SimpleStatistics) state.statistics).statisticslog);
+
+
+			System.out.println("Getting individual 2...");
+			Individual IND2 = state.population.subpops[0].individuals[1];
+
+			System.out.println("Printing original individual to log...");
+			IND2.printIndividual(state, ((SimpleStatistics) state.statistics).statisticslog);
+
+			System.out.println("Reading individual from file...");
+			IND2.readIndividual(state, fileReader);
+
+			System.out.println("Printing read individual to log...");
+			IND2.printIndividual(state, ((SimpleStatistics) state.statistics).statisticslog);
+		} catch (IOException ex) {
+			state.output.fatal("You done fucked up.");
 		}
-		Coevolutionary2WayGPIndividual ind1 = (Coevolutionary2WayGPIndividual)(ind[0]);
-		Coevolutionary2WayGPIndividual ind2 = (Coevolutionary2WayGPIndividual)(ind[1]);
-
-		double[] utilisation = {0.65, 0.75, 0.85, 0.9};
-		double[] breakdownLevel = {0.05};
-		double[] meanRepair = {2.3, 3.3, 4.3};
-		int[] numberOfMachines = {5, 10, 20};
-		String[] lowers = {"miss", "full"};
-		String[] dists = {"expo", "uniform"};
-
-		double[] objectives = new double[3];
-		SmallStatistics[] result = new SmallStatistics[] {
-				new SmallStatistics(),
-				new SmallStatistics()
-		};
-		SmallStatistics resultDD = new SmallStatistics();
-
-		StringBuilder detail = new StringBuilder();
-		runExperiments(dists, lowers, numberOfMachines, utilisation,
-				breakdownLevel, meanRepair, 5,
-				(GPIndividual) ind1, (GPIndividual) ind2, state, threadnum,
-				resultDD,
-				result,
-				detail);
-
-		//return detail + "\n" + result[0].getAverage() + " " + result[1].getAverage() + " " + resultDD.getAverage();
-		return result[0].getAverage() + " " + result[1].getAverage() + " " + resultDD.getAverage();
+		// TODO
+		return null;
 	}
 
 	private void runExperiments(String[] dists,
@@ -348,6 +297,7 @@ public class DMOCCNSGA_MB extends GPjsp2WayMOCoevolveNSGA {
 			}
 		}
 	}
+
 
 	public void postprocessPopulation(final EvolutionState state, Population pop, boolean[] prepareForFitnessAssessment, boolean countVictoriesOnly) {
 		System.out.println("x");
