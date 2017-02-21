@@ -11,15 +11,17 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.PrintStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import SmallStatistics.SmallStatistics;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.Population;
+import ec.Species;
 import ec.gp.GPIndividual;
 import ec.multiobjective.MultiObjectiveFitness;
 import ec.multiobjective.MultiObjectiveStatisticsSu;
-import ec.simple.SimpleStatistics;
 import ec.util.Parameter;
 import jsp.DynamicJSPFrameworkBreakdown;
 import jsp.Job;
@@ -83,57 +85,139 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 
 	}
 
-	// TODO I can't really use this.
-	public String getTestPerformance(final EvolutionState state,
-			final int threadnum,
-			Individual[] ind) {
+	private void writeToIntermediateFile(final EvolutionState state) {
 		try {
 			System.out.println("Reading file...");
-			LineNumberReader fileReader = new LineNumberReader(new FileReader(new File(inputFile)));
+			LineNumberReader inputFileReader = new LineNumberReader(new FileReader(new File(inputFile)));
 			PrintStream intermediateOutput = new PrintStream(new File(intermediateFile));
 
 			String line;
-			line = fileReader.readLine(); // Read in the header.
-			while ((line = fileReader.readLine()) != null) {
+			line = inputFileReader.readLine(); // Read in the header.
+			while ((line = inputFileReader.readLine()) != null) {
 				// Read in the individuals, and then output it in a format that is readable by ECJ.
 				String[] split = line.split(",");
 
 				String dr = split[3];
 				String ddar = split[4];
 
-				String evaluated = ""; // TODO
-				String fitness = ""; // TODO
+				writeIndividualToFile(intermediateOutput, split[0], split[1], split[2], "0", dr);
+				writeIndividualToFile(intermediateOutput, split[0], split[1], split[2], "1", ddar);
 			}
 
-			System.out.println("Getting individual 1...");
-			Individual IND = state.population.subpops[0].individuals[0];
-
-			System.out.println("Printing original individual to log...");
-			IND.printIndividual(state, ((SimpleStatistics) state.statistics).statisticslog);
-
-			System.out.println("Reading individual from file...");
-			IND.readIndividual(state, fileReader);
-
-			System.out.println("Printing read individual to log...");
-			IND.printIndividual(state, ((SimpleStatistics) state.statistics).statisticslog);
-
-
-			System.out.println("Getting individual 2...");
-			Individual IND2 = state.population.subpops[0].individuals[1];
-
-			System.out.println("Printing original individual to log...");
-			IND2.printIndividual(state, ((SimpleStatistics) state.statistics).statisticslog);
-
-			System.out.println("Reading individual from file...");
-			IND2.readIndividual(state, fileReader);
-
-			System.out.println("Printing read individual to log...");
-			IND2.printIndividual(state, ((SimpleStatistics) state.statistics).statisticslog);
+			System.out.println("Successfully read file...");
+			inputFileReader.close();
+			intermediateOutput.close();
 		} catch (IOException ex) {
-			state.output.fatal("You done fucked up.");
+			state.output.fatal(ex.getMessage());
 		}
-		// TODO
+	}
+
+	// TODO these need to go into the multiobjective side of things.
+	private void writeIndividualToFile(PrintStream output,
+			String approach,
+			String seed,
+			String archiveInd,
+			String collabNum,
+			String tree) {
+		output.printf("%s,%s,%s,%s\n", approach, seed, archiveInd, collabNum);
+
+		output.println("Evaluated: false");
+		output.println("Fitness: [d|9999999| d|9999999| d|9999999|]");
+		output.println("Rank: i0|");
+		output.println("Spartiy: d|Infinity|");
+
+		output.println("Tree 0:");
+		output.println(" " + tree);
+	}
+
+	// TODO need to figure out how to disseminate between the different approaches, the different runs, etc.
+	private void readFromIntermediateFile(final EvolutionState state) {
+		try {
+			LineNumberReader interFileReader = new LineNumberReader(new FileReader(new File(intermediateFile)));
+
+			Map<ArchiveRun, SchedulingPolicy> spMap = new HashMap<ArchiveRun, SchedulingPolicy>();
+
+			String headerLine;
+			while ((headerLine = interFileReader.readLine()) != null) {
+				String[] indInfo = headerLine.split(",");
+
+				ArchiveRun ar = new ArchiveRun() {{
+					approach = indInfo[0];
+					seed = Integer.parseInt(indInfo[1]);
+					runNum = Integer.parseInt(indInfo[2]);
+				}};
+
+				int subpop = Integer.parseInt(indInfo[3]);
+				Species species = state.population.subpops[subpop].species;
+				Individual ruleInd = species.newIndividual(state, interFileReader);
+
+				if (!spMap.containsKey(ar)) {
+					spMap.put(ar, new SchedulingPolicy());
+				}
+
+				SchedulingPolicy sp = spMap.get(ar);
+				if (subpop == 0) {
+					sp.drInd = ruleInd;
+				} else if (subpop == 1) {
+					sp.ddarInd = ruleInd;
+				} else {
+					state.output.fatal("There should only be two subpopulations in the DMOCC approach, instead got subpopulation " + subpop);
+				}
+			}
+
+			// TODO write to the evolutionstate.
+		} catch (IOException ex) {
+			state.output.fatal(ex.getMessage());
+		}
+	}
+
+	// TODO need to make this homogeneous for all individuals, but this is going to be a bit tricky.
+	public String getTestPerformance(final EvolutionState state,
+			final int threadnum,
+			Individual[] ind) {
+		writeToIntermediateFile(state);
+		readFromIntermediateFile(state);
+
+//			System.out.println("Getting individual 1...");
+//			Individual IND = state.population.subpops[0].individuals[0];
+//
+//			System.out.println("Printing original individual to log...");
+//			IND.printIndividual(state, ((SimpleStatistics) state.statistics).statisticslog);
+//
+//			System.out.println("Reading individual from file...");
+//			IND.readIndividual(state, inputFileReader);
+//
+//			System.out.println("Printing read individual to log...");
+//			IND.printIndividual(state, ((SimpleStatistics) state.statistics).statisticslog);
+//
+//
+//			System.out.println("Getting individual 2...");
+//			Individual IND2 = state.population.subpops[0].individuals[1];
+//
+//			System.out.println("Printing original individual to log...");
+//			IND2.printIndividual(state, ((SimpleStatistics) state.statistics).statisticslog);
+//
+//			System.out.println("Reading individual from file...");
+//			IND2.readIndividual(state, inputFileReader);
+//
+//			System.out.println("Printing read individual to log...");
+//			IND2.printIndividual(state, ((SimpleStatistics) state.statistics).statisticslog);
 		return null;
+	}
+
+	private class SchedulingPolicy {
+		Individual drInd;
+		Individual ddarInd;
+	}
+
+	private class ArchiveRun {
+		String approach;
+		int seed;
+		int runNum;
+
+		public int hashCode() {
+			return approach.hashCode() * 3 + seed * 5 + runNum * 7;
+		}
 	}
 
 	private void runExperiments(String[] dists,
@@ -309,8 +393,7 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 
 		if (state.generation == state.numGenerations-1) {
 			MultiObjectiveStatisticsSu myMOStat = (MultiObjectiveStatisticsSu) state.statistics;
-			myMOStat.myFinalStatisticCoevolveNSGA(state, 0, this);
-			//FinalStatisticMO2Way.myFinalStatistic(state, threadnum,this,threadnum, 2, 105);
+			myMOStat.fullEvaluationStatisticsCoevolveNSGA(state, 0, this);
 		}
 	}
 

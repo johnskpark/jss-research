@@ -64,34 +64,263 @@ public class MultiObjectiveStatisticsSu extends MultiObjectiveStatistics
 
     public int frontLog;
 
-    public void setup(final EvolutionState state, final Parameter base)
-        {
-        super.setup(state,base);
+    public void setup(final EvolutionState state, final Parameter base) {
+    	super.setup(state,base);
 
-        File frontFile = state.parameters.getFile(base.push(P_PARETO_FRONT_FILE),null);
+    	File frontFile = state.parameters.getFile(base.push(P_PARETO_FRONT_FILE),null);
 
-        if (frontFile!=null)
-            try
-                {
-                frontLog = state.output.addLog(frontFile, !compress, compress);
-                }
-            catch (IOException i)
-                {
-                state.output.fatal("An IOException occurred while trying to create the log " + frontFile + ":\n" + i);
-                }
-        else state.output.warning("No Pareto Front statistics file specified.", base.push(P_PARETO_FRONT_FILE));
-        }
+    	if (frontFile!=null) {
+    		try {
+    			frontLog = state.output.addLog(frontFile, !compress, compress);
+    		} catch (IOException i) {
+    			state.output.fatal("An IOException occurred while trying to create the log " + frontFile + ":\n" + i);
+    		}
+    	} else {
+    		state.output.warning("No Pareto Front statistics file specified.", base.push(P_PARETO_FRONT_FILE));
+    	}
+    }
 
 
-    public void myFinalStatistic(final EvolutionState state, final int result, GPjsp2WayMO gp, int threadnum, int startIndex, int nInstances)
-        {
+    public void myFinalStatistic(final EvolutionState state,
+    		final int result,
+    		GPjsp2WayMO gp,
+    		int threadnum,
+    		int startIndex,
+    		int nInstances) {
+    	// super.finalStatistics(state,result);
+    	// I don't want just a single best fitness
+    	int maxParetoSolution = 200;
+    	state.output.println("\n\n\n PARETO FRONTS", statisticslog);
+    	for (int s = 0; s < state.population.subpops.length; s++) {
+    		MultiObjectiveFitness typicalFitness = (MultiObjectiveFitness)(state.population.subpops[s].individuals[0].fitness);
+    		state.output.println("\n\nPareto Front of Subpopulation " + s, statisticslog);
+
+    		// build front
+    		ArrayList front = typicalFitness.partitionIntoParetoFront(state.population.subpops[s].individuals, null, null);
+
+    		// sort by objective[0]
+    		Object[] sortedFront = front.toArray();
+    		Individual[] newpop = new Individual[sortedFront.length];
+    		for (int i = 0; i < newpop.length; i++) {
+    			newpop[i] = (Individual) sortedFront[i];
+    		}
+
+    		if (newpop[0].fitness instanceof NSGA2MultiObjectiveFitness) {
+    			assignSparsity((Individual[])newpop);
+    		} else if (newpop[0].fitness instanceof HaDMOEA2MultiObjectiveFitness) {
+    			assignSparsityHaDMOEA(state, newpop);
+    		} else {
+    			computeAuxiliaryData(state, newpop);
+    		}
+
+    		QuickSort.qsort(sortedFront, new SortComparator() {
+    			public boolean lt(Object a, Object b) {
+    				MultiObjectiveFitness fitnessA = (MultiObjectiveFitness) ((Individual) a).fitness;
+    				MultiObjectiveFitness fitnessB = (MultiObjectiveFitness) ((Individual) b).fitness;
+
+    				return fitnessA.temp > fitnessB.temp;
+    			}
+
+    			public boolean gt(Object a, Object b) {
+    				MultiObjectiveFitness fitnessA = (MultiObjectiveFitness) ((Individual) a).fitness;
+    				MultiObjectiveFitness fitnessB = (MultiObjectiveFitness) ((Individual) b).fitness;
+
+    				return fitnessA.temp < fitnessB.temp;
+    			}
+    		});
+
+    		if (sortedFront.length < maxParetoSolution) {
+    			maxParetoSolution = sortedFront.length;
+    		}
+
+    		// print out header
+    		state.output.message("Pareto Front Summary: " + sortedFront.length + " Individuals");
+    		String message = "Ind";
+    		int numObjectives = typicalFitness.getObjectives().length;
+    		for(int i = 0; i < numObjectives; i++) {
+    			message += ("\t" + "Objective " + i);
+    		}
+
+    		String[] names = typicalFitness.getAuxilliaryFitnessNames();
+    		for(int i = 0; i < names.length; i++) {
+    			message += ("\t" + names[i]);
+    		}
+    		state.output.message(message);
+
+    		// write front to screen
+    		for (int i = 0; i < maxParetoSolution; i++) {
+    			Individual individual = (Individual) (sortedFront[i]);
+
+    			double[] objectives = ((MultiObjectiveFitness) individual.fitness).getObjectives();
+    			String line = "" + i;
+    			for (int f = 0; f < objectives.length; f++) {
+    				line += ("\t" + objectives[f]);
+    			}
+
+    			double[] vals = ((MultiObjectiveFitness) individual.fitness).getAuxilliaryFitnessValues();
+    			for(int f = 0; f < vals.length; f++) {
+    				line += ("\t" + vals[f]);
+    			}
+    			//for testing (not in origial ECJ
+    			TestResult+=  gp.getTestPerformance(state, threadnum, individual, startIndex, nInstances) + "\n";
+    			////////////////////////////////
+    			state.output.message(line);
+    		}
+
+    		// print out front to statistics log
+    		for (int i = 0; i < maxParetoSolution; i++) {
+    			((Individual)(sortedFront[i])).printIndividualForHumans(state, statisticslog);
+    		}
+
+    		// write short version of front out to disk
+    		if (frontLog >= 0) {
+    			if (state.population.subpops.length > 1) {
+    				state.output.println("Subpopulation " + s, frontLog);
+    			}
+
+    			for (int i = 0; i < maxParetoSolution; i++) {
+    				Individual ind = (Individual)(sortedFront[i]);
+    				MultiObjectiveFitness mof = (MultiObjectiveFitness) (ind.fitness);
+    				double[] objectives = mof.getObjectives();
+
+    				String line = "";
+    				for (int f = 0; f < objectives.length; f++) {
+    					line += (objectives[f] + " ");
+    				}
+    				state.output.println(line, frontLog);
+    			}
+    		}
+    	}
+    	state.output.println("\n TestSet Result", frontLog);
+    	state.output.println(TestResult, frontLog);
+    }
+
+    public void myFinalStatistic(final EvolutionState state,
+    		final int result,
+    		GPjspMOGPHH gp,
+    		int threadnum,
+    		int startIndex,
+    		int nInstances) {
+    	// super.finalStatistics(state,result);
+    	// I don't want just a single best fitness
+    	int maxParetoSolution = 200;
+    	state.output.println("\n\n\n PARETO FRONTS", statisticslog);
+    	for (int s = 0; s < state.population.subpops.length; s++) {
+    		MultiObjectiveFitness typicalFitness = (MultiObjectiveFitness) state.population.subpops[s].individuals[0].fitness;
+    		state.output.println("\n\nPareto Front of Subpopulation " + s, statisticslog);
+
+    		// build front
+    		ArrayList front = typicalFitness.partitionIntoParetoFront(state.population.subpops[s].individuals, null, null);
+
+    		// sort by objective[0]
+    		Object[] sortedFront = front.toArray();
+    		Individual[] newpop = new Individual[sortedFront.length];
+    		for (int i = 0; i < newpop.length; i++) {
+    			newpop[i] = (Individual) sortedFront[i];
+    		}
+
+    		if (newpop[0].fitness instanceof NSGA2MultiObjectiveFitness) {
+    			assignSparsity((Individual[]) newpop);
+    		} else if (newpop[0].fitness instanceof HaDMOEA2MultiObjectiveFitness) {
+    			assignSparsityHaDMOEA(state, newpop);
+    		} else {
+    			computeAuxiliaryData(state, newpop);
+    		}
+
+    		QuickSort.qsort(sortedFront, new SortComparator() {
+    			public boolean lt(Object a, Object b) {
+    				MultiObjectiveFitness fitnessA = (MultiObjectiveFitness) ((Individual) a).fitness;
+    				MultiObjectiveFitness fitnessB = (MultiObjectiveFitness) ((Individual) b).fitness;
+
+    				return fitnessA.temp > fitnessB.temp;
+    			}
+
+    			public boolean gt(Object a, Object b) {
+    				MultiObjectiveFitness fitnessA = (MultiObjectiveFitness) ((Individual) a).fitness;
+    				MultiObjectiveFitness fitnessB = (MultiObjectiveFitness) ((Individual) b).fitness;
+
+    				return fitnessA.temp < fitnessB.temp;
+    			}
+    		});
+
+    		if (sortedFront.length < maxParetoSolution) {
+    			maxParetoSolution = sortedFront.length;
+    		}
+
+    		// print out header
+    		state.output.message("Pareto Front Summary: " + sortedFront.length + " Individuals");
+    		String message = "Ind";
+    		int numObjectives = typicalFitness.getObjectives().length;
+    		for(int i = 0; i < numObjectives; i++) {
+    			message += ("\t" + "Objective " + i);
+    		}
+
+    		String[] names = typicalFitness.getAuxilliaryFitnessNames();
+    		for(int i = 0; i < names.length; i++) {
+    			message += ("\t" + names[i]);
+    		}
+    		state.output.message(message);
+
+    		// write front to screen
+    		for (int i = 0; i < maxParetoSolution; i++) {
+    			Individual individual = (Individual) (sortedFront[i]);
+
+    			double[] objectives = ((MultiObjectiveFitness) individual.fitness).getObjectives();
+    			String line = "" + i;
+    			for (int f = 0; f < objectives.length; f++) {
+    				line += ("\t" + objectives[f]);
+    			}
+
+    			double[] vals = ((MultiObjectiveFitness) individual.fitness).getAuxilliaryFitnessValues();
+    			for(int f = 0; f < vals.length; f++) {
+    				line += ("\t" + vals[f]);
+    			}
+    			//for testing (not in origial ECJ
+    			TestResult+=  gp.getTestPerformance(state, threadnum, individual, startIndex, nInstances) + "\n";
+    			////////////////////////////////
+    			state.output.message(line);
+    		}
+
+    		// print out front to statistics log
+    		for (int i = 0; i < maxParetoSolution; i++) {
+    			((Individual) sortedFront[i]).printIndividualForHumans(state, statisticslog);
+    		}
+
+    		// write short version of front out to disk
+    		if (frontLog >= 0) {
+    			if (state.population.subpops.length > 1) {
+    				state.output.println("Subpopulation " + s, frontLog);
+    			}
+
+    			for (int i = 0; i < maxParetoSolution; i++) {
+    				Individual ind = (Individual)(sortedFront[i]);
+    				MultiObjectiveFitness mof = (MultiObjectiveFitness) (ind.fitness);
+    				double[] objectives = mof.getObjectives();
+
+    				String line = "";
+    				for (int f = 0; f < objectives.length; f++) {
+    					line += (objectives[f] + " ");
+    				}
+    				state.output.println(line, frontLog);
+    			}
+    		}
+    	}
+    	state.output.println("\n TestSet Result", frontLog);
+    	state.output.println(TestResult, frontLog);
+    }
+
+    public void myFinalStatistic(final EvolutionState state,
+    		final int result,
+    		GPoasMO gp,
+    		int threadnum,
+    		int startIndex,
+    		int nInstances) throws IOException {
         // super.finalStatistics(state,result);
         // I don't want just a single best fitness
         int maxParetoSolution = 200;
         state.output.println("\n\n\n PARETO FRONTS", statisticslog);
-        for (int s = 0; s < state.population.subpops.length; s++)
-            {
-            MultiObjectiveFitness typicalFitness = (MultiObjectiveFitness)(state.population.subpops[s].individuals[0].fitness);
+        for (int s = 0; s < state.population.subpops.length; s++) {
+            MultiObjectiveFitness typicalFitness = (MultiObjectiveFitness) state.population.subpops[s].individuals[0].fitness;
             state.output.println("\n\nPareto Front of Subpopulation " + s, statisticslog);
 
             // build front
@@ -103,381 +332,107 @@ public class MultiObjectiveStatisticsSu extends MultiObjectiveStatistics
             for (int i = 0; i < newpop.length; i++) {
                 newpop[i] = (Individual) sortedFront[i];
             }
-            if (newpop[0].fitness instanceof NSGA2MultiObjectiveFitness) assignSparsity((Individual[])newpop);
-            else if (newpop[0].fitness instanceof HaDMOEA2MultiObjectiveFitness) assignSparsityHaDMOEA(state, newpop);
-            else computeAuxiliaryData(state, newpop);
-            QuickSort.qsort(sortedFront, new SortComparator()
-                {
-                public boolean lt(Object a, Object b)
-                    {
-                    return (((MultiObjectiveFitness) (((Individual) a).fitness)).temp >
-                        (((MultiObjectiveFitness) ((Individual) b).fitness)).temp);
-                    }
 
-                public boolean gt(Object a, Object b)
-                    {
-                    return (((MultiObjectiveFitness) (((Individual) a).fitness)).temp <
-                        ((MultiObjectiveFitness) (((Individual) b).fitness)).temp);
-                    }
-                });
-            if (sortedFront.length<maxParetoSolution) maxParetoSolution = sortedFront.length;
+            if (newpop[0].fitness instanceof NSGA2MultiObjectiveFitness) {
+            	assignSparsity((Individual[])newpop);
+            } else if (newpop[0].fitness instanceof HaDMOEA2MultiObjectiveFitness) {
+            	assignSparsityHaDMOEA(state, newpop);
+            } else {
+            	computeAuxiliaryData(state, newpop);
+            }
+
+            QuickSort.qsort(sortedFront, new SortComparator() {
+            	public boolean lt(Object a, Object b) {
+            		MultiObjectiveFitness fitnessA = (MultiObjectiveFitness) ((Individual) a).fitness;
+            		MultiObjectiveFitness fitnessB = (MultiObjectiveFitness) ((Individual) b).fitness;
+
+            		return fitnessA.temp > fitnessB.temp;
+            	}
+
+            	public boolean gt(Object a, Object b) {
+            		MultiObjectiveFitness fitnessA = (MultiObjectiveFitness) ((Individual) a).fitness;
+            		MultiObjectiveFitness fitnessB = (MultiObjectiveFitness) ((Individual) b).fitness;
+
+            		return fitnessA.temp < fitnessB.temp;
+            	}
+            });
+
+            if (sortedFront.length<maxParetoSolution) {
+            	maxParetoSolution = sortedFront.length;
+            }
+
             // print out header
             state.output.message("Pareto Front Summary: " + sortedFront.length + " Individuals");
             String message = "Ind";
             int numObjectives = typicalFitness.getObjectives().length;
-            for(int i = 0; i < numObjectives; i++)
+            for(int i = 0; i < numObjectives; i++) {
                 message += ("\t" + "Objective " + i);
+            }
+
             String[] names = typicalFitness.getAuxilliaryFitnessNames();
-            for(int i = 0; i < names.length; i++)
+            for(int i = 0; i < names.length; i++) {
                 message += ("\t" + names[i]);
-            state.output.message(message);
-
-            // write front to screen
-            for (int i = 0; i < maxParetoSolution; i++)
-                {
-                Individual individual = (Individual) (sortedFront[i]);
-
-                double[] objectives = ((MultiObjectiveFitness) individual.fitness).getObjectives();
-                String line = "" + i;
-                for (int f = 0; f < objectives.length; f++)
-                    line += ("\t" + objectives[f]);
-
-                double[] vals = ((MultiObjectiveFitness) individual.fitness).getAuxilliaryFitnessValues();
-                for(int f = 0; f < vals.length; f++)
-                    line += ("\t" + vals[f]);
-                //for testing (not in origial ECJ
-                TestResult+=  gp.getTestPerformance(state, threadnum, individual, startIndex, nInstances) + "\n";
-                ////////////////////////////////
-                state.output.message(line);
-                }
-
-            // print out front to statistics log
-            for (int i = 0; i < maxParetoSolution; i++)
-                ((Individual)(sortedFront[i])).printIndividualForHumans(state, statisticslog);
-
-            // write short version of front out to disk
-            if (frontLog >= 0)
-                {
-                if (state.population.subpops.length > 1)
-                    state.output.println("Subpopulation " + s, frontLog);
-                for (int i = 0; i < maxParetoSolution; i++)
-                    {
-                    Individual ind = (Individual)(sortedFront[i]);
-                    MultiObjectiveFitness mof = (MultiObjectiveFitness) (ind.fitness);
-                    double[] objectives = mof.getObjectives();
-
-                    String line = "";
-                    for (int f = 0; f < objectives.length; f++)
-                        line += (objectives[f] + " ");
-                    state.output.println(line, frontLog);
-                    }
-                }
             }
-            state.output.println("\n TestSet Result", frontLog);
-            state.output.println(TestResult, frontLog);
-        }
-    public void myFinalStatistic(final EvolutionState state, final int result, GPjspMOGPHH gp, int threadnum, int startIndex, int nInstances)
-        {
-        // super.finalStatistics(state,result);
-        // I don't want just a single best fitness
-        int maxParetoSolution = 200;
-        state.output.println("\n\n\n PARETO FRONTS", statisticslog);
-        for (int s = 0; s < state.population.subpops.length; s++)
-            {
-            MultiObjectiveFitness typicalFitness = (MultiObjectiveFitness)(state.population.subpops[s].individuals[0].fitness);
-            state.output.println("\n\nPareto Front of Subpopulation " + s, statisticslog);
 
-            // build front
-            ArrayList front = typicalFitness.partitionIntoParetoFront(state.population.subpops[s].individuals, null, null);
-
-            // sort by objective[0]
-            Object[] sortedFront = front.toArray();
-            Individual[] newpop = new Individual[sortedFront.length];
-            for (int i = 0; i < newpop.length; i++) {
-                newpop[i] = (Individual) sortedFront[i];
-            }
-            if (newpop[0].fitness instanceof NSGA2MultiObjectiveFitness) assignSparsity((Individual[])newpop);
-            else if (newpop[0].fitness instanceof HaDMOEA2MultiObjectiveFitness) assignSparsityHaDMOEA(state, newpop);
-            else computeAuxiliaryData(state, newpop);
-            QuickSort.qsort(sortedFront, new SortComparator()
-                {
-                public boolean lt(Object a, Object b)
-                    {
-                    return (((MultiObjectiveFitness) (((Individual) a).fitness)).temp >
-                        (((MultiObjectiveFitness) ((Individual) b).fitness)).temp);
-                    }
-
-                public boolean gt(Object a, Object b)
-                    {
-                    return (((MultiObjectiveFitness) (((Individual) a).fitness)).temp <
-                        ((MultiObjectiveFitness) (((Individual) b).fitness)).temp);
-                    }
-                });
-            if (sortedFront.length<maxParetoSolution) maxParetoSolution = sortedFront.length;
-            // print out header
-            state.output.message("Pareto Front Summary: " + sortedFront.length + " Individuals");
-            String message = "Ind";
-            int numObjectives = typicalFitness.getObjectives().length;
-            for(int i = 0; i < numObjectives; i++)
-                message += ("\t" + "Objective " + i);
-            String[] names = typicalFitness.getAuxilliaryFitnessNames();
-            for(int i = 0; i < names.length; i++)
-                message += ("\t" + names[i]);
-            state.output.message(message);
-
-            // write front to screen
-            for (int i = 0; i < maxParetoSolution; i++)
-                {
-                Individual individual = (Individual) (sortedFront[i]);
-
-                double[] objectives = ((MultiObjectiveFitness) individual.fitness).getObjectives();
-                String line = "" + i;
-                for (int f = 0; f < objectives.length; f++)
-                    line += ("\t" + objectives[f]);
-
-                double[] vals = ((MultiObjectiveFitness) individual.fitness).getAuxilliaryFitnessValues();
-                for(int f = 0; f < vals.length; f++)
-                    line += ("\t" + vals[f]);
-                //for testing (not in origial ECJ
-                TestResult+=  gp.getTestPerformance(state, threadnum, individual, startIndex, nInstances) + "\n";
-                ////////////////////////////////
-                state.output.message(line);
-                }
-
-            // print out front to statistics log
-            for (int i = 0; i < maxParetoSolution; i++)
-                ((Individual)(sortedFront[i])).printIndividualForHumans(state, statisticslog);
-
-            // write short version of front out to disk
-            if (frontLog >= 0)
-                {
-                if (state.population.subpops.length > 1)
-                    state.output.println("Subpopulation " + s, frontLog);
-                for (int i = 0; i < maxParetoSolution; i++)
-                    {
-                    Individual ind = (Individual)(sortedFront[i]);
-                    MultiObjectiveFitness mof = (MultiObjectiveFitness) (ind.fitness);
-                    double[] objectives = mof.getObjectives();
-
-                    String line = "";
-                    for (int f = 0; f < objectives.length; f++)
-                        line += (objectives[f] + " ");
-                    state.output.println(line, frontLog);
-                    }
-                }
-            }
-            state.output.println("\n TestSet Result", frontLog);
-            state.output.println(TestResult, frontLog);
-        }
-public void myFinalStatistic(final EvolutionState state, final int result, GPoasMO gp, int threadnum, int startIndex, int nInstances) throws IOException
-        {
-        // super.finalStatistics(state,result);
-        // I don't want just a single best fitness
-        int maxParetoSolution = 200;
-        state.output.println("\n\n\n PARETO FRONTS", statisticslog);
-        for (int s = 0; s < state.population.subpops.length; s++)
-            {
-            MultiObjectiveFitness typicalFitness = (MultiObjectiveFitness)(state.population.subpops[s].individuals[0].fitness);
-            state.output.println("\n\nPareto Front of Subpopulation " + s, statisticslog);
-
-            // build front
-            ArrayList front = typicalFitness.partitionIntoParetoFront(state.population.subpops[s].individuals, null, null);
-
-            // sort by objective[0]
-            Object[] sortedFront = front.toArray();
-            Individual[] newpop = new Individual[sortedFront.length];
-            for (int i = 0; i < newpop.length; i++) {
-                newpop[i] = (Individual) sortedFront[i];
-            }
-            if (newpop[0].fitness instanceof NSGA2MultiObjectiveFitness) assignSparsity((Individual[])newpop);
-            else if (newpop[0].fitness instanceof HaDMOEA2MultiObjectiveFitness) assignSparsityHaDMOEA(state, newpop);
-            else computeAuxiliaryData(state, newpop);
-            QuickSort.qsort(sortedFront, new SortComparator()
-                {
-                public boolean lt(Object a, Object b)
-                    {
-                    return (((MultiObjectiveFitness) (((Individual) a).fitness)).temp >
-                        (((MultiObjectiveFitness) ((Individual) b).fitness)).temp);
-                    }
-
-                public boolean gt(Object a, Object b)
-                    {
-                    return (((MultiObjectiveFitness) (((Individual) a).fitness)).temp <
-                        ((MultiObjectiveFitness) (((Individual) b).fitness)).temp);
-                    }
-                });
-            if (sortedFront.length<maxParetoSolution) maxParetoSolution = sortedFront.length;
-            // print out header
-            state.output.message("Pareto Front Summary: " + sortedFront.length + " Individuals");
-            String message = "Ind";
-            int numObjectives = typicalFitness.getObjectives().length;
-            for(int i = 0; i < numObjectives; i++)
-                message += ("\t" + "Objective " + i);
-            String[] names = typicalFitness.getAuxilliaryFitnessNames();
-            for(int i = 0; i < names.length; i++)
-                message += ("\t" + names[i]);
             state.output.message(message);
 
             // write front to screen
             Individual[] ndSET = new Individual[min(maxParetoSolution,sortedFront.length)];
-            for (int i = 0; i < maxParetoSolution; i++)
-                {
-                Individual individual = (Individual) (sortedFront[i]);
-                ndSET[i] = (Individual) (sortedFront[i]);
-                double[] objectives = ((MultiObjectiveFitness) individual.fitness).getObjectives();
-                String line = "" + i;
-                for (int f = 0; f < objectives.length; f++)
-                    line += ("\t" + objectives[f]);
+            for (int i = 0; i < maxParetoSolution; i++) {
+            	Individual individual = (Individual) sortedFront[i];
+            	ndSET[i] = (Individual) sortedFront[i];
+            	double[] objectives = ((MultiObjectiveFitness) individual.fitness).getObjectives();
+            	String line = "" + i;
+            	for (int f = 0; f < objectives.length; f++) {
+            		line += ("\t" + objectives[f]);
+            	}
 
-                double[] vals = ((MultiObjectiveFitness) individual.fitness).getAuxilliaryFitnessValues();
-                for(int f = 0; f < vals.length; f++)
-                    line += ("\t" + vals[f]);
-                ////////////////////////////////
-                state.output.message(line);
-                }
+            	double[] vals = ((MultiObjectiveFitness) individual.fitness).getAuxilliaryFitnessValues();
+            	for(int f = 0; f < vals.length; f++) {
+            		line += ("\t" + vals[f]);
+            	}
+
+            	////////////////////////////////
+            	state.output.message(line);
+            }
+
             //for testing (not in origial ECJ
-            TestResult+=  gp.getTestPerformance(state, threadnum, ndSET, startIndex, nInstances) + "\n";
+            TestResult +=  gp.getTestPerformance(state, threadnum, ndSET, startIndex, nInstances) + "\n";
+
             // print out front to statistics log
-            for (int i = 0; i < maxParetoSolution; i++)
-                ((Individual)(sortedFront[i])).printIndividualForHumans(state, statisticslog);
+            for (int i = 0; i < maxParetoSolution; i++) {
+                ((Individual) sortedFront[i]).printIndividualForHumans(state, statisticslog);
+            }
 
             // write short version of front out to disk
-            if (frontLog >= 0)
-                {
-                if (state.population.subpops.length > 1)
-                    state.output.println("Subpopulation " + s, frontLog);
-                for (int i = 0; i < maxParetoSolution; i++)
-                    {
-                    Individual ind = (Individual)(sortedFront[i]);
-                    MultiObjectiveFitness mof = (MultiObjectiveFitness) (ind.fitness);
-                    double[] objectives = mof.getObjectives();
+            if (frontLog >= 0) {
+            	if (state.population.subpops.length > 1) {
+            		state.output.println("Subpopulation " + s, frontLog);
+            	}
 
-                    String line = "";
-                    for (int f = 0; f < objectives.length; f++)
-                        line += (objectives[f] + " ");
-                    state.output.println(line, frontLog);
-                    }
-                }
+            	for (int i = 0; i < maxParetoSolution; i++) {
+            		Individual ind = (Individual) sortedFront[i];
+            		MultiObjectiveFitness mof = (MultiObjectiveFitness) ind.fitness;
+            		double[] objectives = mof.getObjectives();
+
+            		String line = "";
+            		for (int f = 0; f < objectives.length; f++) {
+            			line += (objectives[f] + " ");
+            		}
+            		state.output.println(line, frontLog);
+            	}
             }
-            state.output.println("\n TestSet Result", frontLog);
-            state.output.println(TestResult, frontLog);
         }
+        state.output.println("\n TestSet Result", frontLog);
+        state.output.println(TestResult, frontLog);
+    }
+
     /** Logs the best individual of the run. */
-    public void finalStatistics(final EvolutionState state, final int result)
-        {
+    public void finalStatistics(final EvolutionState state, final int result) {
 
-        }
-    public void myFinalStatisticCoevolveSPEA(final EvolutionState state, final int result, GPjsp2WayMOCoevolveSPEA gp)
-        {
-        // super.finalStatistics(state,result);
-        // I don't want just a single best fitness
-        int maxParetoSolution = 200;
-        Individual[] combinedInds;
-        Individual[] sub1 = state.population.subpops[0].individuals;
-        Individual[] sub2 = state.population.subpops[1].individuals;
-        combinedInds = new Individual[sub1.length + sub2.length];
-        System.arraycopy(sub2, 0, combinedInds, 0,  sub2.length);
-        System.arraycopy(sub1, 0, combinedInds,  sub2.length, sub1.length);
-        state.output.println("\n\n\n PARETO FRONTS", statisticslog);
-        //for (int s = 0; s < state.population.subpops.length; s++)
-            //{
-            MultiObjectiveFitness typicalFitness = (MultiObjectiveFitness)(combinedInds[0].fitness);
-            state.output.println("\n\nPareto Front of Subpopulation ", statisticslog);
+    }
 
-            // build front
-            ArrayList front = typicalFitness.partitionIntoParetoFront(combinedInds, null, null);
-
-            // sort by objective[0]
-            Object[] sortedFront = front.toArray();
-            Individual[] newpop = new Individual[sortedFront.length];
-            for (int i = 0; i < newpop.length; i++) {
-                newpop[i] = (Individual) sortedFront[i];
-            }
-            //if (newpop[0].fitness instanceof NSGA2MultiObjectiveFitness) assignSparsity((Individual[])newpop);
-            //else computeAuxiliaryData(state, newpop);
-            //assignSparsity((Individual[])newpop);
-            computeAuxiliaryData(state, newpop);
-            //assignSparsity((Individual[])newpop);
-            QuickSort.qsort(sortedFront, new SortComparator()
-                {
-                public boolean lt(Object a, Object b)
-                    {
-                    return (((MultiObjectiveFitness) (((Individual) a).fitness)).temp >
-                        (((MultiObjectiveFitness) ((Individual) b).fitness)).temp);
-                    }
-
-                public boolean gt(Object a, Object b)
-                    {
-                    return (((MultiObjectiveFitness) (((Individual) a).fitness)).temp <
-                        ((MultiObjectiveFitness) (((Individual) b).fitness)).temp);
-                    }
-                });
-            if (sortedFront.length<maxParetoSolution) maxParetoSolution = sortedFront.length;
-            // print out header
-            state.output.message("Pareto Front Summary: " + sortedFront.length + " Individuals");
-            String message = "Ind";
-            int numObjectives = typicalFitness.getObjectives().length;
-            for(int i = 0; i < numObjectives; i++)
-                message += ("\t" + "Objective " + i);
-            String[] names = typicalFitness.getAuxilliaryFitnessNames();
-            for(int i = 0; i < names.length; i++)
-                message += ("\t" + names[i]);
-            state.output.message(message);
-
-            // write front to screen
-            for (int i = 0; i < maxParetoSolution; i++)
-                {
-                Individual individual = (Individual) (sortedFront[i]);
-
-                double[] objectives = ((MultiObjectiveFitness) individual.fitness).getObjectives();
-                String line = "" + i;
-                for (int f = 0; f < objectives.length; f++)
-                    line += ("\t" + objectives[f]);
-
-                double[] vals = ((MultiObjectiveFitness) individual.fitness).getAuxilliaryFitnessValues();
-                for(int f = 0; f < vals.length; f++)
-                    line += ("\t" + vals[f]);
-                //for testing (not in origial ECJ
-                Individual[] ind = new Individual[2];
-                if (((Coevolutionary2WayGPIndividual)individual).context[1] != null){
-                    ind[0] = individual;
-                    ind[1] = ((Coevolutionary2WayGPIndividual)individual).context[1];
-                } else {
-                    ind[1] = individual;
-                    ind[0] = ((Coevolutionary2WayGPIndividual)individual).context[0];
-                }
-                TestResult+=  gp.getTestPerformance(state, 0, ind) + "\n";
-                ////////////////////////////////
-                state.output.message(line);
-                }
-
-            // print out front to statistics log
-            for (int i = 0; i < maxParetoSolution; i++)
-                ((Individual)(sortedFront[i])).printIndividualForHumans(state, statisticslog);
-
-            // write short version of front out to disk
-            if (frontLog >= 0)
-                {
-                if (state.population.subpops.length > 1)
-                    state.output.println("Subpopulation ", frontLog);
-                for (int i = 0; i < maxParetoSolution; i++)
-                    {
-                    Individual ind = (Individual)(sortedFront[i]);
-                    MultiObjectiveFitness mof = (MultiObjectiveFitness) (ind.fitness);
-                    double[] objectives = mof.getObjectives();
-
-                    String line = "";
-                    for (int f = 0; f < objectives.length; f++)
-                        line += (objectives[f] + " ");
-                    state.output.println(line, frontLog);
-                    }
-                }
-            //}
-            state.output.println("\n TestSet Result", frontLog);
-            state.output.println(TestResult, frontLog);
-        }
-    public void myFinalStatisticCoevolveNSGA(final EvolutionState state, final int result, GPjsp2WayMOCoevolveNSGA gp)
-        {
+    public void myFinalStatisticCoevolveSPEA(final EvolutionState state, final int result, GPjsp2WayMOCoevolveSPEA gp) {
         // super.finalStatistics(state,result);
         // I don't want just a single best fitness
         int maxParetoSolution = 200;
@@ -490,115 +445,378 @@ public void myFinalStatistic(final EvolutionState state, final int result, GPoas
 
         state.output.println("\n\n\n PARETO FRONTS", statisticslog);
         //for (int s = 0; s < state.population.subpops.length; s++)
-            //{
-            MultiObjectiveFitness typicalFitness = (MultiObjectiveFitness)(combinedInds[0].fitness);
-            state.output.println("\n\nPareto Front of Subpopulation ", statisticslog);
+        //{
+        MultiObjectiveFitness typicalFitness = (MultiObjectiveFitness)(combinedInds[0].fitness);
+        state.output.println("\n\nPareto Front of Subpopulation ", statisticslog);
 
-            // build front
-            ArrayList front = typicalFitness.partitionIntoParetoFront(state.population.archive, null, null);
+        // build front
+        ArrayList front = typicalFitness.partitionIntoParetoFront(combinedInds, null, null);
 
-            // sort by objective[0]
-            Object[] sortedFront = front.toArray();
-
-            Individual[] newpop = new Individual[sortedFront.length];
-            for (int i = 0; i < newpop.length; i++) {
-                newpop[i] = (Individual) sortedFront[i];
-            }
-            //if (newpop[0].fitness instanceof NSGA2MultiObjectiveFitness) assignSparsity((Individual[])newpop);
-            //else computeAuxiliaryData(state, newpop);
-            assignSparsity((Individual[])newpop);
-            //computeAuxiliaryData(state, newpop);
-            //assignSparsity((Individual[])newpop);
-            QuickSort.qsort(sortedFront, new SortComparator()
-                {
-                public boolean lt(Object a, Object b)
-                    {
-                    return (((MultiObjectiveFitness) (((Individual) a).fitness)).temp >
-                        (((MultiObjectiveFitness) ((Individual) b).fitness)).temp);
-                    }
-
-                public boolean gt(Object a, Object b)
-                    {
-                    return (((MultiObjectiveFitness) (((Individual) a).fitness)).temp <
-                        ((MultiObjectiveFitness) (((Individual) b).fitness)).temp);
-                    }
-                });
-            if (sortedFront.length<maxParetoSolution) maxParetoSolution = sortedFront.length;
-            // print out header
-            state.output.message("Pareto Front Summary: " + sortedFront.length + " Individuals");
-            String message = "Ind";
-            int numObjectives = typicalFitness.getObjectives().length;
-            for(int i = 0; i < numObjectives; i++)
-                message += ("\t" + "Objective " + i);
-            String[] names = typicalFitness.getAuxilliaryFitnessNames();
-            for(int i = 0; i < names.length; i++)
-                message += ("\t" + names[i]);
-            state.output.message(message);
-
-            // write front to screen
-            for (int i = 0; i < maxParetoSolution; i++)
-                {
-                Individual individual = (Individual) (sortedFront[i]);
-
-                double[] objectives = ((MultiObjectiveFitness) individual.fitness).getObjectives();
-                String line = "" + i;
-                for (int f = 0; f < objectives.length; f++)
-                    line += ("\t" + objectives[f]);
-
-                double[] vals = ((MultiObjectiveFitness) individual.fitness).getAuxilliaryFitnessValues();
-                for(int f = 0; f < vals.length; f++)
-                    line += ("\t" + vals[f]);
-                //for testing (not in origial ECJ
-                Individual[] ind = new Individual[2];
-                if (((Coevolutionary2WayGPIndividual)individual).context[1] != null){
-                    ind[0] = individual;
-                    ind[1] = ((Coevolutionary2WayGPIndividual)individual).context[1];
-                } else {
-                    ind[1] = individual;
-                    ind[0] = ((Coevolutionary2WayGPIndividual)individual).context[0];
-                }
-                TestResult+=  gp.getTestPerformance(state, 0, ind) + "\n";
-                ////////////////////////////////
-                state.output.message(line);
-                }
-
-            // print out front to statistics log
-            for (int i = 0; i < maxParetoSolution; i++)
-                ((Individual)(sortedFront[i])).printIndividualForHumans(state, statisticslog);
-
-            // write short version of front out to disk
-            if (frontLog >= 0)
-                {
-                if (state.population.subpops.length > 1)
-                    state.output.println("Subpopulation ", frontLog);
-                for (int i = 0; i < maxParetoSolution; i++)
-                    {
-                    Individual ind = (Individual)(sortedFront[i]);
-                    MultiObjectiveFitness mof = (MultiObjectiveFitness) (ind.fitness);
-                    double[] objectives = mof.getObjectives();
-
-                    String line = "";
-                    for (int f = 0; f < objectives.length; f++)
-                        line += (objectives[f] + " ");
-                    state.output.println(line, frontLog);
-                    }
-                }
-            //}
-            state.output.println("\n TestSet Result", frontLog);
-            state.output.println(TestResult, frontLog);
+        // sort by objective[0]
+        Object[] sortedFront = front.toArray();
+        Individual[] newpop = new Individual[sortedFront.length];
+        for (int i = 0; i < newpop.length; i++) {
+        	newpop[i] = (Individual) sortedFront[i];
         }
+
+        //if (newpop[0].fitness instanceof NSGA2MultiObjectiveFitness) assignSparsity((Individual[])newpop);
+        //else computeAuxiliaryData(state, newpop);
+        //assignSparsity((Individual[])newpop);
+        computeAuxiliaryData(state, newpop);
+        //assignSparsity((Individual[])newpop);
+        QuickSort.qsort(sortedFront, new SortComparator() {
+        	public boolean lt(Object a, Object b) {
+        		MultiObjectiveFitness fitnessA = (MultiObjectiveFitness) ((Individual) a).fitness;
+        		MultiObjectiveFitness fitnessB = (MultiObjectiveFitness) ((Individual) b).fitness;
+
+        		return fitnessA.temp > fitnessB.temp;
+        	}
+
+        	public boolean gt(Object a, Object b) {
+        		MultiObjectiveFitness fitnessA = (MultiObjectiveFitness) ((Individual) a).fitness;
+        		MultiObjectiveFitness fitnessB = (MultiObjectiveFitness) ((Individual) b).fitness;
+
+        		return fitnessA.temp < fitnessB.temp;
+        	}
+        });
+
+        if (sortedFront.length<maxParetoSolution) {
+        	maxParetoSolution = sortedFront.length;
+        }
+
+        // print out header
+        state.output.message("Pareto Front Summary: " + sortedFront.length + " Individuals");
+        String message = "Ind";
+        int numObjectives = typicalFitness.getObjectives().length;
+        for (int i = 0; i < numObjectives; i++) {
+        	message += ("\t" + "Objective " + i);
+        }
+
+        String[] names = typicalFitness.getAuxilliaryFitnessNames();
+        for (int i = 0; i < names.length; i++) {
+        	message += ("\t" + names[i]);
+        }
+        state.output.message(message);
+
+        // write front to screen
+        for (int i = 0; i < maxParetoSolution; i++) {
+        	Individual individual = (Individual) sortedFront[i];
+        	double[] objectives = ((MultiObjectiveFitness) individual.fitness).getObjectives();
+
+        	String line = "" + i;
+        	for (int f = 0; f < objectives.length; f++) {
+        		line += ("\t" + objectives[f]);
+        	}
+
+        	double[] vals = ((MultiObjectiveFitness) individual.fitness).getAuxilliaryFitnessValues();
+        	for (int f = 0; f < vals.length; f++) {
+        		line += ("\t" + vals[f]);
+        	}
+        	//for testing (not in origial ECJ
+        	Individual[] ind = new Individual[2];
+        	if (((Coevolutionary2WayGPIndividual) individual).context[1] != null) {
+        		ind[0] = individual;
+        		ind[1] = ((Coevolutionary2WayGPIndividual) individual).context[1];
+        	} else {
+        		ind[1] = individual;
+        		ind[0] = ((Coevolutionary2WayGPIndividual) individual).context[0];
+        	}
+        	TestResult+=  gp.getTestPerformance(state, 0, ind) + "\n";
+        	////////////////////////////////
+        	state.output.message(line);
+        }
+
+        // print out front to statistics log
+        for (int i = 0; i < maxParetoSolution; i++) {
+        	((Individual) sortedFront[i]).printIndividualForHumans(state, statisticslog);
+        }
+
+        // write short version of front out to disk
+        if (frontLog >= 0) {
+        	if (state.population.subpops.length > 1) {
+        		state.output.println("Subpopulation ", frontLog);
+        	}
+
+        	for (int i = 0; i < maxParetoSolution; i++) {
+        		Individual ind = (Individual) sortedFront[i];
+        		MultiObjectiveFitness mof = (MultiObjectiveFitness) ind.fitness;
+        		double[] objectives = mof.getObjectives();
+
+        		String line = "";
+        		for (int f = 0; f < objectives.length; f++) {
+        			line += (objectives[f] + " ");
+        		}
+        		state.output.println(line, frontLog);
+        	}
+        }
+        //}
+        state.output.println("\n TestSet Result", frontLog);
+        state.output.println(TestResult, frontLog);
+    }
+
+    public void myFinalStatisticCoevolveNSGA(final EvolutionState state, final int result, GPjsp2WayMOCoevolveNSGA gp) {
+        // super.finalStatistics(state,result);
+        // I don't want just a single best fitness
+        int maxParetoSolution = 200;
+        Individual[] combinedInds;
+        Individual[] sub1 = state.population.subpops[0].individuals;
+        Individual[] sub2 = state.population.subpops[1].individuals;
+        combinedInds = new Individual[sub1.length + sub2.length];
+        System.arraycopy(sub2, 0, combinedInds, 0,  sub2.length);
+        System.arraycopy(sub1, 0, combinedInds,  sub2.length, sub1.length);
+
+        state.output.println("\n\n\n PARETO FRONTS", statisticslog);
+        //for (int s = 0; s < state.population.subpops.length; s++)
+        //{
+        MultiObjectiveFitness typicalFitness = (MultiObjectiveFitness) combinedInds[0].fitness;
+        state.output.println("\n\nPareto Front of Subpopulation ", statisticslog);
+
+        // build front
+        ArrayList front = typicalFitness.partitionIntoParetoFront(state.population.archive, null, null);
+
+        // sort by objective[0]
+        Object[] sortedFront = front.toArray();
+
+        Individual[] newpop = new Individual[sortedFront.length];
+        for (int i = 0; i < newpop.length; i++) {
+        	newpop[i] = (Individual) sortedFront[i];
+        }
+        //if (newpop[0].fitness instanceof NSGA2MultiObjectiveFitness) assignSparsity((Individual[])newpop);
+        //else computeAuxiliaryData(state, newpop);
+        assignSparsity((Individual[])newpop);
+        //computeAuxiliaryData(state, newpop);
+        //assignSparsity((Individual[])newpop);
+        QuickSort.qsort(sortedFront, new SortComparator() {
+        	public boolean lt(Object a, Object b) {
+        		MultiObjectiveFitness fitnessA = (MultiObjectiveFitness) ((Individual) a).fitness;
+        		MultiObjectiveFitness fitnessB = (MultiObjectiveFitness) ((Individual) b).fitness;
+
+        		return fitnessA.temp > fitnessB.temp;
+        	}
+
+        	public boolean gt(Object a, Object b) {
+        		MultiObjectiveFitness fitnessA = (MultiObjectiveFitness) ((Individual) a).fitness;
+        		MultiObjectiveFitness fitnessB = (MultiObjectiveFitness) ((Individual) b).fitness;
+
+        		return fitnessA.temp < fitnessB.temp;
+        	}
+        });
+
+        if (sortedFront.length<maxParetoSolution) {
+        	maxParetoSolution = sortedFront.length;
+        }
+
+        // print out header
+        state.output.message("Pareto Front Summary: " + sortedFront.length + " Individuals");
+        String message = "Ind";
+        int numObjectives = typicalFitness.getObjectives().length;
+        for (int i = 0; i < numObjectives; i++) {
+        	message += ("\t" + "Objective " + i);
+        }
+
+        String[] names = typicalFitness.getAuxilliaryFitnessNames();
+        for (int i = 0; i < names.length; i++) {
+        	message += ("\t" + names[i]);
+        }
+
+        state.output.message(message);
+
+        // write front to screen
+        for (int i = 0; i < maxParetoSolution; i++) {
+        	Individual individual = (Individual) sortedFront[i];
+
+        	double[] objectives = ((MultiObjectiveFitness) individual.fitness).getObjectives();
+        	String line = "" + i;
+        	for (int f = 0; f < objectives.length; f++) {
+        		line += ("\t" + objectives[f]);
+        	}
+
+        	double[] vals = ((MultiObjectiveFitness) individual.fitness).getAuxilliaryFitnessValues();
+        	for(int f = 0; f < vals.length; f++) {
+        		line += ("\t" + vals[f]);
+        	}
+
+        	//for testing (not in origial ECJ
+        	Individual[] ind = new Individual[2];
+        	if (((Coevolutionary2WayGPIndividual)individual).context[1] != null) {
+        		ind[0] = individual;
+        		ind[1] = ((Coevolutionary2WayGPIndividual)individual).context[1];
+        	} else {
+        		ind[1] = individual;
+        		ind[0] = ((Coevolutionary2WayGPIndividual)individual).context[0];
+        	}
+        	TestResult+=  gp.getTestPerformance(state, 0, ind) + "\n";
+        	////////////////////////////////
+        	state.output.message(line);
+        }
+
+        // print out front to statistics log
+        for (int i = 0; i < maxParetoSolution; i++) {
+        	((Individual) sortedFront[i]).printIndividualForHumans(state, statisticslog);
+        }
+
+        // write short version of front out to disk
+        if (frontLog >= 0) {
+        	if (state.population.subpops.length > 1) {
+        		state.output.println("Subpopulation ", frontLog);
+        	}
+
+        	for (int i = 0; i < maxParetoSolution; i++) {
+        		Individual ind = (Individual) sortedFront[i];
+        		MultiObjectiveFitness mof = (MultiObjectiveFitness) ind.fitness;
+        		double[] objectives = mof.getObjectives();
+
+        		String line = "";
+        		for (int f = 0; f < objectives.length; f++) {
+        			line += (objectives[f] + " ");
+        		}
+        		state.output.println(line, frontLog);
+        	}
+        }
+        //}
+        state.output.println("\n TestSet Result", frontLog);
+        state.output.println(TestResult, frontLog);
+    }
+
+    // TODO this part needs to read from a file instead of using the original population.
+    public void fullEvaluationStatisticsCoevolveNSGA(final EvolutionState state, final int result, GPjsp2WayMOCoevolveNSGA gp) {
+
+    	// TODO read in the Pareto front file.
+
+
+        int maxParetoSolution = 200;
+        Individual[] combinedInds;
+        Individual[] sub1 = state.population.subpops[0].individuals;
+        Individual[] sub2 = state.population.subpops[1].individuals;
+        combinedInds = new Individual[sub1.length + sub2.length];
+        System.arraycopy(sub2, 0, combinedInds, 0,  sub2.length);
+        System.arraycopy(sub1, 0, combinedInds,  sub2.length, sub1.length);
+
+        state.output.println("\n\n\n PARETO FRONTS", statisticslog);
+        //for (int s = 0; s < state.population.subpops.length; s++)
+        //{
+        MultiObjectiveFitness typicalFitness = (MultiObjectiveFitness) combinedInds[0].fitness;
+        state.output.println("\n\nPareto Front of Subpopulation ", statisticslog);
+
+        // build front
+        ArrayList front = typicalFitness.partitionIntoParetoFront(state.population.archive, null, null);
+
+        // sort by objective[0]
+        Object[] sortedFront = front.toArray();
+
+        Individual[] newpop = new Individual[sortedFront.length];
+        for (int i = 0; i < newpop.length; i++) {
+        	newpop[i] = (Individual) sortedFront[i];
+        }
+        //if (newpop[0].fitness instanceof NSGA2MultiObjectiveFitness) assignSparsity((Individual[])newpop);
+        //else computeAuxiliaryData(state, newpop);
+        assignSparsity((Individual[])newpop);
+        //computeAuxiliaryData(state, newpop);
+        //assignSparsity((Individual[])newpop);
+        QuickSort.qsort(sortedFront, new SortComparator() {
+        	public boolean lt(Object a, Object b) {
+        		MultiObjectiveFitness fitnessA = (MultiObjectiveFitness) ((Individual) a).fitness;
+        		MultiObjectiveFitness fitnessB = (MultiObjectiveFitness) ((Individual) b).fitness;
+
+        		return fitnessA.temp > fitnessB.temp;
+        	}
+
+        	public boolean gt(Object a, Object b) {
+        		MultiObjectiveFitness fitnessA = (MultiObjectiveFitness) ((Individual) a).fitness;
+        		MultiObjectiveFitness fitnessB = (MultiObjectiveFitness) ((Individual) b).fitness;
+
+        		return fitnessA.temp < fitnessB.temp;
+        	}
+        });
+
+        if (sortedFront.length<maxParetoSolution) {
+        	maxParetoSolution = sortedFront.length;
+        }
+
+        // print out header
+        state.output.message("Pareto Front Summary: " + sortedFront.length + " Individuals");
+        String message = "Ind";
+        int numObjectives = typicalFitness.getObjectives().length;
+        for (int i = 0; i < numObjectives; i++) {
+        	message += ("\t" + "Objective " + i);
+        }
+
+        String[] names = typicalFitness.getAuxilliaryFitnessNames();
+        for (int i = 0; i < names.length; i++) {
+        	message += ("\t" + names[i]);
+        }
+
+        state.output.message(message);
+
+        // write front to screen
+        for (int i = 0; i < maxParetoSolution; i++) {
+        	Individual individual = (Individual) sortedFront[i];
+
+        	double[] objectives = ((MultiObjectiveFitness) individual.fitness).getObjectives();
+        	String line = "" + i;
+        	for (int f = 0; f < objectives.length; f++) {
+        		line += ("\t" + objectives[f]);
+        	}
+
+        	double[] vals = ((MultiObjectiveFitness) individual.fitness).getAuxilliaryFitnessValues();
+        	for(int f = 0; f < vals.length; f++) {
+        		line += ("\t" + vals[f]);
+        	}
+
+        	//for testing (not in origial ECJ
+        	Individual[] ind = new Individual[2];
+        	if (((Coevolutionary2WayGPIndividual)individual).context[1] != null) {
+        		ind[0] = individual;
+        		ind[1] = ((Coevolutionary2WayGPIndividual)individual).context[1];
+        	} else {
+        		ind[1] = individual;
+        		ind[0] = ((Coevolutionary2WayGPIndividual)individual).context[0];
+        	}
+        	TestResult+=  gp.getTestPerformance(state, 0, ind) + "\n";
+        	////////////////////////////////
+        	state.output.message(line);
+        }
+
+        // print out front to statistics log
+        for (int i = 0; i < maxParetoSolution; i++) {
+        	((Individual) sortedFront[i]).printIndividualForHumans(state, statisticslog);
+        }
+
+        // write short version of front out to disk
+        if (frontLog >= 0) {
+        	if (state.population.subpops.length > 1) {
+        		state.output.println("Subpopulation ", frontLog);
+        	}
+
+        	for (int i = 0; i < maxParetoSolution; i++) {
+        		Individual ind = (Individual) sortedFront[i];
+        		MultiObjectiveFitness mof = (MultiObjectiveFitness) ind.fitness;
+        		double[] objectives = mof.getObjectives();
+
+        		String line = "";
+        		for (int f = 0; f < objectives.length; f++) {
+        			line += (objectives[f] + " ");
+        		}
+        		state.output.println(line, frontLog);
+        	}
+        }
+        //}
+        state.output.println("\n TestSet Result", frontLog);
+        state.output.println(TestResult, frontLog);
+    }
+
+
     /**
      * Computes and assigns the sparsity values of a given front.
      */
-    public void assignSparsity(Individual[] front)
-        {
+    public void assignSparsity(Individual[] front) {
         int numObjectives = ((MultiObjectiveFitness) front[0].fitness).getObjectives().length;
 
-        for (int i = 0; i < front.length; i++)
+        for (int i = 0; i < front.length; i++) {
             ((MultiObjectiveFitness) front[i].fitness).temp = 0;
+        }
 
-        for (int i = 0; i < numObjectives; i++)
-            {
+        for (int i = 0; i < numObjectives; i++) {
             final int o = i;
             // 1. Sort front by each objective.
             // 2. Sum the manhattan distance of an individual's neighbours over
@@ -607,47 +825,46 @@ public void myFinalStatistic(final EvolutionState state, final int result, GPoas
             // first and last individuals will always be the same (they maybe
             // interchanged though). This is because a Pareto front's
             // objective values are strictly increasing/decreasing.
-            ec.util.QuickSort.qsort(front, new SortComparator()
-                {
-                public boolean lt(Object a, Object b)
-                    {
-                    Individual i1 = (Individual) a;
-                    Individual i2 = (Individual) b;
-                    return (((MultiObjectiveFitness) i1.fitness).getObjective(o) < ((MultiObjectiveFitness) i2.fitness).getObjective(o));
-                    }
+            ec.util.QuickSort.qsort(front, new SortComparator() {
+            	public boolean lt(Object a, Object b) {
+            		Individual i1 = (Individual) a;
+            		Individual i2 = (Individual) b;
+            		return (((MultiObjectiveFitness) i1.fitness).getObjective(o) < ((MultiObjectiveFitness) i2.fitness).getObjective(o));
+            	}
 
-                public boolean gt(Object a, Object b)
-                    {
-                    Individual i1 = (Individual) a;
-                    Individual i2 = (Individual) b;
-                    return (((MultiObjectiveFitness) i1.fitness).getObjective(o) > ((MultiObjectiveFitness) i2.fitness).getObjective(o));
-                    }
-                });
+            	public boolean gt(Object a, Object b) {
+            		Individual i1 = (Individual) a;
+            		Individual i2 = (Individual) b;
+            		return (((MultiObjectiveFitness) i1.fitness).getObjective(o) > ((MultiObjectiveFitness) i2.fitness).getObjective(o));
+            	}
+            });
 
             // Compute and assign sparsity.
             // the first and last individuals are the sparsest.
             ((MultiObjectiveFitness) front[0].fitness).temp = Double.POSITIVE_INFINITY;
-            if (front[0].fitness instanceof NSGA2MultiObjectiveFitness){
+            if (front[0].fitness instanceof NSGA2MultiObjectiveFitness) {
                 ((NSGA2MultiObjectiveFitness)front[0].fitness).sparsity = ((MultiObjectiveFitness) front[0].fitness).temp;
             }
+
             ((MultiObjectiveFitness) front[front.length - 1].fitness).temp = Double.POSITIVE_INFINITY;
-            if (front[front.length - 1].fitness instanceof NSGA2MultiObjectiveFitness){
+            if (front[front.length - 1].fitness instanceof NSGA2MultiObjectiveFitness) {
                 ((NSGA2MultiObjectiveFitness)front[front.length - 1].fitness).sparsity = ((MultiObjectiveFitness) front[front.length - 1].fitness).temp;
             }
-            for (int j = 1; j < front.length - 1; j++)
-                {
-                MultiObjectiveFitness f_j = (MultiObjectiveFitness) (front[j].fitness);
-                MultiObjectiveFitness f_jplus1 = (MultiObjectiveFitness) (front[j+1].fitness);
-                MultiObjectiveFitness f_jminus1 = (MultiObjectiveFitness) (front[j-1].fitness);
 
-                // store the NSGA2Sparsity in sparsity
-                f_j.temp += (f_jplus1.getObjective(o) - f_jminus1.getObjective(o)) / (f_j.maxObjective[o] - f_j.minObjective[o]);
-                    if (f_j instanceof NSGA2MultiObjectiveFitness){
-                        ((NSGA2MultiObjectiveFitness)f_j).sparsity = f_j.temp;
-                    }
-                }
+            for (int j = 1; j < front.length - 1; j++) {
+            	MultiObjectiveFitness f_j = (MultiObjectiveFitness) (front[j].fitness);
+            	MultiObjectiveFitness f_jplus1 = (MultiObjectiveFitness) (front[j+1].fitness);
+            	MultiObjectiveFitness f_jminus1 = (MultiObjectiveFitness) (front[j-1].fitness);
+
+            	// store the NSGA2Sparsity in sparsity
+            	f_j.temp += (f_jplus1.getObjective(o) - f_jminus1.getObjective(o)) / (f_j.maxObjective[o] - f_j.minObjective[o]);
+            	if (f_j instanceof NSGA2MultiObjectiveFitness) {
+            		((NSGA2MultiObjectiveFitness)f_j).sparsity = f_j.temp;
+            	}
             }
         }
+    }
+
     public void assignSparsityHaDMOEA(EvolutionState state,Individual[] inds)
         {
         double[][] distances = calculateDistancesHadMOEA(inds);
