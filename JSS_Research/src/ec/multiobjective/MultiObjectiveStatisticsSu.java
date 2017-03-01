@@ -6,10 +6,14 @@
 
 package ec.multiobjective;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+
 import ec.EvolutionState;
 import ec.Individual;
 import ec.app.GPjsp.Coevolutionary2WayGPIndividual;
+import ec.app.GPjsp.DMOCCNSGA_MB_eval;
 import ec.app.GPjsp.GPjsp2WayMO;
 import ec.app.GPjsp.GPjsp2WayMOCoevolveNSGA;
 import ec.app.GPjsp.GPjsp2WayMOCoevolveSPEA;
@@ -18,9 +22,10 @@ import ec.app.OAS.GPoasMO;
 import ec.multiobjective.nsga2.HaDMOEA2MultiObjectiveFitness;
 import ec.multiobjective.nsga2.NSGA2MultiObjectiveFitness;
 import ec.multiobjective.spea2.SPEA2MultiObjectiveFitness;
-import ec.simple.SimpleStatistics;
-import ec.util.*;
-import java.io.*;
+import ec.util.MersenneTwisterFast;
+import ec.util.Parameter;
+import ec.util.QuickSort;
+import ec.util.SortComparator;
 
 /*
  * MultiObjectiveStatistics.java
@@ -645,7 +650,7 @@ public class MultiObjectiveStatisticsSu extends MultiObjectiveStatistics
         		ind[1] = individual;
         		ind[0] = ((Coevolutionary2WayGPIndividual)individual).context[0];
         	}
-        	TestResult+=  gp.getTestPerformance(state, 0, ind) + "\n";
+        	TestResult += gp.getTestPerformance(state, 0, ind) + "\n";
         	////////////////////////////////
         	state.output.message(line);
         }
@@ -679,10 +684,11 @@ public class MultiObjectiveStatisticsSu extends MultiObjectiveStatistics
     }
 
     // TODO this part needs to read from a file instead of using the original population.
-    public void fullEvaluationStatisticsCoevolveNSGA(final EvolutionState state, final int result, GPjsp2WayMOCoevolveNSGA gp) {
+    public void fullEvaluationStatisticsCoevolveNSGA(final EvolutionState state, final int result, DMOCCNSGA_MB_eval gp) {
 
-    	// TODO read in the Pareto front file.
-
+    	// Callback to problem to overwrite the individuals in the evolution state.
+    	gp.writeToIntermediateFile(state);
+    	gp.readFromIntermediateFile(state);
 
         int maxParetoSolution = 200;
         Individual[] combinedInds;

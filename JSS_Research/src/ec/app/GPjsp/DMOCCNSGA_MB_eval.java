@@ -19,6 +19,7 @@ import ec.EvolutionState;
 import ec.Individual;
 import ec.Population;
 import ec.Species;
+import ec.Subpopulation;
 import ec.gp.GPIndividual;
 import ec.multiobjective.MultiObjectiveFitness;
 import ec.multiobjective.MultiObjectiveStatisticsSu;
@@ -85,7 +86,7 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 
 	}
 
-	private void writeToIntermediateFile(final EvolutionState state) {
+	public void writeToIntermediateFile(EvolutionState state) {
 		try {
 			System.out.println("Reading file...");
 			LineNumberReader inputFileReader = new LineNumberReader(new FileReader(new File(inputFile)));
@@ -113,7 +114,7 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 	}
 
 	// TODO these need to go into the multiobjective side of things.
-	private void writeIndividualToFile(PrintStream output,
+	public void writeIndividualToFile(PrintStream output,
 			String approach,
 			String seed,
 			String archiveInd,
@@ -124,16 +125,18 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 		output.println("Evaluated: false");
 		output.println("Fitness: [d|9999999| d|9999999| d|9999999|]");
 		output.println("Rank: i0|");
-		output.println("Spartiy: d|Infinity|");
+		output.println("Sparity: d|Infinity|");
 
 		output.println("Tree 0:");
 		output.println(" " + tree);
 	}
 
 	// TODO need to figure out how to disseminate between the different approaches, the different runs, etc.
-	private void readFromIntermediateFile(final EvolutionState state) {
+	public void readFromIntermediateFile(EvolutionState state) {
 		try {
 			LineNumberReader interFileReader = new LineNumberReader(new FileReader(new File(intermediateFile)));
+
+			// TODO this part: I would rather not have to use a map for this.
 
 			Map<ArchiveRun, SchedulingPolicy> spMap = new HashMap<ArchiveRun, SchedulingPolicy>();
 
@@ -151,6 +154,8 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 				Species species = state.population.subpops[subpop].species;
 				Individual ruleInd = species.newIndividual(state, interFileReader);
 
+				// TODO I think I need to set the context of the individuals as well.
+
 				if (!spMap.containsKey(ar)) {
 					spMap.put(ar, new SchedulingPolicy());
 				}
@@ -165,7 +170,28 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 				}
 			}
 
-			// TODO write to the evolutionstate.
+			state.population.subpops[0].individuals = new Individual[spMap.size()];
+			state.population.subpops[1].individuals = new Individual[spMap.size()];
+
+			int index = 0;
+			for (Map.Entry<ArchiveRun, SchedulingPolicy> kv : spMap.entrySet()) {
+				SchedulingPolicy sp = kv.getValue();
+
+				Coevolutionary2WayGPIndividual ind1 = (Coevolutionary2WayGPIndividual) sp.drInd;
+				Coevolutionary2WayGPIndividual ind2 = (Coevolutionary2WayGPIndividual) sp.ddarInd;
+
+				ind1.context[0] = ind1;
+				ind1.context[1] = ind2;
+
+				ind2.context[0] = ind1;
+				ind2.context[1] = ind2;
+
+				state.population.subpops[0].individuals[index] = ind1;
+				state.population.subpops[1].individuals[index] = ind2;
+
+				index++;
+			}
+
 		} catch (IOException ex) {
 			state.output.fatal(ex.getMessage());
 		}
@@ -177,6 +203,8 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 			Individual[] ind) {
 		writeToIntermediateFile(state);
 		readFromIntermediateFile(state);
+
+		// TODO Copy the part from DMOCCNSGA_MB
 
 //			System.out.println("Getting individual 1...");
 //			Individual IND = state.population.subpops[0].individuals[0];
@@ -393,7 +421,7 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 
 		if (state.generation == state.numGenerations-1) {
 			MultiObjectiveStatisticsSu myMOStat = (MultiObjectiveStatisticsSu) state.statistics;
-			myMOStat.fullEvaluationStatisticsCoevolveNSGA(state, 0, this);
+			myMOStat.fullEvaluationStatisticsCoevolveNSGA(state, 0, this); // TODO modify this with the one.
 		}
 	}
 
