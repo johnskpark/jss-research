@@ -81,9 +81,7 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 			final boolean countVictoriesOnly,
 			final int[] subpops,
 			final int threadnum) {
-		// TODO prematurely end the program here.
-
-
+		// Do nothing on evolution runs.
 	}
 
 	public void writeToIntermediateFile(EvolutionState state) {
@@ -113,7 +111,9 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 		}
 	}
 
-	// TODO these need to go into the multiobjective side of things.
+	// TODO It doesn't read constants D:
+	// I need to figure out how to make it read constants.
+
 	public void writeIndividualToFile(PrintStream output,
 			String approach,
 			String seed,
@@ -125,21 +125,21 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 		output.println("Evaluated: false");
 		output.println("Fitness: [d|9999999| d|9999999| d|9999999|]");
 		output.println("Rank: i0|");
-		output.println("Sparity: d|Infinity|");
+		output.println("Sparsity: d|Infinity|");
 
 		output.println("Tree 0:");
 		output.println(" " + tree);
 	}
 
-	// TODO need to figure out how to disseminate between the different approaches, the different runs, etc.
+	// This part doesn't disseminate between the different approaches, so make sure to separate out the approaches beforehand.
 	public void readFromIntermediateFile(EvolutionState state) {
 		try {
 			LineNumberReader interFileReader = new LineNumberReader(new FileReader(new File(intermediateFile)));
 
-			// TODO this part: I would rather not have to use a map for this.
-
+			// Okay, this map thing is fucking up on me right now.
 			Map<ArchiveRun, SchedulingPolicy> spMap = new HashMap<ArchiveRun, SchedulingPolicy>();
 
+			// TODO Not recognising scheduling policy that's already in stored.
 			String headerLine;
 			while ((headerLine = interFileReader.readLine()) != null) {
 				String[] indInfo = headerLine.split(",");
@@ -153,8 +153,6 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 				int subpop = Integer.parseInt(indInfo[3]);
 				Species species = state.population.subpops[subpop].species;
 				Individual ruleInd = species.newIndividual(state, interFileReader);
-
-				// TODO I think I need to set the context of the individuals as well.
 
 				if (!spMap.containsKey(ar)) {
 					spMap.put(ar, new SchedulingPolicy());
@@ -170,6 +168,8 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 				}
 			}
 
+			System.out.printf("map size: %d\n", spMap.size());
+
 			state.population.subpops[0].individuals = new Individual[spMap.size()];
 			state.population.subpops[1].individuals = new Individual[spMap.size()];
 
@@ -179,6 +179,9 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 
 				Coevolutionary2WayGPIndividual ind1 = (Coevolutionary2WayGPIndividual) sp.drInd;
 				Coevolutionary2WayGPIndividual ind2 = (Coevolutionary2WayGPIndividual) sp.ddarInd;
+
+				ind1.context = new Coevolutionary2WayGPIndividual[2];
+				ind2.context = new Coevolutionary2WayGPIndividual[2];
 
 				ind1.context[0] = ind1;
 				ind1.context[1] = ind2;
@@ -201,36 +204,42 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 	public String getTestPerformance(final EvolutionState state,
 			final int threadnum,
 			Individual[] ind) {
-		writeToIntermediateFile(state);
-		readFromIntermediateFile(state);
+//		writeToIntermediateFile(state);
+//		readFromIntermediateFile(state);
 
-		// TODO Copy the part from DMOCCNSGA_MB
+		if( ind.length != 2 ||
+				( ! ( ind[0] instanceof Coevolutionary2WayGPIndividual ) ) ||
+				( ! ( ind[1] instanceof Coevolutionary2WayGPIndividual ) ) )
+		{
+			state.output.error( "There should be two subpopulations, both with CoevolutionaryDoubleVectorIndividual." );
+		}
+		Coevolutionary2WayGPIndividual ind1 = (Coevolutionary2WayGPIndividual)(ind[0]);
+		Coevolutionary2WayGPIndividual ind2 = (Coevolutionary2WayGPIndividual)(ind[1]);
 
-//			System.out.println("Getting individual 1...");
-//			Individual IND = state.population.subpops[0].individuals[0];
-//
-//			System.out.println("Printing original individual to log...");
-//			IND.printIndividual(state, ((SimpleStatistics) state.statistics).statisticslog);
-//
-//			System.out.println("Reading individual from file...");
-//			IND.readIndividual(state, inputFileReader);
-//
-//			System.out.println("Printing read individual to log...");
-//			IND.printIndividual(state, ((SimpleStatistics) state.statistics).statisticslog);
-//
-//
-//			System.out.println("Getting individual 2...");
-//			Individual IND2 = state.population.subpops[0].individuals[1];
-//
-//			System.out.println("Printing original individual to log...");
-//			IND2.printIndividual(state, ((SimpleStatistics) state.statistics).statisticslog);
-//
-//			System.out.println("Reading individual from file...");
-//			IND2.readIndividual(state, inputFileReader);
-//
-//			System.out.println("Printing read individual to log...");
-//			IND2.printIndividual(state, ((SimpleStatistics) state.statistics).statisticslog);
-		return null;
+		double[] utilisation = {0.65, 0.75, 0.85, 0.9};
+		double[] breakdownLevel = {0.05};
+		double[] meanRepair = {2.3, 3.3, 4.3};
+		int[] numberOfMachines = {5, 10, 20};
+		String[] lowers = {"miss", "full"};
+		String[] dists = {"expo", "uniform"};
+
+		double[] objectives = new double[3];
+		SmallStatistics[] result = new SmallStatistics[] {
+				new SmallStatistics(),
+				new SmallStatistics()
+		};
+		SmallStatistics resultDD = new SmallStatistics();
+
+		StringBuilder detail = new StringBuilder();
+		runExperiments(dists, lowers, numberOfMachines, utilisation,
+				breakdownLevel, meanRepair, 5,
+				(GPIndividual) ind1, (GPIndividual) ind2, state, threadnum,
+				resultDD,
+				result,
+				detail);
+
+		//return detail + "\n" + result[0].getAverage() + " " + result[1].getAverage() + " " + resultDD.getAverage();
+		return result[0].getAverage() + " " + result[1].getAverage() + " " + resultDD.getAverage();
 	}
 
 	private class SchedulingPolicy {
@@ -243,8 +252,20 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 		int seed;
 		int runNum;
 
+		@Override
 		public int hashCode() {
 			return approach.hashCode() * 3 + seed * 5 + runNum * 7;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (o == null || o.getClass() != this.getClass()) {
+				return false;
+			}
+			ArchiveRun other = (ArchiveRun) o;
+			return this.approach.equals(other.approach) &&
+					this.seed == other.seed &&
+					this.runNum == other.runNum;
 		}
 	}
 

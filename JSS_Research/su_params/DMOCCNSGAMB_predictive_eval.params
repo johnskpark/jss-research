@@ -1,0 +1,25 @@
+# Copyright 2006 by Sean Luke and George Mason University
+# Licensed under the Academic Free License version 3.0
+# See the file "LICENSE" for more information
+
+parent.0 = DMOCCNSGAMB_baseline_eval.params
+
+gp.fs.0.size = 28
+gp.fs.0.func.25 = ec.app.GPjsp.func.machineBreakdown.PriorityPredictiveBreakdownProb
+gp.fs.0.func.25.nc = ncPRIORITYSTAT
+gp.fs.0.func.26 = ec.app.GPjsp.func.machineBreakdown.PriorityPredictiveNextBreakdownTime
+gp.fs.0.func.26.nc = ncPRIORITYSTAT
+gp.fs.0.func.27 = ec.app.GPjsp.func.machineBreakdown.PriorityPredictiveNextRepairTime
+gp.fs.0.func.27.nc = ncPRIORITYSTAT
+
+
+gp.fs.1.size = 21
+gp.fs.1.func.18 = ec.app.GPjsp.func.DDA.machineBreakdown.ESTPredictiveBreakdownProb
+gp.fs.1.func.18.nc = ncESTSTAT
+gp.fs.1.func.19 = ec.app.GPjsp.func.DDA.machineBreakdown.ESTPredictiveNextBreakdownTime
+gp.fs.1.func.19.nc = ncESTSTAT
+gp.fs.1.func.20 = ec.app.GPjsp.func.DDA.machineBreakdown.ESTPredictiveNextRepairTime
+gp.fs.1.func.20.nc = ncESTSTAT
+
+eval.problem.input-file =        dmocc_exact_fronts.csv
+eval.problem.intermediate-file = dmocc_exact_inter.txt

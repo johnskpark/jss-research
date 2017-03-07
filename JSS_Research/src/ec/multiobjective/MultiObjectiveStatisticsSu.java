@@ -705,6 +705,7 @@ public class MultiObjectiveStatisticsSu extends MultiObjectiveStatistics
         state.output.println("\n\nPareto Front of Subpopulation ", statisticslog);
 
         // build front
+        // TODO this is the one that needs to be filled out.
         ArrayList front = typicalFitness.partitionIntoParetoFront(state.population.archive, null, null);
 
         // sort by objective[0]
@@ -778,7 +779,7 @@ public class MultiObjectiveStatisticsSu extends MultiObjectiveStatistics
         		ind[1] = individual;
         		ind[0] = ((Coevolutionary2WayGPIndividual)individual).context[0];
         	}
-        	TestResult+=  gp.getTestPerformance(state, 0, ind) + "\n";
+        	TestResult += gp.getTestPerformance(state, 0, ind) + "\n";
         	////////////////////////////////
         	state.output.message(line);
         }

@@ -383,3 +383,8 @@
 /breakdown_sample_gp_rule_predictive.txt
 /breakdown_sample_gp_rule_predictive.txt.backup
 /out2.stat
+/dmocc_all_fronts.csv
+/dmocc_baseline_fronts.csv
+/dmocc_exact_fronts.csv
+/dmocc_predictive_fronts.csv
+/test_individual.txt
