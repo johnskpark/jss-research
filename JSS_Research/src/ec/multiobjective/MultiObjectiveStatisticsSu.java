@@ -692,124 +692,58 @@ public class MultiObjectiveStatisticsSu extends MultiObjectiveStatistics
 
         int maxParetoSolution = 200;
         Individual[] combinedInds;
-        Individual[] sub1 = state.population.subpops[0].individuals;
-        Individual[] sub2 = state.population.subpops[1].individuals;
-        combinedInds = new Individual[sub1.length + sub2.length];
-        System.arraycopy(sub2, 0, combinedInds, 0,  sub2.length);
-        System.arraycopy(sub1, 0, combinedInds,  sub2.length, sub1.length);
+        Individual[] subpop1 = state.population.subpops[0].individuals;
+        Individual[] subpop2 = state.population.subpops[1].individuals;
 
-        state.output.println("\n\n\n PARETO FRONTS", statisticslog);
-        //for (int s = 0; s < state.population.subpops.length; s++)
-        //{
-        MultiObjectiveFitness typicalFitness = (MultiObjectiveFitness) combinedInds[0].fitness;
-        state.output.println("\n\nPareto Front of Subpopulation ", statisticslog);
+        checkConstraints(state, subpop1, subpop2);
 
-        // build front
-        // TODO this is the one that needs to be filled out.
-        ArrayList front = typicalFitness.partitionIntoParetoFront(state.population.archive, null, null);
+        state.output.message("Applying rules over training set");
+        state.output.println(" Subpopulation", frontLog);
 
-        // sort by objective[0]
-        Object[] sortedFront = front.toArray();
+        // Sort based on the seed and the runs.
 
-        Individual[] newpop = new Individual[sortedFront.length];
-        for (int i = 0; i < newpop.length; i++) {
-        	newpop[i] = (Individual) sortedFront[i];
-        }
-        //if (newpop[0].fitness instanceof NSGA2MultiObjectiveFitness) assignSparsity((Individual[])newpop);
-        //else computeAuxiliaryData(state, newpop);
-        assignSparsity((Individual[])newpop);
-        //computeAuxiliaryData(state, newpop);
-        //assignSparsity((Individual[])newpop);
-        QuickSort.qsort(sortedFront, new SortComparator() {
-        	public boolean lt(Object a, Object b) {
-        		MultiObjectiveFitness fitnessA = (MultiObjectiveFitness) ((Individual) a).fitness;
-        		MultiObjectiveFitness fitnessB = (MultiObjectiveFitness) ((Individual) b).fitness;
+        for (int i = 0; i < subpop1.length; i++) {
+        	// Reevaluate the individuals over the training set.
+        	Coevolutionary2WayGPIndividual individual = (Coevolutionary2WayGPIndividual) subpop1[i];
 
-        		return fitnessA.temp > fitnessB.temp;
-        	}
+        	Individual[] inds = new Individual[2];
+    		inds[0] = individual;
+    		inds[1] = individual.context[1];
 
-        	public boolean gt(Object a, Object b) {
-        		MultiObjectiveFitness fitnessA = (MultiObjectiveFitness) ((Individual) a).fitness;
-        		MultiObjectiveFitness fitnessB = (MultiObjectiveFitness) ((Individual) b).fitness;
-
-        		return fitnessA.temp < fitnessB.temp;
-        	}
-        });
-
-        if (sortedFront.length<maxParetoSolution) {
-        	maxParetoSolution = sortedFront.length;
+        	state.output.println(gp.getTrainingPerformance(state, 0, inds), frontLog);
+        	state.output.message("Evaluated individual " + i + " on training");
         }
 
-        // print out header
-        state.output.message("Pareto Front Summary: " + sortedFront.length + " Individuals");
-        String message = "Ind";
-        int numObjectives = typicalFitness.getObjectives().length;
-        for (int i = 0; i < numObjectives; i++) {
-        	message += ("\t" + "Objective " + i);
-        }
-
-        String[] names = typicalFitness.getAuxilliaryFitnessNames();
-        for (int i = 0; i < names.length; i++) {
-        	message += ("\t" + names[i]);
-        }
-
-        state.output.message(message);
-
-        // write front to screen
-        for (int i = 0; i < maxParetoSolution; i++) {
-        	Individual individual = (Individual) sortedFront[i];
-
-        	double[] objectives = ((MultiObjectiveFitness) individual.fitness).getObjectives();
-        	String line = "" + i;
-        	for (int f = 0; f < objectives.length; f++) {
-        		line += ("\t" + objectives[f]);
-        	}
-
-        	double[] vals = ((MultiObjectiveFitness) individual.fitness).getAuxilliaryFitnessValues();
-        	for(int f = 0; f < vals.length; f++) {
-        		line += ("\t" + vals[f]);
-        	}
-
-        	//for testing (not in origial ECJ
-        	Individual[] ind = new Individual[2];
-        	if (((Coevolutionary2WayGPIndividual)individual).context[1] != null) {
-        		ind[0] = individual;
-        		ind[1] = ((Coevolutionary2WayGPIndividual)individual).context[1];
-        	} else {
-        		ind[1] = individual;
-        		ind[0] = ((Coevolutionary2WayGPIndividual)individual).context[0];
-        	}
-        	TestResult += gp.getTestPerformance(state, 0, ind) + "\n";
-        	////////////////////////////////
-        	state.output.message(line);
-        }
-
-        // print out front to statistics log
-        for (int i = 0; i < maxParetoSolution; i++) {
-        	((Individual) sortedFront[i]).printIndividualForHumans(state, statisticslog);
-        }
-
-        // write short version of front out to disk
-        if (frontLog >= 0) {
-        	if (state.population.subpops.length > 1) {
-        		state.output.println("Subpopulation ", frontLog);
-        	}
-
-        	for (int i = 0; i < maxParetoSolution; i++) {
-        		Individual ind = (Individual) sortedFront[i];
-        		MultiObjectiveFitness mof = (MultiObjectiveFitness) ind.fitness;
-        		double[] objectives = mof.getObjectives();
-
-        		String line = "";
-        		for (int f = 0; f < objectives.length; f++) {
-        			line += (objectives[f] + " ");
-        		}
-        		state.output.println(line, frontLog);
-        	}
-        }
-        //}
+        state.output.message("Applying rules over test set");
         state.output.println("\n TestSet Result", frontLog);
-        state.output.println(TestResult, frontLog);
+
+        for (int i = 0; i < subpop1.length; i++) {
+        	// Reevaluate the individuals over the test set.
+        	Coevolutionary2WayGPIndividual individual = (Coevolutionary2WayGPIndividual) subpop1[i];
+
+        	Individual[] inds = new Individual[2];
+    		inds[0] = individual;
+    		inds[1] = individual.context[1];
+
+    		state.output.println(gp.getTestPerformance(state, 0, inds), frontLog);
+        	state.output.message("Evaluated individual " + i + " on test");
+        }
+    }
+
+    private void checkConstraints(final EvolutionState state, Individual[] subpop1, Individual[] subpop2) {
+    	if (subpop1.length != subpop2.length) {
+    		state.output.fatal("The two subpopulation's read from the file should be the same length as each other.");
+    	}
+
+    	int len = subpop1.length;
+    	for (int i = 0; i < len; i++) {
+    		Coevolutionary2WayGPIndividual ind1 = (Coevolutionary2WayGPIndividual) subpop1[i];
+    		Coevolutionary2WayGPIndividual ind2 = (Coevolutionary2WayGPIndividual) subpop2[i];
+
+    		if (!ind1.context[1].equals(ind2) || !ind2.context[0].equals(ind1)) {
+    			state.output.fatal("The individual's collaborators do not match: " + i);
+    		}
+    	}
     }
 
 

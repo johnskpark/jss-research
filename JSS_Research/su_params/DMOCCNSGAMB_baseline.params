@@ -111,55 +111,50 @@ eval.problem.data = ec.app.GPjsp.JSPData
 
 seed.0=13412
 
-generations =				101
-#print-used-params =			true
-quit-on-run-complete =			false
+generations =               101
+#print-used-params =        true
+quit-on-run-complete =      false
 
-eval =                                  ec.multiobjective.nsga2.NSGA2EvaluatorCoevolve
-
-eval.num-current=			0
-eval.num-elites =			0
-eval.num-prev =				1
-eval.select-current =			ec.select.RandomSelection
-eval.subpop.0.select-prev = 		ec.select.TournamentSelection
-eval.subpop.1.select-prev = 		ec.select.TournamentSelection
-
-
-eval.problem =                          ec.app.GPjsp.DMOCCNSGA_MB
+eval =                      ec.multiobjective.nsga2.NSGA2EvaluatorCoevolve
+eval.num-current =          0
+eval.num-elites =           0
+eval.num-prev =             1
+eval.select-current =       ec.select.RandomSelection
+eval.subpop.0.select-prev = ec.select.TournamentSelection
+eval.subpop.1.select-prev = ec.select.TournamentSelection
+eval.problem =              ec.app.GPjsp.DMOCCNSGA_MB
 
 pop.subpops =                           2
-pop.subpop.0 = 				ec.Subpopulation
-pop.subpop.0.duplicate-retries = 	10
-pop.subpop.0.size = 			100
-pop.subpop.0.species.fitness =		ec.multiobjective.nsga2.NSGA2MultiObjectiveFitness
+pop.subpop.0 =                          ec.Subpopulation
+pop.subpop.0.duplicate-retries =        10
+pop.subpop.0.size =                     100
+pop.subpop.0.species.fitness =          ec.multiobjective.nsga2.NSGA2MultiObjectiveFitness
 pop.subpop.0.species.fitness.maximize = false
-
-pop.subpop.1 = 				ec.Subpopulation
-pop.subpop.1.duplicate-retries = 	10
-pop.subpop.1.size = 			100
-pop.subpop.1.species.fitness =		ec.multiobjective.nsga2.NSGA2MultiObjectiveFitness
+pop.subpop.1 =                          ec.Subpopulation
+pop.subpop.1.duplicate-retries =        10
+pop.subpop.1.size =                     100
+pop.subpop.1.species.fitness =          ec.multiobjective.nsga2.NSGA2MultiObjectiveFitness
 pop.subpop.1.species.fitness.maximize = false
 
 # how many objectives should we have by default?
 # you can also assign this on a per-subpopulation basis
-multi.fitness.num-objectives 	= 3
+multi.fitness.num-objectives = 3
 
 # max and min values of all each objective function
-multi.fitness.max 		= 100000
-multi.fitness.min 		= -1000000
+multi.fitness.max = 100000
+multi.fitness.min = -1000000
 
 # override specific max and min values, e.g
-# multi.fitness.max.0		= 1000
+# multi.fitness.max.0 = 1000
 
 # Use a statistics object which dumps the front
-stat =                                          ec.multiobjective.MultiObjectiveStatisticsSu
-stat.front =                                    $front.stat
+stat =              ec.multiobjective.MultiObjectiveStatisticsSu
+stat.front =        $front.stat
 
-#stat =                                  ec.simple.SimpleStatistics
-#stat.file =				$out.stat
-stat.num-children = 			1
-stat.child.0 = 				ec.simple.SimpleShortStatistics
-stat.child.0.file =			$out2.stat
+#stat =              ec.simple.SimpleStatistics
+#stat.file =        $out.stat
+stat.num-children = 1
+stat.child.0 =      ec.simple.SimpleShortStatistics
+stat.child.0.file =	$out2.stat
 
-
-breed =						ec.multiobjective.nsga2.NSGA2BreederCoevolve
+breed =	ec.multiobjective.nsga2.NSGA2BreederCoevolve

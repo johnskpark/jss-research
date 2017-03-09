@@ -139,7 +139,6 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 			// Okay, this map thing is fucking up on me right now.
 			Map<ArchiveRun, SchedulingPolicy> spMap = new HashMap<ArchiveRun, SchedulingPolicy>();
 
-			// TODO Not recognising scheduling policy that's already in stored.
 			String headerLine;
 			while ((headerLine = interFileReader.readLine()) != null) {
 				String[] indInfo = headerLine.split(",");
@@ -168,26 +167,27 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 				}
 			}
 
-			System.out.printf("map size: %d\n", spMap.size());
-
 			state.population.subpops[0].individuals = new Individual[spMap.size()];
 			state.population.subpops[1].individuals = new Individual[spMap.size()];
 
 			int index = 0;
 			for (Map.Entry<ArchiveRun, SchedulingPolicy> kv : spMap.entrySet()) {
+				ArchiveRun ar = kv.getKey();
 				SchedulingPolicy sp = kv.getValue();
 
 				Coevolutionary2WayGPIndividual ind1 = (Coevolutionary2WayGPIndividual) sp.drInd;
 				Coevolutionary2WayGPIndividual ind2 = (Coevolutionary2WayGPIndividual) sp.ddarInd;
 
-				ind1.context = new Coevolutionary2WayGPIndividual[2];
-				ind2.context = new Coevolutionary2WayGPIndividual[2];
+				ind1.setApproach(ar.approach);
+				ind1.setSeed(ar.seed);
+				ind1.setRunNum(ar.runNum);
 
-				ind1.context[0] = ind1;
-				ind1.context[1] = ind2;
+				ind2.setApproach(ar.approach);
+				ind2.setSeed(ar.seed);
+				ind2.setRunNum(ar.runNum);
 
-				ind2.context[0] = ind1;
-				ind2.context[1] = ind2;
+				ind1.context = new Coevolutionary2WayGPIndividual[] {ind1, ind2};
+				ind2.context = new Coevolutionary2WayGPIndividual[] {ind1, ind2};
 
 				state.population.subpops[0].individuals[index] = ind1;
 				state.population.subpops[1].individuals[index] = ind2;
@@ -200,30 +200,24 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 		}
 	}
 
-	// TODO need to make this homogeneous for all individuals, but this is going to be a bit tricky.
-	public String getTestPerformance(final EvolutionState state,
+	public String getTrainingPerformance(final EvolutionState state,
 			final int threadnum,
 			Individual[] ind) {
-//		writeToIntermediateFile(state);
-//		readFromIntermediateFile(state);
-
 		if( ind.length != 2 ||
-				( ! ( ind[0] instanceof Coevolutionary2WayGPIndividual ) ) ||
-				( ! ( ind[1] instanceof Coevolutionary2WayGPIndividual ) ) )
-		{
-			state.output.error( "There should be two subpopulations, both with CoevolutionaryDoubleVectorIndividual." );
+				!(ind[0] instanceof Coevolutionary2WayGPIndividual) ||
+				!(ind[1] instanceof Coevolutionary2WayGPIndividual)) {
+			state.output.error("There should be two subpopulations, both with Coevolutionary2WayGPIndividual.");
 		}
 		Coevolutionary2WayGPIndividual ind1 = (Coevolutionary2WayGPIndividual)(ind[0]);
 		Coevolutionary2WayGPIndividual ind2 = (Coevolutionary2WayGPIndividual)(ind[1]);
 
-		double[] utilisation = {0.65, 0.75, 0.85, 0.9};
+		double[] utilisation = {0.75, 0.85};
 		double[] breakdownLevel = {0.05};
-		double[] meanRepair = {2.3, 3.3, 4.3};
-		int[] numberOfMachines = {5, 10, 20};
-		String[] lowers = {"miss", "full"};
-		String[] dists = {"expo", "uniform"};
+		double[] meanRepair = {2.3, 3.3};
+		int[] numberOfMachines = {4, 6};
+		String[] lowers = {"miss"};
+		String[] dists = {"expo"};
 
-		double[] objectives = new double[3];
 		SmallStatistics[] result = new SmallStatistics[] {
 				new SmallStatistics(),
 				new SmallStatistics()
@@ -238,8 +232,58 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 				result,
 				detail);
 
-		//return detail + "\n" + result[0].getAverage() + " " + result[1].getAverage() + " " + resultDD.getAverage();
-		return result[0].getAverage() + " " + result[1].getAverage() + " " + resultDD.getAverage();
+		String output = String.format("%s,%d,%d,%f,%f,%f",
+				ind1.getApproach(),
+				ind1.getSeed(),
+				ind1.getRunNum(),
+				result[0].getAverage(),
+				result[1].getAverage(),
+				resultDD.getAverage());
+
+		return output;
+	}
+
+	public String getTestPerformance(final EvolutionState state,
+			final int threadnum,
+			Individual[] ind) {
+		if( ind.length != 2 ||
+				!(ind[0] instanceof Coevolutionary2WayGPIndividual) ||
+				!(ind[1] instanceof Coevolutionary2WayGPIndividual)) {
+			state.output.error("There should be two subpopulations, both with Coevolutionary2WayGPIndividual.");
+		}
+		Coevolutionary2WayGPIndividual ind1 = (Coevolutionary2WayGPIndividual)(ind[0]);
+		Coevolutionary2WayGPIndividual ind2 = (Coevolutionary2WayGPIndividual)(ind[1]);
+
+		double[] utilisation = {0.65, 0.75, 0.85, 0.9};
+		double[] breakdownLevel = {0.05};
+		double[] meanRepair = {2.3, 3.3, 4.3};
+		int[] numberOfMachines = {5, 10, 20};
+		String[] lowers = {"miss", "full"};
+		String[] dists = {"expo", "uniform"};
+
+		SmallStatistics[] result = new SmallStatistics[] {
+				new SmallStatistics(),
+				new SmallStatistics()
+		};
+		SmallStatistics resultDD = new SmallStatistics();
+
+		StringBuilder detail = new StringBuilder();
+		runExperiments(dists, lowers, numberOfMachines, utilisation,
+				breakdownLevel, meanRepair, 5,
+				(GPIndividual) ind1, (GPIndividual) ind2, state, threadnum,
+				resultDD,
+				result,
+				detail);
+
+		String output = String.format("%s,%d,%d,%f,%f,%f",
+				ind1.getApproach(),
+				ind1.getSeed(),
+				ind1.getRunNum(),
+				result[0].getAverage(),
+				result[1].getAverage(),
+				resultDD.getAverage());
+
+		return output;
 	}
 
 	private class SchedulingPolicy {
