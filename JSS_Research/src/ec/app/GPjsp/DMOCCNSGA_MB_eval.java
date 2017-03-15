@@ -240,20 +240,22 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 
 		StringBuilder builder = new StringBuilder();
 		for (int i = 0; i < mapes.size(); i++) {
+			if (i != 0) {
+				builder.append("\n");
+			}
+
 			double maxF = maxFlowtimes.get(i);
 			double twt = normTWTs.get(i);
 			double mape = mapes.get(i);
 
-			String output = String.format("%s,%d,%d,%d,%f,%f,%f",
+			builder.append(String.format("%s,%d,%d,%d,%f,%f,%f",
 					ind1.getApproach(),
 					ind1.getSeed(),
 					ind1.getRunNum(),
 					i,
 					maxF,
 					twt,
-					mape);
-
-			builder.append(output + "\n");
+					mape));
 		}
 
 		return builder.toString();
@@ -298,20 +300,22 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 
 		StringBuilder builder = new StringBuilder();
 		for (int i = 0; i < mapes.size(); i++) {
+			if (i != 0) {
+				builder.append("\n");
+			}
+
 			double maxF = maxFlowtimes.get(i);
 			double twt = normTWTs.get(i);
 			double mape = mapes.get(i);
 
-			String output = String.format("%s,%d,%d,%d,%f,%f,%f",
+			builder.append(String.format("%s,%d,%d,%d,%f,%f,%f",
 					ind1.getApproach(),
 					ind1.getSeed(),
 					ind1.getRunNum(),
 					i,
 					maxF,
 					twt,
-					mape);
-
-			builder.append(output + "\n");
+					mape));
 		}
 
 		return builder.toString();
