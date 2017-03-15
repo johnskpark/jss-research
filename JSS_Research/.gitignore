@@ -388,3 +388,8 @@
 /dmocc_exact_fronts.csv
 /dmocc_predictive_fronts.csv
 /test_individual.txt
+/dmocc_baseline_fronts_best.csv
+/dmocc_baseline_inter.txt
+/dmocc_exact_fronts_best.csv
+/dmocc_predictive_fronts_best.csv
+/perf.stat

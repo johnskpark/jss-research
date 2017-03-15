@@ -12,14 +12,15 @@ import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.PrintStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import SmallStatistics.AllStatistics;
 import SmallStatistics.SmallStatistics;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.Population;
 import ec.Species;
-import ec.Subpopulation;
 import ec.gp.GPIndividual;
 import ec.multiobjective.MultiObjectiveFitness;
 import ec.multiobjective.MultiObjectiveStatisticsSu;
@@ -215,32 +216,47 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 		double[] breakdownLevel = {0.05};
 		double[] meanRepair = {2.3, 3.3};
 		int[] numberOfMachines = {4, 6};
+		int numDS = 1;
 		String[] lowers = {"miss"};
 		String[] dists = {"expo"};
 
-		SmallStatistics[] result = new SmallStatistics[] {
-				new SmallStatistics(),
-				new SmallStatistics()
+		AllStatistics[] result = new AllStatistics[] {
+				new AllStatistics(),
+				new AllStatistics()
 		};
-		SmallStatistics resultDD = new SmallStatistics();
+		AllStatistics resultDD = new AllStatistics();
 
 		StringBuilder detail = new StringBuilder();
 		runExperiments(dists, lowers, numberOfMachines, utilisation,
-				breakdownLevel, meanRepair, 5,
+				breakdownLevel, meanRepair, numDS,
 				(GPIndividual) ind1, (GPIndividual) ind2, state, threadnum,
 				resultDD,
 				result,
 				detail);
 
-		String output = String.format("%s,%d,%d,%f,%f,%f",
-				ind1.getApproach(),
-				ind1.getSeed(),
-				ind1.getRunNum(),
-				result[0].getAverage(),
-				result[1].getAverage(),
-				resultDD.getAverage());
+		List<Double> maxFlowtimes = result[0].getValues();
+		List<Double> normTWTs = result[1].getValues();
+		List<Double> mapes = resultDD.getValues();
 
-		return output;
+		StringBuilder builder = new StringBuilder();
+		for (int i = 0; i < mapes.size(); i++) {
+			double maxF = maxFlowtimes.get(i);
+			double twt = normTWTs.get(i);
+			double mape = mapes.get(i);
+
+			String output = String.format("%s,%d,%d,%d,%f,%f,%f",
+					ind1.getApproach(),
+					ind1.getSeed(),
+					ind1.getRunNum(),
+					i,
+					maxF,
+					twt,
+					mape);
+
+			builder.append(output + "\n");
+		}
+
+		return builder.toString();
 	}
 
 	public String getTestPerformance(final EvolutionState state,
@@ -258,32 +274,47 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 		double[] breakdownLevel = {0.05};
 		double[] meanRepair = {2.3, 3.3, 4.3};
 		int[] numberOfMachines = {5, 10, 20};
+		int numDS = 5;
 		String[] lowers = {"miss", "full"};
 		String[] dists = {"expo", "uniform"};
 
-		SmallStatistics[] result = new SmallStatistics[] {
-				new SmallStatistics(),
-				new SmallStatistics()
+		AllStatistics[] result = new AllStatistics[] {
+				new AllStatistics(),
+				new AllStatistics()
 		};
-		SmallStatistics resultDD = new SmallStatistics();
+		AllStatistics resultDD = new AllStatistics();
 
 		StringBuilder detail = new StringBuilder();
 		runExperiments(dists, lowers, numberOfMachines, utilisation,
-				breakdownLevel, meanRepair, 5,
+				breakdownLevel, meanRepair, numDS,
 				(GPIndividual) ind1, (GPIndividual) ind2, state, threadnum,
 				resultDD,
 				result,
 				detail);
 
-		String output = String.format("%s,%d,%d,%f,%f,%f",
-				ind1.getApproach(),
-				ind1.getSeed(),
-				ind1.getRunNum(),
-				result[0].getAverage(),
-				result[1].getAverage(),
-				resultDD.getAverage());
+		List<Double> maxFlowtimes = result[0].getValues();
+		List<Double> normTWTs = result[1].getValues();
+		List<Double> mapes = resultDD.getValues();
 
-		return output;
+		StringBuilder builder = new StringBuilder();
+		for (int i = 0; i < mapes.size(); i++) {
+			double maxF = maxFlowtimes.get(i);
+			double twt = normTWTs.get(i);
+			double mape = mapes.get(i);
+
+			String output = String.format("%s,%d,%d,%d,%f,%f,%f",
+					ind1.getApproach(),
+					ind1.getSeed(),
+					ind1.getRunNum(),
+					i,
+					maxF,
+					twt,
+					mape);
+
+			builder.append(output + "\n");
+		}
+
+		return builder.toString();
 	}
 
 	private class SchedulingPolicy {

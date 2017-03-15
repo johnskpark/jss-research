@@ -9,6 +9,11 @@ package ec.multiobjective;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import ec.EvolutionState;
 import ec.Individual;
@@ -683,28 +688,34 @@ public class MultiObjectiveStatisticsSu extends MultiObjectiveStatistics
         state.output.println(TestResult, frontLog);
     }
 
-    // TODO this part needs to read from a file instead of using the original population.
     public void fullEvaluationStatisticsCoevolveNSGA(final EvolutionState state, final int result, DMOCCNSGA_MB_eval gp) {
-
     	// Callback to problem to overwrite the individuals in the evolution state.
     	gp.writeToIntermediateFile(state);
     	gp.readFromIntermediateFile(state);
 
-        int maxParetoSolution = 200;
-        Individual[] combinedInds;
-        Individual[] subpop1 = state.population.subpops[0].individuals;
-        Individual[] subpop2 = state.population.subpops[1].individuals;
+        List<Coevolutionary2WayGPIndividual> subpop1 = Arrays.asList(state.population.subpops[0].individuals)
+        		.stream()
+        		.map(x -> (Coevolutionary2WayGPIndividual) x)
+        		.sorted(new Coevolutionary2WayGPIndividualComparator())
+        		.collect(Collectors.toList());
+        List<Coevolutionary2WayGPIndividual> subpop2 = Arrays.asList(state.population.subpops[1].individuals)
+        		.stream()
+        		.map(x -> (Coevolutionary2WayGPIndividual) x)
+        		.sorted(new Coevolutionary2WayGPIndividualComparator())
+        		.collect(Collectors.toList());
 
         checkConstraints(state, subpop1, subpop2);
+
+        int paretoSize = subpop1.size();
 
         state.output.message("Applying rules over training set");
         state.output.println(" Subpopulation", frontLog);
 
         // Sort based on the seed and the runs.
 
-        for (int i = 0; i < subpop1.length; i++) {
+        for (int i = 0; i < paretoSize; i++) {
         	// Reevaluate the individuals over the training set.
-        	Coevolutionary2WayGPIndividual individual = (Coevolutionary2WayGPIndividual) subpop1[i];
+        	Coevolutionary2WayGPIndividual individual = (Coevolutionary2WayGPIndividual) subpop1.get(i);
 
         	Individual[] inds = new Individual[2];
     		inds[0] = individual;
@@ -717,9 +728,9 @@ public class MultiObjectiveStatisticsSu extends MultiObjectiveStatistics
         state.output.message("Applying rules over test set");
         state.output.println("\n TestSet Result", frontLog);
 
-        for (int i = 0; i < subpop1.length; i++) {
+        for (int i = 0; i < paretoSize; i++) {
         	// Reevaluate the individuals over the test set.
-        	Coevolutionary2WayGPIndividual individual = (Coevolutionary2WayGPIndividual) subpop1[i];
+        	Coevolutionary2WayGPIndividual individual = (Coevolutionary2WayGPIndividual) subpop1.get(i);
 
         	Individual[] inds = new Individual[2];
     		inds[0] = individual;
@@ -730,15 +741,32 @@ public class MultiObjectiveStatisticsSu extends MultiObjectiveStatistics
         }
     }
 
-    private void checkConstraints(final EvolutionState state, Individual[] subpop1, Individual[] subpop2) {
-    	if (subpop1.length != subpop2.length) {
+    private class Coevolutionary2WayGPIndividualComparator implements Comparator<Coevolutionary2WayGPIndividual> {
+
+    	public int compare(Coevolutionary2WayGPIndividual ind1, Coevolutionary2WayGPIndividual ind2) {
+    		int approachComp = ind1.getApproach().compareTo(ind2.getApproach());
+    		if (approachComp != 0) {
+    			return approachComp;
+    		}
+
+    		int seedComp = ind1.getSeed() - ind2.getSeed();
+    		if (seedComp != 0) {
+    			return seedComp;
+    		}
+
+    		return ind1.getRunNum() - ind2.getRunNum();
+    	}
+    }
+
+    private void checkConstraints(final EvolutionState state, List<Coevolutionary2WayGPIndividual> subpop1, List<Coevolutionary2WayGPIndividual> subpop2) {
+    	if (subpop1.size() != subpop2.size()) {
     		state.output.fatal("The two subpopulation's read from the file should be the same length as each other.");
     	}
 
-    	int len = subpop1.length;
+    	int len = subpop1.size();
     	for (int i = 0; i < len; i++) {
-    		Coevolutionary2WayGPIndividual ind1 = (Coevolutionary2WayGPIndividual) subpop1[i];
-    		Coevolutionary2WayGPIndividual ind2 = (Coevolutionary2WayGPIndividual) subpop2[i];
+    		Coevolutionary2WayGPIndividual ind1 = (Coevolutionary2WayGPIndividual) subpop1.get(i);
+    		Coevolutionary2WayGPIndividual ind2 = (Coevolutionary2WayGPIndividual) subpop2.get(i);
 
     		if (!ind1.context[1].equals(ind2) || !ind2.context[0].equals(ind1)) {
     			state.output.fatal("The individual's collaborators do not match: " + i);
