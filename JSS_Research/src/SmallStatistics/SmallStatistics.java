@@ -40,7 +40,7 @@ public class SmallStatistics {
         count=0;
     }
 
-    public void add(double val){
+    public void add(double val) {
         sum += val;
         sumQ += val * val;
         count ++;

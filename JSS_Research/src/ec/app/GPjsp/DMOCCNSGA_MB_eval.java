@@ -112,9 +112,6 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 		}
 	}
 
-	// TODO It doesn't read constants D:
-	// I need to figure out how to make it read constants.
-
 	public void writeIndividualToFile(PrintStream output,
 			String approach,
 			String seed,
@@ -237,6 +234,22 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 		List<Double> maxFlowtimes = result[0].getValues();
 		List<Double> normTWTs = result[1].getValues();
 		List<Double> mapes = resultDD.getValues();
+
+		double[] objectives = new double[]{
+				result[0].getAverage(),
+				result[1].getAverage(),
+				resultDD.getAverage()
+		};
+
+		// Set the fitnesses of the individual just for posterity (and so that the NullPointerException doesn't occur).
+		MultiObjectiveFitness fitness1 = (MultiObjectiveFitness) ind1.fitness;
+		MultiObjectiveFitness fitness2 = (MultiObjectiveFitness) ind2.fitness;
+
+		fitness1.setObjectives(false, objectives);
+		fitness2.setObjectives(false, objectives);
+
+		ind1.evaluated = true;
+		ind2.evaluated = true;
 
 		StringBuilder builder = new StringBuilder();
 		for (int i = 0; i < mapes.size(); i++) {
@@ -429,7 +442,9 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 									input.partialEstimatedFlowtime == Double.POSITIVE_INFINITY ||
 									Double.isNaN(input.partialEstimatedFlowtime)) {
 								resultDD = new SmallStatistics();
-								break outerLoop;
+								// TODO so this part here is being broken.
+								state.output.warning("Invalid PEF value. Soft exitting simulation.");
+								break outerLoop; // TODO these are being triggered at some points, need to figure out why.
 							}
 
 							newjob.assignDuedate(input.partialEstimatedFlowtime);
@@ -488,7 +503,8 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 
 					double mape = jspDynamic.getMAPE();
 					if (mape < 0.0 || mape == Double.POSITIVE_INFINITY || Double.isNaN(mape)) {
-						break outerLoop;
+						state.output.warning("Invalid MAPE value. Soft exitting simulation.");
+						break outerLoop; // TODO these are being triggered at some points, need to figure out why.
 					}
 
 					resultDD.add(mape);
@@ -513,15 +529,10 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 
 	public void postprocessPopulation(final EvolutionState state, Population pop, boolean[] prepareForFitnessAssessment, boolean countVictoriesOnly) {
 		System.out.println("x");
-		for (int i = 0; i < pop.subpops.length; i++) {
-			for (int j = 0; j < pop.subpops[i].individuals.length; j++) {
-				pop.subpops[i].individuals[j].evaluated = true;
-			}
-		}
 
 		if (state.generation == state.numGenerations-1) {
 			MultiObjectiveStatisticsSu myMOStat = (MultiObjectiveStatisticsSu) state.statistics;
-			myMOStat.fullEvaluationStatisticsCoevolveNSGA(state, 0, this); // TODO modify this with the one.
+			myMOStat.fullEvaluationStatisticsCoevolveNSGA(state, 0, this);
 		}
 	}
 
@@ -530,10 +541,3 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 	}
 
 }
-
-/*
-            double[] utilisation = {0.6,0.7,0.8,0.9,0.95};
-            int[] numbeOfMachines = {4,5,6,10,20};
-            String[] lowers = {"miss","full"};
-            String[] dists = {"expo","erlang2","uniform"};
- */

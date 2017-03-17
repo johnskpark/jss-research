@@ -168,7 +168,6 @@ public class DMOCCNSGA_MB extends GPjsp2WayMOCoevolveNSGA {
 		String[] lowers = {"miss", "full"};
 		String[] dists = {"expo", "uniform"};
 
-		double[] objectives = new double[3];
 		SmallStatistics[] result = new SmallStatistics[] {
 				new SmallStatistics(),
 				new SmallStatistics()
