@@ -375,9 +375,16 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 			SmallStatistics resultDD,
 			SmallStatistics[] result,
 			StringBuilder detail) {
+		int count = 0;
+
 		outerLoop:
 			for (String dist : dists) { for (String s : lowers) { for (int m : numberOfMachines) { for (double u : utilisation) { for (double bl : breakdownLevel) { for (double mr : meanRepair) {
 				for (int ds = 0; ds < numDS; ds++) {
+					// TODO temporary code.
+					if (count == 1) {
+						System.out.printf("Second problem instance.\n");
+					}
+
 					int lower = 0;
 					String distribution ="";
 					double param = -1;
@@ -426,7 +433,7 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 							input.J = newjob;
 							for (int i = 0; i < newjob.getNumberOperations(); i++) {
 								input.stat.gatherStatFromJSPModel(jspDynamic, m , newjob, i, input.partialEstimatedFlowtime);
-								//calculcate parital flowtime
+								//calculcate partial flowtime
 								input.tempVal = 0;
 								input.k = i;
 								((GPIndividual) ind2).trees[0].child.eval(state,
@@ -435,6 +442,10 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 										stack,
 										(GPIndividual) ind2,
 										this);
+								if (input.tempVal < 0.0) {
+									state.output.warning("Negative PEF contribution: " + input.tempVal);
+								}
+
 								input.partialEstimatedFlowtime += input.tempVal;
 							}
 
@@ -442,9 +453,8 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 									input.partialEstimatedFlowtime == Double.POSITIVE_INFINITY ||
 									Double.isNaN(input.partialEstimatedFlowtime)) {
 								resultDD = new SmallStatistics();
-								// TODO so this part here is being broken.
-								state.output.warning("Invalid PEF value. Soft exitting simulation.");
-								break outerLoop; // TODO these are being triggered at some points, need to figure out why.
+								state.output.warning("Invalid PEF value: (" + input.partialEstimatedFlowtime + "). Soft exitting simulation.");
+								break outerLoop;
 							}
 
 							newjob.assignDuedate(input.partialEstimatedFlowtime);
@@ -512,6 +522,8 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 					result[1].add(jspDynamic.getNormalisedTotalWeightedTardiness());
 					detail.append(jspDynamic.getCmax() + " " + jspDynamic.getNormalisedTotalWeightedTardiness() + " " + mape + " ");
 				}
+
+				count++;
 			}}}}}}
 	}
 
