@@ -380,11 +380,6 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 		outerLoop:
 			for (String dist : dists) { for (String s : lowers) { for (int m : numberOfMachines) { for (double u : utilisation) { for (double bl : breakdownLevel) { for (double mr : meanRepair) {
 				for (int ds = 0; ds < numDS; ds++) {
-					// TODO temporary code.
-					if (count == 1) {
-						System.out.printf("Second problem instance.\n");
-					}
-
 					int lower = 0;
 					String distribution ="";
 					double param = -1;
@@ -443,10 +438,12 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 										(GPIndividual) ind2,
 										this);
 								if (input.tempVal < 0.0) {
-									state.output.warning("Negative PEF contribution: " + input.tempVal);
+									state.output.warning("Negative PEF contribution: (" + input.tempVal + ") for job " + input.J.getID() + "'s operation " + i + ". Using the absolute value of the PEF contribution.");
+									// TODO temporary.
+									System.err.println("Num ops: " + newjob.getNumberOperations());
 								}
 
-								input.partialEstimatedFlowtime += input.tempVal;
+								input.partialEstimatedFlowtime += Math.abs(input.tempVal);
 							}
 
 							if (input.partialEstimatedFlowtime < 0.0 ||
