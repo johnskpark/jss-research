@@ -122,7 +122,7 @@ eval.num-prev =             1
 eval.select-current =       ec.select.RandomSelection
 eval.subpop.0.select-prev = ec.select.TournamentSelection
 eval.subpop.1.select-prev = ec.select.TournamentSelection
-eval.problem =              ec.app.GPjsp.DMOCCNSGA_MB
+eval.problem =              ec.app.GPjsp.DMOCCNSGA_MB_abs
 
 pop.subpops =                           2
 pop.subpop.0 =                          ec.Subpopulation
