@@ -21,5 +21,7 @@ gp.fs.1.func.19.nc = ncESTSTAT
 gp.fs.1.func.20 = ec.app.GPjsp.func.DDA.machineBreakdown.ESTExactNextRepairTime
 gp.fs.1.func.20.nc = ncESTSTAT
 
-eval.problem.input-file =        dmocc_exact_fronts.csv
-eval.problem.intermediate-file = dmocc_exact_inter.txt
+eval.problem.input-file =        su_params/dmocc_all_fronts.csv
+eval.problem.intermediate-file = dmocc_inter.txt
+eval.problem.approach =          DMOCC-MB (exact)
+eval.problem.use-run-seed =      true

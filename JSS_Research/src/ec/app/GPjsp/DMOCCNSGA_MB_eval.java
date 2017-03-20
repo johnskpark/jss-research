@@ -33,8 +33,14 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 
 	private static final long serialVersionUID = -7145910495558748714L;
 
+	public static final int NOT_SET = -1;
+
 	public static final String P_FILE = "input-file";
 	public static final String P_INTERMEDIATE_FILE = "intermediate-file";
+	public static final String P_APPROACH = "approach";
+	public static final String P_SEED = "seed";
+	public static final String P_USE_RUN_SEED = "use-run-seed";
+	public static final String P_IND_RUN = "ind-run";
 
 	public double meanTime = 1;
 	public static String fitness = "";
@@ -42,6 +48,11 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 
 	public String inputFile = null;
 	public String intermediateFile = null;
+
+	public String approach = null;
+	public int seed = NOT_SET;
+	public boolean useRunSeed = false;
+	public int indRun = NOT_SET;
 
 	public JSPData input;
 
@@ -65,15 +76,43 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 	}
 
 	public void setup(final EvolutionState state, final Parameter base) {
-		// very important, remember this
+		// Very important, remember this.
 		super.setup(state,base);
 
-		// set up our input -- don't want to use the default base, it's unsafe here
+		// Set up our input -- Don't want to use the default base, it's unsafe here.
 		input = (JSPData) state.parameters.getInstanceForParameterEq(base.push(P_DATA), null, JSPData.class);
 		input.setup(state,base.push(P_DATA));
 
+		// Setup the mandatory input and intermediate file.
 		inputFile = state.parameters.getStringWithDefault(base.push(P_FILE), null, null);
 		intermediateFile = state.parameters.getStringWithDefault(base.push(P_INTERMEDIATE_FILE), null, null);
+
+		// Setup subsections of the file that will be read.
+		approach = state.parameters.getStringWithDefault(base.push(P_APPROACH), null, null);
+		seed = state.parameters.getIntWithDefault(base.push(P_SEED), null, NOT_SET);
+		useRunSeed = state.parameters.getBoolean(base.push(P_USE_RUN_SEED), null, false);
+		if (seed == NOT_SET && useRunSeed) {
+			seed = state.parameters.getIntWithDefault(new Parameter(P_SEED).push("" + 0), null, NOT_SET);
+		}
+		indRun = state.parameters.getIntWithDefault(base.push(P_IND_RUN), null, NOT_SET);
+
+		if (approach == null) {
+			state.output.message("Specific approach not set. Iterating through all approaches.");
+		} else {
+			state.output.message("Specific approach set: " + approach);
+		}
+
+		if (seed == NOT_SET) {
+			state.output.message("Specific seed not set. Iterating through all seeds.");
+		} else {
+			state.output.message("Specific seed set: " + seed);
+		}
+
+		if (indRun == NOT_SET) {
+			state.output.message("Specific individual run not set. Iterating through all individual runs.");
+		} else {
+			state.output.message("Specific individual run: " + indRun);
+		}
 	}
 
 	public void evaluate(final EvolutionState state,
@@ -97,11 +136,20 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 				// Read in the individuals, and then output it in a format that is readable by ECJ.
 				String[] split = line.split(",");
 
+				String a = split[0];
+				int s = Integer.parseInt(split[1]);
+				int ir = Integer.parseInt(split[2]);
+
 				String dr = split[3];
 				String ddar = split[4];
 
-				writeIndividualToFile(intermediateOutput, split[0], split[1], split[2], "0", dr);
-				writeIndividualToFile(intermediateOutput, split[0], split[1], split[2], "1", ddar);
+				// Ignore any individuals that are not part of the filter.
+				if ((approach == null || approach.equals(a)) &&
+						(seed == NOT_SET || seed == s) &&
+						(indRun == NOT_SET || indRun == ir)) {
+					writeIndividualToFile(intermediateOutput, split[0], split[1], split[2], "0", dr);
+					writeIndividualToFile(intermediateOutput, split[0], split[1], split[2], "1", ddar);
+				}
 			}
 
 			System.out.println("Successfully read file...");
@@ -375,7 +423,7 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 			SmallStatistics resultDD,
 			SmallStatistics[] result,
 			StringBuilder detail) {
-		int count = 0;
+		int numNegativePEF = 0;
 
 		outerLoop:
 			for (String dist : dists) { for (String s : lowers) { for (int m : numberOfMachines) { for (double u : utilisation) { for (double bl : breakdownLevel) { for (double mr : meanRepair) {
@@ -438,9 +486,8 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 										(GPIndividual) ind2,
 										this);
 								if (input.tempVal < 0.0) {
-									state.output.warning("Negative PEF contribution: (" + input.tempVal + ") for job " + input.J.getID() + "'s operation " + i + ". Using the absolute value of the PEF contribution.");
-									// TODO temporary.
-									System.err.println("Num ops: " + newjob.getNumberOperations());
+									numNegativePEF++;
+									// state.output.warning("Negative PEF contribution: (" + input.tempVal + ") for job " + input.J.getID() + "'s operation " + i + ". Using the absolute value of the PEF contribution.");
 								}
 
 								input.partialEstimatedFlowtime += Math.abs(input.tempVal);
@@ -456,9 +503,6 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 
 							newjob.assignDuedate(input.partialEstimatedFlowtime);
 							jspDynamic.setNextArrivalTime();
-							//*/
-							//newjob.assignDuedate(1.3*newjob.getTotalProcessingTime());
-							//jspDynamic.setNextArrivalTime();
 						} else if (event == DynamicJSPFrameworkBreakdown.READY_EVENT) {
 							jspDynamic.unplanAll();
 							do {
@@ -468,7 +512,8 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 								Machine M = jspDynamic.machines[nextMachine];
 								input.M = M;
 								jspDynamic.setInitalPriority(M);
-								// determine priority of jobs in queue
+
+								// Determine priority of jobs in queue.
 								if (M.getQueue().size() > 1) {
 									((GPIndividual) ind1).trees[0].child.eval(
 											state,
@@ -519,9 +564,11 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 					result[1].add(jspDynamic.getNormalisedTotalWeightedTardiness());
 					detail.append(jspDynamic.getCmax() + " " + jspDynamic.getNormalisedTotalWeightedTardiness() + " " + mape + " ");
 				}
-
-				count++;
 			}}}}}}
+
+		if (numNegativePEF != 0) {
+			state.output.warning("Number negative PEF contributions over the course of experiment: " + numNegativePEF);
+		}
 	}
 
 	public void preprocessPopulation(final EvolutionState state, Population pop, boolean[] prepareForFitnessAssessment, boolean countVictoriesOnly) {

@@ -65,10 +65,10 @@ public class ERCrandom extends ERC{
     	ERCrandom node = (ERCrandom) lightClone();
 
     	// Iterate through the data to find potential match
-    	while (!Character.isWhitespace(dret.data.charAt(dret.pos)) &&
+    	while (dret.pos < len &&
+    			!Character.isWhitespace(dret.data.charAt(dret.pos)) &&
     			dret.data.charAt(dret.pos) != ')' &&
-    			dret.data.charAt(dret.pos) != '(' &&
-    			dret.pos < len) {
+    			dret.data.charAt(dret.pos) != '(') {
     		dret.pos++;
     	}
     	String potentialMatch = dret.data.substring(originalPos, dret.pos);

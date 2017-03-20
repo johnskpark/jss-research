@@ -126,8 +126,10 @@ eval.subpop.1.select-prev = ec.select.TournamentSelection
 
 
 eval.problem =                   ec.app.GPjsp.DMOCCNSGA_MB_eval
-eval.problem.input-file =        dmocc_baseline_fronts.csv
-eval.problem.intermediate-file = dmocc_baseline_inter.txt
+eval.problem.input-file =        su_params/dmocc_all_fronts.csv
+eval.problem.intermediate-file = dmocc_inter.txt
+eval.problem.approach =          DMOCC
+eval.problem.use-run-seed =      true
 
 pop.subpops =                           2
 pop.subpop.0 =                          ec.Subpopulation
