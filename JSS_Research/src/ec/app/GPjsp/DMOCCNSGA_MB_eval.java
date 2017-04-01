@@ -266,22 +266,26 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 		String[] dists = {"expo"};
 
 		AllStatistics[] result = new AllStatistics[] {
-				new AllStatistics(),
-				new AllStatistics()
+				new AllStatistics(), // max flowtime
+				new AllStatistics() // normalised TWT
 		};
-		AllStatistics resultDD = new AllStatistics();
+		AllStatistics resultDD = new AllStatistics(); // MAPE
+		AllStatistics resultNF = new AllStatistics(); // negative flowtimes
 
 		StringBuilder detail = new StringBuilder();
 		runExperiments(dists, lowers, numberOfMachines, utilisation,
 				breakdownLevel, meanRepair, numDS,
 				(GPIndividual) ind1, (GPIndividual) ind2, state, threadnum,
 				resultDD,
+				resultNF,
 				result,
-				detail);
+				detail,
+				false);
 
 		List<Double> maxFlowtimes = result[0].getValues();
 		List<Double> normTWTs = result[1].getValues();
 		List<Double> mapes = resultDD.getValues();
+		List<Double> negativeFlowtimes = resultNF.getValues();
 
 		double[] objectives = new double[]{
 				result[0].getAverage(),
@@ -308,15 +312,17 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 			double maxF = maxFlowtimes.get(i);
 			double twt = normTWTs.get(i);
 			double mape = mapes.get(i);
+			double nf = negativeFlowtimes.get(i);
 
-			builder.append(String.format("%s,%d,%d,%d,%f,%f,%f",
+			builder.append(String.format("%s,%d,%d,%d,%f,%f,%f,%f",
 					ind1.getApproach(),
 					ind1.getSeed(),
 					ind1.getRunNum(),
 					i,
 					maxF,
 					twt,
-					mape));
+					mape,
+					nf));
 		}
 
 		return builder.toString();
@@ -333,31 +339,35 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 		Coevolutionary2WayGPIndividual ind1 = (Coevolutionary2WayGPIndividual)(ind[0]);
 		Coevolutionary2WayGPIndividual ind2 = (Coevolutionary2WayGPIndividual)(ind[1]);
 
-		double[] utilisation = {0.65, 0.75, 0.85, 0.9};
+		double[] utilisation = {0.80, 0.9};
 		double[] breakdownLevel = {0.05};
 		double[] meanRepair = {2.3, 3.3, 4.3};
-		int[] numberOfMachines = {5, 10, 20};
+		int[] numberOfMachines = {5, 10};
 		int numDS = 5;
 		String[] lowers = {"miss", "full"};
 		String[] dists = {"expo", "uniform"};
 
 		AllStatistics[] result = new AllStatistics[] {
-				new AllStatistics(),
-				new AllStatistics()
+				new AllStatistics(), // max flowtime
+				new AllStatistics() // normalised TWT
 		};
-		AllStatistics resultDD = new AllStatistics();
+		AllStatistics resultDD = new AllStatistics(); // MAPE
+		AllStatistics resultNF = new AllStatistics(); // negative flowtimes
 
 		StringBuilder detail = new StringBuilder();
 		runExperiments(dists, lowers, numberOfMachines, utilisation,
 				breakdownLevel, meanRepair, numDS,
 				(GPIndividual) ind1, (GPIndividual) ind2, state, threadnum,
 				resultDD,
+				resultNF,
 				result,
-				detail);
+				detail,
+				false);
 
 		List<Double> maxFlowtimes = result[0].getValues();
 		List<Double> normTWTs = result[1].getValues();
 		List<Double> mapes = resultDD.getValues();
+		List<Double> negativeFlowtimes = resultNF.getValues();
 
 		StringBuilder builder = new StringBuilder();
 		for (int i = 0; i < mapes.size(); i++) {
@@ -368,15 +378,17 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 			double maxF = maxFlowtimes.get(i);
 			double twt = normTWTs.get(i);
 			double mape = mapes.get(i);
+			double nf = negativeFlowtimes.get(i);
 
-			builder.append(String.format("%s,%d,%d,%d,%f,%f,%f",
+			builder.append(String.format("%s,%d,%d,%d,%f,%f,%f,%f",
 					ind1.getApproach(),
 					ind1.getSeed(),
 					ind1.getRunNum(),
 					i,
 					maxF,
 					twt,
-					mape));
+					mape,
+					nf));
 		}
 
 		return builder.toString();
@@ -421,9 +433,10 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 			EvolutionState state,
 			int threadnum,
 			SmallStatistics resultDD,
+			SmallStatistics resultNF,
 			SmallStatistics[] result,
-			StringBuilder detail) {
-		int numNegativePEF = 0;
+			StringBuilder detail,
+			boolean terminateOnInvalidPEF) {
 
 		outerLoop:
 			for (String dist : dists) { for (String s : lowers) { for (int m : numberOfMachines) { for (double u : utilisation) { for (double bl : breakdownLevel) { for (double mr : meanRepair) {
@@ -431,6 +444,7 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 					int lower = 0;
 					String distribution ="";
 					double param = -1;
+					int numNegativeFlowtimes = 0;
 
 					if ("miss".equals(s)) {
 						lower = 1;
@@ -453,14 +467,15 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 							m, u, u, meanTime, distribution, param, 1000, 5000, SIM_BREAKDOWN_SEED[ds], bl, mr);
 					input.abjsp = jspDynamic;
 
-					//set dispatching rule
+					// Set the dispatching rule.
 					Machine.priorityType PT = Machine.priorityType.CONV;
 					jspDynamic.setPriorityType(PT);
 					jspDynamic.setScheduleStrategy(Machine.scheduleStrategy.NONDELAY);
 
 					//////////////////////////////////////////////
 					jspDynamic.setNextArrivalTime();
-					//set deactivations and activations for the machines
+
+					// Set the deactivations and activations for the machines.
 					for (int i = 0; i < m; i++) {
 						jspDynamic.setNextDeactivateTime(i);
 						jspDynamic.setNextActivateTime(i);
@@ -469,14 +484,13 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 					while (!jspDynamic.isStop()) {
 						int event = jspDynamic.getNextEventType();
 						if (event == DynamicJSPFrameworkBreakdown.ARRIVAL_EVENT) {
-							//JOB newjob = jspDynamic.GenerateNonRecirculatedJob(jspDynamic.getNextArrivalTime());
-							///*
 							Job newjob = jspDynamic.generateRandomJob(jspDynamic.getNextArrivalTime());
 							input.partialEstimatedFlowtime = 0;
 							input.J = newjob;
 							for (int i = 0; i < newjob.getNumberOperations(); i++) {
 								input.stat.gatherStatFromJSPModel(jspDynamic, m , newjob, i, input.partialEstimatedFlowtime);
-								//calculcate partial flowtime
+
+								// Calculate partial estimated flowtime.
 								input.tempVal = 0;
 								input.k = i;
 								((GPIndividual) ind2).trees[0].child.eval(state,
@@ -485,20 +499,20 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 										stack,
 										(GPIndividual) ind2,
 										this);
-								if (input.tempVal < 0.0) {
-									numNegativePEF++;
-									// state.output.warning("Negative PEF contribution: (" + input.tempVal + ") for job " + input.J.getID() + "'s operation " + i + ". Using the absolute value of the PEF contribution.");
-								}
 
-								input.partialEstimatedFlowtime += Math.abs(input.tempVal);
+								input.partialEstimatedFlowtime += input.tempVal;
 							}
 
 							if (input.partialEstimatedFlowtime < 0.0 ||
 									input.partialEstimatedFlowtime == Double.POSITIVE_INFINITY ||
 									Double.isNaN(input.partialEstimatedFlowtime)) {
-								resultDD = new SmallStatistics();
-								state.output.warning("Invalid PEF value: (" + input.partialEstimatedFlowtime + "). Soft exitting simulation.");
-								break outerLoop;
+								if (terminateOnInvalidPEF) {
+									state.output.warning("Invalid estimated flowtime value: (" + input.partialEstimatedFlowtime + "). Soft exitting the simulation.");
+									resultDD = new SmallStatistics();
+									break outerLoop;
+								}
+
+								numNegativeFlowtimes++;
 							}
 
 							newjob.assignDuedate(input.partialEstimatedFlowtime);
@@ -530,8 +544,7 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 
 								if (M.getPlannedStartTimeNextOperation() <= jspDynamic.getNextArrivalTime() &&
 										M.getPlannedStartTimeNextOperation() < M.getDeactivationTime()) {
-									// job will start, but may be interrupted by machine deactivation
-
+									// Job will start, but may be interrupted by machine deactivation.
 									Job J = M.completeJob();
 									if (!J.isCompleted()) {
 										jspDynamic.machines[J.getCurrentMachine()].joinQueue(J);
@@ -556,34 +569,38 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 					double mape = jspDynamic.getMAPE();
 					if (mape < 0.0 || mape == Double.POSITIVE_INFINITY || Double.isNaN(mape)) {
 						state.output.warning("Invalid MAPE value. Soft exitting simulation.");
-						break outerLoop; // TODO these are being triggered at some points, need to figure out why.
+						break outerLoop;
 					}
 
 					resultDD.add(mape);
+					resultNF.add(numNegativeFlowtimes);
 					result[0].add(jspDynamic.getCmax());
 					result[1].add(jspDynamic.getNormalisedTotalWeightedTardiness());
 					detail.append(jspDynamic.getCmax() + " " + jspDynamic.getNormalisedTotalWeightedTardiness() + " " + mape + " ");
 				}
 			}}}}}}
-
-		if (numNegativePEF != 0) {
-			state.output.warning("Number negative PEF contributions over the course of experiment: " + numNegativePEF);
-		}
 	}
 
-	public void preprocessPopulation(final EvolutionState state, Population pop, boolean[] prepareForFitnessAssessment, boolean countVictoriesOnly) {
+	public void preprocessPopulation(final EvolutionState state,
+			Population pop,
+			boolean[] prepareForFitnessAssessment,
+			boolean countVictoriesOnly) {
 		double[] objectives = {9999999, 9999999, 9999999};
+
 		for (int i = 0; i < pop.subpops.length; i++) {
 			for (int j = 0; j < pop.subpops[i].individuals.length; j++) {
 				if (!pop.subpops[i].individuals[j].evaluated) {
-					((MultiObjectiveFitness)pop.subpops[i].individuals[j].fitness).setObjectives(state, objectives);
+					((MultiObjectiveFitness) pop.subpops[i].individuals[j].fitness).setObjectives(state, objectives);
 				}
 			}
 		}
 	}
 
 
-	public void postprocessPopulation(final EvolutionState state, Population pop, boolean[] prepareForFitnessAssessment, boolean countVictoriesOnly) {
+	public void postprocessPopulation(final EvolutionState state,
+			Population pop,
+			boolean[] prepareForFitnessAssessment,
+			boolean countVictoriesOnly) {
 		System.out.println("x");
 
 		if (state.generation == state.numGenerations-1) {

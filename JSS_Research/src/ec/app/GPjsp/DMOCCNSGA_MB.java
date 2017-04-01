@@ -83,17 +83,20 @@ public class DMOCCNSGA_MB extends GPjsp2WayMOCoevolveNSGA {
 			double[] objectives = new double[3];
 
 			SmallStatistics[] result = new SmallStatistics[] {
-					new SmallStatistics(), new SmallStatistics()
+					new SmallStatistics(), // max flowtime
+					new SmallStatistics() // normalised TWT
 			};
-			SmallStatistics resultDD = new SmallStatistics();
+			SmallStatistics resultDD = new SmallStatistics(); // MAPE
 
 			StringBuilder detail = new StringBuilder();
 			runExperiments(dists, lowers, numberOfMachines, utilisation,
 					breakdownLevel, meanRepair, 1,
 					(GPIndividual) ind1, (GPIndividual) ind2, state, threadnum,
 					resultDD,
+					null,
 					result,
-					detail);
+					detail,
+					true);
 
 			objectives[0] = result[0].getAverage();
 			objectives[1] = result[1].getAverage();
@@ -101,42 +104,32 @@ public class DMOCCNSGA_MB extends GPjsp2WayMOCoevolveNSGA {
 
 			for (int i = 0; i < 3; i++) {
 				if (objectives[i]  < 0.0f || objectives[i] == Float.POSITIVE_INFINITY || Double.isNaN(objectives[i])) {
-					objectives[i] = Float.POSITIVE_INFINITY;
+					objectives[i] = 9999999;
 				}
 				if (i == 2 && objectives[2] > 3) {
-					for (int j = 0; j < 3; j++) objectives[j]=1000000;
+					for (int j = 0; j < 3; j++) { objectives[j] = 9999999; }
 					break;
 				}
 			}
 
-			//((MultiObjectiveFitness)ind[1].fitness).setObjectives(state, objectives);
-			//ind[1].evaluated = true;
-			//coevolve fitness update
-			//double functionValue = objectives[0];
-
 			MultiObjectiveFitness moFitness = new MultiObjectiveFitness();
 			moFitness.setObjectives(false, objectives);
-			if( updateFitness[0] )
-			{
-				if( moFitness.paretoDominates(((MultiObjectiveFitness)ind1.fitness)) )
-				{
+			if (updateFitness[0]) {
+				if (moFitness.paretoDominates(((MultiObjectiveFitness)ind1.fitness))) {
 					((MultiObjectiveFitness)ind1.fitness).setObjectives(state, objectives);
 					ind1.context = new Coevolutionary2WayGPIndividual[2];
 					ind1.context[1] = ind2;
 				}
 			}
-			if( updateFitness[1] )
-			{
-				if( moFitness.paretoDominates(((MultiObjectiveFitness)ind2.fitness)) )
-				{
+			if (updateFitness[1]) {
+				if (moFitness.paretoDominates((MultiObjectiveFitness)ind2.fitness)) {
 					((MultiObjectiveFitness)ind2.fitness).setObjectives(state, objectives);
 					ind2.context = new Coevolutionary2WayGPIndividual[2];
 					ind2.context[0] = ind1;
 				}
 			}
-			//ind1.printTrees(state, threadnum);
-			//System.out.println("|" + objectives[0] + " " + objectives[1] + " " + objectives[2]);
-			System.out.print("|");// + ind1.trees[0].child.numNodes(GPNode.NODESEARCH_ALL) + "**" + ind2.trees[0].child.numNodes(GPNode.NODESEARCH_ALL));
+
+			System.out.print("|");
 		}
 	}
 
@@ -160,21 +153,23 @@ public class DMOCCNSGA_MB extends GPjsp2WayMOCoevolveNSGA {
 		String[] dists = {"expo", "uniform"};
 
 		SmallStatistics[] result = new SmallStatistics[] {
-				new SmallStatistics(),
-				new SmallStatistics()
+				new SmallStatistics(), // max flowtime
+				new SmallStatistics() // normalised TWT
 		};
-		SmallStatistics resultDD = new SmallStatistics();
+		SmallStatistics resultDD = new SmallStatistics(); // MAPE
+		SmallStatistics resultNF = new SmallStatistics(); // negative flowtimes
 
 		StringBuilder detail = new StringBuilder();
 		runExperiments(dists, lowers, numberOfMachines, utilisation,
 				breakdownLevel, meanRepair, 5,
 				(GPIndividual) ind1, (GPIndividual) ind2, state, threadnum,
 				resultDD,
+				resultNF,
 				result,
-				detail);
+				detail,
+				false);
 
-		//return detail + "\n" + result[0].getAverage() + " " + result[1].getAverage() + " " + resultDD.getAverage();
-		return result[0].getAverage() + " " + result[1].getAverage() + " " + resultDD.getAverage();
+		return result[0].getAverage() + " " + result[1].getAverage() + " " + resultDD.getAverage() + " " + resultNF.getAverage();
 	}
 
 	private void runExperiments(String[] dists,
@@ -189,14 +184,18 @@ public class DMOCCNSGA_MB extends GPjsp2WayMOCoevolveNSGA {
 			EvolutionState state,
 			int threadnum,
 			SmallStatistics resultDD,
+			SmallStatistics resultNF,
 			SmallStatistics[] result,
-			StringBuilder detail) {
+			StringBuilder detail,
+			boolean terminateOnInvalidPEF) {
+
 		outerLoop:
 			for (String dist : dists) { for (String s : lowers) { for (int m : numberOfMachines) { for (double u : utilisation) { for (double bl : breakdownLevel) { for (double mr : meanRepair) {
 				for (int ds = 0; ds < numDS; ds++) {
 					int lower = 0;
 					String distribution ="";
 					double param = -1;
+					int numNegativeFlowtimes = 0;
 
 					if ("miss".equals(s)) {
 						lower = 1;
@@ -219,14 +218,15 @@ public class DMOCCNSGA_MB extends GPjsp2WayMOCoevolveNSGA {
 							m, u, u, meanTime, distribution, param, 1000, 5000, SIM_BREAKDOWN_SEED[ds], bl, mr);
 					input.abjsp = jspDynamic;
 
-					//set dispatching rule
+					// Set the dispatching rule.
 					Machine.priorityType PT = Machine.priorityType.CONV;
 					jspDynamic.setPriorityType(PT);
 					jspDynamic.setScheduleStrategy(Machine.scheduleStrategy.NONDELAY);
 
 					//////////////////////////////////////////////
 					jspDynamic.setNextArrivalTime();
-					//set deactivations and activations for the machines
+
+					// Set the deactivations and activations for the machines.
 					for (int i = 0; i < m; i++) {
 						jspDynamic.setNextDeactivateTime(i);
 						jspDynamic.setNextActivateTime(i);
@@ -235,14 +235,13 @@ public class DMOCCNSGA_MB extends GPjsp2WayMOCoevolveNSGA {
 					while (!jspDynamic.isStop()) {
 						int event = jspDynamic.getNextEventType();
 						if (event == DynamicJSPFrameworkBreakdown.ARRIVAL_EVENT) {
-							//JOB newjob = jspDynamic.GenerateNonRecirculatedJob(jspDynamic.getNextArrivalTime());
-							///*
 							Job newjob = jspDynamic.generateRandomJob(jspDynamic.getNextArrivalTime());
 							input.partialEstimatedFlowtime = 0;
 							input.J = newjob;
 							for (int i = 0; i < newjob.getNumberOperations(); i++) {
 								input.stat.gatherStatFromJSPModel(jspDynamic, m , newjob, i, input.partialEstimatedFlowtime);
-								//calculcate parital flowtime
+
+								// Calculate partial estimated flowtime.
 								input.tempVal = 0;
 								input.k = i;
 								((GPIndividual) ind2).trees[0].child.eval(state,
@@ -251,21 +250,24 @@ public class DMOCCNSGA_MB extends GPjsp2WayMOCoevolveNSGA {
 										stack,
 										(GPIndividual) ind2,
 										this);
+
 								input.partialEstimatedFlowtime += input.tempVal;
 							}
 
 							if (input.partialEstimatedFlowtime < 0.0 ||
 									input.partialEstimatedFlowtime == Double.POSITIVE_INFINITY ||
 									Double.isNaN(input.partialEstimatedFlowtime)) {
-								resultDD = new SmallStatistics();
-								break outerLoop;
+								if (terminateOnInvalidPEF) {
+									state.output.warning("Invalid estimated flowtime value: (" + input.partialEstimatedFlowtime + "). Soft exitting the simulation.");
+									resultDD = new SmallStatistics();
+									break outerLoop;
+								}
+
+								numNegativeFlowtimes++;
 							}
 
 							newjob.assignDuedate(input.partialEstimatedFlowtime);
 							jspDynamic.setNextArrivalTime();
-							//*/
-							//newjob.assignDuedate(1.3*newjob.getTotalProcessingTime());
-							//jspDynamic.setNextArrivalTime();
 						} else if (event == DynamicJSPFrameworkBreakdown.READY_EVENT) {
 							jspDynamic.unplanAll();
 							do {
@@ -275,7 +277,8 @@ public class DMOCCNSGA_MB extends GPjsp2WayMOCoevolveNSGA {
 								Machine M = jspDynamic.machines[nextMachine];
 								input.M = M;
 								jspDynamic.setInitalPriority(M);
-								// determine priority of jobs in queue
+
+								// Determine priority of jobs in queue.
 								if (M.getQueue().size() > 1) {
 									((GPIndividual) ind1).trees[0].child.eval(
 											state,
@@ -317,10 +320,12 @@ public class DMOCCNSGA_MB extends GPjsp2WayMOCoevolveNSGA {
 
 					double mape = jspDynamic.getMAPE();
 					if (mape < 0.0 || mape == Double.POSITIVE_INFINITY || Double.isNaN(mape)) {
+						state.output.warning("Invalid MAPE value. Soft exitting simulation.");
 						break outerLoop;
 					}
 
 					resultDD.add(mape);
+					resultNF.add(numNegativeFlowtimes);
 					result[0].add(jspDynamic.getCmax());
 					result[1].add(jspDynamic.getNormalisedTotalWeightedTardiness());
 					detail.append(jspDynamic.getCmax() + " " + jspDynamic.getNormalisedTotalWeightedTardiness() + " " + mape + " ");
