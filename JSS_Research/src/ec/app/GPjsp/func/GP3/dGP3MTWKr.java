@@ -38,7 +38,7 @@ public class dGP3MTWKr extends GPNode{
 
         JSPData jd = ((JSPData)(input));
 
-        Machine M = jd.M;
+        Machine M = jd.machine;
 
         jd.tempVal = M.getRemainingWorkload();
    }

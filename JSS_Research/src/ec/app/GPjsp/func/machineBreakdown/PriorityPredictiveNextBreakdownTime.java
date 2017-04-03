@@ -40,7 +40,7 @@ public class PriorityPredictiveNextBreakdownTime extends GPNode {
 			final Problem problem) {
         JSPData jd = (JSPData) input;
 
-        Machine machine = jd.M;
+        Machine machine = jd.machine;
         double predNextBreakdown = machine.getActivationTime() + machine.getSampleAvgInterBreakdownTimes();
 
         for (Job job : machine.getQueue()) {

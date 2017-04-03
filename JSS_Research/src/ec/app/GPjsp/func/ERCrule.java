@@ -110,7 +110,7 @@ public class ERCrule extends ERC{
         final Problem problem)
         {
             JSPData jd = (JSPData)(input);
-            AbstractJSPFramework jsp = jd.abjsp;
+            AbstractJSPFramework jsp = jd.abJSP;
             jsp.setPriorityType(PT);
         }
 }

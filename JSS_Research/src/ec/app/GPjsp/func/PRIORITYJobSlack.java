@@ -38,7 +38,7 @@ public class PRIORITYJobSlack extends GPNode{
 
         JSPData jd = ((JSPData)(input));
 
-        Machine M = jd.M;
+        Machine M = jd.machine;
 
         for (Job J:M.getQueue()) {
             J.tempPriority = J.getDuedate() - (M.getReadyTime() + J.getRemainingProcessingTime());

@@ -38,7 +38,7 @@ public class dGP3MNOPw extends GPNode{
 
         JSPData jd = ((JSPData)(input));
 
-        Machine M = jd.M;
+        Machine M = jd.machine;
 
         jd.tempVal = M.getNumberofJobInQueue();
    }

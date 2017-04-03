@@ -38,7 +38,7 @@ public class PRIORITYDiv extends GPNode{
 
         JSPData jd = ((JSPData)(input));
 
-        Machine M = jd.M;
+        Machine M = jd.machine;
         double[] result = new double[M.getQueue().size()];
 
         children[0].eval(state,thread,input,stack,individual,problem);

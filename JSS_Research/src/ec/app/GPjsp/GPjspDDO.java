@@ -82,7 +82,7 @@ public class GPjspDDO extends GPProblem implements SimpleProblemForm {
                         param = 0.5;
                     }
                     DynamicJSPFramework jspDynamic = new DynamicJSPFramework(SimSeed[ds],m,lower,m,u,u,meanTime,distribution,param,1000,5000);
-                    input.abjsp = jspDynamic;
+                    input.abJSP = jspDynamic;
                     //SampleArray sa = new SampleArray(20);
                     //set dispatching rule
                     jspDynamic.setPriorityType(PT);
@@ -94,7 +94,7 @@ public class GPjspDDO extends GPProblem implements SimpleProblemForm {
                         if (jspDynamic.isNextArrivalEvent()) {
                             Job newjob = jspDynamic.generateRandomJob(jspDynamic.getNextArrivalTime());
                             input.partialEstimatedFlowtime = 0;
-                            input.J = newjob;
+                            input.job = newjob;
                             for (int i = 0; i < newjob.getNumberOperations(); i++) {
                                 input.stat.gatherStatFromJSPModel(jspDynamic, m , newjob,i , input.partialEstimatedFlowtime);
                                 //calculcate parital flowtime
@@ -245,7 +245,7 @@ public class GPjspDDO extends GPProblem implements SimpleProblemForm {
                         param = 0.5;
                     }
                     DynamicJSPFramework jspDynamic = new DynamicJSPFramework(SimSeed[ds],m,lower,m,u,u,meanTime,distribution,param,1000,5000);
-                    input.abjsp = jspDynamic;
+                    input.abJSP = jspDynamic;
                     //SampleArray sa = new SampleArray(20);
                     //set dispatching rule
                     jspDynamic.setPriorityType(PT);
@@ -257,7 +257,7 @@ public class GPjspDDO extends GPProblem implements SimpleProblemForm {
                         if (jspDynamic.isNextArrivalEvent()) {
                             Job newjob = jspDynamic.generateRandomJob(jspDynamic.getNextArrivalTime());
                             input.partialEstimatedFlowtime = 0;
-                            input.J = newjob;
+                            input.job = newjob;
                             for (int i = 0; i < newjob.getNumberOperations(); i++) {
                                 input.stat.gatherStatFromJSPModel(jspDynamic, m , newjob,i , input.partialEstimatedFlowtime);
                                 //calculcate parital flowtime

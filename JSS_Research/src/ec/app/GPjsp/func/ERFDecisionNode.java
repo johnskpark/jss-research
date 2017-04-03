@@ -103,8 +103,8 @@ public class ERFDecisionNode extends ERF{
         final Problem problem)
         {
             JSPData jd = ((JSPData)(input));
-            Machine M = jd.M;
-            AbstractJSPFramework jsp = jd.abjsp;
+            Machine M = jd.machine;
+            AbstractJSPFramework jsp = jd.abJSP;
             
             double attributeValue = -1;
             if (attribute == 0) attributeValue = M.getBottleNeckRatioOfQueue(jsp.getBottleneckMachineID());

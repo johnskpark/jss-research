@@ -38,8 +38,8 @@ public class PRIORITYCriticalMachineIdleness extends GPNode{
         final Problem problem) {
 
         JSPData jd = ((JSPData)(input));
-        Machine M = jd.M;
-        AbstractJSPFramework jsp = jd.abjsp;
+        Machine M = jd.machine;
+        AbstractJSPFramework jsp = jd.abJSP;
         
         for (Job J:M.getQueue()) {
             J.tempPriority = jsp.getCriticalMachineIdleness();

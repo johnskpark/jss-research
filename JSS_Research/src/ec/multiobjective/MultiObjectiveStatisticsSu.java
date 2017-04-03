@@ -10,7 +10,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,6 +23,7 @@ import ec.app.GPjsp.GPjsp2WayMOCoevolveNSGA;
 import ec.app.GPjsp.GPjsp2WayMOCoevolveSPEA;
 import ec.app.GPjsp.GPjspMOGPHH;
 import ec.app.OAS.GPoasMO;
+import ec.gp.GPIndividual;
 import ec.multiobjective.nsga2.HaDMOEA2MultiObjectiveFitness;
 import ec.multiobjective.nsga2.NSGA2MultiObjectiveFitness;
 import ec.multiobjective.spea2.SPEA2MultiObjectiveFitness;
@@ -717,9 +717,11 @@ public class MultiObjectiveStatisticsSu extends MultiObjectiveStatistics
         	// Reevaluate the individuals over the training set.
         	Coevolutionary2WayGPIndividual individual = (Coevolutionary2WayGPIndividual) subpop1.get(i);
 
-        	Individual[] inds = new Individual[2];
+        	GPIndividual[] inds = new GPIndividual[2];
     		inds[0] = individual;
     		inds[1] = individual.context[1];
+
+    		inds[1].trees[0].printTree(state, statisticslog);
 
         	state.output.println(gp.getTrainingPerformance(state, 0, inds), frontLog);
         	state.output.message("Evaluated individual " + i + " on training");
@@ -732,12 +734,24 @@ public class MultiObjectiveStatisticsSu extends MultiObjectiveStatistics
         	// Reevaluate the individuals over the test set.
         	Coevolutionary2WayGPIndividual individual = (Coevolutionary2WayGPIndividual) subpop1.get(i);
 
-        	Individual[] inds = new Individual[2];
+        	GPIndividual[] inds = new GPIndividual[2];
     		inds[0] = individual;
     		inds[1] = individual.context[1];
 
     		state.output.println(gp.getTestPerformance(state, 0, inds), frontLog);
         	state.output.message("Evaluated individual " + i + " on test");
+        }
+
+        for (int i = 0; i < paretoSize; i++) {
+        	// Print out the individuals in a GraphViz format.
+        	Coevolutionary2WayGPIndividual individual = (Coevolutionary2WayGPIndividual) subpop1.get(i);
+
+        	GPIndividual[] inds = new GPIndividual[2];
+    		inds[0] = individual;
+    		inds[1] = individual.context[1];
+
+    		state.output.println(inds[0].trees[0].child.makeGraphvizTree(), statisticslog);
+    		state.output.println(inds[1].trees[0].child.makeGraphvizTree(), statisticslog);
         }
     }
 

@@ -38,6 +38,6 @@ public class MACHINEMachineProgress extends GPNode{
 
         JSPData jd = ((JSPData)(input));
 
-        jd.tempVal = jd.M.getMachineProgress();
+        jd.tempVal = jd.machine.getMachineProgress();
    }
 }

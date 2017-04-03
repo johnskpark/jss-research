@@ -38,7 +38,7 @@ public class PRIORITYChangeSign extends GPNode{
 
         JSPData jd = ((JSPData)(input));
 
-        Machine M = jd.M;
+        Machine M = jd.machine;
 
         children[0].eval(state,thread,input,stack,individual,problem);
         for (Job J:M.getQueue()) {

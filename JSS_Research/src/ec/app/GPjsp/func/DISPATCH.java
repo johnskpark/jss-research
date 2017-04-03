@@ -36,8 +36,8 @@ public class DISPATCH extends GPNode{
         final GPIndividual individual,
         final Problem problem) {
         JSPData jd = (JSPData)(input);
-        Machine M = jd.M;
-        AbstractJSPFramework jsp = jd.abjsp;
+        Machine M = jd.machine;
+        AbstractJSPFramework jsp = jd.abJSP;
         children[0].eval(state,thread,input,stack,individual,problem);
         children[1].eval(state,thread,input,stack,individual,problem);
         jsp.calculatePriority(M);

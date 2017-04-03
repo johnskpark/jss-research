@@ -38,7 +38,7 @@ public class CONDITIONGreaterEq extends GPNode{
         final Problem problem) {
 
         JSPData jd = (JSPData)(input);
-        Machine M = jd.M;
+        Machine M = jd.machine;
         double attributeValue = -1;
 
         children[0].eval(state,thread,input,stack,individual,problem);

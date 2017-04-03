@@ -37,7 +37,7 @@ public class MACHINECriticalMachineIdleness extends GPNode{
         final Problem problem) {
 
         JSPData jd = ((JSPData)(input));
-        JSPFramework jsp = (JSPFramework) jd.abjsp;
+        JSPFramework jsp = (JSPFramework) jd.abJSP;
         jd.tempVal = jsp.getCriticalMachineIdleness();
    }
 }

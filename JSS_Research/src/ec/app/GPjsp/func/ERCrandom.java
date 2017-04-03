@@ -126,7 +126,7 @@ public class ERCrandom extends ERC{
     		final Problem problem) {
     	JSPData jd = ((JSPData)(input));
 
-    	Machine M = jd.M;
+    	Machine M = jd.machine;
 
     	for (Job J:M.getQueue()) {
     		J.tempPriority = r_constant;

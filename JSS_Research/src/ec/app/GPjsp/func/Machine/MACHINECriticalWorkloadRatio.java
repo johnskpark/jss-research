@@ -37,7 +37,7 @@ public class MACHINECriticalWorkloadRatio extends GPNode{
         final Problem problem) {
 
         JSPData jd = ((JSPData)(input));
-        AbstractJSPFramework jsp = jd.abjsp;
-        jd.tempVal = jd.M.getCritialRatioOfQueue(jsp.getCriticalMachineID());
+        AbstractJSPFramework jsp = jd.abJSP;
+        jd.tempVal = jd.machine.getCritialRatioOfQueue(jsp.getCriticalMachineID());
    }
 }

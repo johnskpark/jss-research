@@ -100,7 +100,7 @@ public class ERCnondelayfactor extends ERC{
         final Problem problem)
         {
             JSPData jd = (JSPData)(input);
-            AbstractJSPFramework jsp = jd.abjsp;
+            AbstractJSPFramework jsp = jd.abJSP;
             
             jsp.setNonDelayFactor(NONDELAY_FACTOR);
         }

@@ -86,7 +86,7 @@ public class GPjspMOGPHHnoestimate extends GPjspMOGPHH{
                     }
                     DynamicJSPFramework.revisit = true;
                     DynamicJSPFramework jspDynamic = new DynamicJSPFramework(SimSeed[ds],m,2,14,u,u,meanTime,distribution,param,500,2000);
-                    input.abjsp = jspDynamic;
+                    input.abJSP = jspDynamic;
                     //set dispatching rule
                     Machine.priorityType PT = Machine.priorityType.CONV;
                     jspDynamic.setPriorityType(PT);
@@ -110,7 +110,7 @@ public class GPjspMOGPHHnoestimate extends GPjspMOGPHH{
                                 if (nextMachine<0)
                                     break;
                                 Machine M = jspDynamic.machines[nextMachine];
-                                input.M = M;
+                                input.machine = M;
                                 jspDynamic.setInitalPriority(M);
                                 // determine priority of jobs in queue
                                 if (M.getQueue().size()>1){
@@ -199,7 +199,7 @@ public class GPjspMOGPHHnoestimate extends GPjspMOGPHH{
                     meanTime = mean;
                     DynamicJSPFramework.revisit = true;
                     DynamicJSPFramework jspDynamic = new DynamicJSPFramework(SimSeed[ds],m,2,14,u,u,meanTime,distribution,param,500,2000);
-                    input.abjsp = jspDynamic;
+                    input.abJSP = jspDynamic;
                     //set dispatching rule
                     Machine.priorityType PT = Machine.priorityType.CONV;
                     jspDynamic.setPriorityType(PT);
@@ -218,7 +218,7 @@ public class GPjspMOGPHHnoestimate extends GPjspMOGPHH{
                                 if (nextMachine<0)
                                     break;
                                 Machine M = jspDynamic.machines[nextMachine];
-                                input.M = M;
+                                input.machine = M;
                                 jspDynamic.setInitalPriority(M);
                                 // determine priority of jobs in queue
                                 if (M.getQueue().size()>1){

@@ -74,7 +74,7 @@ public class GPjspPriorityIterativeDual extends GPProblem implements SimpleProbl
                     int dr = 1;
                     if (tempObj == Double.POSITIVE_INFINITY) dr = 0;
                     //start evaluate schedule
-                    input.abjsp = jspTrainning[instance];
+                    input.abJSP = jspTrainning[instance];
                     jspTrainning[instance].reset();
                     int N = jspTrainning[instance].getNumberofOperations();
                     jspTrainning[instance].initilizeSchedule();
@@ -82,7 +82,7 @@ public class GPjspPriorityIterativeDual extends GPProblem implements SimpleProbl
                     //choose the next machine to be schedule
                     while (nScheduledOp<N){
                         Machine M = jspTrainning[instance].Machines[jspTrainning[instance].nextMachine()];
-                        input.M = M;
+                        input.machine = M;
 
                         jspTrainning[instance].setScheduleStrategy(Machine.scheduleStrategy.NONDELAY);
                         // determine priority of jobs in queue
@@ -172,7 +172,7 @@ public class GPjspPriorityIterativeDual extends GPProblem implements SimpleProbl
                         int dr = 1;
                         if (tempObj == Double.POSITIVE_INFINITY) dr = 0;
                         //start evaluate schedule
-                        input.abjsp = jspTrainning[instance];
+                        input.abJSP = jspTrainning[instance];
                         jspTrainning[instance].reset();
                         int N = jspTrainning[instance].getNumberofOperations();
                         jspTrainning[instance].initilizeSchedule();
@@ -180,7 +180,7 @@ public class GPjspPriorityIterativeDual extends GPProblem implements SimpleProbl
                         //choose the next machine to be schedule
                         while (nScheduledOp<N){
                             Machine M = jspTrainning[instance].Machines[jspTrainning[instance].nextMachine()];
-                            input.M = M;
+                            input.machine = M;
 
                             jspTrainning[instance].setScheduleStrategy(Machine.scheduleStrategy.NONDELAY);
                             // determine priority of jobs in queue

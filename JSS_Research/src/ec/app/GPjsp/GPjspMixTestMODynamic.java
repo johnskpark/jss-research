@@ -59,7 +59,7 @@ public class GPjspMixTestMODynamic extends GPProblem implements SimpleProblemFor
             for (int ds = 0; ds < 30; ds++) {
                 for (double u : utilisation){
                 DynamicJSPFramework jspDynamic = new DynamicJSPFramework(SimSeed[ds],6,u,100,500);
-                input.abjsp = jspDynamic;
+                input.abJSP = jspDynamic;
                 //set dispatching rule
                 Machine.priorityType PT = Machine.priorityType.CONV;
                 jspDynamic.setPriorityType(PT);
@@ -77,7 +77,7 @@ public class GPjspMixTestMODynamic extends GPProblem implements SimpleProblemFor
                             if (nextMachine<0)
                                 break;
                             Machine M = jspDynamic.machines[nextMachine];
-                            input.M = M;
+                            input.machine = M;
                             jspDynamic.setInitalPriority(M);
                             // determine priority of jobs in queue
                             if (M.getQueue().size()>1){
@@ -125,7 +125,7 @@ public class GPjspMixTestMODynamic extends GPProblem implements SimpleProblemFor
             for (int ds = 0; ds < 30; ds++) {
                 for (double u : utilisation){
                 DynamicJSPFramework jspDynamic = new DynamicJSPFramework(SimSeed[ds],10,u,100,500);
-                input.abjsp = jspDynamic;
+                input.abJSP = jspDynamic;
                 //set dispatching rule
                 Machine.priorityType PT = Machine.priorityType.CONV;
                 jspDynamic.setPriorityType(PT);
@@ -143,7 +143,7 @@ public class GPjspMixTestMODynamic extends GPProblem implements SimpleProblemFor
                             if (nextMachine<0)
                                 break;
                             Machine M = jspDynamic.machines[nextMachine];
-                            input.M = M;
+                            input.machine = M;
                             jspDynamic.setInitalPriority(M);
                             // determine priority of jobs in queue
                             if (M.getQueue().size()>1){

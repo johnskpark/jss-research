@@ -38,6 +38,6 @@ public class MACHINEWorkloadRatio extends GPNode{
 
         JSPData jd = ((JSPData)(input));
 
-        jd.tempVal = jd.M.getWorkLoadRatio();
+        jd.tempVal = jd.machine.getWorkLoadRatio();
    }
 }

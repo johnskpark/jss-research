@@ -42,10 +42,10 @@ public class PriorityExactBreakdownProb extends GPNode {
         JSPData jd = (JSPData) input;
 
         // For now, assume exponential distribution for the breakdowns (memoryless).
-        DynamicJSPFrameworkBreakdown jsp = (DynamicJSPFrameworkBreakdown) jd.abjsp;
+        DynamicJSPFrameworkBreakdown jsp = (DynamicJSPFrameworkBreakdown) jd.abJSP;
         double breakdownRate = jsp.getBreakdownRate();
 
-        Machine machine = jd.M;
+        Machine machine = jd.machine;
         for (Job job : machine.getQueue()) {
         	job.tempPriority = 1.0 - Math.exp(-job.getCurrentOperationProcessingTime() / breakdownRate);
         }

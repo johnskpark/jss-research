@@ -103,7 +103,7 @@ public class GP3ERCrandom extends ERC{
         {
             JSPData jd = ((JSPData)(input));
 
-            Machine M = jd.M;
+            Machine M = jd.machine;
 
             for (Job J:M.getQueue()) {
                 J.tempPriority = r_constant;

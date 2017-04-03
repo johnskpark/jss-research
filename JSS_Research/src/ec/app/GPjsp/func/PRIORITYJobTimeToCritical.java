@@ -40,9 +40,9 @@ public class PRIORITYJobTimeToCritical extends GPNode{
 
         JSPData jd = ((JSPData)(input));
 
-        Machine M = jd.M;
+        Machine M = jd.machine;
         
-        AbstractJSPFramework jsp = jd.abjsp;
+        AbstractJSPFramework jsp = jd.abJSP;
         
         for (Job J:M.getQueue()) {
             J.tempPriority = J.getTimeToMachine(jsp.getCriticalMachineID());

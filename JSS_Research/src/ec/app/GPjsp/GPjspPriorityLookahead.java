@@ -67,7 +67,7 @@ public class GPjspPriorityLookahead extends GPProblem implements SimpleProblemFo
             //*
             for (int instance = 0; instance < jspTrainning.length; instance++){
             //start evaluate schedule
-                input.abjsp = jspTrainning[instance];
+                input.abJSP = jspTrainning[instance];
                 jspTrainning[instance].reset();
                 int N = jspTrainning[instance].getNumberofOperations();
                 jspTrainning[instance].initilizeSchedule();
@@ -75,7 +75,7 @@ public class GPjspPriorityLookahead extends GPProblem implements SimpleProblemFo
                 //choose the next machine to be schedule
                 while (nScheduledOp<N){
                     Machine M = jspTrainning[instance].Machines[jspTrainning[instance].nextMachine()];
-                    input.M = M;
+                    input.machine = M;
                     ((GPIndividual)ind).trees[0].child.eval(
                         state,threadnum,input,stack,((GPIndividual)ind),this);
                     jspTrainning[instance].setScheduleStrategy(Machine.scheduleStrategy.HYBRID);
@@ -150,7 +150,7 @@ public class GPjspPriorityLookahead extends GPProblem implements SimpleProblemFo
                 SmallStatistics result = new SmallStatistics();
                 for (int instance = 0; instance < jspTesting.length; instance++){
                 //start evaluate schedule
-                    input.abjsp = jspTrainning[instance];
+                    input.abJSP = jspTrainning[instance];
                     jspTesting[instance].reset();
                     int N = jspTesting[instance].getNumberofOperations();
                     jspTesting[instance].initilizeSchedule();
@@ -158,7 +158,7 @@ public class GPjspPriorityLookahead extends GPProblem implements SimpleProblemFo
                     //choose the next machine to be schedule
                     while (nScheduledOp<N){
                         Machine M = jspTesting[instance].Machines[jspTesting[instance].nextMachine()];
-                        input.M = M;
+                        input.machine = M;
                         //jsp.setPriorityType(MACHINE.priorityType.WLCtwkr);
                         jspTesting[instance].setScheduleStrategy(Machine.scheduleStrategy.NONDELAY);
                         // determine priority of jobs in queue

@@ -40,7 +40,7 @@ public class PriorityExactNextBreakdownTime extends GPNode {
 			final Problem problem) {
         JSPData jd = (JSPData) input;
 
-        Machine machine = jd.M;
+        Machine machine = jd.machine;
         double nextBreakdown = machine.getDeactivationTime();
 
         for (Job job : machine.getQueue()) {

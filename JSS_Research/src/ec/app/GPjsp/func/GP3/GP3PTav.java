@@ -38,7 +38,7 @@ public class GP3PTav extends GPNode{
 
         JSPData jd = ((JSPData)(input));
 
-        Machine M = jd.M;
+        Machine M = jd.machine;
 
         for (Job J:M.getQueue()) {
             if (M.getNumberofJobInQueue()>0) J.tempPriority = M.getQueueWorkload()/M.getNumberofJobInQueue();

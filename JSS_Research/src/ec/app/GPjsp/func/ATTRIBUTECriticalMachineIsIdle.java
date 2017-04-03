@@ -37,7 +37,7 @@ public class ATTRIBUTECriticalMachineIsIdle extends GPNode{
         final Problem problem) {
 
         JSPData jd = (JSPData)(input);
-        AbstractJSPFramework jsp = jd.abjsp;
+        AbstractJSPFramework jsp = jd.abJSP;
 
         jd.attributeValue = jsp.getCriticalMachineIdleness();
    }

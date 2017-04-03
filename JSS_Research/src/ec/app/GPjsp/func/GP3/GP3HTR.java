@@ -38,7 +38,7 @@ public class GP3HTR extends GPNode{
 
         JSPData jd = ((JSPData)(input));
 
-        Machine M = jd.M;
+        Machine M = jd.machine;
 
         for (Job J:M.getQueue()) {
             if ((J.getTotalProcessingTime()-J.getRemainingProcessingTime())>0) J.tempPriority = ((M.getReadyTime()-J.getReleaseTime())/(J.getTotalProcessingTime()-J.getRemainingProcessingTime()));

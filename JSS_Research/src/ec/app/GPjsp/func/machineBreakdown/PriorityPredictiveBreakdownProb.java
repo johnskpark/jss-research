@@ -41,7 +41,7 @@ public class PriorityPredictiveBreakdownProb extends GPNode {
         JSPData jd = (JSPData) input;
 
         // For now, assume exponential distribution for the breakdowns (memoryless).
-        Machine machine = jd.M;
+        Machine machine = jd.machine;
         double predBreakdownRate = machine.getSampleAvgInterBreakdownTimes();
 
         for (Job job : machine.getQueue()) {

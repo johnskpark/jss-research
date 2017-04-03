@@ -37,19 +37,19 @@ public class TOPGP3classification extends GPNode{
 
         JSPData jd = ((JSPData)(input));
         
-        Machine thisM  = jd.M;
-        int thisID = jd.M.getID();
+        Machine thisM  = jd.machine;
+        int thisID = jd.machine.getID();
         
-        double[] attribute = new double[jd.abjsp.getMachines().length];
+        double[] attribute = new double[jd.abJSP.getMachines().length];
         
         
         for (int i = 0; i < attribute.length; i++) {
-            jd.M = jd.abjsp.getMachines()[i];
+            jd.machine = jd.abJSP.getMachines()[i];
             children[0].eval(state,thread,input,stack,individual,problem);
             attribute[i] = jd.tempVal;
         }  
         
-        jd.M = thisM;
+        jd.machine = thisM;
         
         boolean cond = true;
         for (int i = 0; i < attribute.length; i++) {

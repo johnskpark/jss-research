@@ -116,7 +116,7 @@ public class ERCdispatch extends ERC{
         final Problem problem)
         {
             JSPData jd = (JSPData)(input);
-            AbstractJSPFramework jsp = jd.abjsp;
+            AbstractJSPFramework jsp = jd.abJSP;
             
             jsp.setNonDelayFactor(nonDelayFactor);
             jsp.setPriorityType(PT);

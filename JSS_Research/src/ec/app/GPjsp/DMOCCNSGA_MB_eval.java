@@ -437,10 +437,17 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 			SmallStatistics[] result,
 			StringBuilder detail,
 			boolean terminateOnInvalidPEF) {
+		// TODO temp
+		int count = 0;
 
 		outerLoop:
 			for (String dist : dists) { for (String s : lowers) { for (int m : numberOfMachines) { for (double u : utilisation) { for (double bl : breakdownLevel) { for (double mr : meanRepair) {
 				for (int ds = 0; ds < numDS; ds++) {
+					// TODO temp
+					if (count == 7) {
+						System.out.println("Problem instance in training with bad MAPE");
+					}
+
 					int lower = 0;
 					String distribution ="";
 					double param = -1;
@@ -465,7 +472,7 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 
 					DynamicJSPFrameworkBreakdown jspDynamic = new DynamicJSPFrameworkBreakdown(SIM_JOB_SEED[ds], m, lower,
 							m, u, u, meanTime, distribution, param, 1000, 5000, SIM_BREAKDOWN_SEED[ds], bl, mr);
-					input.abjsp = jspDynamic;
+					input.abJSP = jspDynamic;
 
 					// Set the dispatching rule.
 					Machine.priorityType PT = Machine.priorityType.CONV;
@@ -486,7 +493,7 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 						if (event == DynamicJSPFrameworkBreakdown.ARRIVAL_EVENT) {
 							Job newjob = jspDynamic.generateRandomJob(jspDynamic.getNextArrivalTime());
 							input.partialEstimatedFlowtime = 0;
-							input.J = newjob;
+							input.job = newjob;
 							for (int i = 0; i < newjob.getNumberOperations(); i++) {
 								input.stat.gatherStatFromJSPModel(jspDynamic, m , newjob, i, input.partialEstimatedFlowtime);
 
@@ -499,6 +506,10 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 										stack,
 										(GPIndividual) ind2,
 										this);
+								// TODO temp
+								if (input.tempVal > 100000) {
+									System.out.printf("Large PEF calculation: %d, %f, %f\n", input.job.getID(), input.partialEstimatedFlowtime, input.tempVal);
+								}
 
 								input.partialEstimatedFlowtime += input.tempVal;
 							}
@@ -524,7 +535,7 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 								if (nextMachine < 0)
 									break;
 								Machine M = jspDynamic.machines[nextMachine];
-								input.M = M;
+								input.machine = M;
 								jspDynamic.setInitalPriority(M);
 
 								// Determine priority of jobs in queue.
@@ -578,6 +589,9 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 					result[1].add(jspDynamic.getNormalisedTotalWeightedTardiness());
 					detail.append(jspDynamic.getCmax() + " " + jspDynamic.getNormalisedTotalWeightedTardiness() + " " + mape + " ");
 				}
+
+				// TODO temp
+				count++;
 			}}}}}}
 	}
 

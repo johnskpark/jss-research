@@ -37,7 +37,7 @@ public class MACHINEBottleneckWorkloadRatio extends GPNode{
         final Problem problem) {
 
         JSPData jd = ((JSPData)(input));
-        AbstractJSPFramework jsp = jd.abjsp;
-        jd.tempVal = jd.M.getBottleNeckRatioOfQueue(jsp.getBottleneckMachineID());
+        AbstractJSPFramework jsp = jd.abJSP;
+        jd.tempVal = jd.machine.getBottleNeckRatioOfQueue(jsp.getBottleneckMachineID());
    }
 }

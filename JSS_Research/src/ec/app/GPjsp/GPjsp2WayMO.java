@@ -77,7 +77,7 @@ public class GPjsp2WayMO extends GPProblem implements SimpleProblemForm {
                         param = 0.5;
                     }
                     DynamicJSPFramework jspDynamic = new DynamicJSPFramework(SimSeed[ds],m,lower,m,u,u,meanTime,distribution,param,1000,5000);
-                    input.abjsp = jspDynamic;
+                    input.abJSP = jspDynamic;
                     //set dispatching rule
                     Machine.priorityType PT = Machine.priorityType.CONV;
                     jspDynamic.setPriorityType(PT);
@@ -90,7 +90,7 @@ public class GPjsp2WayMO extends GPProblem implements SimpleProblemForm {
                             ///*
                             Job newjob = jspDynamic.generateRandomJob(jspDynamic.getNextArrivalTime());
                             input.partialEstimatedFlowtime = 0;
-                            input.J = newjob;
+                            input.job = newjob;
                             for (int i = 0; i < newjob.getNumberOperations(); i++) {
                                 input.stat.gatherStatFromJSPModel(jspDynamic, m , newjob,i , input.partialEstimatedFlowtime);
                                 //calculcate parital flowtime
@@ -117,7 +117,7 @@ public class GPjsp2WayMO extends GPProblem implements SimpleProblemForm {
                                 if (nextMachine<0)
                                     break;
                                 Machine M = jspDynamic.machines[nextMachine];
-                                input.M = M;
+                                input.machine = M;
                                 jspDynamic.setInitalPriority(M);
                                 // determine priority of jobs in queue
                                 if (M.getQueue().size()>1){
@@ -208,7 +208,7 @@ public class GPjsp2WayMO extends GPProblem implements SimpleProblemForm {
                         param = 0.5;
                     }
                     DynamicJSPFramework jspDynamic = new DynamicJSPFramework(SimSeed[ds],m,lower,m,u,u,meanTime,distribution,param,1000,5000);
-                    input.abjsp = jspDynamic;
+                    input.abJSP = jspDynamic;
                     //set dispatching rule
                     Machine.priorityType PT = Machine.priorityType.CONV;
                     jspDynamic.setPriorityType(PT);
@@ -219,7 +219,7 @@ public class GPjsp2WayMO extends GPProblem implements SimpleProblemForm {
                         if (jspDynamic.isNextArrivalEvent()) {
                             Job newjob = jspDynamic.generateRandomJob(jspDynamic.getNextArrivalTime());
                             input.partialEstimatedFlowtime = 0;
-                            input.J = newjob;
+                            input.job = newjob;
                             for (int i = 0; i < newjob.getNumberOperations(); i++) {
                                 input.stat.gatherStatFromJSPModel(jspDynamic, m , newjob,i , input.partialEstimatedFlowtime);
                                 //calculcate parital flowtime
@@ -243,7 +243,7 @@ public class GPjsp2WayMO extends GPProblem implements SimpleProblemForm {
                                 if (nextMachine<0)
                                     break;
                                 Machine M = jspDynamic.machines[nextMachine];
-                                input.M = M;
+                                input.machine = M;
                                 jspDynamic.setInitalPriority(M);
                                 // determine priority of jobs in queue
                                 if (M.getQueue().size()>1){

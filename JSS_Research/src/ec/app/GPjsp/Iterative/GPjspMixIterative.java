@@ -70,7 +70,7 @@ public class GPjspMixIterative extends GPProblem implements SimpleProblemForm {
                 jspTrainning[instance].resetALL();
                 do{
                     //start evaluate schedule
-                    input.abjsp = jspTrainning[instance];
+                    input.abJSP = jspTrainning[instance];
                     jspTrainning[instance].reset();
                     int N = jspTrainning[instance].getNumberofOperations();
                     jspTrainning[instance].initilizeSchedule();
@@ -78,7 +78,7 @@ public class GPjspMixIterative extends GPProblem implements SimpleProblemForm {
                     //choose the next machine to be schedule
                     while (nScheduledOp<N){
                         Machine M = jspTrainning[instance].Machines[jspTrainning[instance].nextMachine()];
-                        input.M = M;
+                        input.machine = M;
 
                         jspTrainning[instance].setScheduleStrategy(Machine.scheduleStrategy.HYBRID);
                         // determine priority of jobs in queue
@@ -162,7 +162,7 @@ public class GPjspMixIterative extends GPProblem implements SimpleProblemForm {
                     jspTrainning[instance].resetALL();
                     do{
                         //start evaluate schedule
-                        input.abjsp = jspTrainning[instance];
+                        input.abJSP = jspTrainning[instance];
                         jspTrainning[instance].reset();
                         int N = jspTrainning[instance].getNumberofOperations();
                         jspTrainning[instance].initilizeSchedule();
@@ -170,7 +170,7 @@ public class GPjspMixIterative extends GPProblem implements SimpleProblemForm {
                         //choose the next machine to be schedule
                         while (nScheduledOp<N){
                             Machine M = jspTrainning[instance].Machines[jspTrainning[instance].nextMachine()];
-                            input.M = M;
+                            input.machine = M;
 
                             jspTrainning[instance].setScheduleStrategy(Machine.scheduleStrategy.HYBRID);
                             // determine priority of jobs in queue

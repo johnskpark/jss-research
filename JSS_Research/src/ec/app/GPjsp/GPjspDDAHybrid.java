@@ -82,7 +82,7 @@ public class GPjspDDAHybrid extends GPProblem implements SimpleProblemForm {
                         param = 0.5;
                     }
                     DynamicJSPFramework jspDynamic = new DynamicJSPFramework(SimSeed[ds],m,lower,m,u,u,meanTime,distribution,param,1000,5000);
-                    input.abjsp = jspDynamic;
+                    input.abJSP = jspDynamic;
                     //SampleArray sa = new SampleArray(20);
                     //set dispatching rule
                     jspDynamic.setPriorityType(PT);
@@ -93,7 +93,7 @@ public class GPjspDDAHybrid extends GPProblem implements SimpleProblemForm {
                     while (!jspDynamic.isStop()) {
                         if (jspDynamic.isNextArrivalEvent()) {
                             Job newjob = jspDynamic.generateRandomJob(jspDynamic.getNextArrivalTime());
-                            input.J = newjob;
+                            input.job = newjob;
                             input.stat.gatherStatFromJSPModel(jspDynamic, m , newjob, -1 , -1);
                             //calculcate aggregate flowtime
                             input.tempVal = 0;
@@ -256,7 +256,7 @@ public class GPjspDDAHybrid extends GPProblem implements SimpleProblemForm {
                         param = 0.5;
                     }
                     DynamicJSPFramework jspDynamic = new DynamicJSPFramework(SimSeed[ds],m,lower,m,u,u,meanTime,distribution,param,1000,5000);
-                    input.abjsp = jspDynamic;
+                    input.abJSP = jspDynamic;
                     //SampleArray sa = new SampleArray(20);
                     //set dispatching rule
                     jspDynamic.setPriorityType(PT);
@@ -267,7 +267,7 @@ public class GPjspDDAHybrid extends GPProblem implements SimpleProblemForm {
                     while (!jspDynamic.isStop()) {
                         if (jspDynamic.isNextArrivalEvent()) {
                             Job newjob = jspDynamic.generateRandomJob(jspDynamic.getNextArrivalTime());
-                            input.J = newjob;
+                            input.job = newjob;
                             input.stat.gatherStatFromJSPModel(jspDynamic, m , newjob, -1 , -1);
                             //calculcate aggregate flowtime
                             input.tempVal = 0;

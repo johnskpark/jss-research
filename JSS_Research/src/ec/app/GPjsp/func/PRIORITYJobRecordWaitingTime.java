@@ -38,7 +38,7 @@ public class PRIORITYJobRecordWaitingTime extends GPNode{
 
         JSPData jd = ((JSPData)(input));
 
-        Machine M = jd.M;
+        Machine M = jd.machine;
         for (Job J:M.getQueue()) {
             J.tempPriority = J.getCurrentOperationWaitingTime();
             if (J.tempPriority == -1){

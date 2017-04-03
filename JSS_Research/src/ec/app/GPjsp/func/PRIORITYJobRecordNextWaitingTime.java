@@ -38,14 +38,14 @@ public class PRIORITYJobRecordNextWaitingTime extends GPNode{
 
         JSPData jd = ((JSPData)(input));
 
-        Machine M = jd.M;
+        Machine M = jd.machine;
         for (Job J:M.getQueue()) {
             int nextMachine = J.getNextMachine();
             if (nextMachine==-1) J.tempPriority = 0;
             else {
                 J.tempPriority = J.getNextOperationWaitingTime();
                 if (J.tempPriority == -1){
-                    J.tempPriority = jd.abjsp.getMachines()[nextMachine].getQueueWorkload()/2.0;
+                    J.tempPriority = jd.abJSP.getMachines()[nextMachine].getQueueWorkload()/2.0;
                 }
             }
         }

@@ -36,6 +36,6 @@ public class ESTW extends GPNode{
         final Problem problem) {
 
         JSPData jd = ((JSPData)(input));
-        jd.tempVal = jd.J.getWeight();
+        jd.tempVal = jd.job.getWeight();
    }
 }

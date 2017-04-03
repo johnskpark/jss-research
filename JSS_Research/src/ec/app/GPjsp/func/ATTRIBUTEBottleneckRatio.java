@@ -37,8 +37,8 @@ public class ATTRIBUTEBottleneckRatio extends GPNode{
         final Problem problem) {
 
         JSPData jd = (JSPData)(input);
-        Machine M = jd.M;
-        AbstractJSPFramework jsp = jd.abjsp;
+        Machine M = jd.machine;
+        AbstractJSPFramework jsp = jd.abJSP;
 
         jd.attributeValue = M.getBottleNeckRatioOfQueue(jsp.getBottleneckMachineID());
    }

@@ -38,7 +38,7 @@ public class PRIORITYIf extends GPNode{
 
         JSPData jd = ((JSPData)(input));
 
-        Machine M = jd.M;
+        Machine M = jd.machine;
         double[] cond_result = new double[M.getQueue().size()];
         double[] result = new double[M.getQueue().size()];
 

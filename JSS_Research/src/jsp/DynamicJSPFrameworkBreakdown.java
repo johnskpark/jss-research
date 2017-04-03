@@ -514,26 +514,33 @@ import SmallStatistics.SmallStatistics;
         /*
          * remove complete job from the system
          */
-        public void removeJobFromSystem(Job J){
-            if (!isWarmUp()){
-                double flow = J.getReadyTime()-J.getReleaseTime();
+        public void removeJobFromSystem(Job job) {
+            if (!isWarmUp()) {
+                double flow = job.getReadyTime() - job.getReleaseTime();
                 flowtime.add(flow);
-                lateness.add(J.getReadyTime()-J.getDuedate());
-                tardiness.add(maxPlus(J.getReadyTime()-J.getDuedate()));
-                if (J.getReadyTime()>J.getDuedate()) {
+                lateness.add(job.getReadyTime() - job.getDuedate());
+                tardiness.add(maxPlus(job.getReadyTime() - job.getDuedate()));
+                if (job.getReadyTime() > job.getDuedate()) {
                     percentTardiness++;
-                    totalWeightedTardiness += J.getWeight()*maxPlus(J.getReadyTime()-J.getDuedate());
+                    totalWeightedTardiness += job.getWeight() * maxPlus(job.getReadyTime() - job.getDuedate());
                 }
                 throughput++;
-                totalABSDDError += Math.abs(J.getReadyTime()-J.getDuedate());
-                totalPercentageABSDDError += Math.abs(J.getReadyTime()-J.getDuedate())/flow;
-                totalPercentageDDError += (J.getReadyTime()-J.getDuedate())/flow;
-                estimateError += Math.abs(J.getFinishTime() - J.getReadyTime());
+                totalABSDDError += Math.abs(job.getReadyTime() - job.getDuedate());
+                totalPercentageABSDDError += Math.abs(job.getReadyTime() - job.getDuedate()) / flow;
+
+                // TODO temp
+                double percentageABSDDError = Math.abs(job.getReadyTime() - job.getDuedate()) / flow;
+                if (percentageABSDDError > 100000) {
+                	System.out.printf("Large error value: %f, %f, %f, %f\n", percentageABSDDError, job.getReadyTime(), job.getDuedate(), flow);
+                }
+
+                totalPercentageDDError += (job.getReadyTime() - job.getDuedate()) / flow;
+                estimateError += Math.abs(job.getFinishTime() - job.getReadyTime());
             }
-            errorDDFrequency.add(Math.abs(J.getReadyTime()-J.getDuedate()));
-            jobs.remove(J);
-            for (int i = 0; i < J.getNumberOperations(); i++) {
-                machines[J.getMachineIndexOf(i)].updateLeavingJob(J.getProcessingTimeOf(i));
+            errorDDFrequency.add(Math.abs(job.getReadyTime() - job.getDuedate()));
+            jobs.remove(job);
+            for (int i = 0; i < job.getNumberOperations(); i++) {
+                machines[job.getMachineIndexOf(i)].updateLeavingJob(job.getProcessingTimeOf(i));
             }
         }
         /*

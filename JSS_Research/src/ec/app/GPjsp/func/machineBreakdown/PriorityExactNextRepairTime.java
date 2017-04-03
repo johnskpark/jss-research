@@ -40,7 +40,7 @@ public class PriorityExactNextRepairTime extends GPNode {
 			final Problem problem) {
         JSPData jd = (JSPData) input;
 
-        Machine machine = jd.M;
+        Machine machine = jd.machine;
         double nextRepair = machine.getActivationTime() - machine.getDeactivationTime();
 
         for (Job job : machine.getQueue()) {

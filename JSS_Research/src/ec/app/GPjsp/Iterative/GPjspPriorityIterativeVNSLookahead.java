@@ -70,7 +70,7 @@ public class GPjspPriorityIterativeVNSLookahead extends GPProblem implements Sim
             //*
             for (int instance = 0; instance < jspTrainning.length; instance++){
                 //set look-ahead strategy
-                input.abjsp = jspTrainning[instance];
+                input.abJSP = jspTrainning[instance];
                 //end look-ahead setting
                 double tempObj = Double.POSITIVE_INFINITY;
                 boolean[] isApplied_Nk = new boolean[((GPIndividual)ind).trees.length-1]; //Arrays.fill(isApplied_Nk, Boolean.TRUE);
@@ -86,7 +86,7 @@ public class GPjspPriorityIterativeVNSLookahead extends GPProblem implements Sim
                     //choose the next machine to be schedule
                     while (nScheduledOp<N){
                         Machine M = jspTrainning[instance].Machines[jspTrainning[instance].nextMachine()];
-                        input.M = M;
+                        input.machine = M;
                         //set non-delay factor
                         ((GPIndividual)ind).trees[0].child.eval(
                             state,threadnum,input,stack,((GPIndividual)ind),this);
@@ -180,7 +180,7 @@ public class GPjspPriorityIterativeVNSLookahead extends GPProblem implements Sim
                 SmallStatistics result = new SmallStatistics();
                 for (int instance = 0; instance < jspTrainning.length; instance++){
                     //set look-ahead strategy
-                    input.abjsp = jspTrainning[instance];
+                    input.abJSP = jspTrainning[instance];
                     //end look-ahead setting
                     double tempObj = Double.POSITIVE_INFINITY;
                     boolean[] isApplied_Nk = new boolean[((GPIndividual)best_i).trees.length-1]; //Arrays.fill(isApplied_Nk, Boolean.TRUE);
@@ -196,7 +196,7 @@ public class GPjspPriorityIterativeVNSLookahead extends GPProblem implements Sim
                         //choose the next machine to be schedule
                         while (nScheduledOp<N){
                             Machine M = jspTrainning[instance].Machines[jspTrainning[instance].nextMachine()];
-                            input.M = M;
+                            input.machine = M;
                             //set non-delay factor
                             ((GPIndividual)best_i).trees[0].child.eval(
                                 state,threadnum,input,stack,((GPIndividual)best_i),this);

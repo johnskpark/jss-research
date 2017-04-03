@@ -38,7 +38,7 @@ public class PRIORITYJobSmallestExpectedTardiness extends GPNode{
 
         JSPData jd = ((JSPData)(input));
 
-        Machine M = jd.M;
+        Machine M = jd.machine;
 
         for (Job J:M.getQueue()) {
             double earliestStartTime = (M.getReadyTime()>J.getReadyTime())? M.getReadyTime():J.getReadyTime();

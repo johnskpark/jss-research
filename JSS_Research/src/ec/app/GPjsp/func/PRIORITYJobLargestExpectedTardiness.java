@@ -38,13 +38,13 @@ public class PRIORITYJobLargestExpectedTardiness extends GPNode{
 
         JSPData jd = ((JSPData)(input));
 
-        Machine M = jd.M;
+        Machine M = jd.machine;
 
         for (Job J:M.getQueue()) {
             double earliestStartTime = (M.getReadyTime()>J.getReadyTime())? M.getReadyTime():J.getReadyTime();
-            if (earliestStartTime + J.getLargestExpectedTimeToComplete(jd.abjsp.getMachines()) -J.getDuedate()>0)
+            if (earliestStartTime + J.getLargestExpectedTimeToComplete(jd.abJSP.getMachines()) -J.getDuedate()>0)
                 J.tempPriority = earliestStartTime + 
-                        J.getLargestExpectedTimeToComplete(jd.abjsp.getMachines())-J.getDuedate();
+                        J.getLargestExpectedTimeToComplete(jd.abJSP.getMachines())-J.getDuedate();
             else J.tempPriority = 0;
         }
    }

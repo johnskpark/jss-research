@@ -40,7 +40,7 @@ public class PriorityPredictiveNextRepairTime extends GPNode {
 			final Problem problem) {
         JSPData jd = (JSPData) input;
 
-        Machine machine = jd.M;
+        Machine machine = jd.machine;
         double predNextRepair = machine.getSampleAvgRepairTimes();
 
         for (Job job : machine.getQueue()) {

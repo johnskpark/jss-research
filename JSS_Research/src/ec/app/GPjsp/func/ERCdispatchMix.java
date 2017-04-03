@@ -116,9 +116,9 @@ public class ERCdispatchMix extends ERC{
         final Problem problem)
         {
             JSPData jd = (JSPData)(input);
-            Machine M = jd.M;
+            Machine M = jd.machine;
             
-            AbstractJSPFramework jsp = jd.abjsp;
+            AbstractJSPFramework jsp = jd.abJSP;
             
             jsp.setNonDelayFactor(nonDelayFactor);
             

@@ -38,7 +38,7 @@ public class PRIORITYJobRecordNextWaitingTimePseudo extends GPNode{
 
         JSPData jd = ((JSPData)(input));
 
-        Machine M = jd.M;
+        Machine M = jd.machine;
         for (Job J:M.getQueue()) {
             int nextMachine = J.getNextMachine();
             if (nextMachine==-1) J.tempPriority = 0;

@@ -38,7 +38,7 @@ public class PRIORITYJobRecordFinishTimePseudo extends GPNode{
 
         JSPData jd = ((JSPData)(input));
 
-        Machine M = jd.M;
+        Machine M = jd.machine;
         
         for (Job J:M.getQueue()) {
             if (jd.firstIteration) {

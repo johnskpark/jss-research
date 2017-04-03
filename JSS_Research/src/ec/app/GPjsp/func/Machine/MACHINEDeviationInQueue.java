@@ -36,6 +36,6 @@ public class MACHINEDeviationInQueue extends GPNode{
         final Problem problem) {
 
         JSPData jd = ((JSPData)(input));
-        jd.tempVal = jd.M.getDeviationInQueue();
+        jd.tempVal = jd.machine.getDeviationInQueue();
    }
 }

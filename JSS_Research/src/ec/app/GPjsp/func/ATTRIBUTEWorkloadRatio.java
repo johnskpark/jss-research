@@ -36,7 +36,7 @@ public class ATTRIBUTEWorkloadRatio extends GPNode{
         final Problem problem) {
 
         JSPData jd = (JSPData)(input);
-        Machine M = jd.M;
+        Machine M = jd.machine;
 
         jd.attributeValue = M.getWorkLoadRatio();
    }

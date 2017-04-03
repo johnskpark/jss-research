@@ -76,14 +76,14 @@ public class GPjspLocalSearch extends GPProblem implements SimpleProblemForm {
                 jspTrainning[instance].getRefsolution(pt);
                 jspTrainning[instance].storeBestRank();
                 double bestObj = jspTrainning[instance].getTotalWeightedTardiness();
-                input.abjsp = jspTrainning[instance];
+                input.abJSP = jspTrainning[instance];
                 int count = 0;
                 do {
                     //modify the operation rank
                     for (Job job:jspTrainning[instance].Jobs){
-                        input.J = job;
-                        for (int i = 0; i < input.J.getNumberOperations(); i++) {
-                            input.O = input.J.getKthOperation(i);
+                        input.job = job;
+                        for (int i = 0; i < input.job.getNumberOperations(); i++) {
+                            input.op = input.job.getKthOperation(i);
                             //move selection
                             ((GPIndividual)ind).trees[0].child.eval(
                                 state,threadnum,input,stack,((GPIndividual)ind),this);                        
@@ -182,14 +182,14 @@ public class GPjspLocalSearch extends GPProblem implements SimpleProblemForm {
                 jspTrainning[instance].getRefsolution(pt);
                 jspTrainning[instance].storeBestRank();
                 double bestObj = jspTrainning[instance].getCmax();
-                input.abjsp = jspTrainning[instance];
+                input.abJSP = jspTrainning[instance];
                 int count = 0;
                 do {
                     //modify the operation rank
                     for (Job job:jspTrainning[instance].Jobs){
-                        input.J = job;
-                        for (int i = 0; i < input.J.getNumberOperations(); i++) {
-                            input.O = input.J.getKthOperation(i);
+                        input.job = job;
+                        for (int i = 0; i < input.job.getNumberOperations(); i++) {
+                            input.op = input.job.getKthOperation(i);
                             //move selection
                             ((GPIndividual)best_i).trees[0].child.eval(
                                 state,threadnum,input,stack,((GPIndividual)best_i),this);                        

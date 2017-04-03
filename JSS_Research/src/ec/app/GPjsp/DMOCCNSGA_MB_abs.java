@@ -210,7 +210,7 @@ public class DMOCCNSGA_MB_abs extends GPjsp2WayMOCoevolveNSGA {
 
 					DynamicJSPFrameworkBreakdown jspDynamic = new DynamicJSPFrameworkBreakdown(SIM_JOB_SEED[ds], m, lower,
 							m, u, u, meanTime, distribution, param, 1000, 5000, SIM_BREAKDOWN_SEED[ds], bl, mr);
-					input.abjsp = jspDynamic;
+					input.abJSP = jspDynamic;
 
 					// Set dispatching rule
 					Machine.priorityType PT = Machine.priorityType.CONV;
@@ -230,7 +230,7 @@ public class DMOCCNSGA_MB_abs extends GPjsp2WayMOCoevolveNSGA {
 						if (event == DynamicJSPFrameworkBreakdown.ARRIVAL_EVENT) {
 							Job newjob = jspDynamic.generateRandomJob(jspDynamic.getNextArrivalTime());
 							input.partialEstimatedFlowtime = 0;
-							input.J = newjob;
+							input.job = newjob;
 							for (int i = 0; i < newjob.getNumberOperations(); i++) {
 								input.stat.gatherStatFromJSPModel(jspDynamic, m , newjob, i, input.partialEstimatedFlowtime);
 
@@ -267,7 +267,7 @@ public class DMOCCNSGA_MB_abs extends GPjsp2WayMOCoevolveNSGA {
 								if (nextMachine < 0)
 									break;
 								Machine M = jspDynamic.machines[nextMachine];
-								input.M = M;
+								input.machine = M;
 								jspDynamic.setInitalPriority(M);
 
 								// Determine priority of jobs in queue.
