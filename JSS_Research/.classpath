@@ -30,5 +30,6 @@
 	<classpathentry kind="lib" path="lib/JMetal-3.1.jar"/>
 	<classpathentry kind="lib" path="lib/jsc.jar"/>
 	<classpathentry kind="lib" path="lib/MOEAFramework-1.15.jar"/>
+	<classpathentry kind="lib" path="lib/junit-4.12.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
