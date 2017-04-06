@@ -325,7 +325,7 @@ public class DMOCCNSGA_MB extends GPjsp2WayMOCoevolveNSGA {
 					}
 
 					resultDD.add(mape);
-					resultNF.add(numNegativeFlowtimes);
+					if (resultNF != null) { resultNF.add(numNegativeFlowtimes); }
 					result[0].add(jspDynamic.getCmax());
 					result[1].add(jspDynamic.getNormalisedTotalWeightedTardiness());
 					detail.append(jspDynamic.getCmax() + " " + jspDynamic.getNormalisedTotalWeightedTardiness() + " " + mape + " ");
