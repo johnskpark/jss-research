@@ -531,7 +531,7 @@ import SmallStatistics.SmallStatistics;
                 // TODO temp
                 double percentageABSDDError = Math.abs(job.getReadyTime() - job.getDuedate()) / flow;
                 if (percentageABSDDError > 100000) {
-                	System.out.printf("Large error value: %f, %f, %f, %f\n", percentageABSDDError, job.getReadyTime(), job.getDuedate(), flow);
+                	System.out.printf("Large error value: %d, %f, %f, %f, %f\n", job.getID(), percentageABSDDError, job.getReadyTime(), job.getDuedate(), flow);
                 }
 
                 totalPercentageDDError += (job.getReadyTime() - job.getDuedate()) / flow;

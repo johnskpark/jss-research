@@ -15,7 +15,7 @@ import ec.util.*;
  */
 public class ESTDiv extends GPNode{
     public String toString() { return "/"; }
-    
+
     private static final double DIV_THRESHOLD = 0.00001;
 
     public void checkConstraints(final EvolutionState state,
@@ -36,12 +36,24 @@ public class ESTDiv extends GPNode{
         final ADFStack stack,
         final GPIndividual individual,
         final Problem problem) {
-        
-        JSPData jd = ((JSPData)(input)); 
+
+        JSPData jd = ((JSPData)(input));
         children[0].eval(state,thread,input,stack,individual,problem);
+
         double result = jd.tempVal;
         children[1].eval(state,thread,input,stack,individual,problem);
-            if (Math.abs(jd.tempVal) >= DIV_THRESHOLD) jd.tempVal = result / jd.tempVal;
-            else jd.tempVal = 1;
+
+        // TODO temp
+//        if (Math.abs(jd.tempVal) > 0 && Math.abs(jd.tempVal) < 0.001 && result != 0) {
+//        }
+//    	System.out.printf("/ nominator: %s, %f, denominator: %s, %f\n", children[0].toString(), result, children[1].toString(), jd.tempVal);
+
+    	if (result == 0) {
+    		jd.tempVal = 0.0;
+    	} else if (Math.abs(jd.tempVal) >= DIV_THRESHOLD) {
+        	jd.tempVal = result / jd.tempVal;
+        } else {
+        	jd.tempVal = 1.0;
+        }
    }
 }

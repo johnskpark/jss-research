@@ -20,7 +20,7 @@ public class JSPData extends GPData {
 	public int attributeThreshold; //10%, 20%,...,100%
 	public double attributeValue;
 	public double tempVal = 0;
-	public double partialEstimatedFlowtime =0;
+	public double partialEstimatedFlowtime = 0;
 	public double constant;
 	public int k = -1;
 	public Operation op;

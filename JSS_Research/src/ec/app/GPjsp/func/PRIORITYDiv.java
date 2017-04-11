@@ -24,8 +24,8 @@ public class PRIORITYDiv extends GPNode {
 
 	private static final double DIV_THRESHOLD = 0.00001;
 
-	public String toString() { 
-		return "/"; 
+	public String toString() {
+		return "/";
 	}
 
 	public void checkConstraints(final EvolutionState state,
@@ -62,9 +62,9 @@ public class PRIORITYDiv extends GPNode {
 		for (int i = 0; i < queue.size(); i++) {
 			Job job = queue.get(i);
 
-			if (Math.abs(job.tempPriority) >= DIV_THRESHOLD) { 
+			if (Math.abs(job.tempPriority) >= DIV_THRESHOLD) {
 				job.tempPriority = result[i] / job.tempPriority;
-			} else { 
+			} else {
 				job.tempPriority = 1;
 			}
 		}

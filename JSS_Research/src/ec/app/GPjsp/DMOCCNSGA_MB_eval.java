@@ -443,10 +443,10 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 		outerLoop:
 			for (String dist : dists) { for (String s : lowers) { for (int m : numberOfMachines) { for (double u : utilisation) { for (double bl : breakdownLevel) { for (double mr : meanRepair) {
 				for (int ds = 0; ds < numDS; ds++) {
-					// TODO temp
-					if (count == 7) {
-						System.out.println("Problem instance in training with bad MAPE");
-					}
+//					if (count == 94) {
+//						System.out.println("This is the problem instance with the large error value.");
+//					}
+//					System.out.printf("Problem instance index: %d\n", count);
 
 					int lower = 0;
 					String distribution ="";
@@ -506,9 +506,9 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 										stack,
 										(GPIndividual) ind2,
 										this);
-								// TODO temp
-								if (input.tempVal > 100000) {
-									System.out.printf("Large PEF calculation: %d, %f, %f\n", input.job.getID(), input.partialEstimatedFlowtime, input.tempVal);
+
+								if (input.tempVal > 1000000) {
+									System.out.printf("large PEF value: %d, %d, %d, %f\n", count, input.job.getID(), i, input.tempVal);
 								}
 
 								input.partialEstimatedFlowtime += input.tempVal;
@@ -588,10 +588,10 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 					result[0].add(jspDynamic.getCmax());
 					result[1].add(jspDynamic.getNormalisedTotalWeightedTardiness());
 					detail.append(jspDynamic.getCmax() + " " + jspDynamic.getNormalisedTotalWeightedTardiness() + " " + mape + " ");
-				}
 
-				// TODO temp
-				count++;
+					// TODO temp
+					count++;
+				}
 			}}}}}}
 	}
 
