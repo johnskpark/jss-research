@@ -22,7 +22,7 @@ import jsp.Machine;
  */
 public class PRIORITYDiv extends GPNode {
 
-	private static final double DIV_THRESHOLD = 0.00001;
+	private static final double DIV_THRESHOLD = 0.0000001;
 
 	public String toString() {
 		return "/";

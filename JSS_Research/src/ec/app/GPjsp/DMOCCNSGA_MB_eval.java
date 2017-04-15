@@ -443,10 +443,10 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 		outerLoop:
 			for (String dist : dists) { for (String s : lowers) { for (int m : numberOfMachines) { for (double u : utilisation) { for (double bl : breakdownLevel) { for (double mr : meanRepair) {
 				for (int ds = 0; ds < numDS; ds++) {
-//					if (count == 94) {
-//						System.out.println("This is the problem instance with the large error value.");
+					// TODO temp
+//					if (count == 31) {
+//						System.out.printf("This is the problem instance with the large error value: %d\n", count);
 //					}
-//					System.out.printf("Problem instance index: %d\n", count);
 
 					int lower = 0;
 					String distribution ="";
@@ -494,6 +494,12 @@ public class DMOCCNSGA_MB_eval extends GPjsp2WayMOCoevolveNSGA {
 							Job newjob = jspDynamic.generateRandomJob(jspDynamic.getNextArrivalTime());
 							input.partialEstimatedFlowtime = 0;
 							input.job = newjob;
+
+							// TODO temp
+//							if (input.job.getID() == 878) {
+//								System.out.printf("This is the offending job: %d, %d, %d\n", count, input.job.getID(), input.job.getNumberOperations());
+//							}
+
 							for (int i = 0; i < newjob.getNumberOperations(); i++) {
 								input.stat.gatherStatFromJSPModel(jspDynamic, m , newjob, i, input.partialEstimatedFlowtime);
 
