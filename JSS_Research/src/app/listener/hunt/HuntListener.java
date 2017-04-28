@@ -38,12 +38,14 @@ public class HuntListener extends JasimaWorkStationListener {
 			OperationCompletionStat oldStat = queue.poll();
 
 			this.stat.sumWaitTimes -= oldStat.getWaitTime();
+			this.stat.sumWaitTimesPerMachine[m.index()] -= oldStat.getWaitTime();
 			this.stat.numCompleted--;
 		}
 
 		queue.offer(stat);
 
 		this.stat.sumWaitTimes += stat.getWaitTime();
+		this.stat.sumWaitTimesPerMachine[m.index()] += stat.getWaitTime();
 		this.stat.numCompleted++;
 
 		this.stat.startedJobs[index] = null;
@@ -93,20 +95,42 @@ public class HuntListener extends JasimaWorkStationListener {
 		return stat.completedJobs[machine.index()];
 	}
 
+	public double getAverageWaitTime(WorkStation machine) {
+		if (!stat.initialised) {
+			throw new RuntimeException("The listener has not yet been stat.initalised!");
+		}
+
+		if (hasCompletedJobs(machine)) {
+			double sumWaitTimes = stat.sumWaitTimesPerMachine[machine.index()];
+			double queueSize = stat.completedJobs[machine.index()].size();
+
+			return sumWaitTimes / queueSize;
+		} else {
+			return 0.0;
+		}
+	}
+
 	public double getAverageWaitTimesAllMachines() {
 		if (!stat.initialised) {
 			throw new RuntimeException("The listener has not yet been stat.initialised!");
 		}
 
-		return (stat.sumWaitTimes != 0.0) ? (stat.sumWaitTimes / stat.numCompleted) : 0.0;
+		if (stat.sumWaitTimes != 0.0) {
+			return stat.sumWaitTimes / stat.numCompleted;
+		} else {
+			return 0.0;
+		}
 	}
 
 	@SuppressWarnings("unchecked")
 	public void clear() {
 		stat.startedJobs = new OperationStartStat[stat.numMachines];
 		stat.completedJobs = new Queue[stat.numMachines];
+		stat.sumWaitTimesPerMachine = new double[stat.numMachines];
+
 		for (int i = 0; i < stat.numMachines; i++) {
 			stat.completedJobs[i] = new LinkedList<OperationCompletionStat>();
+			stat.sumWaitTimesPerMachine[i] = 0.0;
 		}
 
 		stat.sumWaitTimes = 0.0;
@@ -138,6 +162,7 @@ public class HuntListener extends JasimaWorkStationListener {
 		int numMachines;
 
 		double sumWaitTimes = 0.0;
+		double[] sumWaitTimesPerMachine;
 		int numCompleted = 0;
 
 		boolean initialised = false;

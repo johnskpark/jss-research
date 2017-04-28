@@ -1,9 +1,7 @@
 package app.evolution.node.nguyen_r1;
 
 import java.util.List;
-import java.util.Map;
 
-import app.JasimaWorkStationListener;
 import app.evolution.JasimaGPData;
 import app.evolution.node.SingleLineGPNode;
 import app.listener.nguyen_r1.NguyenR1Listener;
@@ -37,8 +35,7 @@ public class AttributeCriticalWorkloadRatio extends SingleLineGPNode {
 			Problem problem) {
 		JasimaGPData data = (JasimaGPData) input;
 
-		Map<String, JasimaWorkStationListener> listeners = data.getWorkStationListeners();
-		NguyenR1Listener listener = (NguyenR1Listener) listeners.get(NguyenR1Listener.class.getSimpleName());
+		NguyenR1Listener listener = (NguyenR1Listener) data.getWorkStationListener(NguyenR1Listener.class.getSimpleName());
 
 		PrioRuleTarget entry = data.getPrioRuleTarget();
 		WorkloadStat machineStat = listener.getWorkloadStat(entry.getCurrMachine().index());

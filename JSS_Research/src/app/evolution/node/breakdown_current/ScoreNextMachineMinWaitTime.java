@@ -47,21 +47,15 @@ public class ScoreNextMachineMinWaitTime extends AbsMBNode {
 
 			double minWaitTime;
 
-			// Check if the next machine is currently broken down.
-			if (t <= getActivateTime(nextMachine) && t >= getDeactivateTime(nextMachine)) {
-				System.out.println("Machine has broken down. " + nextMachine.machDat()[0].state);
-
+			// If the machine is currently processing a job, then its the expected completion time of the job.
+			// Otherwise, check if the next machine is currently broken down, and then use the time when the
+			// machine comes back online.
+			if (nextMachine.machDat()[0].curJob != null) {
+				minWaitTime = nextMachine.machDat()[0].procFinished - t;
+			} else if (t <= getActivateTime(nextMachine) && t >= getDeactivateTime(nextMachine)) {
 				minWaitTime = getActivateTime(nextMachine) - t;
 			} else {
 				minWaitTime = 0.0;
-			}
-
-			// Add the leftover operation time to the minimum wait time.
-			// TODO Still don't get how this part here works.
-			if (nextMachine.machDat()[0].curJob != null) {
-				System.out.println("Test print out.");
-
-				// minWaitTime = minWaitTime + nextMachine.machDat()[0].
 			}
 
 			data.setPriority(minWaitTime);

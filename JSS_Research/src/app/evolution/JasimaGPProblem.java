@@ -1,9 +1,7 @@
 package app.evolution;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import app.JasimaWorkStationListener;
 import app.priorityRules.HolthausRule;
@@ -42,7 +40,7 @@ public abstract class JasimaGPProblem extends GPProblem {
 
 	private JasimaExperimentTracker<Individual> experimentTracker;
 
-	private Map<String, JasimaWorkStationListener> workstationListeners = new HashMap<String, JasimaWorkStationListener>();
+	private List<JasimaWorkStationListener> workstationListeners = new ArrayList<JasimaWorkStationListener>();
 
 	private PR referenceRule = new HolthausRule();
 	private List<Double> referenceInstStats = new ArrayList<Double>();
@@ -85,9 +83,8 @@ public abstract class JasimaGPProblem extends GPProblem {
 	        	factory.setup(state, workstationParam);
 
 	        	JasimaWorkStationListener listener = factory.generateWorkStationListener();
-	        	String listenerName = listener.getClass().getSimpleName();
 
-	        	workstationListeners.put(listenerName, listener);
+	        	workstationListeners.add(listener);
         	}
 
     		// Feed in the shop simulation listener to input.
@@ -135,7 +132,7 @@ public abstract class JasimaGPProblem extends GPProblem {
 		return !workstationListeners.isEmpty();
 	}
 
-	protected Map<String, JasimaWorkStationListener> getWorkStationListeners() {
+	protected List<JasimaWorkStationListener> getWorkStationListeners() {
 		return workstationListeners;
 	}
 
@@ -231,9 +228,9 @@ public abstract class JasimaGPProblem extends GPProblem {
 		}
 	}
 
-	protected void clearForExperiment(Map<String, JasimaWorkStationListener> listeners) {
+	protected void clearForExperiment(List<JasimaWorkStationListener> listeners) {
 		if (hasWorkStationListener()) {
-			for (JasimaWorkStationListener listener : listeners.values()) {
+			for (JasimaWorkStationListener listener : listeners) {
 				listener.clear();
 			}
 		}
@@ -250,7 +247,7 @@ public abstract class JasimaGPProblem extends GPProblem {
 	protected Experiment getExperiment(final EvolutionState state,
 			final GPPriorityRuleBase rule,
 			final int index,
-			final Map<String, JasimaWorkStationListener> listeners,
+			final List<JasimaWorkStationListener> listeners,
 			final JasimaExperimentTracker<Individual> tracker) {
 		JobShopExperiment experiment = ExperimentGenerator.getExperiment(simConfig,
 				rule,
@@ -259,7 +256,7 @@ public abstract class JasimaGPProblem extends GPProblem {
 		// Add the workstation listener.
 		experiment.addMachineListener(rule);
 		if (hasWorkStationListener()) {
-			for (JasimaWorkStationListener listener : listeners.values()) {
+			for (JasimaWorkStationListener listener : listeners) {
 				experiment.addMachineListener(listener);
 			}
 		}
@@ -283,7 +280,7 @@ public abstract class JasimaGPProblem extends GPProblem {
 
 		newObject.experimentTracker = experimentTracker;
 
-		newObject.workstationListeners = new HashMap<String, JasimaWorkStationListener>(workstationListeners);
+		newObject.workstationListeners = new ArrayList<JasimaWorkStationListener>(workstationListeners);
 		((JasimaGPData) newObject.input).setWorkStationListener(newObject.workstationListeners);
 
 		return newObject;

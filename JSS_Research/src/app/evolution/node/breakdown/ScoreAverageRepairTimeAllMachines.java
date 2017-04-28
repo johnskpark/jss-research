@@ -1,8 +1,5 @@
 package app.evolution.node.breakdown;
 
-import java.util.Map;
-
-import app.JasimaWorkStationListener;
 import app.evolution.JasimaGPData;
 import app.evolution.node.SingleLineGPNode;
 import app.listener.breakdown.BreakdownListener;
@@ -38,8 +35,7 @@ public class ScoreAverageRepairTimeAllMachines extends SingleLineGPNode {
 			final Problem problem) {
 		JasimaGPData data = (JasimaGPData) input;
 
-		Map<String, JasimaWorkStationListener> listeners = data.getWorkStationListeners();
-		BreakdownListener listener = (BreakdownListener) listeners.get(BreakdownListener.class.getSimpleName());
+		BreakdownListener listener = (BreakdownListener) data.getWorkStationListener(BreakdownListener.class.getSimpleName());
 
 		if (listener.hasBeenRepairedAnyMachine()) {
 			SummaryStat repairStat = listener.getAllMachineRepairStat();

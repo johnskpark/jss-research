@@ -1,8 +1,5 @@
 package app.evolution.node.nguyen_r1;
 
-import java.util.Map;
-
-import app.JasimaWorkStationListener;
 import app.evolution.JasimaGPData;
 import app.evolution.node.SingleLineGPNode;
 import app.listener.nguyen_r1.NguyenR1Listener;
@@ -34,8 +31,7 @@ public class AttributeCriticalMachineIdleness extends SingleLineGPNode {
 			Problem problem) {
 		JasimaGPData data = (JasimaGPData) input;
 
-		Map<String, JasimaWorkStationListener> listeners = data.getWorkStationListeners();
-		NguyenR1Listener listener = (NguyenR1Listener) listeners.get(NguyenR1Listener.class.getSimpleName());
+		NguyenR1Listener listener = (NguyenR1Listener) data.getWorkStationListener(NguyenR1Listener.class.getSimpleName());
 
 		int cmi = 0; // critical machine index
 		for (int i = 1; i < listener.getNumMachines(); i++) {
