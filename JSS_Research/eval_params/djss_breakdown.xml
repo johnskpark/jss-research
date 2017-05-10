@@ -3,21 +3,26 @@
 
 <!-- Rule file definitions -->
 
-<!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>breakdown_sample_gp_rule_baseline.txt</ruleFile>
+			<ruleFile>breakdown_attempt2_baseline.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>breakdown_sample_gp_rule_predictive.txt</ruleFile>
+			<ruleFile>breakdown_attempt2_current1.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
--->
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>breakdown_attempt2_current2.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
 
 <!--
 	<solverConfig>
@@ -43,24 +48,24 @@
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EvalSPT</solverClass>
 	</solverConfig>
--->
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EvalWCOVERT</solverClass>
 	</solverConfig>
+-->
 
 	<datasetConfig>
 		<datasetClass>app.simConfig.holthausConfig.EvalFactory</datasetClass>
-		<datasetInstances>(all),(0.05),(all)</datasetInstances>
+		<datasetInstances>(all),(all),(all)</datasetInstances>
 		<datasetSeed>15</datasetSeed>
 		<!-- <datasetSeed>4609823032865163582</datasetSeed> -->
-		<datasetRepeat>1</datasetRepeat>
-		<datasetRotateSeed>false</datasetRotateSeed>
+		<datasetRepeat>30</datasetRepeat>
+		<datasetRotateSeed>true</datasetRotateSeed>
 	</datasetConfig>
 
 <!-- Output file definition -->
 	<outputConfig>
-	    <outputFile>breakdown_ft_mwt_test_output.csv</outputFile>
+	    <outputFile>breakdown_attempt2_current_output.csv</outputFile>
 	</outputConfig>
 
 
@@ -77,11 +82,11 @@
 		<fitnessClass>app.evaluation.fitness.BreakdownLevelFitness</fitnessClass>
 	</fitnessConfig>
 
+<!--
 	<fitnessConfig>
 		<fitnessClass>app.evaluation.fitness.JobFlowtimeFitness</fitnessClass>
 	</fitnessConfig>
 
-<!--
 	<refConfig>
 		<refRule>app.evaluation.priorityRules.EvalATC</refRule>
 		<refTracking>

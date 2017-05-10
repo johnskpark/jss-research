@@ -19,18 +19,18 @@ public class JobFlowtimeFitness implements IJasimaEvalFitness {
 	public static final String JOB_COMPLETION_TIME = "jobCompletionTime";
 	public static final String JOB_FLOWTIME = "jobFlowtime";
 	public static final String JOB_TARDINESS = "jobTardiness";
-	
+
 	@Override
 	public String getHeaderName() {
 		String jobReleaseDate = "JobRelease";
 		String jobCompletionTime = "JobCompletion";
 		String jobFlowtime = "JobFlowtime";
 		String jobTardiness = "JobTardiness";
-		
-		return String.format("%s,%s,%s,%s", 
+
+		return String.format("%s,%s,%s,%s",
 				jobReleaseDate,
 				jobCompletionTime,
-				jobFlowtime, 
+				jobFlowtime,
 				jobTardiness);
 	}
 
@@ -38,7 +38,7 @@ public class JobFlowtimeFitness implements IJasimaEvalFitness {
 	public boolean resultIsNumeric() {
 		return false;
 	}
-	
+
 	@Override
 	public void beforeExperiment(final PR rule,
 			final SimConfig simConfig,
@@ -48,18 +48,18 @@ public class JobFlowtimeFitness implements IJasimaEvalFitness {
 	}
 
 	@Override
-	public double getNumericResult(final PR rule, 
-			final SimConfig simConfig, 
-			final int configIndex, 
+	public double getNumericResult(final PR rule,
+			final SimConfig simConfig,
+			final int configIndex,
 			final Map<String, Object> results,
 			final JasimaExperimentTracker<INode> tracker) {
 		throw new UnsupportedOperationException("The output is not numeric!");
 	}
 
 	@Override
-	public String getStringResult(final PR rule, 
-			final SimConfig simConfig, 
-			final int configIndex, 
+	public String getStringResult(final PR rule,
+			final SimConfig simConfig,
+			final int configIndex,
 			final Map<String, Object> results,
 			final JasimaExperimentTracker<INode> tracker) {
 		String[] experimentResults = new String[] {
@@ -70,24 +70,25 @@ public class JobFlowtimeFitness implements IJasimaEvalFitness {
 		};
 
 		String output = String.format("%s", experimentResults[0]);
+
 		for (int i = 1; i < experimentResults.length; i++) {
 			output += String.format(",%s", experimentResults[i]);
 		}
-		
+
 		return output;
 	}
-	
-	protected String getReleaseDateResult(final PR rule, 
-			final SimConfig simConfig, 
-			final int configIndex, 
+
+	protected String getReleaseDateResult(final PR rule,
+			final SimConfig simConfig,
+			final int configIndex,
 			final Map<String, Object> results,
 			final JasimaExperimentTracker<INode> tracker) {
 		@SuppressWarnings("unchecked")
 		Map<Integer, Double> jobRelDate = (Map<Integer, Double>) results.get(JOB_RELEASE_DATE);
-		
+
 		List<Integer> jobNumList = new ArrayList<Integer>(jobRelDate.keySet());
 		Collections.sort(jobNumList);
-		
+
 		StringBuilder jobRelDateStr = new StringBuilder();
 		for (int i = 0; i < jobNumList.size(); i++) {
 			int jobNum = jobNumList.get(i);
@@ -98,21 +99,21 @@ public class JobFlowtimeFitness implements IJasimaEvalFitness {
 			}
 			jobRelDateStr.append(String.format("%d:%.4f", jobNum, relDate));
 		}
-		
+
 		return "\"" + jobRelDateStr.toString() + "\"";
 	}
-	
-	protected String getCompletionTimeResult(final PR rule, 
-			final SimConfig simConfig, 
-			final int configIndex, 
+
+	protected String getCompletionTimeResult(final PR rule,
+			final SimConfig simConfig,
+			final int configIndex,
 			final Map<String, Object> results,
 			final JasimaExperimentTracker<INode> tracker) {
 		@SuppressWarnings("unchecked")
 		Map<Integer, Double> jobCompTime = (Map<Integer, Double>) results.get(JOB_COMPLETION_TIME);
-		
+
 		List<Integer> jobNumList = new ArrayList<Integer>(jobCompTime.keySet());
 		Collections.sort(jobNumList);
-		
+
 		StringBuilder jobCompTimeStr = new StringBuilder();
 		for (int i = 0; i < jobNumList.size(); i++) {
 			int jobNum = jobNumList.get(i);
@@ -123,21 +124,21 @@ public class JobFlowtimeFitness implements IJasimaEvalFitness {
 			}
 			jobCompTimeStr.append(String.format("%d:%.4f", jobNum, compTime));
 		}
-		
+
 		return "\"" + jobCompTimeStr.toString() + "\"";
 	}
-	
-	protected String getFlowtimeResult(final PR rule, 
-			final SimConfig simConfig, 
-			final int configIndex, 
+
+	protected String getFlowtimeResult(final PR rule,
+			final SimConfig simConfig,
+			final int configIndex,
 			final Map<String, Object> results,
 			final JasimaExperimentTracker<INode> tracker) {
 		@SuppressWarnings("unchecked")
 		Map<Integer, Double> jobFlowtime = (Map<Integer, Double>) results.get(JOB_FLOWTIME);
-		
+
 		List<Integer> jobNumList = new ArrayList<Integer>(jobFlowtime.keySet());
 		Collections.sort(jobNumList);
-		
+
 		StringBuilder jobFlowtimeStr = new StringBuilder();
 		for (int i = 0; i < jobNumList.size(); i++) {
 			int jobNum = jobNumList.get(i);
@@ -148,21 +149,21 @@ public class JobFlowtimeFitness implements IJasimaEvalFitness {
 			}
 			jobFlowtimeStr.append(String.format("%d:%.4f", jobNum, flowtime));
 		}
-		
+
 		return "\"" + jobFlowtimeStr.toString() + "\"";
 	}
-	
-	protected String getTardinessResult(final PR rule, 
-			final SimConfig simConfig, 
-			final int configIndex, 
+
+	protected String getTardinessResult(final PR rule,
+			final SimConfig simConfig,
+			final int configIndex,
 			final Map<String, Object> results,
 			final JasimaExperimentTracker<INode> tracker) {
 		@SuppressWarnings("unchecked")
 		Map<Integer, Double> jobTardiness = (Map<Integer, Double>) results.get(JOB_TARDINESS);
-		
+
 		List<Integer> jobNumList = new ArrayList<Integer>(jobTardiness.keySet());
 		Collections.sort(jobNumList);
-		
+
 		StringBuilder jobTardinessStr = new StringBuilder();
 		for (int i = 0; i < jobNumList.size(); i++) {
 			int jobNum = jobNumList.get(i);
@@ -173,7 +174,7 @@ public class JobFlowtimeFitness implements IJasimaEvalFitness {
 			}
 			jobTardinessStr.append(String.format("%d:%.4f", jobNum, Tardiness));
 		}
-		
+
 		return "\"" + jobTardinessStr.toString() + "\"";
 	}
 }

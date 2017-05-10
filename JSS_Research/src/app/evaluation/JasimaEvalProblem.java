@@ -280,7 +280,7 @@ public class JasimaEvalProblem {
 
 		NodeList rotateSeedList = datasetBase.getElementsByTagName(XML_DATASET_ROTATE_SEED);
 		if (rotateSeedList.getLength() != 0) {
-			rotateSeed = Boolean.parseBoolean(repeatList.item(0).getTextContent());
+			rotateSeed = Boolean.parseBoolean(rotateSeedList.item(0).getTextContent());
 
 			System.out.println("SimConfig: rotate seed for each problem configuration: " + rotateSeed);
 		}
@@ -467,8 +467,6 @@ public class JasimaEvalProblem {
 				refFitness.put(key, new ArrayList<>());
 			}
 
-			// TODO remove the commented out code once this is sorted.
-//			for (int repeatIndex = 0; repeatIndex < numRepeats; repeatIndex++) {
 			for (int configIndex = 0; configIndex < simConfig.getNumConfigs(); configIndex++) {
 				if (refRule instanceof TrackedPR) {
 					((TrackedPR) refRule).initSampleRun(configIndex);
@@ -480,13 +478,7 @@ public class JasimaEvalProblem {
 				for (IJasimaEvalFitness fitness : standardEvaluation) {
 					Pair<PR, String> key = new Pair<>(refRule, fitness.getClass().getSimpleName());
 
-					// Count in the order of configuration, repetition and reference rule.
-//					int refIndex = refRuleIndex * (numRepeats * simConfig.getNumConfigs()) +
-//							repeatIndex * simConfig.getNumConfigs() +
-//							configIndex;
-
 					int refIndex = refRuleIndex * (simConfig.getNumConfigs()) +
-//							repeatIndex * simConfig.getNumConfigs() +
 							configIndex;
 
 					if (fitness.resultIsNumeric()) {
@@ -504,7 +496,6 @@ public class JasimaEvalProblem {
 					simConfig.reset();
 				}
 			}
-//			}
 
 			simConfig.reset();
 		}
@@ -558,12 +549,6 @@ public class JasimaEvalProblem {
 										repeatIndex * (simConfig.getNumConfigs()) +
 										configIndex;
 
-								// TODO remove the commented out code once this is sorted.
-//								int referenceIndex = refRuleIndex * (trackedRefRules.size() * numRepeats * simConfig.getNumConfigs()) +
-//										solverIndex * (numRepeats * simConfig.getNumConfigs()) +
-//										repeatIndex * (simConfig.getNumConfigs()) +
-//										configIndex;
-
 								int referenceIndex = refRuleIndex * (trackedRefRules.size() * simConfig.getNumConfigs()) +
 										solverIndex * (simConfig.getNumConfigs()) +
 										configIndex;
@@ -605,8 +590,6 @@ public class JasimaEvalProblem {
 
 			tracker.initialise();
 
-			// TODO remove the commented out code once we've confirmed that everything works.
-//			for (int repeatIndex = 0; repeatIndex < numRepeats; repeatIndex++) {
 			for (int configIndex = 0; configIndex < simConfig.getNumConfigs(); configIndex++) {
 				tracker.setExperimentIndex(configIndex);
 				trackedRefRule.initTrackedRun(configIndex);
@@ -624,11 +607,6 @@ public class JasimaEvalProblem {
 						 builder.append("," + result);
 					}
 
-//					int resultsIndex = refRuleIndex * (trackedRefRules.size() * numRepeats * simConfig.getNumConfigs()) +
-//							solverIndex * (numRepeats * simConfig.getNumConfigs()) +
-//							repeatIndex * (simConfig.getNumConfigs()) +
-//							configIndex;
-
 					int resultsIndex = refRuleIndex * (trackedRefRules.size() * simConfig.getNumConfigs()) +
 							solverIndex * (simConfig.getNumConfigs()) +
 							configIndex;
@@ -642,7 +620,6 @@ public class JasimaEvalProblem {
 					simConfig.reset();
 				}
 			}
-//			}
 
 			for (EvalPriorityRuleBase solver : solvers) {
 				solver.setTracker(null);

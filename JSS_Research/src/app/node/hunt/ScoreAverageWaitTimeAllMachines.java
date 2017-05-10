@@ -15,6 +15,8 @@ public class ScoreAverageWaitTimeAllMachines implements INode {
 
 	private static final NodeDefinition NODE_DEFINITION = NodeDefinition.SCORE_AVERAGE_WAIT_TIME_ALL_MACHINE;
 
+	private HuntListener listener;
+
 	public ScoreAverageWaitTimeAllMachines() {
 	}
 
@@ -30,8 +32,10 @@ public class ScoreAverageWaitTimeAllMachines implements INode {
 
 	@Override
 	public double evaluate(NodeData data) {
-		Map<String, JasimaWorkStationListener> listeners = data.getWorkStationListeners();
-		HuntListener listener = (HuntListener) listeners.get(HuntListener.class.getSimpleName());
+		if (listener == null) {
+			Map<String, JasimaWorkStationListener> listeners = data.getWorkStationListeners();
+			listener = (HuntListener) listeners.get(HuntListener.class.getSimpleName());
+		}
 
 		return listener.getAverageWaitTimesAllMachines();
 	}

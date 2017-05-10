@@ -38,6 +38,7 @@ public class ExperimentGenerator {
 		DynamicBreakdownShopExperiment experiment = new DynamicBreakdownShopExperiment();
 
 		long jobValue = simConfig.getLongValueForJob();
+		long machineValue = simConfig.getLongValueForMachine();
 
 		experiment.setInitialSeed(jobValue);
 		experiment.setNumMachines(simConfig.getNumMachines(index));
@@ -48,10 +49,11 @@ public class ExperimentGenerator {
 		experiment.setNumOps(simConfig.getMinNumOps(index), simConfig.getMaxNumOps(index));
 
 		experiment.setStopArrivalsAfterNumJobs(simConfig.getStopArrivalsAfterNumJobs());
+		experiment.setStopAfterNumJobs(simConfig.getStopArrivalsAfterNumJobs());
 
 		experiment.setRepairTimeFactor(simConfig.getRepairTimeFactor(index));
 		experiment.setBreakdownLevel(simConfig.getBreakdownLevel(index));
-		experiment.setMachineRandom(new Random(simConfig.getMachineSeed()));
+		experiment.setMachineRandom(new Random(machineValue));
 
 		BasicJobStatCollector statCollector = new BasicJobStatCollector();
 		statCollector.setIgnoreFirst(simConfig.getNumIgnore());
@@ -80,6 +82,7 @@ public class ExperimentGenerator {
 		experiment.setNumOps(simConfig.getMinNumOps(index), simConfig.getMaxNumOps(index));
 
 		experiment.setStopArrivalsAfterNumJobs(simConfig.getStopArrivalsAfterNumJobs());
+		experiment.setStopAfterNumJobs(simConfig.getStopArrivalsAfterNumJobs());
 
 		BasicJobStatCollector statCollector = new BasicJobStatCollector();
 		statCollector.setIgnoreFirst(simConfig.getNumIgnore());

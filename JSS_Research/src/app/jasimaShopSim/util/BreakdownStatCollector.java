@@ -1,8 +1,8 @@
 package app.jasimaShopSim.util;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import app.jasimaShopSim.core.IndividualBreakdownMachine;
 import jasima.core.statistics.SummaryStat;
@@ -19,7 +19,7 @@ public class BreakdownStatCollector extends WorkStationListenerBase {
 	public SummaryStat avgRepairTime;
 	public SummaryStat avgTimeBetweenBreakdowns;
 
-	private Set<WorkStation> prevDeactivated = new HashSet<WorkStation>();
+	private List<WorkStation> prevDeactivated = new ArrayList<WorkStation>();
 
 	private double[] lastBreakdownTime;
 	private double[] lastRepairTime;

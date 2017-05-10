@@ -1,7 +1,7 @@
 package app.evolution.simple.statistics;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import app.evolution.simple.JasimaSimpleStatistics;
 import ec.EvolutionState;
@@ -59,7 +59,7 @@ public class JasimaMultiRuleStatistics extends JasimaSimpleStatistics {
 				}
 			});
 
-			Set<Individual> indSet = new HashSet<Individual>();
+			List<Individual> indSet = new ArrayList<Individual>();
 			for (int i = 0; i < numPrinted && i < inds.length; i++) {
 				Individual ind = (Individual) inds[i];
 				if (indSet.contains(ind)) {
