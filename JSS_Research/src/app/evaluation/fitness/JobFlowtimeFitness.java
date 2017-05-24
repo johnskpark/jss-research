@@ -51,7 +51,7 @@ public class JobFlowtimeFitness implements IJasimaEvalFitness {
 	public double getNumericResult(final PR rule,
 			final SimConfig simConfig,
 			final int configIndex,
-			final Map<String, Object> results,
+			final JobShopExperiment experiment,
 			final JasimaExperimentTracker<INode> tracker) {
 		throw new UnsupportedOperationException("The output is not numeric!");
 	}
@@ -60,8 +60,10 @@ public class JobFlowtimeFitness implements IJasimaEvalFitness {
 	public String getStringResult(final PR rule,
 			final SimConfig simConfig,
 			final int configIndex,
-			final Map<String, Object> results,
+			final JobShopExperiment experiment,
 			final JasimaExperimentTracker<INode> tracker) {
+		Map<String, Object> results = experiment.getResults();
+
 		String[] experimentResults = new String[] {
 				getReleaseDateResult(rule, simConfig, configIndex, results, tracker),
 				getCompletionTimeResult(rule, simConfig, configIndex, results, tracker),

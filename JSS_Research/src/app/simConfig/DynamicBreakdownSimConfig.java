@@ -2,6 +2,7 @@ package app.simConfig;
 
 import java.util.Random;
 
+import app.jasimaShopSim.models.DynamicBreakdownShopExperiment;
 import jasima.core.random.continuous.DblStream;
 
 public abstract class DynamicBreakdownSimConfig implements SimConfig {
@@ -59,7 +60,9 @@ public abstract class DynamicBreakdownSimConfig implements SimConfig {
 
 	public abstract int getStopArrivalsAfterNumJobs();
 
-	public abstract double getRepairTimeFactor(int index);
+	public abstract DblStream getRepairTimeDistribution(DynamicBreakdownShopExperiment experiment, int index);
+
+	public abstract DblStream getTimeBetweenFailureDistribution(DynamicBreakdownShopExperiment experiment, int index);
 
 	public abstract double getBreakdownLevel(int index);
 

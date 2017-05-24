@@ -1,7 +1,5 @@
 package app.evaluation.fitness;
 
-import java.util.Map;
-
 import app.evaluation.IJasimaEvalFitness;
 import app.node.INode;
 import app.simConfig.SimConfig;
@@ -34,18 +32,18 @@ public class MWFFitness implements IJasimaEvalFitness {
 	public double getNumericResult(final PR rule,
 			final SimConfig simConfig,
 			final int configIndex,
-			final Map<String, Object> results,
+			final JobShopExperiment experiment,
 			final JasimaExperimentTracker<INode> tracker) {
-		return WeightedFlowtimeStat.getMeanWeightedFlowtime(results);
+		return WeightedFlowtimeStat.getMeanWeightedFlowtime(experiment.getResults());
 	}
 
 	@Override
 	public String getStringResult(final PR rule,
 			final SimConfig simConfig,
 			final int configIndex,
-			final Map<String, Object> results,
+			final JobShopExperiment experiment,
 			final JasimaExperimentTracker<INode> tracker) {
-		return String.format("%f", WeightedFlowtimeStat.getMeanWeightedFlowtime(results));
+		return String.format("%f", WeightedFlowtimeStat.getMeanWeightedFlowtime(experiment.getResults()));
 	}
 
 }

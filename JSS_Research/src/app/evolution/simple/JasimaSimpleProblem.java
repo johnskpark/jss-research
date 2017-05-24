@@ -61,9 +61,12 @@ public class JasimaSimpleProblem extends JasimaGPProblem {
 			final int subpopulation,
 			final int threadnum) {
 		if (!ind.evaluated) {
-			configureRule(state, rule, getTracker(),
-					new Individual[]{ ind }, new int[]{ subpopulation }, threadnum);
-
+			configureRule(state,
+					rule,
+					getTracker(),
+					new Individual[] {ind},
+					new int[] {subpopulation},
+					threadnum);
 			initialiseTracker(getTracker());
 
 			for (int i = 0; i < getSimConfig().getNumConfigs(); i++) {

@@ -1,4 +1,4 @@
-package app.simConfig.holthausConfig;
+package app.simConfig.holthausConfig3;
 
 import java.util.List;
 
@@ -15,8 +15,7 @@ import jasima.core.random.continuous.DblStream;
  *
  * Scheduling in job shops with machine breakdowns: an experimental study
  *
- * The modification changes the due date tightness factor and the number of
- * operations per job.
+ * TODO need to describe the changes.
  *
  * @author parkjohn
  *
@@ -26,7 +25,9 @@ public class HolthausSimConfig extends DynamicBreakdownSimConfig {
 	private static final int MIN_PROC_TIME = 1;
 	private static final int MAX_PROC_TIME = 49;
 
-	private static final double UTIL_LEVEL = 0.90;
+	// Try this later down the line:
+	// 90% for BL = (0%, 2.5%, 5%), 80% for BL = (10%, 15%)
+	private static final double UTIL_LEVEL = 0.80;
 	private static final int MIN_NUM_OPS = 2;
 	private static final int MAX_NUM_OPS = 10;
 
@@ -35,8 +36,8 @@ public class HolthausSimConfig extends DynamicBreakdownSimConfig {
 	private static final int NUM_IGNORE = 500;
 	private static final int STOP_AFTER_NUM_JOBS = 2500;
 
-	private List<Double> numRTFs; // repair time factors: (1, 5, 10)
-	private List<Double> numBLs; // breakdown levels: (0%, 2.5%, 5%)
+	private List<Double> numRTFs; // repair time factors: (1.5, 5.5, 10.5)
+	private List<Double> numBLs; // breakdown levels: (0%, 2.5%, 5%, 10%, 15%)
 	private List<Integer> numDDFs; // due date factors: (3, 5)
 	private int numConfigs;
 
@@ -100,21 +101,21 @@ public class HolthausSimConfig extends DynamicBreakdownSimConfig {
 
 	@Override
 	public DblStream getRepairTimeDistribution(DynamicBreakdownShopExperiment experiment, int index) {
-		double meanRepairTime = getMeanRepairTime(experiment, index);
+		double repairTime = getRepairTime(experiment, index);
 
-		return new DblDistribution(experiment.getMachineRandom(), new ExponentialDistribution(meanRepairTime));
+		return new DblConst(repairTime);
 	}
 
 	@Override
 	public DblStream getTimeBetweenFailureDistribution(DynamicBreakdownShopExperiment experiment, int index) {
-		double meanBreakdown = getMeanTimeBetweenFailures(experiment, index);
+		double meanBreakdown = getMeanBreakdownLevel(experiment, index);
 
 		return new DblDistribution(experiment.getMachineRandom(), new ExponentialDistribution(meanBreakdown));
 	}
 
 	// Repair time is dependent on the processing time, and the down time is
 	// dependent on repair time and breakdown level.
-	private double getMeanRepairTime(DynamicBreakdownShopExperiment experiment, int index) {
+	private double getRepairTime(DynamicBreakdownShopExperiment experiment, int index) {
 		int rtfIndex = index / (numBLs.size() * numDDFs.size());
 
 		double repairTimeFactor = numRTFs.get(rtfIndex);
@@ -123,11 +124,11 @@ public class HolthausSimConfig extends DynamicBreakdownSimConfig {
 		return repairTimeFactor * meanProcTime;
 	}
 
-	private double getMeanTimeBetweenFailures(DynamicBreakdownShopExperiment experiment, int index) {
+	private double getMeanBreakdownLevel(DynamicBreakdownShopExperiment experiment, int index) {
 		double breakdownLevel = getBreakdownLevel(index);
-		double meanRepairTime = getMeanRepairTime(experiment, index);
+		double repairTime = getRepairTime(experiment, index);
 
-		return meanRepairTime / breakdownLevel - meanRepairTime;
+		return repairTime / breakdownLevel - repairTime;
 	}
 
 	@Override

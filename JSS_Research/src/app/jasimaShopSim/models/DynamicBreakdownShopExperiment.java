@@ -4,12 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import org.apache.commons.math3.distribution.ExponentialDistribution;
-
 import app.jasimaShopSim.core.BreakdownSource;
 import app.jasimaShopSim.core.IndividualBreakdownMachine;
 import app.jasimaShopSim.util.BreakdownStatCollector;
-import jasima.core.random.continuous.DblDistribution;
+import jasima.core.random.continuous.DblStream;
 import jasima.shopSim.core.IndividualMachine;
 import jasima.shopSim.core.WorkStation;
 import jasima.shopSim.models.dynamicShop.DynamicShopExperiment;
@@ -20,8 +18,8 @@ public class DynamicBreakdownShopExperiment extends DynamicShopExperiment {
 	private static final long serialVersionUID = 4039817323228849037L;
 
 	// Default parameters for machine breakdown.
-	private double repairTimeFactor = 5.0;
-	private double breakdownLevel = 0.025;
+	private DblStream repairTimeFactor;
+	private DblStream breakdownLevel;
 	private Random machineRand = new Random();
 
 	protected List<BreakdownSource> breakdownSrc;
@@ -62,39 +60,33 @@ public class DynamicBreakdownShopExperiment extends DynamicShopExperiment {
 	}
 
 	protected BreakdownSource createBreakdownSource(IndividualMachine machine) {
+		if (repairTimeFactor == null || breakdownLevel == null) {
+			throw new IllegalStateException("Repair Time and Time Between Failures Distributions are not initialised.");
+		}
 		BreakdownSource src = new BreakdownSource(machine);
 
-		double meanProcTime = getProcTimes().getNumericalMean();
-
-		// Repair time is dependent on the processing time, and the down time is
-		// dependent on repair time and breakdown level.
-		double meanRepairTime = repairTimeFactor * meanProcTime;
-		double meanBreakdown = meanRepairTime / breakdownLevel - meanRepairTime;
-
 		src.setName(machine.name);
-		src.setTimeBetweenFailures(new DblDistribution(
-				machineRand, new ExponentialDistribution(meanBreakdown)));
-		src.setTimeToRepair(new DblDistribution(
-				machineRand, new ExponentialDistribution(meanRepairTime)));
+		src.setTimeBetweenFailures(getTimeBetweenFailureDistribution());
+		src.setTimeToRepair(getRepairTimeDistribution());
 
 		machine.addDowntimeSource(src);
 
 		return src;
 	}
 
-	public void setRepairTimeFactor(double repairTimeFactor) {
+	public void setRepairTimeDistribution(DblStream repairTimeFactor) {
 		this.repairTimeFactor = repairTimeFactor;
 	}
 
-	public double getRepairTimeFactor() {
+	public DblStream getRepairTimeDistribution() {
 		return repairTimeFactor;
 	}
 
-	public void setBreakdownLevel(double breakdownLevel) {
+	public void setTimeBetweenFailureDistribution(DblStream breakdownLevel) {
 		this.breakdownLevel = breakdownLevel;
 	}
 
-	public double getBreakdownLevel() {
+	public DblStream getTimeBetweenFailureDistribution() {
 		return breakdownLevel;
 	}
 

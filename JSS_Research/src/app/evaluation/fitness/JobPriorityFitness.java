@@ -50,7 +50,7 @@ public class JobPriorityFitness implements IJasimaEvalFitness {
 	public double getNumericResult(final PR rule,
 			final SimConfig simConfig,
 			final int configIndex,
-			final Map<String, Object> results,
+			final JobShopExperiment experiment,
 			final JasimaExperimentTracker<INode> tracker) {
 		throw new UnsupportedOperationException("The output is not numeric!");
 	}
@@ -59,22 +59,24 @@ public class JobPriorityFitness implements IJasimaEvalFitness {
 	public String getStringResult(final PR rule,
 			final SimConfig simConfig,
 			final int configIndex,
-			final Map<String, Object> results,
+			final JobShopExperiment experiment,
 			final JasimaExperimentTracker<INode> tracker) {
 		// Check to make sure that the rule is multirule
 		if (!(rule instanceof IMultiRule)) {
 			throw new RuntimeException("The rule being evaluated must be a type of multirule.");
 		}
 
+		Map<String, Object> results = experiment.getResults();
+
 		@SuppressWarnings("unchecked")
 		IMultiRule<INode> solver = (IMultiRule<INode>) rule;
-		List<JasimaExperiment<INode>> experiments = tracker.getResults();
+		List<JasimaExperiment<INode>> trackedResults = tracker.getResults();
 
-		JasimaExperiment<INode> experiment = experiments.get(configIndex);
+		JasimaExperiment<INode> trackedResult = trackedResults.get(configIndex);
 
 		String[] experimentResults = new String[] {
-				getJobSelectedResults(solver, results, experiment),
-				getJobPriorityResults(solver, results, experiment)
+				getJobSelectedResults(solver, results, trackedResult),
+				getJobPriorityResults(solver, results, trackedResult)
 		};
 
 
@@ -86,8 +88,8 @@ public class JobPriorityFitness implements IJasimaEvalFitness {
 		return output;
 	}
 
-	protected String getJobSelectedResults(IMultiRule<INode> solver, Map<String, Object> results, JasimaExperiment<INode> experiment) {
-		List<JasimaDecision<INode>> decisions = experiment.getDecisions();
+	protected String getJobSelectedResults(IMultiRule<INode> solver, Map<String, Object> results, JasimaExperiment<INode> trackedResult) {
+		List<JasimaDecision<INode>> decisions = trackedResult.getDecisions();
 		StringBuilder jobSelected = new StringBuilder();
 
 		jobSelected.append("\"");
@@ -102,8 +104,8 @@ public class JobPriorityFitness implements IJasimaEvalFitness {
 		return jobSelected.toString();
 	}
 
-	protected String getJobPriorityResults(IMultiRule<INode> solver, Map<String, Object> results, JasimaExperiment<INode> experiment) {
-		List<JasimaDecision<INode>> decisions = experiment.getDecisions();
+	protected String getJobPriorityResults(IMultiRule<INode> solver, Map<String, Object> results, JasimaExperiment<INode> trackedResult) {
+		List<JasimaDecision<INode>> decisions = trackedResult.getDecisions();
 		StringBuilder jobPriority = new StringBuilder();
 
 		jobPriority.append("\"");
@@ -131,8 +133,8 @@ public class JobPriorityFitness implements IJasimaEvalFitness {
 
 	// TODO old writing, remove after implementation.
 	// TODO double check this.
-	protected String getSingleVotedJobResults(IMultiRule<INode> solver, Map<String, Object> results, JasimaExperiment<INode> experiment) {
-		List<JasimaDecision<INode>> decisions = experiment.getDecisions();
+	protected String getSingleVotedJobResults(IMultiRule<INode> solver, Map<String, Object> results, JasimaExperiment<INode> trackedResult) {
+		List<JasimaDecision<INode>> decisions = trackedResult.getDecisions();
 
 		double singleVoteJobCount = 0.0;
 		for (JasimaDecision<INode> decision : decisions) {
@@ -154,8 +156,8 @@ public class JobPriorityFitness implements IJasimaEvalFitness {
 		return String.format("%f", singleVoteJobCount / decisions.size());
 	}
 
-	protected String getTieBreakJobResults(IMultiRule<INode> solver, Map<String, Object> results, JasimaExperiment<INode> experiment) {
-		List<JasimaDecision<INode>> decisions = experiment.getDecisions();
+	protected String getTieBreakJobResults(IMultiRule<INode> solver, Map<String, Object> results, JasimaExperiment<INode> trackedResult) {
+		List<JasimaDecision<INode>> decisions = trackedResult.getDecisions();
 
 		double tieBreakJobCount = 0.0;
 		for (JasimaDecision<INode> decision : decisions) {
@@ -182,8 +184,8 @@ public class JobPriorityFitness implements IJasimaEvalFitness {
 		return String.format("%f", tieBreakJobCount / decisions.size());
 	}
 
-	protected String getMajorityResults(IMultiRule<INode> solver, Map<String, Object> results, JasimaExperiment<INode> experiment) {
-		List<JasimaDecision<INode>> decisions = experiment.getDecisions();
+	protected String getMajorityResults(IMultiRule<INode> solver, Map<String, Object> results, JasimaExperiment<INode> trackedResult) {
+		List<JasimaDecision<INode>> decisions = trackedResult.getDecisions();
 		List<INode> ruleComponents = solver.getRuleComponents();
 
 		double[] majorityCounts = new double[ruleComponents.size()];
@@ -208,8 +210,8 @@ public class JobPriorityFitness implements IJasimaEvalFitness {
 		return majorityResults;
 	}
 
-	protected String getMinorityResults(IMultiRule<INode> solver, Map<String, Object> results, JasimaExperiment<INode> experiment) {
-		List<JasimaDecision<INode>> decisions = experiment.getDecisions();
+	protected String getMinorityResults(IMultiRule<INode> solver, Map<String, Object> results, JasimaExperiment<INode> trackedResult) {
+		List<JasimaDecision<INode>> decisions = trackedResult.getDecisions();
 		List<INode> ruleComponents = solver.getRuleComponents();
 
 		double[] minorityCounts = new double[ruleComponents.size()];
@@ -240,8 +242,8 @@ public class JobPriorityFitness implements IJasimaEvalFitness {
 		return minorityResults;
 	}
 
-	protected String getRankResults(IMultiRule<INode> solver, Map<String, Object> results, JasimaExperiment<INode> experiment) {
-		List<JasimaDecision<INode>> decisions = experiment.getDecisions();
+	protected String getRankResults(IMultiRule<INode> solver, Map<String, Object> results, JasimaExperiment<INode> trackedResult) {
+		List<JasimaDecision<INode>> decisions = trackedResult.getDecisions();
 		List<INode> ruleComponents = solver.getRuleComponents();
 
 		double[] ranks = new double[ruleComponents.size()];

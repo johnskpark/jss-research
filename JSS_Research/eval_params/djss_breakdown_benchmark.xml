@@ -16,8 +16,8 @@
 	</solverConfig>
 
 	<datasetConfig>
-		<datasetClass>app.simConfig.holthausConfig.EvalFactory</datasetClass>
-		<datasetInstances>(all),(0.05),(all)</datasetInstances>
+		<datasetClass>app.simConfig.holthausConfig3.EvalFactory</datasetClass>
+		<datasetInstances>(all),(all),(all)</datasetInstances>
 		<datasetSeed>15</datasetSeed>
 		<!-- <datasetSeed>4609823032865163582</datasetSeed> -->
 		<datasetRepeat>30</datasetRepeat>
@@ -51,7 +51,15 @@
 	</fitnessConfig>
 
 	<fitnessConfig>
-		<fitnessClass>app.evaluation.fitness.BreakdownLevelFitness</fitnessClass>
+		<fitnessClass>app.evaluation.fitness.BreakdownLevelInfo</fitnessClass>
+	</fitnessConfig>
+
+	<fitnessConfig>
+		<fitnessClass>app.evaluation.fitness.RepairTimeDistributionInfo</fitnessClass>
+	</fitnessConfig>
+
+	<fitnessConfig>
+		<fitnessClass>app.evaluation.fitness.DueDateFactorInfo</fitnessClass>
 	</fitnessConfig>
 
 <!--

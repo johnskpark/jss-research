@@ -6,6 +6,9 @@
 	<property name="jar.dir" value="../output_jars" />
 	<property name="lib.dir" value="../lib" />
 
+    <property name="eval_xsd.src" value="../src/app/evaluation" />
+    <property name="eval_xsd.bin" value="../bin/app/evaluation" />
+
 	<path id="classpath">
 		<fileset dir="${lib.dir}" includes="**/*.jar" />
 	</path> 
@@ -17,7 +20,15 @@
 
 	<target name="compile">
 	    <mkdir dir="${bin.dir}" />
-	    <javac srcdir="${src.dir}" destdir="${bin.dir}" classpathref="classpath" />
+        <!-- Compile the .java files -->
+	    <javac srcdir="${src.dir}" destdir="${bin.dir}" classpathref="classpath" debug="true" />
+
+        <!-- Copy the .xsd file that validates the xml file -->
+        <copy todir="${eval_xsd.bin}" >
+            <fileset dir="${eval_xsd.src}" > 
+                <include name="*.xsd" />
+            </fileset>
+        </copy>
 	</target>
 
 	<target name="jar">

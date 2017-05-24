@@ -1,7 +1,5 @@
 package app.evaluation.fitness;
 
-import java.util.Map;
-
 import app.evaluation.EvalPriorityRuleBase;
 import app.evaluation.IJasimaEvalFitness;
 import app.node.INode;
@@ -34,7 +32,7 @@ public class RuleSizeFitness implements IJasimaEvalFitness {
 	public double getNumericResult(final PR rule,
 			final SimConfig simConfig,
 			final int configIndex,
-			final Map<String, Object> results,
+			final JobShopExperiment experiment,
 			final JasimaExperimentTracker<INode> tracker) {
 		throw new UnsupportedOperationException("The output is not numeric!");
 	}
@@ -43,7 +41,7 @@ public class RuleSizeFitness implements IJasimaEvalFitness {
 	public String getStringResult(final PR rule,
 			final SimConfig simConfig,
 			final int configIndex,
-			final Map<String, Object> results,
+			final JobShopExperiment experiment,
 			final JasimaExperimentTracker<INode> tracker) {
 		EvalPriorityRuleBase evalRule = (EvalPriorityRuleBase) rule;
 

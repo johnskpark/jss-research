@@ -38,7 +38,6 @@ import app.simConfig.ExperimentGenerator;
 import app.simConfig.SimConfig;
 import app.tracker.JasimaExperimentTracker;
 import app.util.RuleParser;
-import jasima.core.experiment.Experiment;
 import jasima.core.util.Pair;
 import jasima.shopSim.core.JobShopExperiment;
 import jasima.shopSim.core.PR;
@@ -472,7 +471,7 @@ public class JasimaEvalProblem {
 					((TrackedPR) refRule).initSampleRun(configIndex);
 				}
 
-				Experiment experiment = getExperiment(refRule, configIndex);
+				JobShopExperiment experiment = getExperiment(refRule, configIndex);
 				experiment.runExperiment();
 
 				for (IJasimaEvalFitness fitness : standardEvaluation) {
@@ -482,7 +481,11 @@ public class JasimaEvalProblem {
 							configIndex;
 
 					if (fitness.resultIsNumeric()) {
-						double result = fitness.getNumericResult(refRule, simConfig, configIndex, experiment.getResults(), tracker);
+						double result = fitness.getNumericResult(refRule,
+								simConfig,
+								configIndex,
+								experiment,
+								tracker);
 
 						refFitness.get(key).add(refIndex, result);
 					}
@@ -594,7 +597,7 @@ public class JasimaEvalProblem {
 				tracker.setExperimentIndex(configIndex);
 				trackedRefRule.initTrackedRun(configIndex);
 
-				Experiment experiment = getExperiment(trackedRefRule, configIndex);
+				JobShopExperiment experiment = getExperiment(trackedRefRule, configIndex);
 				experiment.runExperiment();
 
 				for (int solverIndex = 0; solverIndex < solvers.size(); solverIndex++) {
@@ -603,7 +606,11 @@ public class JasimaEvalProblem {
 					StringBuilder builder = new StringBuilder();
 
 					for (IJasimaEvalFitness fitness : referenceEvaluation) {
-						 String result = fitness.getStringResult(solver, simConfig, configIndex, experiment.getResults(), tracker);
+						 String result = fitness.getStringResult(solver,
+								 simConfig,
+								 configIndex,
+								 experiment,
+								 tracker);
 						 builder.append("," + result);
 					}
 
@@ -653,7 +660,11 @@ public class JasimaEvalProblem {
 					StringBuilder builder = new StringBuilder();
 
 					for (IJasimaEvalFitness fitness : standardEvaluation) {
-						String result = fitness.getStringResult(solver, simConfig, configIndex, experiment.getResults(), tracker);
+						String result = fitness.getStringResult(solver,
+								simConfig,
+								configIndex,
+								experiment,
+								tracker);
 
 						builder.append("," + result);
 					}

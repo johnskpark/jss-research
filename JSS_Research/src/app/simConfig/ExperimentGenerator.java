@@ -51,9 +51,9 @@ public class ExperimentGenerator {
 		experiment.setStopArrivalsAfterNumJobs(simConfig.getStopArrivalsAfterNumJobs());
 		experiment.setStopAfterNumJobs(simConfig.getStopArrivalsAfterNumJobs());
 
-		experiment.setRepairTimeFactor(simConfig.getRepairTimeFactor(index));
-		experiment.setBreakdownLevel(simConfig.getBreakdownLevel(index));
 		experiment.setMachineRandom(new Random(machineValue));
+		experiment.setRepairTimeDistribution(simConfig.getRepairTimeDistribution(experiment, index));
+		experiment.setTimeBetweenFailureDistribution(simConfig.getTimeBetweenFailureDistribution(experiment, index));
 
 		BasicJobStatCollector statCollector = new BasicJobStatCollector();
 		statCollector.setIgnoreFirst(simConfig.getNumIgnore());

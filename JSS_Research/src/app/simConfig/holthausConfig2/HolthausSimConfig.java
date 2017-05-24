@@ -6,6 +6,14 @@ import app.simConfig.DynamicSimConfig;
 import jasima.core.random.continuous.DblConst;
 import jasima.core.random.continuous.DblStream;
 
+/**
+ * This is the Holthaus configuration without the machine breakdown used
+ * to test the original implementation of Holthaus's machine breakdown
+ * simulation configurations.
+ *
+ * @author parkjohn
+ *
+ */
 public class HolthausSimConfig extends DynamicSimConfig {
 
 	private static final int MIN_PROC_TIME = 1;

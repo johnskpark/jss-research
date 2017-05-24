@@ -6,21 +6,28 @@
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>breakdown_attempt2_baseline.txt</ruleFile>
+			<ruleFile>breakdown_attempt2_baseline_10_05_3.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>breakdown_attempt2_current1.txt</ruleFile>
+			<ruleFile>breakdown_attempt2_predictive_10_05_3.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>breakdown_attempt2_current2.txt</ruleFile>
+			<ruleFile>breakdown_attempt2_current1_10_05_3.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>breakdown_attempt2_current2_10_05_3.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
@@ -65,7 +72,7 @@
 
 <!-- Output file definition -->
 	<outputConfig>
-	    <outputFile>breakdown_attempt2_current_output.csv</outputFile>
+	    <outputFile>breakdown_attempt2_10_05_3_current_output.csv</outputFile>
 	</outputConfig>
 
 
@@ -79,7 +86,15 @@
 	</fitnessConfig>
 
 	<fitnessConfig>
-		<fitnessClass>app.evaluation.fitness.BreakdownLevelFitness</fitnessClass>
+		<fitnessClass>app.evaluation.fitness.BreakdownLevelInfo</fitnessClass>
+	</fitnessConfig>
+
+	<fitnessConfig>
+		<fitnessClass>app.evaluation.fitness.RepairTimeDistributionInfo</fitnessClass>
+	</fitnessConfig>
+
+	<fitnessConfig>
+		<fitnessClass>app.evaluation.fitness.DueDateFactorInfo</fitnessClass>
 	</fitnessConfig>
 
 <!--

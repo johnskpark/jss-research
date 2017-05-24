@@ -1,4 +1,4 @@
-package app.simConfig.holthausConfig;
+package app.simConfig.holthausConfig3;
 
 import jasima.core.random.continuous.DblStream;
 import jasima.core.util.Pair;

@@ -2,22 +2,22 @@ package app.evaluation.fitness;
 
 import app.evaluation.IJasimaEvalFitness;
 import app.node.INode;
+import app.simConfig.DynamicBreakdownSimConfig;
 import app.simConfig.SimConfig;
-import app.stat.WeightedTardinessStat;
 import app.tracker.JasimaExperimentTracker;
 import jasima.shopSim.core.JobShopExperiment;
 import jasima.shopSim.core.PR;
 
-public class TWTFitness implements IJasimaEvalFitness {
+public class BreakdownLevelInfo implements IJasimaEvalFitness {
 
 	@Override
 	public String getHeaderName() {
-		return "TWT";
+		return "BreakdownLevel";
 	}
 
 	@Override
 	public boolean resultIsNumeric() {
-		return true;
+		return false;
 	}
 
 	@Override
@@ -34,7 +34,13 @@ public class TWTFitness implements IJasimaEvalFitness {
 			final int configIndex,
 			final JobShopExperiment experiment,
 			final JasimaExperimentTracker<INode> tracker) {
-		return WeightedTardinessStat.getTotalWeightedTardiness(experiment.getResults());
+		if (!(simConfig instanceof DynamicBreakdownSimConfig)) {
+			throw new RuntimeException("SimConfig needs to be of DynamicBreakdownSimConfig instance.");
+		}
+
+		DynamicBreakdownSimConfig breakdownSimConfig = (DynamicBreakdownSimConfig) simConfig;
+
+		return breakdownSimConfig.getBreakdownLevel(configIndex);
 	}
 
 	@Override
@@ -43,7 +49,14 @@ public class TWTFitness implements IJasimaEvalFitness {
 			final int configIndex,
 			final JobShopExperiment experiment,
 			final JasimaExperimentTracker<INode> tracker) {
-		return String.format("%f", WeightedTardinessStat.getTotalWeightedTardiness(experiment.getResults()));
+		if (!(simConfig instanceof DynamicBreakdownSimConfig)) {
+			throw new RuntimeException("SimConfig needs to be of DynamicBreakdownSimConfig instance.");
+		}
+
+		DynamicBreakdownSimConfig breakdownSimConfig = (DynamicBreakdownSimConfig) simConfig;
+
+		return String.format("%f", breakdownSimConfig.getBreakdownLevel(configIndex));
 	}
+
 
 }
