@@ -58,7 +58,7 @@ public abstract class DynamicBreakdownSimConfig implements SimConfig {
 
 	public abstract int getNumIgnore();
 
-	public abstract int getStopArrivalsAfterNumJobs();
+	public abstract int getStopAfterNumJobs();
 
 	public abstract DblStream getRepairTimeDistribution(DynamicBreakdownShopExperiment experiment, int index);
 

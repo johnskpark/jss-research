@@ -95,7 +95,7 @@ public class HolthausSimConfig extends DynamicBreakdownSimConfig {
 	}
 
 	@Override
-	public int getStopArrivalsAfterNumJobs() {
+	public int getStopAfterNumJobs() {
 		return STOP_AFTER_NUM_JOBS;
 	}
 

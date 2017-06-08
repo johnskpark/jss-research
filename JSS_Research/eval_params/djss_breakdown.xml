@@ -6,28 +6,28 @@
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>breakdown_attempt2_baseline_10_05_3.txt</ruleFile>
+			<ruleFile>breakdown_baseline_10_05_3_holthaus.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>breakdown_attempt2_predictive_10_05_3.txt</ruleFile>
+			<ruleFile>breakdown_predictive_10_05_3_holthaus.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>breakdown_attempt2_current1_10_05_3.txt</ruleFile>
+			<ruleFile>breakdown_current1_10_05_3_holthaus.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>breakdown_attempt2_current2_10_05_3.txt</ruleFile>
+			<ruleFile>breakdown_current2_10_05_3_holthaus.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
@@ -62,7 +62,7 @@
 -->
 
 	<datasetConfig>
-		<datasetClass>app.simConfig.holthausConfig.EvalFactory</datasetClass>
+		<datasetClass>app.simConfig.holthausConfig3.EvalFactory</datasetClass>
 		<datasetInstances>(all),(all),(all)</datasetInstances>
 		<datasetSeed>15</datasetSeed>
 		<!-- <datasetSeed>4609823032865163582</datasetSeed> -->
@@ -72,7 +72,7 @@
 
 <!-- Output file definition -->
 	<outputConfig>
-	    <outputFile>breakdown_attempt2_10_05_3_current_output.csv</outputFile>
+	    <outputFile>breakdown_10_05_3_holthaus3_output.csv</outputFile>
 	</outputConfig>
 
 

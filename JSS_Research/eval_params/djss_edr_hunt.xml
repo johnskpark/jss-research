@@ -5,43 +5,22 @@
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>simple_4op.txt</ruleFile>
+			<ruleFile>djss_baseline_4op.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+-->
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>djss_coop_4op.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>simple_8op.txt</ruleFile>
-		</solverFile>
-	</solverConfig>
--->
-
-	<solverConfig>
-		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
-		<solverFile>
-			<ruleFile>coop_4op.txt</ruleFile>
-		</solverFile>
-	</solverConfig>
-
-	<solverConfig>
-		<solverClass>app.evaluation.priorityRules.WeightedVoteRule</solverClass>
-		<solverFile>
-			<ruleFile>coop_weighted_4op.txt</ruleFile>
-		</solverFile>
-	</solverConfig>
-
-	<solverConfig>
-		<solverClass>app.evaluation.priorityRules.LinearCombinationRule</solverClass>
-		<solverFile>
-			<ruleFile>coop_lc_4op.txt</ruleFile>
-		</solverFile>
-	</solverConfig>
-
-	<solverConfig>
-		<solverClass>app.evaluation.priorityRules.WeightedLinearCombinationRule</solverClass>
-		<solverFile>
-			<ruleFile>coop_weighted_lc_4op.txt</ruleFile>
+			<ruleFile>djss_coop_lc_4op.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
@@ -49,23 +28,24 @@
 		<datasetClass>app.simConfig.huntConfig.EvalFactory</datasetClass>
 		<datasetInstances>test</datasetInstances>
 		<datasetSeed>15</datasetSeed>
-		<datasetRepeat>1</datasetRepeat>
+		<datasetRepeat>30</datasetRepeat>
 	</datasetConfig>
 
 	<outputConfig>
-	    <outputFile>coop_only_diversity_4op_output.csv</outputFile>
+	    <outputFile>djss_asoc_temp_output.csv</outputFile>
 	</outputConfig>
 
 	<fitnessConfig>
-		<fitnessClass>app.evaluation.fitness.TWTFitness</fitnessClass>
+		<fitnessClass>app.evaluation.fitness.MWTFitness</fitnessClass>
 	</fitnessConfig>
 
 	<fitnessConfig>
 		<fitnessClass>app.evaluation.fitness.RuleSizeFitness</fitnessClass>
 	</fitnessConfig>
 
+<!--
 	<refConfig>
-		<refRule>app.evaluation.priorityRules.EvalATC</refRule>
+		<refRule>app.evaluation.priorityRules.WATCPR</refRule>
 		<refTracking>
 			<numJobsThreshold>10</numJobsThreshold>
 			<numSamples>50</numSamples>
@@ -76,6 +56,7 @@
 	<refFitnessConfig>
 		<fitnessClass>app.evaluation.fitness.DiversityFitness</fitnessClass>
 	</refFitnessConfig>
+-->
 
 	<listenerConfig>
 	    <listenerClass>app.listener.hunt.EvalFactory</listenerClass>

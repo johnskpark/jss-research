@@ -7,7 +7,7 @@ parent.0 = djss_coop.params
 pop.subpops = 5
 pop.default-subpop = 0
 
-pop.subpop.0.size = 256
+pop.subpop.0.size = 231
 pop.subpop.0.species.ind = app.evolution.coop.JasimaCoopGPIndividual
 
 pop.subpop.4 = ec.Subpopulation

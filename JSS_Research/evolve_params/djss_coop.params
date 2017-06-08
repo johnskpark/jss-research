@@ -3,6 +3,7 @@
 # See the file "LICENSE" for more information
 
 parent.0 = koza.params
+parent.1 = hunt.params
 
 # multi.fitness.num-objectives = 3
 # multi.fitness.maximize = false
@@ -84,27 +85,16 @@ eval.problem = app.evolution.coop.JasimaCoopProblem
 eval.problem.data = app.evolution.JasimaGPData
 
 eval.problem.reference-rule = app.priorityRules.WATCPR
-eval.problem.reference-fitness = app.evolution.simple.fitness.TWTFitness
+eval.problem.reference-fitness = app.evolution.simple.fitness.MWTFitness
 
 #eval.problem.ind-rule = app.evolution.priorityRules.BasicPriorityRule
 #eval.problem.ind-fitness = app.evolution.coop.fitness.IndNormTWTFitness
 
 eval.problem.rule = app.evolution.priorityRules.EnsemblePriorityRule
-eval.problem.fitness = app.evolution.coop.fitness.NormTWTFitness
-
-eval.problem.simulator = app.simConfig.huntConfig.EvolveFactory
-eval.problem.simulator.instances = 8op
-eval.problem.simulator.seed = 15
-eval.problem.simulator.rotate-seed = true
-
-#eval.problem.simulator = app.simConfig.taillardConfig.EvolveFactory
-#eval.problem.simulator.instances = tai15_15,tai20_15,tai20_20
-
-#eval.problem.tracker = app.tracker.JasimaExperimentTracker
+eval.problem.fitness = app.evolution.coop.fitness.NormMWTFitness
 
 eval.problem.workstations = 1
 eval.problem.workstation.0 = app.listener.hunt.EvolveFactory
 eval.problem.workstation.0.max-jobs = 5
 
-# seed.0=26556
 seed.0=17

@@ -48,8 +48,7 @@ public class ExperimentGenerator {
 		experiment.setProcTimes(simConfig.getProcTime(index));
 		experiment.setNumOps(simConfig.getMinNumOps(index), simConfig.getMaxNumOps(index));
 
-		experiment.setStopArrivalsAfterNumJobs(simConfig.getStopArrivalsAfterNumJobs());
-		experiment.setStopAfterNumJobs(simConfig.getStopArrivalsAfterNumJobs());
+		experiment.setStopAfterNumJobs(simConfig.getStopAfterNumJobs());
 
 		experiment.setMachineRandom(new Random(machineValue));
 		experiment.setRepairTimeDistribution(simConfig.getRepairTimeDistribution(experiment, index));
@@ -81,8 +80,7 @@ public class ExperimentGenerator {
 		experiment.setProcTimes(simConfig.getProcTime(index));
 		experiment.setNumOps(simConfig.getMinNumOps(index), simConfig.getMaxNumOps(index));
 
-		experiment.setStopArrivalsAfterNumJobs(simConfig.getStopArrivalsAfterNumJobs());
-		experiment.setStopAfterNumJobs(simConfig.getStopArrivalsAfterNumJobs());
+		experiment.setStopAfterNumJobs(simConfig.getStopAfterNumJobs());
 
 		BasicJobStatCollector statCollector = new BasicJobStatCollector();
 		statCollector.setIgnoreFirst(simConfig.getNumIgnore());

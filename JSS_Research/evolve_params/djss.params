@@ -3,6 +3,7 @@
 # See the file "LICENSE" for more information
 
 parent.0 = koza.params
+parent.1 = hunt.params
 
 pop.subpop.0.species.ind = app.evolution.JasimaGPIndividual
 
@@ -18,7 +19,7 @@ gp.fs.0.name = f0
 
 # We have five functions in the function set.  They are:
 
-#breed.elite.0 = 40
+breed.elite.0 = 40
 
 gp.fs.0.size = 19
 gp.fs.0.func.0 = app.evolution.node.basic.ERCRandomUniform
@@ -67,22 +68,14 @@ stat = app.evolution.simple.JasimaSimpleStatistics
 eval.problem = app.evolution.simple.JasimaSimpleProblem
 eval.problem.data = app.evolution.JasimaGPData
 
-eval.problem.reference-rule = app.priorityRules.ATCPRNew
-eval.problem.reference-fitness = app.evolution.simple.fitness.TWTFitness
+eval.problem.reference-rule = app.priorityRules.WATCPR
+eval.problem.reference-fitness = app.evolution.simple.fitness.MWTFitness
 
 eval.problem.rule = app.evolution.priorityRules.BasicPriorityRule
-eval.problem.fitness = app.evolution.simple.fitness.NormTWTFitness
-
-eval.problem.simulator = app.simConfig.huntConfig.EvolveFactory
-eval.problem.simulator.instances = 8op
-eval.problem.simulator.seed = 15
-eval.problem.simulator.rotate-seed = false
-
-#eval.problem.simulator = app.simConfig.taillardConfig.EvolveFactory
+eval.problem.fitness = app.evolution.simple.fitness.NormMWTFitness
 
 eval.problem.workstations = 1
 eval.problem.workstation.0 = app.listener.hunt.EvolveFactory
 eval.problem.workstation.0.max-jobs = 5
 
-# seed.0=26556
 seed.0=17

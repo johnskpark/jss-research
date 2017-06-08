@@ -1,0 +1,7 @@
+
+# Parameter settings specifically set for Rachel's simulation configuration.
+
+eval.problem.simulator = app.simConfig.huntConfig.EvolveFactory
+eval.problem.simulator.instances = 8op
+eval.problem.simulator.seed = 15
+eval.problem.simulator.rotate-seed = true
