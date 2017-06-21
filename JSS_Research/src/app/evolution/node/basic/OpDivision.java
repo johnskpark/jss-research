@@ -24,7 +24,7 @@ public class OpDivision extends SingleLineGPNode {
 
 	private static final long serialVersionUID = 2589591919537774922L;
 	private static final NodeDefinition NODE_DEFINITION = NodeDefinition.OP_DIVISION;
-	private static final double MINIMUM_THRESHOLD_FROM_ZERO = 0.000001;
+	private static final double MINIMUM_THRESHOLD_FROM_ZERO = 0.0000001;
 
 	@Override
 	public String toString() {

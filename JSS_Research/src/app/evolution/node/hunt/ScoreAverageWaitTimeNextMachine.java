@@ -1,8 +1,11 @@
 package app.evolution.node.hunt;
 
+import java.util.Queue;
+
 import app.evolution.JasimaGPData;
 import app.evolution.node.SingleLineGPNode;
 import app.listener.hunt.HuntListener;
+import app.listener.hunt.OperationCompletionStat;
 import app.node.NodeDefinition;
 import ec.EvolutionState;
 import ec.Problem;
@@ -50,7 +53,22 @@ public class ScoreAverageWaitTimeNextMachine extends SingleLineGPNode {
 		} else {
 			WorkStation machine = entry.getOps()[nextTask].machine;
 
-			data.setPriority(listener.getAverageWaitTime(machine));
+			// TODO This was the original code, why does this work and not the other one?
+			if (listener.hasCompletedJobs(machine)) {
+				Queue<OperationCompletionStat> completedJobsQueue = listener.getLastCompletedJobs(machine);
+
+				double averageWaitTime = 0.0;
+				for (OperationCompletionStat stat : completedJobsQueue) {
+					averageWaitTime += stat.getWaitTime();
+				}
+				averageWaitTime /= completedJobsQueue.size();
+
+				data.setPriority(averageWaitTime);
+			} else {
+				data.setPriority(0.0);
+			}
+
+//			data.setPriority(listener.getAverageWaitTime(machine));
 		}
 	}
 

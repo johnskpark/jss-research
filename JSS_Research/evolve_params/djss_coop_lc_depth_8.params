@@ -1,0 +1,34 @@
+# Copyright 2006 by Sean Luke and George Mason University
+# Licensed under the Academic Free License version 3.0
+# See the file "LICENSE" for more information
+
+parent.0 = djss_coop.params
+
+# Copying over the parameters from koza with the max depth of 8.
+gp.koza.xover.source.0 = ec.select.TournamentSelection
+gp.koza.xover.source.1 = same
+gp.koza.xover.ns.0 = ec.gp.koza.KozaNodeSelector
+gp.koza.xover.ns.1 = same
+gp.koza.xover.maxdepth = 8
+
+gp.koza.mutate.source.0 = ec.select.TournamentSelection
+gp.koza.mutate.ns.0 = ec.gp.koza.KozaNodeSelector
+gp.koza.mutate.build.0 = ec.gp.koza.GrowBuilder
+gp.koza.mutate.maxdepth = 8
+
+gp.koza.grow.min-depth = 4
+gp.koza.grow.max-depth = 4
+
+gp.koza.half.min-depth = 2
+gp.koza.half.max-depth = 4
+gp.koza.half.growp = 0.5
+
+eval.problem.rule = app.evolution.priorityRules.LinearCombinationRule
+
+stat = app.evolution.coop.statistics.BuggedJasimaCoopStatistics
+
+eval.problem.reference-rule = app.priorityRules.WATCPR
+eval.problem.reference-fitness = app.evolution.simple.fitness.TWTFitness
+
+eval.problem.rule = app.evolution.priorityRules.EnsemblePriorityRule
+eval.problem.fitness = app.evolution.coop.fitness.NormTWTFitness

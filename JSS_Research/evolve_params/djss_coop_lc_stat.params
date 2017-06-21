@@ -1,0 +1,15 @@
+# Copyright 2006 by Sean Luke and George Mason University
+# Licensed under the Academic Free License version 3.0
+# See the file "LICENSE" for more information
+
+parent.0 = djss_coop.params
+
+eval.problem.rule = app.evolution.priorityRules.LinearCombinationRule
+
+stat = app.evolution.coop.statistics.JasimaCoopStatistics
+
+eval.problem.reference-rule = app.priorityRules.WATCPR
+eval.problem.reference-fitness = app.evolution.simple.fitness.TWTFitness
+
+eval.problem.rule = app.evolution.priorityRules.EnsemblePriorityRule
+eval.problem.fitness = app.evolution.coop.fitness.NormTWTFitness

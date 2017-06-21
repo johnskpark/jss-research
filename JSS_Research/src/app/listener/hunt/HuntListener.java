@@ -100,11 +100,39 @@ public class HuntListener extends JasimaWorkStationListener {
 			throw new RuntimeException("The listener has not yet been stat.initalised!");
 		}
 
+		double averageWaitTime = 0.0;
 		if (hasCompletedJobs(machine)) {
 			double sumWaitTimes = stat.sumWaitTimesPerMachine[machine.index()];
 			double queueSize = stat.completedJobs[machine.index()].size();
 
-			return sumWaitTimes / queueSize;
+			averageWaitTime = sumWaitTimes / queueSize;
+		}
+
+		// TODO temporary code.
+//		double temp = tempCode(machine);
+//		if (Math.abs(temp - averageWaitTime) >= 0.0000001) {
+//			// TODO error here.
+//			System.out.printf("diff in calc: %f, %f \n", averageWaitTime, temp);
+//		}
+//		if (temp > 0) {
+//			System.out.printf("diff in calc: %f, %f, %f \n", temp-averageWaitTime, averageWaitTime, temp);
+//		}
+
+		return averageWaitTime;
+	}
+
+	// TODO need to temporary code.
+	private double tempCode(WorkStation machine) {
+		if (hasCompletedJobs(machine)) {
+			Queue<OperationCompletionStat> completedJobsQueue = getLastCompletedJobs(machine);
+
+			double averageWaitTime = 0.0;
+			for (OperationCompletionStat stat : completedJobsQueue) {
+				averageWaitTime += stat.getWaitTime();
+			}
+			averageWaitTime /= completedJobsQueue.size();
+
+			return averageWaitTime;
 		} else {
 			return 0.0;
 		}

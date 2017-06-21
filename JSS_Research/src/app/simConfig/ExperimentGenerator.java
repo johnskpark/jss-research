@@ -12,7 +12,9 @@ import jasima.shopSim.util.BasicJobStatCollector;
 
 public class ExperimentGenerator {
 
-	public static final JobShopExperiment getExperiment(final SimConfig simConfig, final PR rule, final int index) {
+	public static final JobShopExperiment getExperiment(final SimConfig simConfig,
+			final PR rule,
+			final int index) {
 		JobShopExperiment experiment = null;
 
 		if (simConfig instanceof DynamicBreakdownSimConfig) {

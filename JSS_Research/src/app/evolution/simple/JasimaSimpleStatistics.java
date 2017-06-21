@@ -60,11 +60,11 @@ public class JasimaSimpleStatistics extends SimpleStatistics {
 	public void postEvaluationStatistics(final EvolutionState state) {
 		super.postEvaluationStatistics(state);
 
-		SummaryStat stat = new SummaryStat();
-
 		// Collect the standarded fitnesses of the individuals.
 		for (int i = 0; i < state.population.subpops.length; i++) {
 			Subpopulation subpop = state.population.subpops[i];
+
+			SummaryStat stat = new SummaryStat();
 
 			for (int j = 0; j < subpop.individuals.length; j++) {
 				Individual ind = subpop.individuals[j];
@@ -82,15 +82,15 @@ public class JasimaSimpleStatistics extends SimpleStatistics {
 					stat.value(((KozaFitness) ind.fitness).standardizedFitness());
 				}
 			}
-		}
 
-		double bestFitness = stat.min();
-		double worstFitness = stat.max();
-		double avgFitness = stat.mean();
+			double bestFitness = stat.min();
+			double worstFitness = stat.max();
+			double avgFitness = stat.mean();
 
-		// Print out a summary of the individual's fitnesses.
-		if (doGeneration) {
-			state.output.println("Best/Avg/Worst Individual Fitness: " + arrayFormat.formatData(bestFitness, worstFitness, avgFitness), statisticslog);
+			// Print out a summary of the individual's fitnesses.
+			if (doGeneration) {
+				state.output.println("Subpopulation " + i + " Best/Avg/Worst Individual Fitness: " + arrayFormat.formatData(bestFitness, worstFitness, avgFitness), statisticslog);
+			}
 		}
 	}
 

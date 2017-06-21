@@ -8,6 +8,7 @@ import ec.Problem;
 import ec.gp.ADFStack;
 import ec.gp.GPData;
 import ec.gp.GPIndividual;
+import jsc.util.Maths;
 
 /**
  * Non-terminal node representing the multiplication operator in a arithmetic
@@ -20,6 +21,7 @@ public class OpMultiplication extends SingleLineGPNode {
 
 	private static final long serialVersionUID = 672174749690633859L;
 	private static final NodeDefinition NODE_DEFINITION = NodeDefinition.OP_MULTIPLICATION;
+	private static final double MINIMUM_THRESHOLD_FROM_ZERO = 0.0000001;
 
 	@Override
 	public String toString() {
@@ -46,6 +48,12 @@ public class OpMultiplication extends SingleLineGPNode {
 		children[1].eval(state, thread, input, stack, individual, problem);
 		double priority2 = data.getPriority();
 
+		// TODO need this for the future.
+//		if (Math.abs(priority1) < MINIMUM_THRESHOLD_FROM_ZERO || Math.abs(priority2) < MINIMUM_THRESHOLD_FROM_ZERO) {
+//			data.setPriority(0.0);
+//		} else {
+//			data.setPriority(priority1 * priority2);
+//		}
 		data.setPriority(priority1 * priority2);
 	}
 

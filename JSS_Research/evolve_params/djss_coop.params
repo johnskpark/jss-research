@@ -88,7 +88,7 @@ eval.problem.reference-rule = app.priorityRules.WATCPR
 eval.problem.reference-fitness = app.evolution.simple.fitness.MWTFitness
 
 #eval.problem.ind-rule = app.evolution.priorityRules.BasicPriorityRule
-#eval.problem.ind-fitness = app.evolution.coop.fitness.IndNormTWTFitness
+#eval.problem.ind-fitness = app.evolution.coop.fitness.IndNormMWTFitness
 
 eval.problem.rule = app.evolution.priorityRules.EnsemblePriorityRule
 eval.problem.fitness = app.evolution.coop.fitness.NormMWTFitness

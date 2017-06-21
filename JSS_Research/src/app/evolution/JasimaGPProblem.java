@@ -62,7 +62,7 @@ public abstract class JasimaGPProblem extends GPProblem {
 		simConfigFactory.setup(state, base.push(P_SIMULATOR));
 		simConfig = simConfigFactory.generateSimConfig();
 
-		state.output.message("JasimaGPProblem rotate seed: " + simConfigFactory.rotatesSeed());
+		state.output.message("JasimaGPProblem rotate-seed: " + simConfigFactory.rotatesSeed());
 
 		// Setup the tracker.
 		try {

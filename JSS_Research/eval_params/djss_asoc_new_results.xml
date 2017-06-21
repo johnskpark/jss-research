@@ -2,74 +2,124 @@
 <evaluationConfig>
 
 <!-- 4op rules -->
+<!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>djss_baseline_4op.txt</ruleFile>
+			<ruleFile>asoc_new_results/djss_baseline_4op.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>djss_coop_4op.txt</ruleFile>
+			<ruleFile>asoc_new_results/djss_coop_4op_new.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.LinearCombinationRule</solverClass>
 		<solverFile>
-			<ruleFile>djss_coop_lc_4op.txt</ruleFile>
+			<ruleFile>asoc_new_results/djss_coop_lc_4op_new.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.WeightedVoteRule</solverClass>
 		<solverFile>
-			<ruleFile>djss_coop_weighted_4op.txt</ruleFile>
+			<ruleFile>asoc_new_results/djss_coop_weighted_4op_new.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.WeightedLinearCombinationRule</solverClass>
 		<solverFile>
-			<ruleFile>djss_coop_weighted_lc_4op.txt</ruleFile>
+			<ruleFile>asoc_new_results/djss_coop_weighted_lc_4op_new.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
+-->
 
 <!-- 8op rules -->
+<!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>djss_baseline_4op.txt</ruleFile>
+			<ruleFile>asoc_new_results/djss_baseline_8op.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>djss_coop_4op.txt</ruleFile>
+			<ruleFile>asoc_new_results/djss_coop_8op_new.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.LinearCombinationRule</solverClass>
 		<solverFile>
-			<ruleFile>djss_coop_lc_4op.txt</ruleFile>
+			<ruleFile>asoc_new_results/djss_coop_lc_8op_new.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.WeightedVoteRule</solverClass>
 		<solverFile>
-			<ruleFile>djss_coop_weighted_4op.txt</ruleFile>
+			<ruleFile>asoc_new_results/djss_coop_weighted_8op_new.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.WeightedLinearCombinationRule</solverClass>
 		<solverFile>
-			<ruleFile>djss_coop_weighted_lc_4op.txt</ruleFile>
+			<ruleFile>asoc_new_results/djss_coop_weighted_lc_8op_new.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+-->
+
+<!-- The bad Coop LC rule 29541 -->
+<!--
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>asoc_new_results/djss_coop_lc_4op_29541a.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>asoc_new_results/djss_coop_lc_4op_29541b.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>asoc_new_results/djss_coop_lc_4op_29541c.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>asoc_new_results/djss_coop_lc_4op_29541d.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.LinearCombinationRule</solverClass>
+		<solverFile>
+			<ruleFile>asoc_new_results/djss_coop_lc_4op_29541.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+-->
+
+<!-- Testing extracted collaborators -->
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.LinearCombinationRule</solverClass>
+		<solverFile>
+			<ruleFile>asoc_new_results/djss_coop_lc_4op_new2.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
@@ -81,12 +131,21 @@
 		<datasetRepeat>30</datasetRepeat>
 	</datasetConfig>
 
+<!--
 	<outputConfig>
-	    <outputFile>djss_asoc_output.csv</outputFile>
+	    <outputFile>djss_asoc_new_output.csv</outputFile>
+	</outputConfig>
+-->
+	<outputConfig>
+	    <outputFile>djss_coop_lc_4op_new2_output.csv</outputFile>
 	</outputConfig>
 
 	<fitnessConfig>
 		<fitnessClass>app.evaluation.fitness.MWTFitness</fitnessClass>
+	</fitnessConfig>
+
+	<fitnessConfig>
+		<fitnessClass>app.evaluation.fitness.TWTFitness</fitnessClass>
 	</fitnessConfig>
 
 	<fitnessConfig>

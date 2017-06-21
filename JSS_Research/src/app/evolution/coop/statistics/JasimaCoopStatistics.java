@@ -1,12 +1,12 @@
 package app.evolution.coop.statistics;
 
 import app.evolution.coop.JasimaCoopProblem;
+import app.evolution.simple.JasimaSimpleStatistics;
 import ec.EvolutionState;
-import ec.simple.SimpleStatistics;
 import ec.util.Parameter;
 import jasima.core.statistics.SummaryStat;
 
-public class JasimaCoopStatistics extends SimpleStatistics {
+public class JasimaCoopStatistics extends JasimaSimpleStatistics {
 
 	private static final long serialVersionUID = 8464431576658975312L;
 
@@ -35,4 +35,5 @@ public class JasimaCoopStatistics extends SimpleStatistics {
 			}
 		}
 	}
+
 }
