@@ -115,11 +115,11 @@
 	</solverConfig>
 -->
 
-<!-- Testing extracted collaborators -->
+<!-- Testing a bugged original -->
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.LinearCombinationRule</solverClass>
 		<solverFile>
-			<ruleFile>asoc_new_results/djss_coop_lc_4op_new2.txt</ruleFile>
+			<ruleFile>asoc_new_results/djss_coop_lc_4op_journal2.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
@@ -137,7 +137,7 @@
 	</outputConfig>
 -->
 	<outputConfig>
-	    <outputFile>djss_coop_lc_4op_new2_output.csv</outputFile>
+	    <outputFile>djss_coop_lc_4op_journal2_output.csv</outputFile>
 	</outputConfig>
 
 	<fitnessConfig>

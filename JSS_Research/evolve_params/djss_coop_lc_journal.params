@@ -11,5 +11,4 @@ stat = app.evolution.coop.statistics.BuggedJasimaCoopStatistics
 eval.problem.reference-rule = app.priorityRules.WATCPR
 eval.problem.reference-fitness = app.evolution.simple.fitness.TWTFitness
 
-eval.problem.rule = app.evolution.priorityRules.EnsemblePriorityRule
 eval.problem.fitness = app.evolution.coop.fitness.NormTWTFitness

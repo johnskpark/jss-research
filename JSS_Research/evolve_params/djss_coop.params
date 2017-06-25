@@ -46,7 +46,7 @@ gp.fs.0.func.1 = app.evolution.node.basic.OpAddition
 gp.fs.0.func.1.nc = nc2
 gp.fs.0.func.2 = app.evolution.node.basic.OpConditional
 gp.fs.0.func.2.nc = nc3
-gp.fs.0.func.3 = app.evolution.node.basic.OpDivision
+gp.fs.0.func.3 = app.evolution.node.basic.OpDivisionOld
 gp.fs.0.func.3.nc = nc2
 gp.fs.0.func.4 = app.evolution.node.basic.OpMultiplication
 gp.fs.0.func.4.nc = nc2
@@ -79,19 +79,17 @@ gp.fs.0.func.17.nc = nc0
 gp.fs.0.func.18 = app.evolution.node.hunt.ScoreNumberWaitingNextMachine
 gp.fs.0.func.18.nc = nc0
 
-stat = app.evolution.coop.statistics.JasimaCoopStatistics
+eval.problem.rule = app.evolution.priorityRules.EnsemblePriorityRule
+
+stat = app.evolution.coop.statistics.BuggedJasimaCoopStatistics
 
 eval.problem = app.evolution.coop.JasimaCoopProblem
 eval.problem.data = app.evolution.JasimaGPData
 
 eval.problem.reference-rule = app.priorityRules.WATCPR
-eval.problem.reference-fitness = app.evolution.simple.fitness.MWTFitness
+eval.problem.reference-fitness = app.evolution.simple.fitness.TWTFitness
 
-#eval.problem.ind-rule = app.evolution.priorityRules.BasicPriorityRule
-#eval.problem.ind-fitness = app.evolution.coop.fitness.IndNormMWTFitness
-
-eval.problem.rule = app.evolution.priorityRules.EnsemblePriorityRule
-eval.problem.fitness = app.evolution.coop.fitness.NormMWTFitness
+eval.problem.fitness = app.evolution.coop.fitness.NormTWTFitness
 
 eval.problem.workstations = 1
 eval.problem.workstation.0 = app.listener.hunt.EvolveFactory

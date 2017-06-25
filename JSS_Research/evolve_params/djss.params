@@ -69,10 +69,10 @@ eval.problem = app.evolution.simple.JasimaSimpleProblem
 eval.problem.data = app.evolution.JasimaGPData
 
 eval.problem.reference-rule = app.priorityRules.WATCPR
-eval.problem.reference-fitness = app.evolution.simple.fitness.MWTFitness
+eval.problem.reference-fitness = app.evolution.simple.fitness.TWTFitness
 
 eval.problem.rule = app.evolution.priorityRules.BasicPriorityRule
-eval.problem.fitness = app.evolution.simple.fitness.NormMWTFitness
+eval.problem.fitness = app.evolution.simple.fitness.NormTWTFitness
 
 eval.problem.workstations = 1
 eval.problem.workstation.0 = app.listener.hunt.EvolveFactory
