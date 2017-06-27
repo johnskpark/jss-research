@@ -36,5 +36,4 @@ pop.subpop.4.species.pipe.source.0.source.1 = same
 breed.elite.0 = 10
 
 eval.problem.rule = app.evolution.priorityRules.WeightedVoteRule
-eval.problem.fitness = app.evolution.coop.fitness.NormTWTFitness
 

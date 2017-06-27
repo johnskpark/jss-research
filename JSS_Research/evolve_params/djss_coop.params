@@ -81,15 +81,15 @@ gp.fs.0.func.18.nc = nc0
 
 eval.problem.rule = app.evolution.priorityRules.EnsemblePriorityRule
 
-stat = app.evolution.coop.statistics.BuggedJasimaCoopStatistics
+stat = app.evolution.coop.statistics.JasimaCoopStatistics
 
 eval.problem = app.evolution.coop.JasimaCoopProblem
 eval.problem.data = app.evolution.JasimaGPData
 
 eval.problem.reference-rule = app.priorityRules.WATCPR
-eval.problem.reference-fitness = app.evolution.simple.fitness.TWTFitness
+eval.problem.reference-fitness = app.evolution.simple.fitness.MWTFitness
 
-eval.problem.fitness = app.evolution.coop.fitness.NormTWTFitness
+eval.problem.fitness = app.evolution.coop.fitness.NormMWTFitness
 
 eval.problem.workstations = 1
 eval.problem.workstation.0 = app.listener.hunt.EvolveFactory

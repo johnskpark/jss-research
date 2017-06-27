@@ -117,9 +117,9 @@
 
 <!-- Testing a bugged original -->
 	<solverConfig>
-		<solverClass>app.evaluation.priorityRules.LinearCombinationRule</solverClass>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>asoc_new_results/djss_coop_lc_4op_journal2.txt</ruleFile>
+			<ruleFile>asoc_new_results/djss_baseline_4op_new.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
@@ -133,11 +133,11 @@
 
 <!--
 	<outputConfig>
-	    <outputFile>djss_asoc_new_output.csv</outputFile>
+	    <outputFile>djss_asoc_baseline_new_output.csv</outputFile>
 	</outputConfig>
 -->
 	<outputConfig>
-	    <outputFile>djss_coop_lc_4op_journal2_output.csv</outputFile>
+	    <outputFile>djss_coop_lc_4op_stat2_output.csv</outputFile>
 	</outputConfig>
 
 	<fitnessConfig>

@@ -65,7 +65,7 @@ public class ScoreAverageWaitTimeNextMachine extends SingleLineGPNode {
 
 				data.setPriority(averageWaitTime);
 			} else {
-				data.setPriority(0.0);
+				data.setPriority(0);
 			}
 
 //			data.setPriority(listener.getAverageWaitTime(machine));

@@ -33,7 +33,7 @@ public class ScoreNextProcessingTime extends SingleLineGPNode	 {
 
 		int nextTask = entry.getTaskNumber() + 1;
 		if (nextTask >= entry.numOps()) {
-			data.setPriority(0.0);
+			data.setPriority(0);
 		} else {
 			data.setPriority(entry.getOps()[nextTask].procTime);
 		}
