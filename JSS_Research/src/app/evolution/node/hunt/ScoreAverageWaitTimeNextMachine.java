@@ -53,7 +53,6 @@ public class ScoreAverageWaitTimeNextMachine extends SingleLineGPNode {
 		} else {
 			WorkStation machine = entry.getOps()[nextTask].machine;
 
-			// TODO This was the original code, why does this work and not the other one?
 			if (listener.hasCompletedJobs(machine)) {
 				Queue<OperationCompletionStat> completedJobsQueue = listener.getLastCompletedJobs(machine);
 
@@ -67,8 +66,6 @@ public class ScoreAverageWaitTimeNextMachine extends SingleLineGPNode {
 			} else {
 				data.setPriority(0);
 			}
-
-//			data.setPriority(listener.getAverageWaitTime(machine));
 		}
 	}
 

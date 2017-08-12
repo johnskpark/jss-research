@@ -6,35 +6,35 @@
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>asoc_new_results/djss_baseline_4op.txt</ruleFile>
+			<ruleFile>asoc_new_results/djss_baseline_4op_new2.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>asoc_new_results/djss_coop_4op_new.txt</ruleFile>
+			<ruleFile>asoc_new_results/djss_coop_4op_new2.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.LinearCombinationRule</solverClass>
 		<solverFile>
-			<ruleFile>asoc_new_results/djss_coop_lc_4op_new.txt</ruleFile>
+			<ruleFile>asoc_new_results/djss_coop_lc_4op_new2.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.WeightedVoteRule</solverClass>
 		<solverFile>
-			<ruleFile>asoc_new_results/djss_coop_weighted_4op_new.txt</ruleFile>
+			<ruleFile>asoc_new_results/djss_coop_weighted_4op_new2.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.WeightedLinearCombinationRule</solverClass>
 		<solverFile>
-			<ruleFile>asoc_new_results/djss_coop_weighted_lc_4op_new.txt</ruleFile>
+			<ruleFile>asoc_new_results/djss_coop_weighted_lc_4op_new2.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 -->
@@ -44,82 +44,96 @@
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>asoc_new_results/djss_baseline_8op.txt</ruleFile>
+			<ruleFile>asoc_new_results/djss_baseline_8op_new2.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>asoc_new_results/djss_coop_8op_new.txt</ruleFile>
+			<ruleFile>asoc_new_results/djss_coop_8op_new2.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.LinearCombinationRule</solverClass>
 		<solverFile>
-			<ruleFile>asoc_new_results/djss_coop_lc_8op_new.txt</ruleFile>
+			<ruleFile>asoc_new_results/djss_coop_lc_8op_new2.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.WeightedVoteRule</solverClass>
 		<solverFile>
-			<ruleFile>asoc_new_results/djss_coop_weighted_8op_new.txt</ruleFile>
+			<ruleFile>asoc_new_results/djss_coop_weighted_8op_new2.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.WeightedLinearCombinationRule</solverClass>
 		<solverFile>
-			<ruleFile>asoc_new_results/djss_coop_weighted_lc_8op_new.txt</ruleFile>
+			<ruleFile>asoc_new_results/djss_coop_weighted_lc_8op_new2.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 -->
 
-<!-- The bad Coop LC rule 29541 -->
+<!-- No seed rotation -->
 <!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>asoc_new_results/djss_coop_lc_4op_29541a.txt</ruleFile>
+			<ruleFile>asoc_no_rotate_results/djss_baseline_4op_no_rotate.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>asoc_no_rotate_results/djss_coop_4op_no_rotate.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>asoc_new_results/djss_coop_lc_4op_29541b.txt</ruleFile>
+			<ruleFile>asoc_no_rotate_results/djss_baseline_8op_no_rotate.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
-		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>asoc_new_results/djss_coop_lc_4op_29541c.txt</ruleFile>
+			<ruleFile>asoc_no_rotate_results/djss_coop_8op_no_rotate.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+-->
+
+<!-- The rules rotated around -->
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.LinearCombinationRule</solverClass>
+		<solverFile>
+			<ruleFile>asoc_new_results/djss_coop_4op_new2.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
-		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>asoc_new_results/djss_coop_lc_4op_29541d.txt</ruleFile>
+			<ruleFile>asoc_new_results/djss_coop_lc_4op_new2.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.LinearCombinationRule</solverClass>
 		<solverFile>
-			<ruleFile>asoc_new_results/djss_coop_lc_4op_29541.txt</ruleFile>
+			<ruleFile>asoc_new_results/djss_coop_8op_new2.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
--->
 
-<!-- Testing a bugged original -->
 	<solverConfig>
-		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>asoc_new_results/djss_baseline_4op_new.txt</ruleFile>
+			<ruleFile>asoc_new_results/djss_coop_lc_8op_new2.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
@@ -131,15 +145,12 @@
 		<datasetRepeat>30</datasetRepeat>
 	</datasetConfig>
 
-<!--
+<!-- The output file -->
 	<outputConfig>
-	    <outputFile>djss_asoc_baseline_new_output.csv</outputFile>
-	</outputConfig>
--->
-	<outputConfig>
-	    <outputFile>djss_coop_lc_4op_stat2_output.csv</outputFile>
+	    <outputFile>asoc_reverse_combination_output.csv</outputFile>
 	</outputConfig>
 
+<!-- The performance measures used -->
 	<fitnessConfig>
 		<fitnessClass>app.evaluation.fitness.MWTFitness</fitnessClass>
 	</fitnessConfig>
@@ -154,7 +165,7 @@
 
 <!--
 	<refConfig>
-		<refRule>app.evaluation.priorityRules.WATCPR</refRule>
+		<refRule>app.priorityRules.WATCPR</refRule>
 		<refTracking>
 			<numJobsThreshold>10</numJobsThreshold>
 			<numSamples>50</numSamples>

@@ -2,12 +2,12 @@
 # Licensed under the Academic Free License version 3.0
 # See the file "LICENSE" for more information
 
-parent.0 = djss_breakdown_attempt2_baseline.params
+parent.0 = djss_breakdown_baseline.params
 
 # Uses the terminals that know when the machine will break down and the repair time.
 
 gp.fs.0.size = 22
-gp.fs.0.func.21 = app.evolution.node.breakdown_current.ScoreNextMachineMinWaitTime
+gp.fs.0.func.21 = app.evolution.node.breakdown_current.ScoreNextMachineRepairTimeRemaining
 gp.fs.0.func.21.nc = nc0
 
 eval.problem.workstations = 2

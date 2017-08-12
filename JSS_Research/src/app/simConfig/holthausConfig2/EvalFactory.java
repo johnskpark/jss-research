@@ -27,7 +27,7 @@ public class EvalFactory implements ISimConfigEvalFactory {
 		if (datasetInstNodeList.getLength() != 0) {
 			String instances = datasetInstNodeList.item(0).getTextContent();
 
-			simConfig = HolthausSimConfigGenerator.getSimConfig(instances);
+			simConfig = Holthaus2SimConfigGenerator.getSimConfig(instances);
 			if (simConfig != null) {
 				System.out.println("SimConfig: configuration loaded for simulator: " + simConfig.getClass().getSimpleName());
 			} else {

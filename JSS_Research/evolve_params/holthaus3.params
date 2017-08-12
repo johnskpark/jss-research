@@ -1,0 +1,13 @@
+
+# Parameter settings specifically set for modified version of Holthaus simulation configuration.
+
+# The possible simulation configurations are as follows:
+# Repair time factors: 1.5, 5.5, 10.5 (first parameter)
+# Breakdown levels: 0.0, 0.025, 0.05, 0.1, 0.15 (second parameter)
+# Due date factors: 3, 5 (third parameter)
+
+eval.problem.simulator = app.simConfig.holthausConfig3.EvolveFactory
+eval.problem.simulator.instances = (10.5),(0.15),(3)
+eval.problem.simulator.job-seed = 15
+eval.problem.simulator.machine-seed = 15
+eval.problem.simulator.rotate-seed = true

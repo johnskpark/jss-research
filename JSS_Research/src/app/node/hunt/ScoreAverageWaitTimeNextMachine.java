@@ -1,9 +1,11 @@
 package app.node.hunt;
 
 import java.util.Map;
+import java.util.Queue;
 
 import app.JasimaWorkStationListener;
 import app.listener.hunt.HuntListener;
+import app.listener.hunt.OperationCompletionStat;
 import app.node.INode;
 import app.node.NodeAnnotation;
 import app.node.NodeData;
@@ -46,7 +48,20 @@ public class ScoreAverageWaitTimeNextMachine implements INode {
 			return 0.0;
 		} else {
 			WorkStation machine = entry.getOps()[nextTask].machine;
-			return listener.getAverageWaitTime(machine);
+
+			if (listener.hasCompletedJobs(machine)) {
+				Queue<OperationCompletionStat> completedJobsQueue = listener.getLastCompletedJobs(machine);
+
+				double averageWaitTime = 0.0;
+				for (OperationCompletionStat stat : completedJobsQueue) {
+					averageWaitTime += stat.getWaitTime();
+				}
+				averageWaitTime /= completedJobsQueue.size();
+
+				return averageWaitTime;
+			} else {
+				return 0;
+			}
 		}
 	}
 

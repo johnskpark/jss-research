@@ -3,8 +3,8 @@
 # See the file "LICENSE" for more information
 
 parent.0 = koza.params
+parent.1 = holthaus.params
 
-pop.subpop.0.size = 256
 pop.subpop.0.species.ind = app.evolution.JasimaGPIndividual
 
 # the next four items are already defined in koza.params, but we
@@ -73,12 +73,6 @@ eval.problem.reference-fitness = app.evolution.simple.fitness.MWTFitness
 
 eval.problem.rule = app.evolution.priorityRules.BasicPriorityRule
 eval.problem.fitness = app.evolution.simple.fitness.NormMWTFitness
-
-eval.problem.simulator = app.simConfig.holthausConfig.EvolveFactory
-eval.problem.simulator.instances = (10),(0.05),(3)
-eval.problem.simulator.job-seed = 15
-eval.problem.simulator.machine-seed = 15
-eval.problem.simulator.rotate-seed = true
 
 #eval.problem.simulator = app.simConfig.taillardConfig.EvolveFactory
 

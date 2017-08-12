@@ -14,7 +14,7 @@ import jasima.core.random.continuous.DblStream;
  * @author parkjohn
  *
  */
-public class HolthausSimConfig extends DynamicSimConfig {
+public class Holthaus2SimConfig extends DynamicSimConfig {
 
 	private static final int MIN_PROC_TIME = 1;
 	private static final int MAX_PROC_TIME = 49;
@@ -31,7 +31,7 @@ public class HolthausSimConfig extends DynamicSimConfig {
 	private List<Integer> numDDFs; // due date factors
 	private int numConfigs;
 
-	public HolthausSimConfig(List<Integer> dueDateFactors) {
+	public Holthaus2SimConfig(List<Integer> dueDateFactors) {
 		numDDFs = dueDateFactors;
 		numConfigs = dueDateFactors.size();
 	}

@@ -28,7 +28,7 @@ public class EvolveFactory implements ISimConfigEvolveFactory {
 	public void setup(EvolutionState state, Parameter base) {
 		String instances = state.parameters.getStringWithDefault(base.push(P_INSTANCES), null, null);
 		if (instances != null) {
-			simConfig = HolthausSimConfigGenerator.getSimConfig(instances);
+			simConfig = Holthaus2SimConfigGenerator.getSimConfig(instances);
 			if (simConfig != null) {
 				state.output.message("Configuration loaded for simulator: " + simConfig.getClass().getSimpleName());
 			} else {

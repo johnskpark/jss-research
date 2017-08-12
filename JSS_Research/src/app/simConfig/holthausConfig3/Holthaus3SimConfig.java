@@ -20,7 +20,7 @@ import jasima.core.random.continuous.DblStream;
  * @author parkjohn
  *
  */
-public class HolthausSimConfig extends DynamicBreakdownSimConfig {
+public class Holthaus3SimConfig extends DynamicBreakdownSimConfig {
 
 	private static final int MIN_PROC_TIME = 1;
 	private static final int MAX_PROC_TIME = 49;
@@ -41,7 +41,7 @@ public class HolthausSimConfig extends DynamicBreakdownSimConfig {
 	private List<Integer> numDDFs; // due date factors: (3, 5)
 	private int numConfigs;
 
-	public HolthausSimConfig(List<Double> repairTimeFactors,
+	public Holthaus3SimConfig(List<Double> repairTimeFactors,
 			List<Double> breakdownLevels,
 			List<Integer> dueDateFactors) {
 		numRTFs = repairTimeFactors;
