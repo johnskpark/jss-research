@@ -6,28 +6,28 @@
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>breakdown_baseline_10_05_3_holthaus.txt</ruleFile>
+			<ruleFile>mb_single_objective/holthaus3_baseline2.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>breakdown_predictive_10_05_3_holthaus.txt</ruleFile>
+			<ruleFile>mb_single_objective/holthaus3_predictive2.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>breakdown_current1_10_05_3_holthaus.txt</ruleFile>
+			<ruleFile>mb_single_objective/holthaus3_current12.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>breakdown_current2_10_05_3_holthaus.txt</ruleFile>
+			<ruleFile>mb_single_objective/holthaus3_current22.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
@@ -72,7 +72,7 @@
 
 <!-- Output file definition -->
 	<outputConfig>
-	    <outputFile>breakdown_10_05_3_holthaus3_output.csv</outputFile>
+	    <outputFile>breakdown_holthaus3_output2.csv</outputFile>
 	</outputConfig>
 
 
