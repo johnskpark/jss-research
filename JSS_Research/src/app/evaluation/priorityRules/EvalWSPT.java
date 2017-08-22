@@ -39,8 +39,8 @@ public class EvalWSPT extends EvalPriorityRuleBase {
 	@Override
 	public void beforeCalc(PriorityQueue<?> q) {
 		super.beforeCalc(q);
-
 		clear();
+		pr.beforeCalc(q);
 	}
 
 	@Override

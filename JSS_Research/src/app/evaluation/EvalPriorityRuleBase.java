@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import app.Clearable;
-import app.MultiRuleBase;
+import app.TrackedRuleBase;
 import app.node.INode;
 import app.node.NodeData;
 import app.tracker.JasimaExperimentTracker;
@@ -15,7 +15,7 @@ import jasima.shopSim.core.PriorityQueue;
 import jasima.shopSim.core.WorkStation;
 import jasima.shopSim.core.WorkStation.WorkStationEvent;
 
-public abstract class EvalPriorityRuleBase extends MultiRuleBase<INode>
+public abstract class EvalPriorityRuleBase extends TrackedRuleBase<INode>
 		implements IJasimaEvalPriorityRule,
 		NotifierListener<WorkStation, WorkStationEvent>,
 		Clearable {

@@ -3,16 +3,16 @@ package app.tracker;
 import java.util.ArrayList;
 import java.util.List;
 
-import app.IMultiRule;
+import app.ITrackedRule;
 
 // TODO come up with a better name in the future.
 class SolverData<T> {
-	private IMultiRule<T> solver;
+	private ITrackedRule<T> solver;
 
 	private List<T> ruleComponents = new ArrayList<>();
 	private List<JasimaDecisionMaker> decisionMakers = new ArrayList<>();
 
-	public SolverData(IMultiRule<T> s) {
+	public SolverData(ITrackedRule<T> s) {
 		solver = s;
 
 		ruleComponents.addAll(solver.getRuleComponents());
@@ -27,7 +27,7 @@ class SolverData<T> {
 		}
 	}
 
-	public IMultiRule<T> getSolver() {
+	public ITrackedRule<T> getSolver() {
 		return solver;
 	}
 

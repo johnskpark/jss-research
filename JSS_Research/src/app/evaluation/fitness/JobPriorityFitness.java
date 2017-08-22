@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import app.IMultiRule;
+import app.ITrackedRule;
 import app.evaluation.IJasimaEvalFitness;
 import app.node.INode;
 import app.simConfig.SimConfig;
@@ -62,14 +62,14 @@ public class JobPriorityFitness implements IJasimaEvalFitness {
 			final JobShopExperiment experiment,
 			final JasimaExperimentTracker<INode> tracker) {
 		// Check to make sure that the rule is multirule
-		if (!(rule instanceof IMultiRule)) {
+		if (!(rule instanceof ITrackedRule)) {
 			throw new RuntimeException("The rule being evaluated must be a type of multirule.");
 		}
 
 		Map<String, Object> results = experiment.getResults();
 
 		@SuppressWarnings("unchecked")
-		IMultiRule<INode> solver = (IMultiRule<INode>) rule;
+		ITrackedRule<INode> solver = (ITrackedRule<INode>) rule;
 		List<JasimaExperiment<INode>> trackedResults = tracker.getResults();
 
 		JasimaExperiment<INode> trackedResult = trackedResults.get(configIndex);
@@ -88,7 +88,7 @@ public class JobPriorityFitness implements IJasimaEvalFitness {
 		return output;
 	}
 
-	protected String getJobSelectedResults(IMultiRule<INode> solver, Map<String, Object> results, JasimaExperiment<INode> trackedResult) {
+	protected String getJobSelectedResults(ITrackedRule<INode> solver, Map<String, Object> results, JasimaExperiment<INode> trackedResult) {
 		List<JasimaDecision<INode>> decisions = trackedResult.getDecisions();
 		StringBuilder jobSelected = new StringBuilder();
 
@@ -104,7 +104,7 @@ public class JobPriorityFitness implements IJasimaEvalFitness {
 		return jobSelected.toString();
 	}
 
-	protected String getJobPriorityResults(IMultiRule<INode> solver, Map<String, Object> results, JasimaExperiment<INode> trackedResult) {
+	protected String getJobPriorityResults(ITrackedRule<INode> solver, Map<String, Object> results, JasimaExperiment<INode> trackedResult) {
 		List<JasimaDecision<INode>> decisions = trackedResult.getDecisions();
 		StringBuilder jobPriority = new StringBuilder();
 
@@ -133,7 +133,7 @@ public class JobPriorityFitness implements IJasimaEvalFitness {
 
 	// TODO old writing, remove after implementation.
 	// TODO double check this.
-	protected String getSingleVotedJobResults(IMultiRule<INode> solver, Map<String, Object> results, JasimaExperiment<INode> trackedResult) {
+	protected String getSingleVotedJobResults(ITrackedRule<INode> solver, Map<String, Object> results, JasimaExperiment<INode> trackedResult) {
 		List<JasimaDecision<INode>> decisions = trackedResult.getDecisions();
 
 		double singleVoteJobCount = 0.0;
@@ -156,7 +156,7 @@ public class JobPriorityFitness implements IJasimaEvalFitness {
 		return String.format("%f", singleVoteJobCount / decisions.size());
 	}
 
-	protected String getTieBreakJobResults(IMultiRule<INode> solver, Map<String, Object> results, JasimaExperiment<INode> trackedResult) {
+	protected String getTieBreakJobResults(ITrackedRule<INode> solver, Map<String, Object> results, JasimaExperiment<INode> trackedResult) {
 		List<JasimaDecision<INode>> decisions = trackedResult.getDecisions();
 
 		double tieBreakJobCount = 0.0;
@@ -184,7 +184,7 @@ public class JobPriorityFitness implements IJasimaEvalFitness {
 		return String.format("%f", tieBreakJobCount / decisions.size());
 	}
 
-	protected String getMajorityResults(IMultiRule<INode> solver, Map<String, Object> results, JasimaExperiment<INode> trackedResult) {
+	protected String getMajorityResults(ITrackedRule<INode> solver, Map<String, Object> results, JasimaExperiment<INode> trackedResult) {
 		List<JasimaDecision<INode>> decisions = trackedResult.getDecisions();
 		List<INode> ruleComponents = solver.getRuleComponents();
 
@@ -210,7 +210,7 @@ public class JobPriorityFitness implements IJasimaEvalFitness {
 		return majorityResults;
 	}
 
-	protected String getMinorityResults(IMultiRule<INode> solver, Map<String, Object> results, JasimaExperiment<INode> trackedResult) {
+	protected String getMinorityResults(ITrackedRule<INode> solver, Map<String, Object> results, JasimaExperiment<INode> trackedResult) {
 		List<JasimaDecision<INode>> decisions = trackedResult.getDecisions();
 		List<INode> ruleComponents = solver.getRuleComponents();
 
@@ -242,7 +242,7 @@ public class JobPriorityFitness implements IJasimaEvalFitness {
 		return minorityResults;
 	}
 
-	protected String getRankResults(IMultiRule<INode> solver, Map<String, Object> results, JasimaExperiment<INode> trackedResult) {
+	protected String getRankResults(ITrackedRule<INode> solver, Map<String, Object> results, JasimaExperiment<INode> trackedResult) {
 		List<JasimaDecision<INode>> decisions = trackedResult.getDecisions();
 		List<INode> ruleComponents = solver.getRuleComponents();
 

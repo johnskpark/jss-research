@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import app.IMultiRule;
+import app.ITrackedRule;
 import jasima.shopSim.core.PrioRuleTarget;
 
 // So the tracker's going to generate one of these for each dispatching decision.
@@ -15,13 +15,13 @@ public class JasimaDecision<T> {
 
 	private List<PrioRuleTarget> entries = new ArrayList<PrioRuleTarget>();
 	 
-	private Map<IMultiRule<T>, List<PrioRuleTarget>> entryRankings;
-	private Map<IMultiRule<T>, PrioRuleTarget> startedEntry;
+	private Map<ITrackedRule<T>, List<PrioRuleTarget>> entryRankings;
+	private Map<ITrackedRule<T>, PrioRuleTarget> startedEntry;
 
-	private Map<IMultiRule<T>, SolverData<T>> solvers;
-	private Map<IMultiRule<T>, JasimaPriorityStat[]> stats;
+	private Map<ITrackedRule<T>, SolverData<T>> solvers;
+	private Map<ITrackedRule<T>, JasimaPriorityStat[]> stats;
 
-	public JasimaDecision(List<PrioRuleTarget> entries, Map<IMultiRule<T>, SolverData<T>> solvers, Map<IMultiRule<T>, JasimaPriorityStat[]> decisions) {
+	public JasimaDecision(List<PrioRuleTarget> entries, Map<ITrackedRule<T>, SolverData<T>> solvers, Map<ITrackedRule<T>, JasimaPriorityStat[]> decisions) {
 		this.entries = entries;
 
 		this.entryRankings = new HashMap<>();
@@ -31,7 +31,7 @@ public class JasimaDecision<T> {
 		this.stats = decisions;
 	}
 
-	public void addPriority(IMultiRule<T> solver, int index, PrioRuleTarget entry, double priority) {
+	public void addPriority(ITrackedRule<T> solver, int index, PrioRuleTarget entry, double priority) {
 		stats.get(solver)[index].addPriority(entry, priority);
 	}
 
@@ -45,19 +45,19 @@ public class JasimaDecision<T> {
 		return entries;
 	}
 
-	public List<PrioRuleTarget> getEntryRankings(IMultiRule<T> solver) {
+	public List<PrioRuleTarget> getEntryRankings(ITrackedRule<T> solver) {
 		return entryRankings.get(solver);
 	}
 
-	public PrioRuleTarget getSelectedEntry(IMultiRule<T> solver) {
+	public PrioRuleTarget getSelectedEntry(ITrackedRule<T> solver) {
 		return startedEntry.get(solver);
 	}
 
-	public List<T> getRules(IMultiRule<T> solver) {
+	public List<T> getRules(ITrackedRule<T> solver) {
 		return solvers.get(solver).getRuleComponents();
 	}
 
-	public JasimaPriorityStat[] getStats(IMultiRule<T> solver) {
+	public JasimaPriorityStat[] getStats(ITrackedRule<T> solver) {
 		return stats.get(solver);
 	}
 
@@ -71,11 +71,11 @@ public class JasimaDecision<T> {
 		this.entries = entries;
 	}
 
-	public void setEntryRankings(IMultiRule<T> solver, List<PrioRuleTarget> entryRankings) {
+	public void setEntryRankings(ITrackedRule<T> solver, List<PrioRuleTarget> entryRankings) {
 		this.entryRankings.put(solver, entryRankings);
 	}
 
-	public void setSelectedEntry(IMultiRule<T> solver, PrioRuleTarget startedEntry) {
+	public void setSelectedEntry(ITrackedRule<T> solver, PrioRuleTarget startedEntry) {
 		this.startedEntry.put(solver, startedEntry);
 	}
 

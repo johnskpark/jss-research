@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import app.IMultiRule;
+import app.ITrackedRule;
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
 
@@ -13,21 +13,21 @@ import jasima.shopSim.core.PriorityQueue;
 // Also, need to record which job that's voted for by the individual.
 public class JasimaExperiment<T> {
 
-	private Map<IMultiRule<T>, SolverData<T>> ruleMap;
+	private Map<ITrackedRule<T>, SolverData<T>> ruleMap;
 
 	private List<JasimaDecision<T>> experimentDecisions;
 	private Map<DecisionEvent, JasimaDecision<T>> experimentDecisionMap;
 
 	private JasimaDecision<T> currentDecision;
-	private Map<IMultiRule<T>, JasimaPriorityStat[]> currentStats;
+	private Map<ITrackedRule<T>, JasimaPriorityStat[]> currentStats;
 
 	/**
 	 * Initialise the experiment data with the solvers and the components that make up the solvers.
 	 */
-	public JasimaExperiment(List<IMultiRule<T>> solvers) {
+	public JasimaExperiment(List<ITrackedRule<T>> solvers) {
 		ruleMap = new HashMap<>();
 
-		for (IMultiRule<T> solver : solvers) {
+		for (ITrackedRule<T> solver : solvers) {
 			ruleMap.put(solver, new SolverData<T>(solver));
 		}
 
@@ -55,7 +55,7 @@ public class JasimaExperiment<T> {
 
 		currentStats = new HashMap<>();
 
-		for (IMultiRule<T> solver : ruleMap.keySet()) {
+		for (ITrackedRule<T> solver : ruleMap.keySet()) {
 			SolverData<T> data = ruleMap.get(solver);
 
 			JasimaPriorityStat[] stats = new JasimaPriorityStat[data.getRuleComponents().size()];
@@ -84,7 +84,7 @@ public class JasimaExperiment<T> {
 	/**
 	 * Add in the priority assigned to an entry by one of the individuals in the experiment.
 	 */
-	public void addPriority(IMultiRule<T> solver, int index, T rule, PrioRuleTarget entry, double priority) {
+	public void addPriority(ITrackedRule<T> solver, int index, T rule, PrioRuleTarget entry, double priority) {
 		JasimaPriorityStat[] stats = currentStats.get(solver);
 
 		stats[index].addPriority(entry, priority);
@@ -93,7 +93,7 @@ public class JasimaExperiment<T> {
 	/**
 	 * Set the entry selected to be processed by the rule.
 	 */
-	public void addSelectedEntry(IMultiRule<T> solver, PrioRuleTarget entry) {
+	public void addSelectedEntry(ITrackedRule<T> solver, PrioRuleTarget entry) {
 		currentDecision.setSelectedEntry(solver, entry);
 	}
 
@@ -107,17 +107,17 @@ public class JasimaExperiment<T> {
 	/**
 	 * Set the ranking for each entry given by the rule.
 	 */
-	public void addEntryRankings(IMultiRule<T> solver, List<PrioRuleTarget> rankings) {
+	public void addEntryRankings(ITrackedRule<T> solver, List<PrioRuleTarget> rankings) {
 		currentDecision.setEntryRankings(solver, rankings);
 	}
 
 	// Getters
 
-	public List<T> getRuleComponents(IMultiRule<T> solver) {
+	public List<T> getRuleComponents(ITrackedRule<T> solver) {
 		return ruleMap.get(solver).getRuleComponents();
 	}
 
-	public List<JasimaDecisionMaker> getDecisionMakers(IMultiRule<T> solver) {
+	public List<JasimaDecisionMaker> getDecisionMakers(ITrackedRule<T> solver) {
 		return ruleMap.get(solver).getDecisionMakers();
 	}
 

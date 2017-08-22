@@ -2,7 +2,7 @@ package app.tracker.distance.ensemble;
 
 import java.util.List;
 
-import app.IMultiRule;
+import app.ITrackedRule;
 import app.simConfig.SimConfig;
 import app.tracker.JasimaDecision;
 import app.tracker.JasimaExperiment;
@@ -17,7 +17,7 @@ public class EnsembleOverlapDistance<T> implements DistanceMeasure<T> {
 	public double[][] getDistances(final EvolutionState state,
 			final JasimaExperiment<T> experiment,
 			final SimConfig simConfig,
-			final IMultiRule<T> solver,
+			final ITrackedRule<T> solver,
 			final List<T> ruleComponents) {
 		int numComponents = ruleComponents.size();
 		double[][] distances = new double[numComponents][numComponents];
@@ -46,7 +46,7 @@ public class EnsembleOverlapDistance<T> implements DistanceMeasure<T> {
 	}
 
 	protected boolean[][] getOverlaps(final JasimaDecision<T> decision,
-			final IMultiRule<T> solver,
+			final ITrackedRule<T> solver,
 			final List<T> ruleComponents,
 			final int numComponents) {
 		boolean[][] overlaps = new boolean[numComponents][numComponents];

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import app.MultiRuleBase;
+import app.TrackedRuleBase;
 import app.node.INode;
 import app.tracker.DecisionEvent;
 import app.tracker.JasimaExperimentTracker;
@@ -32,7 +32,7 @@ public class TrackedPR extends PR {
 	private List<DecisionEvent> currentRecording;
 	private List<DecisionEvent> currentSample;
 
-	private List<MultiRuleBase<INode>> priorityRules = new ArrayList<>();
+	private List<TrackedRuleBase<INode>> priorityRules = new ArrayList<>();
 
 	private JasimaExperimentTracker<?> tracker;
 
@@ -76,11 +76,11 @@ public class TrackedPR extends PR {
 		}
 	}
 
-	public List<MultiRuleBase<INode>> getPriorityRules() {
+	public List<TrackedRuleBase<INode>> getPriorityRules() {
 		return priorityRules;
 	}
 
-	public void setPriorityRules(List<MultiRuleBase<INode>> priorityRules) {
+	public void setPriorityRules(List<TrackedRuleBase<INode>> priorityRules) {
 		this.priorityRules = priorityRules;
 	}
 
@@ -104,14 +104,14 @@ public class TrackedPR extends PR {
 				// Run it over the different rules.
 				tracker.addDispatchingDecision(q);
 
-				for (MultiRuleBase<INode> pr : priorityRules) {
+				for (TrackedRuleBase<INode> pr : priorityRules) {
 					prPriorityCalculation(pr, q);
 				}
 			}
 		}
 	}
 
-	protected void prPriorityCalculation(MultiRuleBase<INode> pr, PriorityQueue<?> q) {
+	protected void prPriorityCalculation(TrackedRuleBase<INode> pr, PriorityQueue<?> q) {
 		pr.beforeCalc(q);
 
 		for (int i = 0; i < q.size(); i++) {

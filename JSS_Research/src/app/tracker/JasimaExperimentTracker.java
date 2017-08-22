@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import app.Clearable;
-import app.IMultiRule;
+import app.ITrackedRule;
 import app.simConfig.SimConfig;
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
@@ -24,7 +24,7 @@ public class JasimaExperimentTracker<T> implements Clearable {
 
 	public static final int NOT_SET = -1;
 
-	private List<IMultiRule<T>> priorityRules;
+	private List<ITrackedRule<T>> priorityRules;
 	private SimConfig simConfig;
 
 	private List<JasimaExperiment<T>> experimentDecisions;
@@ -43,7 +43,7 @@ public class JasimaExperimentTracker<T> implements Clearable {
 
 	// Getters
 
-	public List<? extends IMultiRule<T>> getPriorityRules() {
+	public List<? extends ITrackedRule<T>> getPriorityRules() {
 		return priorityRules;
 	}
 
@@ -53,7 +53,7 @@ public class JasimaExperimentTracker<T> implements Clearable {
 
 	// Setters
 
-	public void setPriorityRule(List<IMultiRule<T>> prs) {
+	public void setPriorityRule(List<ITrackedRule<T>> prs) {
 		this.priorityRules = prs;
 	}
 
@@ -61,7 +61,7 @@ public class JasimaExperimentTracker<T> implements Clearable {
 		this.simConfig = simConfig;
 	}
 
-	public void addRule(IMultiRule<T> rule) {
+	public void addRule(ITrackedRule<T> rule) {
 		this.priorityRules.add(rule);
 	}
 
@@ -105,14 +105,14 @@ public class JasimaExperimentTracker<T> implements Clearable {
 	/**
 	 * Add the priority assigned to an entry for the dispatching decision.
 	 */
-	public void addPriority(IMultiRule<T> solver, int index, T rule, PrioRuleTarget entry, double priority) {
+	public void addPriority(ITrackedRule<T> solver, int index, T rule, PrioRuleTarget entry, double priority) {
 		currentExperimentDecisions.addPriority(solver, index, rule, entry, priority);
 	}
 
 	/**
 	 * Set the entry that is selected to be processed.
 	 */
-	public void addSelectedEntry(IMultiRule<T> solver, PrioRuleTarget entry) {
+	public void addSelectedEntry(ITrackedRule<T> solver, PrioRuleTarget entry) {
 		currentExperimentDecisions.addSelectedEntry(solver, entry);
 	}
 
@@ -126,7 +126,7 @@ public class JasimaExperimentTracker<T> implements Clearable {
 	/**
 	 * Set the rankings set by the rule for the entries in the dispatching decision.
 	 */
-	public void addEntryRankings(IMultiRule<T> solver, List<PrioRuleTarget> entryRankings) {
+	public void addEntryRankings(ITrackedRule<T> solver, List<PrioRuleTarget> entryRankings) {
 		currentExperimentDecisions.addEntryRankings(solver, entryRankings);
 	}
 

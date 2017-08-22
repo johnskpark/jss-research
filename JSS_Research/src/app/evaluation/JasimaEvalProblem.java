@@ -30,7 +30,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import app.JasimaWorkStationListener;
-import app.MultiRuleBase;
+import app.TrackedRuleBase;
 import app.node.INode;
 import app.node.NodeData;
 import app.priorityRules.TrackedPR;
@@ -471,7 +471,7 @@ public class JasimaEvalProblem {
 					((TrackedPR) refRule).initSampleRun(configIndex);
 				}
 
-				JobShopExperiment experiment = getExperiment(refRule, configIndex);
+				JobShopExperiment experiment = getExperimentPR(refRule, configIndex);
 				experiment.runExperiment();
 
 				for (IJasimaEvalFitness fitness : standardEvaluation) {
@@ -584,7 +584,7 @@ public class JasimaEvalProblem {
 
 		for (int refRuleIndex = 0; refRuleIndex < trackedRefRules.size(); refRuleIndex++) {
 			TrackedPR trackedRefRule = (TrackedPR) trackedRefRules.get(refRuleIndex);
-			trackedRefRule.setPriorityRules(new ArrayList<MultiRuleBase<INode>>(solvers));
+			trackedRefRule.setPriorityRules(new ArrayList<TrackedRuleBase<INode>>(solvers));
 
 			for (EvalPriorityRuleBase solver : solvers) {
 				solver.setTracker(tracker);
@@ -597,7 +597,7 @@ public class JasimaEvalProblem {
 				tracker.setExperimentIndex(configIndex);
 				trackedRefRule.initTrackedRun(configIndex);
 
-				JobShopExperiment experiment = getExperiment(trackedRefRule, configIndex);
+				JobShopExperiment experiment = getExperimentPR(trackedRefRule, configIndex);
 				experiment.runExperiment();
 
 				for (int solverIndex = 0; solverIndex < solvers.size(); solverIndex++) {
@@ -650,7 +650,7 @@ public class JasimaEvalProblem {
 			for (int repeat = 0; repeat < numRepeats; repeat++) {
 				for (int configIndex = 0; configIndex < simConfig.getNumConfigs(); configIndex++) {
 
-					JobShopExperiment experiment = getExperiment(solver, configIndex);
+					JobShopExperiment experiment = getExperimentPR(solver, configIndex);
 					for(IJasimaEvalFitness fitness: standardEvaluation) {
 						fitness.beforeExperiment(solver, simConfig, experiment, tracker);
 					}
@@ -689,9 +689,21 @@ public class JasimaEvalProblem {
 		return resultsOutput;
 	}
 
-	private JobShopExperiment getExperiment(PR rule, int index) {
+	private JobShopExperiment getExperimentPR(PR rule, int index) {
 		JobShopExperiment experiment = ExperimentGenerator.getExperiment(simConfig, rule, index);
 
+		for (JasimaWorkStationListener listener : listeners) {
+			experiment.addMachineListener(listener);
+		}
+
+		return experiment;
+	}
+
+	// TODO need to incorporate the rules into the machine listeners later down the line.
+	private JobShopExperiment getExperimentEval(EvalPriorityRuleBase rule, int index) {
+		JobShopExperiment experiment = ExperimentGenerator.getExperiment(simConfig, rule, index);
+
+		experiment.addMachineListener(rule);
 		for (JasimaWorkStationListener listener : listeners) {
 			experiment.addMachineListener(listener);
 		}

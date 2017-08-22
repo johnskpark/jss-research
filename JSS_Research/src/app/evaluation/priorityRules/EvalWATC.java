@@ -36,9 +36,9 @@ public class EvalWATC extends EvalPriorityRuleBase {
 	}
 
 	@Override
-	public void beforeCalc(PriorityQueue<?> q) {
+	public void beforeCalc(PriorityQueue<? extends PrioRuleTarget> q) {
 		super.beforeCalc(q);
-
+		clear();
 		pr.beforeCalc(q);
 	}
 

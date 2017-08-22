@@ -36,6 +36,13 @@ public class EvalEDD extends EvalPriorityRuleBase {
 	}
 
 	@Override
+	public void beforeCalc(PriorityQueue<? extends PrioRuleTarget> q) {
+		super.beforeCalc(q);
+		clear();
+		pr.beforeCalc(q);
+	}
+
+	@Override
 	public double calcPrio(PrioRuleTarget entry) {
 		double prio = pr.calcPrio(entry);
 

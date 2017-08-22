@@ -6,50 +6,8 @@
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_single_objective/holthaus_baseline_10_05_3_2.txt</ruleFile>
+			<ruleFile>mb_single_objective/ddpt_rule.txt</ruleFile>
 		</solverFile>
-	</solverConfig>
-
-	<solverConfig>
-		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
-		<solverFile>
-			<ruleFile>mb_single_objective/holthaus_predictive_10_05_3_2.txt</ruleFile>
-		</solverFile>
-	</solverConfig>
-
-	<solverConfig>
-		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
-		<solverFile>
-			<ruleFile>mb_single_objective/holthaus_current1_10_05_3_2.txt</ruleFile>
-		</solverFile>
-	</solverConfig>
-
-	<solverConfig>
-		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
-		<solverFile>
-			<ruleFile>mb_single_objective/holthaus_current2_10_05_3_2.txt</ruleFile>
-		</solverFile>
-	</solverConfig>
-
-<!--
-	<solverConfig>
-		<solverClass>app.evaluation.priorityRules.EvalHolthausRule</solverClass>
-	</solverConfig>
-
-	<solverConfig>
-		<solverClass>app.evaluation.priorityRules.EvalWSPT</solverClass>
-	</solverConfig>
-
-	<solverConfig>
-		<solverClass>app.evaluation.priorityRules.EvalEDD</solverClass>
-	</solverConfig>
-
-	<solverConfig>
-		<solverClass>app.evaluation.priorityRules.EvalWATC</solverClass>
-	</solverConfig>
-
-	<solverConfig>
-		<solverClass>app.evaluation.priorityRules.EvalFIFO</solverClass>
 	</solverConfig>
 
 	<solverConfig>
@@ -57,12 +15,19 @@
 	</solverConfig>
 
 	<solverConfig>
-		<solverClass>app.evaluation.priorityRules.EvalWCOVERT</solverClass>
+		<solverClass>app.evaluation.priorityRules.EvalWATC</solverClass>
 	</solverConfig>
--->
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.EvalEDD</solverClass>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.EvalFIFO</solverClass>
+	</solverConfig>
 
 	<datasetConfig>
-		<datasetClass>app.simConfig.holthausConfig.EvalFactory</datasetClass>
+		<datasetClass>app.simConfig.holthausConfig3.EvalFactory</datasetClass>
 		<datasetInstances>(all),(all),(all)</datasetInstances>
 		<datasetSeed>15</datasetSeed>
 		<!-- <datasetSeed>4609823032865163582</datasetSeed> -->
@@ -72,7 +37,7 @@
 
 <!-- Output file definition -->
 	<outputConfig>
-	    <outputFile>breakdown_holthaus_output2.csv</outputFile>
+	    <outputFile>breakdown_holthaus3_ddpt_rule_output.csv</outputFile>
 	</outputConfig>
 
 

@@ -6,8 +6,7 @@ import jasima.shopSim.core.PR;
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
 
-// TODO come up with a better name in the future.
-public abstract class MultiRuleBase<T> extends PR implements IMultiRule<T> {
+public abstract class TrackedRuleBase<T> extends PR implements ITrackedRule<T> {
 
 	private static final long serialVersionUID = 2294381566002300842L;
 
