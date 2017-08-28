@@ -73,12 +73,12 @@ public class Holthaus2SimConfig extends DynamicSimConfig {
 	}
 
 	@Override
-	public int getNumIgnore() {
+	public int getNumIgnore(int index) {
 		return NUM_IGNORE;
 	}
 
 	@Override
-	public int getStopAfterNumJobs() {
+	public int getStopAfterNumJobs(int index) {
 		return STOP_AFTER_NUM_JOBS;
 	}
 

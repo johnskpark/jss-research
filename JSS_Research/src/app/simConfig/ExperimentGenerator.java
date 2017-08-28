@@ -50,7 +50,7 @@ public class ExperimentGenerator {
 		experiment.setProcTimes(simConfig.getProcTime(index));
 		experiment.setNumOps(simConfig.getMinNumOps(index), simConfig.getMaxNumOps(index));
 
-		experiment.setStopAfterNumJobs(simConfig.getStopAfterNumJobs());
+		experiment.setStopAfterNumJobs(simConfig.getStopAfterNumJobs(index));
 //		experiment.setStopArrivalsAfterNumJobs(simConfig.getStopAfterNumJobs());
 
 		experiment.setMachineRandom(new Random(machineValue));
@@ -58,7 +58,7 @@ public class ExperimentGenerator {
 		experiment.setTimeBetweenFailureDistribution(simConfig.getTimeBetweenFailureDistribution(experiment, index));
 
 		BasicJobStatCollector statCollector = new BasicJobStatCollector();
-		statCollector.setIgnoreFirst(simConfig.getNumIgnore());
+		statCollector.setIgnoreFirst(simConfig.getNumIgnore(index));
 		experiment.setShopListener(new NotifierListener[]{statCollector});
 
 		experiment.setScenario(DynamicShopExperiment.Scenario.JOB_SHOP);
@@ -83,11 +83,11 @@ public class ExperimentGenerator {
 		experiment.setProcTimes(simConfig.getProcTime(index));
 		experiment.setNumOps(simConfig.getMinNumOps(index), simConfig.getMaxNumOps(index));
 
-		experiment.setStopAfterNumJobs(simConfig.getStopAfterNumJobs());
+		experiment.setStopAfterNumJobs(simConfig.getStopAfterNumJobs(index));
 //		experiment.setStopArrivalsAfterNumJobs(simConfig.getStopAfterNumJobs());
 
 		BasicJobStatCollector statCollector = new BasicJobStatCollector();
-		statCollector.setIgnoreFirst(simConfig.getNumIgnore());
+		statCollector.setIgnoreFirst(simConfig.getNumIgnore(index));
 		experiment.setShopListener(new NotifierListener[]{statCollector});
 
 		experiment.setScenario(DynamicShopExperiment.Scenario.JOB_SHOP);

@@ -27,9 +27,9 @@ import java.util.Set;
 
 /**
  * A job source is an abstract base class for classes producing {@link Job}s.
- * 
+ *
  * @author Torsten Hildebrandt
- * @version 
+ * @version
  *          "$Id$"
  */
 public abstract class JobSource implements ValueStore {
@@ -94,7 +94,7 @@ public abstract class JobSource implements ValueStore {
 	/**
 	 * Factory method used in {@link #createNextJob()} to create a new job
 	 * instance.
-	 * 
+	 *
 	 * @return The new {@link Job} instance.
 	 */
 	protected Job newJobInstance() {
@@ -113,7 +113,7 @@ public abstract class JobSource implements ValueStore {
 	 * Offers a simple get/put-mechanism to store and retrieve information as a
 	 * kind of global data store. This can be used as a simple extension
 	 * mechanism.
-	 * 
+	 *
 	 * @param key
 	 *            The key name.
 	 * @param value
@@ -129,7 +129,7 @@ public abstract class JobSource implements ValueStore {
 
 	/**
 	 * Retrieves a value from the value store.
-	 * 
+	 *
 	 * @param key
 	 *            The entry to return, e.g., identified by a name.
 	 * @return The value associated with {@code key}.
@@ -165,7 +165,7 @@ public abstract class JobSource implements ValueStore {
 
 	/**
 	 * Removes an entry from the value store.
-	 * 
+	 *
 	 * @return The value previously associated with "key", or null, if no such
 	 *         key was found.
 	 */

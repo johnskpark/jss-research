@@ -50,9 +50,9 @@ import org.apache.commons.math3.distribution.ExponentialDistribution;
  * <p>
  * An experiment of this type by default contains a
  * {@code BasicJobStatCollector}.
- * 
+ *
  * @author Torsten Hildebrandt
- * @version 
+ * @version
  *          "$Id$"
  * @see BasicJobStatCollector
  */
@@ -121,6 +121,7 @@ public class DynamicShopExperiment extends JobShopExperiment {
 		src = createJobSource();
 		shop.addJobSource(src);
 
+		// TODO fix this part here.
 		if (getStopAfterNumJobs() <= 0)
 			shop.setStopAfterNumJobs(10 * getStopArrivalsAfterNumJobs());
 	}
@@ -339,7 +340,7 @@ public class DynamicShopExperiment extends JobShopExperiment {
 	 * {@code stopAfterNumJobs} is 2500 the job source is stopped after all of
 	 * the first 2500 jobs were completed (note: this is is not necessarily the
 	 * same as the first 2500 jobs completed).
-	 * 
+	 *
 	 * @param stopAfterNumJobs
 	 *            The number of jobs after which to stop, default: 2500.
 	 */
@@ -354,7 +355,7 @@ public class DynamicShopExperiment extends JobShopExperiment {
 	/**
 	 * Sets the weights to be used for each job. The default setting is to
 	 * assign a weight of 1 for each job when this attribute is {@code null}.
-	 * 
+	 *
 	 * @param weights
 	 *            A {@link DblStream} to determine job weight. Default: each job
 	 *            gets a weight of 1.

@@ -38,9 +38,9 @@ import java.util.HashMap;
  * classes will typically populate the shop with machines and JobSources and add
  * functionality to collect some statistics and produce appropriate experiment
  * results.
- * 
+ *
  * @author Torsten Hildebrandt, 2010-03-12
- * @version 
+ * @version
  *          "$Id$"
  */
 public abstract class JobShopExperiment extends Experiment {
@@ -51,6 +51,7 @@ public abstract class JobShopExperiment extends Experiment {
 	private double simulationLength = 0.0d;
 	private int maxJobsInSystem = 0;
 	private int stopAfterNumJobs = 0;
+	private int stopAfterNthJob = 0;
 	private boolean enableLookAhead = false;
 
 	private PR sequencingRule;
@@ -195,7 +196,7 @@ public abstract class JobShopExperiment extends Experiment {
 
 	/**
 	 * Factory method to create/initialize a shop object.
-	 * 
+	 *
 	 * @return The new {@link JobShop} instance.
 	 */
 	protected JobShop doCreateShop() {
@@ -275,7 +276,7 @@ public abstract class JobShopExperiment extends Experiment {
 
 	/**
 	 * Sets the maximum simulation time. A value of 0.0 means no such limit.
-	 * 
+	 *
 	 * @param simulationLength
 	 *            Stop simulation at this point in time.
 	 * */
@@ -290,7 +291,7 @@ public abstract class JobShopExperiment extends Experiment {
 	/**
 	 * End simulation if WIP (work in process) reaches this value (&lt;=0: no
 	 * limit; default is -1).
-	 * 
+	 *
 	 * @param maxJobsInSystem
 	 *            The maximum number of concurrent jobs allowed in the system.
 	 */
@@ -306,7 +307,7 @@ public abstract class JobShopExperiment extends Experiment {
 	 * Enable/disable the lookahead mechanism of this shop. If enabled,
 	 * dispatching rules can select jobs arriving in the near future (i.e., jobs
 	 * already processed on an immediate predecessor machine).
-	 * 
+	 *
 	 * @param enableLookAhead
 	 *            Whether or not to enable one-stop look ahead.
 	 */
@@ -321,7 +322,7 @@ public abstract class JobShopExperiment extends Experiment {
 	/**
 	 * End simulation if a certain number of jobs was completed (&lt;=0
 	 * (default): no limit).
-	 * 
+	 *
 	 * @param stopAfterNumJobs
 	 *            Set the number of jobs to complete before terminating the
 	 *            simulation.
@@ -334,6 +335,21 @@ public abstract class JobShopExperiment extends Experiment {
 		return stopAfterNumJobs;
 	}
 
+	/**
+	 * End simulation if the nth job is completed
+	 *
+	 * @param stopAfterNthJob
+	 *            Set the nth job that needs to be completed by the
+	 *            simulation before it is terminated.
+	 */
+	public void setStopAfterNthJob(int stopAfterNthJob) {
+		this.stopAfterNthJob =  stopAfterNthJob;
+	}
+
+	public int getStopAfterNthJob() {
+		return stopAfterNthJob;
+	}
+
 	public PR getSequencingRule() {
 		return sequencingRule;
 	}
@@ -341,7 +357,7 @@ public abstract class JobShopExperiment extends Experiment {
 	/**
 	 * Sets a certain dispatching rule to be used for sequencing jobs on all
 	 * machines.
-	 * 
+	 *
 	 * @see #setSequencingRules(PR[])
 	 * @param sequencingRule
 	 *            The sequencing rule to use on all work stations.
@@ -357,7 +373,7 @@ public abstract class JobShopExperiment extends Experiment {
 	/**
 	 * Sets a certain dispatching rule to be used for sequencing batches on all
 	 * batch machines.
-	 * 
+	 *
 	 * @see #setBatchSequencingRules(PR[])
 	 * @param batchSequencingRule
 	 *            The batch sequencing rule to use on all work stations.
@@ -372,7 +388,7 @@ public abstract class JobShopExperiment extends Experiment {
 
 	/**
 	 * Sets a batch forming mechanism to be used on all machines.
-	 * 
+	 *
 	 * @see #setBatchFormingRules(BatchForming[])
 	 * @param batchForming
 	 *            The batch forming rule to use on all machines
@@ -385,7 +401,7 @@ public abstract class JobShopExperiment extends Experiment {
 	 * Sets a sequencing rule for specific machines. To use it
 	 * {@code sequencingRules} has to contain an entry for each machine
 	 * (workstation) in the model.
-	 * 
+	 *
 	 * @see #setSequencingRule(PR)
 	 * @param sequencingRules
 	 *            An array of sequencing rule, containing one {@link PR} per
@@ -403,7 +419,7 @@ public abstract class JobShopExperiment extends Experiment {
 	 * Sets a batch sequencing rule for specific machines. To use it
 	 * {@code batchSequencingRules} has to contain an entry for each machine
 	 * (workstation) in the model.
-	 * 
+	 *
 	 * @see #setBatchSequencingRule(PR)
 	 * @param batchSequencingRules
 	 *            An array of batch sequencing rules, one for each workstation.
@@ -420,7 +436,7 @@ public abstract class JobShopExperiment extends Experiment {
 	 * Sets a batch forming mechanism for specific machines. To use it
 	 * {@code batchFormingRules} has to contain an entry for each machine
 	 * (workstation) in the model.
-	 * 
+	 *
 	 * @see #setBatchForming(BatchForming)
 	 * @param batchFormingRules
 	 *            An array of batch forming rules, one for each workstation.
@@ -435,7 +451,7 @@ public abstract class JobShopExperiment extends Experiment {
 
 	/**
 	 * Gets the complete list of {@link JobShop} listeners.
-	 * 
+	 *
 	 * @return The array of shop listeners; can be null.
 	 */
 	public NotifierListener<Simulation, SimEvent>[] getShopListener() {
@@ -444,7 +460,7 @@ public abstract class JobShopExperiment extends Experiment {
 
 	/**
 	 * Sets a list of {@link JobShop} listeners to be installed on the shop.
-	 * 
+	 *
 	 * @param shopListener
 	 *            The listeners to install during experiment execution.
 	 */
@@ -455,7 +471,7 @@ public abstract class JobShopExperiment extends Experiment {
 
 	/**
 	 * Adds a shop listener to be installed on the experiment's {@link JobShop}.
-	 * 
+	 *
 	 * @param l
 	 *            The listener to install during experiment execution.
 	 */
@@ -477,7 +493,7 @@ public abstract class JobShopExperiment extends Experiment {
 
 	/**
 	 * Gets the complete list of {@link WorkStation} listeners.
-	 * 
+	 *
 	 * @return The array of workstation listeners. Can be null.
 	 */
 	public NotifierListener<WorkStation, WorkStationEvent>[] getMachineListener() {
@@ -487,7 +503,7 @@ public abstract class JobShopExperiment extends Experiment {
 	/**
 	 * Sets a list of {@link WorkStation} listeners to be installed on each
 	 * {@link WorkStation}.
-	 * 
+	 *
 	 * @param machineListener
 	 *            The listeners to install during experiment execution.
 	 */
@@ -499,7 +515,7 @@ public abstract class JobShopExperiment extends Experiment {
 	/**
 	 * Adds a WorkStation listener to be installed on each {@link WorkStation}
 	 * in the experiment.
-	 * 
+	 *
 	 * @param l
 	 *            The listener to install during experiment execution.
 	 */
@@ -523,7 +539,7 @@ public abstract class JobShopExperiment extends Experiment {
 	/**
 	 * Adds a WorkStation-listener to be installed on a certain
 	 * {@link WorkStation}.
-	 * 
+	 *
 	 * @param name
 	 *            The workstation's name.
 	 * @param l
@@ -553,7 +569,7 @@ public abstract class JobShopExperiment extends Experiment {
 	 * Returns an array of all listeners registered for a given machine
 	 * registered before using
 	 * {@code #addMachineListener(String, NotifierListener)}.
-	 * 
+	 *
 	 * @param name
 	 *            The workstation's name.
 	 * @return An array of all listeners for the given machine name.

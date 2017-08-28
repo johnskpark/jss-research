@@ -48,6 +48,7 @@ public class JobShop extends Simulation {
 	// parameters
 	private int maxJobsInSystem = 0;
 	private int stopAfterNumJobs = 0;
+	private int stopAfterNthJob = 0;
 	private boolean enableLookAhead = false;
 
 	public JobSource[] sources = {};
@@ -216,6 +217,28 @@ public class JobShop extends Simulation {
 	 */
 	public int getStopAfterNumJobs() {
 		return stopAfterNumJobs;
+	}
+
+	/**
+	 * End simulation if the nth job is completed
+	 *
+	 * @param stopAfterNthJob
+	 *            Set the nth job that needs to be completed by the
+	 *            simulation before it is terminated.
+	 */
+	public void setStopAfterNthJob(int stopAfterNthJob) {
+		this.stopAfterNthJob =  stopAfterNthJob;
+	}
+
+	/**
+	 * Returns the nth job that needs to be completed before the simulation
+	 * ends.
+	 *
+	 * @return The nth job that needs to be completed before terminating the
+	 *            simulation.
+	 */
+	public int getStopAfterNthJob() {
+		return stopAfterNthJob;
 	}
 
 	/**

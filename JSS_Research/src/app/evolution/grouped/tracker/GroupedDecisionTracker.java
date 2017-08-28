@@ -18,12 +18,12 @@ public class GroupedDecisionTracker implements IJasimaTracker {
 
 	private JasimaGPProblem problem;
 
-	public int getNumIgnore() {
-		return ((DynamicSimConfig) problem.getSimConfig()).getNumIgnore();
+	public int getNumIgnore(int index) {
+		return ((DynamicSimConfig) problem.getSimConfig()).getNumIgnore(index);
 	}
 
-	public void addDecision(GPIndividual ind, int jobFinished, int decision) {
-		if (!shouldSample(jobFinished)) {
+	public void addDecision(GPIndividual ind, int index, int jobFinished, int decision) {
+		if (!shouldSample(index, jobFinished)) {
 			return;
 		}
 
@@ -41,11 +41,11 @@ public class GroupedDecisionTracker implements IJasimaTracker {
 		}
 	}
 
-	private boolean shouldSample(int jobFinished) {
+	private boolean shouldSample(int index, int jobFinished) {
 		DynamicSimConfig simConfig = (DynamicSimConfig) problem.getSimConfig();
 
-		return (jobFinished >= simConfig.getNumIgnore()) &&
-				(jobFinished < simConfig.getNumIgnore() + SAMPLE_SIZE);
+		return (jobFinished >= simConfig.getNumIgnore(index)) &&
+				(jobFinished < simConfig.getNumIgnore(index) + SAMPLE_SIZE);
 	}
 
 	@Override

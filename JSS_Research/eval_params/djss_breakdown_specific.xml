@@ -2,42 +2,63 @@
 <evaluationConfig>
 
 <!-- Rule file definitions -->
-
+<!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
 			<ruleFile>mb_single_objective/ddpt_rule.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
-
-	<solverConfig>
-		<solverClass>app.evaluation.priorityRules.EvalSPT</solverClass>
-	</solverConfig>
+-->
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EvalWATC</solverClass>
 	</solverConfig>
 
 	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.EvalWCOVERT</solverClass>
+	</solverConfig>
+
+	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EvalEDD</solverClass>
+	</solverConfig>
+
+<!--
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.EvalSPT</solverClass>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EvalFIFO</solverClass>
 	</solverConfig>
+-->
+
+<!--
+	<datasetConfig>
+		<datasetClass>app.simConfig.huntConfig.EvalFactory</datasetClass>
+		<datasetInstances>test</datasetInstances>
+		<datasetSeed>15</datasetSeed>
+		<datasetRepeat>30</datasetRepeat>
+	</datasetConfig>
+-->
 
 	<datasetConfig>
-		<datasetClass>app.simConfig.holthausConfig3.EvalFactory</datasetClass>
-		<datasetInstances>(all),(all),(all)</datasetInstances>
+		<datasetClass>app.simConfig.mbConfig4.EvalFactory</datasetClass>
+		<datasetInstances>(all),(all),(all),(all)</datasetInstances>
 		<datasetSeed>15</datasetSeed>
-		<!-- <datasetSeed>4609823032865163582</datasetSeed> -->
 		<datasetRepeat>30</datasetRepeat>
 		<datasetRotateSeed>true</datasetRotateSeed>
 	</datasetConfig>
 
 <!-- Output file definition -->
+<!--
 	<outputConfig>
 	    <outputFile>breakdown_holthaus3_ddpt_rule_output.csv</outputFile>
+	</outputConfig>
+-->
+<!-- Temporary output file. -->
+	<outputConfig>
+	    <outputFile>temp_output.csv</outputFile>
 	</outputConfig>
 
 
@@ -60,6 +81,10 @@
 
 	<fitnessConfig>
 		<fitnessClass>app.evaluation.fitness.DueDateFactorInfo</fitnessClass>
+	</fitnessConfig>
+
+	<fitnessConfig>
+		<fitnessClass>app.evaluation.fitness.StopAfterNumJobsInfo</fitnessClass>
 	</fitnessConfig>
 
 <!--

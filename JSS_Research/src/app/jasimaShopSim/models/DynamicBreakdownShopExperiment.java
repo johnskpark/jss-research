@@ -19,7 +19,7 @@ public class DynamicBreakdownShopExperiment extends DynamicShopExperiment {
 
 	// Default parameters for machine breakdown.
 	private DblStream repairTimeFactor;
-	private DblStream breakdownLevel;
+	private DblStream timeBetweenFailures;
 	private Random machineRand = new Random();
 
 	protected List<BreakdownSource> breakdownSrc;
@@ -60,7 +60,7 @@ public class DynamicBreakdownShopExperiment extends DynamicShopExperiment {
 	}
 
 	protected BreakdownSource createBreakdownSource(IndividualMachine machine) {
-		if (repairTimeFactor == null || breakdownLevel == null) {
+		if (repairTimeFactor == null || timeBetweenFailures == null) {
 			throw new IllegalStateException("Repair Time and Time Between Failures Distributions are not initialised.");
 		}
 		BreakdownSource src = new BreakdownSource(machine);
@@ -83,11 +83,11 @@ public class DynamicBreakdownShopExperiment extends DynamicShopExperiment {
 	}
 
 	public void setTimeBetweenFailureDistribution(DblStream breakdownLevel) {
-		this.breakdownLevel = breakdownLevel;
+		this.timeBetweenFailures = breakdownLevel;
 	}
 
 	public DblStream getTimeBetweenFailureDistribution() {
-		return breakdownLevel;
+		return timeBetweenFailures;
 	}
 
 	public void setMachineRandom(Random machineRand) {

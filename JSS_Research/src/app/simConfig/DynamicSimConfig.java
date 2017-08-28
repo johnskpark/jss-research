@@ -39,8 +39,9 @@ public abstract class DynamicSimConfig implements SimConfig {
 
 	public abstract int getMaxNumOps(int index);
 
-	public abstract int getNumIgnore();
+	public abstract int getNumIgnore(int index);
 
-	public abstract int getStopAfterNumJobs();
+	// FIXME need to add in the option to stop after nth job completion instead as well.
+	public abstract int getStopAfterNumJobs(int index);
 
 }

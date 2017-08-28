@@ -62,15 +62,14 @@ public class DowntimeSource {
 	public void init() {
 		// initialize random streams
 		RandomFactory fact = machine.workStation.shop.getRndStreamFactory();
-		if (timeBetweenFailures != null
-				&& timeBetweenFailures.getRndGen() == null) {
+		if (initialiseDblStream(timeBetweenFailures)) {
 			fact.initNumberStream(timeBetweenFailures, toString()
 					+ ".timeBetweenFailures");
 			timeBetweenFailures.init();
 
 			nextTimeBetweenFailure = timeBetweenFailures.nextDbl();
 		}
-		if (timeToRepair != null && timeToRepair.getRndGen() == null) {
+		if (initialiseDblStream(timeToRepair)) {
 			fact.initNumberStream(timeToRepair, toString() + ".timeToRepair");
 			timeToRepair.init();
 
@@ -104,6 +103,10 @@ public class DowntimeSource {
 
 		// schedule begin of first downtime
 		onActivate();
+	}
+
+	protected boolean initialiseDblStream(DblStream stream) {
+		return stream != null && stream.getRndGen() == null;
 	}
 
 	protected void onActivate() {
