@@ -8,7 +8,7 @@ import jasima.shopSim.core.JobShopExperiment;
 import jasima.shopSim.core.PR;
 import jasima.shopSim.models.dynamicShop.DynamicShopExperiment;
 import jasima.shopSim.models.staticShop.StaticShopExperiment;
-import jasima.shopSim.util.BasicJobStatCollector;
+import jasima.shopSim.util.ExtendedJobStatCollector;
 
 public class ExperimentGenerator {
 
@@ -57,7 +57,7 @@ public class ExperimentGenerator {
 		experiment.setRepairTimeDistribution(simConfig.getRepairTimeDistribution(experiment, index));
 		experiment.setTimeBetweenFailureDistribution(simConfig.getTimeBetweenFailureDistribution(experiment, index));
 
-		BasicJobStatCollector statCollector = new BasicJobStatCollector();
+		ExtendedJobStatCollector statCollector = new ExtendedJobStatCollector();
 		statCollector.setIgnoreFirst(simConfig.getNumIgnore(index));
 		experiment.setShopListener(new NotifierListener[]{statCollector});
 
@@ -86,7 +86,7 @@ public class ExperimentGenerator {
 		experiment.setStopAfterNumJobs(simConfig.getStopAfterNumJobs(index));
 //		experiment.setStopArrivalsAfterNumJobs(simConfig.getStopAfterNumJobs());
 
-		BasicJobStatCollector statCollector = new BasicJobStatCollector();
+		ExtendedJobStatCollector statCollector = new ExtendedJobStatCollector();
 		statCollector.setIgnoreFirst(simConfig.getNumIgnore(index));
 		experiment.setShopListener(new NotifierListener[]{statCollector});
 
@@ -104,7 +104,7 @@ public class ExperimentGenerator {
 
 		experiment.setInstFileName(simConfig.getInstFileName(index));
 
-		BasicJobStatCollector statCollector = new BasicJobStatCollector();
+		ExtendedJobStatCollector statCollector = new ExtendedJobStatCollector();
 		experiment.setShopListener(new NotifierListener[]{statCollector});
 
 		return experiment;

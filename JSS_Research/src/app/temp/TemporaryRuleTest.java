@@ -18,7 +18,7 @@ import jasima.shopSim.core.WorkStation.WorkStationEvent;
 import jasima.shopSim.models.staticShop.StaticShopExperiment;
 import jasima.shopSim.prioRules.basic.EDD;
 import jasima.shopSim.prioRules.basic.SPT;
-import jasima.shopSim.util.BasicJobStatCollector;
+import jasima.shopSim.util.ExtendedJobStatCollector;
 
 public class TemporaryRuleTest {
 
@@ -42,7 +42,7 @@ public class TemporaryRuleTest {
 		StaticShopExperiment e = new StaticShopExperiment();
 
 		e.setSequencingRule(rule);
-		e.setShopListener(new NotifierListener[]{new BasicJobStatCollector()});
+		e.setShopListener(new NotifierListener[]{new ExtendedJobStatCollector()});
 		e.addMachineListener(listener);
 		e.setInstFileName("dataset/js06x06.txt");
 

@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import app.JasimaWorkStationListener;
-import app.JasimaWorkStationListener;
 import app.evolution.IJasimaFitness;
 import app.evolution.JasimaWorkStationListenerEvolveFactory;
 import app.evolution.pickardt.presetRules.PRCR;
@@ -40,7 +39,7 @@ import jasima.shopSim.prioRules.setup.ATCS;
 import jasima.shopSim.prioRules.weighted.WMDD;
 import jasima.shopSim.prioRules.weighted.WMOD;
 import jasima.shopSim.prioRules.weighted.WSPT;
-import jasima.shopSim.util.BasicJobStatCollector;
+import jasima.shopSim.util.ExtendedJobStatCollector;
 
 public class JasimaPickardtProblem extends Problem implements SimpleProblemForm {
 
@@ -214,7 +213,7 @@ public class JasimaPickardtProblem extends Problem implements SimpleProblemForm 
 		experiment.setProcTimes(simConfig.getProcTime(index));
 		experiment.setNumOps(simConfig.getMinNumOps(index), simConfig.getMaxNumOps(index));
 
-		experiment.setShopListener(new NotifierListener[]{new BasicJobStatCollector()});
+		experiment.setShopListener(new NotifierListener[]{new ExtendedJobStatCollector()});
 		experiment.setSequencingRules(rules);
 		experiment.setScenario(DynamicShopExperiment.Scenario.JOB_SHOP);
 

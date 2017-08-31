@@ -4,7 +4,8 @@
 
 parent.0 = koza.params
 # parent.1 = holthaus.params
-parent.1 = holthaus3.params
+# parent.1 = holthaus3.params
+parent.1 = hunt.params
 
 pop.subpop.0.species.ind = app.evolution.JasimaGPIndividual
 
@@ -22,7 +23,7 @@ gp.fs.0.name = f0
 
 #breed.elite.0 = 40
 
-gp.fs.0.size = 21
+gp.fs.0.size = 20
 gp.fs.0.func.0 = app.evolution.node.basic.ERCRandomUniform
 gp.fs.0.func.0.nc = nc0
 gp.fs.0.func.0.min = 0
@@ -53,20 +54,20 @@ gp.fs.0.func.12 = app.evolution.node.basic.ScoreOperationReadyTime
 gp.fs.0.func.12.nc = nc0
 gp.fs.0.func.13 = app.evolution.node.basic.ScoreDueDate
 gp.fs.0.func.13.nc = nc0
-gp.fs.0.func.14 = app.evolution.node.basic.ScorePenalty
+#gp.fs.0.func.14 = app.evolution.node.basic.ScorePenalty
+#gp.fs.0.func.14.nc = nc0
+gp.fs.0.func.14 = app.evolution.node.basic.ScoreMachineReadyTime
 gp.fs.0.func.14.nc = nc0
-gp.fs.0.func.15 = app.evolution.node.basic.ScoreMachineReadyTime
+gp.fs.0.func.15 = app.evolution.node.basic.ScoreSlack
 gp.fs.0.func.15.nc = nc0
-gp.fs.0.func.16 = app.evolution.node.basic.ScoreSlack
+gp.fs.0.func.16 = app.evolution.node.hunt.ScoreAverageWaitTimeAllMachines
 gp.fs.0.func.16.nc = nc0
-gp.fs.0.func.17 = app.evolution.node.hunt.ScoreAverageWaitTimeAllMachines
+gp.fs.0.func.17 = app.evolution.node.hunt.ScoreAverageWaitTimeNextMachine
 gp.fs.0.func.17.nc = nc0
-gp.fs.0.func.18 = app.evolution.node.hunt.ScoreAverageWaitTimeNextMachine
+gp.fs.0.func.18 = app.evolution.node.hunt.ScoreNextProcessingTime
 gp.fs.0.func.18.nc = nc0
-gp.fs.0.func.19 = app.evolution.node.hunt.ScoreNextProcessingTime
+gp.fs.0.func.19 = app.evolution.node.hunt.ScoreNumberWaitingNextMachine
 gp.fs.0.func.19.nc = nc0
-gp.fs.0.func.20 = app.evolution.node.hunt.ScoreNumberWaitingNextMachine
-gp.fs.0.func.20.nc = nc0
 
 stat = app.evolution.simple.JasimaSimpleStatistics
 

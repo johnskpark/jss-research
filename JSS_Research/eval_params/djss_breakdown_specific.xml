@@ -2,15 +2,21 @@
 <evaluationConfig>
 
 <!-- Rule file definitions -->
-<!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_single_objective/ddpt_rule.txt</ruleFile>
+			<ruleFile>mb_single_objective/hunt_baseline.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
--->
 
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>mb_single_objective/hunt_baseline_no_weight.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+<!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EvalWATC</solverClass>
 	</solverConfig>
@@ -23,13 +29,16 @@
 		<solverClass>app.evaluation.priorityRules.EvalEDD</solverClass>
 	</solverConfig>
 
-<!--
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.EvalFIFO</solverClass>
+	</solverConfig>
+
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EvalSPT</solverClass>
 	</solverConfig>
 
 	<solverConfig>
-		<solverClass>app.evaluation.priorityRules.EvalFIFO</solverClass>
+		<solverClass>app.evaluation.priorityRules.EvalWSPT</solverClass>
 	</solverConfig>
 -->
 
@@ -43,8 +52,8 @@
 -->
 
 	<datasetConfig>
-		<datasetClass>app.simConfig.mbConfig4.EvalFactory</datasetClass>
-		<datasetInstances>(all),(all),(all),(all)</datasetInstances>
+		<datasetClass>app.simConfig.huntConfig.EvalFactory</datasetClass>
+		<datasetInstances>test</datasetInstances>
 		<datasetSeed>15</datasetSeed>
 		<datasetRepeat>30</datasetRepeat>
 		<datasetRotateSeed>true</datasetRotateSeed>
@@ -71,6 +80,7 @@
 		<fitnessClass>app.evaluation.fitness.RuleSizeFitness</fitnessClass>
 	</fitnessConfig>
 
+<!--
 	<fitnessConfig>
 		<fitnessClass>app.evaluation.fitness.BreakdownLevelInfo</fitnessClass>
 	</fitnessConfig>
@@ -82,6 +92,7 @@
 	<fitnessConfig>
 		<fitnessClass>app.evaluation.fitness.DueDateFactorInfo</fitnessClass>
 	</fitnessConfig>
+-->
 
 	<fitnessConfig>
 		<fitnessClass>app.evaluation.fitness.StopAfterNumJobsInfo</fitnessClass>

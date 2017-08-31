@@ -6,7 +6,7 @@ import jasima.core.statistics.SummaryStat;
 
 public class WeightedFlowtimeStat {
 
-	private static final String WF_MEAN_STR = "flowtime";
+	private static final String WF_MEAN_STR = "weightedFlowtime";
 
 	public static double getTotalWeightedFlowtime(final Map<String, Object> results) {
 		SummaryStat stat = (SummaryStat) results.get(WF_MEAN_STR);
