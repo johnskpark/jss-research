@@ -20,6 +20,7 @@ import jasima.shopSim.core.PriorityQueue;
 // Is there a way to reduce the memory usage for this?
 
 // TODO Also, I need to change this up to match the decision scenario situation.
+// Did I do this?
 public class JasimaExperimentTracker<T> implements Clearable {
 
 	public static final int NOT_SET = -1;

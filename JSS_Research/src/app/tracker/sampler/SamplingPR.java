@@ -1,4 +1,4 @@
-package app.priorityRules;
+package app.tracker.sampler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,6 +6,7 @@ import java.util.Random;
 
 import app.TrackedRuleBase;
 import app.node.INode;
+import app.simConfig.SimConfig;
 import app.tracker.DecisionEvent;
 import app.tracker.JasimaExperimentTracker;
 import jasima.shopSim.core.PR;
@@ -13,15 +14,17 @@ import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
 import jasima.shopSim.core.WorkStation;
 
-public class TrackedPR extends PR {
+public class SamplingPR extends PR {
 
 	private static final long serialVersionUID = -6359385279252431755L;
 
 //	private static final int NUM_DP_ROUNDED = 4;
 
+	// Default parameters here.
 	private PR referenceRule;
-	private int numJobThreshold;
-	private int numSample;
+	private int numJobThreshold = 10;
+	private int numSample = 50;
+
 	private long seed;
 
 	private boolean firstRun = true;
@@ -36,12 +39,10 @@ public class TrackedPR extends PR {
 
 	private JasimaExperimentTracker<?> tracker;
 
-	public TrackedPR(PR refRule, int jobThreshold, int sample, long s, JasimaExperimentTracker<?> t) {
+	public SamplingPR(PR refRule, long s, JasimaExperimentTracker<?> t) {
 		super();
 
 		referenceRule = refRule;
-		numJobThreshold = jobThreshold;
-		numSample = sample;
 		seed = s;
 
 		recordedEvents = new ArrayList<>();
@@ -53,13 +54,13 @@ public class TrackedPR extends PR {
 		return firstRun;
 	}
 
-	public void initSampleRun(int configIndex) {
+	public void initRecordingRun(SimConfig config, int configIndex) {
 		firstRun = true;
 		currentRecording = new ArrayList<>();
 		recordedEvents.add(configIndex, currentRecording);
 	}
 
-	public void initTrackedRun(int configIndex) {
+	public void initTrackedRun(SimConfig config, int configIndex) {
 		firstRun = false;
 		currentSample = new ArrayList<>();
 		sampledEvents.add(configIndex, currentSample);
@@ -89,17 +90,24 @@ public class TrackedPR extends PR {
 		super.beforeCalc(q);
 		referenceRule.beforeCalc(q);
 
-		if (q.size() < numJobThreshold) {
-			return;
+		if (isDecisionSampled(q)) {
+			sampleDecision(q);
 		}
+	}
 
+	protected boolean isDecisionSampled(PriorityQueue<?> q) {
+		return q.size() >= numJobThreshold;
+	}
+
+	protected void sampleDecision(PriorityQueue<?> q) {
 		DecisionEvent event = getDecisionEvent(q.get(0));
 
-		if (firstRun) {
+		if (isSampleRun()) {
 			// Record this particular decision situation.
 			currentRecording.add(event);
 		} else {
 			 // Determine whether this belongs to one of the sampled events.
+			// Damn this thing is messy as fuck, how the fuck did I write this?
 			if (currentSample.contains(event)) {
 				// Run it over the different rules.
 				tracker.addDispatchingDecision(q);
@@ -121,12 +129,24 @@ public class TrackedPR extends PR {
 		pr.jobSelected(pr.getEntryRankings().get(0), q);
 	}
 
-	private DecisionEvent getDecisionEvent(PrioRuleTarget entry) {
+	protected DecisionEvent getDecisionEvent(PrioRuleTarget entry) {
 		WorkStation machine = entry.getCurrMachine();
 
 		double simTime = entry.getShop().simTime();
 
 		return new DecisionEvent(machine, simTime);
+	}
+
+	protected List<DecisionEvent> getCurrentRecording() {
+		return currentRecording;
+	}
+
+	protected List<DecisionEvent> getCurrentSample() {
+		return currentSample;
+	}
+
+	protected JasimaExperimentTracker<?> getTracker() {
+		return tracker;
 	}
 
 	@Override

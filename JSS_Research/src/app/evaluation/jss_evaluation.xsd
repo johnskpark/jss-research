@@ -47,13 +47,14 @@
 	</xs:sequence>
 </xs:complexType>
 
+<!--
 <xs:complexType name="refTrackType">
 	<xs:sequence>
-		<xs:element name="numJobsThreshold" type="xs:integer" minOccurs="1" maxOccurs="1" />
-		<xs:element name="numSamples" type="xs:integer" minOccurs="1" maxOccurs="1" />
+		<xs:element name="method" type="xs:string" minOccurs="1" maxOccurs="1" />
 		<xs:element name="seed" type="xs:integer" minOccurs="1" maxOccurs="1" />
 	</xs:sequence>
 </xs:complexType>
+-->
 
 <!-- Fitness type definition -->
 <xs:complexType name="fitnessType">

@@ -33,10 +33,11 @@ import app.JasimaWorkStationListener;
 import app.TrackedRuleBase;
 import app.node.INode;
 import app.node.NodeData;
-import app.priorityRules.TrackedPR;
 import app.simConfig.ExperimentGenerator;
 import app.simConfig.SimConfig;
 import app.tracker.JasimaExperimentTracker;
+import app.tracker.sampler.SamplerFactory;
+import app.tracker.sampler.SamplingPR;
 import app.util.RuleParser;
 import jasima.core.util.Pair;
 import jasima.shopSim.core.JobShopExperiment;
@@ -61,8 +62,7 @@ public class JasimaEvalProblem {
 	public static final String XML_REFERENCE_BASE = "refConfig";
 	public static final String XML_REFERENCE_RULE = "refRule";
 	public static final String XML_REFERENCE_TRACKING = "refTracking";
-	public static final String XML_REFERENCE_NUM_JOBS = "numJobsThreshold";
-	public static final String XML_REFERENCE_NUM_SAMPLES = "numSamples";
+	public static final String XML_REFERENCE_METHOD = "method";
 	public static final String XML_REFERENCE_SEED = "seed";
 
 	public static final String XML_FITNESS_BASE = "fitnessConfig";
@@ -320,12 +320,12 @@ public class JasimaEvalProblem {
 		for (int i = 0; i < nList.getLength(); i++) {
 			Element refBase = (Element) nList.item(i);
 
-			Class<?> refClass = Class.forName(refBase
+			Class<?> refRuleClass = Class.forName(refBase
 					.getElementsByTagName(XML_REFERENCE_RULE)
 					.item(0)
 					.getTextContent());
 
-			PR refRule = (PR) refClass.newInstance();
+			PR refRule = (PR) refRuleClass.newInstance();
 
 			System.out.println("Reference: loaded the reference rule " + refRule.getClass().getSimpleName());
 
@@ -333,14 +333,18 @@ public class JasimaEvalProblem {
 			if (nTrack.getLength() != 0) {
 				Element trackBase = (Element) nTrack.item(0);
 
-				int numJobThreshold = Integer.parseInt(trackBase.getElementsByTagName(XML_REFERENCE_NUM_JOBS).item(0).getTextContent());
-				int numSamples = Integer.parseInt(trackBase.getElementsByTagName(XML_REFERENCE_NUM_SAMPLES).item(0).getTextContent());
+				Class<?> refMethodClass = Class.forName(trackBase
+						.getElementsByTagName(XML_REFERENCE_METHOD)
+						.item(0)
+						.getTextContent());
+				SamplerFactory factory = (SamplerFactory) refMethodClass.newInstance();
+
 				long seed = Integer.parseInt(trackBase.getElementsByTagName(XML_REFERENCE_SEED).item(0).getTextContent());
 
 				tracker = new JasimaExperimentTracker<>();
 				tracker.setSimConfig(simConfig);
 
-				TrackedPR trackedRefRule = new TrackedPR(refRule, numJobThreshold, numSamples, seed, tracker);
+				SamplingPR trackedRefRule = factory.generateSampler(refRule, seed, tracker);
 
 				referenceRules.add(trackedRefRule);
 				trackedRefRules.add(trackedRefRule);
@@ -467,8 +471,8 @@ public class JasimaEvalProblem {
 			}
 
 			for (int configIndex = 0; configIndex < simConfig.getNumConfigs(); configIndex++) {
-				if (refRule instanceof TrackedPR) {
-					((TrackedPR) refRule).initSampleRun(configIndex);
+				if (refRule instanceof SamplingPR) {
+					((SamplingPR) refRule).initRecordingRun(simConfig, configIndex);
 				}
 
 				JobShopExperiment experiment = getExperimentPR(refRule, configIndex);
@@ -583,7 +587,7 @@ public class JasimaEvalProblem {
 		String[] resultsOutput = new String[numResults];
 
 		for (int refRuleIndex = 0; refRuleIndex < trackedRefRules.size(); refRuleIndex++) {
-			TrackedPR trackedRefRule = (TrackedPR) trackedRefRules.get(refRuleIndex);
+			SamplingPR trackedRefRule = (SamplingPR) trackedRefRules.get(refRuleIndex);
 			trackedRefRule.setPriorityRules(new ArrayList<TrackedRuleBase<INode>>(solvers));
 
 			for (EvalPriorityRuleBase solver : solvers) {
@@ -595,7 +599,7 @@ public class JasimaEvalProblem {
 
 			for (int configIndex = 0; configIndex < simConfig.getNumConfigs(); configIndex++) {
 				tracker.setExperimentIndex(configIndex);
-				trackedRefRule.initTrackedRun(configIndex);
+				trackedRefRule.initTrackedRun(simConfig, configIndex);
 
 				JobShopExperiment experiment = getExperimentPR(trackedRefRule, configIndex);
 				experiment.runExperiment();

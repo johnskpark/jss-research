@@ -24,7 +24,7 @@ public class DecisionEvent extends Pair<WorkStation, Double> {
 		return b;
 	}
 
-	// TODO this doesn't get called wtf.
+	// TODO this doesn't get called wtf. Oh right...
 	@Override
 	public boolean equals(Object o) {
 		if (o == null || this.getClass() != o.getClass()) {
