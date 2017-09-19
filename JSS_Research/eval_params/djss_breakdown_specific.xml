@@ -3,12 +3,13 @@
 
 <!-- Rule file definitions -->
 	<solverConfig>
-		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_single_objective/holthaus3_predictive_4_21377_no-mb.txt</ruleFile>
+			<ruleFile>mb_single_objective/predictive_multirule_21377.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
+<!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
@@ -16,7 +17,6 @@
 		</solverFile>
 	</solverConfig>
 
-<!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EvalWATC</solverClass>
 	</solverConfig>
@@ -53,7 +53,7 @@
 
 	<datasetConfig>
 		<datasetClass>app.simConfig.holthausConfig3.EvalFactory</datasetClass>
-		<datasetInstances>(all),(all),(all)</datasetInstances>
+		<datasetInstances>(all),(all),(3,5)</datasetInstances>
 		<datasetSeed>15</datasetSeed>
 		<datasetRepeat>30</datasetRepeat>
 		<datasetRotateSeed>true</datasetRotateSeed>
@@ -99,24 +99,24 @@
 		<fitnessClass>app.evaluation.fitness.StopAfterNumJobsInfo</fitnessClass>
 	</fitnessConfig>
 
-<!-- TODO this part here needs to be modified further. -->
-<!--
 	<refConfig>
-		<refRule>app.evaluation.priorityRules.EvalATC</refRule>
-		<refTrackingMethod>app.tracker.sampler.SamplerFactory</refTrackingMethod>
-		<refSeed>15</refSeed>
-		<!--
+		<refRule>app.evaluation.priorityRules.EvalWATC</refRule>
+		<refTracking>
+			<method>app.tracker.sampler.breakdown.MBSamplerFactory</method>
+			<seed>15</seed>
+		</refTracking>
+	</refConfig>
+
+	<refFitnessConfig>
+		<fitnessClass>app.evaluation.fitness.BreakdownReactionFitness</fitnessClass>
+	</refFitnessConfig>
+
+<!--
 		<refTracking>
 			<numJobsThreshold>10</numJobsThreshold>
 			<numSamples>50</numSamples>
 			<seed>15</seed>
 		</refTracking>
-		-->
-	</refConfig>
-
-	<refFitnessConfig>
-		<fitnessClass>app.evaluation.fitness.JobPriorityFitness</fitnessClass>
-	</refFitnessConfig>
 -->
 
 <!--

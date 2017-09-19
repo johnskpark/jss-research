@@ -163,12 +163,10 @@
 		<fitnessClass>app.evaluation.fitness.RuleSizeFitness</fitnessClass>
 	</fitnessConfig>
 
-<!--
 	<refConfig>
-		<refRule>app.priorityRules.WATCPR</refRule>
+		<refRule>app.evaluation.priorityRules.EvalWATC</refRule>
 		<refTracking>
-			<numJobsThreshold>10</numJobsThreshold>
-			<numSamples>50</numSamples>
+			<method>app.tracker.sampler.SamplerFactory</method>
 			<seed>15</seed>
 		</refTracking>
 	</refConfig>
@@ -176,7 +174,6 @@
 	<refFitnessConfig>
 		<fitnessClass>app.evaluation.fitness.DiversityFitness</fitnessClass>
 	</refFitnessConfig>
--->
 
 	<listenerConfig>
 	    <listenerClass>app.listener.hunt.EvalFactory</listenerClass>
