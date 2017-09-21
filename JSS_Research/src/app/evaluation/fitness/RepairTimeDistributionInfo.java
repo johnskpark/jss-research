@@ -22,7 +22,7 @@ public class RepairTimeDistributionInfo implements IJasimaEvalFitness {
 
 	@Override
 	public boolean resultIsNumeric() {
-		return true;
+		return false;
 	}
 
 	@Override

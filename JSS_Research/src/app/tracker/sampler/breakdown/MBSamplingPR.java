@@ -51,7 +51,11 @@ public class MBSamplingPR extends SamplingPR {
 
 	@Override
 	protected boolean isDecisionSampled(PriorityQueue<?> q) {
-		return isWithinMeanTime(q) && isJobsInterrupted(q);
+//		if (isWithinMeanTime(q) && numJobsInterrupted(q) != 0) {
+//			System.out.printf("Num jobs: %d, num jobs interrupted: %d\n", q.size(), numJobsInterrupted(q));
+//		}
+
+		return isWithinMeanTime(q) && numJobsInterrupted(q) != 00;
 	}
 
 	private boolean isWithinMeanTime(PriorityQueue<?> q) {
@@ -63,7 +67,7 @@ public class MBSamplingPR extends SamplingPR {
 		return (time + currentPT) >= deactivateTime;
 	}
 
-	private boolean isJobsInterrupted(PriorityQueue<?> q) {
+	private int numJobsInterrupted(PriorityQueue<?> q) {
 		WorkStation machine = q.getWorkStation();
 
 		double time = machine.shop().simTime();
@@ -76,7 +80,7 @@ public class MBSamplingPR extends SamplingPR {
 			}
 		}
 
-		return numInterrupted != 0;
+		return numInterrupted;
 	}
 
 	protected DowntimeSource getDowntimeSource(WorkStation machine) {

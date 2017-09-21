@@ -9,6 +9,13 @@
 		</solverFile>
 	</solverConfig>
 
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>mb_single_objective/predictive_rule_vs_spt_21377.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
 <!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
@@ -53,7 +60,7 @@
 
 	<datasetConfig>
 		<datasetClass>app.simConfig.holthausConfig3.EvalFactory</datasetClass>
-		<datasetInstances>(all),(all),(3,5)</datasetInstances>
+		<datasetInstances>(all),(0.025,0.05,0.1,0.15),(3,5)</datasetInstances>
 		<datasetSeed>15</datasetSeed>
 		<datasetRepeat>30</datasetRepeat>
 		<datasetRotateSeed>true</datasetRotateSeed>
@@ -81,7 +88,6 @@
 		<fitnessClass>app.evaluation.fitness.RuleSizeFitness</fitnessClass>
 	</fitnessConfig>
 
-<!--
 	<fitnessConfig>
 		<fitnessClass>app.evaluation.fitness.BreakdownLevelInfo</fitnessClass>
 	</fitnessConfig>
@@ -93,7 +99,6 @@
 	<fitnessConfig>
 		<fitnessClass>app.evaluation.fitness.DueDateFactorInfo</fitnessClass>
 	</fitnessConfig>
--->
 
 	<fitnessConfig>
 		<fitnessClass>app.evaluation.fitness.StopAfterNumJobsInfo</fitnessClass>
@@ -108,16 +113,8 @@
 	</refConfig>
 
 	<refFitnessConfig>
-		<fitnessClass>app.evaluation.fitness.BreakdownReactionFitness</fitnessClass>
+		<fitnessClass>app.evaluation.fitness.DiversityFitness</fitnessClass>
 	</refFitnessConfig>
-
-<!--
-		<refTracking>
-			<numJobsThreshold>10</numJobsThreshold>
-			<numSamples>50</numSamples>
-			<seed>15</seed>
-		</refTracking>
--->
 
 <!--
 	<refFitnessConfig>
