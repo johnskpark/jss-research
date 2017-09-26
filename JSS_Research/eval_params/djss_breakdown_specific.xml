@@ -12,7 +12,28 @@
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
 		<solverFile>
+			<ruleFile>mb_single_objective/baseline_rule_vs_spt_28843.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
+		<solverFile>
 			<ruleFile>mb_single_objective/predictive_rule_vs_spt_21377.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>mb_single_objective/current1_rule_vs_spt_27360.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>mb_single_objective/current2_rule_vs_spt_8264.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
