@@ -2,7 +2,7 @@
 # Licensed under the Academic Free License version 3.0
 # See the file "LICENSE" for more information
 
-parent.0 = koza.params
+parent.0 = koza_big_tree.params
 parent.1 = hunt.params
 
 pop.subpop.0.species.ind = app.evolution.JasimaGPIndividual
@@ -71,9 +71,9 @@ eval.problem = app.evolution.simple.JasimaSimpleProblem
 eval.problem.data = app.evolution.JasimaGPData
 
 eval.problem.reference-rule = app.priorityRules.WATCPR
-eval.problem.reference-fitness = app.evolution.simple.fitness.MWTFitness
+eval.problem.reference-fitness = app.evolution.simple.fitness.MeanTardinessFitness
 
-eval.problem.fitness = app.evolution.simple.fitness.NormMWTFitness
+eval.problem.fitness = app.evolution.simple.fitness.NormMeanTardinessFitness
 
 eval.problem.workstations = 1
 eval.problem.workstation.0 = app.listener.hunt.EvolveFactory

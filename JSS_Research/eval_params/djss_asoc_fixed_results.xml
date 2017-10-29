@@ -2,139 +2,137 @@
 <evaluationConfig>
 
 <!-- 4op rules -->
+<!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>asoc_new_results/baseline_4op_no_weight.txt</ruleFile>
+			<ruleFile>asoc_fixed_results/baseline_4op_fixed2.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
-<!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>asoc_new_results/coop_4op_fixed.txt</ruleFile>
+			<ruleFile>asoc_fixed_results/coop_4op_fixed2.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.LinearCombinationRule</solverClass>
 		<solverFile>
-			<ruleFile>asoc_new_results/coop_lc_4op_fixed.txt</ruleFile>
+			<ruleFile>asoc_fixed_results/coop_lc_4op_fixed2.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.WeightedVoteRule</solverClass>
 		<solverFile>
-			<ruleFile>asoc_new_results/coop_weighted_4op_fixed.txt</ruleFile>
+			<ruleFile>asoc_fixed_results/coop_weighted_4op_fixed2.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.WeightedLinearCombinationRule</solverClass>
 		<solverFile>
-			<ruleFile>asoc_new_results/coop_weighted_lc_4op_fixed.txt</ruleFile>
+			<ruleFile>asoc_fixed_results/coop_weighted_lc_4op_fixed2.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 -->
 
 <!-- 8op rules -->
+<!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>asoc_new_results/baseline_8op_no_weight.txt</ruleFile>
+			<ruleFile>asoc_fixed_results/baseline_8op_fixed2.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
-<!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>asoc_new_results/coop_8op_fixed.txt</ruleFile>
+			<ruleFile>asoc_fixed_results/coop_8op_fixed2.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.LinearCombinationRule</solverClass>
 		<solverFile>
-			<ruleFile>asoc_new_results/coop_lc_8op_fixed.txt</ruleFile>
+			<ruleFile>asoc_fixed_results/coop_lc_8op_fixed2.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.WeightedVoteRule</solverClass>
 		<solverFile>
-			<ruleFile>asoc_new_results/coop_weighted_8op_fixed.txt</ruleFile>
+			<ruleFile>asoc_fixed_results/coop_weighted_8op_fixed2.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.WeightedLinearCombinationRule</solverClass>
 		<solverFile>
-			<ruleFile>asoc_new_results/coop_weighted_lc_8op_fixed.txt</ruleFile>
+			<ruleFile>asoc_fixed_results/coop_weighted_lc_8op_fixed2.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 -->
 
 <!-- No seed rotation -->
-<!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>asoc_no_rotate_results/djss_baseline_4op_no_rotate.txt</ruleFile>
+			<ruleFile>asoc_fixed_results/baseline_4op_no_rotate_fixed2.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>asoc_no_rotate_results/djss_coop_4op_no_rotate.txt</ruleFile>
+			<ruleFile>asoc_fixed_results/coop_4op_no_rotate_fixed2.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>asoc_no_rotate_results/djss_baseline_8op_no_rotate.txt</ruleFile>
+			<ruleFile>asoc_fixed_results/baseline_8op_no_rotate_fixed2.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>asoc_no_rotate_results/djss_coop_8op_no_rotate.txt</ruleFile>
+			<ruleFile>asoc_fixed_results/coop_8op_no_rotate_fixed2.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
--->
 
 <!-- The rules rotated around -->
 <!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.LinearCombinationRule</solverClass>
 		<solverFile>
-			<ruleFile>asoc_new_results/djss_coop_4op_new2.txt</ruleFile>
+			<ruleFile>asoc_fixed_results/djss_coop_4op_new2.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>asoc_new_results/djss_coop_lc_4op_new2.txt</ruleFile>
+			<ruleFile>asoc_fixed_results/djss_coop_lc_4op_new2.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.LinearCombinationRule</solverClass>
 		<solverFile>
-			<ruleFile>asoc_new_results/djss_coop_8op_new2.txt</ruleFile>
+			<ruleFile>asoc_fixed_results/djss_coop_8op_new2.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>asoc_new_results/djss_coop_lc_8op_new2.txt</ruleFile>
+			<ruleFile>asoc_fixed_results/djss_coop_lc_8op_new2.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 -->
@@ -149,7 +147,7 @@
 
 <!-- The output file -->
 	<outputConfig>
-	    <outputFile>asoc_baseline_fixed_output.csv</outputFile>
+	    <outputFile>asoc_no_rotate_fixed2_output.csv</outputFile>
 	</outputConfig>
 
 <!-- The performance measures used -->
