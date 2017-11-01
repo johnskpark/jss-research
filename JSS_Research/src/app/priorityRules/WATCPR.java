@@ -14,8 +14,8 @@ public class WATCPR extends ATC {
 	private static final long serialVersionUID = -5200383919674123645L;
 
 	public WATCPR() {
-		super(1.0);
-//		super(3.0);
+//		super(1.0);
+		super(3.0);
 	}
 
 	@Override
