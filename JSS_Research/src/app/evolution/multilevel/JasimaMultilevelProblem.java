@@ -114,12 +114,12 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 			for (int expIndex = 0; expIndex < getSimConfig().getNumConfigs(); expIndex++) {
 				Experiment experiment = getExperiment(state, groupRule, expIndex, getWorkStationListeners(), getTracker());
 				experiment.runExperiment();
-				groupFitness.accumulateFitness(expIndex, group, experiment.getResults());
+				groupFitness.accumulateFitness(expIndex, getSimConfig(), group, experiment.getResults());
 
 				clearForExperiment(getWorkStationListeners());
 			}
 
-			groupFitness.setFitness(state, group);
+			groupFitness.setFitness(state, getSimConfig(), group);
 			groupFitness.clear();
 
 			// Add in the niching adjustment to the fitnesses.
@@ -147,12 +147,12 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 			for (int expIndex = 0; expIndex < getSimConfig().getNumConfigs(); expIndex++) {
 				Experiment experiment = getExperiment(state, indRule, expIndex, getWorkStationListeners(), null);
 				experiment.runExperiment();
-				indFitness.accumulateFitness(expIndex, (JasimaMultilevelIndividual) ind, experiment.getResults()); // getReferenceStat().get(expIndex));
+				indFitness.accumulateFitness(expIndex, getSimConfig(), (JasimaMultilevelIndividual) ind, experiment.getResults()); // getReferenceStat().get(expIndex));
 
 				clearForExperiment(getWorkStationListeners());
 			}
 
-			indFitness.setFitness(state, (JasimaMultilevelIndividual) ind);
+			indFitness.setFitness(state, getSimConfig(), (JasimaMultilevelIndividual) ind);
 			indFitness.clear();
 
 			ind.evaluated = true;

@@ -156,7 +156,7 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 
 			// Add in the results of the training instance to the fitness of the group.
 			for (int j = 0; j < inds.length; j++) {
-				fitness.accumulateFitness(expIndex, (JasimaCoopIndividual) inds[j], experiment.getResults(), j);
+				fitness.accumulateFitness(expIndex, getSimConfig(), (JasimaCoopIndividual) inds[j], experiment.getResults(), j);
 			}
 
 			clearForExperiment(getWorkStationListeners());
@@ -164,7 +164,7 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 
 		fitness.setUpdateConfiguration(inds, updateFitness, shouldSetContext());
 		for (int i = 0; i < inds.length; i++) {
-			fitness.setFitness(state, (JasimaCoopIndividual) inds[i], i);
+			fitness.setFitness(state, getSimConfig(), (JasimaCoopIndividual) inds[i], i);
 			inds[i].evaluated = true;
 		}
 		fitness.clear();
@@ -191,12 +191,12 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 			Experiment experiment = getExperiment(state, indRule, i, getWorkStationListeners(), getTracker());
 			experiment.runExperiment();
 
-			indFitness.accumulateFitness(i, (JasimaCoopIndividual) ind, experiment.getResults());
+			indFitness.accumulateFitness(i, getSimConfig(), (JasimaCoopIndividual) ind, experiment.getResults());
 
 			clearForExperiment(getWorkStationListeners());
 		}
 
-		double finalFitness = indFitness.getFinalFitness(state, (JasimaCoopIndividual) ind);
+		double finalFitness = indFitness.getFinalFitness(state, getSimConfig(), (JasimaCoopIndividual) ind);
 
 		allIndStats.value(finalFitness);
 		indStatPerSubpop[index].value(finalFitness);

@@ -106,12 +106,12 @@ public class JasimaGroupedProblem extends JasimaGPProblem {
 
 				experiment.runExperiment();
 
-				fitness.accumulateIndFitness(i, (JasimaGPIndividual) ind, experiment.getResults());
+				fitness.accumulateIndFitness(i, getSimConfig(), (JasimaGPIndividual) ind, experiment.getResults());
 
 				rule.clear();
 			}
 
-			fitness.setIndFitness(state, (JasimaGPIndividual) ind);
+			fitness.setIndFitness(state, getSimConfig(), (JasimaGPIndividual) ind);
 			fitness.clearIndFitness();
 
 			resetSimSeed();
@@ -141,7 +141,7 @@ public class JasimaGroupedProblem extends JasimaGPProblem {
 
 					experiment.runExperiment();
 
-					fitness.accumulateGroupFitness(i, (JasimaGPIndividual) ind, experiment.getResults());
+					fitness.accumulateGroupFitness(i, getSimConfig(), (JasimaGPIndividual) ind, experiment.getResults());
 					getTracker().clear();
 
 					groupRule.clear();
@@ -154,7 +154,7 @@ public class JasimaGroupedProblem extends JasimaGPProblem {
 		// Set the fitnesses of the groups.
 		for (int i = 0; i < group.length; i++) {
 			if (!group[i].isEvaluated()) {
-				fitness.setGroupFitness(state, (JasimaGPIndividual) ind, group[i]);
+				fitness.setGroupFitness(state, getSimConfig(), (JasimaGPIndividual) ind, group[i]);
 			}
 		}
 

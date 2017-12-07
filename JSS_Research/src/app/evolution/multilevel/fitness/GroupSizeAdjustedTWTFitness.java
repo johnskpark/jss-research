@@ -7,6 +7,7 @@ import java.util.Map;
 import app.evolution.multilevel.IJasimaMultilevelFitnessListener;
 import app.evolution.multilevel.JasimaMultilevelGroupFitness;
 import app.evolution.multilevel.JasimaMultilevelStatistics;
+import app.simConfig.SimConfig;
 import app.stat.WeightedTardinessStat;
 import ec.EvolutionState;
 import ec.multilevel.MLSSubpopulation;
@@ -39,7 +40,7 @@ public class GroupSizeAdjustedTWTFitness extends JasimaMultilevelGroupFitness {
 	}
 
 	@Override
-	public double getFitness(int expIndex, MLSSubpopulation subpop, Map<String, Object> results) {
+	public double getFitness(int expIndex, SimConfig config, MLSSubpopulation subpop, Map<String, Object> results) {
 		double twt = WeightedTardinessStat.getTotalWeightedTardiness(results);
 
 		for (IJasimaMultilevelFitnessListener listener : listeners) {
@@ -50,8 +51,8 @@ public class GroupSizeAdjustedTWTFitness extends JasimaMultilevelGroupFitness {
 	}
 
 	@Override
-	public double getFinalFitness(final EvolutionState state, final MLSSubpopulation subpop) {
-		double avgFitness = super.getFinalFitness(state, subpop);
+	public double getFinalFitness(final EvolutionState state, final SimConfig config, final MLSSubpopulation subpop) {
+		double avgFitness = super.getFinalFitness(state, config, subpop);
 
 		int size = subpop.individuals.length;
 		double sizeFactor = Math.sqrt((2.0 * size) / (2.0 + size));

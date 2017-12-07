@@ -8,6 +8,7 @@ import app.evolution.multilevel.IJasimaMultilevelFitnessListener;
 import app.evolution.multilevel.JasimaMultilevelIndividual;
 import app.evolution.multilevel.JasimaMultilevelIndividualFitness;
 import app.evolution.multilevel.JasimaMultilevelStatistics;
+import app.simConfig.SimConfig;
 import app.stat.WeightedTardinessStat;
 
 /**
@@ -37,7 +38,7 @@ public class IndividualNormTWTFitness extends JasimaMultilevelIndividualFitness 
 	}
 
 	@Override
-	public double getFitness(int expIndex, JasimaMultilevelIndividual ind, Map<String, Object> results) {
+	public double getFitness(int expIndex, SimConfig config, JasimaMultilevelIndividual ind, Map<String, Object> results) {
 		List<Double> referenceStat = getProblem().getReferenceStat();
 
 		double normTWT = WeightedTardinessStat.getNormTotalWeightedTardiness(results, referenceStat.get(expIndex));

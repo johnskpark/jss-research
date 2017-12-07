@@ -171,10 +171,10 @@ public class JasimaPickardtProblem extends Problem implements SimpleProblemForm 
 
 				experiment.runExperiment();
 
-				fitness.accumulateFitness(i, vectorInd, experiment.getResults());
+				fitness.accumulateFitness(i, simConfig, vectorInd, experiment.getResults());
 			}
 
-			fitness.setFitness(state, (JasimaVectorIndividual) ind);
+			fitness.setFitness(state, simConfig, (JasimaVectorIndividual) ind);
 			fitness.clear();
 
 			ind.evaluated = true;

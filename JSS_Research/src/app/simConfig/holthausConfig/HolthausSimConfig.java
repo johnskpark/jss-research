@@ -25,6 +25,7 @@ public class HolthausSimConfig extends DynamicBreakdownSimConfig {
 
 	private static final int MIN_PROC_TIME = 1;
 	private static final int MAX_PROC_TIME = 49;
+	private static final int MEAN_PROC_TIME = 25;
 
 	private static final double UTIL_LEVEL = 0.90;
 	private static final int MIN_NUM_OPS = 2;
@@ -100,34 +101,16 @@ public class HolthausSimConfig extends DynamicBreakdownSimConfig {
 
 	@Override
 	public DblStream getRepairTimeDistribution(DynamicBreakdownShopExperiment experiment, int index) {
-		double meanRepairTime = getMeanRepairTime(experiment, index);
+		double meanRepairTime = getMeanRepairTime(index);
 
 		return new DblDistribution(experiment.getMachineRandom(), new ExponentialDistribution(meanRepairTime));
 	}
 
 	@Override
 	public DblStream getTimeBetweenFailureDistribution(DynamicBreakdownShopExperiment experiment, int index) {
-		double meanBreakdown = getMeanTimeBetweenFailures(experiment, index);
+		double meanBreakdown = getMeanTimeBetweenFailures(index);
 
 		return new DblDistribution(experiment.getMachineRandom(), new ExponentialDistribution(meanBreakdown));
-	}
-
-	// Repair time is dependent on the processing time, and the down time is
-	// dependent on repair time and breakdown level.
-	private double getMeanRepairTime(DynamicBreakdownShopExperiment experiment, int index) {
-		int rtfIndex = index / (numBLs.size() * numDDFs.size());
-
-		double repairTimeFactor = numRTFs.get(rtfIndex);
-		double meanProcTime = experiment.getProcTimes().getNumericalMean();
-
-		return repairTimeFactor * meanProcTime;
-	}
-
-	private double getMeanTimeBetweenFailures(DynamicBreakdownShopExperiment experiment, int index) {
-		double breakdownLevel = getBreakdownLevel(index);
-		double meanRepairTime = getMeanRepairTime(experiment, index);
-
-		return meanRepairTime / breakdownLevel - meanRepairTime;
 	}
 
 	@Override
@@ -135,6 +118,23 @@ public class HolthausSimConfig extends DynamicBreakdownSimConfig {
 		int blIndex = (index / (numDDFs.size())) % numBLs.size();
 
 		return numBLs.get(blIndex);
+	}
+
+	// Repair time is dependent on the processing time, and the down time is
+	// dependent on repair time and breakdown level.
+	@Override
+	public double getMeanRepairTime(int index) {
+		int rtfIndex = index / (numBLs.size() * numDDFs.size());
+		double repairTimeFactor = numRTFs.get(rtfIndex);
+
+		return repairTimeFactor * MEAN_PROC_TIME;
+	}
+
+	private double getMeanTimeBetweenFailures(int index) {
+		double breakdownLevel = getBreakdownLevel(index);
+		double meanRepairTime = getMeanRepairTime(index);
+
+		return meanRepairTime / breakdownLevel - meanRepairTime;
 	}
 
 	@Override

@@ -192,7 +192,7 @@ public abstract class JasimaGPProblem extends GPProblem {
 
 			experiment.runExperiment();
 
-			double result = referenceFitness.getFitness(expIndex, null, experiment.getResults());
+			double result = referenceFitness.getFitness(expIndex, getSimConfig(), null, experiment.getResults());
 			referenceInstStats.add(result);
 		}
 

@@ -73,12 +73,12 @@ public class JasimaSimpleProblem extends JasimaGPProblem {
 				Experiment experiment = getExperiment(state, rule, i, getWorkStationListeners(), getTracker());
 				experiment.runExperiment();
 
-				fitness.accumulateFitness(i, (JasimaGPIndividual) ind, experiment.getResults());
+				fitness.accumulateFitness(i, getSimConfig(), (JasimaGPIndividual) ind, experiment.getResults());
 
 				clearForExperiment(getWorkStationListeners());
 			}
 
-			fitness.setFitness(state, (JasimaGPIndividual) ind);
+			fitness.setFitness(state, getSimConfig(), (JasimaGPIndividual) ind);
 			fitness.clear();
 
 			ind.evaluated = true;

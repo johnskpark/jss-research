@@ -66,4 +66,6 @@ public abstract class DynamicBreakdownSimConfig implements SimConfig {
 
 	public abstract double getBreakdownLevel(int index);
 
+	public abstract double getMeanRepairTime(int index);
+
 }

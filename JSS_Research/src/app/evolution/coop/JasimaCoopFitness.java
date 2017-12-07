@@ -4,6 +4,7 @@ import java.util.Map;
 
 import app.evolution.IJasimaFitness;
 import app.evolution.JasimaGPProblem;
+import app.simConfig.SimConfig;
 import ec.EvolutionState;
 import ec.Individual;
 
@@ -57,36 +58,49 @@ public abstract class JasimaCoopFitness implements IJasimaFitness<JasimaCoopIndi
 
 	@Override
 	@Deprecated
-	public void accumulateFitness(final int expIndex, final JasimaCoopIndividual ind, final Map<String, Object> results) {
+	public void accumulateFitness(final int expIndex,
+			final SimConfig config,
+			final JasimaCoopIndividual ind,
+			final Map<String, Object> results) {
 		int index = getFitnessIndex(ind);
 		if (index == -1) {
 			throw new RuntimeException("Individual " + ind + " has not been loaded into the fitness.");
 		}
 
-		accumulateFitness(expIndex, ind, results, index);
+		accumulateFitness(expIndex, config, ind, results, index);
 	}
 
-	public void accumulateFitness(final int expIndex, final JasimaCoopIndividual ind, final Map<String, Object> results, int index) {
+	public void accumulateFitness(final int expIndex,
+			final SimConfig config,
+			final JasimaCoopIndividual ind,
+			final Map<String, Object> results,
+			int index) {
 		IJasimaFitness<JasimaCoopIndividual> fitness = individualFitnesses[index];
 
-		fitness.accumulateFitness(expIndex, ind, results);
+		fitness.accumulateFitness(expIndex, config, ind, results);
 	}
 
 	@Override
 	@Deprecated
-	public double getFitness(final int expIndex, final JasimaCoopIndividual ind, final Map<String, Object> results) {
+	public double getFitness(final int expIndex,
+			final SimConfig config,
+			final JasimaCoopIndividual ind,
+			final Map<String, Object> results) {
 		int index = getFitnessIndex(ind);
 		if (index == -1) {
 			throw new RuntimeException("Individual " + ind + " has not been loaded into the fitness.");
 		}
 
-		return getFitness(expIndex, ind, results, index);
+		return getFitness(expIndex, config, ind, results, index);
 	}
 
-	public double getFitness(final int expIndex, final JasimaCoopIndividual ind, final Map<String, Object> results, int index) {
+	public double getFitness(final int expIndex,
+			final SimConfig config,
+			final JasimaCoopIndividual ind,
+			final Map<String, Object> results, int index) {
 		IJasimaFitness<JasimaCoopIndividual> fitness = individualFitnesses[index];
 
-		return fitness.getFitness(expIndex, ind, results);
+		return fitness.getFitness(expIndex, config, ind, results);
 	}
 
 	// Set the update fitness somewhere here.
@@ -105,39 +119,49 @@ public abstract class JasimaCoopFitness implements IJasimaFitness<JasimaCoopIndi
 
 	@Override
 	@Deprecated
-	public void setFitness(final EvolutionState state, final JasimaCoopIndividual ind) {
+	public void setFitness(final EvolutionState state,
+			final SimConfig config,
+			final JasimaCoopIndividual ind) {
 		int index = getFitnessIndex(ind);
 		if (index == -1) {
 			throw new RuntimeException("Individual " + ind + " has not been loaded into the fitness.");
 		}
 
-		setFitness(state, ind, index);
+		setFitness(state, config, ind, index);
 	}
 
-	public void setFitness(final EvolutionState state, final JasimaCoopIndividual ind, int index) {
+	public void setFitness(final EvolutionState state,
+			final SimConfig config,
+			final JasimaCoopIndividual ind,
+			int index) {
 		if (updateFitness[index]) {
 			ind.getFitness().setContext(individuals, index);
 
 			IJasimaFitness<JasimaCoopIndividual> fitness = individualFitnesses[index];
 
-			fitness.setFitness(state, ind);
+			fitness.setFitness(state, config, ind);
 		}
 	}
 
 	@Override
 	@Deprecated
-	public double getFinalFitness(final EvolutionState state, final JasimaCoopIndividual ind) {
+	public double getFinalFitness(final EvolutionState state,
+			final SimConfig config,
+			final JasimaCoopIndividual ind) {
 		int index = getFitnessIndex(ind);
 		if (index == -1) {
 			throw new RuntimeException("Individual " + ind + " has not been loaded into the fitness.");
 		}
-		return getFinalFitness(state, ind, index);
+		return getFinalFitness(state, config, ind, index);
 	}
 
-	public double getFinalFitness(final EvolutionState state, final JasimaCoopIndividual ind, int index) {
+	public double getFinalFitness(final EvolutionState state,
+			final SimConfig config,
+			final JasimaCoopIndividual ind,
+			int index) {
 		IJasimaFitness<JasimaCoopIndividual> fitness = individualFitnesses[index];
 
-		return fitness.getFinalFitness(state, ind);
+		return fitness.getFinalFitness(state, config, ind);
 	}
 
 	private int getFitnessIndex(JasimaCoopIndividual ind) {

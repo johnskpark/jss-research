@@ -7,6 +7,7 @@ import app.evolution.IJasimaFitness;
 import app.evolution.JasimaFitnessBase;
 import app.evolution.coop.JasimaCoopFitness;
 import app.evolution.coop.JasimaCoopIndividual;
+import app.simConfig.SimConfig;
 import app.stat.TardinessStat;
 import ec.Individual;
 
@@ -20,7 +21,10 @@ public class NormMeanTardinessFitness extends JasimaCoopFitness {
 	private class IndividualTWTFitness extends JasimaFitnessBase<JasimaCoopIndividual> {
 
 		@Override
-		public double getFitness(int expIndex, JasimaCoopIndividual ind, Map<String, Object> results) {
+		public double getFitness(int expIndex,
+				SimConfig config,
+				JasimaCoopIndividual ind,
+				Map<String, Object> results) {
 			List<Double> referenceStat = getProblem().getReferenceStat();
 
 			return TardinessStat.getNormMeanTardiness(results, referenceStat.get(expIndex));

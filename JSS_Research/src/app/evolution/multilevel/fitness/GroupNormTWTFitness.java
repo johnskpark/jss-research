@@ -7,6 +7,7 @@ import java.util.Map;
 import app.evolution.multilevel.IJasimaMultilevelFitnessListener;
 import app.evolution.multilevel.JasimaMultilevelGroupFitness;
 import app.evolution.multilevel.JasimaMultilevelStatistics;
+import app.simConfig.SimConfig;
 import app.stat.WeightedTardinessStat;
 import ec.multilevel.MLSSubpopulation;
 
@@ -38,7 +39,7 @@ public class GroupNormTWTFitness extends JasimaMultilevelGroupFitness {
 	}
 
 	@Override
-	public double getFitness(int expIndex, MLSSubpopulation subpop, Map<String, Object> results) {
+	public double getFitness(int expIndex, SimConfig config, MLSSubpopulation subpop, Map<String, Object> results) {
 		List<Double> referenceStat = getProblem().getReferenceStat();
 
 		double normTWT = WeightedTardinessStat.getNormTotalWeightedTardiness(results, referenceStat.get(expIndex));

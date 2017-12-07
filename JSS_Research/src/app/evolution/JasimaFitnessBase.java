@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import app.simConfig.SimConfig;
 import ec.EvolutionState;
 import ec.gp.koza.KozaFitness;
 
@@ -38,22 +39,29 @@ public abstract class JasimaFitnessBase<T extends JasimaReproducible> implements
 	}
 
 	@Override
-	public void accumulateFitness(final int index, final T reproducible, final Map<String, Object> results) {
-		double fitness = getFitness(index, reproducible, results);
+	public void accumulateFitness(final int index,
+			final SimConfig config,
+			final T reproducible,
+			final Map<String, Object> results) {
+		double fitness = getFitness(index, config, reproducible, results);
 
 		instanceFitnesses.add(fitness);
 		sumFitness += fitness;
 	}
 
 	@Override
-	public void setFitness(final EvolutionState state, final T reproducible) {
-		double finalFitness = getFinalFitness(state, reproducible);
+	public void setFitness(final EvolutionState state,
+			final SimConfig config,
+			final T reproducible) {
+		double finalFitness = getFinalFitness(state, config, reproducible);
 
 		((KozaFitness) reproducible.getFitness()).setStandardizedFitness(state, finalFitness);
 	}
 
 	@Override
-	public double getFinalFitness(final EvolutionState state, final T reproducible) {
+	public double getFinalFitness(final EvolutionState state,
+			final SimConfig config,
+			final T reproducible) {
 		double avgFitness = sumFitness / instanceFitnesses.size();
 
 		return avgFitness;
