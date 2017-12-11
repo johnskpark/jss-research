@@ -25,7 +25,6 @@ pop.subpop.4.species.pipe = ec.vector.breed.VectorMutationPipeline
 pop.subpop.4.species.mutation-prob = 0.1
 pop.subpop.4.species.mutation-stdev = 0.5
 pop.subpop.4.species.mutation-type = gauss
-pop.subpop.4.species.mutation-type = polynomial
 pop.subpop.4.species.mutation-distribution-index = 21
 pop.subpop.4.species.alternative-polynomial-version = true
 pop.subpop.4.species.mutation-bounded = true

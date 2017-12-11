@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import app.evolution.JasimaGPIndividual;
+import app.evolution.niched.JasimaNichedIndividual;
 import app.simConfig.DynamicBreakdownSimConfig;
 import app.simConfig.SimConfig;
 import app.stat.WeightedTardinessStat;
@@ -12,15 +13,13 @@ import ec.EvolutionState;
 
 public class MWTBreakdownFitness extends NicheFitness {
 
-	private JasimaGPIndividual[] nicheInds;
+	private JasimaNichedIndividual[] nichedInds;
 	private double[] nicheIndFitness;
 	private List<Integer> nicheIndex;
 	private int numNiches = 0;
 
-	private JasimaGPIndividual currentInd = null;
+	private JasimaNichedIndividual currentInd = null;
 	private double currentIndFitness = 0;
-	private double currentBL = Double.NaN;
-	private double currentMRT = Double.NaN;
 
 	@Override
 	public void init(final EvolutionState state, final SimConfig config, final int threadnum) {
@@ -42,12 +41,12 @@ public class MWTBreakdownFitness extends NicheFitness {
 			}
 		}
 
-		// TODO temporary code to test to make sure the correct number of niches are being used
+		// FIXME temporary code to test to make sure the correct number of niches are being used
 		// It should be 9 for HolthausSimConfig, 7 for HolthausSimConfig4.
 		System.out.println(numNiches);
 
 		numNiches++; // Account for the best individual being part of a niche as well.
-		nicheInds = new JasimaGPIndividual[numNiches];
+		nichedInds = new JasimaNichedIndividual[numNiches];
 		nicheIndFitness = new double[numNiches];
 		for (int i = 0; i < nicheIndFitness.length; i++) {
 			nicheIndFitness[i] = Double.POSITIVE_INFINITY;
@@ -56,36 +55,51 @@ public class MWTBreakdownFitness extends NicheFitness {
 
 	@Override
 	public void finalise(final EvolutionState state, final SimConfig config, final int threadnum) {
-		// TODO Compare the niche to the archive.
-
+		// The fitnesses of the individuals in the population.
+		for (int i = 0; i < state.population.archive.length; i++) {
+			// The individual's in the current generation archive have already been evaluated in the 
+			// niche specific training set, so use the fitnesses from those.	
+			JasimaNichedIndividual nichedInd = (JasimaNichedIndividual) state.population.archive[i];
+			
+			if (nichedInds[i].getNichedFitness().betterThan(nichedInd.getNichedFitness())) {
+				state.population.archive[i] = nichedInds[i];
+			}
+		}
 	}
 
 	@Override
 	public double getFitness(int expIndex, SimConfig config, JasimaGPIndividual ind, Map<String, Object> results) {
 		double mwt = WeightedTardinessStat.getMeanWeightedTardiness(results);
 
-		// TODO need to add in the fact that the current generation archive is updated here.
-		// How do I figure out what is what, exactly?
-		// Oh right, store a temporary variable or something, got it.
-		DynamicBreakdownSimConfig cfg = (DynamicBreakdownSimConfig) config;
-
-		if (currentInd == null || !currentInd.equals(ind)) {
-			currentInd = ind;
+		// Individual hasn't been initialised yet. 
+		if (currentInd == null) {
+			currentInd = (JasimaNichedIndividual) ind;
 			currentIndFitness = 0.0;
-			currentBL = cfg.getBreakdownLevel(expIndex);
-			currentMRT = cfg.getMeanRepairTime(expIndex);
-		} else if (currentBL != cfg.getBreakdownLevel(expIndex) || currentMRT != cfg.getMeanRepairTime(expIndex)) {
-			// I need to store what indices they correspond to as well. Shucks.
-
-			currentIndFitness = 0.0;
-			currentBL = cfg.getBreakdownLevel(expIndex);
-			currentMRT = cfg.getMeanRepairTime(expIndex);
 		}
-
+		
 		currentIndFitness += mwt;
-
+		int currentNiche = nicheIndex.get(expIndex);
+		
+		// If its the last index for the specific niche, 
+		// then need to compare the fitness of the individual on the niche 
+		// to the current generation niched individual. 
+		if (expIndex == config.getNumConfigs() - 1 || 
+				nicheIndex.get(expIndex) != nicheIndex.get(expIndex + 1)) {
+			// Store the individual's fitness if the fitness is good enough. 
+			if (nichedInds[currentNiche] == null || nicheIndFitness[currentNiche] > currentIndFitness) {
+				nichedInds[currentNiche] = currentInd;
+				nicheIndFitness[currentNiche] = currentIndFitness;
+			}
+			
+			currentInd = null;
+			currentIndFitness = 0.0; // Just making sure. 
+		}
+		
 		return mwt;
 	}
 
+	public JasimaGPIndividual[] getNichedIndividuals() {
+		return nichedInds;
+	}
 
 }
