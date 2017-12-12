@@ -87,6 +87,14 @@ public class JasimaSimpleProblem extends JasimaGPProblem {
 		}
 	}
 
+	public GPPriorityRuleBase getRule() {
+		return rule;
+	}
+
+	public IJasimaFitness<JasimaGPIndividual> getFitness() {
+		return fitness;
+	}
+
 	@Override
 	public Object clone() {
 		JasimaSimpleProblem newObject = (JasimaSimpleProblem) super.clone();

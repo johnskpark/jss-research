@@ -9,6 +9,10 @@ public abstract class NicheFitness extends JasimaFitnessBase<JasimaGPIndividual>
 
 	public abstract void init(final EvolutionState state, final SimConfig config, final int threadnum);
 
-	public abstract void finalise(final EvolutionState state, final SimConfig config, final int threadnum);
+	public abstract void updateArchive(final EvolutionState state, final SimConfig config, final int threadnum);
+
+	public abstract int getNumNiches(final SimConfig config);
+
+	public abstract JasimaGPIndividual[] getNichedIndividuals();
 
 }
