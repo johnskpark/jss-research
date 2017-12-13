@@ -5,12 +5,12 @@ import ec.Fitness;
 
 public class JasimaNichedIndividual extends JasimaGPIndividual {
 
-	// TODO need a ton of work here, but regardless. 
-	
+	// TODO need a ton of work here, but regardless. Test
+
 	private Fitness nichedFitness;
-	
+
 	public Fitness getNichedFitness() {
 		return nichedFitness;
 	}
-	
+
 }
