@@ -1,9 +1,10 @@
 package app.evolution.niched;
 
-import app.evolution.IJasimaFitness;
+import app.evolution.ISimConfigEvolveFactory;
 import app.evolution.JasimaGPIndividual;
 import app.evolution.niched.fitness.NicheFitness;
 import app.evolution.simple.JasimaSimpleProblem;
+import app.simConfig.SimConfig;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.util.Parameter;
@@ -13,11 +14,14 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 
 	private static final long serialVersionUID = -3573529649173003108L;
 
+	public static final String P_NICHE = "niche";
+
 	private static final int NOT_SET = -1;
 
-	// TODO the code here.
-
 	private int numNiches = NOT_SET;
+
+	private ISimConfigEvolveFactory[] nicheSimConfigFactories;
+	private SimConfig[] nicheSimConfigs;
 
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
@@ -31,6 +35,18 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 		numNiches = nicheFitness.getNumNiches(getSimConfig());
 
 		state.population.archive = new JasimaNichedIndividual[numNiches];
+
+		nicheSimConfigs = new SimConfig[numNiches];
+
+		for (int i = 0; i < numNiches; i++) {
+			Parameter nicheParam = base.push(P_NICHE).push(i+"");
+
+			// Setup the simulator configurations.
+			// It will look something like "eval.problem.niche.0.simulator = ..."
+			nicheSimConfigFactories[i] = (ISimConfigEvolveFactory) state.parameters.getInstanceForParameterEq(nicheParam.push(P_SIMULATOR), null, ISimConfigEvolveFactory.class);
+			nicheSimConfigFactories[i].setup(state, nicheParam.push(P_SIMULATOR));
+			nicheSimConfigs[i] = nicheSimConfigFactories[i].generateSimConfig();
+		}
 	}
 
 	@Override
@@ -50,7 +66,7 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 
 		// Update the nicheFitnesses of the current generation niched individuals.
 		for (int i = 0; i < nichedInds.length; i++) {
-			// TODO run more experiments using the simulator.
+			evaluateNiched(state, nichedInds[i], threadnum);
 		}
 
 		// Update the overall archive of overall niched individuals.
@@ -95,6 +111,18 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 
 			clearForRun(getTracker());
 		}
+	}
+
+	public void evaluateNiched(final EvolutionState state,
+			final JasimaGPIndividual ind,
+			final int threadnum) {
+		if (!(ind instanceof JasimaNichedIndividual)) {
+			state.output.fatal("The niche individual must be of type JasimaNichedIndividual");
+		}
+
+		NicheFitness fitness = (NicheFitness) getFitness();
+
+		// TODO
 	}
 
 	@Override
