@@ -10,13 +10,14 @@ import app.simConfig.DynamicBreakdownSimConfig;
 import app.simConfig.SimConfig;
 import app.stat.WeightedTardinessStat;
 import ec.EvolutionState;
+import ec.gp.koza.KozaFitness;
 
 public class MWTBreakdownFitness extends NicheFitness {
 
 	private static final int NOT_SET = -1;
 
 	private JasimaNichedIndividual[] nichedInds;
-	private double[] nicheIndFitness;
+	private double[] nichedIndFitness;
 	private List<Integer> nicheIndex;
 	private int numNiches = 0;
 
@@ -34,9 +35,9 @@ public class MWTBreakdownFitness extends NicheFitness {
 		System.out.println(numNiches);
 
 		nichedInds = new JasimaNichedIndividual[numNiches];
-		nicheIndFitness = new double[numNiches];
-		for (int i = 0; i < nicheIndFitness.length; i++) {
-			nicheIndFitness[i] = Double.POSITIVE_INFINITY;
+		nichedIndFitness = new double[numNiches];
+		for (int i = 0; i < nichedIndFitness.length; i++) {
+			nichedIndFitness[i] = Double.POSITIVE_INFINITY;
 		}
 	}
 
@@ -72,9 +73,9 @@ public class MWTBreakdownFitness extends NicheFitness {
 		if (expIndex == config.getNumConfigs() - 1 ||
 				nicheIndex.get(expIndex) != nicheIndex.get(expIndex + 1)) {
 			// Store the individual's fitness if the fitness is good enough.
-			if (nichedInds[currentNiche] == null || nicheIndFitness[currentNiche] > currentIndFitness) {
+			if (nichedInds[currentNiche] == null || nichedIndFitness[currentNiche] > currentIndFitness) {
 				nichedInds[currentNiche] = currentInd;
-				nicheIndFitness[currentNiche] = currentIndFitness;
+				nichedIndFitness[currentNiche] = currentIndFitness;
 			}
 
 			currentInd = null;
@@ -82,6 +83,13 @@ public class MWTBreakdownFitness extends NicheFitness {
 		}
 
 		return mwt;
+	}
+
+	@Override
+	public void setNichedFitness(final EvolutionState state, final SimConfig config, final JasimaNichedIndividual ind) {
+		double finalFitness = getFinalFitness(state, config, ind);
+
+		((KozaFitness) ind.getNichedFitness()).setStandardizedFitness(state, finalFitness);
 	}
 
 	public int getNumNiches(SimConfig config) {
@@ -115,6 +123,17 @@ public class MWTBreakdownFitness extends NicheFitness {
 	@Override
 	public JasimaGPIndividual[] getNichedIndividuals() {
 		return nichedInds;
+	}
+
+	@Override
+	public void clear() {
+		super.clear();
+
+		nichedInds = new JasimaNichedIndividual[numNiches];
+		nichedIndFitness = new double[numNiches];
+
+		currentInd = null;
+		currentIndFitness = 0;
 	}
 
 }
