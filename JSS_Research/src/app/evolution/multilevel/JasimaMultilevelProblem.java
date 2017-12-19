@@ -44,11 +44,15 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 
 		// Setup the individual solver for evaluating groups.
 		groupRule = (GPPriorityRuleBase) state.parameters.getInstanceForParameterEq(base.push(P_GROUP_RULE), null, GPPriorityRuleBase.class);
+		getWorkStationListeners().add(groupRule);
+
 		groupFitness = (JasimaMultilevelGroupFitness) state.parameters.getInstanceForParameterEq(base.push(P_GROUP_FITNESS), null, JasimaMultilevelGroupFitness.class);
 		groupFitness.setProblem(this);
 
 		// Setup the individual solver for evaluating individuals.
 		indRule = (GPPriorityRuleBase) state.parameters.getInstanceForParameterEq(base.push(P_IND_RULE), null, GPPriorityRuleBase.class);
+		getWorkStationListeners().add(indRule);
+
 		indFitness = (JasimaMultilevelIndividualFitness) state.parameters.getInstanceForParameterEq(base.push(P_IND_FITNESS), null, JasimaMultilevelIndividualFitness.class);
 		indFitness.setProblem(this);
 

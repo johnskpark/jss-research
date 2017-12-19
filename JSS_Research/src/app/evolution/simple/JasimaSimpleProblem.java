@@ -30,6 +30,7 @@ public class JasimaSimpleProblem extends JasimaGPProblem {
 
 		// Setup the the solver.
 		rule = (GPPriorityRuleBase) state.parameters.getInstanceForParameterEq(base.push(P_RULE), null, GPPriorityRuleBase.class);
+		getWorkStationListeners().add(rule);
 
 		// Setup the fitness.
 		fitness = (IJasimaFitness<JasimaGPIndividual>) state.parameters.getInstanceForParameterEq(base.push(P_FITNESS), null, IJasimaFitness.class);

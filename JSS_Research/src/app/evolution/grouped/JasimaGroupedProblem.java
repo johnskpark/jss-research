@@ -38,6 +38,7 @@ public class JasimaGroupedProblem extends JasimaGPProblem {
 
 		if (state.parameters.exists(base.push(P_GROUP_RULE), null)) {
 			groupRule = (GPPriorityRuleBase) state.parameters.getInstanceForParameterEq(base.push(P_GROUP_RULE), null, GPPriorityRuleBase.class);
+			getWorkStationListeners().add(groupRule);
 		}
 
 		// Setup the fitness.

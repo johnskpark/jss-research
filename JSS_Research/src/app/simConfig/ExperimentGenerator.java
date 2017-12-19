@@ -19,11 +19,11 @@ public class ExperimentGenerator {
 		JobShopExperiment experiment = null;
 
 		if (simConfig instanceof DynamicBreakdownSimConfig) {
-			experiment = getDynamicBreakdownShopExperiment((DynamicBreakdownSimConfig) simConfig, rule, index);
+			experiment = getDynamicBreakdownShopExperiment((DynamicBreakdownSimConfig) simConfig, index);
 		} else if (simConfig instanceof DynamicSimConfig) {
-			experiment = getDynamicShopExperiment((DynamicSimConfig) simConfig, rule, index);
+			experiment = getDynamicShopExperiment((DynamicSimConfig) simConfig, index);
 		} else if (simConfig instanceof StaticSimConfig) {
-			experiment = getStaticShopExperiment((StaticSimConfig) simConfig, rule, index);
+			experiment = getStaticShopExperiment((StaticSimConfig) simConfig, index);
 		} else {
 			throw new IllegalArgumentException("Unrecognised SimConfig type: " + simConfig.getClass().getName());
 		}
@@ -36,7 +36,6 @@ public class ExperimentGenerator {
 	@SuppressWarnings("unchecked")
 	private static DynamicBreakdownShopExperiment getDynamicBreakdownShopExperiment(
 			final DynamicBreakdownSimConfig simConfig,
-			final PR rule,
 			final int index) {
 		DynamicBreakdownShopExperiment experiment = new DynamicBreakdownShopExperiment();
 
@@ -72,7 +71,6 @@ public class ExperimentGenerator {
 	@SuppressWarnings("unchecked")
 	private static DynamicShopExperiment getDynamicShopExperiment(
 			final DynamicSimConfig simConfig,
-			final PR rule,
 			final int index) {
 		DynamicShopExperiment experiment = new DynamicShopExperiment();
 
@@ -103,7 +101,6 @@ public class ExperimentGenerator {
 	@SuppressWarnings("unchecked")
 	private static StaticShopExperiment getStaticShopExperiment(
 			final StaticSimConfig simConfig,
-			final PR rule,
 			final int index) {
 		StaticShopExperiment experiment = new StaticShopExperiment();
 

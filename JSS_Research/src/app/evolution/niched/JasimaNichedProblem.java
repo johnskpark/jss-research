@@ -12,6 +12,7 @@ import ec.Individual;
 import ec.util.ParamClassLoadException;
 import ec.util.Parameter;
 import jasima.core.experiment.Experiment;
+import jasima.shopSim.core.JobShopExperiment;
 import jasima.shopSim.core.PR;
 
 public class JasimaNichedProblem extends JasimaSimpleProblem {
@@ -192,8 +193,17 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 			final int threadnum) {
 		if (samplingPR != null) {
 			// TODO Isn't this going to eat up a shitton of CPU power?
+			// Right, how am I going to write this section here again?
 
 			// TODO run the samplingPR down here.
+			for (int i = 0; i < samplingSimConfig.getNumConfigs(); i++) {
+				samplingPR.initRecordingRun(samplingSimConfig, i);
+
+				Experiment experiment = getExperiment(state, samplingPR, i, getWorkStationListeners(), getTracker());
+				experiment.runExperiment();
+			}
+
+			// TODO now do a rerun.
 		}
 	}
 

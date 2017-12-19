@@ -66,6 +66,9 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 
 		// Setup the solver.
 		coopRule = (GPPriorityRuleBase) state.parameters.getInstanceForParameterEq(base.push(P_COOP_RULE), null, GPPriorityRuleBase.class);
+		getWorkStationListeners().add(coopRule);
+
+		// Setup the fitness.
 		fitness = (JasimaCoopFitness) state.parameters.getInstanceForParameterEq(base.push(P_FITNESS), null, JasimaCoopFitness.class);
 		fitness.setProblem(this);
 
