@@ -192,10 +192,7 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 	public void runSampler(final EvolutionState state,
 			final int threadnum) {
 		if (samplingPR != null) {
-			// TODO Isn't this going to eat up a shitton of CPU power?
-			// Right, how am I going to write this section here again?
-
-			// TODO run the samplingPR down here.
+			// Do an initial run that samples for decision situations
 			for (int i = 0; i < samplingSimConfig.getNumConfigs(); i++) {
 				samplingPR.initRecordingRun(samplingSimConfig, i);
 
@@ -203,7 +200,15 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 				experiment.runExperiment();
 			}
 
-			// TODO now do a rerun.
+			// Rerun the sampling rule again with the individuals as part of the sampling rule.
+			for (int i = 0; i < samplingSimConfig.getNumConfigs(); i++) {
+				samplingPR.initTrackedRun(samplingSimConfig, i);
+
+				// TODO Right, need to write this here.
+
+				// I probably should've turned on some music and wrote this, but maybe later.
+
+			}
 		}
 	}
 
