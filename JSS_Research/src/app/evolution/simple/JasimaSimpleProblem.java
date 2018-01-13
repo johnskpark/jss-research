@@ -71,7 +71,7 @@ public class JasimaSimpleProblem extends JasimaGPProblem {
 			initialiseTracker(getTracker());
 
 			for (int i = 0; i < getSimConfig().getNumConfigs(); i++) {
-				Experiment experiment = getExperiment(state, rule, i, getWorkStationListeners(), getTracker());
+				Experiment experiment = getExperiment(state, rule, i, getSimConfig(), getWorkStationListeners(), getTracker());
 				experiment.runExperiment();
 
 				fitness.accumulateFitness(i, getSimConfig(), (JasimaGPIndividual) ind, experiment.getResults());

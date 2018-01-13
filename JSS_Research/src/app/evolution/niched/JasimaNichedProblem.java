@@ -1,5 +1,7 @@
 package app.evolution.niched;
 
+import app.evaluation.EvalPriorityRuleBase;
+import app.evaluation.IJasimaEvalFitness;
 import app.evolution.ISimConfigEvolveFactory;
 import app.evolution.JasimaGPIndividual;
 import app.evolution.niched.fitness.NicheFitness;
@@ -139,7 +141,7 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 			initialiseTracker(getTracker());
 
 			for (int i = 0; i < getSimConfig().getNumConfigs(); i++) {
-				Experiment experiment = getExperiment(state, getRule(), i, getWorkStationListeners(), getTracker());
+				Experiment experiment = getExperiment(state, getRule(), i, getSimConfig(), getWorkStationListeners(), getTracker());
 				experiment.runExperiment();
 
 				getFitness().accumulateFitness(i, getSimConfig(), (JasimaGPIndividual) ind, experiment.getResults());
@@ -175,7 +177,7 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 		initialiseTracker(getTracker());
 
 		for (int i = 0; i < nicheSimConfigs[nicheIndex].getNumConfigs(); i++) {
-			Experiment experiment = getExperiment(state, getRule(), i, getWorkStationListeners(), getTracker());
+			Experiment experiment = getExperiment(state, getRule(), i, getSimConfig(), getWorkStationListeners(), getTracker());
 			experiment.runExperiment();
 
 			fitness.accumulateFitness(i, nicheSimConfigs[nicheIndex], (JasimaGPIndividual) ind, experiment.getResults());
@@ -196,18 +198,58 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 			for (int i = 0; i < samplingSimConfig.getNumConfigs(); i++) {
 				samplingPR.initRecordingRun(samplingSimConfig, i);
 
-				Experiment experiment = getExperiment(state, samplingPR, i, getWorkStationListeners(), getTracker());
+				Experiment experiment = getExperiment(state,
+						samplingPR,
+						i,
+						samplingSimConfig,
+						getWorkStationListeners(),
+						getTracker());
 				experiment.runExperiment();
+
+				// TODO I think I need more here.
 			}
+
+			samplingSimConfig.reset();
 
 			// Rerun the sampling rule again with the individuals as part of the sampling rule.
 			for (int i = 0; i < samplingSimConfig.getNumConfigs(); i++) {
 				samplingPR.initTrackedRun(samplingSimConfig, i);
 
-				// TODO Right, need to write this here.
+				Experiment experiment = getExperiment(state,
+						samplingPR,
+						i,
+						samplingSimConfig,
+						getWorkStationListeners(),
+						getTracker());
+				experiment.runExperiment();
 
-				// I probably should've turned on some music and wrote this, but maybe later.
-
+				// TODO what the heck do I put down here again?
+//				for (int solverIndex = 0; solverIndex < solvers.size(); solverIndex++) {
+//					EvalPriorityRuleBase solver = solvers.get(solverIndex);
+//
+//					StringBuilder builder = new StringBuilder();
+//
+//					for (IJasimaEvalFitness fitness : referenceEvaluation) {
+//						 String result = fitness.getStringResult(solver,
+//								 simConfig,
+//								 configIndex,
+//								 experiment,
+//								 tracker);
+//						 builder.append("," + result);
+//					}
+//
+//					int resultsIndex = refRuleIndex * (trackedRefRules.size() * simConfig.getNumConfigs()) +
+//							solverIndex * (simConfig.getNumConfigs()) +
+//							configIndex;
+//
+//					resultsOutput[resultsIndex] = builder.toString();
+//				}
+//
+//				tracker.clearCurrentExperiment();
+//
+//				if (!rotateSeed) {
+//					simConfig.reset();
+//				}
 			}
 		}
 	}

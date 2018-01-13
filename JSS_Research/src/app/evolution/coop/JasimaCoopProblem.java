@@ -153,7 +153,7 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 		initialiseTracker(getTracker());
 
 		for (int expIndex = 0; expIndex < getSimConfig().getNumConfigs(); expIndex++) {
-			Experiment experiment = getExperiment(state, coopRule, expIndex, getWorkStationListeners(), getTracker());
+			Experiment experiment = getExperiment(state, coopRule, expIndex, getSimConfig(), getWorkStationListeners(), getTracker());
 
 			experiment.runExperiment();
 
@@ -191,7 +191,7 @@ public class JasimaCoopProblem extends JasimaGPProblem implements GroupedProblem
 		initialiseTracker(null);
 
 		for (int i = 0; i < getSimConfig().getNumConfigs(); i++) {
-			Experiment experiment = getExperiment(state, indRule, i, getWorkStationListeners(), getTracker());
+			Experiment experiment = getExperiment(state, indRule, i, getSimConfig(), getWorkStationListeners(), getTracker());
 			experiment.runExperiment();
 
 			indFitness.accumulateFitness(i, getSimConfig(), (JasimaCoopIndividual) ind, experiment.getResults());

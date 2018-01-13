@@ -248,6 +248,7 @@ public abstract class JasimaGPProblem extends GPProblem {
 	protected Experiment getExperiment(final EvolutionState state,
 			final PR rule,
 			final int index,
+			final SimConfig simConfig,
 			final List<IJasimaWorkStationListener> listeners,
 			final JasimaExperimentTracker<Individual> tracker) {
 		JobShopExperiment experiment = ExperimentGenerator.getExperiment(simConfig,

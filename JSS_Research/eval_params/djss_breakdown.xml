@@ -35,6 +35,7 @@
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EvalHolthausRule</solverClass>
 	</solverConfig>
+-->
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EvalWSPT</solverClass>
@@ -59,7 +60,6 @@
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EvalWCOVERT</solverClass>
 	</solverConfig>
--->
 
 	<datasetConfig>
 		<datasetClass>app.simConfig.holthausConfig3.EvalFactory</datasetClass>

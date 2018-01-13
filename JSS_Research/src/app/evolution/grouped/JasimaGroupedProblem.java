@@ -103,7 +103,7 @@ public class JasimaGroupedProblem extends JasimaGPProblem {
 			rule.setConfiguration(config);
 
 			for (int i = 0; i < getSimConfig().getNumConfigs(); i++) {
-				Experiment experiment = getExperiment(state, rule, i, getWorkStationListeners(), getTracker());
+				Experiment experiment = getExperiment(state, rule, i, getSimConfig(), getWorkStationListeners(), getTracker());
 
 				experiment.runExperiment();
 
@@ -138,7 +138,7 @@ public class JasimaGroupedProblem extends JasimaGPProblem {
 				groupRule.setConfiguration(config);
 
 				for (int j = 0; j < getSimConfig().getNumConfigs(); j++) {
-					Experiment experiment = getExperiment(state, groupRule, j, getWorkStationListeners(), getTracker());
+					Experiment experiment = getExperiment(state, groupRule, j, getSimConfig(), getWorkStationListeners(), getTracker());
 
 					experiment.runExperiment();
 
