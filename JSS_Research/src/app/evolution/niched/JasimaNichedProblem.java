@@ -223,7 +223,8 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 						getTracker());
 				experiment.runExperiment();
 
-				// TODO what the heck do I put down here again?
+				// TODO what the heck do I put down here again? I need to get this working before Tuesday.
+				// Right, need to get this working, but how?
 //				for (int solverIndex = 0; solverIndex < solvers.size(); solverIndex++) {
 //					EvalPriorityRuleBase solver = solvers.get(solverIndex);
 //
@@ -251,6 +252,8 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 //					simConfig.reset();
 //				}
 			}
+
+			samplingSimConfig.reset();
 		}
 	}
 
