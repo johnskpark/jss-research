@@ -2,7 +2,6 @@ package app.evolution.priorityRules;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -133,19 +132,6 @@ public class LinearCombinationRule extends GPPriorityRuleBase {
 			}
 		}
 		return true;
-	}
-
-	@Override
-	public List<PrioRuleTarget> getEntryRankings() {
-		// Sort the list of jobs.
-		Collections.sort(jobRankings);
-
-		List<PrioRuleTarget> entries = new ArrayList<PrioRuleTarget>();
-		for (Score e : jobRankings) {
-			entries.add(e.entry);
-		}
-
-		return entries;
 	}
 
 	@Override

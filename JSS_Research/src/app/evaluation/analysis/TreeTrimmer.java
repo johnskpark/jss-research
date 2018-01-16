@@ -44,14 +44,14 @@ public class TreeTrimmer {
 	}
 
 	public void trimTree() {
-		for (int i = 0; i < seeds.size(); i++) {
-			long seed = seeds.get(i);
-			INode[] rule = rules.get(i);
-
-			for (int j = 0; j < rule.length; j++) {
-				// TODO need to implement this later.
-			}
-		}
+//		for (int i = 0; i < seeds.size(); i++) {
+//			long seed = seeds.get(i);
+//			INode[] rule = rules.get(i);
+//
+//			for (int j = 0; j < rule.length; j++) {
+//				// TODO need to implement this later.
+//			}
+//		}
 	}
 
 	public static void main(String[] args) {

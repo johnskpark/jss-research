@@ -1,7 +1,6 @@
 package app.evolution.priorityRules;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -108,18 +107,6 @@ public abstract class MultiPriorityRule extends GPPriorityRuleBase {
 
 		builder.append(" ]");
 		return builder.toString();
-	}
-
-	@Override
-	public List<PrioRuleTarget> getEntryRankings() {
-		Collections.sort(jobRankings);
-
-		List<PrioRuleTarget> entries = new ArrayList<>();
-		for (Score s : jobRankings) {
-			entries.add(s.getEntry());
-		}
-
-		return entries;
 	}
 
 	@Override

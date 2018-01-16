@@ -1,14 +1,18 @@
 package app.tracker.sampler;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import app.TrackedRuleBase;
 import app.node.INode;
 import app.simConfig.SimConfig;
 import app.tracker.DecisionEvent;
 import app.tracker.JasimaExperimentTracker;
+import jasima.core.util.Pair;
 import jasima.shopSim.core.PR;
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
@@ -122,11 +126,32 @@ public class SamplingPR extends PR {
 	protected void prPriorityCalculation(TrackedRuleBase<INode> pr, PriorityQueue<?> q) {
 		pr.beforeCalc(q);
 
+		List<Pair<PrioRuleTarget, Double>> entryPrio = new ArrayList<>();
+
 		for (int i = 0; i < q.size(); i++) {
-			pr.calcPrio(q.get(i));
+			PrioRuleTarget entry = q.get(i);
+			entryPrio.add(new Pair<PrioRuleTarget, Double>(entry, pr.calcPrio(entry)));
 		}
 
-		pr.jobSelected(pr.getEntryRankings().get(0), q);
+		Comparator<Pair<PrioRuleTarget, Double>> comp = new Comparator<Pair<PrioRuleTarget, Double>>()
+		{
+			@Override
+			public int compare(Pair<PrioRuleTarget, Double> p1, Pair<PrioRuleTarget, Double> p2) {
+				if (p1.b > p2.b) {
+					return -1;
+				} else if (p1.b < p2.b) {
+					return 1;
+				} else {
+					return 0;
+				}
+			}
+		};
+
+		Collections.sort(entryPrio, comp);
+
+		List<PrioRuleTarget> entryRankings = entryPrio.stream().map(x -> x.a).collect(Collectors.toList());
+
+		pr.jobSelected(entryRankings.get(0), entryRankings, q);
 	}
 
 	protected DecisionEvent getDecisionEvent(PrioRuleTarget entry) {

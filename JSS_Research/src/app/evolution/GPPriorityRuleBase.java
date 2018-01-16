@@ -1,11 +1,16 @@
 package app.evolution;
 
+import java.util.Arrays;
+import java.util.List;
+
 import app.IJasimaWorkStationListener;
+import app.TrackedRuleBase;
 import app.tracker.JasimaExperimentTracker;
 import ec.EvolutionState;
 import ec.Individual;
-import jasima.shopSim.core.PR;
+import jasima.shopSim.core.Job;
 import jasima.shopSim.core.PrioRuleTarget;
+import jasima.shopSim.core.PriorityQueue;
 import jasima.shopSim.core.WorkStation;
 import jasima.shopSim.core.WorkStation.WorkStationEvent;
 
@@ -15,7 +20,7 @@ import jasima.shopSim.core.WorkStation.WorkStationEvent;
  * @author parkjohn
  *
  */
-public abstract class GPPriorityRuleBase extends PR implements
+public abstract class GPPriorityRuleBase extends TrackedRuleBase<Individual> implements
 		IJasimaGPPriorityRule,
 		IJasimaWorkStationListener {
 
@@ -52,10 +57,25 @@ public abstract class GPPriorityRuleBase extends PR implements
 	public void update(WorkStation notifier, WorkStationEvent event) {
 		if (event == WorkStation.WS_JOB_SELECTED && hasTracker()) {
 			PrioRuleTarget entry = notifier.justStarted;
+			PriorityQueue<Job> q = notifier.queue;
 
-			tracker.addStartTime(entry.getShop().simTime());
-			tracker.addSelectedEntry(this, entry);
-			tracker.addEntryRankings(this, getEntryRankings());
+			Job[] entryByPrio = new Job[q.size()];
+			q.getAllElementsInOrder(entryByPrio);
+
+			List<PrioRuleTarget> entryRankings = Arrays.asList(entryByPrio);
+
+			jobSelected(entry, entryRankings, q);
+		}
+	}
+
+	@Override
+	public void jobSelected(PrioRuleTarget entry,
+			List<PrioRuleTarget> entryRankings,
+			PriorityQueue<?> q) {
+		if (hasTracker()) {
+			getTracker().addStartTime(entry.getShop().simTime());
+			getTracker().addSelectedEntry(this, entry);
+			getTracker().addEntryRankings(this, entryRankings);
 
 			clear();
 		}

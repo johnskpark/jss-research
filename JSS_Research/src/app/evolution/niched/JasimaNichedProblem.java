@@ -1,12 +1,11 @@
 package app.evolution.niched;
 
-import app.evaluation.EvalPriorityRuleBase;
-import app.evaluation.IJasimaEvalFitness;
 import app.evolution.ISimConfigEvolveFactory;
 import app.evolution.JasimaGPIndividual;
 import app.evolution.niched.fitness.NicheFitness;
 import app.evolution.simple.JasimaSimpleProblem;
 import app.simConfig.SimConfig;
+import app.tracker.JasimaExperimentTracker;
 import app.tracker.sampler.SamplerFactory;
 import app.tracker.sampler.SamplingPR;
 import ec.EvolutionState;
@@ -14,7 +13,6 @@ import ec.Individual;
 import ec.util.ParamClassLoadException;
 import ec.util.Parameter;
 import jasima.core.experiment.Experiment;
-import jasima.shopSim.core.JobShopExperiment;
 import jasima.shopSim.core.PR;
 
 public class JasimaNichedProblem extends JasimaSimpleProblem {
@@ -191,70 +189,56 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 		clearForRun(getTracker());
 	}
 
-	public void runSampler(final EvolutionState state,
-			final int threadnum) {
+	public void runSampler(final EvolutionState state, final int threadnum) {
 		if (samplingPR != null) {
-			// Do an initial run that samples for decision situations
-			for (int i = 0; i < samplingSimConfig.getNumConfigs(); i++) {
-				samplingPR.initRecordingRun(samplingSimConfig, i);
+			runRecordingRun(state, threadnum);
+			runTrackedRun(state, threadnum);
 
-				Experiment experiment = getExperiment(state,
-						samplingPR,
-						i,
-						samplingSimConfig,
-						getWorkStationListeners(),
-						getTracker());
-				experiment.runExperiment();
+			calculateDiversity(state, threadnum);
 
-				// TODO I think I need more here.
-			}
-
-			samplingSimConfig.reset();
-
-			// Rerun the sampling rule again with the individuals as part of the sampling rule.
-			for (int i = 0; i < samplingSimConfig.getNumConfigs(); i++) {
-				samplingPR.initTrackedRun(samplingSimConfig, i);
-
-				Experiment experiment = getExperiment(state,
-						samplingPR,
-						i,
-						samplingSimConfig,
-						getWorkStationListeners(),
-						getTracker());
-				experiment.runExperiment();
-
-				// TODO what the heck do I put down here again? I need to get this working before Tuesday.
-				// Right, need to get this working, but how?
-//				for (int solverIndex = 0; solverIndex < solvers.size(); solverIndex++) {
-//					EvalPriorityRuleBase solver = solvers.get(solverIndex);
-//
-//					StringBuilder builder = new StringBuilder();
-//
-//					for (IJasimaEvalFitness fitness : referenceEvaluation) {
-//						 String result = fitness.getStringResult(solver,
-//								 simConfig,
-//								 configIndex,
-//								 experiment,
-//								 tracker);
-//						 builder.append("," + result);
-//					}
-//
-//					int resultsIndex = refRuleIndex * (trackedRefRules.size() * simConfig.getNumConfigs()) +
-//							solverIndex * (simConfig.getNumConfigs()) +
-//							configIndex;
-//
-//					resultsOutput[resultsIndex] = builder.toString();
-//				}
-//
-//				tracker.clearCurrentExperiment();
-//
-//				if (!rotateSeed) {
-//					simConfig.reset();
-//				}
-			}
-
-			samplingSimConfig.reset();
+			getTracker().clear();
 		}
+	}
+
+	// Do an initial run that samples for decision situations.
+	protected void runRecordingRun(final EvolutionState state, final int threadnum) {
+		for (int i = 0; i < samplingSimConfig.getNumConfigs(); i++) {
+			samplingPR.initRecordingRun(samplingSimConfig, i);
+
+			Experiment experiment = getExperiment(state,
+					samplingPR,
+					i,
+					samplingSimConfig,
+					getWorkStationListeners(),
+					getTracker());
+			experiment.runExperiment();
+		}
+
+		samplingSimConfig.reset();
+	}
+
+	// Rerun the sampling rule again with the individuals as part of the sampling rule.
+	protected void runTrackedRun(final EvolutionState state, final int threadnum) {
+		for (int i = 0; i < samplingSimConfig.getNumConfigs(); i++) {
+			samplingPR.initTrackedRun(samplingSimConfig, i);
+
+			Experiment experiment = getExperiment(state,
+					samplingPR,
+					i,
+					samplingSimConfig,
+					getWorkStationListeners(),
+					getTracker());
+			experiment.runExperiment();
+		}
+
+		samplingSimConfig.reset();
+	}
+
+	// Calculate the diversity from the samples gathered from the tracked run.
+	protected void calculateDiversity(final EvolutionState state, final int threadnum) {
+		JasimaExperimentTracker<Individual> tracker = getTracker();
+
+		// get the results from the tracker. TODO
 	}
 
 	public void updateFitnesses(final EvolutionState state,

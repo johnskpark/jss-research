@@ -63,16 +63,6 @@ public class EvalMBSPTDiscrete extends EvalPriorityRuleBase {
 	}
 
 	@Override
-	public List<PrioRuleTarget> getEntryRankings() {
-		throw new UnsupportedOperationException("Not yet implemented.");
-	}
-
-	@Override
-	public void jobSelected(PrioRuleTarget entry, PriorityQueue<?> q) {
-		// Does nothing.
-	}
-
-	@Override
 	public void clear() {
 		// Does nothing.
 	}

@@ -120,24 +120,6 @@ public class WeightedVoteRule extends EvalPriorityRuleBase {
 	}
 
 	@Override
-	public List<PrioRuleTarget> getEntryRankings() {
-		Collections.sort(jobRankings);
-
-		return jobRankings.stream().map(x -> x.getEntry()).collect(Collectors.toList());
-	}
-
-	@Override
-	public void jobSelected(PrioRuleTarget entry, PriorityQueue<?> q) {
-		if (hasTracker()) {
-			getTracker().addStartTime(entry.getShop().simTime());
-			getTracker().addSelectedEntry(this, entry);
-			getTracker().addEntryRankings(this, getEntryRankings());
-
-			clear();
-		}
-	}
-
-	@Override
 	public void clear() {
 		jobVotes.clear();
 		jobRankings.clear();

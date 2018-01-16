@@ -10,8 +10,8 @@ public abstract class TrackedRuleBase<T> extends PR implements ITrackedRule<T> {
 
 	private static final long serialVersionUID = 2294381566002300842L;
 
-	public abstract List<PrioRuleTarget> getEntryRankings();
-
-	public abstract void jobSelected(PrioRuleTarget entry, PriorityQueue<?> q);
+	public abstract void jobSelected(PrioRuleTarget entry,
+			List<PrioRuleTarget> entryRankings,
+			PriorityQueue<?> q);
 
 }

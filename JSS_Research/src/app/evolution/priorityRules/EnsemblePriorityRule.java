@@ -2,7 +2,6 @@ package app.evolution.priorityRules;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +14,6 @@ import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
 import jasima.shopSim.prioRules.basic.ATC;
 
-// TODO this needs to be unit tested.
 public class EnsemblePriorityRule extends GPPriorityRuleBase {
 
 	private static final long serialVersionUID = -2159123752873667029L;
@@ -135,19 +133,6 @@ public class EnsemblePriorityRule extends GPPriorityRuleBase {
 			}
 		}
 		return true;
-	}
-
-	@Override
-	public List<PrioRuleTarget> getEntryRankings() {
-		// Sort the list of jobs.
-		Collections.sort(jobRankings);
-
-		List<PrioRuleTarget> entries = new ArrayList<PrioRuleTarget>();
-		for (EntryVotes e : jobRankings) {
-			entries.add(e.entry);
-		}
-
-		return entries;
 	}
 
 	@Override

@@ -69,7 +69,6 @@ public abstract class EvalPriorityRuleBase extends TrackedRuleBase<INode>
 	public void update(WorkStation notifier, WorkStationEvent event) {
 		if (event == WorkStation.WS_JOB_SELECTED && hasTracker()) {
 			PrioRuleTarget entry = notifier.justStarted;
-
 			PriorityQueue<Job> q = notifier.queue;
 
 			Job[] entryByPrio = new Job[q.size()];
@@ -77,11 +76,18 @@ public abstract class EvalPriorityRuleBase extends TrackedRuleBase<INode>
 
 			List<PrioRuleTarget> entryRankings = Arrays.asList(entryByPrio);
 
-			tracker.addStartTime(entry.getShop().simTime());
-			tracker.addSelectedEntry(this, entry);
-			tracker.addEntryRankings(this, entryRankings);
+			jobSelected(entry, entryRankings, q);
+		}
+	}
 
-			jobSelected(notifier.justStarted, notifier.queue);
+	@Override
+	public void jobSelected(PrioRuleTarget entry,
+			List<PrioRuleTarget> entryRankings,
+			PriorityQueue<?> q) {
+		if (hasTracker()) {
+			getTracker().addStartTime(entry.getShop().simTime());
+			getTracker().addSelectedEntry(this, entry);
+			getTracker().addEntryRankings(this, entryRankings);
 
 			clear();
 		}

@@ -79,12 +79,6 @@ public class MachineSpecificPriorityRule extends GPPriorityRuleBase {
 	}
 
 	@Override
-	public List<PrioRuleTarget> getEntryRankings() {
-		// TODO
-		return null;
-	}
-
-	@Override
 	public void clear() {
 		// TODO fill this later.
 	}

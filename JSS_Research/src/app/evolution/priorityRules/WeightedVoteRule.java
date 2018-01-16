@@ -2,11 +2,9 @@ package app.evolution.priorityRules;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import app.evolution.GPPriorityRuleBase;
 import app.evolution.JasimaGPConfig;
@@ -130,13 +128,6 @@ public class WeightedVoteRule extends GPPriorityRuleBase {
 			}
 		}
 		return true;
-	}
-
-	@Override
-	public List<PrioRuleTarget> getEntryRankings() {
-		Collections.sort(jobRankings);
-
-		return jobRankings.stream().map(x -> x.getEntry()).collect(Collectors.toList());
 	}
 
 	@Override

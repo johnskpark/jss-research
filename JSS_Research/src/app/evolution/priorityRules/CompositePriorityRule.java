@@ -97,12 +97,6 @@ public class CompositePriorityRule extends GPPriorityRuleBase {
 	}
 
 	@Override
-	public List<PrioRuleTarget> getEntryRankings() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Not yet implemented.");
-	}
-
-	@Override
 	public void clear() {
 		entries = null;
 		priorities = null;

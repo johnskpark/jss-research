@@ -2,8 +2,6 @@ package app.evolution.priorityRules;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,8 +24,6 @@ public class BasicPriorityRule extends GPPriorityRuleBase {
 
 	private Map<PrioRuleTarget, Double> jobPriorities = new HashMap<PrioRuleTarget, Double>();
 	private List<Pair<PrioRuleTarget, Double>> jobRankings = new ArrayList<Pair<PrioRuleTarget, Double>>();
-
-	private JobComparator comparator = new JobComparator();
 
 	public BasicPriorityRule() {
 		super();
@@ -87,37 +83,9 @@ public class BasicPriorityRule extends GPPriorityRuleBase {
 	}
 
 	@Override
-	public List<PrioRuleTarget> getEntryRankings() {
-		// Sort the list of jobs.
-		Collections.sort(jobRankings, comparator);
-
-		List<PrioRuleTarget> entries = new ArrayList<PrioRuleTarget>();
-		for (Pair<PrioRuleTarget, Double> e : jobRankings) {
-			entries.add(e.i1);
-		}
-
-		return entries;
-	}
-
-	@Override
 	public void clear() {
 		jobPriorities.clear();
 		jobRankings.clear();
-	}
-
-	private class JobComparator implements Comparator<Pair<PrioRuleTarget, Double>> {
-
-		@Override
-		public int compare(Pair<PrioRuleTarget, Double> o1,
-				Pair<PrioRuleTarget, Double> o2) {
-			if (o1.i2 > o2.i2) {
-				return -1;
-			} else if (o1.i2 < o2.i2) {
-				return 1;
-			} else {
-				return 0;
-			}
-		}
 	}
 
 }

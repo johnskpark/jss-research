@@ -129,24 +129,6 @@ public class LinearCombinationRule extends EvalPriorityRuleBase {
 		jobRankings.clear();
 	}
 
-	@Override
-	public List<PrioRuleTarget> getEntryRankings() {
-		Collections.sort(jobRankings);
-
-		return jobRankings.stream().map(x -> x.getEntry()).collect(Collectors.toList());
-	}
-
-	@Override
-	public void jobSelected(PrioRuleTarget entry, PriorityQueue<?> q) {
-		if (hasTracker()) {
-			getTracker().addStartTime(entry.getShop().simTime());
-			getTracker().addSelectedEntry(this, entry);
-			getTracker().addEntryRankings(this, getEntryRankings());
-
-			clear();
-		}
-	}
-
 	private class EntryVotes implements Comparable<EntryVotes> {
 		private PrioRuleTarget entry;
 		private double score = 0.0;

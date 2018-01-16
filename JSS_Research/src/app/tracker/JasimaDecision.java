@@ -14,7 +14,8 @@ public class JasimaDecision<T> {
 	private double startTime;
 
 	private List<PrioRuleTarget> entries = new ArrayList<PrioRuleTarget>();
-	 
+
+	// TODO I should probably replace these with the rules themselves, Maps are horribly inefficient for small sizes.
 	private Map<ITrackedRule<T>, List<PrioRuleTarget>> entryRankings;
 	private Map<ITrackedRule<T>, PrioRuleTarget> startedEntry;
 
@@ -26,7 +27,7 @@ public class JasimaDecision<T> {
 
 		this.entryRankings = new HashMap<>();
 		this.startedEntry = new HashMap<>();
-		
+
 		this.solvers = solvers;
 		this.stats = decisions;
 	}
