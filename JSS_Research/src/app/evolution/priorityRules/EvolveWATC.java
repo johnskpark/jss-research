@@ -22,7 +22,9 @@ public class EvolveWATC extends GPPriorityRuleBase {
 
 	@Override
 	public double calcPrio(PrioRuleTarget entry) {
-		return rule.calcPrio(entry);
+		throw new RuntimeException("TODO");
+
+//		return rule.calcPrio(entry);
 	}
 
 	@Override
