@@ -289,7 +289,7 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 
 	public void updateFitnesses(final EvolutionState state,
 			final int threadnum) {
-		// TODO
+		// Apply the clearing algorithm here.
 	}
 
 	public boolean hasSamplingPR() {
