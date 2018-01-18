@@ -1,10 +1,16 @@
 package app.evolution.niched;
 
+import java.util.List;
+
+import app.evolution.GPPriorityRuleBase;
 import app.evolution.ISimConfigEvolveFactory;
 import app.evolution.JasimaGPIndividual;
 import app.evolution.niched.fitness.NicheFitness;
+import app.evolution.priorityRules.EvolveWATC;
 import app.evolution.simple.JasimaSimpleProblem;
 import app.simConfig.SimConfig;
+import app.tracker.JasimaDecision;
+import app.tracker.JasimaExperiment;
 import app.tracker.JasimaExperimentTracker;
 import app.tracker.sampler.SamplerFactory;
 import app.tracker.sampler.SamplingPR;
@@ -14,6 +20,7 @@ import ec.util.ParamClassLoadException;
 import ec.util.Parameter;
 import jasima.core.experiment.Experiment;
 import jasima.shopSim.core.PR;
+import jasima.shopSim.core.PrioRuleTarget;
 
 public class JasimaNichedProblem extends JasimaSimpleProblem {
 
@@ -37,6 +44,8 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 	private SamplingPR samplingPR;
 	private PR samplingRule;
 	private int samplingSeed; // Find out whether Yi rotates the seed used for the rules or not.
+
+	private GPPriorityRuleBase rankRule = new EvolveWATC(); // Keep it simple for now.
 
 	private ISimConfigEvolveFactory samplingSimConfigFactory;
 	private SimConfig samplingSimConfig;
@@ -91,6 +100,10 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 			samplingSimConfigFactory = null;
 			samplingSimConfig = null;
 		}
+
+		if (hasTracker()) {
+			getTracker().addRule(rankRule);
+		}
 	}
 
 	@Override
@@ -116,9 +129,6 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 		// Update the overall archive of overall niched individuals.
 		nicheFitness.updateArchive(state, getSimConfig(), threadnum);
 
-		// Apply the sampling algorithm and use that to determine the ranks calculated by the individuals.
-		runSampler(state, threadnum);
-
 		// Update the fitnesses of the individuals using the niched individuals.
 		updateFitnesses(state, threadnum);
 	}
@@ -138,13 +148,13 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 					threadnum);
 			initialiseTracker(getTracker());
 
-			for (int i = 0; i < getSimConfig().getNumConfigs(); i++) {
-				Experiment experiment = getExperiment(state, getRule(), i, getSimConfig(), getWorkStationListeners(), getTracker());
-				experiment.runExperiment();
+			runStandardExperiment(state, ind, subpopulation, threadnum);
 
-				getFitness().accumulateFitness(i, getSimConfig(), (JasimaGPIndividual) ind, experiment.getResults());
+			if (hasSamplingPR()) {
+				JasimaNichedIndividual nichedInd = (JasimaNichedIndividual) ind;
 
-				clearForExperiment(getWorkStationListeners());
+				runSamplerRecording(state, nichedInd, subpopulation, threadnum);
+				runSamplerTracked(state, nichedInd, subpopulation, threadnum);
 			}
 
 			getFitness().setFitness(state, getSimConfig(), (JasimaGPIndividual) ind);
@@ -152,8 +162,96 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 
 			ind.evaluated = true;
 
-			clearForRun(getTracker());
+			clearForRun(getTracker(), getSamplingPR());
 		}
+	}
+
+	protected void runStandardExperiment(final EvolutionState state,
+			final Individual ind,
+			final int subpopulation,
+			final int threadnum) {
+		for (int i = 0; i < getSimConfig().getNumConfigs(); i++) {
+			Experiment experiment = getExperiment(state, getRule(), i, getSimConfig(), getWorkStationListeners(), getTracker());
+			experiment.runExperiment();
+
+			getFitness().accumulateFitness(i, getSimConfig(), (JasimaGPIndividual) ind, experiment.getResults());
+
+			clearForExperiment(getWorkStationListeners());
+		}
+	}
+
+	// Do an initial run that samples for decision situations.
+	protected void runSamplerRecording(final EvolutionState state,
+			final Individual ind,
+			final int subpopulation,
+			final int threadnum) {
+		for (int i = 0; i < samplingSimConfig.getNumConfigs(); i++) {
+			samplingPR.initRecordingRun(samplingSimConfig, i);
+
+			Experiment experiment = getExperiment(state,
+					samplingPR,
+					i,
+					samplingSimConfig,
+					getWorkStationListeners(),
+					getTracker());
+			experiment.runExperiment();
+		}
+
+		samplingSimConfig.reset();
+	}
+
+	// Rerun the sampling rule again with the individuals as part of the sampling rule.
+	protected void runSamplerTracked(final EvolutionState state,
+			final JasimaNichedIndividual ind,
+			final int subpopulation,
+			final int threadnum) {
+		for (int i = 0; i < samplingSimConfig.getNumConfigs(); i++) {
+			samplingPR.initTrackedRun(samplingSimConfig, i);
+
+			Experiment experiment = getExperiment(state,
+					samplingPR,
+					i,
+					samplingSimConfig,
+					getWorkStationListeners(),
+					getTracker());
+			experiment.runExperiment();
+
+			calculateDiversity(state, i, experiment, ind, subpopulation, threadnum);
+			getTracker().clearCurrentExperiment();
+		}
+
+		samplingSimConfig.reset();
+		getTracker().clear();
+	}
+
+	// Calculate the diversity from the samples gathered from the tracked run.
+	protected void calculateDiversity(final EvolutionState state,
+			final int configIndex,
+			final Experiment experiment,
+			final JasimaNichedIndividual ind,
+			final int subpopulation,
+			final int threadnum) {
+		JasimaExperimentTracker<Individual> tracker = getTracker();
+		List<JasimaExperiment<Individual>> trackedResults = tracker.getResults();
+
+		JasimaExperiment<Individual> trackedResult = trackedResults.get(configIndex);
+		List<JasimaDecision<Individual>> decisions = trackedResult.getDecisions();
+
+		int[] ruleDecisionVector = new int[decisions.size()];
+
+		for (int i = 0; i < decisions.size(); i++) {
+			JasimaDecision<Individual> decision = decisions.get(i);
+			PrioRuleTarget selectedJob = decision.getSelectedEntry(rankRule);
+			List<PrioRuleTarget> jobRankings = decision.getEntryRankings(getRule());
+
+			for (int j = 0; j < jobRankings.size(); j++) {
+				if (jobRankings.get(j).equals(selectedJob)) {
+					ruleDecisionVector[i] = j;
+				}
+			}
+		}
+
+		ind.setRuleDecisionVector(ruleDecisionVector);
 	}
 
 	public void evaluateNiched(final EvolutionState state,
@@ -189,61 +287,17 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 		clearForRun(getTracker());
 	}
 
-	public void runSampler(final EvolutionState state, final int threadnum) {
-		if (samplingPR != null) {
-			runRecordingRun(state, threadnum);
-			runTrackedRun(state, threadnum);
-
-			calculateDiversity(state, threadnum);
-
-			getTracker().clear();
-		}
-	}
-
-	// Do an initial run that samples for decision situations.
-	protected void runRecordingRun(final EvolutionState state, final int threadnum) {
-		for (int i = 0; i < samplingSimConfig.getNumConfigs(); i++) {
-			samplingPR.initRecordingRun(samplingSimConfig, i);
-
-			Experiment experiment = getExperiment(state,
-					samplingPR,
-					i,
-					samplingSimConfig,
-					getWorkStationListeners(),
-					getTracker());
-			experiment.runExperiment();
-		}
-
-		samplingSimConfig.reset();
-	}
-
-	// Rerun the sampling rule again with the individuals as part of the sampling rule.
-	protected void runTrackedRun(final EvolutionState state, final int threadnum) {
-		for (int i = 0; i < samplingSimConfig.getNumConfigs(); i++) {
-			samplingPR.initTrackedRun(samplingSimConfig, i);
-
-			Experiment experiment = getExperiment(state,
-					samplingPR,
-					i,
-					samplingSimConfig,
-					getWorkStationListeners(),
-					getTracker());
-			experiment.runExperiment();
-		}
-
-		samplingSimConfig.reset();
-	}
-
-	// Calculate the diversity from the samples gathered from the tracked run.
-	protected void calculateDiversity(final EvolutionState state, final int threadnum) {
-		JasimaExperimentTracker<Individual> tracker = getTracker();
-
-		// get the results from the tracker. TODO
-	}
-
 	public void updateFitnesses(final EvolutionState state,
 			final int threadnum) {
 		// TODO
+	}
+
+	public boolean hasSamplingPR() {
+		return samplingPR != null;
+	}
+
+	public SamplingPR getSamplingPR() {
+		return samplingPR;
 	}
 
 	@Override

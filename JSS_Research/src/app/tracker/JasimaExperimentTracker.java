@@ -9,18 +9,6 @@ import app.simConfig.SimConfig;
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
 
-// TODO right, the tracker needs to be able to do the following:
-// - Get the decision made by the sequencing rule on which job was selected to be processed.
-// - Get the decisions made by the individual components that make up the sequencing rule.
-// - Get the priorities assigned to each of the jobs by the individuals components.
-
-// I'm wondering: Is there a better way to implement the ensemble rules for Jasima?
-// Could I have something where the EnsemblePriorityRule is aggregated from BasicPriorityRule?
-
-// Is there a way to reduce the memory usage for this?
-
-// TODO Also, I need to change this up to match the decision scenario situation.
-// Did I do this?
 public class JasimaExperimentTracker<T> implements Clearable {
 
 	public static final int NOT_SET = -1;

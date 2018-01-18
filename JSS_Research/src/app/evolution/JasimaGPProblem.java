@@ -3,7 +3,7 @@ package app.evolution;
 import java.util.ArrayList;
 import java.util.List;
 
-import app.IJasimaWorkStationListener;
+import app.Clearable;
 import app.IJasimaWorkStationListener;
 import app.priorityRules.HolthausRule;
 import app.simConfig.ExperimentGenerator;
@@ -237,9 +237,11 @@ public abstract class JasimaGPProblem extends GPProblem {
 		}
 	}
 
-	protected void clearForRun(JasimaExperimentTracker<Individual> tracker) {
-		if (tracker != null) {
-			tracker.clear();
+	protected void clearForRun(Clearable... clearables) {
+		for (Clearable clearable : clearables) {
+			if (clearable != null) {
+				clearable.clear();
+			}
 		}
 
 		resetSimSeed();

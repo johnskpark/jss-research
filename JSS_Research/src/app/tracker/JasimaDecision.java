@@ -22,7 +22,9 @@ public class JasimaDecision<T> {
 	private Map<ITrackedRule<T>, SolverData<T>> solvers;
 	private Map<ITrackedRule<T>, JasimaPriorityStat[]> stats;
 
-	public JasimaDecision(List<PrioRuleTarget> entries, Map<ITrackedRule<T>, SolverData<T>> solvers, Map<ITrackedRule<T>, JasimaPriorityStat[]> decisions) {
+	public JasimaDecision(List<PrioRuleTarget> entries,
+			Map<ITrackedRule<T>, SolverData<T>> solvers,
+			Map<ITrackedRule<T>, JasimaPriorityStat[]> decisions) {
 		this.entries = entries;
 
 		this.entryRankings = new HashMap<>();

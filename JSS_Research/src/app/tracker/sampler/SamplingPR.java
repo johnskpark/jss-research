@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
+import app.Clearable;
 import app.TrackedRuleBase;
 import app.node.INode;
 import app.simConfig.SimConfig;
@@ -18,7 +19,7 @@ import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
 import jasima.shopSim.core.WorkStation;
 
-public class SamplingPR extends PR {
+public class SamplingPR extends PR implements Clearable {
 
 	private static final long serialVersionUID = -6359385279252431755L;
 
@@ -179,6 +180,11 @@ public class SamplingPR extends PR {
 		double prio = referenceRule.calcPrio(entry);
 
 		return prio;
+	}
+
+	@Override
+	public void clear() {
+		// TODO write the code here.
 	}
 
 }
