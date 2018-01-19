@@ -1,12 +1,15 @@
 package app.evolution.priorityRules;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import app.evolution.GPPriorityRuleBase;
 import app.priorityRules.WATCPR;
 import ec.Individual;
+import ec.gp.GPIndividual;
 import jasima.shopSim.core.PR;
 import jasima.shopSim.core.PrioRuleTarget;
+import jasima.shopSim.core.PriorityQueue;
 
 public class EvolveWATC extends GPPriorityRuleBase {
 
@@ -14,23 +17,31 @@ public class EvolveWATC extends GPPriorityRuleBase {
 
 	private PR rule = new WATCPR();
 
+	private List<Individual> dummyRuleComponent;
+
+	public EvolveWATC() {
+		dummyRuleComponent = new ArrayList<Individual>();
+		dummyRuleComponent.add(new GPIndividual());
+	}
+
 	@Override
 	public List<Individual> getRuleComponents() {
-		// TODO Auto-generated method stub
-		return null;
+		return dummyRuleComponent;
+	}
+
+	@Override
+	public void beforeCalc(PriorityQueue<?> q) {
+		rule.beforeCalc(q);
 	}
 
 	@Override
 	public double calcPrio(PrioRuleTarget entry) {
-		throw new RuntimeException("TODO");
-
-//		return rule.calcPrio(entry);
+		return rule.calcPrio(entry);
 	}
 
 	@Override
 	public void clear() {
-		// TODO Auto-generated method stub
-
+		// Don't need to do anything here, nothing is stored.
 	}
 
 }

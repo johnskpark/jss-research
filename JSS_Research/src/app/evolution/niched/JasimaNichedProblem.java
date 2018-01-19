@@ -1,5 +1,9 @@
 package app.evolution.niched;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import app.evolution.GPPriorityRuleBase;
@@ -16,9 +20,12 @@ import app.tracker.sampler.SamplerFactory;
 import app.tracker.sampler.SamplingPR;
 import ec.EvolutionState;
 import ec.Individual;
+import ec.Subpopulation;
+import ec.gp.koza.KozaFitness;
 import ec.util.ParamClassLoadException;
 import ec.util.Parameter;
 import jasima.core.experiment.Experiment;
+import jasima.core.util.Pair;
 import jasima.shopSim.core.PR;
 import jasima.shopSim.core.PrioRuleTarget;
 
@@ -27,6 +34,8 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 	private static final long serialVersionUID = -3573529649173003108L;
 
 	public static final String P_NICHE = "niche";
+	public static final String P_NICHE_RADIUS = "niche-radius";
+	public static final String P_NICHE_CAPACITY = "niche-capacity";
 
 	public static final String P_SAMPLING = "sampling";
 	public static final String P_SAMPLING_METHOD = "factory";
@@ -36,6 +45,8 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 	private static final int NOT_SET = -1;
 
 	private int numNiches = NOT_SET;
+	private double nicheRadius;
+	private double nicheCapacity;
 
 	private ISimConfigEvolveFactory[] nicheSimConfigFactories;
 	private SimConfig[] nicheSimConfigs;
@@ -75,6 +86,9 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 			nicheSimConfigFactories[i].setup(state, nicheParam.push(P_SIMULATOR));
 			nicheSimConfigs[i] = nicheSimConfigFactories[i].generateSimConfig();
 		}
+
+		nicheRadius = state.parameters.getDouble(base.push(P_NICHE_RADIUS), null);
+		nicheCapacity = state.parameters.getDouble(base.push(P_NICHE_CAPACITY), null);
 
 		// Initialise the sampler.
 		try {
@@ -290,6 +304,110 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 	public void updateFitnesses(final EvolutionState state,
 			final int threadnum) {
 		// Apply the clearing algorithm here.
+		for (int i = 0; i < state.population.subpops.length; i++) {
+			Subpopulation subpop = state.population.subpops[i];
+
+			JasimaNichedIndividual[] sortedInds = (JasimaNichedIndividual[]) Arrays.stream(subpop.individuals)
+					.map(x -> (JasimaNichedIndividual) x)
+					.toArray();
+
+			Arrays.sort(sortedInds, new Comparator<JasimaNichedIndividual>() {
+				@Override
+				public int compare(JasimaNichedIndividual ind1, JasimaNichedIndividual ind2) {
+					if (ind1.getFitness().contextIsBetterThan(ind2.getFitness())) {
+						return -1;
+					} else if (ind2.getFitness().contextIsBetterThan(ind1.getFitness())) {
+						return 1;
+					} else {
+						return 0;
+					}
+				}
+			});
+
+			int[] nicheCapacities = new int[numNiches];
+			Arrays.fill(nicheCapacities, 1); // The niche individual counts towards the niches.
+
+			for (int j = 1; j < sortedInds.length; j++) { // Ignore the best individual
+				JasimaNichedIndividual ind = sortedInds[j];
+
+				List<Pair<Integer, Double>> nicheIndexDistancePairs = new ArrayList<>();
+
+				boolean isNichedInd = false;
+
+				// Calculate the distances to the niches, and add to the closest niche possible.
+				// If full, then add to the second closest, then third, etc.
+				for (int k = 0; k < state.population.archive.length; k++) {
+					JasimaNichedIndividual nichedInd = (JasimaNichedIndividual) state.population.archive[k];
+
+					if (nichedInd.equals(ind)) {
+						isNichedInd = true;
+					}
+
+					double distance = calculateDistance(ind, nichedInd);
+					nicheIndexDistancePairs.add(new Pair<Integer, Double>(k, distance));
+				}
+
+				// If the individual is a niched individual, then just move onto the next individual.
+				if (isNichedInd) {
+					continue;
+				}
+
+				Collections.sort(nicheIndexDistancePairs, new Comparator<Pair<Integer, Double>>() {
+					@Override
+					public int compare(Pair<Integer, Double> pair1, Pair<Integer, Double> pair2) {
+						if (pair1.b < pair2.b) {
+							return -1;
+						} else if (pair1.b > pair2.b) {
+							return 1;
+						} else {
+							return 0;
+						}
+					}
+				});
+
+				boolean inOvercrowdedNiche = false;
+				for (int k = 0; k < nicheIndexDistancePairs.size(); k++) {
+					Pair<Integer, Double> nicheIndexDistance = nicheIndexDistancePairs.get(i);
+
+					if (nicheIndexDistance.b > nicheRadius) {
+						break;
+					} else {
+						if (atMaxCapacity(nicheCapacities, nicheIndexDistance.a)) {
+							inOvercrowdedNiche = true;
+						} else {
+							inOvercrowdedNiche = false;
+							nicheCapacities[nicheIndexDistance.a]++;
+						}
+					}
+				}
+
+				if (inOvercrowdedNiche) {
+					// Assign the worst fitness to the individual.
+					((KozaFitness) ind.getFitness()).setStandardizedFitness(state, Double.POSITIVE_INFINITY);
+				}
+			}
+		}
+	}
+
+	protected boolean atMaxCapacity(int[] capacities, int index) {
+		return capacities[index] >= nicheCapacity;
+	}
+
+	protected double calculateDistance(JasimaNichedIndividual ind1, JasimaNichedIndividual ind2) {
+		int[] decisions1 = ind1.getRuleDecisionVector();
+		int[] decisions2 = ind2.getRuleDecisionVector();
+
+		// FIXME keep this until we've determined that there's no bugs with the code.
+		if (decisions1.length != decisions2.length) {
+			throw new RuntimeException(String.format("The decision vectors are not the same length: %d, %d", decisions1.length, decisions2.length));
+		}
+
+		double distance = 0.0;
+		for (int i = 0; i < decisions1.length; i++) {
+			distance += (decisions1[i] - decisions2[i]) * (decisions1[i] - decisions2[i]);
+		}
+
+		return Math.sqrt(distance);
 	}
 
 	public boolean hasSamplingPR() {
