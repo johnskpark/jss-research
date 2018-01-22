@@ -314,9 +314,9 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 			Arrays.sort(sortedInds, new Comparator<JasimaNichedIndividual>() {
 				@Override
 				public int compare(JasimaNichedIndividual ind1, JasimaNichedIndividual ind2) {
-					if (ind1.getFitness().contextIsBetterThan(ind2.getFitness())) {
+					if (ind1.getFitness().betterThan(ind2.getFitness())) {
 						return -1;
-					} else if (ind2.getFitness().contextIsBetterThan(ind1.getFitness())) {
+					} else if (ind2.getFitness().betterThan(ind1.getFitness())) {
 						return 1;
 					} else {
 						return 0;
