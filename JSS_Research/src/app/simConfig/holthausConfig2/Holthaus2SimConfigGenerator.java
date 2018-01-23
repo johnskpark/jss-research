@@ -57,7 +57,7 @@ public class Holthaus2SimConfigGenerator {
 				}
 
 				if (!varFound) {
-					throw new RuntimeException("Error in HolthausSimConfigGenerator.");
+					throw new RuntimeException("Error in Holthaus2SimConfigGenerator.");
 				}
 			}
 		}

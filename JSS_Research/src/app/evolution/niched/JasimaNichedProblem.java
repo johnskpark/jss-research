@@ -33,9 +33,9 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 
 	private static final long serialVersionUID = -3573529649173003108L;
 
-	public static final String P_NICHE = "niche";
-	public static final String P_NICHE_RADIUS = "niche-radius";
-	public static final String P_NICHE_CAPACITY = "niche-capacity";
+	public static final String P_NICHE = "niched";
+	public static final String P_NICHE_RADIUS = "niched-radius";
+	public static final String P_NICHE_CAPACITY = "niched-capacity";
 
 	public static final String P_SAMPLING = "sampling";
 	public static final String P_SAMPLING_METHOD = "factory";
@@ -73,8 +73,7 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 		NicheFitness nicheFitness = (NicheFitness) getFitness();
 		numNiches = nicheFitness.getNumNiches(getSimConfig());
 
-		state.population.archive = new JasimaNichedIndividual[numNiches];
-
+		nicheSimConfigFactories = new ISimConfigEvolveFactory[numNiches];
 		nicheSimConfigs = new SimConfig[numNiches];
 
 		for (int i = 0; i < numNiches; i++) {
@@ -94,7 +93,7 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 		try {
 			Parameter samplingParam = base.push(P_SAMPLING);
 
-			samplingFactory = (SamplerFactory) state.parameters.getInstanceForParameter(samplingParam.push(P_SAMPLING_METHOD), null, SamplerFactory.class);
+			samplingFactory = (SamplerFactory) state.parameters.getInstanceForParameter(samplingParam.push(P_SAMPLING_METHOD), null, Object.class);
 			samplingRule = (PR) state.parameters.getInstanceForParameter(samplingParam.push(P_SAMPLING_RULE), null, PR.class);
 			samplingSeed = state.parameters.getInt(samplingParam.push(P_SAMPLING_SEED), null);
 
@@ -123,6 +122,10 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 	@Override
 	public void prepareToEvaluate(final EvolutionState state, final int threadnum) {
 		super.prepareToEvaluate(state, threadnum);
+
+		if (state.generation == 0) {
+			state.population.archive = new JasimaNichedIndividual[numNiches];
+		}
 
 		NicheFitness nicheFitness = (NicheFitness) getFitness();
 		nicheFitness.init(state, getSimConfig(), threadnum);

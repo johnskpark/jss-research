@@ -1,2 +1,99 @@
+# Copyright 2006 by Sean Luke and George Mason University
+# Licensed under the Academic Free License version 3.0
+# See the file "LICENSE" for more information
 
-# TODO
+parent.0 = koza.params
+parent.1 = holthaus_niched.params
+
+pop.subpop.0.species.ind = app.evolution.niched.JasimaNichedIndividual
+pop.subpop.0.species.ind.niched-fitness = ec.gp.koza.KozaFitness
+
+# the next four items are already defined in koza.params, but we
+# put them here to be clear.
+
+# For this MO problem, we most likely need two function sets to deal with
+# the two objective functions
+gp.fs.size = 1
+gp.fs.0 = ec.gp.GPFunctionSet
+# We'll call the function set "f0".
+gp.fs.0.name = f0
+
+# We have five functions in the function set.  They are:
+
+#breed.elite.0 = 40
+
+gp.fs.0.size = 19
+gp.fs.0.func.0 = app.evolution.node.basic.ERCRandomUniform
+gp.fs.0.func.0.nc = nc0
+gp.fs.0.func.0.min = 0
+gp.fs.0.func.0.max = 1
+gp.fs.0.func.1 = app.evolution.node.basic.OpAddition
+gp.fs.0.func.1.nc = nc2
+gp.fs.0.func.2 = app.evolution.node.basic.OpConditional
+gp.fs.0.func.2.nc = nc3
+gp.fs.0.func.3 = app.evolution.node.basic.OpDivision
+gp.fs.0.func.3.nc = nc2
+gp.fs.0.func.4 = app.evolution.node.basic.OpMultiplication
+gp.fs.0.func.4.nc = nc2
+gp.fs.0.func.5 = app.evolution.node.basic.OpSubtraction
+gp.fs.0.func.5.nc = nc2
+gp.fs.0.func.6 = app.evolution.node.basic.OpMaximum
+gp.fs.0.func.6.nc = nc2
+gp.fs.0.func.7 = app.evolution.node.basic.OpMinimum
+gp.fs.0.func.7.nc = nc2
+gp.fs.0.func.8 = app.evolution.node.basic.ScoreProcessingTime
+gp.fs.0.func.8.nc = nc0
+gp.fs.0.func.9 = app.evolution.node.basic.ScoreRemainingOperation
+gp.fs.0.func.9.nc = nc0
+gp.fs.0.func.10 = app.evolution.node.basic.ScoreRemainingTime
+gp.fs.0.func.10.nc = nc0
+gp.fs.0.func.11 = app.evolution.node.basic.ScoreOperationReadyTime
+gp.fs.0.func.11.nc = nc0
+gp.fs.0.func.12 = app.evolution.node.basic.ScoreDueDate
+gp.fs.0.func.12.nc = nc0
+gp.fs.0.func.13 = app.evolution.node.basic.ScorePenalty
+gp.fs.0.func.13.nc = nc0
+gp.fs.0.func.14 = app.evolution.node.basic.ScoreMachineReadyTime
+gp.fs.0.func.14.nc = nc0
+gp.fs.0.func.15 = app.evolution.node.hunt.ScoreAverageWaitTimeAllMachines
+gp.fs.0.func.15.nc = nc0
+gp.fs.0.func.16 = app.evolution.node.hunt.ScoreAverageWaitTimeNextMachine
+gp.fs.0.func.16.nc = nc0
+gp.fs.0.func.17 = app.evolution.node.hunt.ScoreNextProcessingTime
+gp.fs.0.func.17.nc = nc0
+gp.fs.0.func.18 = app.evolution.node.hunt.ScoreNumberWaitingNextMachine
+gp.fs.0.func.18.nc = nc0
+
+stat = app.evolution.niched.JasimaNichedStatistics
+
+eval.problem = app.evolution.niched.JasimaNichedProblem
+eval.problem.data = app.evolution.JasimaGPData
+
+# FIXME placeholder values for now.
+eval.problem.niched-radius = 0.5
+eval.problem.niched-capacity = 50
+
+eval.problem.reference-rule = app.priorityRules.WATCPR
+eval.problem.reference-fitness = app.evolution.simple.fitness.MWTFitness
+
+eval.problem.rule = app.evolution.priorityRules.BasicPriorityRule
+eval.problem.fitness = app.evolution.niched.fitness.MWTBreakdownFitness
+
+eval.problem.sampling.simulator = app.simConfig.samplingConfig.EvolveFactory
+eval.problem.sampling.simulator.job-seed = 15
+eval.problem.sampling.simulator.rotate-seed = false
+
+eval.problem.sampling.factory = app.tracker.sampler.SamplerFactory
+eval.problem.sampling.rule = app.evolution.priorityRules.EvolveWSPT
+eval.problem.sampling.seed = 15
+
+eval.problem.workstations = 1
+eval.problem.workstation.0 = app.listener.hunt.EvolveFactory
+eval.problem.workstation.0.max-jobs = 5
+
+eval.problem.tracker = app.tracker.JasimaExperimentTracker
+
+# TODO need a tracker.
+
+# seed.0=26556
+seed.0=17

@@ -11,7 +11,7 @@ import app.simConfig.DynamicBreakdownSimConfig;
 public class Holthaus3SimConfigGenerator {
 
 	private static final double[] NUM_REPAIR_TIME_FACTORS = new double[]{1.5, 5.5, 10.5};
-	private static final double[] NUM_BREAKDOWN_LEVELS = new double[]{0.0, 0.025, 0.05, 0.1, 0.15}; 
+	private static final double[] NUM_BREAKDOWN_LEVELS = new double[]{0.0, 0.025, 0.05, 0.1, 0.15};
 
 	private static final double[] NUM_DUE_DATE_FACTORS = new double[]{3, 5};
 
@@ -64,7 +64,7 @@ public class Holthaus3SimConfigGenerator {
 				}
 
 				if (!varFound) {
-					throw new RuntimeException("Error in HolthausSimConfigGenerator.");
+					throw new RuntimeException("Error in Holthaus3SimConfigGenerator.");
 				}
 			}
 		}

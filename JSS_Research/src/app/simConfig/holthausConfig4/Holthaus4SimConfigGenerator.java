@@ -7,13 +7,11 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import app.simConfig.DynamicBreakdownSimConfig;
-import app.simConfig.holthausConfig3.Holthaus3SimConfig;
 
-// TODO this is copied from the Holthaus3SimConfigGenerator, modify this.
 public class Holthaus4SimConfigGenerator {
 
-	private static final double[] NUM_REPAIR_TIME_FACTORS = new double[]{1.5, 5.5, 10.5};
-	private static final double[] NUM_BREAKDOWN_LEVELS = new double[]{0.0, 0.025, 0.05, 0.1, 0.15};
+	private static final double[] NUM_REPAIR_TIME_FACTORS = new double[]{1, 5, 10};
+	private static final double[] NUM_BREAKDOWN_LEVELS = new double[]{0.0, 0.025, 0.05};
 
 	private static final double[] NUM_DUE_DATE_FACTORS = new double[]{3, 5};
 
@@ -23,8 +21,6 @@ public class Holthaus4SimConfigGenerator {
 	private static final double EPSILON = 0.001;
 
 	private Holthaus4SimConfigGenerator() {
-		// TODO
-		throw new RuntimeException("TODO");
 	}
 
 	public static final DynamicBreakdownSimConfig getSimConfig(String instances) {
@@ -43,7 +39,7 @@ public class Holthaus4SimConfigGenerator {
 				.map(x -> x.intValue())
 				.collect(Collectors.toList());
 
-		return new Holthaus3SimConfig(repairTimeFactors, breakdownLevels, dueDateFactors);
+		return new Holthaus4SimConfig(repairTimeFactors, breakdownLevels, dueDateFactors);
 	}
 
 	private static List<Double> convertToVariables(String varStr, double[] validVars) {
@@ -68,7 +64,7 @@ public class Holthaus4SimConfigGenerator {
 				}
 
 				if (!varFound) {
-					throw new RuntimeException("Error in HolthausSimConfigGenerator.");
+					throw new RuntimeException("Error in Holthaus4SimConfigGenerator.");
 				}
 			}
 		}

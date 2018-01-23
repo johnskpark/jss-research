@@ -1,4 +1,4 @@
-package app.evolution.niched.statistics;
+package app.evolution.niched;
 
 import ec.EvolutionState;
 import ec.Individual;

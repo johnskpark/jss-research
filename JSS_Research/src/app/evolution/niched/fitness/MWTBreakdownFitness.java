@@ -19,7 +19,7 @@ public class MWTBreakdownFitness extends NicheFitness {
 	private JasimaNichedIndividual[] nichedInds;
 	private double[] nichedIndFitness;
 	private List<Integer> nicheIndex;
-	private int numNiches = 0;
+	private int numNiches = NOT_SET;
 
 	private JasimaNichedIndividual currentInd = null;
 	private double currentIndFitness = 0;
@@ -115,8 +115,9 @@ public class MWTBreakdownFitness extends NicheFitness {
 				repairTimeFactor = cfg.getMeanRepairTime(i);
 
 				numNiches++;
-				nicheIndex.add(i, numNiches-1);
 			}
+
+			nicheIndex.add(numNiches-1);
 		}
 	}
 

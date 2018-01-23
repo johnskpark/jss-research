@@ -10,7 +10,6 @@ import jasima.core.random.continuous.DblConst;
 import jasima.core.random.continuous.DblDistribution;
 import jasima.core.random.continuous.DblStream;
 
-// TODO copied from Holthaus3SimConfig, fix this.
 public class Holthaus4SimConfig extends DynamicBreakdownSimConfig {
 
 	private static final int MIN_PROC_TIME = 1;
@@ -33,6 +32,8 @@ public class Holthaus4SimConfig extends DynamicBreakdownSimConfig {
 	private List<Integer> numDDFs; // due date factors: (3, 5)
 	private int numConfigs;
 
+	private boolean hasZeroBL = false;
+
 	public Holthaus4SimConfig(List<Double> repairTimeFactors,
 			List<Double> breakdownLevels,
 			List<Integer> dueDateFactors) {
@@ -40,12 +41,10 @@ public class Holthaus4SimConfig extends DynamicBreakdownSimConfig {
 		numBLs = breakdownLevels;
 		numDDFs = dueDateFactors;
 
+		hasZeroBL = breakdownLevels.contains(0.0);
 		numConfigs = repairTimeFactors.size() *
-				breakdownLevels.size() *
-				dueDateFactors.size();
-
-		// TODO This needs to have 7 configurations, not 9.
-		throw new RuntimeException("TODO");
+				(breakdownLevels.size() - ((hasZeroBL) ? 1 : 0)) *
+				dueDateFactors.size() + ((hasZeroBL) ? dueDateFactors.size() : 0);
 	}
 
 	@Override
@@ -106,7 +105,7 @@ public class Holthaus4SimConfig extends DynamicBreakdownSimConfig {
 	public DblStream getRepairTimeDistribution(DynamicBreakdownShopExperiment experiment, int index) {
 		double repairTime = getMeanRepairTime(index);
 
-		return new DblConst(repairTime);
+		return new DblDistribution(experiment.getMachineRandom(), new ExponentialDistribution(repairTime));
 	}
 
 	@Override
@@ -118,7 +117,17 @@ public class Holthaus4SimConfig extends DynamicBreakdownSimConfig {
 
 	@Override
 	public double getBreakdownLevel(int index) {
-		int blIndex = (index / (numDDFs.size())) % numBLs.size();
+		int blIndex;
+		if (hasZeroBL) {
+			if (index < numDDFs.size()) {
+				blIndex = 0;
+			} else {
+				blIndex = (index - numDDFs.size()) / (numRTFs.size() * numDDFs.size()) + 1;
+			}
+		} else {
+			blIndex = index / (numRTFs.size() * numDDFs.size());
+		}
+
 
 		return numBLs.get(blIndex);
 	}
@@ -127,9 +136,22 @@ public class Holthaus4SimConfig extends DynamicBreakdownSimConfig {
 	// dependent on repair time and breakdown level.
 	@Override
 	public double getMeanRepairTime(int index) {
-		int rtfIndex = index / (numBLs.size() * numDDFs.size());
-		double repairTimeFactor = numRTFs.get(rtfIndex);
+		if (getBreakdownLevel(index) == 0.0) {
+			return 1.0;
+		}
 
+		int rtfIndex;
+		if (hasZeroBL) {
+			if (index < numDDFs.size()) {
+				rtfIndex = 0; // just choose the first one
+			} else {
+				rtfIndex = ((index - numDDFs.size()) / numDDFs.size()) % numRTFs.size();
+			}
+		} else {
+			rtfIndex = (index / numDDFs.size()) % numRTFs.size();
+		}
+
+		double repairTimeFactor = numRTFs.get(rtfIndex);
 		return repairTimeFactor * MEAN_PROC_TIME;
 	}
 
