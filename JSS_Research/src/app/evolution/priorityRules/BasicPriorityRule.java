@@ -53,10 +53,6 @@ public class BasicPriorityRule extends GPPriorityRuleBase {
 
 		clear();
 
-		if (tracker != null) {
-			tracker.addDispatchingDecision(q);
-		}
-
 		for (int i = 0; i < q.size(); i++) {
 			PrioRuleTarget entry = q.get(i);
 
@@ -66,11 +62,6 @@ public class BasicPriorityRule extends GPPriorityRuleBase {
 			ind.trees[0].child.eval(state, threadnum, data, null, ind, null);
 
 			double priority = data.getPriority();
-
-			// Add the priority assigned to the entry to the tracker.
-			if (tracker != null) {
-				tracker.addPriority(this, i, individual.get(indIndex), entry, priority);
-			}
 
 			jobPriorities.put(entry, priority);
 			jobRankings.add(new Pair<PrioRuleTarget, Double>(entry, priority));

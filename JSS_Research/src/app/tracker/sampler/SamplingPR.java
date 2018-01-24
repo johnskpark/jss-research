@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 
 import app.Clearable;
 import app.TrackedRuleBase;
-import app.node.INode;
 import app.simConfig.SimConfig;
 import app.tracker.DecisionEvent;
 import app.tracker.JasimaExperimentTracker;
@@ -19,7 +18,7 @@ import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
 import jasima.shopSim.core.WorkStation;
 
-public class SamplingPR extends PR implements Clearable {
+public class SamplingPR<T> extends PR implements Clearable {
 
 	private static final long serialVersionUID = -6359385279252431755L;
 
@@ -40,7 +39,7 @@ public class SamplingPR extends PR implements Clearable {
 	private List<DecisionEvent> currentRecording;
 	private List<DecisionEvent> currentSample;
 
-	private List<TrackedRuleBase<INode>> priorityRules = new ArrayList<>();
+	private List<TrackedRuleBase<T>> priorityRules = new ArrayList<>();
 
 	private JasimaExperimentTracker<?> tracker;
 
@@ -82,11 +81,11 @@ public class SamplingPR extends PR implements Clearable {
 		}
 	}
 
-	public List<TrackedRuleBase<INode>> getPriorityRules() {
+	public List<TrackedRuleBase<T>> getPriorityRules() {
 		return priorityRules;
 	}
 
-	public void setPriorityRules(List<TrackedRuleBase<INode>> priorityRules) {
+	public void setPriorityRules(List<TrackedRuleBase<T>> priorityRules) {
 		this.priorityRules = priorityRules;
 	}
 
@@ -117,14 +116,14 @@ public class SamplingPR extends PR implements Clearable {
 				// Run it over the different rules.
 				tracker.addDispatchingDecision(q);
 
-				for (TrackedRuleBase<INode> pr : priorityRules) {
+				for (TrackedRuleBase<T> pr : priorityRules) {
 					prPriorityCalculation(pr, q);
 				}
 			}
 		}
 	}
 
-	protected void prPriorityCalculation(TrackedRuleBase<INode> pr, PriorityQueue<?> q) {
+	protected void prPriorityCalculation(TrackedRuleBase<T> pr, PriorityQueue<?> q) {
 		pr.beforeCalc(q);
 
 		List<Pair<PrioRuleTarget, Double>> entryPrio = new ArrayList<>();

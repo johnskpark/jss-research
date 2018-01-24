@@ -58,10 +58,6 @@ public class EnsemblePriorityRule extends GPPriorityRuleBase {
 		// Initialise the decisions vector.
 		int[] decisions = new int[individuals.size()];
 
-		if (tracker != null) {
-			tracker.addDispatchingDecision(q);
-		}
-
 		// Go through the individuals and vote on the decisions.
 		for (int i = 0; i < individuals.size(); i++) {
 			double bestPriority = Double.NEGATIVE_INFINITY;
@@ -76,11 +72,6 @@ public class EnsemblePriorityRule extends GPPriorityRuleBase {
 				ind.trees[0].child.eval(state, threadnum, data, null, ind, null);
 
 				double priority = data.getPriority();
-
-				// Add the priority assigned to the entry to the tracker.
-				if (tracker != null) {
-					tracker.addPriority(this, i, individuals.get(i), entry, priority);
-				}
 
 				if (priority > bestPriority) {
 					bestPriority = priority;

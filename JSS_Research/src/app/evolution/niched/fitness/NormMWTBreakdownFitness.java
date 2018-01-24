@@ -13,7 +13,7 @@ import app.stat.WeightedTardinessStat;
 import ec.EvolutionState;
 import ec.gp.koza.KozaFitness;
 
-public class MWTBreakdownFitness extends NicheFitness {
+public class NormMWTBreakdownFitness extends NicheFitness {
 
 	private static final int NOT_SET = -1;
 
@@ -51,7 +51,9 @@ public class MWTBreakdownFitness extends NicheFitness {
 
 	@Override
 	public double getFitness(int expIndex, SimConfig config, JasimaGPIndividual ind, Map<String, Object> results) {
-		double mwt = WeightedTardinessStat.getMeanWeightedTardiness(results);
+		List<Double> referenceStat = getProblem().getReferenceStat();
+
+		double normMwt = WeightedTardinessStat.getNormMeanWeightedTardiness(results, referenceStat.get(expIndex));
 
 		// Individual hasn't been initialised yet.
 		if (currentInd == null) {
@@ -59,7 +61,7 @@ public class MWTBreakdownFitness extends NicheFitness {
 			currentIndFitness = 0.0;
 		}
 
-		currentIndFitness += mwt;
+		currentIndFitness += normMwt;
 		int currentNiche = nicheIndex.get(expIndex);
 
 		// If its the last index for the specific niche,
@@ -80,7 +82,7 @@ public class MWTBreakdownFitness extends NicheFitness {
 			currentIndFitness = 0.0; // Just making sure.
 		}
 
-		return mwt;
+		return normMwt;
 	}
 
 	@Override

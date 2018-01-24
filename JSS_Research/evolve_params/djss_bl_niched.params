@@ -71,13 +71,13 @@ eval.problem.data = app.evolution.JasimaGPData
 
 # FIXME placeholder values for now.
 eval.problem.niched-radius = 0.5
-eval.problem.niched-capacity = 50
+eval.problem.niched-capacity = 3
 
 eval.problem.reference-rule = app.priorityRules.WATCPR
 eval.problem.reference-fitness = app.evolution.simple.fitness.MWTFitness
 
 eval.problem.rule = app.evolution.priorityRules.BasicPriorityRule
-eval.problem.fitness = app.evolution.niched.fitness.MWTBreakdownFitness
+eval.problem.fitness = app.evolution.niched.fitness.NormMWTBreakdownFitness
 
 eval.problem.sampling.simulator = app.simConfig.samplingConfig.EvolveFactory
 eval.problem.sampling.simulator.job-seed = 15

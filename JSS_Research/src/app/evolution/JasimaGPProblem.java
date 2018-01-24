@@ -217,8 +217,7 @@ public abstract class JasimaGPProblem extends GPProblem {
 		config.setThreadnum(threadnum);
 		config.setData((JasimaGPData) input);
 		config.setSimConfig(simConfig);
-
-		if (tracker != null) { config.setTracker(tracker); }
+		config.setTracker(tracker); 
 
 		rule.setConfiguration(config);
 	}
@@ -264,7 +263,7 @@ public abstract class JasimaGPProblem extends GPProblem {
 			}
 		}
 
-		if (hasTracker()) {
+		if (tracker != null) {
 			tracker.clearCurrentExperiment();
 			tracker.setExperimentIndex(index);
 		}

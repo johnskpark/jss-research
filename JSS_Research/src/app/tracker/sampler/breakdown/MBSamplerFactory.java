@@ -8,8 +8,8 @@ import jasima.shopSim.core.PR;
 public class MBSamplerFactory extends SamplerFactory {
 
 	@Override
-	public SamplingPR generateSampler(PR refRule, long seed, JasimaExperimentTracker<?> t) {
-		return new MBSamplingPR(refRule, seed, t);
+	public <T> SamplingPR<T> generateSampler(PR refRule, long seed, JasimaExperimentTracker<T> t) {
+		return new MBSamplingPR<T>(refRule, seed, t);
 	}
 
 }

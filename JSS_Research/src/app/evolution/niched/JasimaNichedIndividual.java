@@ -17,6 +17,7 @@ public class JasimaNichedIndividual extends JasimaGPIndividual {
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
 		super.setup(state, base);
+
 		nichedFitness = (Fitness) state.parameters.getInstanceForParameter(base.push(P_NICHED_FITNESS), null, Fitness.class);
 		nichedFitness.setup(state, base.push(P_NICHED_FITNESS));
 	}

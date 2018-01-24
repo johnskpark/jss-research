@@ -3,7 +3,6 @@ package app.tracker.sampler.breakdown;
 import java.util.List;
 
 import app.TrackedRuleBase;
-import app.node.INode;
 import app.simConfig.DynamicBreakdownSimConfig;
 import app.simConfig.SimConfig;
 import app.tracker.DecisionEvent;
@@ -15,13 +14,13 @@ import jasima.shopSim.core.PR;
 import jasima.shopSim.core.PriorityQueue;
 import jasima.shopSim.core.WorkStation;
 
-public class MBSamplingPR extends SamplingPR {
+public class MBSamplingPR<T> extends SamplingPR<T> {
 
 	private static final long serialVersionUID = 8494043176020775929L;
 
 	private double currentPT;
 
-	public MBSamplingPR(PR refRule, long s, JasimaExperimentTracker<?> t) {
+	public MBSamplingPR(PR refRule, long s, JasimaExperimentTracker<T> t) {
 		super(refRule, s, t);
 	}
 
@@ -119,7 +118,7 @@ public class MBSamplingPR extends SamplingPR {
 				// Run it over the different rules.
 				getTracker().addDispatchingDecision(q);
 
-				for (TrackedRuleBase<INode> pr : getPriorityRules()) {
+				for (TrackedRuleBase<T> pr : getPriorityRules()) {
 					prPriorityCalculation(pr, q);
 				}
 			}
