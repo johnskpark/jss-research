@@ -2,10 +2,11 @@ package app.evolution;
 
 import java.util.Map;
 
+import app.Clearable;
 import app.simConfig.SimConfig;
 import ec.EvolutionState;
 
-public interface IJasimaFitness<T extends JasimaReproducible> {
+public interface IJasimaFitness<T extends JasimaReproducible> extends Clearable {
 
 	public void setProblem(JasimaGPProblem problem);
 
@@ -26,7 +27,5 @@ public interface IJasimaFitness<T extends JasimaReproducible> {
 	public double getFinalFitness(final EvolutionState state,
 			final SimConfig config,
 			final T reproducible);
-
-	public void clear();
 
 }

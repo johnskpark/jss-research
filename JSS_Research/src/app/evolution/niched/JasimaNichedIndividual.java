@@ -11,19 +11,24 @@ public class JasimaNichedIndividual extends JasimaGPIndividual {
 
 	public static final String P_NICHED_FITNESS = "niched-fitness";
 
-	private Fitness nichedFitness;
+	private Fitness[] nichedFitness;
 	private int[] jobRanks;
 
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
 		super.setup(state, base);
 
-		nichedFitness = (Fitness) state.parameters.getInstanceForParameter(base.push(P_NICHED_FITNESS), null, Fitness.class);
-		nichedFitness.setup(state, base.push(P_NICHED_FITNESS));
+		JasimaNichedProblem problem = (JasimaNichedProblem) state.evaluator.p_problem;
+		nichedFitness = new Fitness[problem.getNumNiches()];
+
+		for (int i = 0; i < problem.getNumNiches(); i++) {
+			nichedFitness[i] = (Fitness) state.parameters.getInstanceForParameter(base.push(P_NICHED_FITNESS), null, Fitness.class);
+			nichedFitness[i].setup(state, base.push(P_NICHED_FITNESS));
+		}
 	}
 
-	public Fitness getNichedFitness() {
-		return nichedFitness;
+	public Fitness getNichedFitness(int index) {
+		return nichedFitness[index];
 	}
 
 	public int[] getRuleDecisionVector() {
@@ -32,6 +37,19 @@ public class JasimaNichedIndividual extends JasimaGPIndividual {
 
 	public void setRuleDecisionVector(int[] jobRanks) {
 		this.jobRanks = jobRanks;
+	}
+
+	@Override
+    public void printIndividualForHumans(final EvolutionState state, final int log) {
+        state.output.println(EVALUATED_PREAMBLE + (evaluated ? "true" : "false"), log);
+
+        state.output.print("Standard ", log);
+        fitness.printFitnessForHumans(state,log);
+
+        state.output.print("Niched ", log);
+//        nichedFitness.printFitnessForHumans(state,log); // FIXME
+
+        printTrees(state,log);
 	}
 
 }

@@ -5,13 +5,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import app.evolution.GPPriorityRuleBase;
 import app.evolution.ISimConfigEvolveFactory;
 import app.evolution.JasimaGPIndividual;
-import app.evolution.niched.fitness.NicheFitness;
+import app.evolution.niched.fitness.NicheFitnessBase;
 import app.evolution.priorityRules.EvolveWATC;
 import app.evolution.simple.JasimaSimpleProblem;
 import app.simConfig.SimConfig;
@@ -62,7 +61,7 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 
 	private ISimConfigEvolveFactory samplingSimConfigFactory;
 	private SimConfig samplingSimConfig;
-	
+
 	private JasimaNichedIndividual[] curGenNichedInds;
 	private double[] curGenNichedIndsFitness;
 
@@ -70,12 +69,12 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 	public void setup(final EvolutionState state, final Parameter base) {
 		super.setup(state, base);
 
-		if (!(getFitness() instanceof NicheFitness)) {
+		if (!(getFitness() instanceof NicheFitnessBase)) {
 			state.output.fatal("The fitness must be of type NicheFitness.");
 		}
 
 		// Initialise the niches.
-		NicheFitness nicheFitness = (NicheFitness) getFitness();
+		NicheFitnessBase nicheFitness = (NicheFitnessBase) getFitness();
 		numNiches = nicheFitness.getNumNiches(getSimConfig());
 
 		nicheSimConfigFactories = new ISimConfigEvolveFactory[numNiches];
@@ -107,7 +106,7 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 			samplingSimConfigFactory = (ISimConfigEvolveFactory) state.parameters.getInstanceForParameterEq(samplingParam.push(P_SIMULATOR), null, ISimConfigEvolveFactory.class);
 			samplingSimConfigFactory.setup(state, samplingParam.push(P_SIMULATOR));
 			samplingSimConfig = samplingSimConfigFactory.generateSimConfig();
-			
+
 			samplingPR.setPriorityRules(Arrays.asList(rankRule, getRule()));
 		} catch (ParamClassLoadException ex) {
 			state.output.warning("No sampling rule provided for JasimaGPProblem: " + ex.getMessage());
@@ -121,10 +120,10 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 			samplingSimConfig = null;
 		}
 
-//		if (hasTracker()) {
-//			getTracker().addRule(rankRule);
-//		}
-		
+		if (hasTracker()) {
+			getTracker().addRule(rankRule);
+		}
+
 		curGenNichedInds = new JasimaNichedIndividual[numNiches];
 		curGenNichedIndsFitness = new double[numNiches];
 	}
@@ -136,11 +135,11 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 		if (state.generation == 0) {
 			state.population.archive = new JasimaNichedIndividual[numNiches];
 		}
-		
+
 		Arrays.fill(curGenNichedInds, null);
 		Arrays.fill(curGenNichedIndsFitness, Double.POSITIVE_INFINITY);
 
-		NicheFitness nicheFitness = (NicheFitness) getFitness();
+		NicheFitnessBase nicheFitness = (NicheFitnessBase) getFitness();
 		nicheFitness.init(state, getSimConfig(), threadnum);
 	}
 
@@ -148,15 +147,15 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 	public void finishEvaluating(final EvolutionState state, final int threadnum) {
 		super.finishEvaluating(state, threadnum);
 
-		NicheFitness nicheFitness = (NicheFitness) getFitness();
+		NicheFitnessBase nicheFitness = (NicheFitnessBase) getFitness();
 
 		// Update the nicheFitnesses of the current generation niched individuals.
-		for (int i = 0; i < curGenNichedInds.length; i++) {
+		for (int i = 0; i < numNiches; i++) {
 			evaluateNiched(state, curGenNichedInds[i], i, threadnum);
 		}
 
 		// Update the overall archive of overall niched individuals.
-		nicheFitness.updateArchive(state, curGenNichedInds, getSimConfig(), threadnum);
+		nicheFitness.updateArchive(state, curGenNichedInds, threadnum);
 
 		// Update the fitnesses of the individuals using the niched individuals.
 		updateFitnesses(state, threadnum);
@@ -178,9 +177,6 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 				runSamplerTracked(state, nichedInd, subpopulation, threadnum);
 			}
 
-			getFitness().setFitness(state, getSimConfig(), (JasimaGPIndividual) ind);
-			getFitness().clear();
-
 			ind.evaluated = true;
 		}
 	}
@@ -189,19 +185,14 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 			final Individual ind,
 			final int subpopulation,
 			final int threadnum) {
-		configureRule(state,
-				getRule(),
-				null,
-				new Individual[] {ind},
-				new int[] {subpopulation},
-				threadnum);
-		
+		configureRule(state, getRule(), null, new Individual[] {ind}, new int[] {subpopulation}, threadnum);
+
 		for (int i = 0; i < getSimConfig().getNumConfigs(); i++) {
-			Experiment experiment = getExperiment(state, 
-					getRule(), 
-					i, 
-					getSimConfig(), 
-					getWorkStationListeners(), 
+			Experiment experiment = getExperiment(state,
+					getRule(),
+					i,
+					getSimConfig(),
+					getWorkStationListeners(),
 					null);
 			experiment.runExperiment();
 
@@ -210,6 +201,10 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 			clearForExperiment(getWorkStationListeners());
 //			if (hasTracker()) { getTracker().clearCurrentExperiment(); }
 		}
+
+		getFitness().setFitness(state, getSimConfig(), (JasimaGPIndividual) ind);
+
+		clearForRun(getFitness());
 	}
 
 	// Do an initial run that samples for decision situations.
@@ -217,21 +212,16 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 			final Individual ind,
 			final int subpopulation,
 			final int threadnum) {
-		configureRule(state,
-				getRule(),
-				null,
-				new Individual[] {ind},
-				new int[] {subpopulation},
-				threadnum);
-		
+		configureRule(state, getRule(), null, new Individual[] {ind}, new int[] {subpopulation}, threadnum);
+
 		for (int i = 0; i < samplingSimConfig.getNumConfigs(); i++) {
 			samplingPR.initRecordingRun(samplingSimConfig, i);
 
-			Experiment experiment = getExperiment(state, 
-					samplingPR, 
-					i, 
-					samplingSimConfig, 
-					getWorkStationListeners(), 
+			Experiment experiment = getExperiment(state,
+					samplingPR,
+					i,
+					samplingSimConfig,
+					getWorkStationListeners(),
 					null);
 			experiment.runExperiment();
 //			if (hasTracker()) { getTracker().clearCurrentExperiment(); }
@@ -245,14 +235,10 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 			final JasimaNichedIndividual ind,
 			final int subpopulation,
 			final int threadnum) {
-		configureRule(state,
-				getRule(),
-				getTracker(),
-				new Individual[] {ind},
-				new int[] {subpopulation},
-				threadnum);
+		configureRule(state, getRule(), getTracker(), new Individual[] {ind}, new int[] {subpopulation}, threadnum);
+		configureRule(state, rankRule, getTracker(), new Individual[] {ind}, new int[] {subpopulation}, threadnum);
 		initialiseTracker(getTracker());
-		
+
 		for (int i = 0; i < samplingSimConfig.getNumConfigs(); i++) {
 			samplingPR.initTrackedRun(samplingSimConfig, i);
 
@@ -304,14 +290,15 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 	}
 
 	public void evaluateNiched(final EvolutionState state,
-			final JasimaGPIndividual ind,
+			final Individual ind,
 			final int nicheIndex,
 			final int threadnum) {
 		if (!(ind instanceof JasimaNichedIndividual)) {
 			state.output.fatal("The niche individual must be of type JasimaNichedIndividual: " + ind.getClass());
 		}
 
-		NicheFitness fitness = (NicheFitness) getFitness();
+		JasimaNichedIndividual nichedInd = (JasimaNichedIndividual) ind;
+		NicheFitnessBase fitness = (NicheFitnessBase) getFitness();
 
 		configureRule(state,
 				getRule(),
@@ -319,21 +306,25 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 				new Individual[] {ind},
 				new int[] {0},
 				threadnum);
-		initialiseTracker(getTracker());
 
 		for (int i = 0; i < nicheSimConfigs[nicheIndex].getNumConfigs(); i++) {
-			Experiment experiment = getExperiment(state, getRule(), i, getSimConfig(), getWorkStationListeners(), getTracker());
+			Experiment experiment = getExperiment(state,
+					getRule(),
+					i,
+					nicheSimConfigs[nicheIndex],
+					getWorkStationListeners(),
+					null);
 			experiment.runExperiment();
 
-			fitness.accumulateFitness(i, nicheSimConfigs[nicheIndex], (JasimaGPIndividual) ind, experiment.getResults());
+			fitness.accumulateFitness(i, nicheSimConfigs[nicheIndex], nichedInd, experiment.getResults());
 
 			clearForExperiment(getWorkStationListeners());
 		}
 
-		fitness.setNichedFitness(state, nicheSimConfigs[nicheIndex], (JasimaNichedIndividual) ind);
+		fitness.setNichedFitness(state, nicheIndex, nicheSimConfigs[nicheIndex], nichedInd);
 		fitness.clear();
 
-		clearForRun(getTracker());
+		clearForRun(fitness);
 	}
 
 	public void updateFitnesses(final EvolutionState state,
@@ -345,7 +336,7 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 			List<JasimaNichedIndividual> sortedInds = Arrays.stream(subpop.individuals)
 					.map(x -> (JasimaNichedIndividual) x)
 					.collect(Collectors.toList());
-			
+
 			Collections.sort(sortedInds, new Comparator<JasimaNichedIndividual>() {
 				@Override
 				public int compare(JasimaNichedIndividual ind1, JasimaNichedIndividual ind2) {
@@ -404,9 +395,6 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 				for (int k = 0; k < nicheIndexDistancePairs.size(); k++) {
 					Pair<Integer, Double> nicheIndexDistance = nicheIndexDistancePairs.get(i);
 
-					// TODO This is incorrect, everything is a zero. 
-					System.out.println(nicheIndexDistance.b);
-					
 					if (nicheIndexDistance.b > nicheRadius) {
 						break;
 					} else {
@@ -415,9 +403,6 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 						} else {
 							inOvercrowdedNiche = false;
 							nicheCapacities[nicheIndexDistance.a]++;
-							
-							// TODO 
-							System.out.println(nicheCapacities[nicheIndexDistance.a]);
 						}
 					}
 				}
@@ -438,7 +423,6 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 		int[] decisions1 = ind1.getRuleDecisionVector();
 		int[] decisions2 = ind2.getRuleDecisionVector();
 
-		// FIXME keep this until we've determined that there's no bugs with the code.
 		if (decisions1.length != decisions2.length) {
 			throw new RuntimeException(String.format("The decision vectors are not the same length: %d, %d", decisions1.length, decisions2.length));
 		}
@@ -458,35 +442,59 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 	public SamplingPR<Individual> getSamplingPR() {
 		return samplingPR;
 	}
-	
+
 	public JasimaNichedIndividual[] getCurGenNichedInds() {
 		return curGenNichedInds;
 	}
-	
+
 	public double[] getCurGenNichedIndsFitness() {
 		return curGenNichedIndsFitness;
+	}
+
+	public int getNumNiches() {
+		return numNiches;
+	}
+
+	@Override
+	protected void rotateSimSeed() {
+		super.rotateSimSeed();
+
+		for (int i = 0; i < numNiches; i++) {
+			nicheSimConfigs[i] = nicheSimConfigFactories[i].generateSimConfig();
+		}
+		samplingSimConfig = samplingSimConfigFactory.generateSimConfig();
+	}
+
+	@Override
+	protected void resetSimSeed() {
+		super.resetSimSeed();
+
+		for (int i = 0; i < numNiches; i++) {
+			nicheSimConfigs[i].reset();
+		}
+		samplingSimConfig.reset();
 	}
 
 	@Override
 	public Object clone() {
 		JasimaNichedProblem newObject = (JasimaNichedProblem) super.clone();
-		
+
 		newObject.numNiches = this.numNiches;
 		newObject.nicheRadius = this.nicheRadius;
 		newObject.nicheCapacity = this.nicheCapacity;
 		newObject.nicheSimConfigFactories = this.nicheSimConfigFactories;
 		newObject.nicheSimConfigs = this.nicheSimConfigs;
-		
+
 		newObject.samplingFactory = this.samplingFactory;
 		newObject.samplingPR = this.samplingPR;
 		newObject.samplingRule = this.samplingRule;
 		newObject.samplingSeed = this.samplingSeed;
-		
+
 		newObject.samplingSimConfigFactory = this.samplingSimConfigFactory;
 		newObject.samplingSimConfig = this.samplingSimConfig;
-		
+
 		newObject.rankRule = this.rankRule;
-		
+
 		newObject.curGenNichedInds = this.curGenNichedInds;
 		newObject.curGenNichedIndsFitness = this.curGenNichedIndsFitness;
 

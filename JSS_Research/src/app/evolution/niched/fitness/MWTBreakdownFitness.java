@@ -1,6 +1,7 @@
 package app.evolution.niched.fitness;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -11,21 +12,20 @@ import app.simConfig.DynamicBreakdownSimConfig;
 import app.simConfig.SimConfig;
 import app.stat.WeightedTardinessStat;
 import ec.EvolutionState;
-import ec.gp.koza.KozaFitness;
 
-public class MWTBreakdownFitness extends NicheFitness {
+public class MWTBreakdownFitness extends NicheFitnessBase {
 
 	private static final int NOT_SET = -1;
 
 //	private JasimaNichedIndividual[] nichedInds;
 //	private double[] nichedIndFitness;
 	private JasimaNichedProblem problem;
-	
+
 	private List<Integer> nicheIndex;
 	private int numNiches = NOT_SET;
 
-	private JasimaNichedIndividual currentInd = null;
-	private double currentIndFitness = 0;
+//	private JasimaNichedIndividual currentInd = null;
+//	private double currentIndFitness = 0;
 
 	@Override
 	public void init(final EvolutionState state, final SimConfig config, final int threadnum) {
@@ -37,57 +37,63 @@ public class MWTBreakdownFitness extends NicheFitness {
 	}
 
 	@Override
-	public void updateArchive(final EvolutionState state, final JasimaNichedIndividual[] nichedInds, final SimConfig config, final int threadnum) {
-		for (int i = 0; i < state.population.archive.length; i++) {
-			// The individual's in the current generation archive have already been evaluated in the
-			// niche specific training set, so use the fitnesses from those.
-			JasimaNichedIndividual nichedInd = (JasimaNichedIndividual) state.population.archive[i];
-
-			if (nichedInd == null || nichedInds[i].getNichedFitness().betterThan(nichedInd.getNichedFitness())) {
-				state.population.archive[i] = nichedInds[i];
-			}
-		}
-	}
-
-	@Override
-	public double getFitness(int expIndex, SimConfig config, JasimaGPIndividual ind, Map<String, Object> results) {
+	public double getFitness(final int expIndex,
+			final SimConfig config,
+			final JasimaGPIndividual ind,
+			final Map<String, Object> results) {
 		double mwt = WeightedTardinessStat.getMeanWeightedTardiness(results);
 
-		// Individual hasn't been initialised yet.
-		if (currentInd == null) {
-			currentInd = (JasimaNichedIndividual) ind;
-			currentIndFitness = 0.0;
-		}
-
-		currentIndFitness += mwt;
-		int currentNiche = nicheIndex.get(expIndex);
-
-		// If its the last index for the specific niche,
-		// then need to compare the fitness of the individual on the niche
-		// to the current generation niched individual.
-		if (expIndex == config.getNumConfigs() - 1 ||
-				nicheIndex.get(expIndex) != nicheIndex.get(expIndex + 1)) {
-			JasimaNichedIndividual[] nichedInds = problem.getCurGenNichedInds();
-			double[] nichedIndsFitness = problem.getCurGenNichedIndsFitness();
-			
-			// Store the individual's fitness if the fitness is good enough.
-			if (nichedInds[currentNiche] == null || nichedIndsFitness[currentNiche] > currentIndFitness) {
-				nichedInds[currentNiche] = currentInd;
-				nichedIndsFitness[currentNiche] = currentIndFitness;
-			}
-
-			currentInd = null;
-			currentIndFitness = 0.0; // Just making sure.
-		}
+//		// Individual hasn't been initialised yet.
+//		if (currentInd == null) {
+//			currentInd = (JasimaNichedIndividual) ind;
+//			currentIndFitness = 0.0;
+//		}
+//
+//		currentIndFitness += mwt;
+//		int currentNiche = nicheIndex.get(expIndex);
+//
+//		// If its the last index for the specific niche,
+//		// then need to compare the fitness of the individual on the niche
+//		// to the current generation niched individual.
+//		if (expIndex == config.getNumConfigs() - 1 ||
+//				nicheIndex.get(expIndex) != nicheIndex.get(expIndex + 1)) {
+//			JasimaNichedIndividual[] nichedInds = problem.getCurGenNichedInds();
+//			double[] nichedIndsFitness = problem.getCurGenNichedIndsFitness();
+//
+//			// Store the individual's fitness if the fitness is good enough.
+//			if (nichedInds[currentNiche] == null || nichedIndsFitness[currentNiche] > currentIndFitness) {
+//				nichedInds[currentNiche] = currentInd;
+//				nichedIndsFitness[currentNiche] = currentIndFitness;
+//			}
+//
+//			currentInd = null;
+//			currentIndFitness = 0.0; // Just making sure.
+//		}
 
 		return mwt;
 	}
 
-	@Override
-	public void setNichedFitness(final EvolutionState state, final SimConfig config, final JasimaNichedIndividual ind) {
-		double finalFitness = getFinalFitness(state, config, ind);
+	// Update the current generation niched individuals.
+	public void updateNiches(final EvolutionState state, final SimConfig config, final JasimaNichedIndividual ind) {
+		List<Double> fitnesses = getInstanceFitnesses();
 
-		((KozaFitness) ind.getNichedFitness()).setStandardizedFitness(state, finalFitness);
+		double[] nichedFitnesses = new double[numNiches];
+		Arrays.fill(nichedFitnesses, 0.0);
+
+		for (int i = 0; i < fitnesses.size(); i++) {
+			int index = nicheIndex.get(i);
+			nichedFitnesses[index] += fitnesses.get(i);
+		}
+
+		JasimaNichedIndividual[] nichedInds = problem.getCurGenNichedInds();
+		double[] nichedIndsFitness = problem.getCurGenNichedIndsFitness();
+
+		for (int i = 0; i < numNiches; i++) {
+			if (nichedInds[i] == null || nichedFitnesses[i] < nichedIndsFitness[i]) {
+				nichedInds[i] = ind;
+				nichedIndsFitness[i] = nichedFitnesses[i];
+			}
+		}
 	}
 
 	public int getNumNiches(SimConfig config) {
@@ -123,8 +129,8 @@ public class MWTBreakdownFitness extends NicheFitness {
 	public void clear() {
 		super.clear();
 
-		currentInd = null;
-		currentIndFitness = 0;
+//		currentInd = null;
+//		currentIndFitness = 0;
 	}
 
 }

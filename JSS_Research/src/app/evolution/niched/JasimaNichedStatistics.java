@@ -48,7 +48,7 @@ public class JasimaNichedStatistics extends SimpleStatistics {
 		// Print out the niched individuals of the current generation.
         if (doGeneration) { state.output.println("Best Niched Individual:",statisticslog); }
         for (int i = 0; i < state.population.archive.length; i++) {
-        	Individual nichedInd = state.population.archive[i];
+        	JasimaNichedIndividual nichedInd = (JasimaNichedIndividual) state.population.archive[i];
         	if (doGeneration) {
         		state.output.println("Niche " + i + ":", statisticslog);
         		nichedInd.printIndividualForHumans(state, statisticslog);
@@ -56,9 +56,9 @@ public class JasimaNichedStatistics extends SimpleStatistics {
 
         	if (doMessage && !silentPrint) {
         		if (nichedInd.evaluated) {
-        			state.output.message("Niche " + i + " best fitness of generation " + nichedInd.fitness.fitnessToStringForHumans());
+        			state.output.message("Niche " + i + " best fitness of generation " + nichedInd.getNichedFitness(i).fitnessToStringForHumans());
         		} else {
-        			state.output.message("Niche " + i + " best fitness of generation (evaluated flag not set): " + nichedInd.fitness.fitnessToStringForHumans());
+        			state.output.message("Niche " + i + " best fitness of generation (evaluated flag not set): " + nichedInd.getNichedFitness(i).fitnessToStringForHumans());
         		}
         	}
 
@@ -95,13 +95,13 @@ public class JasimaNichedStatistics extends SimpleStatistics {
 		// Print the niched individual of the last generation.
         if (doFinal) { state.output.println("\nBest Niched Individual:",statisticslog); }
         for (int i = 0; i < state.population.archive.length; i++) {
-        	Individual nichedInd = state.population.archive[i];
+        	JasimaNichedIndividual nichedInd = (JasimaNichedIndividual) state.population.archive[i];
         	if (doFinal) {
         		state.output.println("Niche " + i + ":", statisticslog);
         		nichedInd.printIndividualForHumans(state, statisticslog);
     		}
 
-        	if (doMessage && !silentPrint) { state.output.message("Niche " + i + " best fitness of run " + nichedInd.fitness.fitnessToStringForHumans()); }
+        	if (doMessage && !silentPrint) { state.output.message("Niche " + i + " best fitness of run " + nichedInd.getNichedFitness(i).fitnessToStringForHumans()); }
 
         	if (doFinal && doPerGenerationDescription) {
                 if (state.evaluator.p_problem instanceof SimpleProblemForm) {

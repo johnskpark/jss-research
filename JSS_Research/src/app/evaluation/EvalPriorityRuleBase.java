@@ -1,6 +1,5 @@
 package app.evaluation;
 
-import java.util.Arrays;
 import java.util.List;
 
 import app.Clearable;
@@ -9,7 +8,6 @@ import app.node.INode;
 import app.node.NodeData;
 import app.tracker.JasimaExperimentTracker;
 import jasima.core.util.observer.NotifierListener;
-import jasima.shopSim.core.Job;
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
 import jasima.shopSim.core.WorkStation;

@@ -1,6 +1,5 @@
 package app.evolution;
 
-import java.util.Arrays;
 import java.util.List;
 
 import app.IJasimaWorkStationListener;
@@ -8,7 +7,6 @@ import app.TrackedRuleBase;
 import app.tracker.JasimaExperimentTracker;
 import ec.EvolutionState;
 import ec.Individual;
-import jasima.shopSim.core.Job;
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
 import jasima.shopSim.core.WorkStation;
@@ -61,13 +59,13 @@ public abstract class GPPriorityRuleBase extends TrackedRuleBase<Individual> imp
 //
 //			if (q.size() == 0) {
 //				List<PrioRuleTarget> entryRankings = Arrays.asList(new PrioRuleTarget[] {entry});
-//				jobSelected(entry, entryRankings, q);				
+//				jobSelected(entry, entryRankings, q);
 //			} else {
 //				Job[] entryByPrio = new Job[q.size()];
 //				q.getAllElementsInOrder(entryByPrio);
 //
 //				List<PrioRuleTarget> entryRankings = Arrays.asList(entryByPrio);
-//				
+//
 //				jobSelected(entry, entryRankings, q);
 //			}
 //
@@ -83,7 +81,7 @@ public abstract class GPPriorityRuleBase extends TrackedRuleBase<Individual> imp
 			getTracker().addSelectedEntry(this, entry);
 			getTracker().addEntryRankings(this, entryRankings);
 		}
-		
+
 		clear();
 	}
 
