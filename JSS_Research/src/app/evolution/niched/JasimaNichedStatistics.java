@@ -56,9 +56,9 @@ public class JasimaNichedStatistics extends SimpleStatistics {
 
         	if (doMessage && !silentPrint) {
         		if (nichedInd.evaluated) {
-        			state.output.message("Niche " + i + " best fitness of generation " + nichedInd.getNichedFitness(i).fitnessToStringForHumans());
+        			state.output.message("Niche " + i + " best fitness of generation: " + nichedInd.getNichedFitness(i));
         		} else {
-        			state.output.message("Niche " + i + " best fitness of generation (evaluated flag not set): " + nichedInd.getNichedFitness(i).fitnessToStringForHumans());
+        			state.output.message("Niche " + i + " best fitness of generation (evaluated flag not set): " + nichedInd.getNichedFitness(i));
         		}
         	}
 
@@ -101,7 +101,7 @@ public class JasimaNichedStatistics extends SimpleStatistics {
         		nichedInd.printIndividualForHumans(state, statisticslog);
     		}
 
-        	if (doMessage && !silentPrint) { state.output.message("Niche " + i + " best fitness of run " + nichedInd.getNichedFitness(i).fitnessToStringForHumans()); }
+        	if (doMessage && !silentPrint) { state.output.message("Niche " + i + " best fitness of run: " + nichedInd.getNichedFitness(i)); }
 
         	if (doFinal && doPerGenerationDescription) {
                 if (state.evaluator.p_problem instanceof SimpleProblemForm) {

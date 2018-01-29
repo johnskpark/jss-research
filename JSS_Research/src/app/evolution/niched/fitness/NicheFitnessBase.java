@@ -5,7 +5,6 @@ import app.evolution.JasimaGPIndividual;
 import app.evolution.niched.JasimaNichedIndividual;
 import app.simConfig.SimConfig;
 import ec.EvolutionState;
-import ec.gp.koza.KozaFitness;
 
 public abstract class NicheFitnessBase extends JasimaFitnessBase<JasimaGPIndividual> {
 
@@ -29,7 +28,7 @@ public abstract class NicheFitnessBase extends JasimaFitnessBase<JasimaGPIndivid
 			final JasimaNichedIndividual reproducible) {
 		double finalFitness = getFinalFitness(state, config, reproducible);
 
-		((KozaFitness) reproducible.getNichedFitness(nicheIndex)).setStandardizedFitness(state, finalFitness);
+		reproducible.setNichedFitness(nicheIndex, finalFitness);
 	}
 
 	public void updateArchive(final EvolutionState state,
@@ -40,7 +39,7 @@ public abstract class NicheFitnessBase extends JasimaFitnessBase<JasimaGPIndivid
 			// niche specific training set, so use the fitnesses from those.
 			JasimaNichedIndividual archiveInd = (JasimaNichedIndividual) state.population.archive[i];
 
-			if (archiveInd == null || nichedInds[i].getNichedFitness(i).betterThan(archiveInd.getNichedFitness(i))) {
+			if (archiveInd == null || nichedInds[i].getNichedFitness(i) < archiveInd.getNichedFitness(i)) {
 				state.population.archive[i] = nichedInds[i];
 			}
 		}

@@ -1,8 +1,9 @@
 package app.evolution.niched;
 
+import java.util.Arrays;
+
 import app.evolution.JasimaGPIndividual;
 import ec.EvolutionState;
-import ec.Fitness;
 import ec.util.Parameter;
 
 public class JasimaNichedIndividual extends JasimaGPIndividual {
@@ -11,7 +12,9 @@ public class JasimaNichedIndividual extends JasimaGPIndividual {
 
 	public static final String P_NICHED_FITNESS = "niched-fitness";
 
-	private Fitness[] nichedFitness;
+	private double[] nichedFitnesses;
+	private int numNiches;
+	
 	private int[] jobRanks;
 
 	@Override
@@ -19,16 +22,19 @@ public class JasimaNichedIndividual extends JasimaGPIndividual {
 		super.setup(state, base);
 
 		JasimaNichedProblem problem = (JasimaNichedProblem) state.evaluator.p_problem;
-		nichedFitness = new Fitness[problem.getNumNiches()];
-
-		for (int i = 0; i < problem.getNumNiches(); i++) {
-			nichedFitness[i] = (Fitness) state.parameters.getInstanceForParameter(base.push(P_NICHED_FITNESS), null, Fitness.class);
-			nichedFitness[i].setup(state, base.push(P_NICHED_FITNESS));
-		}
+		numNiches = problem.getNumNiches();
 	}
 
-	public Fitness getNichedFitness(int index) {
-		return nichedFitness[index];
+	public void initNichedFitness() {
+		nichedFitnesses = new double[numNiches];
+	}
+	
+	public double getNichedFitness(int index) {
+		return nichedFitnesses[index];
+	}
+	
+	public void setNichedFitness(int index, double fitness) {
+		nichedFitnesses[index] = fitness;
 	}
 
 	public int[] getRuleDecisionVector() {
@@ -50,6 +56,18 @@ public class JasimaNichedIndividual extends JasimaGPIndividual {
 //        nichedFitness.printFitnessForHumans(state,log); // FIXME
 
         printTrees(state,log);
+	}
+	
+	@Override
+	public Object clone() {
+		JasimaNichedIndividual newObject = (JasimaNichedIndividual) super.clone();
+		
+		newObject.nichedFitnesses = Arrays.copyOf(this.nichedFitnesses, this.nichedFitnesses.length);
+		newObject.numNiches = this.numNiches;
+		
+		newObject.jobRanks = Arrays.copyOf(this.jobRanks, this.jobRanks.length);
+		
+		return newObject;
 	}
 
 }

@@ -2,6 +2,7 @@ package app.simConfig;
 
 import java.util.Random;
 
+import app.evolution.niched.JasimaNichedProblem;
 import app.jasimaShopSim.models.DynamicBreakdownShopExperiment;
 import jasima.core.util.observer.NotifierListener;
 import jasima.shopSim.core.JobShopExperiment;
@@ -42,6 +43,11 @@ public class ExperimentGenerator {
 		long jobValue = simConfig.getLongValueForJob();
 		long machineValue = simConfig.getLongValueForMachine();
 
+		// TODO temporary code. 
+		if (simConfig.equals(JasimaNichedProblem.TEST)) {
+			System.out.println(simConfig + "," + jobValue + "," + machineValue);
+		}
+		
 		experiment.setInitialSeed(jobValue);
 		experiment.setNumMachines(simConfig.getNumMachines(index));
 		experiment.setUtilLevel(simConfig.getUtilLevel(index));

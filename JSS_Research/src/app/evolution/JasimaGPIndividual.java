@@ -21,5 +21,12 @@ public class JasimaGPIndividual extends GPIndividual implements JasimaReproducib
 	public void setEvaluated(boolean evaluated) {
 		this.evaluated = evaluated;
 	}
+	
+	@Override
+	public Object clone() {
+		Object newObject = super.clone();
+		
+		return newObject;
+	}
 
 }

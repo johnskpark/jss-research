@@ -12,7 +12,6 @@ import app.simConfig.DynamicBreakdownSimConfig;
 import app.simConfig.SimConfig;
 import app.stat.WeightedTardinessStat;
 import ec.EvolutionState;
-import ec.gp.koza.KozaFitness;
 
 public class NormMWTBreakdownFitness extends NicheFitnessBase {
 
@@ -94,13 +93,6 @@ public class NormMWTBreakdownFitness extends NicheFitnessBase {
 				nichedIndsFitness[i] = nichedFitnesses[i];
 			}
 		}
-	}
-
-	@Override
-	public void setNichedFitness(final EvolutionState state, final int nicheIndex, final SimConfig config, final JasimaNichedIndividual ind) {
-		double finalFitness = getFinalFitness(state, config, ind);
-
-		((KozaFitness) ind.getNichedFitness(nicheIndex)).setStandardizedFitness(state, finalFitness);
 	}
 
 	public int getNumNiches(SimConfig config) {
