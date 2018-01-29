@@ -168,7 +168,7 @@ public abstract class JasimaGPProblem extends GPProblem {
 		// Apply the benchmark/reference rule to the problem instances.
 		if (hasReferenceRule()) {
 			clearReference();
-			evaluateReference();
+			evaluateReference(getSimConfig());
 		}
 	}
 
@@ -178,7 +178,7 @@ public abstract class JasimaGPProblem extends GPProblem {
 		// Is empty for now. Populate with common after evaluation procedure.
 	}
 
-	protected void evaluateReference() {
+	protected void evaluateReference(SimConfig simConfig) {
 		if (!hasReferenceRule()) {
 			throw new RuntimeException("Cannot evaluate reference rule. Reference rule is not initialised.");
 		}
@@ -186,18 +186,18 @@ public abstract class JasimaGPProblem extends GPProblem {
 			throw new RuntimeException("The reference rule has been previously evaluated. Please clear the statistics for the reference rule beforehand.");
 		}
 
-		for (int expIndex = 0; expIndex < getSimConfig().getNumConfigs(); expIndex++) {
+		for (int expIndex = 0; expIndex < simConfig.getNumConfigs(); expIndex++) {
 			Experiment experiment = ExperimentGenerator.getExperiment(simConfig,
 					referenceRule,
 					expIndex);
 
 			experiment.runExperiment();
 
-			double result = referenceFitness.getFitness(expIndex, getSimConfig(), null, experiment.getResults());
+			double result = referenceFitness.getFitness(expIndex, simConfig, null, experiment.getResults());
 			referenceInstStats.add(result);
 		}
 
-		resetSimSeed();
+		simConfig.reset();
 	}
 
 	protected void clearReference() {

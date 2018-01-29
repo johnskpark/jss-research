@@ -90,12 +90,6 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 			nicheSimConfigFactories[i] = (ISimConfigEvolveFactory) state.parameters.getInstanceForParameterEq(nicheParam.push(P_SIMULATOR), null, ISimConfigEvolveFactory.class);
 			nicheSimConfigFactories[i].setup(state, nicheParam.push(P_SIMULATOR));
 			nicheSimConfigs[i] = nicheSimConfigFactories[i].generateSimConfig();
-			
-			// TODO temporary code. 
-			if (i == 0) {
-				TEST = nicheSimConfigs[i];
-				System.out.println(i + ": " + nicheSimConfigs[i]);
-			}
 		}
 
 		nicheRadius = state.parameters.getDouble(base.push(P_NICHE_RADIUS), null);
@@ -167,6 +161,11 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 		
 		// The reference MWT values are from non-niched problem instances.
 		for (int i = 0; i < numNiches; i++) {
+			if (hasReferenceRule()) {
+				clearReference();
+				evaluateReference(nicheSimConfigs[i]);
+			}
+			
 			evaluateNiched(state, curGenNichedInds[i], i, threadnum);
 			
 			if (state.population.archive[i] != null) {
@@ -219,7 +218,6 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 			getFitness().accumulateFitness(i, getSimConfig(), (JasimaGPIndividual) ind, experiment.getResults());
 
 			clearForExperiment(getWorkStationListeners());
-//			if (hasTracker()) { getTracker().clearCurrentExperiment(); }
 		}
 
 		getFitness().setFitness(state, getSimConfig(), (JasimaGPIndividual) ind);
@@ -244,7 +242,6 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 					getWorkStationListeners(),
 					null);
 			experiment.runExperiment();
-//			if (hasTracker()) { getTracker().clearCurrentExperiment(); }
 		}
 
 		samplingSimConfig.reset();

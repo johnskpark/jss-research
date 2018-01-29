@@ -5,7 +5,7 @@
 parent.0 = koza.params
 parent.1 = holthaus_niched.params
 
-pop.subpop.0.species.ind = app.evolution.niched.JasimaGPIndividual
+pop.subpop.0.species.ind = app.evolution.JasimaGPIndividual
 
 # the next four items are already defined in koza.params, but we
 # put them here to be clear.
@@ -63,7 +63,7 @@ gp.fs.0.func.17.nc = nc0
 gp.fs.0.func.18 = app.evolution.node.hunt.ScoreNumberWaitingNextMachine
 gp.fs.0.func.18.nc = nc0
 
-stat = app.evolution.niched.JasimaSimpleStatistics
+stat = app.evolution.simple.JasimaSimpleStatistics
 
 eval.problem = app.evolution.simple.JasimaSimpleProblem
 eval.problem.data = app.evolution.JasimaGPData
@@ -73,8 +73,6 @@ eval.problem.reference-fitness = app.evolution.simple.fitness.MWTFitness
 
 eval.problem.rule = app.evolution.priorityRules.BasicPriorityRule
 eval.problem.fitness = app.evolution.simple.fitness.NormMWTFitness
-
-#eval.problem.simulator = app.simConfig.taillardConfig.EvolveFactory
 
 eval.problem.workstations = 1
 eval.problem.workstation.0 = app.listener.hunt.EvolveFactory
