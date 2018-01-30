@@ -64,7 +64,7 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 
 	private JasimaNichedIndividual[] curGenNichedInds;
 	private double[] curGenNichedIndsFitness;
-	
+
 	public static SimConfig TEST = null;
 
 	@Override
@@ -140,10 +140,10 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 
 		Arrays.fill(curGenNichedInds, null);
 		Arrays.fill(curGenNichedIndsFitness, Double.POSITIVE_INFINITY);
-		
+
 		for (int i = 0; i < state.population.subpops.length; i++) {
 			Subpopulation subpop = state.population.subpops[i];
-			
+
 			Arrays.stream(subpop.individuals).forEach(x -> ((JasimaNichedIndividual) x).initNichedFitness());
 		}
 
@@ -158,16 +158,16 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 		NicheFitnessBase nicheFitness = (NicheFitnessBase) getFitness();
 
 		// Update the nicheFitnesses of the current generation niched individuals.
-		
+
 		// The reference MWT values are from non-niched problem instances.
 		for (int i = 0; i < numNiches; i++) {
 			if (hasReferenceRule()) {
 				clearReference();
 				evaluateReference(nicheSimConfigs[i]);
 			}
-			
+
 			evaluateNiched(state, curGenNichedInds[i], i, threadnum);
-			
+
 			if (state.population.archive[i] != null) {
 				evaluateNiched(state, state.population.archive[i], i, threadnum);
 			}
@@ -342,13 +342,15 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 		fitness.clear();
 
 		nicheSimConfigs[nicheIndex].reset();
-		
+
 		clearForRun(fitness);
 	}
 
 	public void updateFitnesses(final EvolutionState state,
 			final int threadnum) {
 		// Apply the clearing algorithm here.
+		int numInOvercrowded = 0;
+
 		for (int i = 0; i < state.population.subpops.length; i++) {
 			Subpopulation subpop = state.population.subpops[i];
 
@@ -429,9 +431,12 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 				if (inOvercrowdedNiche) {
 					// Assign the worst fitness to the individual.
 					((KozaFitness) ind.getFitness()).setStandardizedFitness(state, Double.MAX_VALUE);
+					numInOvercrowded++;
 				}
 			}
 		}
+
+		state.output.message("Number of individuals in overcrowded niche: " + numInOvercrowded);
 	}
 
 	protected boolean atMaxCapacity(int[] capacities, int index) {

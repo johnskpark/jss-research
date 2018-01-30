@@ -3,7 +3,7 @@
 # See the file "LICENSE" for more information
 
 parent.0 = koza.params
-parent.1 = holthaus_niched.params
+parent.1 = holthaus4_niched.params
 
 pop.subpop.0.species.ind = app.evolution.niched.JasimaNichedIndividual
 pop.subpop.0.species.ind.niched-fitness = ec.gp.koza.KozaFitness
@@ -69,9 +69,9 @@ stat = app.evolution.niched.JasimaNichedStatistics
 eval.problem = app.evolution.niched.JasimaNichedProblem
 eval.problem.data = app.evolution.JasimaGPData
 
-# FIXME placeholder values for now.
-eval.problem.niched-radius = 0.5
-eval.problem.niched-capacity = 3
+# This is based off the parameter settings used by Yi.
+eval.problem.niched-radius = 1
+eval.problem.niched-capacity = 1
 
 eval.problem.reference-rule = app.priorityRules.WATCPR
 eval.problem.reference-fitness = app.evolution.simple.fitness.MWTFitness
