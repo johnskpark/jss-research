@@ -9,38 +9,35 @@ import app.ITrackedRule;
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
 
-// TODO trying to figure out how to do this efficiently.
-// Also, need to record which job that's voted for by the individual.
 public class JasimaExperiment<T> {
 
-	private Map<ITrackedRule<T>, SolverData<T>> ruleMap;
+	private List<ITrackedRule<T>> solvers;
+	private List<SolverData<T>> solverData;
 
 	private List<JasimaDecision<T>> experimentDecisions;
 	private Map<DecisionEvent, JasimaDecision<T>> experimentDecisionMap;
 
 	private JasimaDecision<T> currentDecision;
-	private Map<ITrackedRule<T>, JasimaPriorityStat[]> currentStats;
+	private JasimaPriorityStat[][] currentStats;
 
 	/**
 	 * Initialise the experiment data with the solvers and the components that make up the solvers.
 	 */
 	public JasimaExperiment(List<ITrackedRule<T>> solvers) {
-		ruleMap = new HashMap<>();
+		this.solvers = solvers;
+		this.solverData = new ArrayList<>();
 
 		for (ITrackedRule<T> solver : solvers) {
-			ruleMap.put(solver, new SolverData<T>(solver));
+			solverData.add(new SolverData<T>(solver));
 		}
 
 		experimentDecisions = new ArrayList<>();
 		experimentDecisionMap = new HashMap<>();
-
-		currentStats = new HashMap<>();
 	}
 
 	/**
 	 * Load up a dispatching decision to the experiment with the specified priority queue.
 	 */
-	// TODO right, it seems that this doesn't get called the second time, which is a bug.
 	public void addDispatchingDecision(PriorityQueue<?> q) {
 		DecisionEvent event = getDecisionEvent(q);
 		// Ensure that duplicate dispatching decisions are not added.
@@ -53,24 +50,24 @@ public class JasimaExperiment<T> {
 			entries.add(q.get(i));
 		}
 
-		currentStats = new HashMap<>();
+		currentStats = new JasimaPriorityStat[solvers.size()][];
 
-		for (ITrackedRule<T> solver : ruleMap.keySet()) {
-			SolverData<T> data = ruleMap.get(solver);
+		for (int i = 0; i < solvers.size(); i++) {
+			SolverData<T> data = solverData.get(i);
 
 			JasimaPriorityStat[] stats = new JasimaPriorityStat[data.getRuleComponents().size()];
 
-			for (int i = 0; i < data.getRuleComponents().size(); i++) {
+			for (int j = 0; j < data.getRuleComponents().size(); j++) {
 				JasimaPriorityStat stat = new JasimaPriorityStat(q.size());
 
-				data.addPriorityStat(i, stat);
-				stats[i] = stat;
+				data.addPriorityStat(j, stat);
+				stats[j] = stat;
 			}
 
-			currentStats.put(solver, stats);
+			currentStats[i] = stats;
 		}
 
-		currentDecision = new JasimaDecision<T>(entries, ruleMap, currentStats);
+		currentDecision = new JasimaDecision<T>(entries, solvers, solverData, currentStats);
 		experimentDecisions.add(currentDecision);
 		experimentDecisionMap.put(event, currentDecision);
 	}
@@ -85,7 +82,9 @@ public class JasimaExperiment<T> {
 	 * Add in the priority assigned to an entry by one of the individuals in the experiment.
 	 */
 	public void addPriority(ITrackedRule<T> solver, int index, T rule, PrioRuleTarget entry, double priority) {
-		JasimaPriorityStat[] stats = currentStats.get(solver);
+		int solverIndex = solvers.indexOf(solver);
+		
+		JasimaPriorityStat[] stats = currentStats[solverIndex];
 
 		stats[index].addPriority(entry, priority);
 	}
@@ -114,11 +113,15 @@ public class JasimaExperiment<T> {
 	// Getters
 
 	public List<T> getRuleComponents(ITrackedRule<T> solver) {
-		return ruleMap.get(solver).getRuleComponents();
+		int index = solvers.indexOf(solver);
+		
+		return solverData.get(index).getRuleComponents();
 	}
 
 	public List<JasimaDecisionMaker> getDecisionMakers(ITrackedRule<T> solver) {
-		return ruleMap.get(solver).getDecisionMakers();
+		int index = solvers.indexOf(solver);
+		
+		return solverData.get(index).getDecisionMakers();
 	}
 
 	public List<JasimaDecision<T>> getDecisions() {

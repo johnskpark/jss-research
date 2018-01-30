@@ -124,5 +124,10 @@ public class MBSamplingPR<T> extends SamplingPR<T> {
 			}
 		}
 	}
+	
+	@Override
+	public void clear() {
+		super.clear();
+	}
 
 }

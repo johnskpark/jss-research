@@ -183,7 +183,11 @@ public class SamplingPR<T> extends PR implements Clearable {
 
 	@Override
 	public void clear() {
-		// TODO write the code here.
+		recordedEvents.clear();
+		sampledEvents.clear();
+		
+		currentRecording.clear();
+		currentSample.clear();
 	}
 
 }
