@@ -2,6 +2,126 @@
 <evaluationConfig>
 
 <!-- Rule file definitions -->
+<!-- The niched approach -->
+<!--
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>mb_niched/bl_niched_0.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>mb_niched/bl_niched_1.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>mb_niched/bl_niched_2.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>mb_niched/bl_niched_3.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>mb_niched/bl_niched_4.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>mb_niched/bl_niched_5.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>mb_niched/bl_niched_6.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>mb_niched/bl_niched_7.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+-->
+
+<!-- The baseline approach -->
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>mb_niched/bl_baseline.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+<!--
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>mb_niched/bl_baseline_0.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>mb_niched/bl_baseline_025_1.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>mb_niched/bl_baseline_025_5.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>mb_niched/bl_baseline_025_10.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>mb_niched/bl_baseline_05_1.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>mb_niched/bl_baseline_05_5.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>mb_niched/bl_baseline_05_10.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+-->
+
+<!-- The man-made approach -->
+<!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EvalWATC</solverClass>
 	</solverConfig>
@@ -25,6 +145,7 @@
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EvalWSPT</solverClass>
 	</solverConfig>
+-->
 
 	<datasetConfig>
 		<datasetClass>app.simConfig.holthausConfig4.EvalFactory</datasetClass>
@@ -36,7 +157,7 @@
 
 <!-- Output file definition -->
 	<outputConfig>
-	    <outputFile>breakdown_holthaus4_test_output.csv</outputFile>
+	    <outputFile>breakdown_holthaus4_baseline_output.csv</outputFile>
 	</outputConfig>
 
 <!-- Temporary output file. -->
@@ -72,18 +193,16 @@
 		<fitnessClass>app.evaluation.fitness.StopAfterNumJobsInfo</fitnessClass>
 	</fitnessConfig>
 
+<!-- TODO this part needs some work to homogenise this with the evolution part. -->
 <!--
 	<refConfig>
 		<refRule>app.evaluation.priorityRules.EvalWATC</refRule>
 		<refTracking>
-			<method>app.tracker.sampler.breakdown.MBSamplerFactory</method>
+			<factory>app.tracker.sampler.breakdown.SamplerFactory</factory>
+			<rule>app.evaluation.priorityRules.EvalWSPT<rule>
 			<seed>15</seed>
 		</refTracking>
 	</refConfig>
-
-	<refFitnessConfig>
-		<fitnessClass>app.evaluation.fitness.DiversityFitness</fitnessClass>
-	</refFitnessConfig>
 -->
 
 <!--

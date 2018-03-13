@@ -128,7 +128,8 @@
 	<refConfig>
 		<refRule>app.evaluation.priorityRules.EvalWATC</refRule>
 		<refTracking>
-			<method>app.tracker.sampler.breakdown.MBSamplerFactory</method>
+			<factory>app.tracker.sampler.breakdown.MBSamplerFactory</factory>
+			<rule>app.evaluation.priorityRules.EvalWATC</rule>
 			<seed>15</seed>
 		</refTracking>
 	</refConfig>

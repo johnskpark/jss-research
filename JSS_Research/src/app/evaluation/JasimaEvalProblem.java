@@ -62,7 +62,8 @@ public class JasimaEvalProblem {
 	public static final String XML_REFERENCE_BASE = "refConfig";
 	public static final String XML_REFERENCE_RULE = "refRule";
 	public static final String XML_REFERENCE_TRACKING = "refTracking";
-	public static final String XML_REFERENCE_METHOD = "method";
+	public static final String XML_REFERENCE_FACTORY = "factory";
+	public static final String XML_REFERNCE_RULE = "rule";
 	public static final String XML_REFERENCE_SEED = "seed";
 
 	public static final String XML_FITNESS_BASE = "fitnessConfig";
@@ -94,7 +95,7 @@ public class JasimaEvalProblem {
 	private Map<String, JasimaWorkStationListener> listenerMap = new HashMap<>();
 
 	private List<PR> referenceRules = new ArrayList<>();
-	private List<PR> trackedRefRules = new ArrayList<>();
+	private List<PR> samplingPRs = new ArrayList<>();
 	private Map<Pair<PR, String>, List<Double>> refFitness = new HashMap<>();
 	private JasimaExperimentTracker<INode> tracker = null;
 
@@ -333,21 +334,27 @@ public class JasimaEvalProblem {
 			if (nTrack.getLength() != 0) {
 				Element trackBase = (Element) nTrack.item(0);
 
-				Class<?> refMethodClass = Class.forName(trackBase
-						.getElementsByTagName(XML_REFERENCE_METHOD)
+				Class<?> samplingFactoryClass = Class.forName(trackBase
+						.getElementsByTagName(XML_REFERENCE_FACTORY)
 						.item(0)
 						.getTextContent());
-				SamplerFactory factory = (SamplerFactory) refMethodClass.newInstance();
+				SamplerFactory factory = (SamplerFactory) samplingFactoryClass.newInstance();
+
+				Class<?> samplingRuleClass = Class.forName(trackBase
+						.getElementsByTagName(XML_REFERENCE_FACTORY)
+						.item(0)
+						.getTextContent());
+				PR samplingRule = (PR) samplingRuleClass.newInstance();
 
 				long seed = Integer.parseInt(trackBase.getElementsByTagName(XML_REFERENCE_SEED).item(0).getTextContent());
 
 				tracker = new JasimaExperimentTracker<>();
 				tracker.setSimConfig(simConfig);
 
-				SamplingPR<INode> trackedRefRule = factory.generateSampler(refRule, seed, tracker);
+				SamplingPR<INode> samplingPR = factory.generateSampler(samplingRule, seed, tracker);
 
-				referenceRules.add(trackedRefRule);
-				trackedRefRules.add(trackedRefRule);
+				referenceRules.add(refRule);
+				samplingPRs.add(samplingPR);
 			} else {
 				referenceRules.add(refRule);
 			}
@@ -544,8 +551,8 @@ public class JasimaEvalProblem {
 							}
 						} else {
 							// Prints out the standard evaluation plus the reference evaluation.
-							for (int refRuleIndex = 0; refRuleIndex < trackedRefRules.size(); refRuleIndex++) {
-								PR refRule = trackedRefRules.get(refRuleIndex);
+							for (int refRuleIndex = 0; refRuleIndex < samplingPRs.size(); refRuleIndex++) {
+								PR refRule = samplingPRs.get(refRuleIndex);
 								output.printf("%s,%d,%d,%s,%d,%s",
 										ruleFilename,
 										solver.getSeed(),
@@ -557,7 +564,7 @@ public class JasimaEvalProblem {
 										repeatIndex * (simConfig.getNumConfigs()) +
 										configIndex;
 
-								int referenceIndex = refRuleIndex * (trackedRefRules.size() * simConfig.getNumConfigs()) +
+								int referenceIndex = refRuleIndex * (samplingPRs.size() * simConfig.getNumConfigs()) +
 										solverIndex * (simConfig.getNumConfigs()) +
 										configIndex;
 
@@ -587,9 +594,9 @@ public class JasimaEvalProblem {
 
 		String[] resultsOutput = new String[numResults];
 
-		for (int refRuleIndex = 0; refRuleIndex < trackedRefRules.size(); refRuleIndex++) {
-			SamplingPR<INode> trackedRefRule = (SamplingPR<INode>) trackedRefRules.get(refRuleIndex);
-			trackedRefRule.setPriorityRules(new ArrayList<TrackedRuleBase<INode>>(solvers));
+		for (int refRuleIndex = 0; refRuleIndex < samplingPRs.size(); refRuleIndex++) {
+			SamplingPR<INode> samplingPR = (SamplingPR<INode>) samplingPRs.get(refRuleIndex);
+			samplingPR.setPriorityRules(new ArrayList<TrackedRuleBase<INode>>(solvers));
 
 			for (EvalPriorityRuleBase solver : solvers) {
 				solver.setTracker(tracker);
@@ -600,9 +607,9 @@ public class JasimaEvalProblem {
 
 			for (int configIndex = 0; configIndex < simConfig.getNumConfigs(); configIndex++) {
 				tracker.setExperimentIndex(configIndex);
-				trackedRefRule.initTrackedRun(simConfig, configIndex);
+				samplingPR.initTrackedRun(simConfig, configIndex);
 
-				JobShopExperiment experiment = getExperimentPR(trackedRefRule, configIndex);
+				JobShopExperiment experiment = getExperimentPR(samplingPR, configIndex);
 				experiment.runExperiment();
 
 				for (int solverIndex = 0; solverIndex < solvers.size(); solverIndex++) {
@@ -619,7 +626,7 @@ public class JasimaEvalProblem {
 						 builder.append("," + result);
 					}
 
-					int resultsIndex = refRuleIndex * (trackedRefRules.size() * simConfig.getNumConfigs()) +
+					int resultsIndex = refRuleIndex * (samplingPRs.size() * simConfig.getNumConfigs()) +
 							solverIndex * (simConfig.getNumConfigs()) +
 							configIndex;
 
