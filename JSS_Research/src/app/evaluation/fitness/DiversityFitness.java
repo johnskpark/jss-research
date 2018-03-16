@@ -7,7 +7,9 @@ import java.util.List;
 import java.util.Map;
 
 import app.ITrackedRule;
+import app.TrackedRuleBase;
 import app.evaluation.IJasimaEvalFitness;
+import app.evaluation.JasimaEvalProblem;
 import app.node.INode;
 import app.simConfig.SimConfig;
 import app.tracker.JasimaDecision;
@@ -15,9 +17,11 @@ import app.tracker.JasimaExperiment;
 import app.tracker.JasimaExperimentTracker;
 import app.tracker.JasimaPriorityStat;
 import jasima.shopSim.core.JobShopExperiment;
-import jasima.shopSim.core.PR;
 import jasima.shopSim.core.PrioRuleTarget;
 
+// FIXME this diversity fitness needs to work the same as the
+// diversity measure that's used in evolution now,
+// fix this when I get the chance.
 public class DiversityFitness implements IJasimaEvalFitness {
 
 	@Override
@@ -49,7 +53,8 @@ public class DiversityFitness implements IJasimaEvalFitness {
 	}
 
 	@Override
-	public void beforeExperiment(final PR rule,
+	public void beforeExperiment(final JasimaEvalProblem problem,
+			final TrackedRuleBase<INode> rule,
 			final SimConfig simConfig,
 			final JobShopExperiment experiment,
 			final JasimaExperimentTracker<INode> tracker) {
@@ -57,7 +62,7 @@ public class DiversityFitness implements IJasimaEvalFitness {
 	}
 
 	@Override
-	public double getNumericResult(final PR rule,
+	public double getNumericResult(final TrackedRuleBase<INode> rule,
 			final SimConfig simConfig,
 			final int configIndex,
 			final JobShopExperiment experiment,
@@ -66,30 +71,27 @@ public class DiversityFitness implements IJasimaEvalFitness {
 	}
 
 	@Override
-	public String getStringResult(final PR rule,
+	public String getStringResult(final TrackedRuleBase<INode> rule,
 			final SimConfig simConfig,
 			final int configIndex,
 			final JobShopExperiment experiment,
 			final JasimaExperimentTracker<INode> tracker) {
 		// Check to make sure that the rule is multirule
 		if (!(rule instanceof ITrackedRule)) {
-			throw new RuntimeException("The rule being evaluated must be a type of multirule.");
+			throw new RuntimeException("The rule being evaluated must be a type of tracked rule.");
 		}
 
 		Map<String, Object> results = experiment.getResults();
-
-		@SuppressWarnings("unchecked")
-		ITrackedRule<INode> solver = (ITrackedRule<INode>) rule;
 		List<JasimaExperiment<INode>> trackedResults = tracker.getResults();
 
 		JasimaExperiment<INode> trackedResult = trackedResults.get(configIndex);
 
 		String[] experimentResults = new String[] {
-				getSingleVotedJobResults(solver, results, trackedResult),
-				getTieBreakJobResults(solver, results, trackedResult),
-				getMajorityResults(solver, results, trackedResult),
-				getMinorityResults(solver, results, trackedResult),
-				getRankResults(solver, results, trackedResult)
+				getSingleVotedJobResults(rule, results, trackedResult),
+				getTieBreakJobResults(rule, results, trackedResult),
+				getMajorityResults(rule, results, trackedResult),
+				getMinorityResults(rule, results, trackedResult),
+				getRankResults(rule, results, trackedResult)
 		};
 
 

@@ -1,6 +1,8 @@
 package app.evaluation.fitness;
 
+import app.TrackedRuleBase;
 import app.evaluation.IJasimaEvalFitness;
+import app.evaluation.JasimaEvalProblem;
 import app.node.INode;
 import app.simConfig.DynamicBreakdownSimConfig;
 import app.simConfig.SimConfig;
@@ -8,7 +10,6 @@ import app.tracker.JasimaExperimentTracker;
 import jasima.core.random.continuous.DblStream;
 import jasima.core.util.Pair;
 import jasima.shopSim.core.JobShopExperiment;
-import jasima.shopSim.core.PR;
 
 public class DueDateFactorInfo implements IJasimaEvalFitness {
 
@@ -25,7 +26,8 @@ public class DueDateFactorInfo implements IJasimaEvalFitness {
 	}
 
 	@Override
-	public void beforeExperiment(final PR rule,
+	public void beforeExperiment(final JasimaEvalProblem problem,
+			final TrackedRuleBase<INode> rule,
 			final SimConfig simConfig,
 			final JobShopExperiment experiment,
 			final JasimaExperimentTracker<INode> tracker) {
@@ -33,7 +35,7 @@ public class DueDateFactorInfo implements IJasimaEvalFitness {
 	}
 
 	@Override
-	public double getNumericResult(final PR rule,
+	public double getNumericResult(final TrackedRuleBase<INode> rule,
 			final SimConfig simConfig,
 			final int configIndex,
 			final JobShopExperiment experiment,
@@ -42,7 +44,7 @@ public class DueDateFactorInfo implements IJasimaEvalFitness {
 	}
 
 	@Override
-	public String getStringResult(final PR rule,
+	public String getStringResult(final TrackedRuleBase<INode> rule,
 			final SimConfig simConfig,
 			final int configIndex,
 			final JobShopExperiment experiment,

@@ -3,7 +3,6 @@
 
 <!-- Rule file definitions -->
 <!-- The niched approach -->
-<!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
@@ -59,7 +58,6 @@
 			<ruleFile>mb_niched/bl_niched_7.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
--->
 
 <!-- The baseline approach -->
 	<solverConfig>
@@ -69,7 +67,6 @@
 		</solverFile>
 	</solverConfig>
 
-<!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
@@ -118,7 +115,6 @@
 			<ruleFile>mb_niched/bl_baseline_05_10.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
--->
 
 <!-- The man-made approach -->
 <!--
@@ -147,6 +143,7 @@
 	</solverConfig>
 -->
 
+<!--
 	<datasetConfig>
 		<datasetClass>app.simConfig.holthausConfig4.EvalFactory</datasetClass>
 		<datasetInstances>(all),(all),(all)</datasetInstances>
@@ -154,19 +151,19 @@
 		<datasetRepeat>30</datasetRepeat>
 		<datasetRotateSeed>true</datasetRotateSeed>
 	</datasetConfig>
+-->
+
+	<datasetConfig>
+		<datasetClass>app.simConfig.samplingConfig.EvalFactory</datasetClass>
+		<datasetSeed>15</datasetSeed>
+		<datasetRepeat>30</datasetRepeat>
+		<datasetRotateSeed>true</datasetRotateSeed>
+	</datasetConfig>
 
 <!-- Output file definition -->
 	<outputConfig>
-	    <outputFile>breakdown_holthaus4_baseline_output.csv</outputFile>
+	    <outputFile>breakdown_holthaus4_diversity_output.csv</outputFile>
 	</outputConfig>
-
-<!-- Temporary output file. -->
-<!--
-	<outputConfig>
-	    <outputFile>temp_output.csv</outputFile>
-	</outputConfig>
--->
-
 
 <!-- Fitness definitions -->
 	<fitnessConfig>
@@ -193,23 +190,20 @@
 		<fitnessClass>app.evaluation.fitness.StopAfterNumJobsInfo</fitnessClass>
 	</fitnessConfig>
 
-<!-- TODO this part needs some work to homogenise this with the evolution part. -->
-<!--
+<!-- Uncomment whenever you need to calculate things via the reference rules -->
+
 	<refConfig>
 		<refRule>app.evaluation.priorityRules.EvalWATC</refRule>
 		<refTracking>
-			<factory>app.tracker.sampler.breakdown.SamplerFactory</factory>
-			<rule>app.evaluation.priorityRules.EvalWSPT<rule>
+			<factory>app.tracker.sampler.SamplerFactory</factory>
+			<rule>app.evaluation.priorityRules.EvalWSPT</rule>
 			<seed>15</seed>
 		</refTracking>
 	</refConfig>
--->
 
-<!--
 	<refFitnessConfig>
-		<fitnessClass>app.evaluation.fitness.DiversityFitness</fitnessClass>
+		<fitnessClass>app.evaluation.fitness.RuleRankFitness</fitnessClass>
 	</refFitnessConfig>
--->
 
 	<listenerConfig>
 	    <listenerClass>app.listener.hunt.EvalFactory</listenerClass>

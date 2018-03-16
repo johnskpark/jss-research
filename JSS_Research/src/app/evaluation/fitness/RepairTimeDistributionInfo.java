@@ -2,7 +2,9 @@ package app.evaluation.fitness;
 
 import org.apache.commons.math3.distribution.RealDistribution;
 
+import app.TrackedRuleBase;
 import app.evaluation.IJasimaEvalFitness;
+import app.evaluation.JasimaEvalProblem;
 import app.jasimaShopSim.models.DynamicBreakdownShopExperiment;
 import app.node.INode;
 import app.simConfig.DynamicBreakdownSimConfig;
@@ -11,7 +13,6 @@ import app.tracker.JasimaExperimentTracker;
 import jasima.core.random.continuous.DblDistribution;
 import jasima.core.random.continuous.DblStream;
 import jasima.shopSim.core.JobShopExperiment;
-import jasima.shopSim.core.PR;
 
 public class RepairTimeDistributionInfo implements IJasimaEvalFitness {
 
@@ -26,7 +27,8 @@ public class RepairTimeDistributionInfo implements IJasimaEvalFitness {
 	}
 
 	@Override
-	public void beforeExperiment(final PR rule,
+	public void beforeExperiment(final JasimaEvalProblem problem,
+			final TrackedRuleBase<INode> rule,
 			final SimConfig simConfig,
 			final JobShopExperiment experiment,
 			final JasimaExperimentTracker<INode> tracker) {
@@ -34,7 +36,7 @@ public class RepairTimeDistributionInfo implements IJasimaEvalFitness {
 	}
 
 	@Override
-	public double getNumericResult(final PR rule,
+	public double getNumericResult(final TrackedRuleBase<INode> rule,
 			final SimConfig simConfig,
 			final int configIndex,
 			final JobShopExperiment experiment,
@@ -43,7 +45,7 @@ public class RepairTimeDistributionInfo implements IJasimaEvalFitness {
 	}
 
 	@Override
-	public String getStringResult(final PR rule,
+	public String getStringResult(final TrackedRuleBase<INode> rule,
 			final SimConfig simConfig,
 			final int configIndex,
 			final JobShopExperiment experiment,

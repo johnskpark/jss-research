@@ -39,6 +39,7 @@ import app.tracker.JasimaExperimentTracker;
 import app.tracker.sampler.SamplerFactory;
 import app.tracker.sampler.SamplingPR;
 import app.util.RuleParser;
+import jasima.core.experiment.Experiment;
 import jasima.core.util.Pair;
 import jasima.shopSim.core.JobShopExperiment;
 import jasima.shopSim.core.PR;
@@ -63,7 +64,7 @@ public class JasimaEvalProblem {
 	public static final String XML_REFERENCE_RULE = "refRule";
 	public static final String XML_REFERENCE_TRACKING = "refTracking";
 	public static final String XML_REFERENCE_FACTORY = "factory";
-	public static final String XML_REFERNCE_RULE = "rule";
+	public static final String XML_REFERENCE_SAMPLING_RULE = "rule";
 	public static final String XML_REFERENCE_SEED = "seed";
 
 	public static final String XML_FITNESS_BASE = "fitnessConfig";
@@ -94,9 +95,9 @@ public class JasimaEvalProblem {
 	private List<JasimaWorkStationListener> listeners = new ArrayList<>();
 	private Map<String, JasimaWorkStationListener> listenerMap = new HashMap<>();
 
-	private List<PR> referenceRules = new ArrayList<>();
-	private List<PR> samplingPRs = new ArrayList<>();
-	private Map<Pair<PR, String>, List<Double>> refFitness = new HashMap<>();
+	private List<EvalPriorityRuleBase> referenceRules = new ArrayList<>();
+	private Map<Pair<EvalPriorityRuleBase, String>, List<Double>> referenceFitness = new HashMap<>();
+	private List<SamplingPR<INode>> samplingPRs = new ArrayList<>();
 	private JasimaExperimentTracker<INode> tracker = null;
 
 	private String outputCsv = null;
@@ -326,7 +327,7 @@ public class JasimaEvalProblem {
 					.item(0)
 					.getTextContent());
 
-			PR refRule = (PR) refRuleClass.newInstance();
+			EvalPriorityRuleBase refRule = (EvalPriorityRuleBase) refRuleClass.newInstance();
 
 			System.out.println("Reference: loaded the reference rule " + refRule.getClass().getSimpleName());
 
@@ -341,7 +342,7 @@ public class JasimaEvalProblem {
 				SamplerFactory factory = (SamplerFactory) samplingFactoryClass.newInstance();
 
 				Class<?> samplingRuleClass = Class.forName(trackBase
-						.getElementsByTagName(XML_REFERENCE_FACTORY)
+						.getElementsByTagName(XML_REFERENCE_SAMPLING_RULE)
 						.item(0)
 						.getTextContent());
 				PR samplingRule = (PR) samplingRuleClass.newInstance();
@@ -465,29 +466,24 @@ public class JasimaEvalProblem {
 		System.out.println("Evaluation complete.");
 	}
 
-	@SuppressWarnings("unchecked")
 	private void evaluateReference(PrintStream output) {
 		for (int refRuleIndex = 0; refRuleIndex < referenceRules.size(); refRuleIndex++) {
-			PR refRule = referenceRules.get(refRuleIndex);
+			EvalPriorityRuleBase refRule = referenceRules.get(refRuleIndex);
 
 			System.out.println("Evaluation: evaluating the reference rule " + refRule.getClass().getSimpleName());
 
 			for (IJasimaEvalFitness fitness : standardEvaluation) {
-				Pair<PR, String> key = new Pair<>(refRule, fitness.getClass().getSimpleName());
+				Pair<EvalPriorityRuleBase, String> key = new Pair<>(refRule, fitness.getClass().getSimpleName());
 
-				refFitness.put(key, new ArrayList<>());
+				referenceFitness.put(key, new ArrayList<>());
 			}
 
 			for (int configIndex = 0; configIndex < simConfig.getNumConfigs(); configIndex++) {
-				if (refRule instanceof SamplingPR) {
-					((SamplingPR<INode>) refRule).initRecordingRun(simConfig, configIndex);
-				}
-
 				JobShopExperiment experiment = getExperimentPR(refRule, configIndex);
 				experiment.runExperiment();
 
 				for (IJasimaEvalFitness fitness : standardEvaluation) {
-					Pair<PR, String> key = new Pair<>(refRule, fitness.getClass().getSimpleName());
+					Pair<EvalPriorityRuleBase, String> key = new Pair<>(refRule, fitness.getClass().getSimpleName());
 
 					int refIndex = refRuleIndex * (simConfig.getNumConfigs()) +
 							configIndex;
@@ -499,7 +495,7 @@ public class JasimaEvalProblem {
 								experiment,
 								tracker);
 
-						refFitness.get(key).add(refIndex, result);
+						referenceFitness.get(key).add(refIndex, result);
 					}
 				}
 
@@ -594,17 +590,37 @@ public class JasimaEvalProblem {
 
 		String[] resultsOutput = new String[numResults];
 
-		for (int refRuleIndex = 0; refRuleIndex < samplingPRs.size(); refRuleIndex++) {
-			SamplingPR<INode> samplingPR = (SamplingPR<INode>) samplingPRs.get(refRuleIndex);
-			samplingPR.setPriorityRules(new ArrayList<TrackedRuleBase<INode>>(solvers));
+		List<EvalPriorityRuleBase> ruleList = new ArrayList<>();
+		ruleList.addAll(solvers);
+		ruleList.addAll(referenceRules);
 
-			for (EvalPriorityRuleBase solver : solvers) {
-				solver.setTracker(tracker);
-				tracker.addRule(solver);
+		for (int samplingRuleIndex = 0; samplingRuleIndex < samplingPRs.size(); samplingRuleIndex++) {
+			SamplingPR<INode> samplingPR = (SamplingPR<INode>) samplingPRs.get(samplingRuleIndex);
+			samplingPR.setPriorityRules(new ArrayList<TrackedRuleBase<INode>>(ruleList));
+
+			// Carry out the recording run.
+			for (int configIndex = 0; configIndex < simConfig.getNumConfigs(); configIndex++) {
+				samplingPR.initRecordingRun(simConfig, configIndex);
+
+				Experiment experiment = getExperimentPR(samplingPR, configIndex);
+				experiment.runExperiment();
+
+				if (!rotateSeed) {
+					simConfig.reset();
+				}
+			}
+
+			simConfig.reset();
+
+			// Set up the tracker.
+			for (EvalPriorityRuleBase rule : ruleList) {
+				rule.setTracker(tracker);
+				tracker.addRule(rule);
 			}
 
 			tracker.initialise();
 
+			// Carry out the tracked run.
 			for (int configIndex = 0; configIndex < simConfig.getNumConfigs(); configIndex++) {
 				tracker.setExperimentIndex(configIndex);
 				samplingPR.initTrackedRun(simConfig, configIndex);
@@ -618,15 +634,16 @@ public class JasimaEvalProblem {
 					StringBuilder builder = new StringBuilder();
 
 					for (IJasimaEvalFitness fitness : referenceEvaluation) {
-						 String result = fitness.getStringResult(solver,
-								 simConfig,
-								 configIndex,
-								 experiment,
-								 tracker);
-						 builder.append("," + result);
+						fitness.beforeExperiment(this, solver, simConfig, experiment, tracker);
+						String result = fitness.getStringResult(solver,
+								simConfig,
+								configIndex,
+								experiment,
+								tracker);
+						builder.append("," + result);
 					}
 
-					int resultsIndex = refRuleIndex * (samplingPRs.size() * simConfig.getNumConfigs()) +
+					int resultsIndex = samplingRuleIndex * (samplingPRs.size() * simConfig.getNumConfigs()) +
 							solverIndex * (simConfig.getNumConfigs()) +
 							configIndex;
 
@@ -640,10 +657,12 @@ public class JasimaEvalProblem {
 				}
 			}
 
+			// Clear for the experiment.
 			for (EvalPriorityRuleBase solver : solvers) {
 				solver.setTracker(null);
 			}
 
+			samplingPR.clear();
 			tracker.clear();
 			simConfig.reset();
 		}
@@ -663,8 +682,8 @@ public class JasimaEvalProblem {
 				for (int configIndex = 0; configIndex < simConfig.getNumConfigs(); configIndex++) {
 
 					JobShopExperiment experiment = getExperimentPR(solver, configIndex);
-					for(IJasimaEvalFitness fitness: standardEvaluation) {
-						fitness.beforeExperiment(solver, simConfig, experiment, tracker);
+					for(IJasimaEvalFitness fitness : standardEvaluation) {
+						fitness.beforeExperiment(this, solver, simConfig, experiment, tracker);
 					}
 
 					experiment.runExperiment();
@@ -712,16 +731,16 @@ public class JasimaEvalProblem {
 	}
 
 	// TODO need to incorporate the rules into the machine listeners later down the line.
-	private JobShopExperiment getExperimentEval(EvalPriorityRuleBase rule, int index) {
-		JobShopExperiment experiment = ExperimentGenerator.getExperiment(simConfig, rule, index);
-
-		experiment.addMachineListener(rule);
-		for (JasimaWorkStationListener listener : listeners) {
-			experiment.addMachineListener(listener);
-		}
-
-		return experiment;
-	}
+//	private JobShopExperiment getExperimentEval(EvalPriorityRuleBase rule, int index) {
+//		JobShopExperiment experiment = ExperimentGenerator.getExperiment(simConfig, rule, index);
+//
+//		experiment.addMachineListener(rule);
+//		for (JasimaWorkStationListener listener : listeners) {
+//			experiment.addMachineListener(listener);
+//		}
+//
+//		return experiment;
+//	}
 
 	private boolean hasReferenceEvaluation() {
 		return hasReferenceRules() && referenceEvaluation != null && !referenceEvaluation.isEmpty();
@@ -733,6 +752,15 @@ public class JasimaEvalProblem {
 
 	private boolean hasReferenceRules() {
 		return !referenceRules.isEmpty();
+	}
+
+	// List of getters
+	public List<EvalPriorityRuleBase> getSolvers() {
+		return allSolvers;
+	}
+
+	public List<EvalPriorityRuleBase> getReferenceRules() {
+		return referenceRules;
 	}
 
 }
