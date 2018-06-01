@@ -142,4 +142,20 @@ public class HolthausSimConfig extends DynamicBreakdownSimConfig {
 		return numConfigs;
 	}
 
+	// Added for the multitask approach.
+	public int getNumScenarios() {
+		// TODO
+		return 0;
+	}
+
+	public List<Integer> getNeighbourScenarios(int scenario) {
+		// TODO
+		return null;
+	}
+
+	public List<Integer> getIndicesForScenario(int scenario) {
+		// TODO
+		return null;
+	}
+
 }

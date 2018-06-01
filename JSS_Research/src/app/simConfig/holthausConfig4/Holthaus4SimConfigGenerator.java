@@ -10,11 +10,6 @@ import app.simConfig.DynamicBreakdownSimConfig;
 
 public class Holthaus4SimConfigGenerator {
 
-	private static final double[] NUM_REPAIR_TIME_FACTORS = new double[]{1, 5, 10};
-	private static final double[] NUM_BREAKDOWN_LEVELS = new double[]{0.0, 0.025, 0.05};
-
-	private static final double[] NUM_DUE_DATE_FACTORS = new double[]{3, 5};
-
 	private static final String V_CATEGORY_ALL = "all";
 
 	private static final String REGEX = "\\(([^)]+)\\)[,]?";
@@ -32,9 +27,9 @@ public class Holthaus4SimConfigGenerator {
 		m.find(); String blStr = m.group().replaceAll(REGEX, "$1");
 		m.find(); String ddfStr = m.group().replaceAll(REGEX, "$1");
 
-		List<Double> repairTimeFactors = convertToVariables(rtfStr, NUM_REPAIR_TIME_FACTORS);
-		List<Double> breakdownLevels = convertToVariables(blStr, NUM_BREAKDOWN_LEVELS);
-		List<Integer> dueDateFactors = convertToVariables(ddfStr, NUM_DUE_DATE_FACTORS)
+		List<Double> repairTimeFactors = convertToVariables(rtfStr, Holthaus4SimConfig.NUM_REPAIR_TIME_FACTORS);
+		List<Double> breakdownLevels = convertToVariables(blStr, Holthaus4SimConfig.NUM_BREAKDOWN_LEVELS);
+		List<Integer> dueDateFactors = convertToVariables(ddfStr, Holthaus4SimConfig.NUM_DUE_DATE_FACTORS)
 				.stream()
 				.map(x -> x.intValue())
 				.collect(Collectors.toList());

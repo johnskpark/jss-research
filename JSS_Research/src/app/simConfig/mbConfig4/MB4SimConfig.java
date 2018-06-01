@@ -20,18 +20,21 @@ import jasima.core.random.continuous.DblStream;
  */
 public class MB4SimConfig extends DynamicBreakdownSimConfig {
 
-	private static final int MIN_PROC_TIME = 1;
-	private static final int MAX_PROC_TIME = 49;
-	private static final int MEAN_PROC_TIME = 25;
+	public static final double[] NUM_REPAIR_TIME_FACTORS = new double[] {1.5, 5.5, 10.5};
+	public static final double[] NUM_BREAKDOWN_LEVELS = new double[] {0.0, 0.025, 0.05, 0.1, 0.15};
+	public static final double[] NUM_DUE_DATE_FACTORS = new double[] {3, 5};
+	public static final double[] NUM_STOP_AFTER_NUM_JOBS = new double[] {2500, 5000, 7500};
 
-	// Try this later down the line:
-	// 90% for BL = (0%, 2.5%, 5%), 80% for BL = (10%, 15%)
-	private static final double UTIL_LEVEL = 0.80;
-	private static final int MIN_NUM_OPS = 2;
-	private static final int MAX_NUM_OPS = 10;
+	public static final int MIN_PROC_TIME = 1;
+	public static final int MAX_PROC_TIME = 49;
+	public static final int MEAN_PROC_TIME = 25;
 
-	private static final int NUM_MACHINES = 10;
-	private static final int NUM_IGNORE = 500;
+	public static final double UTIL_LEVEL = 0.80;
+	public static final int MIN_NUM_OPS = 2;
+	public static final int MAX_NUM_OPS = 10;
+
+	public static final int NUM_MACHINES = 10;
+	public static final int NUM_IGNORE = 500;
 
 	private List<Double> numRTFs; // repair time factors: (1.5, 5.5, 10.5)
 	private List<Double> numBLs; // breakdown levels: (0%, 2.5%, 5%, 10%, 15%)
@@ -143,6 +146,22 @@ public class MB4SimConfig extends DynamicBreakdownSimConfig {
 	@Override
 	public int getNumConfigs() {
 		return numConfigs;
+	}
+
+	// Added for the multitask approach.
+	public int getNumScenarios() {
+		// TODO
+		return 0;
+	}
+
+	public List<Integer> getNeighbourScenarios(int scenario) {
+		// TODO
+		return null;
+	}
+
+	public List<Integer> getIndicesForScenario(int scenario) {
+		// TODO
+		return null;
 	}
 
 }

@@ -10,11 +10,6 @@ import app.simConfig.DynamicBreakdownSimConfig;
 
 public class MB4SimConfigGenerator {
 
-	private static final double[] NUM_REPAIR_TIME_FACTORS = new double[] {1.5, 5.5, 10.5};
-	private static final double[] NUM_BREAKDOWN_LEVELS = new double[] {0.0, 0.025, 0.05, 0.1, 0.15};
-	private static final double[] NUM_DUE_DATE_FACTORS = new double[] {3, 5};
-	private static final double[] NUM_STOP_AFTER_NUM_JOBS = new double[] {2500, 5000, 7500};
-
 	private static final String V_CATEGORY_ALL = "all";
 
 	private static final String REGEX = "\\(([^)]+)\\)[,]?";
@@ -33,13 +28,13 @@ public class MB4SimConfigGenerator {
 		m.find(); String ddfStr = m.group().replaceAll(REGEX, "$1");
 		m.find(); String sanjStr = m.group().replaceAll(REGEX, "$1");
 
-		List<Double> repairTimeFactors = convertToVariables(rtfStr, NUM_REPAIR_TIME_FACTORS);
-		List<Double> breakdownLevels = convertToVariables(blStr, NUM_BREAKDOWN_LEVELS);
-		List<Integer> dueDateFactors = convertToVariables(ddfStr, NUM_DUE_DATE_FACTORS)
+		List<Double> repairTimeFactors = convertToVariables(rtfStr, MB4SimConfig.NUM_REPAIR_TIME_FACTORS);
+		List<Double> breakdownLevels = convertToVariables(blStr, MB4SimConfig.NUM_BREAKDOWN_LEVELS);
+		List<Integer> dueDateFactors = convertToVariables(ddfStr, MB4SimConfig.NUM_DUE_DATE_FACTORS)
 				.stream()
 				.map(x -> x.intValue())
 				.collect(Collectors.toList());
-		List<Integer> stopAfterNumJobs = convertToVariables(sanjStr, NUM_STOP_AFTER_NUM_JOBS)
+		List<Integer> stopAfterNumJobs = convertToVariables(sanjStr, MB4SimConfig.NUM_STOP_AFTER_NUM_JOBS)
 				.stream()
 				.map(x -> x.intValue())
 				.collect(Collectors.toList());

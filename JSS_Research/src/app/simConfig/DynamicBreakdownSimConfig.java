@@ -1,5 +1,6 @@
 package app.simConfig;
 
+import java.util.List;
 import java.util.Random;
 
 import app.jasimaShopSim.models.DynamicBreakdownShopExperiment;
@@ -67,5 +68,15 @@ public abstract class DynamicBreakdownSimConfig implements SimConfig {
 	public abstract double getBreakdownLevel(int index);
 
 	public abstract double getMeanRepairTime(int index);
+
+	// Added for the multitask approach, but might be useful elsewhere as well.
+	public abstract int getNumScenarios();
+
+	public abstract List<Integer> getNeighbourScenarios(int scenario);
+
+	public abstract List<Integer> getIndicesForScenario(int scenario);
+
+	// TODO this needs a parameter called machine breakdown scenarios. How am I going to set this up though?
+	// TODO Also, I need to look at the tardiness values, since <2.5%, 125> configuration gives abnormally high MWT values.
 
 }

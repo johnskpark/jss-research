@@ -1,6 +1,8 @@
 package app.simConfig.holthausConfig4;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.commons.math3.distribution.ExponentialDistribution;
 
@@ -12,39 +14,91 @@ import jasima.core.random.continuous.DblStream;
 
 public class Holthaus4SimConfig extends DynamicBreakdownSimConfig {
 
-	private static final int MIN_PROC_TIME = 1;
-	private static final int MAX_PROC_TIME = 49;
-	private static final int MEAN_PROC_TIME = 25;
+	public static final double[] NUM_REPAIR_TIME_FACTORS = new double[]{1, 5, 10};
+	public static final double[] NUM_BREAKDOWN_LEVELS = new double[]{0.0, 0.025, 0.05};
+	public static final double[] NUM_DUE_DATE_FACTORS = new double[]{3, 5};
+
+	public static final int NUM_SCENARIOS = 7; // Based on the repair time factors and breakdown levels above.
+
+	public static final int MIN_PROC_TIME = 1;
+	public static final int MAX_PROC_TIME = 49;
+	public static final int MEAN_PROC_TIME = 25;
 
 	// Try this later down the line:
 	// 90% for BL = (0%, 2.5%, 5%), 80% for BL = (10%, 15%)
-	private static final double[] UTIL_LEVEL = new double[]{0.80, 0.90};
-	private static final int MIN_NUM_OPS = 2;
-	private static final int MAX_NUM_OPS = 10;
+	public static final double[] UTIL_LEVEL = new double[]{0.80, 0.90};
+	public static final int MIN_NUM_OPS = 2;
+	public static final int MAX_NUM_OPS = 10;
 
-	private static final int NUM_MACHINES = 10;
+	public static final int NUM_MACHINES = 10;
 
-	private static final int NUM_IGNORE = 500;
-	private static final int STOP_AFTER_NUM_JOBS = 2500;
+	public static final int NUM_IGNORE = 500;
+	public static final int STOP_AFTER_NUM_JOBS = 2500;
 
-	private List<Double> numRTFs; // repair time factors: (1.5, 5.5, 10.5)
-	private List<Double> numBLs; // breakdown levels: (0%, 2.5%, 5%, 10%, 15%)
-	private List<Integer> numDDFs; // due date factors: (3, 5)
+	private List<Double> rtfs; // repair time factors: (1, 5, 10)
+	private List<Double> bls; // breakdown levels: (0%, 2.5%, 5%)
+	private List<Integer> ddfs; // due date factors: (3, 5)
+
+	private int numRTFs;
+	private int numBLs;
+	private int numDDFs;
+	private int numScenarios;
 	private int numConfigs;
 
 	private boolean hasZeroBL = false;
 
+	private List<Node> nodes;
+
 	public Holthaus4SimConfig(List<Double> repairTimeFactors,
 			List<Double> breakdownLevels,
 			List<Integer> dueDateFactors) {
-		numRTFs = repairTimeFactors;
-		numBLs = breakdownLevels;
-		numDDFs = dueDateFactors;
+		rtfs = repairTimeFactors;
+		bls = breakdownLevels;
+		ddfs = dueDateFactors;
 
 		hasZeroBL = breakdownLevels.contains(0.0);
-		numConfigs = repairTimeFactors.size() *
-				(breakdownLevels.size() - ((hasZeroBL) ? 1 : 0)) *
-				dueDateFactors.size() + ((hasZeroBL) ? dueDateFactors.size() : 0);
+
+		numRTFs = rtfs.size();
+		numBLs = bls.size();
+		numDDFs = ddfs.size();
+		numScenarios = numRTFs * (numBLs - ((hasZeroBL) ? 1 : 0)) + ((hasZeroBL) ? 1 : 0);
+		numConfigs = numScenarios * numDDFs;
+
+		initNeighbourRelations();
+	}
+
+	private void initNeighbourRelations() {
+		nodes = new ArrayList<Node>(NUM_SCENARIOS);
+
+		int[] r = new int[NUM_SCENARIOS];
+		int[] b = new int[NUM_SCENARIOS];
+
+		// Add the nodes.
+		for (int i = 0; i < NUM_SCENARIOS; i++) {
+			r[i] = (i == 0) ? 0 : (i - 1) % NUM_REPAIR_TIME_FACTORS.length;
+			b[i] = (i == 0) ? 0 : (i - 1) / NUM_REPAIR_TIME_FACTORS.length + 1;
+
+			Node node1 = new Node(i);
+			for (int j = 0; j < NUM_DUE_DATE_FACTORS.length; j++) {
+				node1.indices.add(i * NUM_DUE_DATE_FACTORS.length + j);
+			}
+
+			nodes.add(node1);
+
+			// Add the neighbourhood relations.
+			if (b[i] > 0) {
+				int j = (NUM_BREAKDOWN_LEVELS[b[i]-1] == 0) ? 0 : i - NUM_REPAIR_TIME_FACTORS.length;
+
+				Node node2 = nodes.get(j);
+
+				node1.neighbours.add(node2);
+				node2.neighbours.add(node1);
+			}
+		}
+
+		// TODO test this later down the line with print outs, make sure:
+		// Relation and neighbours are correct.
+		// This works exactly the same as the original code.
 	}
 
 	@Override
@@ -72,8 +126,8 @@ public class Holthaus4SimConfig extends DynamicBreakdownSimConfig {
 
 	@Override
 	public DblStream getDueDateFactor(int index) {
-		int ddfIndex = index % numDDFs.size();
-		return new DblConst(numDDFs.get(ddfIndex));
+		int ddfIndex = index % ddfs.size();
+		return new DblConst(ddfs.get(ddfIndex));
 	}
 
 	@Override
@@ -119,17 +173,17 @@ public class Holthaus4SimConfig extends DynamicBreakdownSimConfig {
 	public double getBreakdownLevel(int index) {
 		int blIndex;
 		if (hasZeroBL) {
-			if (index < numDDFs.size()) {
+			if (index < ddfs.size()) {
 				blIndex = 0;
 			} else {
-				blIndex = (index - numDDFs.size()) / (numRTFs.size() * numDDFs.size()) + 1;
+				blIndex = (index - ddfs.size()) / (rtfs.size() * ddfs.size()) + 1;
 			}
 		} else {
-			blIndex = index / (numRTFs.size() * numDDFs.size());
+			blIndex = index / (rtfs.size() * ddfs.size());
 		}
 
 
-		return numBLs.get(blIndex);
+		return bls.get(blIndex);
 	}
 
 	// Repair time is dependent on the processing time, and the down time is
@@ -142,16 +196,16 @@ public class Holthaus4SimConfig extends DynamicBreakdownSimConfig {
 
 		int rtfIndex;
 		if (hasZeroBL) {
-			if (index < numDDFs.size()) {
+			if (index < ddfs.size()) {
 				rtfIndex = 0; // just choose the first one
 			} else {
-				rtfIndex = ((index - numDDFs.size()) / numDDFs.size()) % numRTFs.size();
+				rtfIndex = ((index - ddfs.size()) / ddfs.size()) % rtfs.size();
 			}
 		} else {
-			rtfIndex = (index / numDDFs.size()) % numRTFs.size();
+			rtfIndex = (index / ddfs.size()) % rtfs.size();
 		}
 
-		double repairTimeFactor = numRTFs.get(rtfIndex);
+		double repairTimeFactor = rtfs.get(rtfIndex);
 		return repairTimeFactor * MEAN_PROC_TIME;
 	}
 
@@ -165,6 +219,29 @@ public class Holthaus4SimConfig extends DynamicBreakdownSimConfig {
 	@Override
 	public int getNumConfigs() {
 		return numConfigs;
+	}
+
+	// Added for the multitask approach.
+	public int getNumScenarios() {
+		return NUM_SCENARIOS;
+	}
+
+	public List<Integer> getNeighbourScenarios(int scenario) {
+		return nodes.get(scenario).neighbours.stream().map(x -> x.index).collect(Collectors.toList());
+	}
+
+	public List<Integer> getIndicesForScenario(int scenario) {
+		return nodes.get(scenario).indices;
+	}
+
+	private class Node {
+		List<Node> neighbours = new ArrayList<Node>();
+		List<Integer> indices = new ArrayList<Integer>();
+		int index;
+
+		public Node(int index) {
+			this.index = index;
+		}
 	}
 
 }
