@@ -64,6 +64,15 @@ public class DeterministicBestJump implements IMultitaskNeighbourJump {
 	}
 
 	@Override
+	public void addIndividualToTask(final EvolutionState state,
+			final int subpopulation,
+			final int task,
+			final JasimaMultitaskIndividual ind,
+			final int threadnum) {
+		// TODO
+	}
+
+	@Override
 	public void clear() {
 		for (int i = 0; i < numSubpops; i++) {
 			for (int j = 0; j < numTasks; j++) {

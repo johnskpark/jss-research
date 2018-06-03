@@ -15,6 +15,12 @@ public interface IMultitaskNeighbourJump {
 			final JasimaMultitaskIndividual ind,
 			final int threadnum);
 
+	public void addIndividualToTask(final EvolutionState state,
+			final int subpopulation,
+			final int task,
+			final JasimaMultitaskIndividual ind,
+			final int threadnum);
+
 	public void clear();
 
 }

@@ -83,6 +83,9 @@ public class MultitaskBreeder extends SimpleBreeder {
 					x += bp.produce(1, upperbound - x, x, subpop,
 							newpop.subpops[subpop].individuals,
 							state,threadnum);
+
+					// TODO this part here, I need to assign the task to individuals.
+					// But how do I do this part that's compatible with the crossover operator?
 				}
 				if (x > upperbound) { // uh oh!  Someone blew it!
 					state.output.fatal("Whoa! A breeding pipeline overwrote the space of another pipeline in subpopulation " + subpop + ".  You need to check your breeding pipeline code (in produce() ).");

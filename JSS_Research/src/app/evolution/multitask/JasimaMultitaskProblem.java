@@ -184,7 +184,8 @@ public class JasimaMultitaskProblem extends JasimaSimpleProblem {
 			if (neighbourJump.jumpToNeighbour(state, subpopulation, taskPair.a, taskPair.b, ind, threadnum)) {
 				evaluateForTask(state, taskPair.b, ind, subpopulation, threadnum);
 
-				// TODO need to add the individual to the list...? This part needs some work.
+				// Add the individual to the task.
+				neighbourJump.addIndividualToTask(state, subpopulation, taskPair.b, ind, threadnum);
 
 				// Add the neighbours of the neighbours.
 				addNeighbours(neighbourQueue, taskPair.b);
