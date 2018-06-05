@@ -17,7 +17,7 @@ public class MultitaskBreeder extends SimpleBreeder {
 
 	private static final long serialVersionUID = -1963270030018084823L;
 
-	public static final String P_BREEDING_STRATEGY = "breed-strategy";
+	public static final String P_BREEDING_STRATEGY = "strategy";
 
 	private IMultitaskBreedStrategy breedStrategy;
 
@@ -32,7 +32,7 @@ public class MultitaskBreeder extends SimpleBreeder {
 	public Population breedPopulation(EvolutionState state) {
 		MultitaskEvolutionState multitaskState = (MultitaskEvolutionState) state;
 
-		multitaskState.setNumIndsPerTask(state, breedStrategy.getNumIndsPerTask(multitaskState));
+		multitaskState.setTasksForInds(breedStrategy.getTasksForInds(multitaskState));
 		addIndsToTasks(state);
 
 		Population newPop = super.breedPopulation(state);
@@ -43,7 +43,6 @@ public class MultitaskBreeder extends SimpleBreeder {
 	}
 
 	@Override
-	// TODO this is a copy of the old code, I need to assign the task to the individuals here.
 	protected void breedPopChunk(Population newpop,
 			EvolutionState state,
 			int[] numinds,
@@ -76,16 +75,23 @@ public class MultitaskBreeder extends SimpleBreeder {
 				bp.prepareToProduce(state, subpop, threadnum);
 
 				// start breedin'!
+				MultitaskEvolutionState multitaskState = (MultitaskEvolutionState) state;
+
+				int[] tasksForInds = multitaskState.getTasksForInds()[subpop];
 
 				x = from[subpop];
 				int upperbound = from[subpop] + numinds[subpop];
 				while (x < upperbound) {
-					x += bp.produce(1, upperbound - x, x, subpop,
+					int indsGenerated = bp.produce(1, upperbound - x, x, subpop,
 							newpop.subpops[subpop].individuals,
 							state,threadnum);
 
-					// TODO this part here, I need to assign the task to individuals.
-					// But how do I do this part that's compatible with the crossover operator?
+					for (int i = 0 ; i < indsGenerated; i++) {
+						JasimaMultitaskIndividual ind = (JasimaMultitaskIndividual) newpop.subpops[subpop].individuals[x + i];
+						ind.setAssignedTask(tasksForInds[x + i]);
+					}
+
+					x += indsGenerated;
 				}
 				if (x > upperbound) { // uh oh!  Someone blew it!
 					state.output.fatal("Whoa! A breeding pipeline overwrote the space of another pipeline in subpopulation " + subpop + ".  You need to check your breeding pipeline code (in produce() ).");

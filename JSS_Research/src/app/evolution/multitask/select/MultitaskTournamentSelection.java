@@ -21,8 +21,7 @@ public class MultitaskTournamentSelection extends TournamentSelection {
 			final int thread) {
 		MultitaskEvolutionState multitaskState = (MultitaskEvolutionState) state;
 
-		int numTasks = multitaskState.getNumTasks();
-		int[] numIndsPerTask = multitaskState.getNumIndsPerTask()[subpopulation];
+		int[] tasksForInds = multitaskState.getTasksForInds()[subpopulation];
 
 		int n = INDS_PRODUCED;
 		if (n < min) { n = min; }
@@ -30,19 +29,7 @@ public class MultitaskTournamentSelection extends TournamentSelection {
 
 		for(int i = 0; i < n; i++) {
 			// Determine the task that the individual will belong to.
-			int index = start + i;
-			int increment = 0;
-			int task = -1;
-
-			for (int j = 0; j < numTasks && task == -1; j++) {
-				if (index < numIndsPerTask[j] + increment) {
-					task = j;
-				} else {
-					increment += numIndsPerTask[j];
-				}
-			}
-
-			currentTask = task;
+			currentTask = tasksForInds[start + i];
 
 			// Start the tournament selection.
 			inds[start + i] = state.population.subpops[subpopulation].individuals[produce(subpopulation,state,thread)];

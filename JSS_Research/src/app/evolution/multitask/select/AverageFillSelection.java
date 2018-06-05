@@ -15,14 +15,18 @@ public class AverageFillSelection extends MultitaskTournamentSelection {
 
 	public static final String P_NEIGHBOUR_WEIGHT = "neighbour-weight";
 
+	public static final double DEFAULT_WEIGHT = 0.0;
+
 	private double neighbourWeight;
 
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
 		super.setup(state, base);
 
+		Parameter def = defaultBase();
+
 		try {
-			neighbourWeight = state.parameters.getDouble(base.push(P_NEIGHBOUR_WEIGHT), null);
+			neighbourWeight = state.parameters.getDouble(base.push(P_NEIGHBOUR_WEIGHT), def.push(P_NEIGHBOUR_WEIGHT), DEFAULT_WEIGHT);
 		} catch (NumberFormatException ex) {
 			state.output.fatal("Neighbour weight for needs to be defined for the class AverageFillSelection.");
 		}

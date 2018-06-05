@@ -2,6 +2,6 @@ package app.evolution.multitask;
 
 public interface IMultitaskBreedStrategy {
 
-	public int[][] getNumIndsPerTask(MultitaskEvolutionState state);
+	public int[][] getTasksForInds(MultitaskEvolutionState state);
 
 }

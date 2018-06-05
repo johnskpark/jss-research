@@ -3,7 +3,6 @@ package app.evolution.multitask;
 import java.util.List;
 
 import app.simConfig.DynamicBreakdownSimConfig;
-import ec.EvolutionState;
 import ec.simple.SimpleEvolutionState;
 
 public class MultitaskEvolutionState extends SimpleEvolutionState {
@@ -15,7 +14,7 @@ public class MultitaskEvolutionState extends SimpleEvolutionState {
 	private DynamicBreakdownSimConfig simConfig;
 	private int numTasks;
 
-	private int[][] numIndsPerTask;
+	private int[][] tasksForInds;
 
 	private List<Integer>[][] indsPerTask;
 
@@ -35,12 +34,12 @@ public class MultitaskEvolutionState extends SimpleEvolutionState {
 		return simConfig;
 	}
 
-	public void setNumIndsPerTask(final EvolutionState state, final int[][] numIndsPerTask) {
-		this.numIndsPerTask = numIndsPerTask;
+	public void setTasksForInds(final int[][] tasksForInds) {
+		this.tasksForInds = tasksForInds;
 	}
 
-	public int[][] getNumIndsPerTask() {
-		return numIndsPerTask;
+	public int[][] getTasksForInds() {
+		return tasksForInds;
 	}
 
 	public void setIndsPerTask(List<Integer>[][] indsPerTask) {
