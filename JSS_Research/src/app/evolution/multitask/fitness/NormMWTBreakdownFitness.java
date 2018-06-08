@@ -7,7 +7,7 @@ import app.evolution.JasimaGPIndividual;
 import app.simConfig.SimConfig;
 import app.stat.WeightedTardinessStat;
 
-public class NormMWTFitness extends MultitaskFitnessBase {
+public class NormMWTBreakdownFitness extends MultitaskFitnessBase {
 
 	@Override
 	public double getFitness(final int index,

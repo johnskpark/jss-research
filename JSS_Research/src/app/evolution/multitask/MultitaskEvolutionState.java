@@ -34,6 +34,9 @@ public class MultitaskEvolutionState extends SimpleEvolutionState {
 		return simConfig;
 	}
 
+	// FIXME I need to change up these wordings to make it a bit more clear.
+
+	// Used as part of breeding.
 	public void setTasksForInds(final int[][] tasksForInds) {
 		this.tasksForInds = tasksForInds;
 	}
@@ -42,6 +45,7 @@ public class MultitaskEvolutionState extends SimpleEvolutionState {
 		return tasksForInds;
 	}
 
+	// Used as part of evaluation.
 	public void setIndsPerTask(List<Integer>[][] indsPerTask) {
 		this.indsPerTask = indsPerTask;
 	}

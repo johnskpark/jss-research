@@ -30,26 +30,12 @@ public class JasimaMultitaskProblem extends JasimaSimpleProblem {
 	public void setup(final EvolutionState state, final Parameter base) {
 		super.setup(state, base);
 
-		// TODO add more stuff here along the way.
-
 		breakdownSimConfig = (DynamicBreakdownSimConfig) getSimConfig();
 		multitaskFitness = (MultitaskFitnessBase) getFitness();
 
 		MultitaskEvolutionState multitaskState = (MultitaskEvolutionState) state;
 		multitaskState.setSimConfig(breakdownSimConfig);
 		multitaskState.setNumTasks(breakdownSimConfig.getNumScenarios());
-
-		int numSubpops = multitaskState.population.subpops.length;
-		int numTasks = multitaskState.getNumTasks();
-
-		@SuppressWarnings("unchecked")
-		List<Integer>[][] indsPerTask = new List[numSubpops][numTasks];
-		for (int i = 0; i < numSubpops; i++) {
-			for (int j = 0; j < numTasks; j++) {
-				indsPerTask[i][j] = new ArrayList<>();
-			}
-		}
-		multitaskState.setIndsPerTask(indsPerTask);
 
 		neighbourJump = (IMultitaskNeighbourJump) state.parameters.getInstanceForParameter(base.push(P_NEIGHBOUR_JUMP), null, IMultitaskNeighbourJump.class);
 		neighbourJump.init(state);
@@ -61,12 +47,32 @@ public class JasimaMultitaskProblem extends JasimaSimpleProblem {
 
 		MultitaskEvolutionState multitaskState = (MultitaskEvolutionState) state;
 
+		if (state.generation == 0) {
+			int numSubpops = multitaskState.population.subpops.length;
+			int numTasks = multitaskState.getNumTasks();
+
+			@SuppressWarnings("unchecked")
+			List<Integer>[][] indsPerTask = new List[numSubpops][numTasks];
+			for (int i = 0; i < numSubpops; i++) {
+				for (int j = 0; j < numTasks; j++) {
+					indsPerTask[i][j] = new ArrayList<>();
+				}
+			}
+			multitaskState.setIndsPerTask(indsPerTask);
+		}
+
+		// TODO temporary output
+//		System.out.println("Outputting assigned tasks:");
+
 		for (int i = 0; i < state.population.subpops.length; i++) {
 			Individual[] inds = state.population.subpops[i].individuals;
 			for (int j = 0; j < inds.length; j++) {
 				JasimaMultitaskIndividual multitaskInd = (JasimaMultitaskIndividual) inds[j];
 
 				multitaskInd.setNumTasks(multitaskState.getNumTasks());
+
+				// TODO temporary output
+//				System.out.println(multitaskInd + ": " + multitaskInd.getAssignedTask());
 			}
 		}
 	}
@@ -101,7 +107,6 @@ public class JasimaMultitaskProblem extends JasimaSimpleProblem {
 				new Individual[] {ind},
 				new int[] {subpopulation},
 				threadnum);
-		initialiseTracker(getTracker());
 
 		JasimaMultitaskIndividual multitaskInd = (JasimaMultitaskIndividual) ind;
 
@@ -114,14 +119,14 @@ public class JasimaMultitaskProblem extends JasimaSimpleProblem {
 
 			evaluateForTask(state, task, multitaskInd, subpopulation, threadnum);
 		}
-
-		clearForRun(getTracker());
 	}
 
 	public void evaluateForDomain(final EvolutionState state,
 			final JasimaMultitaskIndividual ind,
 			final int subpopulation,
 			final int threadnum) {
+		initialiseTracker(getTracker());
+
 		for (int task = 0; task < breakdownSimConfig.getNumScenarios(); task++) {
 			List<Integer> indices = breakdownSimConfig.getIndicesForScenario(task);
 
@@ -139,6 +144,8 @@ public class JasimaMultitaskProblem extends JasimaSimpleProblem {
 			multitaskFitness.setTaskFitness(state, task, getSimConfig(), ind);
 			multitaskFitness.clear();
 		}
+
+		clearForRun(getTracker());
 	}
 
 	public void evaluateForTask(final EvolutionState state,
@@ -146,6 +153,8 @@ public class JasimaMultitaskProblem extends JasimaSimpleProblem {
 			final JasimaMultitaskIndividual ind,
 			final int subpopulation,
 			final int threadnum) {
+		initialiseTracker(getTracker());
+
 		List<Integer> indices = breakdownSimConfig.getIndicesForScenario(task);
 
 		for (int i = 0; i < indices.size(); i++) {
@@ -161,6 +170,8 @@ public class JasimaMultitaskProblem extends JasimaSimpleProblem {
 
 		multitaskFitness.setTaskFitness(state, task, getSimConfig(), ind);
 		multitaskFitness.clear();
+
+		clearForRun(getTracker());
 	}
 
 	private void applyToNeighbours(final EvolutionState state,

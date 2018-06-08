@@ -100,14 +100,14 @@ public class AverageFillSelection extends MultitaskTournamentSelection {
 		// Get the ranks of the individuals in the tournament selection.
 		worstRanks[0] = indsPerTask[subpopulation][task].size();
 		for (int i = 0; i < tournamentInds.length; i++) {
-			ranks[i][0] = indsPerTask[subpopulation][task].indexOf(tournamentInds[i]) + 1;
+			ranks[0][i] = indsPerTask[subpopulation][task].indexOf(tournamentInds[i]) + 1;
 
-			sumRanks[0] += ranks[i][0];
-			nonZeroRankCounts[0] += ((ranks[i][0] != 0) ? 1 : 0);
+			sumRanks[0] += ranks[0][i];
+			nonZeroRankCounts[0] += ((ranks[0][i] != 0) ? 1 : 0);
 		}
 
 		for (int i = 1; i < numTasks; i++) {
-			int neighbourIndex = neighbours.get(i);
+			int neighbourIndex = neighbours.get(i - 1);
 			worstRanks[i] = indsPerTask[subpopulation][neighbourIndex].size();
 
 			for (int j = 0; j < tournamentInds.length; j++) {

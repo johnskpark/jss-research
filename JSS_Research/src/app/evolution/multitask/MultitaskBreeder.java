@@ -115,6 +115,7 @@ public class MultitaskBreeder extends SimpleBreeder {
 		for (int i = 0; i < numSubpops; i++) {
 			for (int j = 0; j < numTasks; j++) {
 				indsPerTask[i][j] = new ArrayList<>();
+				indIndicesPerTask[i][j] = new ArrayList<>();
 			}
 		}
 
@@ -133,8 +134,6 @@ public class MultitaskBreeder extends SimpleBreeder {
 						if (!indList.contains(multitaskInd)) {
 							indList.add(multitaskInd);
 							indIndicesList.add(i);
-						} else {
-							state.output.fatal("Attempting to add duplicate individual to task " + multitaskInd);
 						}
 					}
 				}

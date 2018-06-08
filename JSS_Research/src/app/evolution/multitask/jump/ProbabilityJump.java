@@ -19,26 +19,28 @@ public class ProbabilityJump implements IMultitaskNeighbourJump {
 	private int numTasks;
 	private MersenneTwisterFast rand;
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void init(final EvolutionState state) {
-		MultitaskEvolutionState multitaskState = (MultitaskEvolutionState) state;
-
-		numSubpops = multitaskState.population.subpops.length;
-		numTasks = multitaskState.getNumTasks();
-
-		individualsPerTask = new List[numSubpops][numTasks];
-		for (int s = 0; s < numSubpops; s++) {
-			for (int t = 0; t < numTasks; t++) {
-				individualsPerTask[s][t] = new ArrayList<>();
-			}
-		}
-
 		rand = new MersenneTwisterFast(state.random[0].nextLong());
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void preprocessing(final EvolutionState state, final int threadnum) {
+		if (state.generation == 0) {
+			MultitaskEvolutionState multitaskState = (MultitaskEvolutionState) state;
+
+			numSubpops = multitaskState.population.subpops.length;
+			numTasks = multitaskState.getNumTasks();
+
+			individualsPerTask = new List[numSubpops][numTasks];
+			for (int s = 0; s < numSubpops; s++) {
+				for (int t = 0; t < numTasks; t++) {
+					individualsPerTask[s][t] = new ArrayList<>();
+				}
+			}
+		}
+
 		// Insert the individuals into the respective slots.
 		for (int i = 0; i < state.population.subpops.length; i++) {
 			Individual[] inds = state.population.subpops[i].individuals;
@@ -101,7 +103,19 @@ public class ProbabilityJump implements IMultitaskNeighbourJump {
 			}
 		}
 
-		indList.add(low, ind);
+		// Ensure we're not adding in a duplicate here.
+		int start = low;
+		boolean isDuplicate = false;
+		while (comparator.compare(ind, indList.get(start)) == 0 && !isDuplicate && start < indList.size()) {
+			if (ind.equals(indList.get(start))) {
+				isDuplicate = true;
+			}
+			start++;
+		}
+
+		if (!isDuplicate) {
+			indList.add(low, ind);
+		}
 	}
 
 	@Override
@@ -122,9 +136,12 @@ public class ProbabilityJump implements IMultitaskNeighbourJump {
 
 		@Override
 		public int compare(JasimaMultitaskIndividual o1, JasimaMultitaskIndividual o2) {
-			if (o1.getTaskFitness(task) < o2.getTaskFitness(task)) {
+			double tf1 = o1.getTaskFitness(task);
+			double tf2 = o2.getTaskFitness(task);
+
+			if (tf1 < tf2) {
 				return -1;
-			} else if (o2.getTaskFitness(task) > o2.getTaskFitness(task)) {
+			} else if (tf1 > tf2) {
 				return 1;
 			} else {
 				return 0;

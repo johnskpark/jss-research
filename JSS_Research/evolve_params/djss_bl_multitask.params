@@ -84,13 +84,16 @@ select.tournament.neighbour-weight = 0.5
 
 ############################################################
 eval.problem = app.evolution.multitask.JasimaMultitaskProblem
+
+eval.problem.neighbour-jump = app.evolution.multitask.jump.ProbabilityJump
+
 eval.problem.data = app.evolution.JasimaGPData
 
 eval.problem.reference-rule = app.priorityRules.WATCPR
 eval.problem.reference-fitness = app.evolution.simple.fitness.MWTFitness
 
 eval.problem.rule = app.evolution.priorityRules.BasicPriorityRule
-eval.problem.fitness = app.evolution.niched.fitness.NormMWTBreakdownFitness
+eval.problem.fitness = app.evolution.multitask.fitness.NormMWTBreakdownFitness
 
 eval.problem.workstations = 1
 eval.problem.workstation.0 = app.listener.hunt.EvolveFactory
