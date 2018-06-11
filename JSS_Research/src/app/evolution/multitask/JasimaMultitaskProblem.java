@@ -61,18 +61,12 @@ public class JasimaMultitaskProblem extends JasimaSimpleProblem {
 			multitaskState.setIndsPerTask(indsPerTask);
 		}
 
-		// TODO temporary output
-//		System.out.println("Outputting assigned tasks:");
-
 		for (int i = 0; i < state.population.subpops.length; i++) {
 			Individual[] inds = state.population.subpops[i].individuals;
 			for (int j = 0; j < inds.length; j++) {
 				JasimaMultitaskIndividual multitaskInd = (JasimaMultitaskIndividual) inds[j];
 
 				multitaskInd.setNumTasks(multitaskState.getNumTasks());
-
-				// TODO temporary output
-//				System.out.println(multitaskInd + ": " + multitaskInd.getAssignedTask());
 			}
 		}
 	}
