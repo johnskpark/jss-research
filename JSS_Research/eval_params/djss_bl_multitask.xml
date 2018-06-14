@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<evaluationConfig>
+
+<!-- Rule file definitions -->
+<!-- The multitask approach -->
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>mb_multitask/bl_multitask_0.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>mb_multitask/bl_multitask_1.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>mb_multitask/bl_multitask_2.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>mb_multitask/bl_multitask_3.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>mb_multitask/bl_multitask_4.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>mb_multitask/bl_multitask_5.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>mb_multitask/bl_multitask_6.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+<!-- The man-made approach -->
+<!--
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.EvalWATC</solverClass>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.EvalWCOVERT</solverClass>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.EvalEDD</solverClass>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.EvalFIFO</solverClass>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.EvalSPT</solverClass>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.EvalWSPT</solverClass>
+	</solverConfig>
+-->
+
+<!--
+	<datasetConfig>
+		<datasetClass>app.simConfig.holthausConfig4.EvalFactory</datasetClass>
+		<datasetInstances>(all),(all),(all)</datasetInstances>
+		<datasetSeed>15</datasetSeed>
+		<datasetRepeat>30</datasetRepeat>
+		<datasetRotateSeed>true</datasetRotateSeed>
+	</datasetConfig>
+-->
+
+	<datasetConfig>
+		<datasetClass>app.simConfig.samplingConfig.EvalFactory</datasetClass>
+		<datasetSeed>15</datasetSeed>
+		<datasetRepeat>30</datasetRepeat>
+		<datasetRotateSeed>true</datasetRotateSeed>
+	</datasetConfig>
+
+<!-- Output file definition -->
+	<outputConfig>
+	    <outputFile>breakdown_holthaus4_diversity_output.csv</outputFile>
+	</outputConfig>
+
+<!-- Fitness definitions -->
+	<fitnessConfig>
+		<fitnessClass>app.evaluation.fitness.MWTFitness</fitnessClass>
+	</fitnessConfig>
+
+	<fitnessConfig>
+		<fitnessClass>app.evaluation.fitness.RuleSizeFitness</fitnessClass>
+	</fitnessConfig>
+
+<!-- Comment out of not a breakdown simulation config -->
+<!--
+	<fitnessConfig>
+		<fitnessClass>app.evaluation.fitness.BreakdownLevelInfo</fitnessClass>
+	</fitnessConfig>
+
+	<fitnessConfig>
+		<fitnessClass>app.evaluation.fitness.RepairTimeDistributionInfo</fitnessClass>
+	</fitnessConfig>
+
+	<fitnessConfig>
+		<fitnessClass>app.evaluation.fitness.DueDateFactorInfo</fitnessClass>
+	</fitnessConfig>
+
+	<fitnessConfig>
+		<fitnessClass>app.evaluation.fitness.StopAfterNumJobsInfo</fitnessClass>
+	</fitnessConfig>
+-->
+
+<!-- Uncomment whenever you need to calculate things via the reference rules -->
+
+	<refConfig>
+		<refRule>app.evaluation.priorityRules.EvalWATC</refRule>
+		<refTracking>
+			<factory>app.tracker.sampler.SamplerFactory</factory>
+			<rule>app.evaluation.priorityRules.EvalWSPT</rule>
+			<seed>15</seed>
+		</refTracking>
+	</refConfig>
+
+	<refFitnessConfig>
+		<fitnessClass>app.evaluation.fitness.RuleRankFitness</fitnessClass>
+	</refFitnessConfig>
+
+	<listenerConfig>
+	    <listenerClass>app.listener.hunt.EvalFactory</listenerClass>
+	    <listenerSize>5</listenerSize>
+	</listenerConfig>
+
+	<listenerConfig>
+		<listenerClass>app.listener.breakdown.EvalFactory</listenerClass>
+	</listenerConfig>
+
+</evaluationConfig>
+
+
+

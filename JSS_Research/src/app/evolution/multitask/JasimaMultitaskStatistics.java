@@ -62,6 +62,7 @@ public class JasimaMultitaskStatistics extends SimpleStatistics {
 			}
 
 			// Print out a summary of the individual's fitnesses.
+			if (doGeneration) { state.output.println("\n Best Multitask Individuals of Subpopulation " + i + ":",statisticslog); }
 			for (int j = 0; j < numTasks; j++) {
 				if (doGeneration) {
 					state.output.println("Task: " + j, statisticslog);
@@ -85,35 +86,17 @@ public class JasimaMultitaskStatistics extends SimpleStatistics {
 		int numSubpops = multitaskState.population.subpops.length;
 		int numTasks = multitaskState.getNumTasks();
 
-		// for now we just print the best fitness of last generation of subpopulation i.
-		if (doFinal) {
-			state.output.println("\nBest Individual of Run:", statisticslog);
-		}
+		// For now we just print the best fitness of last generation of subpopulation i.
+
+		if (doFinal) { state.output.println("\nBest Individual of Run:", statisticslog); }
 		for (int i = 0; i < numSubpops; i++) {
-			if (doFinal) {
-				state.output.println("Subpopulation " + i + ":", statisticslog);
-			}
-
-			// Print out the best individuals per task.
-			for (int j = 0; j < numTasks; j++) {
-				JasimaMultitaskIndividual taskInd = bestIndPerTask[i][j];
-				if (doFinal) {
-					state.output.println("Task " + j + ":", statisticslog);
-					taskInd.printIndividualForHumans(state, statisticslog);
-				}
-
-				if (doMessage && !silentPrint) {
-					state.output.message("Subpop " + i + " task " + j + " best fitness of run: " + taskInd.fitness.fitnessToStringForHumans());
-				}
-			}
-
 			// Print out the best overall individual.
 			if (doFinal) {
+				state.output.println("Subpopulation " + i + ":", statisticslog);
 				bestIndOfGen[i].printIndividualForHumans(state, statisticslog);
 			}
-			if (doMessage && !silentPrint) {
-				state.output.message("Subpop " + i + " best fitness of run: " + bestIndOfGen[i].fitness.fitnessToStringForHumans());
-			}
+
+			if (doMessage && !silentPrint) { state.output.message("Subpop " + i + " best fitness of run: " + bestIndOfGen[i].fitness.fitnessToStringForHumans()); }
 
 			// finally describe the winner if there is a description
 			if (doFinal && doDescription) {
@@ -121,7 +104,20 @@ public class JasimaMultitaskStatistics extends SimpleStatistics {
 					((SimpleProblemForm) (state.evaluator.p_problem.clone())).describe(state, bestIndOfGen[i], 0, 0, statisticslog);
 				}
 			}
+			
+			// Print out the best individuals per task.
+			if (doFinal) { state.output.println("\nBest Multitask Individual of Subpopulation " + i + ":", statisticslog); }
+			for (int j = 0; j < numTasks; j++) {
+				JasimaMultitaskIndividual taskInd = bestIndPerTask[i][j];
+				if (doFinal) {
+					state.output.println("Task " + j + ":", statisticslog);
+					taskInd.printIndividualForHumans(state, statisticslog);
+				}
+
+				if (doMessage && !silentPrint) { state.output.message("Subpop " + i + " task " + j + " best fitness of run: " + taskInd.fitness.fitnessToStringForHumans()); }
+			}
 		}
 	}
+	
 
 }

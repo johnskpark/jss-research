@@ -3,6 +3,7 @@ package app.evolution.multitask;
 import java.util.Arrays;
 
 import app.evolution.JasimaGPIndividual;
+import ec.EvolutionState;
 
 public class JasimaMultitaskIndividual extends JasimaGPIndividual {
 
@@ -39,4 +40,29 @@ public class JasimaMultitaskIndividual extends JasimaGPIndividual {
 		return taskFitnesses[taskIndex];
 	}
 
+
+	@Override
+    public void printIndividualForHumans(final EvolutionState state, final int log) {
+        state.output.println(EVALUATED_PREAMBLE + (evaluated ? "true" : "false"), log);
+
+        state.output.print("Standard ", log);
+        fitness.printFitnessForHumans(state,log);
+
+        state.output.print("Task " + task + " Fitness: " + taskFitnesses[task], log);
+
+        state.output.print("Task ", log);
+        printTrees(state,log);
+	}
+
+	@Override
+	public Object clone() {
+		JasimaMultitaskIndividual newObject = (JasimaMultitaskIndividual) super.clone();
+
+		newObject.taskFitnesses = Arrays.copyOf(this.taskFitnesses, this.taskFitnesses.length);
+		newObject.task = this.task;
+
+		newObject.taskFitnesses = Arrays.copyOf(this.taskFitnesses, this.taskFitnesses.length);
+
+		return newObject;
+	}
 }
