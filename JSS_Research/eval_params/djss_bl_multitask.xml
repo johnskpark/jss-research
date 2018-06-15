@@ -79,7 +79,6 @@
 	</solverConfig>
 -->
 
-<!--
 	<datasetConfig>
 		<datasetClass>app.simConfig.holthausConfig4.EvalFactory</datasetClass>
 		<datasetInstances>(all),(all),(all)</datasetInstances>
@@ -87,18 +86,19 @@
 		<datasetRepeat>30</datasetRepeat>
 		<datasetRotateSeed>true</datasetRotateSeed>
 	</datasetConfig>
--->
 
+<!--
 	<datasetConfig>
 		<datasetClass>app.simConfig.samplingConfig.EvalFactory</datasetClass>
 		<datasetSeed>15</datasetSeed>
 		<datasetRepeat>30</datasetRepeat>
 		<datasetRotateSeed>true</datasetRotateSeed>
 	</datasetConfig>
+-->
 
 <!-- Output file definition -->
 	<outputConfig>
-	    <outputFile>breakdown_holthaus4_diversity_output.csv</outputFile>
+	    <outputFile>breakdown_holthaus4_multitask_output.csv</outputFile>
 	</outputConfig>
 
 <!-- Fitness definitions -->
@@ -111,7 +111,6 @@
 	</fitnessConfig>
 
 <!-- Comment out of not a breakdown simulation config -->
-<!--
 	<fitnessConfig>
 		<fitnessClass>app.evaluation.fitness.BreakdownLevelInfo</fitnessClass>
 	</fitnessConfig>
@@ -127,10 +126,10 @@
 	<fitnessConfig>
 		<fitnessClass>app.evaluation.fitness.StopAfterNumJobsInfo</fitnessClass>
 	</fitnessConfig>
--->
 
 <!-- Uncomment whenever you need to calculate things via the reference rules -->
 
+<!--
 	<refConfig>
 		<refRule>app.evaluation.priorityRules.EvalWATC</refRule>
 		<refTracking>
@@ -143,6 +142,7 @@
 	<refFitnessConfig>
 		<fitnessClass>app.evaluation.fitness.RuleRankFitness</fitnessClass>
 	</refFitnessConfig>
+-->
 
 	<listenerConfig>
 	    <listenerClass>app.listener.hunt.EvalFactory</listenerClass>
