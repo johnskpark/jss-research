@@ -39,21 +39,26 @@ public class ProbabilityJump implements IMultitaskNeighbourJump {
 					individualsPerTask[s][t] = new ArrayList<>();
 				}
 			}
-		}
+		} else {
+			// Insert the individuals into the respective slots.
+			for (int i = 0; i < state.population.subpops.length; i++) {
+				Individual[] inds = state.population.subpops[i].individuals;
+				for (int j = 0; j < inds.length; j++) {
+					JasimaMultitaskIndividual ind = (JasimaMultitaskIndividual) inds[j];
 
-		// Insert the individuals into the respective slots.
-		for (int i = 0; i < state.population.subpops.length; i++) {
-			Individual[] inds = state.population.subpops[i].individuals;
-			for (int j = 0; j < inds.length; j++) {
-				JasimaMultitaskIndividual ind = (JasimaMultitaskIndividual) inds[j];
-				individualsPerTask[i][ind.getAssignedTask()].add(ind);
+					for (int task = 0; task < numTasks; task++) {
+						if (ind.getTaskFitness(task) != JasimaMultitaskIndividual.NOT_SET) {
+							individualsPerTask[i][task].add(ind);
+						}
+					}
+				}
 			}
-		}
 
-		// Sort the individuals into their respective ranks.
-		for (int i = 0; i < numSubpops; i++) {
-			for (int j = 0; j < numTasks; j++) {
-				Collections.sort(individualsPerTask[i][j], new FitnessComparator(j));
+			// Sort the individuals into their respective ranks.
+			for (int i = 0; i < numSubpops; i++) {
+				for (int j = 0; j < numTasks; j++) {
+					Collections.sort(individualsPerTask[i][j], new FitnessComparator(j));
+				}
 			}
 		}
 	}

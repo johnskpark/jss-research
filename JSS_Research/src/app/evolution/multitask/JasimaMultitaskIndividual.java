@@ -10,8 +10,9 @@ public class JasimaMultitaskIndividual extends JasimaGPIndividual {
 	private static final long serialVersionUID = 2678166441642194373L;
 
 	public static final int NOT_SET = -1;
+	public static final int NO_TASK_SET = -1;
 
-	private int task;
+	private int task = NO_TASK_SET;
 	private double[] taskFitnesses;
 
 	public void setAssignedTask(int task) {
@@ -48,7 +49,9 @@ public class JasimaMultitaskIndividual extends JasimaGPIndividual {
         state.output.print("Standard ", log);
         fitness.printFitnessForHumans(state,log);
 
-        state.output.print("Task " + task + " Fitness: " + taskFitnesses[task], log);
+        if (task != NOT_SET) {
+        	state.output.print("Task " + task + " Fitness: " + taskFitnesses[task], log);
+        }
 
         state.output.print("Task ", log);
         printTrees(state,log);

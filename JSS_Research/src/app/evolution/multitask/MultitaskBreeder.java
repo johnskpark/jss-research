@@ -11,6 +11,7 @@ import ec.Individual;
 import ec.Population;
 import ec.simple.SimpleBreeder;
 import ec.util.Parameter;
+import ec.util.QuickSort;
 import ec.util.SortComparatorL;
 import jasima.core.util.Pair;
 
@@ -35,14 +36,14 @@ public class MultitaskBreeder extends SimpleBreeder {
 
 		int numElites = super.numElites(state, subpopulation);
 
-		return numElites * multitaskState.getNumTasks();
+		return numElites * (multitaskState.getNumTasks() + 1);
 	}
 
 	@Override
 	public Population breedPopulation(EvolutionState state) {
 		MultitaskEvolutionState multitaskState = (MultitaskEvolutionState) state;
 
-		multitaskState.setTasksForInds(breedStrategy.getTasksForInds(multitaskState));
+		multitaskState.setTasksForInds(breedStrategy.getTasksForInds(multitaskState, this));
 		addIndsToTasks(state);
 
 		Population newPop = super.breedPopulation(state);
@@ -119,31 +120,38 @@ public class MultitaskBreeder extends SimpleBreeder {
 		int numSubpops = multitaskState.population.subpops.length;
 		int numTasks = multitaskState.getNumTasks();
 
-		// are our elites small enough?
 		for(int x = 0; x < numSubpops; x++)  {
+			// Are our elites small enough?
 			if (numElites(state, x) > state.population.subpops[x].individuals.length) {
-				state.output.error("The number of elites for subpopulation " + x + " exceeds the actual size of the subpopulation", new Parameter(EvolutionState.P_BREEDER).push(P_ELITE).push(""+x));
+				state.output.error("The number of elites for subpopulation " + x + " exceeds the actual size of the subpopulation", new Parameter(EvolutionState.P_BREEDER).push(P_ELITE).push("" + x));
 			}
 			if (numElites(state, x) == state.population.subpops[x].individuals.length) {
-				state.output.warning("The number of elites for subpopulation " + x + " is the actual size of the subpopulation", new Parameter(EvolutionState.P_BREEDER).push(P_ELITE).push(""+x));
+				state.output.warning("The number of elites for subpopulation " + x + " is the actual size of the subpopulation", new Parameter(EvolutionState.P_BREEDER).push(P_ELITE).push("" + x));
+			}
+
+			// The number of elites need to be divisible by the number of tasks + 1
+			if (numElites(state, x) % (numTasks + 1) != 0) {
+				state.output.warning("The number of elites for subpopulation " + x + " needs to be divisible by the number of tasks + 1. Number of elites: " + numElites(state, x), new Parameter(EvolutionState.P_BREEDER).push(P_ELITE).push("" + x));
 			}
 		}
 		state.output.exitIfErrors();
 
-		// we assume that we're only grabbing a small number (say <10%), so
-		// it's not being done multithreaded
+		// We assume that we're only grabbing a small number (say <10%), so it's not being done multithreaded
 		for (int sub = 0; sub < numSubpops; sub++)  {
-			if (!shouldBreedSubpop(state, sub, 0)) { // don't load the elites for this one, we're not doing breeding of it
+			if (!shouldBreedSubpop(state, sub, 0)) { // Don't load the elites for this one, we're not doing breeding of it
 				continue;
 			}
 
-			// if the number of elites equals the number of tasks, then we handle this by just finding the best elites for each task.
-			if (numElites(state, sub) == numTasks) {
-				int[] best = new int[numTasks];
-				Individual[] oldinds = state.population.subpops[sub].individuals;
+			Individual[] oldinds = state.population.subpops[sub].individuals;
+			int numElites = numElites(state, sub);
+
+			// If the number of elites equals the number of tasks, then we handle this by just finding the best elites for each task.
+			if (numElites == numTasks + 1) {
+				int[] best = new int[numElites];
 				for(int x = 1; x < oldinds.length; x++) {
 					JasimaMultitaskIndividual ind = (JasimaMultitaskIndividual) oldinds[x];
 
+					// Best fitness for specific tasks.
 					for (int task = 0; task < numTasks; task++) {
 						JasimaMultitaskIndividual bestInd = (JasimaMultitaskIndividual) oldinds[best[task]];
 
@@ -152,35 +160,66 @@ public class MultitaskBreeder extends SimpleBreeder {
 							best[task] = x;
 						}
 					}
+
+					// Best overall fitness.
+					if (ind.fitness.betterThan(oldinds[best[numTasks]].fitness)) {
+						best[numTasks] = x;
+					}
 				}
 				Individual[] inds = newpop.subpops[sub].individuals;
-				for (int task = 0; task < numTasks; task++) {
+				for (int task = 0; task < numElites; task++) {
 					JasimaMultitaskIndividual ind = (JasimaMultitaskIndividual) oldinds[best[task]];
-					ind.setAssignedTask(task);
+					if (task < numTasks) {
+						ind.setAssignedTask(task);
+					} else {
+						ind.setAssignedTask(JasimaMultitaskIndividual.NOT_SET);
+					}
 
 					inds[inds.length-task-1] = (Individual) (ind.clone());
 				}
-			}  else if (numElites(state, sub) > numTasks) { // we'll need to sort for each task.
-				state.output.fatal("Not yet implemented.");
+			}  else if (numElites > numTasks + 1) { // We'll need to sort for each task.
+				int increment = 0;
 
-				// TODO this part is commented out for now. It needs to take into account multiple elites for each individual.
-//				int[] orderedPop = new int[state.population.subpops[sub].individuals.length];
-//				for(int x = 0; x < state.population.subpops[sub].individuals.length; x++) { orderedPop[x] = x; }
-//
-//				// sort the best so far where "<" means "not as fit as"
-//				QuickSort.qsort(orderedPop, new EliteTaskComparator(state.population.subpops[sub].individuals));
-//				// load the top N individuals
-//
-//				Individual[] inds = newpop.subpops[sub].individuals;
-//				Individual[] oldinds = state.population.subpops[sub].individuals;
-//				for(int x = inds.length - numElites(state, sub); x < inds.length; x++) {
-//					inds[x] = (Individual) (oldinds[orderedPop[x]].clone());
-//				}
+				// Load individuals per task.
+				for (int task = 0; task < numTasks; task++) {
+					increment += loadElitesPerTask(state, newpop, sub, task, numTasks, increment);
+				}
+
+				// Load best overall individuals.
+				loadElitesPerTask(state, newpop, sub, JasimaMultitaskIndividual.NOT_SET, numTasks, increment);
 			}
 		}
 
-		// optionally force reevaluation
+		// Optionally force reevaluation.
 		unmarkElitesEvaluated(state, newpop);
+	}
+
+	protected int loadElitesPerTask(EvolutionState state,
+			Population newpop,
+			int subpopulation,
+			int task,
+			int numTasks,
+			int increment) {
+		// This is bugged, it doesn't assign the
+		Individual[] oldinds = state.population.subpops[subpopulation].individuals;
+		int numLoaded = numElites(state, subpopulation) / numTasks;
+
+		int[] orderedPop = new int[oldinds.length];
+		for (int x = 0; x < oldinds.length; x++) { orderedPop[x] = x; }
+
+		// Sort the best so far where "<" means "not as fit as".
+		QuickSort.qsort(orderedPop, new EliteTaskComparator(oldinds, task));
+		// Load the top N individuals.
+
+		Individual[] inds = newpop.subpops[subpopulation].individuals;
+		for(int x = inds.length - (increment + numLoaded); x < inds.length - increment; x++) {
+			JasimaMultitaskIndividual newind = (JasimaMultitaskIndividual) (oldinds[orderedPop[x]].clone());
+			newind.setAssignedTask(task);
+
+			inds[x] = newind;
+		}
+
+		return numLoaded;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -288,10 +327,35 @@ public class MultitaskBreeder extends SimpleBreeder {
 			this.inds = inds;
 			this.task = task;
 		}
+
+		@Override
 		public boolean lt(long a, long b) {
-			return inds[(int)b].fitness.betterThan(inds[(int)a].fitness);
+			if (task == JasimaMultitaskIndividual.NOT_SET) {
+				return inds[(int)b].fitness.betterThan(inds[(int)a].fitness);
+			} else {
+				double tf1 = ((JasimaMultitaskIndividual) inds[(int)a]).getTaskFitness(task);
+				double tf2 = ((JasimaMultitaskIndividual) inds[(int)b]).getTaskFitness(task);
+				if (tf1 > tf2) {
+					return true;
+				} else {
+					return false;
+				}
+			}
 		}
-		public boolean gt(long a, long b) { return inds[(int)a].fitness.betterThan(inds[(int)b].fitness);
+
+		@Override
+		public boolean gt(long a, long b) {
+			if (task == JasimaMultitaskIndividual.NOT_SET) {
+				return inds[(int)b].fitness.betterThan(inds[(int)a].fitness);
+			} else {
+				double tf1 = ((JasimaMultitaskIndividual) inds[(int)a]).getTaskFitness(task);
+				double tf2 = ((JasimaMultitaskIndividual) inds[(int)b]).getTaskFitness(task);
+				if (tf1 < tf2) {
+					return true;
+				} else {
+					return false;
+				}
+			}
 		}
 	}
 }

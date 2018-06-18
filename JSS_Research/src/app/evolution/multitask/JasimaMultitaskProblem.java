@@ -82,9 +82,11 @@ public class JasimaMultitaskProblem extends JasimaSimpleProblem {
 			for (int j = 0; j < inds.length; j++) {
 				JasimaMultitaskIndividual multitaskInd = (JasimaMultitaskIndividual) inds[j];
 
-				applyToNeighbours(state, i, multitaskInd, threadnum);
-				multitaskFitness.setFitness(state, breakdownSimConfig, multitaskInd);
+				if (multitaskInd.getAssignedTask() != JasimaMultitaskIndividual.NO_TASK_SET) {
+					applyToNeighbours(state, i, multitaskInd, threadnum);
+				}
 
+				multitaskFitness.setFitness(state, breakdownSimConfig, multitaskInd);
 				multitaskInd.evaluated = true;
 			}
 		}
@@ -103,15 +105,14 @@ public class JasimaMultitaskProblem extends JasimaSimpleProblem {
 				threadnum);
 
 		JasimaMultitaskIndividual multitaskInd = (JasimaMultitaskIndividual) ind;
+		int task = multitaskInd.getAssignedTask();
 
-		if (state.generation == 0) {
+		if (task != JasimaMultitaskIndividual.NO_TASK_SET) {
+			// Evaluate for the specific assigned task.
+			evaluateForTask(state, task, multitaskInd, subpopulation, threadnum);
+		} else {
 			// Evaluate for the entire problem domain.
 			evaluateForDomain(state, multitaskInd, subpopulation, threadnum);
-		} else {
-			// Evaluate for the specific assigned task.
-			int task = multitaskInd.getAssignedTask();
-
-			evaluateForTask(state, task, multitaskInd, subpopulation, threadnum);
 		}
 	}
 
@@ -140,6 +141,8 @@ public class JasimaMultitaskProblem extends JasimaSimpleProblem {
 		}
 
 		clearForRun(getTracker());
+
+		ind.evaluated = true;
 	}
 
 	public void evaluateForTask(final EvolutionState state,
