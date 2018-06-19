@@ -461,3 +461,5 @@
 /breakdown_holthaus4_baseline_output.csv
 /breakdown_holthaus4_diversity_output.csv
 /mb_multitask/
+/breakdown_holthaus4_debug_output.csv
+/breakdown_holthaus4_multitask_output.csv

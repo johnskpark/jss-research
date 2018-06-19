@@ -26,6 +26,8 @@ public class JasimaMultitaskProblem extends JasimaSimpleProblem {
 
 	private IMultitaskNeighbourJump neighbourJump;
 
+	private int numSimulation;
+
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
 		super.setup(state, base);
@@ -69,6 +71,8 @@ public class JasimaMultitaskProblem extends JasimaSimpleProblem {
 				multitaskInd.setNumTasks(multitaskState.getNumTasks());
 			}
 		}
+
+		numSimulation = 0;
 	}
 
 	@Override
@@ -90,6 +94,8 @@ public class JasimaMultitaskProblem extends JasimaSimpleProblem {
 				multitaskInd.evaluated = true;
 			}
 		}
+
+		state.output.message("Number of times the simulation has been used: " + numSimulation);
 	}
 
 	@Override
@@ -134,6 +140,8 @@ public class JasimaMultitaskProblem extends JasimaSimpleProblem {
 				getFitness().accumulateFitness(i, getSimConfig(), (JasimaGPIndividual) ind, experiment.getResults());
 
 				clearForExperiment(getWorkStationListeners());
+
+				numSimulation++;
 			}
 
 			multitaskFitness.setTaskFitness(state, task, getSimConfig(), ind);
@@ -163,6 +171,8 @@ public class JasimaMultitaskProblem extends JasimaSimpleProblem {
 			getFitness().accumulateFitness(i, getSimConfig(), (JasimaGPIndividual) ind, experiment.getResults());
 
 			clearForExperiment(getWorkStationListeners());
+
+			numSimulation++;
 		}
 
 		multitaskFitness.setTaskFitness(state, task, getSimConfig(), ind);

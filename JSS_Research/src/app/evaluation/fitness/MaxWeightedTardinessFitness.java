@@ -4,22 +4,21 @@ import app.TrackedRuleBase;
 import app.evaluation.IJasimaEvalFitness;
 import app.evaluation.JasimaEvalProblem;
 import app.node.INode;
-import app.simConfig.DynamicBreakdownSimConfig;
-import app.simConfig.DynamicSimConfig;
 import app.simConfig.SimConfig;
+import app.stat.WeightedTardinessStat;
 import app.tracker.JasimaExperimentTracker;
 import jasima.shopSim.core.JobShopExperiment;
 
-public class StopAfterNumJobsInfo implements IJasimaEvalFitness {
+public class MaxWeightedTardinessFitness implements IJasimaEvalFitness {
 
 	@Override
 	public String getHeaderName() {
-		return "StopAfterNumJobs";
+		return "MaxWeightedTardiness";
 	}
 
 	@Override
 	public boolean resultIsNumeric() {
-		return false;
+		return true;
 	}
 
 	@Override
@@ -37,7 +36,7 @@ public class StopAfterNumJobsInfo implements IJasimaEvalFitness {
 			final int configIndex,
 			final JobShopExperiment experiment,
 			final JasimaExperimentTracker<INode> tracker) {
-		throw new UnsupportedOperationException("The output is not numeric!");
+		return WeightedTardinessStat.getMaxWeightedTardiness(experiment.getResults());
 	}
 
 	@Override
@@ -46,18 +45,6 @@ public class StopAfterNumJobsInfo implements IJasimaEvalFitness {
 			final int configIndex,
 			final JobShopExperiment experiment,
 			final JasimaExperimentTracker<INode> tracker) {
-		if (!((simConfig instanceof DynamicSimConfig) || (simConfig instanceof DynamicBreakdownSimConfig))) {
-			throw new RuntimeException("SimConfig needs to be of DynamicSimConfig or DynamicBreakdownSimConfig instance.");
-		}
-
-		if (simConfig instanceof DynamicSimConfig) {
-			return String.format("%d", ((DynamicSimConfig) simConfig).getStopAfterNumJobs(configIndex));
-		} else if (simConfig instanceof DynamicBreakdownSimConfig) {
-			return String.format("%d", ((DynamicBreakdownSimConfig) simConfig).getStopAfterNumJobs(configIndex));
-		} else {
-			return null; // Should not be reachable.
-		}
+		return String.format("%f", WeightedTardinessStat.getMaxWeightedTardiness(experiment.getResults()));
 	}
-
-
 }

@@ -20,6 +20,12 @@ public class TardinessStat {
 		return stat.mean();
 	}
 
+	public static double getMaxTardiness(final Map<String, Object> results) {
+		SummaryStat stat = (SummaryStat) results.get(T_MEAN_STR);
+
+		return stat.max();
+	}
+
 	public static double getNormTotalTardiness(final Map<String, Object> results, final double factor) {
 		double twt = getTotalTardiness(results);
 

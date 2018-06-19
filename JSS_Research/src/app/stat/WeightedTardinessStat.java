@@ -20,6 +20,12 @@ public class WeightedTardinessStat {
 		return stat.mean();
 	}
 
+	public static double getMaxWeightedTardiness(final Map<String, Object> results) {
+		SummaryStat stat = (SummaryStat) results.get(WT_MEAN_STR);
+
+		return stat.max();
+	}
+
 	public static double getNormTotalWeightedTardiness(final Map<String, Object> results, final double factor) {
 		double twt = getTotalWeightedTardiness(results);
 

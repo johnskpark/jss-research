@@ -95,10 +95,6 @@ public class Holthaus4SimConfig extends DynamicBreakdownSimConfig {
 				node2.neighbours.add(node1);
 			}
 		}
-
-		// TODO test this later down the line with print outs, make sure:
-		// Relation and neighbours are correct.
-		// This works exactly the same as the original code.
 	}
 
 	@Override

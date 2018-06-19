@@ -680,6 +680,10 @@ public class JasimaEvalProblem {
 		for (EvalPriorityRuleBase solver : solvers) {
 			for (int repeat = 0; repeat < numRepeats; repeat++) {
 				for (int configIndex = 0; configIndex < simConfig.getNumConfigs(); configIndex++) {
+					// TODO temporary code.
+					if (repeat == 17 && configIndex == 6) {
+						System.out.println("Breakpoint setup here for debug purposes.");
+					}
 
 					JobShopExperiment experiment = getExperimentPR(solver, configIndex);
 					for(IJasimaEvalFitness fitness : standardEvaluation) {
@@ -729,18 +733,6 @@ public class JasimaEvalProblem {
 
 		return experiment;
 	}
-
-	// TODO need to incorporate the rules into the machine listeners later down the line.
-//	private JobShopExperiment getExperimentEval(EvalPriorityRuleBase rule, int index) {
-//		JobShopExperiment experiment = ExperimentGenerator.getExperiment(simConfig, rule, index);
-//
-//		experiment.addMachineListener(rule);
-//		for (JasimaWorkStationListener listener : listeners) {
-//			experiment.addMachineListener(listener);
-//		}
-//
-//		return experiment;
-//	}
 
 	private boolean hasReferenceEvaluation() {
 		return hasReferenceRules() && referenceEvaluation != null && !referenceEvaluation.isEmpty();
