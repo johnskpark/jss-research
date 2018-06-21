@@ -6,49 +6,49 @@
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask/bl_multitask_0.txt</ruleFile>
+			<ruleFile>mb_multitask/bl_multitask_elite_5_0.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask/bl_multitask_1.txt</ruleFile>
+			<ruleFile>mb_multitask/bl_multitask_elite_5_1.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask/bl_multitask_2.txt</ruleFile>
+			<ruleFile>mb_multitask/bl_multitask_elite_5_2.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask/bl_multitask_3.txt</ruleFile>
+			<ruleFile>mb_multitask/bl_multitask_elite_5_3.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask/bl_multitask_4.txt</ruleFile>
+			<ruleFile>mb_multitask/bl_multitask_elite_5_4.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask/bl_multitask_5.txt</ruleFile>
+			<ruleFile>mb_multitask/bl_multitask_elite_5_5.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask/bl_multitask_6.txt</ruleFile>
+			<ruleFile>mb_multitask/bl_multitask_elite_5_6.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
@@ -98,7 +98,7 @@
 
 <!-- Output file definition -->
 	<outputConfig>
-	    <outputFile>breakdown_holthaus4_multitask_output.csv</outputFile>
+	    <outputFile>breakdown_holthaus4_multitask_elite_5_output.csv</outputFile>
 	</outputConfig>
 
 <!-- Fitness definitions -->

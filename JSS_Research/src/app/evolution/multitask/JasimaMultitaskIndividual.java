@@ -50,7 +50,7 @@ public class JasimaMultitaskIndividual extends JasimaGPIndividual {
         fitness.printFitnessForHumans(state,log);
 
         if (task != NOT_SET) {
-        	state.output.print("Task " + task + " Fitness: " + taskFitnesses[task], log);
+        	state.output.println("Task " + task + " Fitness: " + taskFitnesses[task], log);
         }
 
         state.output.print("Task ", log);
