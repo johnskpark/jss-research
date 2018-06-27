@@ -102,8 +102,6 @@ public class JasimaEvalProblem {
 
 	private String outputCsv = null;
 
-//	public static boolean IS_INST = false;
-
 	/**
 	 * Instantiate a new instance of the evaluation procedure.
 	 * @param xmlFilename
@@ -682,13 +680,6 @@ public class JasimaEvalProblem {
 		for (EvalPriorityRuleBase solver : solvers) {
 			for (int repeat = 0; repeat < numRepeats; repeat++) {
 				for (int configIndex = 0; configIndex < simConfig.getNumConfigs(); configIndex++) {
-					// TODO temporary code.
-//					if (repeat == 7 && configIndex == 6) {
-//						IS_INST = true;
-//					} else {
-//						IS_INST = false;
-//					}
-
 					JobShopExperiment experiment = getExperimentPR(solver, configIndex);
 					for(IJasimaEvalFitness fitness : standardEvaluation) {
 						fitness.beforeExperiment(this, solver, simConfig, experiment, tracker);

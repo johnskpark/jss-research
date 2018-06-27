@@ -8,7 +8,6 @@ import java.util.Map;
 
 import app.evaluation.EvalPriorityRuleBase;
 import app.evaluation.JasimaEvalConfig;
-import app.evaluation.JasimaEvalProblem;
 import app.node.INode;
 import jasima.shopSim.core.PrioRuleTarget;
 import jasima.shopSim.core.PriorityQueue;
@@ -55,11 +54,6 @@ public class BasicPriorityRule extends EvalPriorityRuleBase {
 		if (hasTracker()) {
 			getTracker().addPriority(this, 0, rule, entry, prio);
 		}
-
-//		if (JasimaEvalProblem.IS_INST) {
-//			double ddpt = entry.getDueDate() / entry.currProcTime();
-//			System.out.println(ddpt + "," + prio);
-//		}
 
 		entries.add(entry);
 		entryPrios.put(entry, prio);

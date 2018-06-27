@@ -51,6 +51,7 @@ public class BreakdownSource extends DowntimeSource {
 
 		// schedule reactivation
 		double nextActivation = calcActivateTime(shop);
+
 		machine.procFinished = nextActivation;
 
 		shop.schedule(new Event(nextActivation, WorkStation.ACTIVATE_PRIO) {

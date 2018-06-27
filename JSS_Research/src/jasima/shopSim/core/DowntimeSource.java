@@ -73,7 +73,7 @@ public class DowntimeSource {
 			fact.initNumberStream(timeToRepair, toString() + ".timeToRepair");
 			timeToRepair.init();
 
-			nextTimeToRepair = timeBetweenFailures.nextDbl();
+			nextTimeToRepair = timeToRepair.nextDbl();
 		}
 
 		machine.workStation.addNotifierListener(new WorkStationListenerBase() {
