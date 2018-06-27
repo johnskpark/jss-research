@@ -47,6 +47,10 @@ public abstract class JasimaGPProblem extends GPProblem {
 	private List<Double> referenceInstStats = new ArrayList<Double>();
 	private IJasimaFitness<JasimaGPIndividual> referenceFitness = null;
 
+	private long evalStartTime;
+	private long evalFinishTime;
+	private long evalTime;
+
 	@SuppressWarnings("unchecked")
 	public void setup(final EvolutionState state, final Parameter base) {
 		super.setup(state, base);
@@ -156,6 +160,8 @@ public abstract class JasimaGPProblem extends GPProblem {
 	protected void prepareToEvaluate(final EvolutionState state,
 			final int threadnum,
 			GPPriorityRuleBase rule) {
+		evalStartTime = System.currentTimeMillis();
+
 		// Reset the seed for the simulator.
 		rotateSimSeed();
 
@@ -175,7 +181,10 @@ public abstract class JasimaGPProblem extends GPProblem {
 	protected void finishEvaluating(final EvolutionState state,
 			final int threadnum,
 			GPPriorityRuleBase rule) {
-		// Is empty for now. Populate with common after evaluation procedure.
+		evalFinishTime = System.currentTimeMillis();
+		evalTime = evalFinishTime - evalStartTime;
+
+		// TODO output this to statistics.
 	}
 
 	protected void evaluateReference(SimConfig simConfig) {
@@ -217,7 +226,7 @@ public abstract class JasimaGPProblem extends GPProblem {
 		config.setThreadnum(threadnum);
 		config.setData((JasimaGPData) input);
 		config.setSimConfig(simConfig);
-		config.setTracker(tracker); 
+		config.setTracker(tracker);
 
 		rule.setConfiguration(config);
 	}

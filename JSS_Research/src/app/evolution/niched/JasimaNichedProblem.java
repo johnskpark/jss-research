@@ -153,8 +153,6 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 
 	@Override
 	public void finishEvaluating(final EvolutionState state, final int threadnum) {
-		super.finishEvaluating(state, threadnum);
-
 		NicheFitnessBase nicheFitness = (NicheFitnessBase) getFitness();
 
 		// Update the nicheFitnesses of the current generation niched individuals.
@@ -178,6 +176,8 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 
 		// Update the fitnesses of the individuals using the niched individuals.
 		updateFitnesses(state, threadnum);
+
+		super.finishEvaluating(state, threadnum);
 	}
 
 
