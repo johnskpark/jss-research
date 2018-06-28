@@ -12,6 +12,7 @@ import ec.multilevel.MLSSubpopulation;
 import ec.util.Parameter;
 import jasima.core.statistics.SummaryStat;
 
+// FIXME this is going to be broken with the timekeeping algorithm. 
 public class JasimaMultilevelStatistics extends MLSStatistics implements IJasimaMultilevelFitnessListener {
 
 	private static final long serialVersionUID = 1831159170439048338L;

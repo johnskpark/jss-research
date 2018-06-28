@@ -77,8 +77,6 @@ public class JasimaMultitaskProblem extends JasimaSimpleProblem {
 
 	@Override
 	public void finishEvaluating(final EvolutionState state, final int threadnum) {
-		super.finishEvaluating(state, threadnum);
-
 		neighbourJump.preprocessing(state, threadnum);
 
 		for (int i = 0; i < state.population.subpops.length; i++) {
@@ -95,7 +93,12 @@ public class JasimaMultitaskProblem extends JasimaSimpleProblem {
 			}
 		}
 
-		state.output.message("Number of times the simulation has been used: " + numSimulation);
+		JasimaMultitaskStatistics stats = (JasimaMultitaskStatistics) state.statistics;
+
+		state.output.message("Number of times the simulation has been used: " + numSimulation);		
+		state.output.println("Generation " + state.generation + " simulation use count: " + numSimulation, stats.statisticslog);
+		
+		super.finishEvaluating(state, threadnum);
 	}
 
 	@Override

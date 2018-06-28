@@ -12,6 +12,7 @@ import app.tracker.JasimaExperimentTracker;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.gp.GPProblem;
+import ec.simple.SimpleStatistics;
 import ec.util.ParamClassLoadException;
 import ec.util.Parameter;
 import jasima.core.experiment.Experiment;
@@ -49,7 +50,7 @@ public abstract class JasimaGPProblem extends GPProblem {
 
 	private long evalStartTime;
 	private long evalFinishTime;
-	private long evalTime;
+	private double evalTime;
 
 	@SuppressWarnings("unchecked")
 	public void setup(final EvolutionState state, final Parameter base) {
@@ -180,11 +181,17 @@ public abstract class JasimaGPProblem extends GPProblem {
 
 	protected void finishEvaluating(final EvolutionState state,
 			final int threadnum,
-			GPPriorityRuleBase rule) {
+			GPPriorityRuleBase rule) {		
 		evalFinishTime = System.currentTimeMillis();
-		evalTime = evalFinishTime - evalStartTime;
+		evalTime = (evalFinishTime - evalStartTime) / 1000.0;
+		
+		state.output.message("Generation " + state.generation + " evaluation time (s) : " + evalTime);
 
-		// TODO output this to statistics.
+		if (state.statistics instanceof SimpleStatistics) {
+			SimpleStatistics stats = (SimpleStatistics) state.statistics;
+	
+			state.output.println("Generation " + state.generation + " evaluation time (s): " + evalTime, stats.statisticslog); 
+		}
 	}
 
 	protected void evaluateReference(SimConfig simConfig) {
