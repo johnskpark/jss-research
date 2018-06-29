@@ -6,11 +6,10 @@
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask/bl_baseline_0.txt</ruleFile>
+			<ruleFile>mb_multitask/bl_baseline.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
-<!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
@@ -59,10 +58,8 @@
 			<ruleFile>mb_multitask/bl_baseline_05_10.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
--->
 
 <!-- The niched approach -->
-<!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
@@ -118,11 +115,9 @@
 			<ruleFile>mb_multitask/bl_niched_7.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
--->
 
 <!-- The multitask approach -->
 <!-- Elite 1 -->
-<!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
@@ -178,10 +173,8 @@
 			<ruleFile>mb_multitask/bl_multitask_elite_1_7.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
--->
 
 <!-- Elite 5 -->
-<!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
@@ -237,10 +230,8 @@
 			<ruleFile>mb_multitask/bl_multitask_elite_5_7.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
--->
 
 <!-- Elite 10 -->
-<!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
@@ -296,8 +287,8 @@
 			<ruleFile>mb_multitask/bl_multitask_elite_10_7.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
--->
 
+<!--
 	<datasetConfig>
 		<datasetClass>app.simConfig.holthausConfig4.EvalFactory</datasetClass>
 		<datasetInstances>(all),(all),(all)</datasetInstances>
@@ -305,19 +296,18 @@
 		<datasetRepeat>30</datasetRepeat>
 		<datasetRotateSeed>true</datasetRotateSeed>
 	</datasetConfig>
+-->
 
-<!--
 	<datasetConfig>
 		<datasetClass>app.simConfig.samplingConfig.EvalFactory</datasetClass>
 		<datasetSeed>15</datasetSeed>
 		<datasetRepeat>30</datasetRepeat>
 		<datasetRotateSeed>true</datasetRotateSeed>
 	</datasetConfig>
--->
 
 <!-- Output file definition -->
 	<outputConfig>
-	    <outputFile>bl_holthaus4_baseline_gen_output.csv</outputFile>
+	    <outputFile>bl_holthaus4_diversity_output.csv</outputFile>
 	</outputConfig>
 
 <!-- Fitness definitions -->
@@ -330,6 +320,7 @@
 	</fitnessConfig>
 
 <!-- Comment out of not a breakdown simulation config -->
+<!--
 	<fitnessConfig>
 		<fitnessClass>app.evaluation.fitness.BreakdownLevelInfo</fitnessClass>
 	</fitnessConfig>
@@ -345,10 +336,9 @@
 	<fitnessConfig>
 		<fitnessClass>app.evaluation.fitness.StopAfterNumJobsInfo</fitnessClass>
 	</fitnessConfig>
+-->
 
 <!-- Uncomment whenever you need to calculate things via the reference rules -->
-
-<!--
 	<refConfig>
 		<refRule>app.evaluation.priorityRules.EvalWATC</refRule>
 		<refTracking>
@@ -361,7 +351,6 @@
 	<refFitnessConfig>
 		<fitnessClass>app.evaluation.fitness.RuleRankFitness</fitnessClass>
 	</refFitnessConfig>
--->
 
 	<listenerConfig>
 	    <listenerClass>app.listener.hunt.EvalFactory</listenerClass>
