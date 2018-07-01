@@ -86,7 +86,7 @@ public class RuleRankFitness implements IJasimaEvalFitness {
 			}
 		}
 
-		String output = String.format("{%s}", formatRuleRanks(ruleRankVectors, referenceRules));
+		String output = String.format("\"%s\"", formatRuleRanks(ruleRankVectors, referenceRules));
 
 		return output;
 	}
