@@ -3,7 +3,7 @@
 # See the file "LICENSE" for more information
 
 parent.0 = koza.params
-parent.1 = holthaus4_baseline.params
+parent.1 = holthaus5_baseline.params
 
 pop.subpop.0.species.ind = app.evolution.JasimaGPIndividual
 

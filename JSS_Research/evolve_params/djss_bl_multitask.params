@@ -3,7 +3,7 @@
 # See the file "LICENSE" for more information
 
 parent.0 = koza.params
-parent.1 = holthaus4_multitask.params
+parent.1 = holthaus5_multitask.params
 
 pop.subpop.0.species.ind = app.evolution.multitask.JasimaMultitaskIndividual
 
@@ -19,7 +19,7 @@ gp.fs.0.name = f0
 
 # We have five functions in the function set.  They are:
 
-breed.elite.0 = 10
+breed.elite.0 = 1
 
 gp.fs.0.size = 19
 gp.fs.0.func.0 = app.evolution.node.basic.ERCRandomUniform

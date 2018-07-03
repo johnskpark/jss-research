@@ -3,10 +3,9 @@
 # See the file "LICENSE" for more information
 
 parent.0 = koza.params
-parent.1 = holthaus5_niched.params
+parent.1 = holthaus4_repeat_baseline.params
 
-pop.subpop.0.species.ind = app.evolution.niched.JasimaNichedIndividual
-pop.subpop.0.species.ind.niched-fitness = ec.gp.koza.KozaFitness
+pop.subpop.0.species.ind = app.evolution.JasimaGPIndividual
 
 # the next four items are already defined in koza.params, but we
 # put them here to be clear.
@@ -64,36 +63,20 @@ gp.fs.0.func.17.nc = nc0
 gp.fs.0.func.18 = app.evolution.node.hunt.ScoreNumberWaitingNextMachine
 gp.fs.0.func.18.nc = nc0
 
-stat = app.evolution.niched.JasimaNichedStatistics
+stat = app.evolution.simple.JasimaSimpleStatistics
 
-eval.problem = app.evolution.niched.JasimaNichedProblem
+eval.problem = app.evolution.simple.JasimaSimpleProblem
 eval.problem.data = app.evolution.JasimaGPData
-
-# This is based off the parameter settings used by Yi.
-eval.problem.niched-radius = 1
-eval.problem.niched-capacity = 1
 
 eval.problem.reference-rule = app.priorityRules.WATCPR
 eval.problem.reference-fitness = app.evolution.simple.fitness.MWTFitness
 
 eval.problem.rule = app.evolution.priorityRules.BasicPriorityRule
-eval.problem.fitness = app.evolution.niched.fitness.NormMWTBreakdownFitness
-
-eval.problem.sampling.simulator = app.simConfig.samplingConfig.EvolveFactory
-eval.problem.sampling.simulator.job-seed = 15
-eval.problem.sampling.simulator.rotate-seed = false
-
-eval.problem.sampling.factory = app.tracker.sampler.SamplerFactory
-eval.problem.sampling.rule = app.evolution.priorityRules.EvolveWSPT
-eval.problem.sampling.seed = 15
+eval.problem.fitness = app.evolution.simple.fitness.NormMWTFitness
 
 eval.problem.workstations = 1
 eval.problem.workstation.0 = app.listener.hunt.EvolveFactory
 eval.problem.workstation.0.max-jobs = 5
-
-eval.problem.tracker = app.tracker.JasimaExperimentTracker
-
-# TODO need a tracker.
 
 # seed.0=26556
 seed.0=17
