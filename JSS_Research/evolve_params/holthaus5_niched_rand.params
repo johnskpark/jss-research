@@ -1,0 +1,56 @@
+
+# Parameter settings specifically set for Holthaus simulation configuration.
+
+# The possible simulation configurations are as follows:
+# Repair time factors: 1.0, 5.0, 10.0 (first parameter)
+# Breakdown levels: 0.0, 0.025, 0.05 (second parameter)
+# Due date factors: 3, 5 (third parameter)
+
+eval.problem.simulator = app.simConfig.holthausConfig5.EvolveFactory
+eval.problem.simulator.instances = (all),(all)
+eval.problem.simulator.job-seed = 15
+eval.problem.simulator.machine-seed = 15
+eval.problem.simulator.rotate-seed = true
+
+# Niched simulations
+eval.problem.niched.0.simulator = app.simConfig.holthausConfig5.EvolveFactory
+eval.problem.niched.0.simulator.instances = (all),(0.0)
+eval.problem.niched.0.simulator.job-seed = 28063
+eval.problem.niched.0.simulator.machine-seed = 28063
+eval.problem.niched.0.simulator.rotate-seed = false
+
+eval.problem.niched.1.simulator = app.simConfig.holthausConfig5.EvolveFactory
+eval.problem.niched.1.simulator.instances = (1),(0.025)
+eval.problem.niched.1.simulator.job-seed = 74235
+eval.problem.niched.1.simulator.machine-seed = 74235
+eval.problem.niched.1.simulator.rotate-seed = false
+
+eval.problem.niched.2.simulator = app.simConfig.holthausConfig5.EvolveFactory
+eval.problem.niched.2.simulator.instances = (5),(0.025)
+eval.problem.niched.2.simulator.job-seed = 80368
+eval.problem.niched.2.simulator.machine-seed = 80368
+eval.problem.niched.2.simulator.rotate-seed = false
+
+eval.problem.niched.3.simulator = app.simConfig.holthausConfig5.EvolveFactory
+eval.problem.niched.3.simulator.instances = (10),(0.025)
+eval.problem.niched.3.simulator.job-seed = 5988
+eval.problem.niched.3.simulator.machine-seed = 5988
+eval.problem.niched.3.simulator.rotate-seed = false
+
+eval.problem.niched.4.simulator = app.simConfig.holthausConfig5.EvolveFactory
+eval.problem.niched.4.simulator.instances = (1),(0.05)
+eval.problem.niched.4.simulator.job-seed = 888
+eval.problem.niched.4.simulator.machine-seed = 888
+eval.problem.niched.4.simulator.rotate-seed = false
+
+eval.problem.niched.5.simulator = app.simConfig.holthausConfig5.EvolveFactory
+eval.problem.niched.5.simulator.instances = (5),(0.05)
+eval.problem.niched.5.simulator.job-seed = 48065
+eval.problem.niched.5.simulator.machine-seed = 48065
+eval.problem.niched.5.simulator.rotate-seed = false
+
+eval.problem.niched.6.simulator = app.simConfig.holthausConfig5.EvolveFactory
+eval.problem.niched.6.simulator.instances = (10),(0.05)
+eval.problem.niched.6.simulator.job-seed = 62172
+eval.problem.niched.6.simulator.machine-seed = 62172
+eval.problem.niched.6.simulator.rotate-seed = false
