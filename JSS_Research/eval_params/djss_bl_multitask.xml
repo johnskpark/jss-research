@@ -3,21 +3,23 @@
 
 <!-- Rule file definitions -->
 <!-- The baseline approach -->
-	<solverConfig>
-		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
-		<solverFile>
-			<ruleFile>mb_multitask/bl_baseline_0.txt</ruleFile>
-		</solverFile>
-	</solverConfig>
-
 <!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask/bl_baseline_0.txt</ruleFile>
+			<ruleFile>mb_multitask/bl_baseline.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+-->
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>mb_multitask/bl_baseline_0_repeat.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
+<!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
@@ -52,14 +54,14 @@
 			<ruleFile>mb_multitask/bl_baseline_05_5.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
+--> 
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask/bl_baseline_05_10.txt</ruleFile>
+			<ruleFile>mb_multitask/bl_baseline_05_10_repeat.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
--->
 
 <!-- The niched approach -->
 <!--
@@ -317,7 +319,7 @@
 
 <!-- Output file definition -->
 	<outputConfig>
-	    <outputFile>bl_holthaus4_baseline_gen_output.csv</outputFile>
+	    <outputFile>bl_holthaus4_baseline_repeat_output.csv</outputFile>
 	</outputConfig>
 
 <!-- Fitness definitions -->

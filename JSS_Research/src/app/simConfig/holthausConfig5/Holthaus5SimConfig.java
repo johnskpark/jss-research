@@ -16,7 +16,6 @@ public class Holthaus5SimConfig extends DynamicBreakdownSimConfig {
 
 	public static final double[] NUM_REPAIR_TIME_FACTORS = new double[]{1, 5, 10};
 	public static final double[] NUM_BREAKDOWN_LEVELS = new double[]{0.0, 0.025, 0.05};
-	public static final double[] NUM_DUE_DATE_FACTORS = new double[]{3, 5};
 
 	public static final int NUM_SCENARIOS = 7; // Based on the repair time factors and breakdown levels above.
 
@@ -75,9 +74,7 @@ public class Holthaus5SimConfig extends DynamicBreakdownSimConfig {
 			b[i] = (i == 0) ? 0 : (i - 1) / NUM_REPAIR_TIME_FACTORS.length + 1;
 
 			Node node1 = new Node(i);
-			for (int j = 0; j < NUM_DUE_DATE_FACTORS.length; j++) {
-				node1.indices.add(i * NUM_DUE_DATE_FACTORS.length + j);
-			}
+			node1.indices.add(i);
 
 			nodes.add(node1);
 
