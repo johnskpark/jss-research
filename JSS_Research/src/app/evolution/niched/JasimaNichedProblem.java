@@ -65,8 +65,6 @@ public class JasimaNichedProblem extends JasimaSimpleProblem {
 	private JasimaNichedIndividual[] curGenNichedInds;
 	private double[] curGenNichedIndsFitness;
 
-	public static SimConfig TEST = null;
-
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
 		super.setup(state, base);

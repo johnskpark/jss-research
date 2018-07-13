@@ -27,11 +27,11 @@
 #eval.problem.simulator.machine-seed = 15
 #eval.problem.simulator.rotate-seed = true
 
-#eval.problem.simulator = app.simConfig.holthausConfig4Repeat.EvolveFactory
-#eval.problem.simulator.instances = (5.0),(0.025),(all),(7)
-#eval.problem.simulator.job-seed = 15
-#eval.problem.simulator.machine-seed = 15
-#eval.problem.simulator.rotate-seed = true
+eval.problem.simulator = app.simConfig.holthausConfig4Repeat.EvolveFactory
+eval.problem.simulator.instances = (5.0),(0.025),(all),(7)
+eval.problem.simulator.job-seed = 15
+eval.problem.simulator.machine-seed = 15
+eval.problem.simulator.rotate-seed = true
 
 #eval.problem.simulator = app.simConfig.holthausConfig4Repeat.EvolveFactory
 #eval.problem.simulator.instances = (10.0),(0.025),(all),(7)
@@ -52,8 +52,8 @@
 #eval.problem.simulator.machine-seed = 15
 #eval.problem.simulator.rotate-seed = true
 
-eval.problem.simulator = app.simConfig.holthausConfig4Repeat.EvolveFactory
-eval.problem.simulator.instances = (10.0),(0.05),(all),(7)
-eval.problem.simulator.job-seed = 15
-eval.problem.simulator.machine-seed = 15
-eval.problem.simulator.rotate-seed = true
+#eval.problem.simulator = app.simConfig.holthausConfig4Repeat.EvolveFactory
+#eval.problem.simulator.instances = (10.0),(0.05),(all),(7)
+#eval.problem.simulator.job-seed = 15
+#eval.problem.simulator.machine-seed = 15
+#eval.problem.simulator.rotate-seed = true

@@ -10,7 +10,6 @@
 			<ruleFile>mb_multitask/bl_baseline.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
--->
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
@@ -19,7 +18,6 @@
 		</solverFile>
 	</solverConfig>
 
-<!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
@@ -54,12 +52,19 @@
 			<ruleFile>mb_multitask/bl_baseline_05_5.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
---> 
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
 			<ruleFile>mb_multitask/bl_baseline_05_10_repeat.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+-->
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>mb_multitask/bl_baseline_025_5_repeat.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
