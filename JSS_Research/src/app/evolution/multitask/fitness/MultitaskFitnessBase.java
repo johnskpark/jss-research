@@ -36,7 +36,9 @@ public abstract class MultitaskFitnessBase extends JasimaFitnessBase<JasimaGPInd
 			}
 		}
 
-		((KozaFitness) reproducible.getFitness()).setStandardizedFitness(state, (sumFitnesses / count));
+		double finalFitness = sumFitnesses / count;
+
+		((KozaFitness) reproducible.getFitness()).setStandardizedFitness(state, finalFitness);
 	}
 
 }

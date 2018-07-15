@@ -3,7 +3,7 @@
 # See the file "LICENSE" for more information
 
 parent.0 = koza.params
-parent.1 = holthaus5_niched.params
+parent.1 = holthaus4_niched.params
 
 pop.subpop.0.species.ind = app.evolution.niched.JasimaNichedIndividual
 pop.subpop.0.species.ind.niched-fitness = ec.gp.koza.KozaFitness
