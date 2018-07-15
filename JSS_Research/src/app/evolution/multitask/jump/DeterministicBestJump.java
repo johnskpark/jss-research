@@ -10,8 +10,11 @@ import app.evolution.multitask.JasimaMultitaskIndividual;
 import app.evolution.multitask.MultitaskEvolutionState;
 import ec.EvolutionState;
 import ec.Individual;
+import ec.util.Parameter;
 
 public class DeterministicBestJump implements IMultitaskNeighbourJump {
+
+	private static final long serialVersionUID = 3024278600297142094L;
 
 	private List<JasimaMultitaskIndividual>[][] individualsPerTask;
 	private int numSubpops;
@@ -19,7 +22,7 @@ public class DeterministicBestJump implements IMultitaskNeighbourJump {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void init(final EvolutionState state) {
+	public void setup(final EvolutionState state, final Parameter base) {
 		MultitaskEvolutionState multitaskState = (MultitaskEvolutionState) state;
 
 		numSubpops = multitaskState.population.subpops.length;

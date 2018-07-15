@@ -76,7 +76,4 @@ public abstract class DynamicBreakdownSimConfig implements SimConfig {
 
 	public abstract List<Integer> getIndicesForScenario(int scenario);
 
-	// TODO this needs a parameter called machine breakdown scenarios. How am I going to set this up though?
-	// TODO Also, I need to look at the tardiness values, since <2.5%, 125> configuration gives abnormally high MWT values.
-
 }

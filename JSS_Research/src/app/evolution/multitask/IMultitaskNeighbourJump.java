@@ -1,10 +1,9 @@
 package app.evolution.multitask;
 
 import ec.EvolutionState;
+import ec.Setup;
 
-public interface IMultitaskNeighbourJump {
-
-	public void init(final EvolutionState state);
+public interface IMultitaskNeighbourJump extends Setup {
 
 	public void preprocessing(final EvolutionState state, final int threadnum);
 

@@ -9,7 +9,7 @@ import ec.EvolutionState;
 import ec.gp.koza.KozaFitness;
 
 /**
- * TODO javadoc.
+ * The abstract base used for the fitness class that assigns the fitness to the GP individuals.
  *
  * @author parkjohn
  *

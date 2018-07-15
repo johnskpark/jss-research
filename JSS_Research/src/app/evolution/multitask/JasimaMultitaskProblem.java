@@ -1,6 +1,7 @@
 package app.evolution.multitask;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -11,6 +12,7 @@ import app.evolution.simple.JasimaSimpleProblem;
 import app.simConfig.DynamicBreakdownSimConfig;
 import ec.EvolutionState;
 import ec.Individual;
+import ec.Subpopulation;
 import ec.util.Parameter;
 import jasima.core.experiment.Experiment;
 import jasima.core.util.Pair;
@@ -40,7 +42,7 @@ public class JasimaMultitaskProblem extends JasimaSimpleProblem {
 		multitaskState.setNumTasks(breakdownSimConfig.getNumScenarios());
 
 		neighbourJump = (IMultitaskNeighbourJump) state.parameters.getInstanceForParameter(base.push(P_NEIGHBOUR_JUMP), null, IMultitaskNeighbourJump.class);
-		neighbourJump.init(state);
+		neighbourJump.setup(state, base);
 	}
 
 	@Override
@@ -64,12 +66,9 @@ public class JasimaMultitaskProblem extends JasimaSimpleProblem {
 		}
 
 		for (int i = 0; i < state.population.subpops.length; i++) {
-			Individual[] inds = state.population.subpops[i].individuals;
-			for (int j = 0; j < inds.length; j++) {
-				JasimaMultitaskIndividual multitaskInd = (JasimaMultitaskIndividual) inds[j];
+			Subpopulation subpop = state.population.subpops[i];
 
-				multitaskInd.setNumTasks(multitaskState.getNumTasks());
-			}
+			Arrays.stream(subpop.individuals).forEach(x -> ((JasimaMultitaskIndividual) x).setNumTasks(multitaskState.getNumTasks()));
 		}
 
 		numSimulation = 0;
@@ -95,9 +94,9 @@ public class JasimaMultitaskProblem extends JasimaSimpleProblem {
 
 		JasimaMultitaskStatistics stats = (JasimaMultitaskStatistics) state.statistics;
 
-		state.output.message("Number of times the simulation has been used: " + numSimulation);		
+		state.output.message("Number of times the simulation has been used: " + numSimulation);
 		state.output.println("Generation " + state.generation + " simulation use count: " + numSimulation, stats.statisticslog);
-		
+
 		super.finishEvaluating(state, threadnum);
 	}
 
@@ -135,12 +134,12 @@ public class JasimaMultitaskProblem extends JasimaSimpleProblem {
 			List<Integer> indices = breakdownSimConfig.getIndicesForScenario(task);
 
 			for (int i = 0; i < indices.size(); i++) {
-				int index = indices.get(i);
+				int simConfigIndex = indices.get(i);
 
-				Experiment experiment = getExperiment(state, getRule(), index, getSimConfig(), getWorkStationListeners(), getTracker());
+				Experiment experiment = getExperiment(state, getRule(), simConfigIndex, getSimConfig(), getWorkStationListeners(), getTracker());
 				experiment.runExperiment();
 
-				getFitness().accumulateFitness(i, getSimConfig(), (JasimaGPIndividual) ind, experiment.getResults());
+				getFitness().accumulateFitness(simConfigIndex, getSimConfig(), (JasimaGPIndividual) ind, experiment.getResults());
 
 				clearForExperiment(getWorkStationListeners());
 

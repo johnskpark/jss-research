@@ -11,17 +11,26 @@ import app.evolution.multitask.MultitaskEvolutionState;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.util.MersenneTwisterFast;
+import ec.util.Parameter;
 
 public class ProbabilityJump implements IMultitaskNeighbourJump {
+
+	private static final long serialVersionUID = 866072103875458209L;
+
+	public static final String P_SEED = "seed";
 
 	private List<JasimaMultitaskIndividual>[][] individualsPerTask;
 	private int numSubpops;
 	private int numTasks;
 	private MersenneTwisterFast rand;
+	private int initSeed;
 
 	@Override
-	public void init(final EvolutionState state) {
-		rand = new MersenneTwisterFast(state.random[0].nextLong());
+	public void setup(final EvolutionState state, final Parameter base) {
+		// Use the default seed.
+		initSeed = state.parameters.getInt((new Parameter(P_SEED)).push(""+0), null);
+
+		rand = new MersenneTwisterFast(initSeed);
 	}
 
 	@SuppressWarnings("unchecked")
