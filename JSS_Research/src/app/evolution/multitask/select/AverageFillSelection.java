@@ -43,7 +43,6 @@ public class AverageFillSelection extends MultitaskTournamentSelection {
 
 		List<Integer> neighbours = multitaskState.getSimConfig().getNeighbourScenarios(currentTask);
 
-		// FIXME make sure this isn't costing some stupid amount of resource later down the line.
 		Set<Integer> indSet = new LinkedHashSet<>();
 		indSet.addAll(indsPerTask[subpopulation][currentTask]);
 		for (int i = 0; i < neighbours.size(); i++) {

@@ -61,13 +61,6 @@
 	</solverConfig>
 -->
 
-	<solverConfig>
-		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
-		<solverFile>
-			<ruleFile>mb_multitask/bl_baseline_025_5_repeat.txt</ruleFile>
-		</solverFile>
-	</solverConfig>
-
 <!-- The niched approach -->
 <!--
 	<solverConfig>
@@ -129,7 +122,6 @@
 
 <!-- The multitask approach -->
 <!-- Elite 1 -->
-<!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
@@ -185,10 +177,8 @@
 			<ruleFile>mb_multitask/bl_multitask_elite_1_7.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
--->
 
 <!-- Elite 5 -->
-<!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
@@ -244,10 +234,8 @@
 			<ruleFile>mb_multitask/bl_multitask_elite_5_7.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
--->
 
 <!-- Elite 10 -->
-<!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
@@ -303,7 +291,6 @@
 			<ruleFile>mb_multitask/bl_multitask_elite_10_7.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
--->
 
 	<datasetConfig>
 		<datasetClass>app.simConfig.holthausConfig4.EvalFactory</datasetClass>
@@ -324,7 +311,7 @@
 
 <!-- Output file definition -->
 	<outputConfig>
-	    <outputFile>bl_holthaus4_baseline_repeat_output.csv</outputFile>
+	    <outputFile>bl_holthaus4_multitask_output.csv</outputFile>
 	</outputConfig>
 
 <!-- Fitness definitions -->
