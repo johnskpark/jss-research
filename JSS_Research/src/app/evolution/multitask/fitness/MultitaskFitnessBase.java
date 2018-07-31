@@ -3,6 +3,7 @@ package app.evolution.multitask.fitness;
 import app.evolution.JasimaFitnessBase;
 import app.evolution.JasimaGPIndividual;
 import app.evolution.multitask.JasimaMultitaskIndividual;
+import app.evolution.multitask.MultitaskKozaFitness;
 import app.simConfig.SimConfig;
 import ec.EvolutionState;
 import ec.gp.koza.KozaFitness;
@@ -30,7 +31,7 @@ public abstract class MultitaskFitnessBase extends JasimaFitnessBase<JasimaGPInd
 		int count = 0;
 
 		for (int i = 0; i < ind.getNumTasks(); i++) {
-			if (ind.getTaskFitness(i) != JasimaMultitaskIndividual.NOT_SET) {
+			if (ind.getTaskFitness(i) != MultitaskKozaFitness.NOT_SET) {
 				sumFitnesses += ind.getTaskFitness(i);
 				count++;
 			}

@@ -155,7 +155,7 @@ public class MultitaskBreeder extends SimpleBreeder {
 					for (int task = 0; task < numTasks; task++) {
 						JasimaMultitaskIndividual bestInd = (JasimaMultitaskIndividual) oldinds[best[task]];
 
-						if (bestInd.getTaskFitness(task) == JasimaMultitaskIndividual.NOT_SET ||
+						if (bestInd.getTaskFitness(task) == MultitaskKozaFitness.NOT_SET ||
 								ind.getTaskFitness(task) < bestInd.getTaskFitness(task)) {
 							best[task] = x;
 						}
@@ -172,7 +172,7 @@ public class MultitaskBreeder extends SimpleBreeder {
 					if (task < numTasks) {
 						ind.setAssignedTask(task);
 					} else {
-						ind.setAssignedTask(JasimaMultitaskIndividual.NOT_SET);
+						ind.setAssignedTask(JasimaMultitaskIndividual.NO_TASK_SET);
 					}
 
 					inds[inds.length-task-1] = (Individual) (ind.clone());
@@ -186,7 +186,7 @@ public class MultitaskBreeder extends SimpleBreeder {
 				}
 
 				// Load best overall individuals.
-				loadElitesPerTask(state, newpop, sub, JasimaMultitaskIndividual.NOT_SET, numTasks, increment);
+				loadElitesPerTask(state, newpop, sub, JasimaMultitaskIndividual.NO_TASK_SET, numTasks, increment);
 			}
 		}
 
@@ -330,7 +330,7 @@ public class MultitaskBreeder extends SimpleBreeder {
 
 		@Override
 		public boolean lt(long a, long b) {
-			if (task == JasimaMultitaskIndividual.NOT_SET) {
+			if (task == JasimaMultitaskIndividual.NO_TASK_SET) {
 				return inds[(int)b].fitness.betterThan(inds[(int)a].fitness);
 			} else {
 				double tf1 = ((JasimaMultitaskIndividual) inds[(int)a]).getTaskFitness(task);
@@ -345,7 +345,7 @@ public class MultitaskBreeder extends SimpleBreeder {
 
 		@Override
 		public boolean gt(long a, long b) {
-			if (task == JasimaMultitaskIndividual.NOT_SET) {
+			if (task == JasimaMultitaskIndividual.NO_TASK_SET) {
 				return inds[(int)b].fitness.betterThan(inds[(int)a].fitness);
 			} else {
 				double tf1 = ((JasimaMultitaskIndividual) inds[(int)a]).getTaskFitness(task);

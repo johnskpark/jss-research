@@ -8,6 +8,7 @@ import java.util.List;
 import app.evolution.multitask.IMultitaskNeighbourJump;
 import app.evolution.multitask.JasimaMultitaskIndividual;
 import app.evolution.multitask.MultitaskEvolutionState;
+import app.evolution.multitask.MultitaskKozaFitness;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.util.MersenneTwisterFast;
@@ -56,7 +57,7 @@ public class ProbabilityJump implements IMultitaskNeighbourJump {
 					JasimaMultitaskIndividual ind = (JasimaMultitaskIndividual) inds[j];
 
 					for (int task = 0; task < numTasks; task++) {
-						if (ind.getTaskFitness(task) != JasimaMultitaskIndividual.NOT_SET) {
+						if (ind.getTaskFitness(task) != MultitaskKozaFitness.NOT_SET) {
 							individualsPerTask[i][task].add(ind);
 						}
 					}

@@ -71,6 +71,9 @@ breed.strategy = app.evolution.multitask.taskbreed.RoundRobinStrategy
 
 stat = app.evolution.multitask.JasimaMultitaskStatistics
 
+############################################################
+pop.subpop.0.species.fitness = app.evolution.multitask.MultitaskKozaFitness
+
 # Tournament selection related parameter settings here.
 breed.reproduce.source.0 = app.evolution.multitask.select.AverageFillSelection
 

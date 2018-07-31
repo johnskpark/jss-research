@@ -50,7 +50,7 @@ public class JasimaMultitaskStatistics extends SimpleStatistics {
 
 					// For multitask fitness.
 					for (int k = 0; k < numTasks; k++) {
-						if (ind.getTaskFitness(k) == JasimaMultitaskIndividual.NOT_SET) {
+						if (ind.getTaskFitness(k) == MultitaskKozaFitness.NOT_SET) {
 							continue;
 						}
 
@@ -104,7 +104,7 @@ public class JasimaMultitaskStatistics extends SimpleStatistics {
 					((SimpleProblemForm) (state.evaluator.p_problem.clone())).describe(state, bestIndOfGen[i], 0, 0, statisticslog);
 				}
 			}
-			
+
 			// Print out the best individuals per task.
 			if (doFinal) { state.output.println("\nBest Multitask Individual of Subpopulation " + i + ":", statisticslog); }
 			for (int j = 0; j < numTasks; j++) {
@@ -118,6 +118,6 @@ public class JasimaMultitaskStatistics extends SimpleStatistics {
 			}
 		}
 	}
-	
+
 
 }

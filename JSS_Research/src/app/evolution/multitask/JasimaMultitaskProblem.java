@@ -197,7 +197,7 @@ public class JasimaMultitaskProblem extends JasimaSimpleProblem {
 			Pair<Integer, Integer> taskPair = neighbourQueue.poll();
 
 			// Ignore tasks that have already been evaluated.
-			if (ind.getTaskFitness(taskPair.b) != JasimaMultitaskIndividual.NOT_SET) {
+			if (ind.getTaskFitness(taskPair.b) != MultitaskKozaFitness.NOT_SET) {
 				continue;
 			}
 
