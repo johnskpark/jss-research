@@ -200,7 +200,7 @@ public class MultitaskBreeder extends SimpleBreeder {
 			int task,
 			int numTasks,
 			int increment) {
-		// This is bugged, it doesn't assign the
+		// This is bugged, it doesn't assign the (Assign the what???)
 		Individual[] oldinds = state.population.subpops[subpopulation].individuals;
 		int numLoaded = numElites(state, subpopulation) / numTasks;
 
@@ -335,10 +335,14 @@ public class MultitaskBreeder extends SimpleBreeder {
 			} else {
 				double tf1 = ((JasimaMultitaskIndividual) inds[(int)a]).getTaskFitness(task);
 				double tf2 = ((JasimaMultitaskIndividual) inds[(int)b]).getTaskFitness(task);
+
 				if (tf1 > tf2) {
 					return true;
-				} else {
+				} else if (tf1 < tf2) {
 					return false;
+				} else {
+					// Use the overall fitness.
+					return inds[(int)b].fitness.betterThan(inds[(int)a].fitness);
 				}
 			}
 		}
@@ -346,14 +350,17 @@ public class MultitaskBreeder extends SimpleBreeder {
 		@Override
 		public boolean gt(long a, long b) {
 			if (task == JasimaMultitaskIndividual.NO_TASK_SET) {
-				return inds[(int)b].fitness.betterThan(inds[(int)a].fitness);
+				return inds[(int)a].fitness.betterThan(inds[(int)b].fitness);
 			} else {
 				double tf1 = ((JasimaMultitaskIndividual) inds[(int)a]).getTaskFitness(task);
 				double tf2 = ((JasimaMultitaskIndividual) inds[(int)b]).getTaskFitness(task);
 				if (tf1 < tf2) {
 					return true;
-				} else {
+				} else if (tf1 > tf2) {
 					return false;
+				} else {
+					// Use the overall fitness.
+					return inds[(int)a].fitness.betterThan(inds[(int)b].fitness);
 				}
 			}
 		}

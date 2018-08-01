@@ -1,5 +1,7 @@
 package app.evolution.multitask;
 
+import java.util.List;
+
 import app.evolution.JasimaGPIndividual;
 import ec.EvolutionState;
 
@@ -35,6 +37,9 @@ public class JasimaMultitaskIndividual extends JasimaGPIndividual {
 		return ((MultitaskKozaFitness) getFitness()).getTaskFitness(taskIndex);
 	}
 
+	public List<Double> getTaskFitnesses() {
+		return ((MultitaskKozaFitness) getFitness()).getTaskFitnesses();
+	}
 
 	@Override
     public void printIndividualForHumans(final EvolutionState state, final int log) {

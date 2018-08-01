@@ -83,7 +83,7 @@ gp.koza.xover.source.1 = same
 gp.koza.mutate.source.0 = app.evolution.multitask.select.AverageFillSelection
 
 select.tournament.size = 7
-select.tournament.neighbour-weight = 0.5
+select.tournament.neighbour-weight = 0.25
 
 ############################################################
 eval.problem = app.evolution.multitask.JasimaMultitaskProblem

@@ -154,12 +154,20 @@ public class ProbabilityJump implements IMultitaskNeighbourJump {
 			double tf1 = o1.getTaskFitness(task);
 			double tf2 = o2.getTaskFitness(task);
 
+			// Compare the task fitnesses.
 			if (tf1 < tf2) {
 				return -1;
 			} else if (tf1 > tf2) {
 				return 1;
 			} else {
-				return 0;
+				// Compare their general fitnesses
+				if (o1.getFitness().betterThan(o2.getFitness())) {
+					return -1;
+				} else if (o2.getFitness().betterThan(o1.getFitness())) {
+					return 1;
+				} else {
+					return 0;
+				}
 			}
 		}
 

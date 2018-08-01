@@ -27,6 +27,7 @@ public class AverageFillSelection extends MultitaskTournamentSelection {
 
 		try {
 			neighbourWeight = state.parameters.getDouble(base.push(P_NEIGHBOUR_WEIGHT), def.push(P_NEIGHBOUR_WEIGHT), DEFAULT_WEIGHT);
+			state.output.message("AverageFillSelection neighbour weight: " + neighbourWeight);
 		} catch (NumberFormatException ex) {
 			state.output.fatal("Neighbour weight for needs to be defined for the class AverageFillSelection.");
 		}
