@@ -54,7 +54,7 @@ public class JasimaMultitaskStatistics extends SimpleStatistics {
 							continue;
 						}
 
-						if (bestIndPerTask[i][k] == null || ind.getTaskFitness(k) < bestIndPerTask[i][k].getTaskFitness(k)) {
+						if (bestIndPerTask[i][k] == null || ind.taskFitnessBetterThan(bestIndPerTask[i][k], k)) {
 							bestIndPerTask[i][k] = ind;
 						}
 					}

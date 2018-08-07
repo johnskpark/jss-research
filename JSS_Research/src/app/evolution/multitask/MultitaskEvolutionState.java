@@ -17,6 +17,7 @@ public class MultitaskEvolutionState extends SimpleEvolutionState {
 	private int[][] tasksForInds;
 
 	private List<Integer>[][] indsPerTask;
+	private List<Integer>[][] ranksPerTask;
 
 	public void setNumTasks(int numTasks) {
 		this.numTasks = numTasks;
@@ -36,7 +37,7 @@ public class MultitaskEvolutionState extends SimpleEvolutionState {
 
 	// FIXME I need to change up these wordings to make it a bit more clear.
 
-	// Used as part of breeding.
+	// Used to assign the task for individuals after breeding.
 	public void setTasksForInds(final int[][] tasksForInds) {
 		this.tasksForInds = tasksForInds;
 	}
@@ -52,6 +53,14 @@ public class MultitaskEvolutionState extends SimpleEvolutionState {
 
 	public List<Integer>[][] getIndsPerTask() {
 		return indsPerTask;
+	}
+
+	public void setRanksPerTask(List<Integer>[][] ranksPerTask) {
+		this.ranksPerTask = ranksPerTask;
+	}
+
+	public List<Integer>[][] getRanksPerTask() {
+		return ranksPerTask;
 	}
 
 }

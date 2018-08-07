@@ -88,7 +88,8 @@ select.tournament.neighbour-weight = 0.25
 ############################################################
 eval.problem = app.evolution.multitask.JasimaMultitaskProblem
 
-eval.problem.neighbour-jump = app.evolution.multitask.jump.ProbabilityJump
+#eval.problem.neighbour-jump = app.evolution.multitask.jump.RankProbabilityJump
+eval.proble.neighbour-jump = app.evolution.multitask.jump.FitnessProbabilityJump
 
 eval.problem.data = app.evolution.JasimaGPData
 

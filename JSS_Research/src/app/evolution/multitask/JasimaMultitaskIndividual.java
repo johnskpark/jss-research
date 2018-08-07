@@ -11,14 +11,14 @@ public class JasimaMultitaskIndividual extends JasimaGPIndividual {
 
 	public static final int NO_TASK_SET = -1;
 
-	private int task = NO_TASK_SET;
+	private int assignedTask = NO_TASK_SET;
 
 	public void setAssignedTask(int task) {
-		this.task = task;
+		this.assignedTask = task;
 	}
 
 	public int getAssignedTask() {
-		return task;
+		return assignedTask;
 	}
 
 	public void setNumTasks(int numTasks) {
@@ -41,6 +41,16 @@ public class JasimaMultitaskIndividual extends JasimaGPIndividual {
 		return ((MultitaskKozaFitness) getFitness()).getTaskFitnesses();
 	}
 
+	public boolean taskFitnessBetterThan(JasimaMultitaskIndividual other, int task) {
+		if (this.getTaskFitness(task) < other.getTaskFitness(task) ||
+				(this.getTaskFitness(task) == other.getTaskFitness(task) &&
+				this.getFitness().betterThan(other.getFitness()))) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	@Override
     public void printIndividualForHumans(final EvolutionState state, final int log) {
 		MultitaskKozaFitness fitness = (MultitaskKozaFitness) getFitness();
@@ -50,7 +60,7 @@ public class JasimaMultitaskIndividual extends JasimaGPIndividual {
         state.output.print("Standard ", log);
         fitness.printFitnessForHumans(state,log);
 
-        state.output.println("Assigned task: " + ((task != NO_TASK_SET) ? task : "NOT_SET") + ", fitnesses: " + fitness.getTaskFitnesses(), log);
+        state.output.println("Assigned task: " + ((assignedTask != NO_TASK_SET) ? assignedTask : "NOT_SET") + ", fitnesses: " + fitness.getTaskFitnesses(), log);
 
         state.output.print("Task ", log);
         printTrees(state,log);

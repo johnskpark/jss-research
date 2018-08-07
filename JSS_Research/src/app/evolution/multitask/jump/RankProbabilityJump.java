@@ -14,7 +14,7 @@ import ec.Individual;
 import ec.util.MersenneTwisterFast;
 import ec.util.Parameter;
 
-public class ProbabilityJump implements IMultitaskNeighbourJump {
+public class RankProbabilityJump implements IMultitaskNeighbourJump {
 
 	private static final long serialVersionUID = 866072103875458209L;
 
@@ -151,24 +151,32 @@ public class ProbabilityJump implements IMultitaskNeighbourJump {
 
 		@Override
 		public int compare(JasimaMultitaskIndividual o1, JasimaMultitaskIndividual o2) {
-			double tf1 = o1.getTaskFitness(task);
-			double tf2 = o2.getTaskFitness(task);
-
-			// Compare the task fitnesses.
-			if (tf1 < tf2) {
+			if (o1.taskFitnessBetterThan(o2, task)) {
 				return -1;
-			} else if (tf1 > tf2) {
+			} else if (o2.taskFitnessBetterThan(o1, task)) {
 				return 1;
 			} else {
-				// Compare their general fitnesses
-				if (o1.getFitness().betterThan(o2.getFitness())) {
-					return -1;
-				} else if (o2.getFitness().betterThan(o1.getFitness())) {
-					return 1;
-				} else {
-					return 0;
-				}
+				return 0;
 			}
+
+//			double tf1 = o1.getTaskFitness(task);
+//			double tf2 = o2.getTaskFitness(task);
+//
+//			// Compare the task fitnesses.
+//			if (tf1 < tf2) {
+//				return -1;
+//			} else if (tf1 > tf2) {
+//				return 1;
+//			} else {
+//				// Compare their general fitnesses
+//				if (o1.getFitness().betterThan(o2.getFitness())) {
+//					return -1;
+//				} else if (o2.getFitness().betterThan(o1.getFitness())) {
+//					return 1;
+//				} else {
+//					return 0;
+//				}
+//			}
 		}
 
 	}

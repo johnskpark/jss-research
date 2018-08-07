@@ -45,6 +45,7 @@ public class JasimaMultitaskProblem extends JasimaSimpleProblem {
 		neighbourJump.setup(state, base);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void prepareToEvaluate(final EvolutionState state, final int threadnum) {
 		super.prepareToEvaluate(state, threadnum);
@@ -55,14 +56,18 @@ public class JasimaMultitaskProblem extends JasimaSimpleProblem {
 			int numSubpops = multitaskState.population.subpops.length;
 			int numTasks = multitaskState.getNumTasks();
 
-			@SuppressWarnings("unchecked")
 			List<Integer>[][] indsPerTask = new List[numSubpops][numTasks];
+			List<Integer>[][] ranksPerTask = new List[numSubpops][numTasks];
+
 			for (int i = 0; i < numSubpops; i++) {
 				for (int j = 0; j < numTasks; j++) {
 					indsPerTask[i][j] = new ArrayList<>();
+					ranksPerTask[i][j] = new ArrayList<>();
 				}
 			}
+
 			multitaskState.setIndsPerTask(indsPerTask);
+			multitaskState.setRanksPerTask(ranksPerTask);
 		}
 
 		for (int i = 0; i < state.population.subpops.length; i++) {

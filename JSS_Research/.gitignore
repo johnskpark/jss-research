@@ -464,3 +464,6 @@
 /breakdown_holthaus4_debug_output.csv
 /breakdown_holthaus4_multitask_output.csv
 /jss_evolve11015.txt
+/jss_evolve11015.txt.old
+/jss_evolve11015_baseline.txt
+/jss_evolve11015_multitask.txt

@@ -157,9 +157,7 @@ public class MultitaskBreeder extends SimpleBreeder {
 
 						// So why did I do this again?
 						if (bestInd.getTaskFitness(task) == MultitaskKozaFitness.NOT_SET ||
-								ind.getTaskFitness(task) < bestInd.getTaskFitness(task) ||
-								(ind.getTaskFitness(task) == bestInd.getTaskFitness(task) &&
-								ind.getFitness().betterThan(bestInd.getFitness()))) {
+								ind.taskFitnessBetterThan(bestInd, task)) {
 							best[task] = x;
 						}
 					}
@@ -279,8 +277,17 @@ public class MultitaskBreeder extends SimpleBreeder {
 
 				Collections.sort(indIndexPair[i][j], new TaskFitnessComparator(j));
 
+				double lastFitness = 0.0;
+				int rank = 0;
 				for (Pair<Integer, JasimaMultitaskIndividual> pair : indIndexPair[i][j]) {
 					multitaskState.getIndsPerTask()[i][j].add(pair.a);
+
+					double fitness = pair.b.getTaskFitness(j);
+					if (fitness != lastFitness) {
+						lastFitness = fitness;
+						rank++;
+					}
+					multitaskState.getRanksPerTask()[i][j].add(rank);
 				}
 			}
 		}
@@ -289,13 +296,13 @@ public class MultitaskBreeder extends SimpleBreeder {
 	protected void clearIndTaskLists(EvolutionState state) {
 		MultitaskEvolutionState multitaskState = (MultitaskEvolutionState) state;
 
-		List<Integer>[][] indsPerTask = multitaskState.getIndsPerTask();
 		int numSubpops = multitaskState.population.subpops.length;
 		int numTasks = multitaskState.getNumTasks();
 
 		for (int i = 0; i < numSubpops; i++) {
 			for (int j = 0; j < numTasks; j++) {
-				indsPerTask[i][j].clear();
+				multitaskState.getIndsPerTask()[i][j].clear();
+				multitaskState.getRanksPerTask()[i][j].clear();
 			}
 		}
 	}
@@ -309,16 +316,24 @@ public class MultitaskBreeder extends SimpleBreeder {
 
 		@Override
 		public int compare(Pair<Integer, JasimaMultitaskIndividual> o1, Pair<Integer, JasimaMultitaskIndividual> o2) {
-			double tf1 = o1.b.getTaskFitness(task);
-			double tf2 = o2.b.getTaskFitness(task);
-
-			if (tf1 < tf2) {
+			if (o1.b.taskFitnessBetterThan(o2.b, task)) {
 				return -1;
-			} else if (tf1 > tf2) {
+			} else if (o2.b.taskFitnessBetterThan(o1.b, task)) {
 				return 1;
 			} else {
 				return 0;
 			}
+
+//			double tf1 = o1.b.getTaskFitness(task);
+//			double tf2 = o2.b.getTaskFitness(task);
+//
+//			if (tf1 < tf2) {
+//				return -1;
+//			} else if (tf1 > tf2) {
+//				return 1;
+//			} else {
+//				return 0;
+//			}
 		}
 	}
 
@@ -336,17 +351,21 @@ public class MultitaskBreeder extends SimpleBreeder {
 			if (task == JasimaMultitaskIndividual.NO_TASK_SET) {
 				return inds[(int)b].fitness.betterThan(inds[(int)a].fitness);
 			} else {
-				double tf1 = ((JasimaMultitaskIndividual) inds[(int)a]).getTaskFitness(task);
-				double tf2 = ((JasimaMultitaskIndividual) inds[(int)b]).getTaskFitness(task);
+				JasimaMultitaskIndividual ind1 = (JasimaMultitaskIndividual) inds[(int)a];
+				JasimaMultitaskIndividual ind2 = (JasimaMultitaskIndividual) inds[(int)b];
+				return ind2.taskFitnessBetterThan(ind1, task);
 
-				if (tf1 > tf2) {
-					return true;
-				} else if (tf1 < tf2) {
-					return false;
-				} else {
-					// Use the overall fitness.
-					return inds[(int)b].fitness.betterThan(inds[(int)a].fitness);
-				}
+//				double tf1 = ((JasimaMultitaskIndividual) inds[(int)a]).getTaskFitness(task);
+//				double tf2 = ((JasimaMultitaskIndividual) inds[(int)b]).getTaskFitness(task);
+//
+//				if (tf1 > tf2) {
+//					return true;
+//				} else if (tf1 < tf2) {
+//					return false;
+//				} else {
+//					// Use the overall fitness.
+//					return inds[(int)b].fitness.betterThan(inds[(int)a].fitness);
+//				}
 			}
 		}
 
@@ -355,16 +374,20 @@ public class MultitaskBreeder extends SimpleBreeder {
 			if (task == JasimaMultitaskIndividual.NO_TASK_SET) {
 				return inds[(int)a].fitness.betterThan(inds[(int)b].fitness);
 			} else {
-				double tf1 = ((JasimaMultitaskIndividual) inds[(int)a]).getTaskFitness(task);
-				double tf2 = ((JasimaMultitaskIndividual) inds[(int)b]).getTaskFitness(task);
-				if (tf1 < tf2) {
-					return true;
-				} else if (tf1 > tf2) {
-					return false;
-				} else {
-					// Use the overall fitness.
-					return inds[(int)a].fitness.betterThan(inds[(int)b].fitness);
-				}
+				JasimaMultitaskIndividual ind1 = (JasimaMultitaskIndividual) inds[(int)a];
+				JasimaMultitaskIndividual ind2 = (JasimaMultitaskIndividual) inds[(int)b];
+				return ind1.taskFitnessBetterThan(ind2, task);
+
+//				double tf1 = ((JasimaMultitaskIndividual) inds[(int)a]).getTaskFitness(task);
+//				double tf2 = ((JasimaMultitaskIndividual) inds[(int)b]).getTaskFitness(task);
+//				if (tf1 < tf2) {
+//					return true;
+//				} else if (tf1 > tf2) {
+//					return false;
+//				} else {
+//					// Use the overall fitness.
+//					return inds[(int)a].fitness.betterThan(inds[(int)b].fitness);
+//				}
 			}
 		}
 	}
