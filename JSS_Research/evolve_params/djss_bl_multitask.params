@@ -3,7 +3,7 @@
 # See the file "LICENSE" for more information
 
 parent.0 = koza.params
-parent.1 = holthaus6_multitask.params
+parent.1 = holthaus4_multitask.params
 
 pop.subpop.0.species.ind = app.evolution.multitask.JasimaMultitaskIndividual
 
@@ -89,7 +89,7 @@ select.tournament.neighbour-weight = 0.25
 eval.problem = app.evolution.multitask.JasimaMultitaskProblem
 
 #eval.problem.neighbour-jump = app.evolution.multitask.jump.RankProbabilityJump
-eval.proble.neighbour-jump = app.evolution.multitask.jump.FitnessProbabilityJump
+eval.problem.neighbour-jump = app.evolution.multitask.jump.FitnessProbabilityJump
 
 eval.problem.data = app.evolution.JasimaGPData
 

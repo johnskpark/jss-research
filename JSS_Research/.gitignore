@@ -467,3 +467,10 @@
 /jss_evolve11015.txt.old
 /jss_evolve11015_baseline.txt
 /jss_evolve11015_multitask.txt
+/bl_holthaus4_baseline_025_5_repeat_output.csv
+/bl_holthaus4_baseline_gen_output.csv
+/bl_holthaus4_baseline_output.csv
+/bl_holthaus4_debug_output.csv
+/bl_holthaus4_diversity_output.csv
+/bl_holthaus4_multitask_elite_1_output.csv
+/bl_holthaus4_multitask_output.csv

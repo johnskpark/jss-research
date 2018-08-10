@@ -1,9 +1,9 @@
 package app.evolution.multitask.select;
 
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
+import java.util.Queue;
 
 import app.evolution.multitask.JasimaMultitaskIndividual;
 import app.evolution.multitask.MultitaskEvolutionState;
@@ -11,16 +11,20 @@ import app.evolution.multitask.MultitaskKozaFitness;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.util.Parameter;
+import jasima.core.util.Pair;
 
 public class AverageFillSelection extends MultitaskTournamentSelection {
 
 	private static final long serialVersionUID = -4710594906194873672L;
 
 	public static final String P_NEIGHBOUR_WEIGHT = "neighbour-weight";
+//	public static final String P_USE_WORST_RANK = "worst-rank";
 
 	public static final double DEFAULT_WEIGHT = 0.0;
+//	public static final boolean DEFAULT_USE_WORST_RANK = true;
 
 	private double neighbourWeight;
+	private boolean useWorstRank;
 
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
@@ -31,6 +35,9 @@ public class AverageFillSelection extends MultitaskTournamentSelection {
 		try {
 			neighbourWeight = state.parameters.getDouble(base.push(P_NEIGHBOUR_WEIGHT), def.push(P_NEIGHBOUR_WEIGHT), DEFAULT_WEIGHT);
 			state.output.message("AverageFillSelection neighbour weight: " + neighbourWeight);
+
+//			useWorstRank = state.parameters.getBoolean(base.push(P_USE_WORST_RANK), def.push(P_USE_WORST_RANK), DEFAULT_USE_WORST_RANK);
+//			state.output.message("AverageFillSelection use worst rank: " + useWorstRank);
 		} catch (NumberFormatException ex) {
 			state.output.fatal("Neighbour weight for needs to be defined for the class AverageFillSelection.");
 		}
@@ -110,7 +117,7 @@ public class AverageFillSelection extends MultitaskTournamentSelection {
 
 	protected double[] calculateScores(final EvolutionState state,
 			final int subpopulation,
-			final int task,
+			final int currentTask,
 			final int[] tournamentInds,
 			final int thread) {
 		double[] scores = new double[tournamentInds.length];
@@ -118,42 +125,48 @@ public class AverageFillSelection extends MultitaskTournamentSelection {
 		MultitaskEvolutionState multitaskState = (MultitaskEvolutionState) state;
 		List<Integer>[][] indsPerTask = multitaskState.getIndsPerTask();
 		List<Integer>[][] ranksPerTask = multitaskState.getRanksPerTask();
-		List<Integer> neighbours = multitaskState.getSimConfig().getNeighbourScenarios(task);
 
-		int numTasks = 1 + neighbours.size();
+		int numTasks = multitaskState.getNumTasks();
 		double[][] ranks = new double[numTasks][tournamentInds.length];
-		int[] worstRanks = new int[numTasks];
+		double[] worstRanks = new double[numTasks];
+		double[] weights = new double[numTasks];
 
 		int[] sumRanks = new int[numTasks];
 		int[] nonZeroRankCounts = new int[numTasks];
 
-		// Get the ranks of the individuals in the tournament selection.
-//		worstRanks[0] = indsPerTask[subpopulation][task].size();
-		int worstIndex = indsPerTask[subpopulation][task].size() - 1;
-		worstRanks[0] = ranksPerTask[subpopulation][task].get(worstIndex);
-		for (int i = 0; i < tournamentInds.length; i++) {
-//			ranks[0][i] = indsPerTask[subpopulation][task].indexOf(tournamentInds[i]) + 1;
-			int index = indsPerTask[subpopulation][task].indexOf(tournamentInds[i]) + 1;
-			ranks[0][i] = (index != -1) ? ranksPerTask[subpopulation][task].get(index) : 0;
+		Queue<Pair<Integer, Integer>> taskQueue = new LinkedList<>();
+		List<Integer> visitedTasks = new ArrayList<>();
+		taskQueue.offer(new Pair<Integer, Integer>(currentTask, -1));
+		int taskIndex = 0;
 
-			sumRanks[0] += ranks[0][i];
-			nonZeroRankCounts[0] += ((ranks[0][i] != 0) ? 1 : 0);
-		}
-
-		for (int i = 1; i < numTasks; i++) {
-			int neighbourIndex = neighbours.get(i - 1);
-//			worstRanks[i] = indsPerTask[subpopulation][neighbourIndex].size();
-			worstIndex = indsPerTask[subpopulation][neighbourIndex].size() - 1;
-			worstRanks[i] = ranksPerTask[subpopulation][neighbourIndex].get(worstIndex);
-
-			for (int j = 0; j < tournamentInds.length; j++) {
-//				ranks[i][j] = indsPerTask[subpopulation][neighbourIndex].indexOf(tournamentInds[j]) + 1;
-				int index = indsPerTask[subpopulation][task].indexOf(tournamentInds[i]) + 1;
-				ranks[i][j] = (index != -1) ? ranksPerTask[subpopulation][task].get(index) : 0;
-
-				sumRanks[i] += ranks[i][j];
-				nonZeroRankCounts[i] += ((ranks[i][j] != 0) ? 1 : 0);
+		// Calculate the worst ranks, ranks, non-zero counts and weights.
+		weights[0] = 1.0;
+		while (!taskQueue.isEmpty()) {
+			Pair<Integer, Integer> taskPair = taskQueue.poll();
+			if (visitedTasks.contains(taskPair.a)) {
+				continue;
 			}
+
+			worstRanks[taskIndex] = getWorstRank(state, subpopulation, taskPair.a, indsPerTask, ranksPerTask, thread);
+			for (int i = 0; i < tournamentInds.length; i++) {
+				int indIndex = indsPerTask[subpopulation][taskPair.a].indexOf(tournamentInds[i]);
+				ranks[taskIndex][i] = (indIndex != -1) ? ranksPerTask[subpopulation][taskPair.a].get(indIndex) : 0;
+
+				sumRanks[taskIndex] += ranks[taskIndex][i];
+				nonZeroRankCounts[taskIndex] += ((ranks[0][i] != 0) ? 1 : 0);
+			}
+
+			// Use the index of the past task to calculate weight.
+			weights[taskIndex] = (taskPair.b != -1) ? neighbourWeight * weights[taskPair.b] : 1.0;
+
+			List<Integer> neighbours = multitaskState.getSimConfig().getNeighbourScenarios(taskPair.a);
+			for (int i = 0; i < neighbours.size(); i++) {
+				int neighbourTask = neighbours.get(i);
+				taskQueue.offer(new Pair<Integer, Integer>(neighbourTask, taskIndex));
+			}
+
+			visitedTasks.add(taskPair.a);
+			taskIndex++;
 		}
 
 		// Fill in the missing ranks.
@@ -163,7 +176,7 @@ public class AverageFillSelection extends MultitaskTournamentSelection {
 					if (nonZeroRankCounts[i] != 0) {
 						ranks[i][j] = 1.0 * sumRanks[i] / nonZeroRankCounts[i];
 					} else {
-						ranks[i][j] = 1.0 * indsPerTask[subpopulation][task].size() / 2;
+						ranks[i][j] = 1.0 * indsPerTask[subpopulation][currentTask].size() / 2;
 					}
 				}
 			}
@@ -178,6 +191,35 @@ public class AverageFillSelection extends MultitaskTournamentSelection {
 		}
 
 		return scores;
+	}
+
+	protected double getDefaultRank(final EvolutionState state,
+			final int subpopulation,
+			final int task,
+			final List<Integer>[][] indsPerTask,
+			final List<Integer>[][] ranksPerTask,
+			final int thread) {
+		if (useWorstRank) {
+			return getWorstRank(state, subpopulation, task, indsPerTask, ranksPerTask, thread);
+		} else {
+			double averageRank = 0.0;
+			List<Integer> ranks = ranksPerTask[subpopulation][task];
+			for (Integer rank : ranks) {
+				averageRank += rank;
+			}
+			averageRank = averageRank / ranks.size();
+			return averageRank;
+		}
+	}
+
+	protected double getWorstRank(final EvolutionState state,
+			final int subpopulation,
+			final int task,
+			final List<Integer>[][] indsPerTask,
+			final List<Integer>[][] ranksPerTask,
+			final int thread) {
+		int lastIndex = indsPerTask[subpopulation][task].size() - 1;
+		return ranksPerTask[subpopulation][task].get(lastIndex);
 	}
 
 }
