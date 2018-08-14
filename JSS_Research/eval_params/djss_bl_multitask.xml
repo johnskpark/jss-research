@@ -125,60 +125,61 @@
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask/bl_multitask_elite_1_0.txt</ruleFile>
+			<ruleFile>mb_multitask/bl_multitask_elite_1_new_0.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask/bl_multitask_elite_1_1.txt</ruleFile>
+			<ruleFile>mb_multitask/bl_multitask_elite_1_new_1.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask/bl_multitask_elite_1_2.txt</ruleFile>
+			<ruleFile>mb_multitask/bl_multitask_elite_1_new_2.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask/bl_multitask_elite_1_3.txt</ruleFile>
+			<ruleFile>mb_multitask/bl_multitask_elite_1_new_3.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask/bl_multitask_elite_1_4.txt</ruleFile>
+			<ruleFile>mb_multitask/bl_multitask_elite_1_new_4.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask/bl_multitask_elite_1_5.txt</ruleFile>
+			<ruleFile>mb_multitask/bl_multitask_elite_1_new_5.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask/bl_multitask_elite_1_6.txt</ruleFile>
+			<ruleFile>mb_multitask/bl_multitask_elite_1_new_6.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask/bl_multitask_elite_1_7.txt</ruleFile>
+			<ruleFile>mb_multitask/bl_multitask_elite_1_new_7.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 <!-- Elite 5 -->
+<!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
@@ -234,8 +235,10 @@
 			<ruleFile>mb_multitask/bl_multitask_elite_5_7.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
+-->
 
 <!-- Elite 10 -->
+<!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
@@ -291,6 +294,7 @@
 			<ruleFile>mb_multitask/bl_multitask_elite_10_7.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
+-->
 
 	<datasetConfig>
 		<datasetClass>app.simConfig.holthausConfig4.EvalFactory</datasetClass>
@@ -311,7 +315,7 @@
 
 <!-- Output file definition -->
 	<outputConfig>
-	    <outputFile>bl_holthaus4_multitask_output.csv</outputFile>
+	    <outputFile>bl_holthaus4_multitask_elite_1_output.csv</outputFile>
 	</outputConfig>
 
 <!-- Fitness definitions -->
