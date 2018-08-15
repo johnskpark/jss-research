@@ -254,10 +254,10 @@ public class MultitaskBreeder extends SimpleBreeder {
 						List<JasimaMultitaskIndividual> indList = indsPerTask[s][t];
 						List<Integer> indIndicesList = indIndicesPerTask[s][t];
 
-						if (!indList.contains(multitaskInd)) {
+//						if (!indList.contains(multitaskInd)) {
 							indList.add(multitaskInd);
 							indIndicesList.add(i);
-						}
+//						}
 					}
 				}
 			}
