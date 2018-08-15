@@ -4,7 +4,7 @@
 
 parent.0 = koza.params
 parent.1 = gp_terminals.params
-parent.2 = holthaus6_multitask.params
+parent.2 = holthaus4_multitask.params
 
 pop.subpop.0.species.ind = app.evolution.multitask.JasimaMultitaskIndividual
 
