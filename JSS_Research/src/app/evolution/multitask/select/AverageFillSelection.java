@@ -50,16 +50,6 @@ public class AverageFillSelection extends MultitaskTournamentSelection {
 		int currentTask = getCurrentTask();
 
 		MultitaskEvolutionState multitaskState = (MultitaskEvolutionState) state;
-//		List<Integer>[][] indsPerTask = multitaskState.getIndsPerTask();
-//
-//		List<Integer> neighbours = multitaskState.getSimConfig().getNeighbourScenarios(currentTask);
-//
-//		Set<Integer> indSet = new LinkedHashSet<>();
-//		indSet.addAll(indsPerTask[subpopulation][currentTask]);
-//		for (int i = 0; i < neighbours.size(); i++) {
-//			indSet.addAll(indsPerTask[subpopulation][neighbours.get(i)]);
-//		}
-//		List<Integer> indList = new ArrayList<>(indSet);
 
 		List<Integer> indList = getViableInds(multitaskState, subpopulation, currentTask);
 
