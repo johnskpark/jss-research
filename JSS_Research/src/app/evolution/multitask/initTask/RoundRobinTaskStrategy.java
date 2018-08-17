@@ -19,7 +19,7 @@ public class RoundRobinTaskStrategy implements IMultitaskInitTaskStrategy {
 			Arrays.stream(subpop.individuals).forEach(x -> ((JasimaMultitaskIndividual) x).setNumTasks(numTasks));
 
 			int numIndsPerTask = subpop.individuals.length / numTasks;
-			int remainder = subpop.individuals.length - (numIndsPerTask * numTasks);
+			int remainderInds = subpop.individuals.length - (numIndsPerTask * numTasks);
 
 			int taskCount = 0;
 			int taskIndex = 0;
@@ -27,7 +27,7 @@ public class RoundRobinTaskStrategy implements IMultitaskInitTaskStrategy {
 				((JasimaMultitaskIndividual) subpop.individuals[j]).setAssignedTask(taskIndex);
 
 				taskCount++;
-				if (taskCount >= numIndsPerTask + ((taskIndex < remainder) ? 1 : 0)) {
+				if (taskCount >= numIndsPerTask + ((taskIndex < remainderInds) ? 1 : 0)) {
 					taskCount = 0;
 					taskIndex++;
 				}

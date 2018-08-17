@@ -17,20 +17,20 @@ public class RoundRobinStrategy implements IMultitaskBreedStrategy {
     	for (int s = 0; s < subpops.length; s++) {
     		int subpopSize = subpops[s].individuals.length - breeder.numElites(state, s);
 
-	    	int indsPerTaskFloor = subpopSize / numTasks;
-	    	int remainderInds = subpopSize - indsPerTaskFloor * numTasks;
+	    	int numIndsPerTask = subpopSize / numTasks;
+	    	int remainderInds = subpopSize - numIndsPerTask * numTasks;
 
     		tasksForInds[s] = new int[subpopSize];
 
-	    	int task = 0;
-	    	int indTracker = indsPerTaskFloor + (((remainderInds - task) != 0) ? 1 : 0);
+    		int taskCount = 0;
+	    	int taskIndex = 0;
 	    	for (int i = 0; i < subpopSize; i++) {
-	    		tasksForInds[s][i] = task;
+	    		tasksForInds[s][i] = taskIndex;
 
-	    		indTracker--;
-	    		if (indTracker == 0) {
-	    			indTracker = indsPerTaskFloor + (((remainderInds - task) != 0) ? 1 : 0);
-	    			task++;
+	    		taskCount++;
+	    		if (taskCount >= numIndsPerTask + ((taskIndex < remainderInds) ? 1 : 0)) {
+	    			taskCount = 0;
+	    			taskIndex++;
 	    		}
 	    	}
     	}

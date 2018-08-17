@@ -7,6 +7,7 @@ parent.1 = gp_terminals.params
 parent.2 = holthaus4_multitask.params
 
 pop.subpop.0.species.ind = app.evolution.multitask.JasimaMultitaskIndividual
+pop.subpop.0.size = 7168
 
 # the next four items are already defined in koza.params, but we
 # put them here to be clear.
