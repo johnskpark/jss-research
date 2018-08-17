@@ -1,6 +1,8 @@
 package app.evolution.niched;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import app.evolution.JasimaGPIndividual;
 import ec.EvolutionState;
@@ -12,9 +14,11 @@ public class JasimaNichedIndividual extends JasimaGPIndividual {
 
 	public static final String P_NICHED_FITNESS = "niched-fitness";
 
-	private double[] nichedFitnesses;
+	public static final double NOT_SET = -1;
+
+	private List<Double> nichedFitness = new ArrayList<Double>();
 	private int numNiches;
-	
+
 	private int[] jobRanks;
 
 	@Override
@@ -26,15 +30,19 @@ public class JasimaNichedIndividual extends JasimaGPIndividual {
 	}
 
 	public void initNichedFitness() {
-		nichedFitnesses = new double[numNiches];
+		nichedFitness = new ArrayList<>(numNiches);
+
+		for (int i = 0; i < numNiches; i++) {
+			nichedFitness.add(NOT_SET);
+		}
 	}
-	
+
 	public double getNichedFitness(int index) {
-		return nichedFitnesses[index];
+		return nichedFitness.get(index);
 	}
-	
+
 	public void setNichedFitness(int index, double fitness) {
-		nichedFitnesses[index] = fitness;
+		nichedFitness.set(index, fitness);
 	}
 
 	public int[] getRuleDecisionVector() {
@@ -52,21 +60,23 @@ public class JasimaNichedIndividual extends JasimaGPIndividual {
         state.output.print("Standard ", log);
         fitness.printFitnessForHumans(state,log);
 
-        state.output.print("Niched ", log);
-//        nichedFitness.printFitnessForHumans(state,log); // FIXME
+        state.output.println("Niched fitness: " + nichedFitness, log);
 
+        state.output.print("Niched ", log);
         printTrees(state,log);
+
+//      nichedFitness.printFitnessForHumans(state,log); // FIXME
 	}
-	
+
 	@Override
 	public Object clone() {
 		JasimaNichedIndividual newObject = (JasimaNichedIndividual) super.clone();
-		
-		newObject.nichedFitnesses = Arrays.copyOf(this.nichedFitnesses, this.nichedFitnesses.length);
+
+		newObject.nichedFitness = new ArrayList<>(this.nichedFitness);
 		newObject.numNiches = this.numNiches;
-		
+
 		newObject.jobRanks = Arrays.copyOf(this.jobRanks, this.jobRanks.length);
-		
+
 		return newObject;
 	}
 
