@@ -21,11 +21,13 @@ public class JasimaMultitaskProblem extends JasimaSimpleProblem {
 
 	private static final long serialVersionUID = -37395823771748782L;
 
+	public static final String P_INIT_TASK = "init-task";
 	public static final String P_NEIGHBOUR_JUMP = "neighbour-jump";
 
 	private DynamicBreakdownSimConfig breakdownSimConfig;
 	private MultitaskFitnessBase multitaskFitness;
 
+	private IMultitaskInitTaskStrategy initTaskStrategy;
 	private IMultitaskNeighbourJump neighbourJump;
 
 	private int numSimulation;
@@ -40,6 +42,8 @@ public class JasimaMultitaskProblem extends JasimaSimpleProblem {
 		MultitaskEvolutionState multitaskState = (MultitaskEvolutionState) state;
 		multitaskState.setSimConfig(breakdownSimConfig);
 		multitaskState.setNumTasks(breakdownSimConfig.getNumScenarios());
+
+		initTaskStrategy = (IMultitaskInitTaskStrategy) state.parameters.getInstanceForParameter(base.push(P_INIT_TASK), null, IMultitaskInitTaskStrategy.class);
 
 		neighbourJump = (IMultitaskNeighbourJump) state.parameters.getInstanceForParameter(base.push(P_NEIGHBOUR_JUMP), null, IMultitaskNeighbourJump.class);
 		neighbourJump.setup(state, base);
@@ -68,6 +72,8 @@ public class JasimaMultitaskProblem extends JasimaSimpleProblem {
 
 			multitaskState.setIndsPerTask(indsPerTask);
 			multitaskState.setRanksPerTask(ranksPerTask);
+
+			initTaskStrategy.initTasksForInds(multitaskState);
 		}
 
 		for (int i = 0; i < state.population.subpops.length; i++) {

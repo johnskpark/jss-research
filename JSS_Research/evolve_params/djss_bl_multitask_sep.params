@@ -34,22 +34,20 @@ stat = app.evolution.multitask.JasimaMultitaskStatistics
 pop.subpop.0.species.fitness = app.evolution.multitask.MultitaskKozaFitness
 
 # Tournament selection related parameter settings here.
-breed.reproduce.source.0 = app.evolution.multitask.select.AverageFillSelection
+breed.reproduce.source.0 = app.evolution.multitask.select.SingleTaskSelection
 
-gp.koza.xover.source.0 = app.evolution.multitask.select.AverageFillSelection
+gp.koza.xover.source.0 = app.evolution.multitask.select.SingleTaskSelection
 gp.koza.xover.source.1 = same
 
-gp.koza.mutate.source.0 = app.evolution.multitask.select.AverageFillSelection
+gp.koza.mutate.source.0 = app.evolution.multitask.select.SingleTaskSelection
 
 select.tournament.size = 7
-select.tournament.neighbour-weight = 0.25
 
 ############################################################
 eval.problem = app.evolution.multitask.JasimaMultitaskProblem
 
-#eval.problem.neighbour-jump = app.evolution.multitask.jump.RankProbabilityJump
-eval.problem.init-task = app.evolution.multitask.initTask.NoInitialTaskStrategy
-eval.problem.neighbour-jump = app.evolution.multitask.jump.FitnessProbabilityJump
+eval.problem.init-task = app.evolution.multitask.initTask.RoundRobinTaskStrategy
+eval.problem.neighbour-jump = app.evolution.multitask.jump.NoJump
 
 eval.problem.data = app.evolution.JasimaGPData
 
