@@ -116,13 +116,6 @@ public class JasimaMultitaskProblem extends JasimaSimpleProblem {
 			final Individual ind,
 			final int subpopulation,
 			final int threadnum) {
-		configureRule(state,
-				getRule(),
-				getTracker(),
-				new Individual[] {ind},
-				new int[] {subpopulation},
-				threadnum);
-
 		JasimaMultitaskIndividual multitaskInd = (JasimaMultitaskIndividual) ind;
 		int task = multitaskInd.getAssignedTask();
 
@@ -139,6 +132,13 @@ public class JasimaMultitaskProblem extends JasimaSimpleProblem {
 			final JasimaMultitaskIndividual ind,
 			final int subpopulation,
 			final int threadnum) {
+		configureRule(state,
+				getRule(),
+				getTracker(),
+				new Individual[] {ind},
+				new int[] {subpopulation},
+				threadnum);
+
 		initialiseTracker(getTracker());
 
 		for (int task = 0; task < breakdownSimConfig.getNumScenarios(); task++) {
@@ -150,7 +150,7 @@ public class JasimaMultitaskProblem extends JasimaSimpleProblem {
 				Experiment experiment = getExperiment(state, getRule(), simConfigIndex, getSimConfig(), getWorkStationListeners(), getTracker());
 				experiment.runExperiment();
 
-				getFitness().accumulateFitness(simConfigIndex, getSimConfig(), (JasimaGPIndividual) ind, experiment.getResults());
+				multitaskFitness.accumulateFitness(simConfigIndex, getSimConfig(), (JasimaGPIndividual) ind, experiment.getResults());
 
 				clearForExperiment(getWorkStationListeners());
 
@@ -161,7 +161,7 @@ public class JasimaMultitaskProblem extends JasimaSimpleProblem {
 			multitaskFitness.clear();
 		}
 
-		clearForRun(getTracker());
+		clearForRun(getTracker(), multitaskFitness);
 
 		ind.evaluated = true;
 	}
@@ -171,6 +171,13 @@ public class JasimaMultitaskProblem extends JasimaSimpleProblem {
 			final JasimaMultitaskIndividual ind,
 			final int subpopulation,
 			final int threadnum) {
+		configureRule(state,
+				getRule(),
+				getTracker(),
+				new Individual[] {ind},
+				new int[] {subpopulation},
+				threadnum);
+
 		initialiseTracker(getTracker());
 
 		List<Integer> indices = breakdownSimConfig.getIndicesForScenario(task);
@@ -181,7 +188,7 @@ public class JasimaMultitaskProblem extends JasimaSimpleProblem {
 			Experiment experiment = getExperiment(state, getRule(), simConfigIndex, getSimConfig(), getWorkStationListeners(), getTracker());
 			experiment.runExperiment();
 
-			getFitness().accumulateFitness(simConfigIndex, getSimConfig(), (JasimaGPIndividual) ind, experiment.getResults());
+			multitaskFitness.accumulateFitness(simConfigIndex, getSimConfig(), (JasimaGPIndividual) ind, experiment.getResults());
 
 			clearForExperiment(getWorkStationListeners());
 
@@ -189,9 +196,8 @@ public class JasimaMultitaskProblem extends JasimaSimpleProblem {
 		}
 
 		multitaskFitness.setTaskFitness(state, task, getSimConfig(), ind);
-		multitaskFitness.clear();
 
-		clearForRun(getTracker());
+		clearForRun(getTracker(), multitaskFitness);
 	}
 
 	private void applyToNeighbours(final EvolutionState state,

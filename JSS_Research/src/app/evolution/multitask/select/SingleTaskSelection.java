@@ -14,6 +14,9 @@ public class SingleTaskSelection extends MultitaskTournamentSelection {
 
 	private static final long serialVersionUID = -2081578565362533642L;
 
+	private List<Integer> indList = new ArrayList<>();
+	private int currentTask = MultitaskKozaFitness.NOT_SET;
+
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
 		super.setup(state, base);
@@ -23,11 +26,10 @@ public class SingleTaskSelection extends MultitaskTournamentSelection {
 	public int produce(final int subpopulation,
 			final EvolutionState state,
 			final int thread) {
+		MultitaskEvolutionState multitaskState = (MultitaskEvolutionState) state;
 		int currentTask = getCurrentTask();
 
-		MultitaskEvolutionState multitaskState = (MultitaskEvolutionState) state;
-
-		List<Integer> indList = getViableInds(multitaskState, subpopulation, currentTask);
+		setCurrentTask(multitaskState, subpopulation, currentTask);
 
 		int size = getTournamentSizeToUse(state.random[thread]);
 		int[] tournamentInds = new int[size];
@@ -57,10 +59,21 @@ public class SingleTaskSelection extends MultitaskTournamentSelection {
 		return tournamentInds[bestIndex];
 	}
 
-	private List<Integer> getViableInds(final MultitaskEvolutionState state,
+	protected void setCurrentTask(final MultitaskEvolutionState state,
 			final int subpopulation,
 			final int task) {
-		List<Integer> indList = new ArrayList<>();
+		if (currentTask != task) {
+			getViableInds(state, subpopulation, task);
+			currentTask = task;
+		}
+	}
+
+	protected void getViableInds(final MultitaskEvolutionState state,
+			final int subpopulation,
+			final int task) {
+		if (!indList.isEmpty()) {
+			indList.clear();
+		}
 
 		Individual[] inds = state.population.subpops[subpopulation].individuals;
 		for (int i = 0; i < inds.length; i++) {
@@ -70,8 +83,6 @@ public class SingleTaskSelection extends MultitaskTournamentSelection {
 				indList.add(i);
 			}
 		}
-
-		return indList;
 	}
 
 	protected double[] calculateScores(final EvolutionState state,

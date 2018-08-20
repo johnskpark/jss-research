@@ -189,7 +189,6 @@ public class MultitaskBreeder extends SimpleBreeder {
 			int task,
 			int numTasks,
 			int increment) {
-		// This is bugged, it doesn't assign the (Assign the what???)
 		Individual[] oldinds = state.population.subpops[subpopulation].individuals;
 		int numLoaded = numElites(state, subpopulation) / numTasks;
 

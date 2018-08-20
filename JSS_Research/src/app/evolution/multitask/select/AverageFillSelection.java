@@ -26,6 +26,9 @@ public class AverageFillSelection extends MultitaskTournamentSelection {
 	private double neighbourWeight;
 	private boolean useWorstRank;
 
+	private List<Integer> indList = new ArrayList<>();
+	private int currentTask = MultitaskKozaFitness.NOT_SET;
+
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
 		super.setup(state, base);
@@ -47,11 +50,12 @@ public class AverageFillSelection extends MultitaskTournamentSelection {
 	public int produce(final int subpopulation,
 			final EvolutionState state,
 			final int thread) {
+		MultitaskEvolutionState multitaskState = (MultitaskEvolutionState) state;
 		int currentTask = getCurrentTask();
 
-		MultitaskEvolutionState multitaskState = (MultitaskEvolutionState) state;
+		setCurrentTask(multitaskState, subpopulation, currentTask);
 
-		List<Integer> indList = getViableInds(multitaskState, subpopulation, currentTask);
+//		List<Integer> indList = getViableInds(multitaskState, subpopulation, currentTask);
 
 		int size = getTournamentSizeToUse(state.random[thread]);
 		int[] tournamentInds = new int[size];
@@ -81,11 +85,21 @@ public class AverageFillSelection extends MultitaskTournamentSelection {
 		return tournamentInds[bestIndex];
 	}
 
-	private List<Integer> getViableInds(final MultitaskEvolutionState state,
+	protected void setCurrentTask(final MultitaskEvolutionState state,
 			final int subpopulation,
 			final int task) {
-		List<Integer> indList = new ArrayList<>();
-		List<Integer> neighbours = state.getSimConfig().getNeighbourScenarios(task);
+		if (currentTask != task) {
+			getViableInds(state, subpopulation, task);
+			currentTask = task;
+		}
+	}
+
+	protected void getViableInds(final MultitaskEvolutionState state,
+			final int subpopulation,
+			final int task) {
+		if (!indList.isEmpty()) {
+			indList.clear();
+		}
 
 		Individual[] inds = state.population.subpops[subpopulation].individuals;
 		for (int i = 0; i < inds.length; i++) {
@@ -93,17 +107,33 @@ public class AverageFillSelection extends MultitaskTournamentSelection {
 
 			if (ind.getTaskFitness(task) != MultitaskKozaFitness.NOT_SET) {
 				indList.add(i);
-			} else {
-				boolean found = false;
-				for (int n = 0; n < neighbours.size() && !found; n++) {
-					if (ind.getTaskFitness(n) != MultitaskKozaFitness.NOT_SET) { found = true; }
-				}
-				if (found) { indList.add(i); }
 			}
 		}
-
-		return indList;
 	}
+
+//	private List<Integer> getViableInds(final MultitaskEvolutionState state,
+//			final int subpopulation,
+//			final int task) {
+//		List<Integer> indList = new ArrayList<>();
+//		List<Integer> neighbours = state.getSimConfig().getNeighbourScenarios(task);
+//
+//		Individual[] inds = state.population.subpops[subpopulation].individuals;
+//		for (int i = 0; i < inds.length; i++) {
+//			JasimaMultitaskIndividual ind = (JasimaMultitaskIndividual) inds[i];
+//
+//			if (ind.getTaskFitness(task) != MultitaskKozaFitness.NOT_SET) {
+//				indList.add(i);
+//			} else {
+//				boolean found = false;
+//				for (int n = 0; n < neighbours.size() && !found; n++) {
+//					if (ind.getTaskFitness(n) != MultitaskKozaFitness.NOT_SET) { found = true; }
+//				}
+//				if (found) { indList.add(i); }
+//			}
+//		}
+//
+//		return indList;
+//	}
 
 	protected double[] calculateScores(final EvolutionState state,
 			final int subpopulation,
