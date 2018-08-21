@@ -109,6 +109,9 @@ public class JasimaMultitaskProblem extends JasimaSimpleProblem {
 		state.output.println("Generation " + state.generation + " simulation use count: " + numSimulation, stats.statisticslog);
 
 		super.finishEvaluating(state, threadnum);
+
+		// TODO temporary code. Seems that the thing is working better now that it has a GC?
+		System.gc();
 	}
 
 	@Override

@@ -14,11 +14,11 @@
 #eval.problem.simulator.rotate-seed = true
 
 # Config for zero machine breakdown
-eval.problem.simulator = app.simConfig.holthausConfig4.EvolveFactory
-eval.problem.simulator.instances = (all),(0.0),(all)
-eval.problem.simulator.job-seed = 15
-eval.problem.simulator.machine-seed = 15
-eval.problem.simulator.rotate-seed = true
+#eval.problem.simulator = app.simConfig.holthausConfig4.EvolveFactory
+#eval.problem.simulator.instances = (all),(0.0),(all)
+#eval.problem.simulator.job-seed = 15
+#eval.problem.simulator.machine-seed = 15
+#eval.problem.simulator.rotate-seed = true
 
 # Config for low machine breakdown
 #eval.problem.simulator = app.simConfig.holthausConfig4.EvolveFactory
@@ -52,8 +52,8 @@ eval.problem.simulator.rotate-seed = true
 #eval.problem.simulator.machine-seed = 15
 #eval.problem.simulator.rotate-seed = true
 
-#eval.problem.simulator = app.simConfig.holthausConfig4.EvolveFactory
-#eval.problem.simulator.instances = (10.0),(0.05),(all)
-#eval.problem.simulator.job-seed = 15
-#eval.problem.simulator.machine-seed = 15
-#eval.problem.simulator.rotate-seed = true
+eval.problem.simulator = app.simConfig.holthausConfig4.EvolveFactory
+eval.problem.simulator.instances = (10.0),(0.05),(all)
+eval.problem.simulator.job-seed = 15
+eval.problem.simulator.machine-seed = 15
+eval.problem.simulator.rotate-seed = true

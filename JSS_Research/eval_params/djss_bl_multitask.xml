@@ -122,6 +122,7 @@
 
 <!-- The multitask approach -->
 <!-- Elite 1 -->
+<!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
@@ -177,6 +178,7 @@
 			<ruleFile>mb_multitask/bl_multitask_elite_1_7.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
+-->
 
 <!-- Elite 5 -->
 <!--
@@ -296,6 +298,64 @@
 	</solverConfig>
 -->
 
+<!-- Separated -->
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>mb_multitask/bl_multitask_sep_0.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>mb_multitask/bl_multitask_sep_1.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>mb_multitask/bl_multitask_sep_2.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>mb_multitask/bl_multitask_sep_3.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>mb_multitask/bl_multitask_sep_4.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>mb_multitask/bl_multitask_sep_5.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>mb_multitask/bl_multitask_sep_6.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>mb_multitask/bl_multitask_sep_7.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+
 	<datasetConfig>
 		<datasetClass>app.simConfig.holthausConfig4.EvalFactory</datasetClass>
 		<datasetInstances>(all),(all),(all)</datasetInstances>
@@ -303,15 +363,6 @@
 		<datasetRepeat>30</datasetRepeat>
 		<datasetRotateSeed>true</datasetRotateSeed>
 	</datasetConfig>
-
-<!--
-	<datasetConfig>
-		<datasetClass>app.simConfig.samplingConfig.EvalFactory</datasetClass>
-		<datasetSeed>15</datasetSeed>
-		<datasetRepeat>30</datasetRepeat>
-		<datasetRotateSeed>true</datasetRotateSeed>
-	</datasetConfig>
--->
 
 <!-- Output file definition -->
 	<outputConfig>
