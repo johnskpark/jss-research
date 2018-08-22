@@ -254,14 +254,16 @@ public class JasimaMultitaskProblem extends JasimaSimpleProblem {
 		for (int task = 0; task < breakdownSimConfig.getNumScenarios(); task++) {
 			List<Integer> indices = breakdownSimConfig.getIndicesForScenario(task);
 			
-			for (int expIndex = 0; expIndex < indices.size(); expIndex++) {
+			for (int i = 0; i < indices.size(); i++) {
+				int simConfigIndex = indices.get(i);
+				
 				Experiment experiment = ExperimentGenerator.getExperiment(simConfig,
 						getReferenceRule(),
-						expIndex);
+						simConfigIndex);
 	
 				experiment.runExperiment();
 	
-				double result = getReferenceFitness().getFitness(expIndex, simConfig, null, experiment.getResults());
+				double result = getReferenceFitness().getFitness(simConfigIndex, simConfig, null, experiment.getResults());
 				getReferenceInstStats().add(result);
 			}
 			
