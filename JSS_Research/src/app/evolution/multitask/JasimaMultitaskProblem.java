@@ -10,6 +10,8 @@ import app.evolution.JasimaGPIndividual;
 import app.evolution.multitask.fitness.MultitaskFitnessBase;
 import app.evolution.simple.JasimaSimpleProblem;
 import app.simConfig.DynamicBreakdownSimConfig;
+import app.simConfig.ExperimentGenerator;
+import app.simConfig.SimConfig;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.Subpopulation;
@@ -110,7 +112,6 @@ public class JasimaMultitaskProblem extends JasimaSimpleProblem {
 
 		super.finishEvaluating(state, threadnum);
 
-		// TODO temporary code. Seems that the thing is working better now that it has a GC?
 		System.gc();
 	}
 
@@ -238,6 +239,33 @@ public class JasimaMultitaskProblem extends JasimaSimpleProblem {
 
 		for (int i = 0; i < neighbours.size(); i++) {
 			queue.offer(new Pair<Integer, Integer>(task, neighbours.get(i)));
+		}
+	}
+
+	@Override
+	protected void evaluateReference(SimConfig simConfig) {
+		if (!hasReferenceRule()) {
+			throw new RuntimeException("Cannot evaluate reference rule. Reference rule is not initialised.");
+		}
+		if (getReferenceInstStats().size() != 0) {
+			throw new RuntimeException("The reference rule has been previously evaluated. Please clear the statistics for the reference rule beforehand.");
+		}
+
+		for (int task = 0; task < breakdownSimConfig.getNumScenarios(); task++) {
+			List<Integer> indices = breakdownSimConfig.getIndicesForScenario(task);
+			
+			for (int expIndex = 0; expIndex < indices.size(); expIndex++) {
+				Experiment experiment = ExperimentGenerator.getExperiment(simConfig,
+						getReferenceRule(),
+						expIndex);
+	
+				experiment.runExperiment();
+	
+				double result = getReferenceFitness().getFitness(expIndex, simConfig, null, experiment.getResults());
+				getReferenceInstStats().add(result);
+			}
+			
+			simConfig.reset();
 		}
 	}
 

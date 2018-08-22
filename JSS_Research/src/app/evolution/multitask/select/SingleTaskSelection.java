@@ -46,11 +46,11 @@ public class SingleTaskSelection extends MultitaskTournamentSelection {
 		int bestIndex = 0;
 		for (int i = 1; i < size; i++) {
 			if (pickWorst) {
-				if (scores[bestIndex] > scores[i]) {
+				if (scores[bestIndex] < scores[i]) {
 					bestIndex = i;
 				}
 			} else {
-				if (scores[bestIndex] < scores[i]) {
+				if (scores[bestIndex] > scores[i]) {
 					bestIndex = i;
 				}
 			}

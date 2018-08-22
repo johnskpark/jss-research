@@ -215,6 +215,14 @@ public abstract class JasimaGPProblem extends GPProblem {
 
 		simConfig.reset();
 	}
+	
+	protected List<Double> getReferenceInstStats() {
+		return referenceInstStats;
+	}
+	
+	protected IJasimaFitness<JasimaGPIndividual> getReferenceFitness() {
+		return referenceFitness;
+	}
 
 	protected void clearReference() {
 		referenceInstStats.clear();
