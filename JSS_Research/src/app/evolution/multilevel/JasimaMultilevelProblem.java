@@ -86,7 +86,7 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 		if (niching != null) {
 			niching.clear();
 		}
-		
+
 		super.finishEvaluating(state, threadnum, groupRule);
 	}
 
@@ -124,7 +124,6 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 			}
 
 			groupFitness.setFitness(state, getSimConfig(), group);
-			groupFitness.clear();
 
 			// Add in the niching adjustment to the fitnesses.
 			if (hasTracker() && niching != null) {
@@ -133,7 +132,7 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 
 			group.setEvaluated(true);
 
-			clearForRun(getTracker());
+			clearForRun(getTracker(), groupFitness);
 		}
 	}
 
@@ -157,11 +156,10 @@ public class JasimaMultilevelProblem extends JasimaGPProblem implements MLSProbl
 			}
 
 			indFitness.setFitness(state, getSimConfig(), (JasimaMultilevelIndividual) ind);
-			indFitness.clear();
 
 			ind.evaluated = true;
 
-			clearForRun(null);
+			clearForRun(indFitness);
 		}
 	}
 

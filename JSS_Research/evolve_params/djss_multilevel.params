@@ -76,13 +76,14 @@ stat = app.evolution.multilevel.JasimaMultilevelStatistics
 eval.problem = app.evolution.multilevel.JasimaMultilevelProblem
 eval.problem.data = app.evolution.JasimaGPData
 
-eval.problem.reference-rule = app.priorityRules.ATCPRNew
+eval.problem.reference-rule = app.priorityRules.WATCPR
+eval.problem.reference-fitness = app.evolution.simple.fitness.MWTFitness
 
 eval.problem.group-rule = app.evolution.priorityRules.EnsemblePriorityRule
-eval.problem.group-fitness = app.evolution.multilevel.fitness.GroupPrefSizeNormTWTFitness
+eval.problem.group-fitness = app.evolution.multilevel.fitness.GroupPrefSizeNormMWTFitness
 
 eval.problem.ind-rule = app.evolution.priorityRules.BasicPriorityRule
-eval.problem.ind-fitness = app.evolution.multilevel.fitness.IndividualNormTWTFitness
+eval.problem.ind-fitness = app.evolution.multilevel.fitness.IndividualNormMWTFitness
 
 eval.problem.simulator = app.simConfig.huntConfig.EvolveFactory
 eval.problem.simulator.instances = 4op

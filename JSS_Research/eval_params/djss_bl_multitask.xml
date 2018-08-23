@@ -366,7 +366,7 @@
 
 <!-- Output file definition -->
 	<outputConfig>
-	    <outputFile>bl_holthaus4_multitask_elite_1_output.csv</outputFile>
+	    <outputFile>bl_holthaus4_multitask_sep_output.csv</outputFile>
 	</outputConfig>
 
 <!-- Fitness definitions -->

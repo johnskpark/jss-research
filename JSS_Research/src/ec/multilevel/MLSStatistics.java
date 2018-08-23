@@ -85,6 +85,10 @@ public class MLSStatistics extends Statistics {
 
 	// Getters associated with the printing.
 
+	public int statisticslog() {
+		return statisticsLog;
+	}
+
 	public boolean isCompressed() {
 		return compress;
 	}

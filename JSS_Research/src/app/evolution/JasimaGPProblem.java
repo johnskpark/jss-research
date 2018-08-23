@@ -12,6 +12,7 @@ import app.tracker.JasimaExperimentTracker;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.gp.GPProblem;
+import ec.multilevel.MLSStatistics;
 import ec.simple.SimpleStatistics;
 import ec.util.ParamClassLoadException;
 import ec.util.Parameter;
@@ -181,16 +182,20 @@ public abstract class JasimaGPProblem extends GPProblem {
 
 	protected void finishEvaluating(final EvolutionState state,
 			final int threadnum,
-			GPPriorityRuleBase rule) {		
+			GPPriorityRuleBase rule) {
 		evalFinishTime = System.currentTimeMillis();
 		evalTime = (evalFinishTime - evalStartTime) / 1000.0;
-		
+
 		state.output.message("Generation " + state.generation + " evaluation time (s) : " + evalTime);
 
 		if (state.statistics instanceof SimpleStatistics) {
 			SimpleStatistics stats = (SimpleStatistics) state.statistics;
-	
-			state.output.println("Generation " + state.generation + " evaluation time (s): " + evalTime, stats.statisticslog); 
+
+			state.output.println("Generation " + state.generation + " evaluation time (s): " + evalTime, stats.statisticslog);
+		} else if (state.statistics instanceof MLSStatistics) {
+			MLSStatistics stats = (MLSStatistics) state.statistics;
+
+			state.output.println("Generation " + state.generation + " evaluation time (s): " + evalTime, stats.statisticslog());
 		}
 	}
 
@@ -215,11 +220,11 @@ public abstract class JasimaGPProblem extends GPProblem {
 
 		simConfig.reset();
 	}
-	
+
 	protected List<Double> getReferenceInstStats() {
 		return referenceInstStats;
 	}
-	
+
 	protected IJasimaFitness<JasimaGPIndividual> getReferenceFitness() {
 		return referenceFitness;
 	}
