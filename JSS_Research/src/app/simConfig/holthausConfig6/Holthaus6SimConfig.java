@@ -23,6 +23,9 @@ public class Holthaus6SimConfig extends DynamicBreakdownSimConfig {
 	public static final int MAX_PROC_TIME = 49;
 	public static final int MEAN_PROC_TIME = 25;
 
+	public static final double BREAKDOWN_LEVEL = 0;
+	public static final double REPAIR_TIME_FACTOR = 1;
+	
 	// Try this later down the line:
 	// 90% for BL = (0%, 2.5%, 5%), 80% for BL = (10%, 15%)
 	public static final double[] UTIL_LEVEL = new double[]{0.80, 0.90};
@@ -118,14 +121,14 @@ public class Holthaus6SimConfig extends DynamicBreakdownSimConfig {
 
 	@Override
 	public double getBreakdownLevel(int index) {
-		return 0;
+		return BREAKDOWN_LEVEL;
 	}
 
 	// Repair time is dependent on the processing time, and the down time is
 	// dependent on repair time and breakdown level.
 	@Override
 	public double getMeanRepairTime(int index) {
-		return 1;
+		return REPAIR_TIME_FACTOR * MEAN_PROC_TIME;
 	}
 
 	private double getMeanBreakdownLevel(int index) {

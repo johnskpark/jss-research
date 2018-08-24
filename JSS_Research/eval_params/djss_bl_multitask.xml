@@ -122,7 +122,6 @@
 
 <!-- The multitask approach -->
 <!-- Elite 1 -->
-<!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
@@ -178,7 +177,6 @@
 			<ruleFile>mb_multitask/bl_multitask_elite_1_7.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
--->
 
 <!-- Elite 5 -->
 <!--
@@ -299,6 +297,7 @@
 -->
 
 <!-- Separated -->
+<!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
@@ -354,6 +353,7 @@
 			<ruleFile>mb_multitask/bl_multitask_sep_7.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
+-->
 
 
 	<datasetConfig>
@@ -366,7 +366,7 @@
 
 <!-- Output file definition -->
 	<outputConfig>
-	    <outputFile>bl_holthaus4_multitask_sep_output.csv</outputFile>
+	    <outputFile>bl_holthaus4_multitask_elite_1_output.csv</outputFile>
 	</outputConfig>
 
 <!-- Fitness definitions -->
