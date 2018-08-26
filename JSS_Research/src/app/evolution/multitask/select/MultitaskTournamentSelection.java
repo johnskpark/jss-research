@@ -30,7 +30,13 @@ public class MultitaskTournamentSelection extends TournamentSelection {
 		for(int i = 0; i < n; i++) {
 			// Determine the task that the individual will belong to. This won't work with the current setup.
 			 int from = multitaskState.getFrom();
-			 currentTask = tasksForInds[from + i];
+			 if (from + i < tasksForInds.length) {
+				 currentTask = tasksForInds[from + i];
+			 } else {
+				 int task = tasksForInds[tasksForInds.length - 1];
+				 state.output.warning("MultitaskTournamentSelection: exceeding the task allocation bounds for subpopulation " + subpopulation + " at " + tasksForInds.length + ", returning the task value at last index: " + task);
+				 currentTask = task;
+			 }
 
 			// Start the tournament selection.
 			inds[start + i] = state.population.subpops[subpopulation].individuals[produce(subpopulation,state,thread)];
