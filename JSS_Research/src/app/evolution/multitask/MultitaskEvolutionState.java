@@ -15,6 +15,7 @@ public class MultitaskEvolutionState extends SimpleEvolutionState {
 	private int numTasks;
 
 	private int[][] tasksForInds;
+	private int index;
 
 	private List<Integer>[][] indsPerTask;
 	private List<Integer>[][] ranksPerTask;
@@ -44,6 +45,14 @@ public class MultitaskEvolutionState extends SimpleEvolutionState {
 
 	public int[][] getTasksForInds() {
 		return tasksForInds;
+	}
+
+	public void setFrom(final int index) {
+		this.index = index;
+	}
+
+	public int getFrom() {
+		return index;
 	}
 
 	// Used as part of evaluation.

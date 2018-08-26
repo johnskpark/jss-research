@@ -93,6 +93,8 @@ public class MultitaskBreeder extends SimpleBreeder {
 				x = from[subpop];
 				int upperbound = from[subpop] + numinds[subpop];
 				while (x < upperbound) {
+					multitaskState.setFrom(x);
+
 					int indsGenerated = bp.produce(1, upperbound - x, x, subpop,
 							newpop.subpops[subpop].individuals,
 							state,threadnum);

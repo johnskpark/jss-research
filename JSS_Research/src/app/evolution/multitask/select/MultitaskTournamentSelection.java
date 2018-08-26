@@ -28,8 +28,9 @@ public class MultitaskTournamentSelection extends TournamentSelection {
 		if (n > max) { n = max; }
 
 		for(int i = 0; i < n; i++) {
-			// Determine the task that the individual will belong to.
-			currentTask = tasksForInds[start + i];
+			// Determine the task that the individual will belong to. This won't work with the current setup.
+			 int from = multitaskState.getFrom();
+			 currentTask = tasksForInds[from + i];
 
 			// Start the tournament selection.
 			inds[start + i] = state.population.subpops[subpopulation].individuals[produce(subpopulation,state,thread)];
