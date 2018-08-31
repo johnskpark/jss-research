@@ -1,5 +1,8 @@
 package app.evolution.multitask;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import ec.EvolutionState;
 import ec.Individual;
 import ec.simple.SimpleProblemForm;
@@ -115,6 +118,22 @@ public class JasimaMultitaskStatistics extends SimpleStatistics {
 				}
 
 				if (doMessage && !silentPrint) { state.output.message("Subpop " + i + " task " + j + " best fitness of run: " + taskInd.fitness.fitnessToStringForHumans()); }
+			}
+		}
+
+		// Print out the fitness and the tasks.
+		if (doFinal) {
+			for (int i = 0; i < numSubpops; i++) {
+				state.output.println("\nPrinting out Individual Fitness for Subpopulation " + i + ":", statisticslog);
+
+				for (int j = 0; j < state.population.subpops[i].individuals.length; j++) {
+					JasimaMultitaskIndividual ind = (JasimaMultitaskIndividual) state.population.subpops[i].individuals[j];
+
+					List<Double> fitness = ind.getTaskFitnesses();
+					List<String> fitnessStr = fitness.stream().map(x -> (x == MultitaskKozaFitness.NOT_SET) ? "NA" : x+"").collect(Collectors.toList());
+
+					state.output.println(fitnessStr.toString(), statisticslog);
+				}
 			}
 		}
 	}
