@@ -3,6 +3,7 @@
 
 <!-- Rule file definitions -->
 <!-- The baseline approach -->
+<!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
@@ -58,8 +59,10 @@
 			<ruleFile>mb_multitask/bl_baseline_05_10.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
+-->
 
 <!-- The niched approach -->
+<!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
@@ -115,6 +118,7 @@
 			<ruleFile>mb_multitask/bl_niched_7.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
+-->
 
 <!-- The multitask approach -->
 <!-- Elite 1 -->
@@ -307,7 +311,7 @@
 
 <!-- Output file definition -->
 	<outputConfig>
-	    <outputFile>bl_holthaus4_diversity_output.csv</outputFile>
+	    <outputFile>bl_holthaus4_multitask_diversity_output.csv</outputFile>
 	</outputConfig>
 
 <!-- Fitness definitions -->
