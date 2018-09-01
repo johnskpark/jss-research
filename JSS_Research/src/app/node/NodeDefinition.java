@@ -21,6 +21,8 @@ public enum NodeDefinition {
 	SCORE_NUM_JOBS_WAITING("NJ", 0, NodeType.JOB, NodeValueRange.NON_NEGATIVE),
 	SCORE_PENALTY("W", 0, NodeType.JOB, NodeValueRange.NON_NEGATIVE),
 	SCORE_CURRENT_TIME("CT", 0, NodeType.SHOP, NodeValueRange.NON_NEGATIVE),
+	SCORE_OPERATION_WAITING_TIME("OWT", 0, NodeType.JOB, NodeValueRange.ANY),
+	SCORE_RELATIVE_DUE_DATE("rDD", 0, NodeType.JOB, NodeValueRange.ANY),
 
 	// Node definitions from Hunt
 	SCORE_NEXT_PROCESSING_TIME("NPT", 0, NodeType.JOB, NodeValueRange.NON_NEGATIVE),

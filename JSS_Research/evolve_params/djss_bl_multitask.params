@@ -3,7 +3,7 @@
 # See the file "LICENSE" for more information
 
 parent.0 = koza.params
-parent.1 = gp_terminals.params
+parent.1 = gp_terminals_invariant.params
 parent.2 = holthaus4_multitask.params
 
 pop.subpop.0.species.ind = app.evolution.multitask.JasimaMultitaskIndividual

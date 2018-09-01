@@ -8,7 +8,6 @@ import ec.Problem;
 import ec.gp.ADFStack;
 import ec.gp.GPData;
 import ec.gp.GPIndividual;
-import jsc.util.Maths;
 
 /**
  * Non-terminal node representing the multiplication operator in a arithmetic
@@ -21,7 +20,7 @@ public class OpMultiplication extends SingleLineGPNode {
 
 	private static final long serialVersionUID = 672174749690633859L;
 	private static final NodeDefinition NODE_DEFINITION = NodeDefinition.OP_MULTIPLICATION;
-	private static final double MINIMUM_THRESHOLD_FROM_ZERO = 0.0000001;
+//	private static final double MINIMUM_THRESHOLD_FROM_ZERO = 0.0000001;
 
 	@Override
 	public String toString() {
