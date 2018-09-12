@@ -4,6 +4,7 @@
 # TODO right, need to get the parameter file written up.
 
 parent.0 = koza_mls.params
+parent.1 = hunt.params
 
 pop.subpop.0.species.ind = app.evolution.multilevel.JasimaMultilevelIndividual
 
@@ -85,9 +86,9 @@ eval.problem.group-fitness = app.evolution.multilevel.fitness.GroupPrefSizeNormM
 eval.problem.ind-rule = app.evolution.priorityRules.BasicPriorityRule
 eval.problem.ind-fitness = app.evolution.multilevel.fitness.IndividualNormMWTFitness
 
-eval.problem.simulator = app.simConfig.huntConfig.EvolveFactory
-eval.problem.simulator.instances = 4op
-eval.problem.simulator.seed = 15
+#eval.problem.simulator = app.simConfig.huntConfig.EvolveFactory
+#eval.problem.simulator.instances = 4op
+#eval.problem.simulator.seed = 15
 
 # eval.problem.simulator = app.simConfig.taillardConfig.EvolveFactory
 

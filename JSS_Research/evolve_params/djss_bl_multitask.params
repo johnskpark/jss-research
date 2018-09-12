@@ -20,7 +20,7 @@ gp.fs.0.name = f0
 
 # We have five functions in the function set.  They are:
 
-breed.elite.0 = 1
+breed.elite.0 = 10
 
 # The generic parameter settings here.
 state = app.evolution.multitask.MultitaskEvolutionState
