@@ -2,7 +2,7 @@
 # Licensed under the Academic Free License version 3.0
 # See the file "LICENSE" for more information
 
-parent.0 = koza_big_tree.params
+parent.0 = koza.params
 parent.1 = hunt.params
 
 pop.subpop.0.species.ind = app.evolution.JasimaGPIndividual

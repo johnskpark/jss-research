@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<evaluationConfig>
+
+<!-- 4op rules -->
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>ensemble/ensemble_baseline_4op.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>ensemble/ensemble_coop_mv_4op.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.LinearCombinationRule</solverClass>
+		<solverFile>
+			<ruleFile>ensemble/ensemble_coop_lc_4op.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.WeightedVoteRule</solverClass>
+		<solverFile>
+			<ruleFile>ensemble/ensemble_coop_wmv_4op.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.WeightedLinearCombinationRule</solverClass>
+		<solverFile>
+			<ruleFile>ensemble/ensemble_coop_wlc_4op.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+<!-- 8op rules -->
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>ensemble/ensemble_baseline_8op.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>ensemble/ensemble_coop_mv_8op.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.LinearCombinationRule</solverClass>
+		<solverFile>
+			<ruleFile>ensemble/ensemble_coop_lc_8op.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.WeightedVoteRule</solverClass>
+		<solverFile>
+			<ruleFile>ensemble/ensemble_coop_wmv_8op.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.WeightedLinearCombinationRule</solverClass>
+		<solverFile>
+			<ruleFile>ensemble/ensemble_coop_wlc_8op.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+<!-- No seed rotation -->
+<!--
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>ensemble/ensemble_baseline_4op_no_rotate.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>ensemble/ensemble_coop_4op_no_rotate.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>ensemble/ensemble_baseline_8op_no_rotate.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>ensemble/ensemble_coop_8op_no_rotate.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+-->
+
+<!-- The rules rotated around -->
+<!--
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.LinearCombinationRule</solverClass>
+		<solverFile>
+			<ruleFile>ensemble/ensemble_djss_coop_4op_new2.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>ensemble/ensemble_djss_coop_lc_4op_new2.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.LinearCombinationRule</solverClass>
+		<solverFile>
+			<ruleFile>ensemble/ensemble_djss_coop_8op_new2.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>ensemble/ensemble_djss_coop_lc_8op_new2.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+-->
+
+<!-- Rachel Hunt's dataset -->
+	<datasetConfig>
+		<datasetClass>app.simConfig.huntConfig.EvalFactory</datasetClass>
+		<datasetInstances>test</datasetInstances>
+		<datasetSeed>15</datasetSeed>
+		<datasetRepeat>30</datasetRepeat>
+	</datasetConfig>
+
+<!-- The output file -->
+	<outputConfig>
+	    <outputFile>ensemble_output.csv</outputFile>
+	</outputConfig>
+
+<!-- The performance measures used -->
+	<fitnessConfig>
+		<fitnessClass>app.evaluation.fitness.MWTFitness</fitnessClass>
+	</fitnessConfig>
+
+	<fitnessConfig>
+		<fitnessClass>app.evaluation.fitness.TWTFitness</fitnessClass>
+	</fitnessConfig>
+
+	<fitnessConfig>
+		<fitnessClass>app.evaluation.fitness.RuleSizeFitness</fitnessClass>
+	</fitnessConfig>
+
+<!--
+	<refConfig>
+		<refRule>app.evaluation.priorityRules.EvalWATC</refRule>
+		<refTracking>
+			<factory>app.tracker.sampler.SamplerFactory</factory>
+			<rule>app.evaluation.priorityRules.EvalWATC</rule>
+			<seed>15</seed>
+		</refTracking>
+	</refConfig>
+
+	<refFitnessConfig>
+		<fitnessClass>app.evaluation.fitness.DiversityFitness</fitnessClass>
+	</refFitnessConfig>
+-->
+
+	<listenerConfig>
+	    <listenerClass>app.listener.hunt.EvalFactory</listenerClass>
+	    <listenerSize>5</listenerSize>
+	</listenerConfig>
+</evaluationConfig>

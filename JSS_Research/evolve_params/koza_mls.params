@@ -60,7 +60,7 @@ pop.subpop.0.species.pipe.generate-max = false
 # Subsidiary pipelines:
 # TODO the pipeline's parameters are modified to be consistent with the paper.
 # The original values are 0.9, 0.0, 0.1 (crossover, mutation, reproduction)
-pop.subpop.0.species.pipe.num-sources = 2
+pop.subpop.0.species.pipe.num-sources = 3
 pop.subpop.0.species.pipe.source.0 = ec.gp.koza.CrossoverPipeline
 pop.subpop.0.species.pipe.source.0.prob = 0.8
 pop.subpop.0.species.pipe.source.1 = ec.gp.koza.MutationPipeline
@@ -87,7 +87,7 @@ gp.koza.xover.source.0 = ec.multilevel.select.MLSIndividualSelection
 gp.koza.xover.source.1 = same
 gp.koza.xover.ns.0 = ec.gp.koza.KozaNodeSelector
 gp.koza.xover.ns.1 = same
-gp.koza.xover.maxdepth = 17
+gp.koza.xover.maxdepth = 8
 # This is the default for Koza and lil-gp, though it's
 # a little wimpy; on the other hand, a higher number can
 # make things really slow
@@ -104,7 +104,7 @@ gp.koza.xover.tries = 1
 gp.koza.mutate.source.0 = ec.multilevel.select.MLSIndividualSelection
 gp.koza.mutate.ns.0 = ec.gp.koza.KozaNodeSelector
 gp.koza.mutate.build.0 = ec.gp.koza.GrowBuilder
-gp.koza.mutate.maxdepth = 17
+gp.koza.mutate.maxdepth = 8
 # This is the default for Koza and lil-gp, though it's
 # a little wimpy; on the other hand, a higher number can
 # make things really slow
@@ -131,8 +131,8 @@ select.multilevel.size = 7
 # This means that if someone decided to use GROW to generate
 # new individual trees, it's also use the defaults below
 # unless he overrided them locally.
-gp.koza.grow.min-depth = 5
-gp.koza.grow.max-depth = 5
+gp.koza.grow.min-depth = 4
+gp.koza.grow.max-depth = 4
 
 
 
@@ -204,7 +204,7 @@ gp.tc.0.init = ec.gp.koza.HalfBuilder
 # We set the default for HalfBuilder to be a ramp of 2--6,
 # with a grow probability of 0.5
 gp.koza.half.min-depth = 2
-gp.koza.half.max-depth = 8
+gp.koza.half.max-depth = 4
 gp.koza.half.growp = 0.5
 
 
