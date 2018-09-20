@@ -15,10 +15,10 @@ public class NormMWTFitness extends JasimaCoopFitness {
 
 	@Override
 	protected IJasimaFitness<JasimaCoopIndividual> generateFitness(final Individual[] inds) {
-		return new IndividualTWTFitness();
+		return new IndividualMWTFitness();
 	}
 
-	private class IndividualTWTFitness extends JasimaFitnessBase<JasimaCoopIndividual> {
+	private class IndividualMWTFitness extends JasimaFitnessBase<JasimaCoopIndividual> {
 
 		@Override
 		public double getFitness(int expIndex,

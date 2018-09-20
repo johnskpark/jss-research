@@ -2,6 +2,7 @@
 <evaluationConfig>
 
 <!-- 4op rules -->
+<!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
@@ -37,7 +38,23 @@
 		</solverFile>
 	</solverConfig>
 
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>ensemble/ensemble_multilevel_4op.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+	
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>ensemble/ensemble_multilevel_large_4op.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+-->
+
 <!-- 8op rules -->
+<!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
@@ -70,6 +87,21 @@
 		<solverClass>app.evaluation.priorityRules.WeightedLinearCombinationRule</solverClass>
 		<solverFile>
 			<ruleFile>ensemble/ensemble_coop_wlc_8op.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+-->
+	
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>ensemble/ensemble_multilevel_8op.txt</ruleFile>
+		</solverFile>
+	</solverConfig>
+	
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
+		<solverFile>
+			<ruleFile>ensemble/ensemble_multilevel_large_8op.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
@@ -145,12 +177,16 @@
 
 <!-- The output file -->
 	<outputConfig>
-	    <outputFile>ensemble_output.csv</outputFile>
+	    <outputFile>ensemble_multilevel_8op_output.csv</outputFile>
 	</outputConfig>
 
 <!-- The performance measures used -->
 	<fitnessConfig>
 		<fitnessClass>app.evaluation.fitness.MWTFitness</fitnessClass>
+	</fitnessConfig>
+	
+	<fitnessConfig>
+		<fitnessClass>app.evaluation.fitness.MeanTardinessFitness</fitnessClass>
 	</fitnessConfig>
 
 	<fitnessConfig>
