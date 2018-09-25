@@ -1,0 +1,66 @@
+
+# Parameter settings specifically set for Holthaus simulation configuration.
+
+# The possible simulation configurations are as follows:
+# Repair time factors: 1.0, 5.0, 10.0 (first parameter)
+# Breakdown levels: 0.0, 0.025, 0.05 (second parameter)
+# Due date factors: 3, 5 (third parameter)
+
+# Pure specialist
+
+# Zero machine breakdown scenarios
+#eval.problem.simulator = app.simConfig.holthausConfigRepeat.EvolveFactory
+#eval.problem.simulator.instances = (all),(0.0),(all),(6)
+#eval.problem.simulator.job-seed = 15
+#eval.problem.simulator.machine-seed = 15
+#eval.problem.simulator.rotate-seed = true
+
+
+# Mid machine breakdown scenarios
+#eval.problem.simulator = app.simConfig.holthausConfigRepeat.EvolveFactory
+#eval.problem.simulator.instances = (all),(0.025),(all),(6)
+#eval.problem.simulator.job-seed = 15
+#eval.problem.simulator.machine-seed = 15
+#eval.problem.simulator.rotate-seed = true
+
+
+# High machine breakdown scenarios
+#eval.problem.simulator = app.simConfig.holthausConfigRepeat.EvolveFactory
+#eval.problem.simulator.instances = (all),(0.05),(all),(6)
+#eval.problem.simulator.job-seed = 15
+#eval.problem.simulator.machine-seed = 15
+#eval.problem.simulator.rotate-seed = true
+
+
+# Mid range specialist
+
+
+# Zero machine breakdown scenarios
+#eval.problem.simulator = app.simConfig.holthausConfigRepeat.EvolveFactory
+#eval.problem.simulator.instances = (all),(0.0,0.025),(all),(3)
+#eval.problem.simulator.job-seed = 15
+#eval.problem.simulator.machine-seed = 15
+#eval.problem.simulator.rotate-seed = true
+
+
+# Mid machine breakdown scenarios
+#eval.problem.simulator = app.simConfig.holthausConfigRepeat.EvolveFactory
+#eval.problem.simulator.instances = (all),(0.025,0.05),(all),(3)
+#eval.problem.simulator.job-seed = 15
+#eval.problem.simulator.machine-seed = 15
+#eval.problem.simulator.rotate-seed = true
+
+
+# Generalist
+
+
+# High machine breakdown scenarios
+eval.problem.simulator = app.simConfig.holthausConfigRepeat.EvolveFactory
+eval.problem.simulator.instances = (all),(all),(all),(2)
+eval.problem.simulator.job-seed = 15
+eval.problem.simulator.machine-seed = 15
+eval.problem.simulator.rotate-seed = true
+
+
+
+

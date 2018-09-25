@@ -44,7 +44,7 @@
 			<ruleFile>ensemble/ensemble_multilevel_4op.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
-	
+
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
 		<solverFile>
@@ -89,52 +89,50 @@
 			<ruleFile>ensemble/ensemble_coop_wlc_8op.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
--->
-	
+
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
 		<solverFile>
 			<ruleFile>ensemble/ensemble_multilevel_8op.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
-	
+
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
 		<solverFile>
 			<ruleFile>ensemble/ensemble_multilevel_large_8op.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
+-->
 
 <!-- No seed rotation -->
-<!--
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>ensemble/ensemble_baseline_4op_no_rotate.txt</ruleFile>
+			<ruleFile>ensemble/ensemble_baseline_no_rotate_4op.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>ensemble/ensemble_coop_4op_no_rotate.txt</ruleFile>
+			<ruleFile>ensemble/ensemble_mls_no_rotate_4op.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>ensemble/ensemble_baseline_8op_no_rotate.txt</ruleFile>
+			<ruleFile>ensemble/ensemble_baseline_no_rotate_8op.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.EnsemblePriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>ensemble/ensemble_coop_8op_no_rotate.txt</ruleFile>
+			<ruleFile>ensemble/ensemble_mls_no_rotate_8op.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
--->
 
 <!-- The rules rotated around -->
 <!--
@@ -177,14 +175,14 @@
 
 <!-- The output file -->
 	<outputConfig>
-	    <outputFile>ensemble_multilevel_8op_output.csv</outputFile>
+	    <outputFile>ensemble_no_rotate_output.csv</outputFile>
 	</outputConfig>
 
 <!-- The performance measures used -->
 	<fitnessConfig>
 		<fitnessClass>app.evaluation.fitness.MWTFitness</fitnessClass>
 	</fitnessConfig>
-	
+
 	<fitnessConfig>
 		<fitnessClass>app.evaluation.fitness.MeanTardinessFitness</fitnessClass>
 	</fitnessConfig>
