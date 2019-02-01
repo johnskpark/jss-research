@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<evaluationConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.EvalFIFO</solverClass>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.EvalEDD</solverClass>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.EvalSPT</solverClass>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.EvalWSPT</solverClass>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.EvalWCOVERT</solverClass>
+	</solverConfig>
+
+	<solverConfig>
+		<solverClass>app.evaluation.priorityRules.EvalWATC</solverClass>
+	</solverConfig>
+
+<!-- Rachel Hunt's dataset -->
+	<datasetConfig>
+<!--
+		<datasetClass>app.simConfig.huntConfig.EvalFactory</datasetClass>
+		<datasetInstances>train</datasetInstances>
+-->
+		<datasetClass>app.simConfig.holthausConfig3.EvalFactory</datasetClass>
+		<datasetInstances>(all),(all),(all)</datasetInstances>
+		<datasetSeed>15</datasetSeed>
+		<datasetRepeat>30</datasetRepeat>
+	</datasetConfig>
+
+<!-- The output file -->
+	<outputConfig>
+	    <outputFile>breakdown_man_made_output.csv</outputFile>
+	</outputConfig>
+
+<!-- The performance measures used -->
+	<fitnessConfig>
+		<fitnessClass>app.evaluation.fitness.MWTFitness</fitnessClass>
+	</fitnessConfig>
+
+	<fitnessConfig>
+		<fitnessClass>app.evaluation.fitness.MeanTardinessFitness</fitnessClass>
+	</fitnessConfig>
+
+	<fitnessConfig>
+		<fitnessClass>app.evaluation.fitness.TWTFitness</fitnessClass>
+	</fitnessConfig>
+
+	<fitnessConfig>
+		<fitnessClass>app.evaluation.fitness.RuleSizeFitness</fitnessClass>
+	</fitnessConfig>
+
+	<fitnessConfig>
+		<fitnessClass>app.evaluation.fitness.BreakdownLevelInfo</fitnessClass>
+	</fitnessConfig>
+
+	<fitnessConfig>
+		<fitnessClass>app.evaluation.fitness.RepairTimeDistributionInfo</fitnessClass>
+	</fitnessConfig>
+
+	<fitnessConfig>
+		<fitnessClass>app.evaluation.fitness.DueDateFactorInfo</fitnessClass>
+	</fitnessConfig>
+
+<!--
+	<refConfig>
+		<refRule>app.evaluation.priorityRules.EvalWATC</refRule>
+		<refTracking>
+			<factory>app.tracker.sampler.SamplerFactory</factory>
+			<rule>app.evaluation.priorityRules.EvalWATC</rule>
+			<seed>15</seed>
+		</refTracking>
+	</refConfig>
+
+	<refFitnessConfig>
+		<fitnessClass>app.evaluation.fitness.DiversityFitness</fitnessClass>
+	</refFitnessConfig>
+-->
+
+	<listenerConfig>
+	    <listenerClass>app.listener.hunt.EvalFactory</listenerClass>
+	    <listenerSize>5</listenerSize>
+	</listenerConfig>
+</evaluationConfig>

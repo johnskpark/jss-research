@@ -129,7 +129,7 @@ select.tournament.size = 7
 # This means that if someone decided to use GROW to generate
 # new individual trees, it's also use the defaults below
 # unless he overrided them locally.
-gp.koza.grow.min-depth = 4
+gp.koza.grow.min-depth = 2
 gp.koza.grow.max-depth = 4
 
 

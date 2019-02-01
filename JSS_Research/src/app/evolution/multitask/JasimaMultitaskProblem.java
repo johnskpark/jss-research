@@ -33,6 +33,7 @@ public class JasimaMultitaskProblem extends JasimaSimpleProblem {
 	private IMultitaskNeighbourJump neighbourJump;
 
 	private int numSimulation;
+	private int[] numSimPerTask;
 
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
@@ -85,6 +86,7 @@ public class JasimaMultitaskProblem extends JasimaSimpleProblem {
 		}
 
 		numSimulation = 0;
+		numSimPerTask = new int[multitaskState.getNumTasks()];
 	}
 
 	@Override
@@ -197,6 +199,9 @@ public class JasimaMultitaskProblem extends JasimaSimpleProblem {
 			clearForExperiment(getWorkStationListeners());
 
 			numSimulation++;
+			if (ind.getAssignedTask() != JasimaMultitaskIndividual.NO_TASK_SET) {
+				numSimPerTask[ind.getAssignedTask()]++;
+			}
 		}
 
 		multitaskFitness.setTaskFitness(state, task, getSimConfig(), ind);
@@ -253,20 +258,20 @@ public class JasimaMultitaskProblem extends JasimaSimpleProblem {
 
 		for (int task = 0; task < breakdownSimConfig.getNumScenarios(); task++) {
 			List<Integer> indices = breakdownSimConfig.getIndicesForScenario(task);
-			
+
 			for (int i = 0; i < indices.size(); i++) {
 				int simConfigIndex = indices.get(i);
-				
+
 				Experiment experiment = ExperimentGenerator.getExperiment(simConfig,
 						getReferenceRule(),
 						simConfigIndex);
-	
+
 				experiment.runExperiment();
-	
+
 				double result = getReferenceFitness().getFitness(simConfigIndex, simConfig, null, experiment.getResults());
 				getReferenceInstStats().add(result);
 			}
-			
+
 			simConfig.reset();
 		}
 	}

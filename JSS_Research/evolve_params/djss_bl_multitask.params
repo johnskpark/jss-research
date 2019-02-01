@@ -3,7 +3,7 @@
 # See the file "LICENSE" for more information
 
 parent.0 = koza.params
-parent.1 = gp_terminals_invariant.params
+parent.1 = gp_terminals.params
 parent.2 = holthaus4_multitask.params
 
 pop.subpop.0.species.ind = app.evolution.multitask.JasimaMultitaskIndividual
@@ -20,7 +20,7 @@ gp.fs.0.name = f0
 
 # We have five functions in the function set.  They are:
 
-breed.elite.0 = 10
+breed.elite.0 = 1
 
 # The generic parameter settings here.
 state = app.evolution.multitask.MultitaskEvolutionState
