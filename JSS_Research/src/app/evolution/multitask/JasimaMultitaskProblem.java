@@ -33,7 +33,7 @@ public class JasimaMultitaskProblem extends JasimaSimpleProblem {
 	private IMultitaskNeighbourJump neighbourJump;
 
 	private int numSimulation;
-	private int[] numSimPerTask;
+	private Integer[] numSimPerTask;
 
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
@@ -86,7 +86,8 @@ public class JasimaMultitaskProblem extends JasimaSimpleProblem {
 		}
 
 		numSimulation = 0;
-		numSimPerTask = new int[multitaskState.getNumTasks()];
+		numSimPerTask = new Integer[multitaskState.getNumTasks()];
+		Arrays.fill(numSimPerTask, new Integer(0));
 	}
 
 	@Override
@@ -111,6 +112,11 @@ public class JasimaMultitaskProblem extends JasimaSimpleProblem {
 
 		state.output.message("Number of times the simulation has been used: " + numSimulation);
 		state.output.println("Generation " + state.generation + " simulation use count: " + numSimulation, stats.statisticslog);
+
+		List<Integer> numSimsList = Arrays.asList(numSimPerTask);
+
+		state.output.message("Number of times the simulation has been used for each task: " + numSimsList.toString());
+		state.output.println("Generation " + state.generation + " simulation use count per task: " + numSimsList.toString(), stats.statisticslog);
 
 		super.finishEvaluating(state, threadnum);
 
