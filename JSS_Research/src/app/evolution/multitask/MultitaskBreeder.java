@@ -155,6 +155,10 @@ public class MultitaskBreeder extends SimpleBreeder {
 
 					// Best fitness for specific tasks.
 					for (int task = 0; task < numElites; task++) {
+						if (ind.getTaskFitness(task) == MultitaskKozaFitness.NOT_SET) {
+							continue;
+						}
+
 						JasimaMultitaskIndividual bestInd = (JasimaMultitaskIndividual) oldinds[best[task]];
 
 						// So why did I do this again?

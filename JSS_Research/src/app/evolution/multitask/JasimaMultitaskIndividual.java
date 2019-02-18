@@ -42,6 +42,11 @@ public class JasimaMultitaskIndividual extends JasimaGPIndividual {
 	}
 
 	public boolean taskFitnessBetterThan(JasimaMultitaskIndividual other, int task) {
+		if (this.getTaskFitness(task) == MultitaskKozaFitness.NOT_SET ||
+				other.getTaskFitness(task) == MultitaskKozaFitness.NOT_SET) {
+			throw new RuntimeException("Trying to compare fitnesses that have not been set yet");
+		}
+
 		if (this.getTaskFitness(task) < other.getTaskFitness(task) ||
 				(this.getTaskFitness(task) == other.getTaskFitness(task) &&
 				this.getFitness().betterThan(other.getFitness()))) {

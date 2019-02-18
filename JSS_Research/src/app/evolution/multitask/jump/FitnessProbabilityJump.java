@@ -3,6 +3,7 @@ package app.evolution.multitask.jump;
 import app.evolution.multitask.IMultitaskNeighbourJump;
 import app.evolution.multitask.JasimaMultitaskIndividual;
 import app.evolution.multitask.MultitaskEvolutionState;
+import app.evolution.multitask.MultitaskKozaFitness;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.util.MersenneTwisterFast;
@@ -47,6 +48,10 @@ public class FitnessProbabilityJump implements IMultitaskNeighbourJump {
 					JasimaMultitaskIndividual ind = (JasimaMultitaskIndividual) inds[i];
 
 					for (int task = 0; task < numTasks; task++) {
+						if (ind.getTaskFitness(task) == MultitaskKozaFitness.NOT_SET) {
+							continue;
+						}
+
 						if (bestIndsPerTask[subpop][task] == null || ind.taskFitnessBetterThan(bestIndsPerTask[subpop][task], task)) {
 							bestIndsPerTask[subpop][task] = ind;
 						}
@@ -67,11 +72,6 @@ public class FitnessProbabilityJump implements IMultitaskNeighbourJump {
 			final int neighbourTask,
 			final JasimaMultitaskIndividual ind,
 			final int threadnum) {
-		// Always guarantee a jump for the first neighbour.
-		if (ind.getAssignedTask() == currentTask) {
-			return true;
-		}
-
 		// Calculate the probability from the fitness using min-max normalisation
 		// to bring the fitness value in between 0.0 and 1.0 first.
 		double taskFitness = ind.getTaskFitness(currentTask);
@@ -89,6 +89,10 @@ public class FitnessProbabilityJump implements IMultitaskNeighbourJump {
 			final int task,
 			final JasimaMultitaskIndividual ind,
 			final int threadnum) {
+		if (ind.getTaskFitness(task) == MultitaskKozaFitness.NOT_SET) {
+			throw new RuntimeException("Trying to add individual that has not been evaluated to task.");
+		}
+
 		if (bestIndsPerTask[subpopulation][task] == null || ind.taskFitnessBetterThan(bestIndsPerTask[subpopulation][task], task)) {
 			bestIndsPerTask[subpopulation][task] = ind;
 		}
@@ -106,6 +110,18 @@ public class FitnessProbabilityJump implements IMultitaskNeighbourJump {
 				worstIndsPerTask[i][j] = null;
 			}
 		}
+	}
+
+	protected JasimaMultitaskIndividual[][] getBestIndsPerTask() {
+		return bestIndsPerTask;
+	}
+
+	protected JasimaMultitaskIndividual[][] getWorstIndsPerTask() {
+		return worstIndsPerTask;
+	}
+
+	protected MersenneTwisterFast getRand() {
+		return rand;
 	}
 
 }
