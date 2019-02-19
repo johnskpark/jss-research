@@ -147,6 +147,8 @@ public class MultitaskBreeder extends SimpleBreeder {
 			Individual[] oldinds = state.population.subpops[sub].individuals;
 			int numElites = numElites(state, sub);
 
+			state.output.message("MultitaskBreeder: total number of elites for subpop " + sub + ": " + numElites);
+
 			// If the number of elites equals the number of tasks, then we handle this by just finding the best elites for each task.
 			if (numElites == numTasks) {
 				int[] best = new int[numElites];
@@ -155,10 +157,6 @@ public class MultitaskBreeder extends SimpleBreeder {
 
 					// Best fitness for specific tasks.
 					for (int task = 0; task < numElites; task++) {
-						if (ind.getTaskFitness(task) == MultitaskKozaFitness.NOT_SET) {
-							continue;
-						}
-
 						JasimaMultitaskIndividual bestInd = (JasimaMultitaskIndividual) oldinds[best[task]];
 
 						// So why did I do this again?

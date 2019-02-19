@@ -53,10 +53,6 @@ public class JasimaMultitaskStatistics extends SimpleStatistics {
 
 					// For multitask fitness.
 					for (int k = 0; k < numTasks; k++) {
-						if (ind.getTaskFitness(k) == MultitaskKozaFitness.NOT_SET) {
-							continue;
-						}
-
 						if (bestIndPerTask[i][k] == null || ind.taskFitnessBetterThan(bestIndPerTask[i][k], k)) {
 							bestIndPerTask[i][k] = ind;
 						}

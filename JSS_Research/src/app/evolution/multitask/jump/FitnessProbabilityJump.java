@@ -23,6 +23,8 @@ public class FitnessProbabilityJump implements IMultitaskNeighbourJump {
 	private MersenneTwisterFast rand;
 	private int initSeed;
 
+	private int probCalcCount = 0;
+
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
 		// Use the default seed.
@@ -80,6 +82,11 @@ public class FitnessProbabilityJump implements IMultitaskNeighbourJump {
 
 		double prob = 1.0 - (taskFitness - minFitness) / (maxFitness - minFitness);
 
+		if (probCalcCount % 500 == 0) {
+			state.output.message("FitnessProbabilityJump: Outputting probability " + probCalcCount + " calculated: " + prob + ", fitness: " + taskFitness + ", worst: " + maxFitness + "best: " + minFitness);
+		}
+		probCalcCount++;
+
 		return rand.nextBoolean(prob);
 	}
 
@@ -110,6 +117,8 @@ public class FitnessProbabilityJump implements IMultitaskNeighbourJump {
 				worstIndsPerTask[i][j] = null;
 			}
 		}
+
+		probCalcCount = 0;
 	}
 
 	protected JasimaMultitaskIndividual[][] getBestIndsPerTask() {
