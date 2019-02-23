@@ -74,20 +74,22 @@ public class FitnessProbabilityJump implements IMultitaskNeighbourJump {
 			final int neighbourTask,
 			final JasimaMultitaskIndividual ind,
 			final int threadnum) {
+		// Always guarantee a jump for the first neighbour.
+		if (ind.getAssignedTask() == currentTask) {
+			return true;
+		}
+
 		// Calculate the probability from the fitness using min-max normalisation
 		// to bring the fitness value in between 0.0 and 1.0 first.
 		double taskFitness = ind.getTaskFitness(currentTask);
-		double minFitness = bestIndsPerTask[subpopulation][currentTask].getTaskFitness(currentTask);
-		double maxFitness = worstIndsPerTask[subpopulation][currentTask].getTaskFitness(currentTask);
+		double minFitness = getBestIndsPerTask()[subpopulation][currentTask].getTaskFitness(currentTask);
+		double maxFitness = getWorstIndsPerTask()[subpopulation][currentTask].getTaskFitness(currentTask);
 
 		double prob = 1.0 - (taskFitness - minFitness) / (maxFitness - minFitness);
 
-		if (probCalcCount % 500 == 0) {
-			state.output.message("FitnessProbabilityJump: Outputting probability " + probCalcCount + " calculated: " + prob + ", fitness: " + taskFitness + ", worst: " + maxFitness + "best: " + minFitness);
-		}
-		probCalcCount++;
+		probabilityOutput(state, prob, taskFitness, maxFitness, minFitness);
 
-		return rand.nextBoolean(prob);
+		return getRand().nextBoolean(prob);
 	}
 
 	@Override
@@ -107,6 +109,18 @@ public class FitnessProbabilityJump implements IMultitaskNeighbourJump {
 		if (worstIndsPerTask[subpopulation][task] == null || worstIndsPerTask[subpopulation][task].taskFitnessBetterThan(ind, task)) {
 			worstIndsPerTask[subpopulation][task] = ind;
 		}
+	}
+
+	protected void probabilityOutput(EvolutionState state, double prob, double taskFitness, double maxFitness, double minFitness) {
+		if (probCalcCount % 500 == 0) {
+			state.output.message("FitnessProbabilityJump: Outputting probability " + probCalcCount + " calculated: " + prob + ", fitness: " + taskFitness + ", worst: " + maxFitness + "best: " + minFitness);
+		}
+		probCalcCount++;
+
+	}
+
+	protected int getProbCalcCount() {
+		return probCalcCount;
 	}
 
 	@Override

@@ -20,11 +20,6 @@ public class FitnessProbabilityJump2 extends FitnessProbabilityJump {
 			final int neighbourTask,
 			final JasimaMultitaskIndividual ind,
 			final int threadnum) {
-		// Always guarantee a jump for the first neighbour.
-		if (ind.getAssignedTask() == currentTask) {
-			return true;
-		}
-
 		// Calculate the probability from the fitness using min-max normalisation
 		// to bring the fitness value in between 0.0 and 1.0 first.
 		double taskFitness = ind.getTaskFitness(currentTask);
@@ -32,6 +27,8 @@ public class FitnessProbabilityJump2 extends FitnessProbabilityJump {
 		double maxFitness = getWorstIndsPerTask()[subpopulation][currentTask].getTaskFitness(currentTask);
 
 		double prob = 1.0 - (taskFitness - minFitness) / (maxFitness - minFitness);
+
+		probabilityOutput(state, prob, taskFitness, maxFitness, minFitness);
 
 		return getRand().nextBoolean(prob);
 	}
