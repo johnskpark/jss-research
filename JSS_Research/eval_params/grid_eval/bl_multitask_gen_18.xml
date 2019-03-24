@@ -7,56 +7,56 @@
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask/bl_baseline__18.txt</ruleFile>
+			<ruleFile>jss_rules/bl_baseline__18.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask/bl_baseline_0_18.txt</ruleFile>
+			<ruleFile>jss_rules/bl_baseline_0_18.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask/bl_baseline_025_1_18.txt</ruleFile>
+			<ruleFile>jss_rules/bl_baseline_025_1_18.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask/bl_baseline_025_5_18.txt</ruleFile>
+			<ruleFile>jss_rules/bl_baseline_025_5_18.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask/bl_baseline_025_10_18.txt</ruleFile>
+			<ruleFile>jss_rules/bl_baseline_025_10_18.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask/bl_baseline_05_1_18.txt</ruleFile>
+			<ruleFile>jss_rules/bl_baseline_05_1_18.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask/bl_baseline_05_5_18.txt</ruleFile>
+			<ruleFile>jss_rules/bl_baseline_05_5_18.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask/bl_baseline_05_10_18.txt</ruleFile>
+			<ruleFile>jss_rules/bl_baseline_05_10_18.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
@@ -64,56 +64,56 @@
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask/bl_niched_18_0.txt</ruleFile>
+			<ruleFile>jss_rules/bl_niched_18_0.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask/bl_niched_18_1.txt</ruleFile>
+			<ruleFile>jss_rules/bl_niched_18_1.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask/bl_niched_18_2.txt</ruleFile>
+			<ruleFile>jss_rules/bl_niched_18_2.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask/bl_niched_18_3.txt</ruleFile>
+			<ruleFile>jss_rules/bl_niched_18_3.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask/bl_niched_18_4.txt</ruleFile>
+			<ruleFile>jss_rules/bl_niched_18_4.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask/bl_niched_18_5.txt</ruleFile>
+			<ruleFile>jss_rules/bl_niched_18_5.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask/bl_niched_18_6.txt</ruleFile>
+			<ruleFile>jss_rules/bl_niched_18_6.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask/bl_niched_18_7.txt</ruleFile>
+			<ruleFile>jss_rules/bl_niched_18_7.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
@@ -122,56 +122,56 @@
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask_new/bl_multi_elite_1_18_0.txt</ruleFile>
+			<ruleFile>jss_rules/bl_multi_elite_1_18_0.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask_new/bl_multi_elite_1_18_1.txt</ruleFile>
+			<ruleFile>jss_rules/bl_multi_elite_1_18_1.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask_new/bl_multi_elite_1_18_2.txt</ruleFile>
+			<ruleFile>jss_rules/bl_multi_elite_1_18_2.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask_new/bl_multi_elite_1_18_3.txt</ruleFile>
+			<ruleFile>jss_rules/bl_multi_elite_1_18_3.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask_new/bl_multi_elite_1_18_4.txt</ruleFile>
+			<ruleFile>jss_rules/bl_multi_elite_1_18_4.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask_new/bl_multi_elite_1_18_5.txt</ruleFile>
+			<ruleFile>jss_rules/bl_multi_elite_1_18_5.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask_new/bl_multi_elite_1_18_6.txt</ruleFile>
+			<ruleFile>jss_rules/bl_multi_elite_1_18_6.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask_new/bl_multi_elite_1_18_7.txt</ruleFile>
+			<ruleFile>jss_rules/bl_multi_elite_1_18_7.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
@@ -179,56 +179,56 @@
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask_new/bl_multi_elite_5_18_0.txt</ruleFile>
+			<ruleFile>jss_rules/bl_multi_elite_5_18_0.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask_new/bl_multi_elite_5_18_1.txt</ruleFile>
+			<ruleFile>jss_rules/bl_multi_elite_5_18_1.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask_new/bl_multi_elite_5_18_2.txt</ruleFile>
+			<ruleFile>jss_rules/bl_multi_elite_5_18_2.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask_new/bl_multi_elite_5_18_3.txt</ruleFile>
+			<ruleFile>jss_rules/bl_multi_elite_5_18_3.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask_new/bl_multi_elite_5_18_4.txt</ruleFile>
+			<ruleFile>jss_rules/bl_multi_elite_5_18_4.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask_new/bl_multi_elite_5_18_5.txt</ruleFile>
+			<ruleFile>jss_rules/bl_multi_elite_5_18_5.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask_new/bl_multi_elite_5_18_6.txt</ruleFile>
+			<ruleFile>jss_rules/bl_multi_elite_5_18_6.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask_new/bl_multi_elite_5_18_7.txt</ruleFile>
+			<ruleFile>jss_rules/bl_multi_elite_5_18_7.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
@@ -236,56 +236,56 @@
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask_new/bl_multi_elite_10_18_0.txt</ruleFile>
+			<ruleFile>jss_rules/bl_multi_elite_10_18_0.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask_new/bl_multi_elite_10_18_1.txt</ruleFile>
+			<ruleFile>jss_rules/bl_multi_elite_10_18_1.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask_new/bl_multi_elite_10_18_2.txt</ruleFile>
+			<ruleFile>jss_rules/bl_multi_elite_10_18_2.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask_new/bl_multi_elite_10_18_3.txt</ruleFile>
+			<ruleFile>jss_rules/bl_multi_elite_10_18_3.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask_new/bl_multi_elite_10_18_4.txt</ruleFile>
+			<ruleFile>jss_rules/bl_multi_elite_10_18_4.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask_new/bl_multi_elite_10_18_5.txt</ruleFile>
+			<ruleFile>jss_rules/bl_multi_elite_10_18_5.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask_new/bl_multi_elite_10_18_6.txt</ruleFile>
+			<ruleFile>jss_rules/bl_multi_elite_10_18_6.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask_new/bl_multi_elite_10_18_7.txt</ruleFile>
+			<ruleFile>jss_rules/bl_multi_elite_10_18_7.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
@@ -294,56 +294,56 @@
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask_new/bl_multi_elite_diff_jump_1_18_0.txt</ruleFile>
+			<ruleFile>jss_rules/bl_multi_elite_diff_jump_1_18_0.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask_new/bl_multi_elite_diff_jump_1_18_1.txt</ruleFile>
+			<ruleFile>jss_rules/bl_multi_elite_diff_jump_1_18_1.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask_new/bl_multi_elite_diff_jump_1_18_2.txt</ruleFile>
+			<ruleFile>jss_rules/bl_multi_elite_diff_jump_1_18_2.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask_new/bl_multi_elite_diff_jump_1_18_3.txt</ruleFile>
+			<ruleFile>jss_rules/bl_multi_elite_diff_jump_1_18_3.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask_new/bl_multi_elite_diff_jump_1_18_4.txt</ruleFile>
+			<ruleFile>jss_rules/bl_multi_elite_diff_jump_1_18_4.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask_new/bl_multi_elite_diff_jump_1_18_5.txt</ruleFile>
+			<ruleFile>jss_rules/bl_multi_elite_diff_jump_1_18_5.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask_new/bl_multi_elite_diff_jump_1_18_6.txt</ruleFile>
+			<ruleFile>jss_rules/bl_multi_elite_diff_jump_1_18_6.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask_new/bl_multi_elite_diff_jump_1_18_7.txt</ruleFile>
+			<ruleFile>jss_rules/bl_multi_elite_diff_jump_1_18_7.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
@@ -351,56 +351,56 @@
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask_new/bl_multi_elite_diff_jump_5_18_0.txt</ruleFile>
+			<ruleFile>jss_rules/bl_multi_elite_diff_jump_5_18_0.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask_new/bl_multi_elite_diff_jump_5_18_1.txt</ruleFile>
+			<ruleFile>jss_rules/bl_multi_elite_diff_jump_5_18_1.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask_new/bl_multi_elite_diff_jump_5_18_2.txt</ruleFile>
+			<ruleFile>jss_rules/bl_multi_elite_diff_jump_5_18_2.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask_new/bl_multi_elite_diff_jump_5_18_3.txt</ruleFile>
+			<ruleFile>jss_rules/bl_multi_elite_diff_jump_5_18_3.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask_new/bl_multi_elite_diff_jump_5_18_4.txt</ruleFile>
+			<ruleFile>jss_rules/bl_multi_elite_diff_jump_5_18_4.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask_new/bl_multi_elite_diff_jump_5_18_5.txt</ruleFile>
+			<ruleFile>jss_rules/bl_multi_elite_diff_jump_5_18_5.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask_new/bl_multi_elite_diff_jump_5_18_6.txt</ruleFile>
+			<ruleFile>jss_rules/bl_multi_elite_diff_jump_5_18_6.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask_new/bl_multi_elite_diff_jump_5_18_7.txt</ruleFile>
+			<ruleFile>jss_rules/bl_multi_elite_diff_jump_5_18_7.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
@@ -408,56 +408,56 @@
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask_new/bl_multi_elite_diff_jump_10_18_0.txt</ruleFile>
+			<ruleFile>jss_rules/bl_multi_elite_diff_jump_10_18_0.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask_new/bl_multi_elite_diff_jump_10_18_1.txt</ruleFile>
+			<ruleFile>jss_rules/bl_multi_elite_diff_jump_10_18_1.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask_new/bl_multi_elite_diff_jump_10_18_2.txt</ruleFile>
+			<ruleFile>jss_rules/bl_multi_elite_diff_jump_10_18_2.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask_new/bl_multi_elite_diff_jump_10_18_3.txt</ruleFile>
+			<ruleFile>jss_rules/bl_multi_elite_diff_jump_10_18_3.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask_new/bl_multi_elite_diff_jump_10_18_4.txt</ruleFile>
+			<ruleFile>jss_rules/bl_multi_elite_diff_jump_10_18_4.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask_new/bl_multi_elite_diff_jump_10_18_5.txt</ruleFile>
+			<ruleFile>jss_rules/bl_multi_elite_diff_jump_10_18_5.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask_new/bl_multi_elite_diff_jump_10_18_6.txt</ruleFile>
+			<ruleFile>jss_rules/bl_multi_elite_diff_jump_10_18_6.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 
 	<solverConfig>
 		<solverClass>app.evaluation.priorityRules.BasicPriorityRule</solverClass>
 		<solverFile>
-			<ruleFile>mb_multitask_new/bl_multi_elite_diff_jump_10_18_7.txt</ruleFile>
+			<ruleFile>jss_rules/bl_multi_elite_diff_jump_10_18_7.txt</ruleFile>
 		</solverFile>
 	</solverConfig>
 

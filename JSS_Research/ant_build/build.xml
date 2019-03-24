@@ -11,7 +11,7 @@
 
 	<path id="classpath">
 		<fileset dir="${lib.dir}" includes="**/*.jar" />
-	</path> 
+	</path>
 
 	<target name="clean">
 		<delete dir="${bin.dir}" />
@@ -25,7 +25,7 @@
 
         <!-- Copy the .xsd file that validates the xml file -->
         <copy todir="${eval_xsd.bin}" >
-            <fileset dir="${eval_xsd.src}" > 
+            <fileset dir="${eval_xsd.src}" >
                 <include name="*.xsd" />
             </fileset>
         </copy>
@@ -33,7 +33,7 @@
 
 	<target name="jar">
 		<mkdir dir="${jar.dir}" />
-		
+
 		<!-- Write the jss_evolve.jar jar file -->
 		<jar destfile="${jar.dir}/jss_evolve.jar" basedir="${bin.dir}" >
 			<manifest>
@@ -48,7 +48,7 @@
 			<manifest>
 				<attribute name="Manifest-Version" value="1.0" />
 				<attribute name="Main-Class" value="app.evaluation.Evaluate" />
-				<attribute name="Class-Path" value="guava-18.0.jar javassist-3.18.jar reflections-0.9.9-RC1-uberjar.jar slf4j-api-1.7.7.jar" />
+				<attribute name="Class-Path" value="com.thoughtworks.xstream.jar commons-math3-3.3.jar jxl.jar cmaes_java.jar colt.jar commons-cli-1.2.jar commons-codec-1.5.jar commons-lang3-3.1.jar commons-math-2.2.jar concurrent.jar jcommon-1.0.16.jar jfreechart-1.0.13.jar JMetal-3.1.jar jsc.jar MOEAFramework-1.15.jar guava-18.0.jar javassist-3.18.jar reflections-0.9.9-RC1-uberjar.jar slf4j-api-1.7.7.jar" />
 			</manifest>
 		</jar>
 	</target>
