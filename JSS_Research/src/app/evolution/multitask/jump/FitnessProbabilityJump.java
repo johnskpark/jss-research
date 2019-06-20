@@ -113,7 +113,7 @@ public class FitnessProbabilityJump implements IMultitaskNeighbourJump {
 
 	protected void probabilityOutput(EvolutionState state, double prob, double taskFitness, double maxFitness, double minFitness) {
 		if (probCalcCount % 500 == 0) {
-			state.output.message("FitnessProbabilityJump: Outputting probability " + probCalcCount + " calculated: " + prob + ", fitness: " + taskFitness + ", worst: " + maxFitness + "best: " + minFitness);
+			state.output.message("FitnessProbabilityJump: Outputting probability " + probCalcCount + " calculated: " + prob + ", fitness: " + taskFitness + ", worst: " + maxFitness + ", best: " + minFitness);
 		}
 		probCalcCount++;
 

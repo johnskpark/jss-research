@@ -1,6 +1,8 @@
 package app.evolution.multitask;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.PriorityQueue;
 import java.util.stream.Collectors;
 
 import ec.EvolutionState;
@@ -15,6 +17,13 @@ public class JasimaMultitaskStatistics extends SimpleStatistics {
 	private JasimaMultitaskIndividual[][] bestIndPerTask = null;
 	private JasimaMultitaskIndividual[] bestIndOfGen = null;
 
+	private double[][] bestTaskFitnesses;
+	private double[][] worstTaskFitnesses;
+	private double[][] meanTaskFitnesses;
+	private double[][] medianTaskFitnesses;
+	private MedianCalculator[][] medianCalculator;
+	private int[][] numIndsPerTask;
+
 	@Override
 	public void preEvaluationStatistics(final EvolutionState state) {
 		super.preEvaluationStatistics(state);
@@ -26,6 +35,13 @@ public class JasimaMultitaskStatistics extends SimpleStatistics {
 
 		bestIndPerTask = new JasimaMultitaskIndividual[numSubpops][numTasks];
 		bestIndOfGen = new JasimaMultitaskIndividual[numSubpops];
+
+		bestTaskFitnesses = new double[numSubpops][numTasks];
+		worstTaskFitnesses = new double[numSubpops][numTasks];
+		meanTaskFitnesses = new double[numSubpops][numTasks];
+		medianTaskFitnesses = new double[numSubpops][numTasks];
+		medianCalculator = new MedianCalculator[numSubpops][numTasks];
+		numIndsPerTask = new int[numSubpops][numTasks];
 	}
 
 	@Override
@@ -40,6 +56,15 @@ public class JasimaMultitaskStatistics extends SimpleStatistics {
 		// Collect the standarded fitnesses of the individuals.
 		for (int i = 0; i < numSubpops; i++) {
 			Individual[] inds = state.population.subpops[i].individuals;
+
+			for (int j = 0; j < numTasks; j++) {
+				bestTaskFitnesses[i][j] = Double.POSITIVE_INFINITY;
+				worstTaskFitnesses[i][j] = 0.0;
+				meanTaskFitnesses[i][j] = 0.0;
+				medianTaskFitnesses[i][j] = 0.0;
+				medianCalculator[i][j] = new MedianCalculator();
+				numIndsPerTask[i][j] = 0;
+			}
 
 			// Carry out fitness comparisons between the current individual and the best individual found so far.
 			for (int j = 0; j < inds.length; j++) {
@@ -56,8 +81,22 @@ public class JasimaMultitaskStatistics extends SimpleStatistics {
 						if (bestIndPerTask[i][k] == null || ind.taskFitnessBetterThan(bestIndPerTask[i][k], k)) {
 							bestIndPerTask[i][k] = ind;
 						}
+
+						double taskFit = ind.getTaskFitness(k);
+						if (!Double.isNaN(taskFit) && taskFit > 0) {
+							bestTaskFitnesses[i][k] = Math.min(bestTaskFitnesses[i][k], taskFit);
+							worstTaskFitnesses[i][k] = Math.max(worstTaskFitnesses[i][k], taskFit);
+							meanTaskFitnesses[i][k] += taskFit;
+							medianCalculator[i][k].insert(taskFit);
+							numIndsPerTask[i][k]++;
+						}
 					}
 				}
+			}
+
+			for (int j = 0; j < numTasks; j++) {
+				meanTaskFitnesses[i][j] = 1.0 * meanTaskFitnesses[i][j] / numIndsPerTask[i][j];
+				medianTaskFitnesses[i][j] = medianCalculator[i][j].getMedian();
 			}
 
 			// Print out a summary of the individual's fitnesses.
@@ -66,6 +105,13 @@ public class JasimaMultitaskStatistics extends SimpleStatistics {
 				if (doGeneration) {
 					state.output.println("Task: " + j, statisticslog);
 					bestIndPerTask[i][j].printIndividualForHumans(state, statisticslog);
+
+					state.output.println("Task: " + j + " best/worst/mean/median/count fitnesses: " + String.format("[%f,%f,%f,%f,%d]",
+							bestTaskFitnesses[i][j],
+							worstTaskFitnesses[i][j],
+							meanTaskFitnesses[i][j],
+							medianTaskFitnesses[i][j],
+							numIndsPerTask[i][j]), statisticslog);
 				}
 				if (doMessage && !silentPrint) {
 					state.output.message("Subpop " + i + " task " + j + " best fitness of generation" +
@@ -132,6 +178,68 @@ public class JasimaMultitaskStatistics extends SimpleStatistics {
 				}
 			}
 		}
+	}
+
+	// Uses the rolling median algorithm to find the median.
+	private class MedianCalculator {
+		private PriorityQueue<Double> minHeap = new PriorityQueue<>(new Comparator<Double>() {
+			public int compare(Double o1, Double o2) {
+				if (o1 > o2) { return -1; }
+				else { return 1; }
+			}
+		});
+		private PriorityQueue<Double> maxHeap = new PriorityQueue<>(new Comparator<Double>() {
+			public int compare(Double o1, Double o2) {
+				if (o1 < o2) { return -1; }
+				else { return 1; }
+			}
+		});
+		private int count;
+
+		public void insert(double taskFitness) {
+			if (count == 0) {
+				minHeap.offer(taskFitness);
+			} else {
+				// Add to the respective heap based on its comparison to the median.
+				double curMedian = getMedian();
+				if (taskFitness < curMedian) {
+					minHeap.offer(taskFitness);
+				} else if (taskFitness > curMedian) {
+					maxHeap.offer(taskFitness);
+				} else {
+					if (minHeap.size() > maxHeap.size()) {
+						maxHeap.offer(taskFitness);
+					} else {
+						minHeap.offer(taskFitness);
+					}
+				}
+
+				// Rebalance the heaps if they are off by more than one.
+				if (minHeap.size() > maxHeap.size() + 1) {
+					maxHeap.offer(minHeap.poll());
+				} else if (maxHeap.size() > minHeap.size() + 1) {
+					minHeap.offer(maxHeap.poll());
+				}
+			}
+			count++;
+		}
+
+		public double getMedian() {
+			if (minHeap.size() > maxHeap.size()) {
+				return minHeap.peek();
+			} else if (minHeap.size() < maxHeap.size()) {
+				return maxHeap.peek();
+			} else {
+				return (minHeap.peek() + maxHeap.peek()) / 2.0;
+			}
+		}
+
+		public void clear() {
+			minHeap.clear();
+			maxHeap.clear();
+			count = 0;
+		}
+
 	}
 
 
