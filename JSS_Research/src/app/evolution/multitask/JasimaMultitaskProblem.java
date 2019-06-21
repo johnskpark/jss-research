@@ -120,6 +120,8 @@ public class JasimaMultitaskProblem extends JasimaSimpleProblem {
 
 		super.finishEvaluating(state, threadnum);
 
+		neighbourJump.clear();
+
 		System.gc();
 	}
 

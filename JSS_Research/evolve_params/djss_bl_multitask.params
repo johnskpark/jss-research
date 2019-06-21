@@ -49,7 +49,9 @@ eval.problem = app.evolution.multitask.JasimaMultitaskProblem
 
 #eval.problem.neighbour-jump = app.evolution.multitask.jump.RankProbabilityJump
 eval.problem.init-task = app.evolution.multitask.initTask.NoInitialTaskStrategy
-eval.problem.neighbour-jump = app.evolution.multitask.jump.FitnessProbabilityJump
+#eval.problem.neighbour-jump = app.evolution.multitask.jump.FitnessProbabilityJump
+#eval.problem.neighbour-jump = app.evolution.multitask.jump.FitnessProbabilityJump2
+eval.problem.neighbour-jump = app.evolution.multitask.jump.FitnessProbabilityJump3
 
 eval.problem.data = app.evolution.JasimaGPData
 

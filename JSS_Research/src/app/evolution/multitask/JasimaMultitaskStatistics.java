@@ -239,7 +239,6 @@ public class JasimaMultitaskStatistics extends SimpleStatistics {
 			maxHeap.clear();
 			count = 0;
 		}
-
 	}
 
 
