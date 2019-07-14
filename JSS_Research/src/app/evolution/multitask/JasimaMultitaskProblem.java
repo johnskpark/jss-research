@@ -19,6 +19,11 @@ import ec.util.Parameter;
 import jasima.core.experiment.Experiment;
 import jasima.core.util.Pair;
 
+/**
+ * The main problem component for the multitask GP approach. 
+ * @author John
+ *
+ */
 public class JasimaMultitaskProblem extends JasimaSimpleProblem {
 
 	private static final long serialVersionUID = -37395823771748782L;
